@@ -27,11 +27,11 @@ export const seedStudents: Student[] = [
   { id: "A26-0024", lrn: "100000000024", lastName: "Lim", firstName: "Bianca", middleName: "Ignacio", gender: "Female", gradeLevel: "Grade 6", section: "B" },
 ];
 
-export function getNextStudentId(existing: Student[]): string {
-  const year = existing[0]?.id.slice(1, 3) ?? String(new Date().getFullYear()).slice(2);
-  const maxSeq = existing.reduce((max, s) => {
-    const seq = parseInt(s.id.split("-")[1] ?? "0", 10);
-    return Number.isNaN(seq) ? max : Math.max(max, seq);
-  }, 0);
-  return `A${year}-${String(maxSeq + 1).padStart(4, "0")}`;
-}
+// export function getNextStudentId(existing: Student[]): string {
+//   const year = existing[0]?.id.slice(1, 3) ?? String(new Date().getFullYear()).slice(2);
+//   const maxSeq = existing.reduce((max, s) => {
+//     const seq = parseInt(s.id.split("-")[1] ?? "0", 10);
+//     return Number.isNaN(seq) ? max : Math.max(max, seq);
+//   }, 0);
+//   return `A${year}-${String(maxSeq + 1).padStart(4, "0")}`;
+// }

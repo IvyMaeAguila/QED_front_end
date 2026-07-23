@@ -2,10 +2,11 @@ import { useState, type FormEvent } from "react";
 import { useNavigate, useParams, useOutletContext } from "react-router-dom";
 import { ArrowLeft, Save } from "lucide-react";
 import { useStudents } from "./context/StudentsContext";
-import { GRADE_LEVELS, GENDERS, type  Gender, type GradeLevel } from "./types/Students";
+import { GRADE_LEVELS, GENDERS, type Gender, type GradeLevel } from "./types/Students";
 import type { AdminThemeContext } from "../shared/AdminLayout";
 
 interface FormState {
+  id: string;
   lastName: string;
   firstName: string;
   middleName: string;
@@ -16,6 +17,7 @@ interface FormState {
 }
 
 const emptyForm: FormState = {
+  id: "",
   lastName: "",
   firstName: "",
   middleName: "",
@@ -26,12 +28,13 @@ const emptyForm: FormState = {
 };
 
 const LRN_PATTERN = /^\d{12}$/; 
+const ID_PATTERN = /^[A-Z]\d{2}-\d{4}$/;
 
 export function StudentFormPage() {
-  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
+  const { darkMode, panelBg, panelBorder, textMuted } = useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const { studentId } = useParams<{ studentId: string }>();
-  const { getStudent, addStudent, updateStudent } = useStudents();
+  const { getStudent, addStudent, updateStudent, students } = useStudents();
 
   const isEditing = Boolean(studentId);
   const existing = studentId ? getStudent(studentId) : undefined;
@@ -39,6 +42,7 @@ export function StudentFormPage() {
   const [form, setForm] = useState<FormState>(
     existing
       ? {
+          id: existing.id,
           lastName: existing.lastName,
           firstName: existing.firstName,
           middleName: existing.middleName,
@@ -78,6 +82,15 @@ export function StudentFormPage() {
 
   function validate(): boolean {
     const next: Partial<Record<keyof FormState, string>> = {};
+    
+    if (!form.id.trim()) {
+      next.id = "Student ID is required.";
+    } else if (!ID_PATTERN.test(form.id.trim())) {
+      next.id = "Student ID must be in the format A##-####.";
+    } else if (!isEditing && students.some((s) => s.id.toLowerCase() === form.id.trim().toLowerCase())) {
+      next.id = "This Student ID is already taken.";
+    }
+
     if (!form.lastName.trim()) next.lastName = "Last name is required.";
     if (!form.firstName.trim()) next.firstName = "First name is required.";
     if (!form.lrn.trim()) {
@@ -86,6 +99,7 @@ export function StudentFormPage() {
       next.lrn = "LRN must be exactly 12 digits.";
     }
     if (!form.section.trim()) next.section = "Section is required.";
+    
     setErrors(next);
     return Object.keys(next).length === 0;
   }
@@ -95,6 +109,7 @@ export function StudentFormPage() {
     if (!validate()) return;
 
     const payload = {
+      id: form.id.trim(),
       lastName: form.lastName.trim(),
       firstName: form.firstName.trim(),
       middleName: form.middleName.trim(),
@@ -106,10 +121,10 @@ export function StudentFormPage() {
 
     if (isEditing && existing) {
       updateStudent(existing.id, payload);
-      navigate(`/admin/students/${existing.id}`);
+      navigate(`/admin/students/${payload.id}`);
     } else {
-      const created = addStudent(payload);
-      navigate(`/admin/students/${created.id}`);
+      addStudent(payload);
+      navigate(`/admin/students/${payload.id}`);
     }
   }
 
@@ -125,12 +140,38 @@ export function StudentFormPage() {
         <div>
           <h3 className="text-white font-bold">{isEditing ? "Edit Student" : "Add New Student"}</h3>
           <p className="text-xs text-white/70 mt-0.5">
-            {isEditing ? `Updating record ${existing?.id}` : "This student will be assigned the next available ID"}
+            {isEditing ? `Updating record ${existing?.id}` : "Enter a unique student ID for this record"}
           </p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="p-6 space-y-5 max-w-xl">
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label className={labelClasses}>Student ID</label>
+            <input
+              className={inputClasses}
+              value={form.id}
+              disabled={isEditing}
+              onChange={(e) => setForm({ ...form, id: e.target.value })}
+              placeholder="STU-2026-001"
+            />
+            {errors.id && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.id}</p>}
+          </div>
+          <div>
+            <label className={labelClasses}>LRN</label>
+            <input
+              className={inputClasses}
+              value={form.lrn}
+              maxLength={12}
+              inputMode="numeric"
+              onChange={(e) => setForm({ ...form, lrn: e.target.value.replace(/\D/g, "") })}
+              placeholder="123456789012"
+            />
+            {errors.lrn && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.lrn}</p>}
+          </div>
+        </div>
+
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label className={labelClasses}>Last Name</label>
@@ -168,16 +209,14 @@ export function StudentFormPage() {
             )}
           </div>
           <div>
-            <label className={labelClasses}>LRN</label>
+            <label className={labelClasses}>Section</label>
             <input
               className={inputClasses}
-              value={form.lrn}
-              maxLength={12}
-              inputMode="numeric"
-              onChange={(e) => setForm({ ...form, lrn: e.target.value.replace(/\D/g, "") })}
-              placeholder="123456789012"
+              value={form.section}
+              onChange={(e) => setForm({ ...form, section: e.target.value })}
+              placeholder="A"
             />
-            {errors.lrn && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.lrn}</p>}
+            {errors.section && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.section}</p>}
           </div>
         </div>
 
@@ -209,19 +248,6 @@ export function StudentFormPage() {
                 </option>
               ))}
             </select>
-          </div>
-        </div>
-
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label className={labelClasses}>Section</label>
-            <input
-              className={inputClasses}
-              value={form.section}
-              onChange={(e) => setForm({ ...form, section: e.target.value })}
-              placeholder="A"
-            />
-            {errors.section && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.section}</p>}
           </div>
         </div>
 

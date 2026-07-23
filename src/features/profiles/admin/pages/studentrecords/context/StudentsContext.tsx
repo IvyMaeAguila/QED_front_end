@@ -1,14 +1,14 @@
 import { createContext, useContext, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import type { Student } from "../types/Students";
-import { seedStudents, getNextStudentId } from "../data/studentData";
+import { seedStudents } from "../data/studentData";
 
 interface StudentsContextValue {
   students: Student[];
   getStudent: (id: string) => Student | undefined;
-  addStudent: (student: Omit<Student, "id">) => Student;
+  addStudent: (student: Student) => Student;
   addStudents: (students: Student[]) => void;
-  updateStudent: (id: string, updates: Omit<Student, "id">) => void;
+  updateStudent: (id: string, updates: Student) => void;
   deleteStudent: (id: string) => void;
 }
 
@@ -22,15 +22,14 @@ export function StudentsProvider({ children }: { children: ReactNode }) {
       students,
       getStudent: (id) => students.find((s) => s.id === id),
       addStudent: (student) => {
-        const newStudent: Student = { ...student, id: getNextStudentId(students) };
-        setStudents((prev) => [...prev, newStudent]);
-        return newStudent;
+        setStudents((prev) => [...prev, student]);
+        return student;
       },
       addStudents: (newStudents) => {
         setStudents((prev) => [...prev, ...newStudents]);
       },
       updateStudent: (id, updates) => {
-        setStudents((prev) => prev.map((s) => (s.id === id ? { ...updates, id } : s)));
+        setStudents((prev) => prev.map((s) => (s.id === id ? updates : s)));
       },
       deleteStudent: (id) => {
         setStudents((prev) => prev.filter((s) => s.id !== id));

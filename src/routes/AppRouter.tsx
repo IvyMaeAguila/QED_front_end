@@ -17,6 +17,11 @@ import { UsersProvider } from "../features/profiles/admin/pages/usermanagement/c
 import { UserManagementPage } from "../features/profiles/admin/pages/usermanagement/UserManagementPage";
 import { UserFormPage } from "../features/profiles/admin/pages/usermanagement/UserFormPage";
 import { UserViewPage } from "../features/profiles/admin/pages/usermanagement/UserViewPage";
+import { TeachersProvider } from "../features/profiles/admin/pages/classes/context/TeachersContext";
+import { ClassesProvider } from "../features/profiles/admin/pages/classes/context/ClassesContext";
+import { ClassesPage } from "../features/profiles/admin/pages/classes/ClassPage";
+import { ClassFormPage } from "../features/profiles/admin/pages/classes/ClassFormPage";
+import { ClassViewPage } from "../features/profiles/admin/pages/classes/ClassViewPage";
 import LandingPage from "../features/Landing/LandingPage";
 import { LoginPanel } from "../features/auth/LoginPanel";
 
@@ -71,7 +76,11 @@ function AdminSection() {
   return (
     <StudentsProvider>
       <UsersProvider>
-        <AdminLayout onLogout={() => console.log("Logging out...")} />
+        <TeachersProvider>
+          <ClassesProvider>
+            <AdminLayout onLogout={() => console.log("Logging out...")} />
+          </ClassesProvider>
+        </TeachersProvider>
       </UsersProvider>
     </StudentsProvider>
   );
@@ -95,18 +104,25 @@ export function AppRouter() {
             </ProtectedRoute>
           }
         >
-          
           <Route index element={<AdminDashboardHome />} />
 
           <Route path="students" element={<StudentRecordsPage />} />
           <Route path="students/new" element={<StudentFormPage />} />
           <Route path="students/:studentId" element={<StudentViewPage />} />
-          <Route path="students/:studentId/edit" element={<StudentFormPage />} />
+          <Route
+            path="students/:studentId/edit"
+            element={<StudentFormPage />}
+          />
 
           <Route path="users" element={<UserManagementPage />} />
           <Route path="users/new" element={<UserFormPage />} />
           <Route path="users/:userId" element={<UserViewPage />} />
           <Route path="users/:userId/edit" element={<UserFormPage />} />
+
+          <Route path="classes" element={<ClassesPage />} />
+          <Route path="classes/new" element={<ClassFormPage />} />
+          <Route path="classes/:classId" element={<ClassViewPage />} />
+          <Route path="classes/:classId/edit" element={<ClassFormPage />} />
         </Route>
         <Route path="*" element={<div>404 Page Not Found</div>} />
       </Routes>
