@@ -1,9 +1,11 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate, useParams, useOutletContext } from "react-router-dom";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, IdCard } from "lucide-react";
 import { useStudents } from "./context/StudentsContext";
 import { GRADE_LEVELS, GENDERS, type Gender, type GradeLevel } from "./types/Students";
 import type { AdminThemeContext } from "../shared/AdminLayout";
+
+const ACCENT = "#8B0D0D";
 
 interface FormState {
   id: string;
@@ -31,7 +33,7 @@ const LRN_PATTERN = /^\d{12}$/;
 const ID_PATTERN = /^[A-Z]\d{2}-\d{4}$/;
 
 export function StudentFormPage() {
-  const { darkMode, panelBg, panelBorder, textMuted } = useOutletContext<AdminThemeContext>();
+  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const { studentId } = useParams<{ studentId: string }>();
   const { getStudent, addStudent, updateStudent, students } = useStudents();
@@ -55,21 +57,30 @@ export function StudentFormPage() {
   );
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
 
+  // cardClasses mirrors StudentRecordsPage exactly
+  const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
+  
+  // Custom header matching StudentRecordsPage layout, but including the Back button and proper spacing
+  const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
+  const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
+
   if (isEditing && !existing) {
     return (
-      <section className={`rounded-xl border shadow-sm p-8 text-center ${panelBg} ${panelBorder}`}>
-        <p className={`text-sm font-semibold ${textMuted}`}>
-          No student found with ID <span className="font-bold">{studentId}</span>.
-        </p>
-        <button
-          onClick={() => navigate("/admin/students")}
-          className="mt-4 h-9 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2"
-          style={{ background: "#8B0D0D" }}
-        >
-          <ArrowLeft size={14} />
-          Back to Student Records
-        </button>
-      </section>
+      <div className="max-w-7xl mx-auto mt-6 px-4 sm:px-6 pb-12">
+        <section className={`rounded-xl border shadow-xs p-8 text-center ${panelBg} ${panelBorder}`}>
+          <p className={`text-sm font-semibold ${textMuted}`}>
+            No student found with ID <span className="font-bold">{studentId}</span>.
+          </p>
+          <button
+            onClick={() => navigate("/admin/students")}
+            className="mt-4 h-9 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2"
+            style={{ background: ACCENT }}
+          >
+            <ArrowLeft size={14} />
+            Back to Student Records
+          </button>
+        </section>
+      </div>
     );
   }
 
@@ -129,150 +140,158 @@ export function StudentFormPage() {
   }
 
   return (
-    <section className={`rounded-xl border shadow-sm overflow-hidden ${panelBg} ${panelBorder}`}>
-      <div className="bg-[#8B0D0D] px-5 py-4 flex items-center gap-3">
-        <button
-          onClick={() => navigate("/admin/students")}
-          className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors shrink-0"
-        >
-          <ArrowLeft size={16} className="text-white" />
-        </button>
-        <div>
-          <h3 className="text-white font-bold">{isEditing ? "Edit Student" : "Add New Student"}</h3>
-          <p className="text-xs text-white/70 mt-0.5">
+    <div className="max-w-7xl mx-auto mt-6 space-y-6 pb-12 px-4 sm:px-6">
+      <section className={cardClasses}>
+        <div className={cardHeaderClasses}>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => navigate("/admin/students")}
+              className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-colors ${
+                darkMode ? "border-[#374151] hover:bg-white/10 text-white" : "border-[#E5E7EB] hover:bg-[#F6F7FB] text-[#374151]"
+              }`}
+            >
+              <ArrowLeft size={14} />
+            </button>
+            <h2 className={sectionTitleClasses}>
+              <IdCard size={15} style={{ color: ACCENT }} />
+              {isEditing ? "Edit Student Record" : "Add New Student Record"}
+            </h2>
+          </div>
+          <span className={`text-xs font-semibold ${textMuted}`}>
             {isEditing ? `Updating record ${existing?.id}` : "Enter a unique student ID for this record"}
-          </p>
-        </div>
-      </div>
-
-      <form onSubmit={handleSubmit} className="p-6 space-y-5 max-w-xl">
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label className={labelClasses}>Student ID</label>
-            <input
-              className={inputClasses}
-              value={form.id}
-              disabled={isEditing}
-              onChange={(e) => setForm({ ...form, id: e.target.value })}
-              placeholder="STU-2026-001"
-            />
-            {errors.id && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.id}</p>}
-          </div>
-          <div>
-            <label className={labelClasses}>LRN</label>
-            <input
-              className={inputClasses}
-              value={form.lrn}
-              maxLength={12}
-              inputMode="numeric"
-              onChange={(e) => setForm({ ...form, lrn: e.target.value.replace(/\D/g, "") })}
-              placeholder="123456789012"
-            />
-            {errors.lrn && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.lrn}</p>}
-          </div>
+          </span>
         </div>
 
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label className={labelClasses}>Last Name</label>
-            <input
-              className={inputClasses}
-              value={form.lastName}
-              onChange={(e) => setForm({ ...form, lastName: e.target.value })}
-              placeholder="Dela Cruz"
-            />
-            {errors.lastName && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.lastName}</p>}
+        <form onSubmit={handleSubmit} className="p-6 space-y-5 max-w-xl">
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label className={labelClasses}>Student ID</label>
+              <input
+                className={inputClasses}
+                value={form.id}
+                disabled={isEditing}
+                onChange={(e) => setForm({ ...form, id: e.target.value })}
+                placeholder="STU-2026-001"
+              />
+              {errors.id && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.id}</p>}
+            </div>
+            <div>
+              <label className={labelClasses}>LRN</label>
+              <input
+                className={inputClasses}
+                value={form.lrn}
+                maxLength={12}
+                inputMode="numeric"
+                onChange={(e) => setForm({ ...form, lrn: e.target.value.replace(/\D/g, "") })}
+                placeholder="123456789012"
+              />
+              {errors.lrn && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.lrn}</p>}
+            </div>
           </div>
-          <div>
-            <label className={labelClasses}>First Name</label>
-            <input
-              className={inputClasses}
-              value={form.firstName}
-              onChange={(e) => setForm({ ...form, firstName: e.target.value })}
-              placeholder="Juan"
-            />
-            {errors.firstName && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.firstName}</p>}
-          </div>
-        </div>
 
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label className={labelClasses}>Middle Name</label>
-            <input
-              className={inputClasses}
-              value={form.middleName}
-              onChange={(e) => setForm({ ...form, middleName: e.target.value })}
-              placeholder="Manalo"
-            />
-            {errors.middleName && (
-              <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.middleName}</p>
-            )}
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label className={labelClasses}>Last Name</label>
+              <input
+                className={inputClasses}
+                value={form.lastName}
+                onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+                placeholder="Dela Cruz"
+              />
+              {errors.lastName && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.lastName}</p>}
+            </div>
+            <div>
+              <label className={labelClasses}>First Name</label>
+              <input
+                className={inputClasses}
+                value={form.firstName}
+                onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+                placeholder="Juan"
+              />
+              {errors.firstName && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.firstName}</p>}
+            </div>
           </div>
-          <div>
-            <label className={labelClasses}>Section</label>
-            <input
-              className={inputClasses}
-              value={form.section}
-              onChange={(e) => setForm({ ...form, section: e.target.value })}
-              placeholder="A"
-            />
-            {errors.section && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.section}</p>}
-          </div>
-        </div>
 
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label className={labelClasses}>Gender</label>
-            <select
-              className={inputClasses}
-              value={form.gender}
-              onChange={(e) => setForm({ ...form, gender: e.target.value as Gender })}
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label className={labelClasses}>Middle Name</label>
+              <input
+                className={inputClasses}
+                value={form.middleName}
+                onChange={(e) => setForm({ ...form, middleName: e.target.value })}
+                placeholder="Manalo"
+              />
+              {errors.middleName && (
+                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.middleName}</p>
+              )}
+            </div>
+            <div>
+              <label className={labelClasses}>Section</label>
+              <input
+                className={inputClasses}
+                value={form.section}
+                onChange={(e) => setForm({ ...form, section: e.target.value })}
+                placeholder="A"
+              />
+              {errors.section && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.section}</p>}
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label className={labelClasses}>Gender</label>
+              <select
+                className={inputClasses}
+                value={form.gender}
+                onChange={(e) => setForm({ ...form, gender: e.target.value as Gender })}
+              >
+                {GENDERS.map((g) => (
+                  <option key={g} value={g}>
+                    {g}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className={labelClasses}>Grade Level</label>
+              <select
+                className={inputClasses}
+                value={form.gradeLevel}
+                onChange={(e) => setForm({ ...form, gradeLevel: e.target.value as GradeLevel })}
+              >
+                {GRADE_LEVELS.map((g) => (
+                  <option key={g} value={g}>
+                    {g}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="flex gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => navigate("/admin/students")}
+              className={`h-10 px-4 rounded-xl text-xs font-bold border transition-colors ${
+                darkMode
+                  ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
+                  : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+              }`}
             >
-              {GENDERS.map((g) => (
-                <option key={g} value={g}>
-                  {g}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className={labelClasses}>Grade Level</label>
-            <select
-              className={inputClasses}
-              value={form.gradeLevel}
-              onChange={(e) => setForm({ ...form, gradeLevel: e.target.value as GradeLevel })}
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 transition-colors hover:bg-[#6B0000]"
+              style={{ background: ACCENT }}
             >
-              {GRADE_LEVELS.map((g) => (
-                <option key={g} value={g}>
-                  {g}
-                </option>
-              ))}
-            </select>
+              <Save size={14} />
+              {isEditing ? "Save Changes" : "Add Student"}
+            </button>
           </div>
-        </div>
-
-        <div className="flex gap-3 pt-2">
-          <button
-            type="button"
-            onClick={() => navigate("/admin/students")}
-            className={`h-10 px-4 rounded-xl text-xs font-bold border transition-colors ${
-              darkMode
-                ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-                : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
-            }`}
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 transition-colors hover:bg-[#6B0000]"
-            style={{ background: "#8B0D0D" }}
-          >
-            <Save size={14} />
-            {isEditing ? "Save Changes" : "Add Student"}
-          </button>
-        </div>
-      </form>
-    </section>
+        </form>
+      </section>
+    </div>
   );
 }

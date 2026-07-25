@@ -66,11 +66,12 @@ export function ClassFormPage() {
     );
   }
 
-  const inputClasses = `w-full h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors ${
+  const fieldBase = `h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors ${
     darkMode
       ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]"
       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
   }`;
+  const inputClasses = `w-full ${fieldBase}`;
   const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 
   function updatePeriod(id: string, updates: Partial<SchedulePeriod>) {
@@ -121,16 +122,16 @@ export function ClassFormPage() {
 
   return (
     <section className={`rounded-xl border shadow-sm overflow-hidden ${panelBg} ${panelBorder}`}>
-      <div className="bg-[#8B0D0D] px-5 py-4 flex items-center gap-3">
+      <div className="bg-[#8B0D0D] px-4 sm:px-5 py-4 flex items-center gap-3">
         <button
           onClick={() => navigate("/admin/classes")}
           className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors shrink-0"
         >
           <ArrowLeft size={16} className="text-white" />
         </button>
-        <div>
-          <h3 className="text-white font-bold">{isEditing ? "Edit Class" : "Add New Class"}</h3>
-          <p className="text-xs text-white/70 mt-0.5">
+        <div className="min-w-0">
+          <h3 className="text-white font-bold truncate">{isEditing ? "Edit Class" : "Add New Class"}</h3>
+          <p className="text-xs text-white/70 mt-0.5 truncate">
             {isEditing
               ? `Updating ${existing?.gradeLevel} • ${existing?.section}`
               : "Students matching the grade and section below sync automatically"}
@@ -138,7 +139,7 @@ export function ClassFormPage() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="p-6 space-y-6 max-w-2xl">
+      <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-6 max-w-2xl">
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label className={labelClasses}>Grade Level</label>
@@ -180,12 +181,12 @@ export function ClassFormPage() {
         </div>
 
         <div>
-          <div className="flex items-center justify-between mb-3">
-            <label className={labelClasses}>Class Schedule</label>
+          <div className="flex items-center justify-between mb-3 gap-2">
+            <label className={`${labelClasses} mb-0`}>Class Schedule</label>
             <button
               type="button"
               onClick={() => setForm((f) => ({ ...f, schedule: [...f.schedule, emptyPeriod()] }))}
-              className={`h-8 px-3 rounded-lg text-xs font-bold border inline-flex items-center gap-1.5 transition-colors ${
+              className={`h-8 px-3 rounded-lg text-xs font-bold border inline-flex items-center gap-1.5 shrink-0 transition-colors ${
                 darkMode
                   ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
                   : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
@@ -202,7 +203,7 @@ export function ClassFormPage() {
 
           <div className="space-y-3">
             {form.schedule.map((period) => (
-              <div key={period.id} className={`rounded-xl border p-4 space-y-3 ${panelBorder}`}>
+              <div key={period.id} className={`rounded-xl border p-3 sm:p-4 space-y-3 ${panelBorder}`}>
                 <div className="grid sm:grid-cols-2 gap-3">
                   <input
                     className={inputClasses}
@@ -222,37 +223,38 @@ export function ClassFormPage() {
                   </select>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3">
-                  <div className="flex gap-1">
-                    {DAYS_OF_WEEK.map((day) => (
-                      <button
-                        key={day}
-                        type="button"
-                        onClick={() => toggleDay(period.id, day)}
-                        className={`w-9 h-9 rounded-lg text-[11px] font-bold transition-colors ${
-                          period.days.includes(day)
-                            ? "text-white"
-                            : darkMode
-                            ? "bg-[#0B1120] text-[#D1D5DB] border border-[#374151]"
-                            : "bg-[#F8FAFC] text-[#64748B] border border-[#E5E7EB]"
-                        }`}
-                        style={period.days.includes(day) ? { background: "#1D70D6" } : undefined}
-                      >
-                        {day}
-                      </button>
-                    ))}
-                  </div>
+            
+                <div className="flex flex-wrap gap-1">
+                  {DAYS_OF_WEEK.map((day) => (
+                    <button
+                      key={day}
+                      type="button"
+                      onClick={() => toggleDay(period.id, day)}
+                      className={`w-9 h-9 rounded-lg text-[11px] font-bold transition-colors shrink-0 ${
+                        period.days.includes(day)
+                          ? "text-white"
+                          : darkMode
+                          ? "bg-[#0B1120] text-[#D1D5DB] border border-[#374151]"
+                          : "bg-[#F8FAFC] text-[#64748B] border border-[#E5E7EB]"
+                      }`}
+                      style={period.days.includes(day) ? { background: "#1D70D6" } : undefined}
+                    >
+                      {day}
+                    </button>
+                  ))}
+                </div>
 
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                   <input
                     type="time"
-                    className={`${inputClasses} w-auto`}
+                    className={`${fieldBase} w-33`}
                     value={period.startTime}
                     onChange={(e) => updatePeriod(period.id, { startTime: e.target.value })}
                   />
                   <span className={`text-xs font-bold ${textMuted}`}>to</span>
                   <input
                     type="time"
-                    className={`${inputClasses} w-auto`}
+                    className={`${fieldBase} w-33`}
                     value={period.endTime}
                     onChange={(e) => updatePeriod(period.id, { endTime: e.target.value })}
                   />
@@ -262,7 +264,7 @@ export function ClassFormPage() {
                     onClick={() =>
                       setForm((f) => ({ ...f, schedule: f.schedule.filter((p) => p.id !== period.id) }))
                     }
-                    className="ml-auto w-9 h-9 rounded-lg flex items-center justify-center text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors"
+                    className="ml-auto w-9 h-9 rounded-lg flex items-center justify-center text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors shrink-0"
                   >
                     <Trash2 size={14} />
                   </button>
@@ -272,7 +274,7 @@ export function ClassFormPage() {
           </div>
         </div>
 
-        <div className="flex gap-3 pt-2">
+        <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
           <button
             type="button"
             onClick={() => navigate("/admin/classes")}
@@ -286,7 +288,7 @@ export function ClassFormPage() {
           </button>
           <button
             type="submit"
-            className="h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 transition-colors hover:bg-[#6B0000]"
+            className="h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center justify-center gap-2 transition-colors hover:bg-[#6B0000]"
             style={{ background: "#8B0D0D" }}
           >
             <Save size={14} />

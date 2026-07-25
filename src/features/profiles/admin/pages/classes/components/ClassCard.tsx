@@ -48,12 +48,12 @@ export function ClassCard({
   return (
     <div className={`rounded-2xl border shadow-sm overflow-hidden transition-shadow hover:shadow-md ${panelBorder}`}>
       <div
-        className="px-5 pt-5 pb-6 relative"
+        className="px-4 sm:px-5 pt-5 pb-6 relative"
         style={{ background: `linear-gradient(160deg, ${PALETTE.gradientFrom} 0%, ${PALETTE.gradientTo} 100%)` }}
       >
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-between gap-2">
           <span
-            className="w-12 h-12 rounded-xl flex items-center justify-center"
+            className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
             style={{
               background: "rgba(255,255,255,0.08)",
               border: `1.5px solid ${PALETTE.white}66`,
@@ -63,7 +63,7 @@ export function ClassCard({
             <GraduationCap size={22} />
           </span>
 
-          <div className="relative">
+          <div className="relative shrink-0">
             <button
               onClick={() => setMenuOpen((v) => !v)}
               className="w-8 h-8 rounded-lg flex items-center justify-center text-white/70 hover:bg-white/10 transition-colors"
@@ -73,7 +73,7 @@ export function ClassCard({
             </button>
             {menuOpen && (
               <div
-                className={`absolute right-0 top-9 z-10 w-40 rounded-xl border shadow-lg py-1 ${
+                className={`absolute right-0 top-9 z-10 w-40 max-w-[calc(100vw-2rem)] rounded-xl border shadow-lg py-1 ${
                   darkMode ? "bg-[#241012] border-[#4A2226]" : "bg-white border-[#E8DFC8]"
                 }`}
                 onMouseLeave={() => setMenuOpen(false)}
@@ -105,35 +105,39 @@ export function ClassCard({
           </div>
         </div>
 
-        <h3 className="mt-4 text-2xl font-semibold text-white leading-tight">
+        <h3 className="mt-4 text-xl sm:text-2xl font-semibold text-white leading-tight truncate" title={formatClassName(schoolClass)}>
           {formatClassName(schoolClass)}
         </h3>
 
-        <div className="mt-5 flex items-center gap-1.5 text-white/85">
-          <Users size={14} />
-          <span className="text-sm">{studentCount} students</span>
+        <div className="mt-5 flex items-center gap-1.5 text-white/85 min-w-0">
+          <Users size={14} className="shrink-0" />
+          <span className="text-sm truncate">{studentCount} students</span>
         </div>
       </div>
 
-      <div className={`px-5 py-4 space-y-3 ${panelBg}`}>
-        <div className="flex items-center justify-between text-sm">
-          <span className={textMuted}>Adviser</span>
-          <span className={`font-semibold ${textPrimary}`}>{adviserName}</span>
+      <div className={`px-4 sm:px-5 py-4 space-y-3 ${panelBg}`}>
+        <div className="flex items-center justify-between gap-3 text-sm">
+          <span className={`shrink-0 ${textMuted}`}>Adviser</span>
+          <span className={`font-semibold text-right truncate ${textPrimary}`} title={adviserName}>
+            {adviserName}
+          </span>
         </div>
-        <div className="flex items-center justify-between text-sm">
-          <span className={`inline-flex items-center gap-1.5 ${textMuted}`}>
+        <div className="flex items-center justify-between gap-3 text-sm">
+          <span className={`inline-flex items-center gap-1.5 shrink-0 ${textMuted}`}>
             <Clock size={13} />
             Schedule
           </span>
-          <span className={`font-semibold text-right ${textPrimary}`}>{scheduleLabel}</span>
+          <span className={`font-semibold text-right truncate ${textPrimary}`} title={scheduleLabel}>
+            {scheduleLabel}
+          </span>
         </div>
 
         <button
           onClick={onView}
           className="w-full mt-2 h-11 rounded-xl text-sm font-normal border inline-flex items-center justify-center gap-2 transition-colors"
           style={{
-            borderColor: darkMode ? PALETTE.gray : "bg-[#9CA3AF]",
-            color:  darkMode ? "#F2F4F7" : "#650000",
+            borderColor: darkMode ? PALETTE.gray : "#9CA3AF",
+            color: darkMode ? "#F2F4F7" : "#650000",
             background: darkMode ? "#650000" : "#F8FAFC",
           }}
         >

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
+import { useSettings } from "./settings/context/SettingsContext"; 
 
 export interface AdminThemeContext {
   darkMode: boolean;
@@ -15,10 +16,9 @@ interface AdminLayoutProps {
   onLogout: () => void;
 }
 
-
 export function AdminLayout({ onLogout }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode } = useSettings(); 
 
   const theme: AdminThemeContext = {
     darkMode,
@@ -54,8 +54,7 @@ export function AdminLayout({ onLogout }: AdminLayoutProps) {
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         <Header
           onMenuClick={() => setSidebarOpen(true)}
-          darkMode={darkMode}
-          onToggleDarkMode={() => setDarkMode(!darkMode)}
+          onLogout={onLogout}
         />
 
         <main className="flex-1 overflow-y-auto p-6">

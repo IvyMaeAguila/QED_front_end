@@ -124,11 +124,11 @@ export function DailyLoginFrequency({
             { label: "Weekly Growth", value: "+12.4%", positive: true },
           ].map((item) => (
             <div key={item.label}>
-              <p className={`text-[10px] font-semibold uppercase tracking-wide ${textMuted}`}>
+              <p className={`text-xs font-bold uppercase tracking-wide ${textMuted}`}>
                 {item.label}
               </p>
               <p
-                className={`mt-0.5 text-lg font-bold tabular-nums ${
+                className={`mt-0.5 text-lg font-black tabular-nums ${
                   item.positive ? "text-[#16834A]" : textPrimary
                 }`}
               >

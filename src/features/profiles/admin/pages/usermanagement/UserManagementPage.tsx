@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { IdCard, Crown, UserPlus, ArrowRight } from "lucide-react";
+import { Users, Crown, UserPlus, ArrowRight } from "lucide-react";
 import { useUsers } from "./context/UsersContext";
 import { UsersFilterBar } from "./components/UsersFilterBar";
 import { UsersTable } from "./components/UsersTable";
@@ -8,6 +8,8 @@ import { ConfirmDeleteUserModal } from "./components/ConfirmDeleteUserModal";
 import type { UserAccount, UserStatus } from "./types/user";
 import { formatFullName, ROLE_LABELS } from "./types/user";
 import type { AdminThemeContext } from "../shared/AdminLayout";
+
+const ACCENT = "#8B0D0D";
 
 export function UserManagementPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
@@ -33,11 +35,15 @@ export function UserManagementPage() {
       return true;
     });
   }, [users, roleFilter, statusFilter, search]);
+  
+  const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
+  const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
+  const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
 
   return (
-    <div className="space-y-5">
+    <div className="max-w-7xl mx-auto mt-6 space-y-6 pb-12 px-4 sm:px-6">
       <section
-        className={`rounded-xl border shadow-sm p-5 flex items-center justify-between gap-4 flex-wrap ${panelBg} ${panelBorder}`}
+        className={`rounded-xl border shadow-xs p-5 flex items-center justify-between gap-4 flex-wrap ${panelBg} ${panelBorder}`}
       >
         <div className="flex items-center gap-4 min-w-0">
           <div className="w-11 h-11 rounded-xl bg-[#C98A2B] flex items-center justify-center text-white shrink-0">
@@ -76,7 +82,7 @@ export function UserManagementPage() {
           <button
             onClick={() => navigate("/admin/users/new", { state: { presetRole: "PRINCIPAL" } })}
             className="h-9 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 shrink-0 transition-colors hover:bg-[#6B0000]"
-            style={{ background: "#8B0D0D" }}
+            style={{ background: ACCENT }}
           >
             <UserPlus size={14} />
             Assign Principal
@@ -84,17 +90,15 @@ export function UserManagementPage() {
         )}
       </section>
 
-      <section className={`rounded-xl border shadow-sm overflow-hidden ${panelBg} ${panelBorder}`}>
-        <div className="bg-[#8B0D0D] px-5 py-4 flex justify-between items-center">
-          <div>
-            <h3 className="text-white font-bold">User Management</h3>
-            <p className="text-xs text-white/70 mt-1">
-              {filtered.length} of {users.length} account{users.length === 1 ? "" : "s"} shown
-            </p>
-          </div>
-          <div className="w-10 h-10 rounded-xl bg-[#C98A2B] flex items-center justify-center text-white shrink-0">
-            <IdCard size={19} />
-          </div>
+      <section className={cardClasses}>
+        <div className={cardHeaderClasses}>
+          <h2 className={sectionTitleClasses}>
+            <Users size={15} style={{ color: ACCENT }} />
+            User Management
+          </h2>
+          <span className={`text-xs font-semibold ${textMuted}`}>
+            {filtered.length} of {users.length} account{users.length === 1 ? "" : "s"} shown
+          </span>
         </div>
 
         <UsersFilterBar
@@ -119,19 +123,19 @@ export function UserManagementPage() {
           onEdit={(user) => navigate(`/admin/users/${user.id}/edit`)}
           onDelete={(user) => setUserToDelete(user)}
         />
-
-        {userToDelete && (
-          <ConfirmDeleteUserModal
-            user={userToDelete}
-            darkMode={darkMode}
-            onCancel={() => setUserToDelete(null)}
-            onConfirm={() => {
-              deleteUser(userToDelete.id);
-              setUserToDelete(null);
-            }}
-          />
-        )}
       </section>
+
+      {userToDelete && (
+        <ConfirmDeleteUserModal
+          user={userToDelete}
+          darkMode={darkMode}
+          onCancel={() => setUserToDelete(null)}
+          onConfirm={() => {
+            deleteUser(userToDelete.id);
+            setUserToDelete(null);
+          }}
+        />
+      )}
     </div>
   );
 }
