@@ -40,7 +40,7 @@ export function PerformanceByGrade({
         ].map(([label, dot]) => (
           <div key={label} className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full" style={{ background: dot }} />
-            <span className={`text-[10px] font-semibold ${textMuted}`}>{label}</span>
+            <span className={`text-[10px] font-bold ${textMuted}`}>{label}</span>
           </div>
         ))}
       </div>

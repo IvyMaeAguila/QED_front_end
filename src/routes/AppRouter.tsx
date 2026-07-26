@@ -7,12 +7,11 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useAuth } from "../shared/AuthContext";
-import { AdminLayout } from "../features/profiles/admin/pages/shared/AdminLayout";
+import { AdminLayout } from "../features/profiles/admin/pages/AdminLayout";
 import { AdminDashboardHome } from "../features/profiles/admin/pages/dashboard/AdminDashboardHome";
 import { StudentsProvider } from "../features/profiles/admin/pages/studentrecords/context/StudentsContext";
 import { StudentRecordsPage } from "../features/profiles/admin/pages/studentrecords/StudentRecordsPage";
 import { StudentFormPage } from "../features/profiles/admin/pages/studentrecords/StudentFormPage";
-import { StudentViewPage } from "../features/profiles/admin/pages/studentrecords/StudentViewPage";
 import { UsersProvider } from "../features/profiles/admin/pages/usermanagement/context/UsersContext";
 import { UserManagementPage } from "../features/profiles/admin/pages/usermanagement/UserManagementPage";
 import { UserFormPage } from "../features/profiles/admin/pages/usermanagement/UserFormPage";
@@ -24,6 +23,11 @@ import { ClassFormPage } from "../features/profiles/admin/pages/classes/ClassFor
 import { ClassViewPage } from "../features/profiles/admin/pages/classes/ClassViewPage";
 import LandingPage from "../features/Landing/LandingPage";
 import { LoginPanel } from "../features/auth/LoginPanel";
+import { StudentDetailPage } from "../features/profiles/admin/pages/studentrecords/StudentDetailPage";
+import { ManageSubjectsPage } from "../features/profiles/admin/pages/subjects/ManageSubjectsPage";
+import { CalendarPage } from "../features/profiles/admin/pages/calendar/CalendarPage";
+import { HelpSupportPage } from "../features/profiles/admin/pages/help/HelpSupportPage";
+import { SettingsProvider } from "../features/profiles/admin/pages/settings/context/SettingsContext";
 
 function DebugRoute() {
   const location = useLocation();
@@ -53,10 +57,12 @@ function RoleRoute({
   }
   return <>{children}</>;
 }
+
 function LoginPage() {
   const navigate = useNavigate();
   return <LoginPanel open={true} onClose={() => navigate("/")} />;
 }
+
 export function getRoleHome(role?: Role): string {
   switch (role) {
     case "ADMIN":
@@ -88,44 +94,53 @@ function AdminSection() {
 
 export function AppRouter() {
   return (
-    <BrowserRouter>
-      <DebugRoute />
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
+    <SettingsProvider>
+      <BrowserRouter>
+        <DebugRoute />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
 
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <RoleRoute allowed={["ADMIN"]}>
-                <AdminSection />
-              </RoleRoute>
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<AdminDashboardHome />} />
-
-          <Route path="students" element={<StudentRecordsPage />} />
-          <Route path="students/new" element={<StudentFormPage />} />
-          <Route path="students/:studentId" element={<StudentViewPage />} />
           <Route
-            path="students/:studentId/edit"
-            element={<StudentFormPage />}
-          />
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <RoleRoute allowed={["ADMIN"]}>
+                  <AdminSection />
+                </RoleRoute>
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<AdminDashboardHome />} />
 
-          <Route path="users" element={<UserManagementPage />} />
-          <Route path="users/new" element={<UserFormPage />} />
-          <Route path="users/:userId" element={<UserViewPage />} />
-          <Route path="users/:userId/edit" element={<UserFormPage />} />
+            <Route path="students" element={<StudentRecordsPage />} />
+            <Route path="students/new" element={<StudentFormPage />} />
+            <Route
+              path="students/:studentId"
+              element={<StudentDetailPage />}
+            />
+            <Route
+              path="students/:studentId/edit"
+              element={<StudentFormPage />}
+            />
 
-          <Route path="classes" element={<ClassesPage />} />
-          <Route path="classes/new" element={<ClassFormPage />} />
-          <Route path="classes/:classId" element={<ClassViewPage />} />
-          <Route path="classes/:classId/edit" element={<ClassFormPage />} />
-        </Route>
-        <Route path="*" element={<div>404 Page Not Found</div>} />
-      </Routes>
-    </BrowserRouter>
+            <Route path="users" element={<UserManagementPage />} />
+            <Route path="users/new" element={<UserFormPage />} />
+            <Route path="users/:userId" element={<UserViewPage />} />
+            <Route path="users/:userId/edit" element={<UserFormPage />} />
+
+            <Route path="classes" element={<ClassesPage />} />
+            <Route path="classes/new" element={<ClassFormPage />} />
+            <Route path="classes/:classId" element={<ClassViewPage />} />
+            <Route path="classes/:classId/edit" element={<ClassFormPage />} />
+
+            <Route path="subjects" element={<ManageSubjectsPage />} />
+            <Route path="calendar" element={<CalendarPage />} />
+            <Route path="help" element={<HelpSupportPage />} />
+          </Route>
+          <Route path="*" element={<div>404 Page Not Found</div>} />
+        </Routes>
+      </BrowserRouter>
+    </SettingsProvider>
   );
 }

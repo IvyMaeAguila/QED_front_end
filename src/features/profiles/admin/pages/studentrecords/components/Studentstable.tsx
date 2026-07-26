@@ -1,4 +1,5 @@
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { Eye, Pencil, Trash2, MoreVertical } from "lucide-react";
 import type { Student } from "../types/Students";
 import { formatFullName } from "../types/Students";
 
@@ -52,12 +53,17 @@ export function StudentsTable({
               ))}
             </tr>
           </thead>
-          
+
           <tbody>
             {students.map((student) => {
               const badge = genderBadge(student.gender);
               return (
-                <tr key={student.id} className={`border-t ${panelBorder} hover:bg-black/2 transition-colors`}>
+                <tr
+                  key={student.id}
+                  onDoubleClick={() => onView(student)}
+                  title="Double-click to view details"
+                  className={`border-t ${panelBorder} hover:bg-black/2 transition-colors cursor-pointer`}
+                >
                   <td className={`px-5 py-4 font-extrabold tabular-nums ${textPrimary}`}>{student.id}</td>
                   <td className={`px-5 py-4 font-semibold ${textPrimary}`}>{formatFullName(student)}</td>
                   <td className="px-5 py-4">
@@ -71,15 +77,12 @@ export function StudentsTable({
                   <td className={`px-5 py-4 font-semibold ${textPrimary}`}>{student.gradeLevel}</td>
                   <td className={`px-5 py-4 font-semibold ${textPrimary}`}>{student.section}</td>
                   <td className="px-5 py-4">
-                    <div className="flex items-center justify-end gap-2">
-                      <RowActionButton icon={Eye} label="View" darkMode={darkMode} onClick={() => onView(student)} />
-                      <RowActionButton icon={Pencil} label="Edit" darkMode={darkMode} onClick={() => onEdit(student)} />
-                      <RowActionButton
-                        icon={Trash2}
-                        label="Delete"
+                    <div className="flex items-center justify-end">
+                      <RowActionMenu
                         darkMode={darkMode}
-                        danger
-                        onClick={() => onDelete(student)}
+                        onView={() => onView(student)}
+                        onEdit={() => onEdit(student)}
+                        onDelete={() => onDelete(student)}
                       />
                     </div>
                   </td>
@@ -94,36 +97,35 @@ export function StudentsTable({
         {students.map((student) => {
           const badge = genderBadge(student.gender);
           return (
-            <div key={student.id} className="p-4 space-y-3">
+            <div
+              key={student.id}
+              onDoubleClick={() => onView(student)}
+              className="p-4 space-y-3 cursor-pointer"
+            >
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className={`font-extrabold text-base ${textPrimary}`}>{formatFullName(student)}</p>
                   <p className={`text-xs font-bold tabular-nums mt-0.5 ${textMuted}`}>{student.id}</p>
                 </div>
-                <span
-                  className="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-bold shrink-0"
-                  style={{ background: darkMode ? `${badge.color}25` : badge.bg, color: badge.color }}
-                >
-                  {student.gender}
-                </span>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span
+                    className="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-bold"
+                    style={{ background: darkMode ? `${badge.color}25` : badge.bg, color: badge.color }}
+                  >
+                    {student.gender}
+                  </span>
+                  <RowActionMenu
+                    darkMode={darkMode}
+                    onView={() => onView(student)}
+                    onEdit={() => onEdit(student)}
+                    onDelete={() => onDelete(student)}
+                  />
+                </div>
               </div>
 
               <p className={`text-xs font-semibold ${textMuted}`}>
                 {student.gradeLevel} &middot; Section {student.section}
               </p>
-
-              <div className="flex items-center gap-2 pt-1">
-                <RowActionButton icon={Eye} label="View" darkMode={darkMode} full onClick={() => onView(student)} />
-                <RowActionButton icon={Pencil} label="Edit" darkMode={darkMode} full onClick={() => onEdit(student)} />
-                <RowActionButton
-                  icon={Trash2}
-                  label="Delete"
-                  darkMode={darkMode}
-                  danger
-                  full
-                  onClick={() => onDelete(student)}
-                />
-              </div>
             </div>
           );
         })}
@@ -132,38 +134,76 @@ export function StudentsTable({
   );
 }
 
-function RowActionButton({
-  icon: Icon,
-  label,
+function RowActionMenu({
   darkMode,
-  danger,
-  full,
-  onClick,
+  onView,
+  onEdit,
+  onDelete,
 }: {
-  icon: typeof Eye;
-  label: string;
   darkMode: boolean;
-  danger?: boolean;
-  full?: boolean;
-  onClick: () => void;
+  onView: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
 }) {
-  const dangerClasses = darkMode
-    ? "border-[#7F1D1D] text-[#F87171] hover:bg-[#7F1D1D]/20"
-    : "border-[#FEE2E2] text-[#B91C1C] hover:bg-[#FEE2E2]";
-  const normalClasses = darkMode
-    ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-    : "border-[#E5E7EB] text-[#64748B] hover:bg-[#F6F7FB]";
+  const [open, setOpen] = useState(false);
 
   return (
-    <button
-      onClick={onClick}
-      title={label}
-      className={`inline-flex items-center justify-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-bold transition-colors ${
-        danger ? dangerClasses : normalClasses
-      } ${full ? "flex-1" : ""}`}
-    >
-      <Icon size={13} />
-      {full && label}
-    </button>
+    <div className="relative shrink-0" onClick={(e) => e.stopPropagation()}>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        aria-label="Row actions"
+        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
+          darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#64748B] hover:bg-[#F6F7FB]"
+        }`}
+      >
+        <MoreVertical size={16} />
+      </button>
+
+      {open && (
+        <div
+          className={`absolute right-0 top-9 z-10 w-40 rounded-xl border shadow-lg py-1 ${
+            darkMode ? "bg-[#111827] border-[#374151]" : "bg-white border-[#E5E7EB]"
+          }`}
+          onMouseLeave={() => setOpen(false)}
+        >
+          <button
+            onClick={() => {
+              setOpen(false);
+              onView();
+            }}
+            className={`w-full text-left px-3 py-2 text-xs font-bold flex items-center gap-2 ${
+              darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#374151] hover:bg-[#F6F7FB]"
+            }`}
+          >
+            <Eye size={13} />
+            View
+          </button>
+          <button
+            onClick={() => {
+              setOpen(false);
+              onEdit();
+            }}
+            className={`w-full text-left px-3 py-2 text-xs font-bold flex items-center gap-2 ${
+              darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#374151] hover:bg-[#F6F7FB]"
+            }`}
+          >
+            <Pencil size={13} />
+            Edit
+          </button>
+          <button
+            onClick={() => {
+              setOpen(false);
+              onDelete();
+            }}
+            className={`w-full text-left px-3 py-2 text-xs font-bold flex items-center gap-2 ${
+              darkMode ? "text-[#F87171] hover:bg-white/5" : "text-[#B91C1C] hover:bg-[#FEE2E2]"
+            }`}
+          >
+            <Trash2 size={13} />
+            Delete
+          </button>
+        </div>
+      )}
+    </div>
   );
 }

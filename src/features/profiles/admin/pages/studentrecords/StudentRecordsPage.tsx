@@ -6,8 +6,10 @@ import { StudentsFilterBar } from "./components/Studentsfilterbar";
 import { StudentsTable } from "./components/Studentstable";
 import { ConfirmDeleteModal } from "./components/ConfirmDeleteModal";
 import type { Gender, GradeLevel, Student } from "./types/Students";
-import type { AdminThemeContext } from "../shared/AdminLayout";
+import type { AdminThemeContext } from "../../AdminLayout";
 import { StudentImportExportToolbar } from "./components/StudentImportExportToolbar";
+
+const ACCENT = "#8B0D0D";
 
 export function StudentRecordsPage() {
   const navigate = useNavigate();
@@ -41,56 +43,59 @@ export function StudentRecordsPage() {
     });
   }, [students, gradeFilter, genderFilter, search]);
 
+
+  const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
+  const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
+  const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
+
   return (
-    <section
-      className={`rounded-xl border shadow-sm overflow-hidden ${panelBg} ${panelBorder}`}
-    >
-      <div className="bg-[#8B0D0D] px-5 py-4 flex justify-between items-center">
-        <div>
-          <h3 className="text-white font-bold">Student Records</h3>
-          <p className="text-xs text-white/70 mt-1">
+    <div className="max-w-7xl mx-auto mt-6 space-y-6 pb-12 px-4 sm:px-6">
+      <section className={cardClasses}>
+        <div className={cardHeaderClasses}>
+          <h2 className={sectionTitleClasses}>
+            <IdCard size={15} style={{ color: ACCENT }} />
+            Student Records
+          </h2>
+          <span className={`text-xs font-semibold ${textMuted}`}>
             {filtered.length} of {students.length} student
             {students.length === 1 ? "" : "s"} shown
-          </p>
+          </span>
         </div>
-        <div className="w-10 h-10 rounded-xl bg-[#C98A2B] flex items-center justify-center text-white shrink-0">
-          <IdCard size={19} />
-        </div>
-      </div>
 
-      <StudentsFilterBar
-        darkMode={darkMode}
-        panelBorder={panelBorder}
-        gradeFilter={gradeFilter}
-        genderFilter={genderFilter}
-        search={search}
-        onGradeChange={setGradeFilter}
-        onGenderChange={setGenderFilter}
-        onSearchChange={setSearch}
-        onAddNew={() => navigate("new")}
-      />
+        <StudentsFilterBar
+          darkMode={darkMode}
+          panelBorder={panelBorder}
+          gradeFilter={gradeFilter}
+          genderFilter={genderFilter}
+          search={search}
+          onGradeChange={setGradeFilter}
+          onGenderChange={setGenderFilter}
+          onSearchChange={setSearch}
+          onAddNew={() => navigate("new")}
+        />
 
-      <StudentImportExportToolbar
-        filteredStudents={filtered}
-        allStudentIds={students.map((s) => s.id)}
-        allLrns={students.map((s) => s.lrn)}
-        onImportStudents={(newStudents) => addStudents(newStudents)}
-        darkMode={darkMode}
-        panelBorder={panelBorder}
-        textPrimary={textPrimary}
-        textMuted={textMuted}
-      />
+        <StudentImportExportToolbar
+          filteredStudents={filtered}
+          allStudentIds={students.map((s) => s.id)}
+          allLrns={students.map((s) => s.lrn)}
+          onImportStudents={(newStudents) => addStudents(newStudents)}
+          darkMode={darkMode}
+          panelBorder={panelBorder}
+          textPrimary={textPrimary}
+          textMuted={textMuted}
+        />
 
-      <StudentsTable
-        students={filtered}
-        darkMode={darkMode}
-        panelBorder={panelBorder}
-        textPrimary={textPrimary}
-        textMuted={textMuted}
-        onView={(student) => navigate(`${student.id}`)}
-        onEdit={(student) => navigate(`${student.id}/edit`)}
-        onDelete={(student) => setStudentToDelete(student)}
-      />
+        <StudentsTable
+          students={filtered}
+          darkMode={darkMode}
+          panelBorder={panelBorder}
+          textPrimary={textPrimary}
+          textMuted={textMuted}
+          onView={(student) => navigate(`/admin/students/${student.id}`)}
+          onEdit={(student) => navigate(`${student.id}/edit`)}
+          onDelete={(student) => setStudentToDelete(student)}
+        />
+      </section>
 
       {studentToDelete && (
         <ConfirmDeleteModal
@@ -103,6 +108,6 @@ export function StudentRecordsPage() {
           }}
         />
       )}
-    </section>
+    </div>
   );
 }

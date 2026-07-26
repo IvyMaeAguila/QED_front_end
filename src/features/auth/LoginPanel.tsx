@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Logo from "../../shared/images/QED_Logo.png";
 import { UserIDIcon, PasswordIcon } from "./components/LoginIcon";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +13,11 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const login = useAuth().login;
+
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -31,6 +36,40 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
   }, [open]);
 
   if (!open) return null;
+
+  const handleLogin = async () => {
+    setError(null);
+
+    if (!userId.trim() || !password.trim()) {
+      setError("Please enter both User ID and Password.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 400)); 
+
+      const role = userId.trim().toUpperCase().startsWith("T")
+        ? "TEACHER"
+        : "ADMIN";
+
+      login(
+        { id: "1", email: userId, role },
+        "fake-token",
+      );
+
+      navigate(role === "TEACHER" ? "/teacher" : "/admin");
+    
+    } catch (err) {
+      setError("Login failed. Please check your credentials and try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") handleLogin();
+  };
 
   return (
     <div
@@ -109,6 +148,13 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
             </p>
           </div>
 
+          {/* Error message */}
+          {error && (
+            <div className="mb-4 px-3.5 py-2.5 rounded-lg bg-[#fdecec] border border-[#f5c2c2] text-[#a30000] text-[12px] font-medium text-center">
+              {error}
+            </div>
+          )}
+
           {/* Fields */}
           <div className="flex flex-col gap-4">
             {/* User ID */}
@@ -122,6 +168,9 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
                 </span>
                 <input
                   type="text"
+                  value={userId}
+                  onChange={(e) => setUserId(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   placeholder="e.g. A05-1234"
                   className="w-full pl-12 pr-4 py-3 rounded-xl text-[13px] text-black bg-[#f7f7f8] border border-transparent outline-none transition-all placeholder:text-[#ccc]"
                   style={{ boxShadow: "none" }}
@@ -151,6 +200,9 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
                 </span>
                 <input
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   placeholder="••••••••"
                   className="w-full pl-12 pr-4 py-3 rounded-xl text-[13px] text-black bg-[#f7f7f8] border border-transparent outline-none transition-all placeholder:text-[#ccc]"
                   onFocus={(e) => {
@@ -187,22 +239,16 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
 
           {/* Login button */}
           <button
-            className="mt-7 w-full py-3.5 rounded-xl font-semibold text-[15px] text-white transition-opacity hover:opacity-90 active:scale-[0.98]"
+            disabled={loading}
+            className="mt-7 w-full py-3.5 rounded-xl font-semibold text-[15px] text-white transition-opacity hover:opacity-90 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
             style={{
               background: "linear-gradient(135deg, #550000 0%, #bb0000 100%)",
               boxShadow: "0 4px 16px rgba(85,0,0,0.3)",
               transition: "opacity 0.15s, transform 0.1s",
             }}
-            onClick={() => {
-              // after successful auth:
-              login(
-                { id: "1", email: "admin@qed.edu", role: "ADMIN" },
-                "fake-token",
-              );
-              navigate("/admin");
-            }}
+            onClick={handleLogin}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
 
           {/* Footer note */}

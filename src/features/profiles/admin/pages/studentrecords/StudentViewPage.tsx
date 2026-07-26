@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useStudents } from "./context/StudentsContext";
 import { formatFullName } from "./types/Students";
 import { ConfirmDeleteModal } from "./components/ConfirmDeleteModal";
-import type { AdminThemeContext } from "../shared/AdminLayout";
+import type { AdminThemeContext } from "../../AdminLayout";
 
 export function StudentViewPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();

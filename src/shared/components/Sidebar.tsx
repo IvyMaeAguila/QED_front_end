@@ -4,13 +4,12 @@ import {
   Users,
   BookOpen,
   BookMarked,
-  BarChart2,
   Calendar,
   HelpCircle,
   LogOut,
   X,
 } from "lucide-react";
-import { LogoComponent } from "../../../../../shared/components/Logo";
+import { LogoComponent } from "./Logo";
 
 interface SidebarProps {
   open: boolean;
@@ -24,10 +23,11 @@ const NAV_ITEMS = [
   { label: "Student Records", Icon: Users, to: "/admin/students" },
   { label: "Manage Users", Icon: Users, to: "/admin/users" },
   { label: "Classes", Icon: BookOpen, to: "/admin/classes" },
-  { label: "Academics", Icon: BookMarked, to: "/admin/academics" },
-  { label: "Reports", Icon: BarChart2, to: "/admin/reports" },
+  { label: "Academics", Icon: BookMarked, to: "/admin/subjects" },
   { label: "Calendar", Icon: Calendar, to: "/admin/calendar" },
 ];
+
+const HELP_ITEM = { label: "Help & Support", Icon: HelpCircle, to: "/admin/help" };
 
 export function Sidebar({ open, onClose, onLogout, darkMode }: SidebarProps) {
   const location = useLocation();
@@ -94,9 +94,13 @@ export function Sidebar({ open, onClose, onLogout, darkMode }: SidebarProps) {
       </nav>
 
       <div className="p-5 border-t border-white/10">
-        <div className="flex items-center gap-3 text-[13px] text-white/55 hover:text-white cursor-pointer mb-4 transition-colors">
+        <Link
+          to={HELP_ITEM.to}
+          onClick={onClose}
+          className="flex items-center gap-3 text-[13px] text-white/55 hover:text-white cursor-pointer mb-4 transition-colors"
+        >
           <HelpCircle size={16} className="shrink-0" /> Help & Support
-        </div>
+        </Link>
 
         <div
           onClick={onLogout}
