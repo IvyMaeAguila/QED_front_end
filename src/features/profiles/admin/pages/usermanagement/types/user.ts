@@ -5,7 +5,7 @@ export interface UserAccount {
   id: string; 
   lastName: string;
   firstName: string;
-  middleInitial: string; 
+  middleName: string; 
   role: Role;
   email: string;
   contactNumber: string;
@@ -14,9 +14,9 @@ export interface UserAccount {
 }
 
 
-export function formatFullName(u: Pick<UserAccount, "lastName" | "firstName" | "middleInitial">) {
-  const mi = u.middleInitial ? ` ${u.middleInitial}.` : "";
-  return `${u.lastName}, ${u.firstName}${mi}`;
+export function formatFullName(u: Pick<UserAccount, "lastName" | "firstName" | "middleName">) {
+  const middleName = u.middleName ? ` ${u.middleName}.` : "";
+  return `${u.lastName}, ${u.firstName}${middleName}`;
 }
 
 export const ROLES: Role[] = ["ADMIN", "PRINCIPAL", "TEACHER", "PARENT"];

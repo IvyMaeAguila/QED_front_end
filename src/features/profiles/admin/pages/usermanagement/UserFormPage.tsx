@@ -6,11 +6,13 @@ import { principalConflict } from "./context/UsersContext";
 import { ROLES, ROLE_LABELS, STATUSES, type Role, type UserStatus } from "./types/user";
 import { formatFullName } from "./types/user";
 import type { AdminThemeContext } from "../shared/AdminLayout";
+import { generateUsername, generateRandomPassword } from "./../../../../auth/utils/credentials";
+import { AuthService } from "./../../../../auth/services/authentication.service";
 
 interface FormState {
   lastName: string;
   firstName: string;
-  middleInitial: string;
+  middleName: string;
   role: Role;
   email: string;
   contactNumber: string;
@@ -20,7 +22,7 @@ interface FormState {
 const emptyForm: FormState = {
   lastName: "",
   firstName: "",
-  middleInitial: "",
+  middleName: "",
   role: "TEACHER",
   email: "",
   contactNumber: "",
@@ -43,7 +45,7 @@ export function UserFormPage() {
       ? {
           lastName: existing.lastName,
           firstName: existing.firstName,
-          middleInitial: existing.middleInitial,
+          middleName: existing.middleName,
           role: existing.role,
           email: existing.email,
           contactNumber: existing.contactNumber,
@@ -85,8 +87,8 @@ export function UserFormPage() {
     const next: Partial<Record<keyof FormState, string>> = {};
     if (!form.lastName.trim()) next.lastName = "Last name is required.";
     if (!form.firstName.trim()) next.firstName = "First name is required.";
-    if (form.middleInitial && form.middleInitial.trim().length > 1)
-      next.middleInitial = "Enter a single initial.";
+    // if (form.middleName && form.middleName.trim().length > 1)
+    //   next.middleName = "Enter a middle name.";
     if (!form.email.trim()) next.email = "Email is required.";
     else if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) next.email = "Enter a valid email address.";
     if (!form.contactNumber.trim()) next.contactNumber = "Contact number is required.";
@@ -94,29 +96,82 @@ export function UserFormPage() {
     return Object.keys(next).length === 0;
   }
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    if (!validate()) return;
-    if (conflict) return;
+
+async function handleSubmit(e: FormEvent) {
+  e.preventDefault();
+  if (!validate()) return;
+  if (conflict) return;
+
+  try {
+    let userId = existing?.id;
+    let generatedPassword: string | null = null;
+    let userName: string | null = null;
+
+    // Create auth account FIRST (only for new users) so we get an id
+    if (!isEditing) {
+      userName = generateUsername(form.role, form.firstName, form.lastName);
+      generatedPassword = generateRandomPassword(10);
+
+      const authResult = await AuthService.registerUser({
+        userName,
+        password: generatedPassword,
+        role: form.role,
+      });
+
+      userId = authResult.user.id; // <-- this becomes teachers_table.user_id
+    }
 
     const payload = {
+      userId,                      // now actually defined
       lastName: form.lastName.trim(),
       firstName: form.firstName.trim(),
-      middleInitial: form.middleInitial.trim().toUpperCase(),
+      middleName: form.middleName.trim(),
       role: form.role,
       email: form.email.trim(),
       contactNumber: form.contactNumber.trim(),
       status: form.status,
     };
 
+    const endpoint =
+      isEditing && existing
+        ? `http://localhost:7400/api/user/updateUser/${existing.id}`
+        : "http://localhost:7400/api/user/addUser";
+
+    const response = await fetch(endpoint, {
+      method: isEditing && existing ? "PUT" : "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(`Error: ${data.message || "Failed to save user's record."}`);
+      return;
+    }
+
+    const targetId = data.data?.id || existing?.id;
+
     if (isEditing && existing) {
       updateUser(existing.id, payload);
-      navigate(`/admin/users/${existing.id}`);
     } else {
-      const created = addUser(payload);
-      navigate(`/admin/users/${created.id}`);
+      addUser(payload);
     }
+
+    if (generatedPassword && userName) {
+      alert(
+        `User added successfully!\n\nUsername: ${userName}\nPassword: ${generatedPassword}\n\nPlease share this with the user securely.`
+      );
+    } else {
+      alert("User updated successfully!");
+    }
+
+    navigate(`/admin/users/${targetId}`);
+  } catch (error) {
+    console.error("API Connection Error:", error);
+    alert("Can't connect to the server. Make sure the backend is running.");
   }
+}
 
   return (
     <section className={`rounded-xl border shadow-sm overflow-hidden ${panelBg} ${panelBorder}`}>
@@ -176,16 +231,15 @@ export function UserFormPage() {
 
         <div className="grid sm:grid-cols-[120px_1fr] gap-4">
           <div>
-            <label className={labelClasses}>M.I.</label>
+            <label className={labelClasses}>MIDDLE NAME</label>
             <input
               className={inputClasses}
-              value={form.middleInitial}
-              maxLength={1}
-              onChange={(e) => setForm({ ...form, middleInitial: e.target.value })}
-              placeholder="S"
+              value={form.middleName}
+              onChange={(e) => setForm({ ...form, middleName: e.target.value })}
+              placeholder="Santos"
             />
-            {errors.middleInitial && (
-              <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.middleInitial}</p>
+            {errors.middleName && (
+              <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.middleName}</p>
             )}
           </div>
           <div>
@@ -222,6 +276,7 @@ export function UserFormPage() {
             <input
               className={inputClasses}
               value={form.contactNumber}
+              maxLength={11}
               onChange={(e) => setForm({ ...form, contactNumber: e.target.value })}
               placeholder="0917-123-4567"
             />

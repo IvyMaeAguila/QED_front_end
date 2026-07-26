@@ -27,7 +27,7 @@ export function UserManagementPage() {
       if (roleFilter !== "All Roles" && ROLE_LABELS[u.role] !== roleFilter) return false;
       if (statusFilter !== "All Statuses" && u.status !== statusFilter) return false;
       if (q) {
-        const haystack = `${u.id} ${u.lastName} ${u.firstName} ${u.middleInitial} ${u.email}`.toLowerCase();
+        const haystack = `${u.id} ${u.lastName} ${u.firstName} ${u.middleName} ${u.email}`.toLowerCase();
         if (!haystack.includes(q)) return false;
       }
       return true;

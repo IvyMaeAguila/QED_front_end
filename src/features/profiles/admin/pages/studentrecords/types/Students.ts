@@ -10,6 +10,7 @@ export type GradeLevel =
 
 export interface Student {
   id: string; 
+  studentId: string;
   lrn: string;
   lastName: string;
   firstName: string;
