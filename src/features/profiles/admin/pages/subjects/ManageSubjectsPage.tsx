@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { Plus, School } from "lucide-react";
 import { useTeachers } from "../classes/context/TeachersContext";
-import type { AdminThemeContext } from "../shared/AdminLayout";
+import type { AdminThemeContext } from "../AdminLayout";
 import { buildDefaultSubjects } from "./data";
 import { ACCENT, type GradeLevel, type Subject } from "./types";
 import { SubjectFilters } from "./components/SubjectFilters";
@@ -13,7 +13,7 @@ import { AssignTeacherModal } from "./components/AssignTeacherModal";
 import { AddSubjectModal } from "./components/AddSubjectModal";
 import { ManageSectionsModal } from "./components/ManageSectionsModal";
 import { SectionsProvider } from "./context/SectionsContext";
-import { useSettings } from "../shared/settings/context/SettingsContext";
+import { useSettings } from "../settings/context/SettingsContext";
 
 export function ManageSubjectsPage() {
   return (

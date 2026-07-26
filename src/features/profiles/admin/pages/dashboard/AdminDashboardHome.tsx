@@ -2,7 +2,7 @@ import { useOutletContext } from "react-router-dom";
 import { StatCards } from "./components/StatCards";
 import { DailyLoginFrequency } from "./components/DailyLoginFrequency";
 import { PerformanceByGrade } from "./components/PerformanceByGrade";
-import type { AdminThemeContext } from "../shared/AdminLayout";
+import type { AdminThemeContext } from "../../AdminLayout";
 
 export function AdminDashboardHome() {
   const theme = useOutletContext<AdminThemeContext>();

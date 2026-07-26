@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useUsers } from "./context/UsersContext";
 import { formatFullName, ROLE_LABELS } from "./types/user";
 import { ConfirmDeleteUserModal } from "./components/ConfirmDeleteUserModal";
-import type { AdminThemeContext } from "../shared/AdminLayout";
+import type { AdminThemeContext } from "../../AdminLayout";
 
 const ACCENT = "#8B0D0D";
 

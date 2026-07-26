@@ -5,7 +5,7 @@ import { useUsers } from "./context/UsersContext";
 import { principalConflict } from "./context/UsersContext";
 import { ROLES, ROLE_LABELS, STATUSES, type Role, type UserStatus } from "./types/user";
 import { formatFullName } from "./types/user";
-import type { AdminThemeContext } from "../shared/AdminLayout";
+import type { AdminThemeContext } from "../AdminLayout";
 
 const ACCENT = "#8B0D0D";
 

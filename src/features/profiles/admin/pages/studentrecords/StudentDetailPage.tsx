@@ -32,7 +32,7 @@ import { useStudents } from "./context/StudentsContext";
 import { useClasses } from "../classes/context/ClassesContext";
 import { useTeachers } from "../classes/context/TeachersContext";
 import { formatTeacherName } from "../classes/types/Teacher";
-import type { AdminThemeContext } from "../shared/AdminLayout";
+import type { AdminThemeContext } from "../../AdminLayout";
 import type { Student } from "./types/Students";
 import { useState } from "react";
 

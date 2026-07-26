@@ -9,7 +9,7 @@ import {
   LogOut,
   X,
 } from "lucide-react";
-import { LogoComponent } from "../../../../../shared/components/Logo";
+import { LogoComponent } from "./Logo";
 
 interface SidebarProps {
   open: boolean;

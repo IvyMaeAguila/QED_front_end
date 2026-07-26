@@ -7,7 +7,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useAuth } from "../shared/AuthContext";
-import { AdminLayout } from "../features/profiles/admin/pages/shared/AdminLayout";
+import { AdminLayout } from "../features/profiles/admin/pages/AdminLayout";
 import { AdminDashboardHome } from "../features/profiles/admin/pages/dashboard/AdminDashboardHome";
 import { StudentsProvider } from "../features/profiles/admin/pages/studentrecords/context/StudentsContext";
 import { StudentRecordsPage } from "../features/profiles/admin/pages/studentrecords/StudentRecordsPage";
@@ -27,7 +27,7 @@ import { StudentDetailPage } from "../features/profiles/admin/pages/studentrecor
 import { ManageSubjectsPage } from "../features/profiles/admin/pages/subjects/ManageSubjectsPage";
 import { CalendarPage } from "../features/profiles/admin/pages/calendar/CalendarPage";
 import { HelpSupportPage } from "../features/profiles/admin/pages/help/HelpSupportPage";
-import { SettingsProvider } from "../features/profiles/admin/pages/shared/settings/context/SettingsContext";
+import { SettingsProvider } from "../features/profiles/admin/pages/settings/context/SettingsContext";
 
 function DebugRoute() {
   const location = useLocation();

@@ -6,7 +6,7 @@ import { StudentsFilterBar } from "./components/Studentsfilterbar";
 import { StudentsTable } from "./components/Studentstable";
 import { ConfirmDeleteModal } from "./components/ConfirmDeleteModal";
 import type { Gender, GradeLevel, Student } from "./types/Students";
-import type { AdminThemeContext } from "../shared/AdminLayout";
+import type { AdminThemeContext } from "../../AdminLayout";
 import { StudentImportExportToolbar } from "./components/StudentImportExportToolbar";
 
 const ACCENT = "#8B0D0D";

@@ -3,7 +3,7 @@ import { useNavigate, useParams, useOutletContext } from "react-router-dom";
 import { ArrowLeft, Save, IdCard } from "lucide-react";
 import { useStudents } from "./context/StudentsContext";
 import { GRADE_LEVELS, GENDERS, type Gender, type GradeLevel } from "./types/Students";
-import type { AdminThemeContext } from "../shared/AdminLayout";
+import type { AdminThemeContext } from "../../AdminLayout";
 
 const ACCENT = "#8B0D0D";
 

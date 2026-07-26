@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import { Sidebar } from "./Sidebar";
-import { Header } from "./Header";
+import { Sidebar } from "@shared/components/Sidebar";
+import { Header } from "@shared/components/Header";
 import { useSettings } from "./settings/context/SettingsContext"; 
 
 export interface AdminThemeContext {

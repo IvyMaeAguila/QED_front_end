@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { useClasses } from "../classes/context/ClassesContext";
-import type { AdminThemeContext } from "../shared/AdminLayout";
+import type { AdminThemeContext } from "../../AdminLayout";
 import type { GradeLevel } from "../studentrecords/types/Students";
 import { buildSeedEvents, toISODate } from "./data";
 import { canViewerSeeEvent, POSTABLE_ROLES_BY_POSTER, type CalendarEvent, type Role, type ViewerContext } from "./types/Calendar";

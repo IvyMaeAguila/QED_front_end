@@ -10,7 +10,7 @@ import {
   GRADE_LEVELS,
   type GradeLevel,
 } from "../studentrecords/types/Students";
-import type { AdminThemeContext } from "../shared/AdminLayout";
+import type { AdminThemeContext } from "../../AdminLayout";
 
 export function ClassesPage() {
   const navigate = useNavigate();
