@@ -23,11 +23,18 @@ import { ClassFormPage } from "../features/profiles/admin/pages/classes/ClassFor
 import { ClassViewPage } from "../features/profiles/admin/pages/classes/ClassViewPage";
 import LandingPage from "../features/Landing/LandingPage";
 import { LoginPanel } from "../features/auth/LoginPanel";
-import { StudentDetailPage } from "../features/profiles/admin/pages/studentrecords/StudentDetailPage";
+import { StudentDetailPage } from "../shared/components/StudentDetailPage";
 import { ManageSubjectsPage } from "../features/profiles/admin/pages/subjects/ManageSubjectsPage";
-import { CalendarPage } from "../features/profiles/admin/pages/calendar/CalendarPage";
+import { CalendarPage } from "../shared/calendar/CalendarPage";
 import { HelpSupportPage } from "../features/profiles/admin/pages/help/HelpSupportPage";
 import { SettingsProvider } from "../features/profiles/admin/pages/settings/context/SettingsContext";
+import { TeacherSection } from "./TeacherSection";
+import { TeacherDashboardHome } from "../features/profiles/teacher/pages/dashboard/TeacherDashboardHome";
+import { TeacherCalendarPage } from "../features/profiles/teacher/pages/calendar/TeacherCalendarPage";
+import { AdvisoryRosterPage } from "../features/profiles/teacher/pages/roster/AdvisoryRosterPage";
+import { GradesPage } from "../features/profiles/teacher/pages/grades/GradePage";
+import { HolisticOverviewPage } from "../features/profiles/teacher/pages/holistic/HolisticOverviewPage";
+import { SubjectsPage } from "../features/profiles/teacher/pages/subjects/SubjectPage";
 
 function DebugRoute() {
   const location = useLocation();
@@ -101,6 +108,7 @@ export function AppRouter() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
 
+          {/* ADMIN */}
           <Route
             path="/admin"
             element={
@@ -112,33 +120,48 @@ export function AppRouter() {
             }
           >
             <Route index element={<AdminDashboardHome />} />
-
             <Route path="students" element={<StudentRecordsPage />} />
             <Route path="students/new" element={<StudentFormPage />} />
-            <Route
-              path="students/:studentId"
-              element={<StudentDetailPage />}
-            />
+            <Route path="students/:studentId" element={<StudentDetailPage />} />
             <Route
               path="students/:studentId/edit"
               element={<StudentFormPage />}
             />
-
             <Route path="users" element={<UserManagementPage />} />
             <Route path="users/new" element={<UserFormPage />} />
             <Route path="users/:userId" element={<UserViewPage />} />
             <Route path="users/:userId/edit" element={<UserFormPage />} />
-
             <Route path="classes" element={<ClassesPage />} />
             <Route path="classes/new" element={<ClassFormPage />} />
             <Route path="classes/:classId" element={<ClassViewPage />} />
             <Route path="classes/:classId/edit" element={<ClassFormPage />} />
-
             <Route path="subjects" element={<ManageSubjectsPage />} />
             <Route path="calendar" element={<CalendarPage />} />
             <Route path="help" element={<HelpSupportPage />} />
           </Route>
-          <Route path="*" element={<div>404 Page Not Found</div>} />
+
+          {/* TEACHER */}
+          <Route
+            path="/teacher"
+            element={
+              <ProtectedRoute>
+                <RoleRoute allowed={["TEACHER"]}>
+                  <TeacherSection />
+                </RoleRoute>
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<TeacherDashboardHome />} />
+            <Route path="subjects" element={<SubjectsPage />} />
+            <Route path="grades" element={<GradesPage />} />
+            {/* <Route path="holistic" element={<TeacherHolisticAssessmentPage />} /> */}
+            <Route path="holistic" element={<HolisticOverviewPage />} />
+            {/* <Route path="holistic/:studentId/assess" element={<TeacherHolisticAssessmentPage />} /> */}
+            <Route path="students/:studentId" element={<StudentDetailPage />} />
+            <Route path="advisory" element={<AdvisoryRosterPage />} />
+            <Route path="calendar" element={<TeacherCalendarPage />} />
+            <Route path="help" element={<div>Help page</div>} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </SettingsProvider>

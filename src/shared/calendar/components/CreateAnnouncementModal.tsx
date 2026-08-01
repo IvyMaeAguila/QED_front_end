@@ -3,8 +3,7 @@ import { X, Megaphone } from "lucide-react";
 import { ACCENT, type AnnouncementAudience, type CalendarEvent, type CalendarTheme, type Role } from "../types/Calendar";
 import { toISODate } from "../data";
 import { AudienceTargetPicker } from "./AudienceTargetPicker";
-import type { GradeLevel } from "../../studentrecords/types/Students";
-
+import { type GradeLevel } from "../../../features/profiles/admin/pages/studentrecords/types/Students";
 interface CreateAnnouncementModalProps extends CalendarTheme {
   posterRole: Role;
   posterName: string;

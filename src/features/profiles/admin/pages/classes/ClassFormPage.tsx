@@ -6,7 +6,7 @@ import { useTeachers } from "./context/TeachersContext";
 import { formatTeacherName } from "./types/Teacher";
 import { GRADE_LEVELS, type GradeLevel } from "../studentrecords/types/Students";
 import { DAYS_OF_WEEK, type DayOfWeek, type SchedulePeriod } from "./types/Class";
-import type { AdminThemeContext } from "../../AdminLayout";
+import type { AdminThemeContext } from "../AdminLayout";
 
 interface FormState {
   gradeLevel: GradeLevel;

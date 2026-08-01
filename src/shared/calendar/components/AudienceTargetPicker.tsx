@@ -1,5 +1,5 @@
 import { ACCENT, POSTABLE_ROLES_BY_POSTER, ROLE_LABELS, type Role, type AnnouncementAudience } from "../types/Calendar";
-import { GRADE_LEVELS, type GradeLevel } from "../../studentrecords/types/Students";
+import { GRADE_LEVELS, type GradeLevel } from "../../../features/profiles/admin/pages/studentrecords/types/Students";
 
 interface AudienceTargetPickerProps {
   posterRole: Role;

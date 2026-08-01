@@ -32,7 +32,7 @@ export function SectionsProvider({ children }: { children: ReactNode }) {
     setSections((prev) => [...prev, { id, gradeLevel: grade, name: trimmed }]);
     return { ok: true };
   }
-
+  //
   function removeSection(id: string) {
     setSections((prev) => prev.filter((s) => s.id !== id));
   }

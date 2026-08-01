@@ -6,7 +6,7 @@ import { useStudents } from "../studentrecords/context/StudentsContext";
 import { formatTeacherName } from "./types/Teacher";
 import { formatTimeRange } from "./types/Class";
 import { formatFullName } from "../studentrecords/types/Students";
-import type { AdminThemeContext } from "../../AdminLayout";
+import type { AdminThemeContext } from "../AdminLayout";
 
 export function ClassViewPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();

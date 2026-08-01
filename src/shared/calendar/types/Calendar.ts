@@ -1,4 +1,4 @@
-import type { GradeLevel } from "../../studentrecords/types/Students";
+import type { GradeLevel } from "../../../features/profiles/admin/pages/studentrecords/types/Students";
 
 export type Role = "ADMIN" | "PRINCIPAL" | "TEACHER" | "PARENT" | "STUDENT";
 

@@ -1,13 +1,13 @@
 import { useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import { useClasses } from "../classes/context/ClassesContext";
-import type { AdminThemeContext } from "../../AdminLayout";
-import type { GradeLevel } from "../studentrecords/types/Students";
-import { buildSeedEvents, toISODate } from "./data";
-import { canViewerSeeEvent, POSTABLE_ROLES_BY_POSTER, type CalendarEvent, type Role, type ViewerContext } from "./types/Calendar";
 import { MonthGrid } from "./components/MonthGrid";
 import { UpcomingEventsPanel } from "./components/UpcomingEventsPanel";
 import { CreateAnnouncementModal } from "./components/CreateAnnouncementModal";
+import { buildSeedEvents, toISODate } from "./data";
+import { useClasses } from "../../features/profiles/admin/pages/classes/context/ClassesContext";
+import type { AdminThemeContext } from "../../features/profiles/admin/pages/AdminLayout";
+import type { GradeLevel } from "../../features/profiles/admin/pages/studentrecords/types/Students";
+import { canViewerSeeEvent, POSTABLE_ROLES_BY_POSTER, type CalendarEvent, type Role, type ViewerContext } from "./types/Calendar";
 
 // Wire this to real auth once available — for now the viewer defaults to
 // ADMIN so this page works standalone under /admin/calendar. Pass real
@@ -28,6 +28,8 @@ export function CalendarPage({
   teacherSection,
 }: CalendarPageProps) {
   const theme = useOutletContext<AdminThemeContext>();
+  if (!theme) return null;
+
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
   const { classes } = useClasses();
 
