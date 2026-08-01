@@ -2,22 +2,15 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "@shared/components/Sidebar";
 import { Header } from "@shared/components/Header";
-import { useSettings } from "./settings/context/SettingsContext";
-import { ADMIN_HELP_ITEM, ADMIN_NAV_ITEMS } from "./config/adminNav";
+import { useSettings } from "../../admin/pages/settings/context/SettingsContext";
+import { TEACHER_NAV_ITEMS, TEACHER_HELP_ITEM } from "./config/teacherNav";
+import type { AdminThemeContext } from "../../admin/pages/AdminLayout";
 
-export interface AdminThemeContext {
-  darkMode: boolean;
-  panelBg: string;
-  panelBorder: string;
-  textPrimary: string;
-  textMuted: string;
-}
-
-interface AdminLayoutProps {
+interface TeacherLayoutProps {
   onLogout: () => void;
 }
 
-export function AdminLayout({ onLogout }: AdminLayoutProps) {
+export function TeacherLayout({ onLogout }: TeacherLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { darkMode } = useSettings();
 
@@ -42,9 +35,9 @@ export function AdminLayout({ onLogout }: AdminLayoutProps) {
           onClose={() => setSidebarOpen(false)}
           onLogout={onLogout}
           darkMode={darkMode}
-          navItems={ADMIN_NAV_ITEMS}
-          helpItem={ADMIN_HELP_ITEM}
-          homeTo="/admin"
+          navItems={TEACHER_NAV_ITEMS}
+          helpItem={TEACHER_HELP_ITEM}
+          homeTo="/teacher"
         />
       </div>
 

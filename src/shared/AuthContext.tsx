@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react'
+import type { GradeLevel } from "../features/profiles/admin/pages/studentrecords/types/Students"
 
 type Role = 'ADMIN' | 'PRINCIPAL' | 'TEACHER' | 'PARENT'
 
@@ -6,7 +7,11 @@ type User = {
     id: string
     email: string
     role: Role
+    name: string
+    gradeLevel?: GradeLevel   // only present when role === 'TEACHER'
+    section?: string
 }
+
 
 type AuthContextType = {
     user: User | null

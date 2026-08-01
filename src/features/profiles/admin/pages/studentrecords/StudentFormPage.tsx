@@ -669,6 +669,7 @@ export function StudentFormPage() {
               <input
                 className={inputClasses}
                 value={form.id}
+                maxLength={8}
                 disabled={isEditing}
                 onChange={(e) => setForm({ ...form, id: e.target.value })}
                 placeholder="STU-2026-001"
