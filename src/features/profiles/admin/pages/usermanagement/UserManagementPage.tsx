@@ -7,14 +7,15 @@ import { UsersTable } from "./components/UsersTable";
 import { ConfirmDeleteUserModal } from "./components/ConfirmDeleteUserModal";
 import type { UserAccount, UserStatus } from "./types/user";
 import { formatFullName, ROLE_LABELS } from "./types/user";
-import type { AdminThemeContext } from "../../AdminLayout";
+import type { AdminThemeContext } from "../AdminLayout";
 
 const ACCENT = "#8B0D0D";
 
 export function UserManagementPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
-  const { users, deleteUser, getActivePrincipal } = useUsers();
+  const { users, loading, error, deleteUser, getActivePrincipal } = useUsers();
+  
 
   const [roleFilter, setRoleFilter] = useState("All Roles");
   const [statusFilter, setStatusFilter] = useState<UserStatus | "All Statuses">("All Statuses");
@@ -39,6 +40,9 @@ export function UserManagementPage() {
   const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
   const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
   const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
+
+  if (loading) return <p>Loading users...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="max-w-7xl mx-auto mt-6 space-y-6 pb-12 px-4 sm:px-6">
@@ -131,7 +135,7 @@ export function UserManagementPage() {
           darkMode={darkMode}
           onCancel={() => setUserToDelete(null)}
           onConfirm={() => {
-            deleteUser(userToDelete.id);
+            deleteUser(userToDelete.id, userToDelete.role.toLowerCase());
             setUserToDelete(null);
           }}
         />

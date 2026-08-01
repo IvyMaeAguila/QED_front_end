@@ -24,8 +24,7 @@ export function ConfirmDeleteUserModal({ user, darkMode, onCancel, onConfirm }: 
           Remove user account?
         </h3>
         <p className={`text-sm mt-2 ${darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]"}`}>
-          This will permanently remove <span className="font-semibold">{formatFullName(user)}</span> (
-          {user.id}) and revoke their access. This action cannot be undone.
+          This will permanently remove <span className="font-semibold">{formatFullName(user)}</span> and revoke their access. This action cannot be undone.
         </p>
 
         <div className="flex gap-3 mt-6">

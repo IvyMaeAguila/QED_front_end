@@ -64,7 +64,7 @@ export function StudentsTable({
                   title="Double-click to view details"
                   className={`border-t ${panelBorder} hover:bg-black/2 transition-colors cursor-pointer`}
                 >
-                  <td className={`px-5 py-4 font-extrabold tabular-nums ${textPrimary}`}>{student.id}</td>
+                  <td className={`px-5 py-4 font-extrabold tabular-nums ${textPrimary}`}>{student.studentId}</td>
                   <td className={`px-5 py-4 font-semibold ${textPrimary}`}>{formatFullName(student)}</td>
                   <td className="px-5 py-4">
                     <span

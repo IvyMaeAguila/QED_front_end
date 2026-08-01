@@ -15,7 +15,6 @@ import type { AdminThemeContext } from "../AdminLayout";
 export function ClassesPage() {
   const navigate = useNavigate();
   const { classes, deleteClass } = useClasses();
-  const { getTeacher } = useTeachers();
   const { students } = useStudents();
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
@@ -92,18 +91,13 @@ export function ClassesPage() {
         ) : (
           <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-8">
             {filtered.map((c) => {
-              const adviser = getTeacher(c.adviserId);
-              const studentCount = students.filter(
-                (s) => s.gradeLevel === c.gradeLevel && s.section === c.section,
-              ).length;
+              const studentCount = (c as any).studentCount ?? 0;
 
               return (
                 <ClassCard
                   key={c.id}
                   schoolClass={c}
-                  adviserName={
-                    adviser ? formatTeacherName(adviser) : "Unassigned"
-                  }
+                  adviserName={c.adviserName || "Unassigned"}
                   studentCount={studentCount}
                   darkMode={darkMode}
                   panelBg={panelBg}
@@ -112,13 +106,13 @@ export function ClassesPage() {
                   textMuted={textMuted}
                   onView={() => navigate(c.id)}
                   onEdit={() => navigate(`${c.id}/edit`)}
-                  onDelete={() => {
+                  onDelete={async () => {
                     if (
                       confirm(
                         `Delete ${c.gradeLevel} • ${c.section}? This cannot be undone.`,
                       )
                     ) {
-                      deleteClass(c.id);
+                      await deleteClass(c.id);
                     }
                   }}
                 />

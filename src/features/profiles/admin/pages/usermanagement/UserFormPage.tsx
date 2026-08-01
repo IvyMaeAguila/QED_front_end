@@ -5,15 +5,13 @@ import { useUsers } from "./context/UsersContext";
 import { principalConflict } from "./context/UsersContext";
 import { ROLES, ROLE_LABELS, STATUSES, type Role, type UserStatus } from "./types/user";
 import { formatFullName } from "./types/user";
-<<<<<<< HEAD
-import type { AdminThemeContext } from "../shared/AdminLayout";
+
 import { generateUsername, generateRandomPassword } from "./../../../../auth/utils/credentials";
 import { AuthService } from "./../../../../auth/services/authentication.service";
-=======
-import type { AdminThemeContext } from "../AdminLayout";
+
+import type { AdminThemeContext } from "./../AdminLayout";
 
 const ACCENT = "#8B0D0D";
->>>>>>> cbca7a763e04a6346b42aabc2f52e9b96031e0ae
 
 interface FormState {
   lastName: string;
@@ -35,6 +33,13 @@ const emptyForm: FormState = {
   status: "Active",
 };
 
+// Backend/DB values aren't guaranteed to come back as strings (e.g. contactNumber
+// can arrive as a number, or null/undefined for older records). Coerce everything
+// that goes into the form state so .trim() and friends never blow up downstream.
+function toStr(value: unknown): string {
+  return value === null || value === undefined ? "" : String(value);
+}
+
 export function UserFormPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
@@ -49,12 +54,12 @@ export function UserFormPage() {
   const [form, setForm] = useState<FormState>(
     existing
       ? {
-          lastName: existing.lastName,
-          firstName: existing.firstName,
-          middleName: existing.middleName,
+          lastName: toStr(existing.lastName),
+          firstName: toStr(existing.firstName),
+          middleName: toStr(existing.middleName),
           role: existing.role,
-          email: existing.email,
-          contactNumber: existing.contactNumber,
+          email: toStr(existing.email),
+          contactNumber: toStr(existing.contactNumber),
           status: existing.status,
         }
       : { ...emptyForm, role: presetRole ?? emptyForm.role }
@@ -97,93 +102,97 @@ export function UserFormPage() {
 
   function validate(): boolean {
     const next: Partial<Record<keyof FormState, string>> = {};
-    if (!form.lastName.trim()) next.lastName = "Last name is required.";
-    if (!form.firstName.trim()) next.firstName = "First name is required.";
+    const lastName = toStr(form.lastName);
+    const firstName = toStr(form.firstName);
+    const email = toStr(form.email);
+    const contactNumber = toStr(form.contactNumber);
+
+    if (!lastName.trim()) next.lastName = "Last name is required.";
+    if (!firstName.trim()) next.firstName = "First name is required.";
     // if (form.middleName && form.middleName.trim().length > 1)
     //   next.middleName = "Enter a middle name.";
-    if (!form.email.trim()) next.email = "Email is required.";
-    else if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) next.email = "Enter a valid email address.";
-    if (!form.contactNumber.trim()) next.contactNumber = "Contact number is required.";
+    if (!email.trim()) next.email = "Email is required.";
+    else if (!/^\S+@\S+\.\S+$/.test(email.trim())) next.email = "Enter a valid email address.";
+    if (!contactNumber.trim()) next.contactNumber = "Contact number is required.";
     setErrors(next);
     return Object.keys(next).length === 0;
   }
 
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (!validate()) return;
+    if (conflict) return;
 
-async function handleSubmit(e: FormEvent) {
-  e.preventDefault();
-  if (!validate()) return;
-  if (conflict) return;
+    try {
+      let userId = existing?.id;
+      let generatedPassword: string | null = null;
+      let userName: string | null = null;
 
-  try {
-    let userId = existing?.id;
-    let generatedPassword: string | null = null;
-    let userName: string | null = null;
+      // Create auth account FIRST (only for new users) so we get an id
+      if (!isEditing) {
+        userName = generateUsername(form.role, form.firstName, form.lastName);
+        generatedPassword = generateRandomPassword(10);
 
-    // Create auth account FIRST (only for new users) so we get an id
-    if (!isEditing) {
-      userName = generateUsername(form.role, form.firstName, form.lastName);
-      generatedPassword = generateRandomPassword(10);
+        const authResult = await AuthService.registerUser({
+          userName,
+          password: generatedPassword,
+          role: form.role,
+        });
 
-      const authResult = await AuthService.registerUser({
-        userName,
-        password: generatedPassword,
+        userId = authResult.user.id; // <-- this becomes teachers_table.user_id
+      }
+
+      const payload = {
+        userId, // now actually defined
+        lastName: toStr(form.lastName).trim(),
+        firstName: toStr(form.firstName).trim(),
+        middleName: toStr(form.middleName).trim(),
         role: form.role,
+        email: toStr(form.email).trim(),
+        contactNumber: toStr(form.contactNumber).trim(),
+        status: form.status,
+      };
+
+      const endpoint =
+        isEditing && existing
+          ? `http://localhost:7400/api/user/editUser/${existing.id}`
+          : "http://localhost:7400/api/user/addUser";
+
+      const response = await fetch(endpoint, {
+        method: isEditing && existing ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
 
-      userId = authResult.user.id; // <-- this becomes teachers_table.user_id
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(`Error: ${data.message || "Failed to save user's record."}`);
+        return;
+      }
+
+      const targetId = data.data?.id || existing?.id;
+
+      if (isEditing && existing) {
+        updateUser(existing.id, payload);
+      } else {
+        addUser(payload);
+      }
+
+      if (generatedPassword && userName) {
+        alert(
+          `User added successfully!\n\nUsername: ${userName}\nPassword: ${generatedPassword}\n\nPlease share this with the user securely.`
+        );
+      } else {
+        alert("User updated successfully!");
+      }
+
+      navigate(`/admin/users`);
+    } catch (error) {
+      console.error("API Connection Error:", error);
+      alert("Can't connect to the server. Make sure the backend is running.");
     }
-
-    const payload = {
-      userId,                      // now actually defined
-      lastName: form.lastName.trim(),
-      firstName: form.firstName.trim(),
-      middleName: form.middleName.trim(),
-      role: form.role,
-      email: form.email.trim(),
-      contactNumber: form.contactNumber.trim(),
-      status: form.status,
-    };
-
-    const endpoint =
-      isEditing && existing
-        ? `http://localhost:7400/api/user/updateUser/${existing.id}`
-        : "http://localhost:7400/api/user/addUser";
-
-    const response = await fetch(endpoint, {
-      method: isEditing && existing ? "PUT" : "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      alert(`Error: ${data.message || "Failed to save user's record."}`);
-      return;
-    }
-
-    const targetId = data.data?.id || existing?.id;
-
-    if (isEditing && existing) {
-      updateUser(existing.id, payload);
-    } else {
-      addUser(payload);
-    }
-
-    if (generatedPassword && userName) {
-      alert(
-        `User added successfully!\n\nUsername: ${userName}\nPassword: ${generatedPassword}\n\nPlease share this with the user securely.`
-      );
-    } else {
-      alert("User updated successfully!");
-    }
-
-    navigate(`/admin/users/${targetId}`);
-  } catch (error) {
-    console.error("API Connection Error:", error);
-    alert("Can't connect to the server. Make sure the backend is running.");
   }
-}
 
   return (
     <div className="max-w-7xl mx-auto mt-6 space-y-6 pb-12 px-4 sm:px-6">
@@ -209,34 +218,12 @@ async function handleSubmit(e: FormEvent) {
           </span>
         </div>
 
-<<<<<<< HEAD
-        <div className="grid sm:grid-cols-[120px_1fr] gap-4">
-          <div>
-            <label className={labelClasses}>MIDDLE NAME</label>
-            <input
-              className={inputClasses}
-              value={form.middleName}
-              onChange={(e) => setForm({ ...form, middleName: e.target.value })}
-              placeholder="Santos"
-            />
-            {errors.middleName && (
-              <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.middleName}</p>
-            )}
-          </div>
-          <div>
-            <label className={labelClasses}>Role</label>
-            <select
-              className={inputClasses}
-              value={form.role}
-              onChange={(e) => setForm({ ...form, role: e.target.value as Role })}
-=======
         <form onSubmit={handleSubmit} className="p-6 space-y-5 max-w-xl">
           {conflict && (
             <div
               className={`flex items-start gap-3 rounded-xl border p-3.5 ${
                 darkMode ? "bg-[#7F1D1D]/15 border-[#7F1D1D]" : "bg-[#FEF3C7] border-[#FCD34D]"
               }`}
->>>>>>> cbca7a763e04a6346b42aabc2f52e9b96031e0ae
             >
               <AlertTriangle size={18} className="text-[#B45309] shrink-0 mt-0.5" />
               <p className={`text-xs font-semibold leading-relaxed ${darkMode ? "text-[#FCD34D]" : "text-[#92400E]"}`}>
@@ -275,13 +262,13 @@ async function handleSubmit(e: FormEvent) {
               <label className={labelClasses}>M.I.</label>
               <input
                 className={inputClasses}
-                value={form.middleInitial}
+                value={form.middleName}
                 maxLength={1}
-                onChange={(e) => setForm({ ...form, middleInitial: e.target.value })}
+                onChange={(e) => setForm({ ...form, middleName: e.target.value })}
                 placeholder="S"
               />
-              {errors.middleInitial && (
-                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.middleInitial}</p>
+              {errors.middleName && (
+                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.middleName}</p>
               )}
             </div>
             <div>
@@ -305,16 +292,9 @@ async function handleSubmit(e: FormEvent) {
             <input
               type="email"
               className={inputClasses}
-<<<<<<< HEAD
-              value={form.contactNumber}
-              maxLength={11}
-              onChange={(e) => setForm({ ...form, contactNumber: e.target.value })}
-              placeholder="0917-123-4567"
-=======
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               placeholder="name@qedschool.edu"
->>>>>>> cbca7a763e04a6346b42aabc2f52e9b96031e0ae
             />
             {errors.email && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.email}</p>}
           </div>

@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import Logo from "../../shared/images/QED_Logo.png";
 import { UserIDIcon, PasswordIcon } from "./components/LoginIcon";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../shared/AuthContext";
+import { AuthService } from "../auth/services/authentication.service";
 
 interface LoginModalProps {
   open: boolean;
@@ -14,10 +16,11 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
   const navigate = useNavigate();
   const login = useAuth().login;
 
-  const [userId, setUserId] = useState("");
+  const [userName, setuserName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -40,28 +43,29 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
   const handleLogin = async () => {
     setError(null);
 
-    if (!userId.trim() || !password.trim()) {
+    if (!userName.trim() || !password.trim()) {
       setError("Please enter both User ID and Password.");
       return;
     }
 
     setLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 400)); 
+      const user = await AuthService.login({
+        userName: userName.trim(),
+        password,
+      });
 
-      const role = userId.trim().toUpperCase().startsWith("T")
-        ? "TEACHER"
-        : "ADMIN";
+      console.log("Logged in user:", user); // 👈 dito, i-check kung may laman lahat (id, role, token) — walang undefined
 
-      login(
-        { id: "1", email: userId, role },
-        "fake-token",
-      );
+      login({ id: user.id, email: user.email, role: user.role }, user.token);
 
-      navigate(role === "TEACHER" ? "/teacher" : "/admin");
-    
+      navigate(user.role === "TEACHER" ? "/teacher" : "/admin");
     } catch (err) {
-      setError("Login failed. Please check your credentials and try again.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Login failed. Please check your credentials and try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -168,8 +172,8 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
                 </span>
                 <input
                   type="text"
-                  value={userId}
-                  onChange={(e) => setUserId(e.target.value)}
+                  value={userName}
+                  onChange={(e) => setuserName(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="e.g. A05-1234"
                   className="w-full pl-12 pr-4 py-3 rounded-xl text-[13px] text-black bg-[#f7f7f8] border border-transparent outline-none transition-all placeholder:text-[#ccc]"
@@ -190,6 +194,7 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
             </div>
 
             {/* Password */}
+            {/* Password */}
             <div className="flex flex-col gap-1.5">
               <label className="text-[11px] font-semibold text-[#5d5d5d] tracking-wide uppercase">
                 Password
@@ -199,12 +204,12 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
                   <PasswordIcon color="#bbb" />
                 </span>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="••••••••"
-                  className="w-full pl-12 pr-4 py-3 rounded-xl text-[13px] text-black bg-[#f7f7f8] border border-transparent outline-none transition-all placeholder:text-[#ccc]"
+                  className="w-full pl-12 pr-11 py-3 rounded-xl text-[13px] text-black bg-[#f7f7f8] border border-transparent outline-none transition-all placeholder:text-[#ccc]"
                   onFocus={(e) => {
                     e.currentTarget.style.background = "#fff";
                     e.currentTarget.style.borderColor = "rgba(85,0,0,0.35)";
@@ -217,6 +222,15 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
                     e.currentTarget.style.boxShadow = "none";
                   }}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  tabIndex={-1}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#bbb] hover:text-[#7d7d7d] transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
             </div>
           </div>

@@ -1,9 +1,7 @@
 import { useOutletContext, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Pencil, Mail, Phone, Clock } from "lucide-react";
 import { useClasses } from "./context/ClassesContext";
-import { useTeachers } from "./context/TeachersContext";
 import { useStudents } from "../studentrecords/context/StudentsContext";
-import { formatTeacherName } from "./types/Teacher";
 import { formatTimeRange } from "./types/Class";
 import { formatFullName } from "../studentrecords/types/Students";
 import type { AdminThemeContext } from "../AdminLayout";
@@ -13,7 +11,6 @@ export function ClassViewPage() {
   const navigate = useNavigate();
   const { classId } = useParams<{ classId: string }>();
   const { getClass } = useClasses();
-  const { getTeacher } = useTeachers();
   const { students } = useStudents();
 
   const schoolClass = classId ? getClass(classId) : undefined;
@@ -36,7 +33,15 @@ export function ClassViewPage() {
     );
   }
 
-  const adviser = getTeacher(schoolClass.adviserId);
+  const hasAdviser = schoolClass.adviserName && schoolClass.adviserName !== "Unassigned";
+  const initials = hasAdviser
+    ? schoolClass.adviserName
+        .split(" ")
+        .map((n) => n[0])
+        .slice(0, 2)
+        .join("")
+    : "?";
+
   const roster = students.filter(
     (s) => s.gradeLevel === schoolClass.gradeLevel && s.section === schoolClass.section
   );
@@ -71,21 +76,25 @@ export function ClassViewPage() {
             className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold shrink-0"
             style={{ background: "#1D70D6" }}
           >
-            {adviser ? adviser.firstName[0] + adviser.lastName[0] : "?"}
+            {initials}
           </div>
           <div className="flex-1 min-w-0">
             <p className={`text-[11px] font-bold uppercase tracking-wide ${textMuted}`}>Class Adviser</p>
             <p className={`text-sm font-extrabold ${textPrimary}`}>
-              {adviser ? formatTeacherName(adviser) : "Unassigned"}
+              {schoolClass.adviserName || "Unassigned"}
             </p>
-            {adviser && (
+            {hasAdviser && (schoolClass.adviserEmail || schoolClass.adviserContact) && (
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1">
-                <span className={`text-xs font-semibold flex items-center gap-1 ${textMuted}`}>
-                  <Mail size={12} /> {adviser.email}
-                </span>
-                <span className={`text-xs font-semibold flex items-center gap-1 ${textMuted}`}>
-                  <Phone size={12} /> {adviser.contactNumber}
-                </span>
+                {schoolClass.adviserEmail && (
+                  <span className={`text-xs font-semibold flex items-center gap-1 ${textMuted}`}>
+                    <Mail size={12} /> {schoolClass.adviserEmail}
+                  </span>
+                )}
+                {schoolClass.adviserContact && (
+                  <span className={`text-xs font-semibold flex items-center gap-1 ${textMuted}`}>
+                    <Phone size={12} /> {schoolClass.adviserContact}
+                  </span>
+                )}
               </div>
             )}
           </div>
@@ -97,26 +106,23 @@ export function ClassViewPage() {
             <p className={`text-xs font-semibold ${textMuted}`}>No schedule set yet.</p>
           ) : (
             <div className="space-y-2">
-              {schoolClass.schedule.map((period) => {
-                const teacher = getTeacher(period.teacherId);
-                return (
-                  <div
-                    key={period.id}
-                    className={`rounded-xl border px-4 py-3 flex items-center justify-between gap-3 ${panelBorder}`}
-                  >
-                    <div className="min-w-0">
-                      <p className={`text-sm font-bold ${textPrimary}`}>{period.subject}</p>
-                      <p className={`text-xs font-semibold ${textMuted}`}>
-                        {teacher ? formatTeacherName(teacher) : "Unassigned"} • {period.days.join(", ")}
-                      </p>
-                    </div>
-                    <span className={`text-xs font-bold flex items-center gap-1.5 shrink-0 ${textMuted}`}>
-                      <Clock size={13} />
-                      {formatTimeRange(period.startTime, period.endTime)}
-                    </span>
+              {schoolClass.schedule.map((period) => (
+                <div
+                  key={period.id}
+                  className={`rounded-xl border px-4 py-3 flex items-center justify-between gap-3 ${panelBorder}`}
+                >
+                  <div className="min-w-0">
+                    <p className={`text-sm font-bold ${textPrimary}`}>{period.subject}</p>
+                    <p className={`text-xs font-semibold ${textMuted}`}>
+                      {period.teacherName || "Unassigned"} • {period.days.join(", ")}
+                    </p>
                   </div>
-                );
-              })}
+                  <span className={`text-xs font-bold flex items-center gap-1.5 shrink-0 ${textMuted}`}>
+                    <Clock size={13} />
+                    {formatTimeRange(period.startTime, period.endTime)}
+                  </span>
+                </div>
+              ))}
             </div>
           )}
         </div>

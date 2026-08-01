@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { School, Plus, Trash2 } from "lucide-react";
 import { ACCENT, GRADE_LEVELS, type GradeLevel, type Subject, type SubjectsTheme } from "../types";
 import { useSections } from "../context/SectionsContext";
@@ -12,11 +12,15 @@ interface ManageSectionsModalProps extends SubjectsTheme {
 
 export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme }: ManageSectionsModalProps) {
   const { darkMode, textMuted, textPrimary } = theme;
-  const { getSectionsForGrade, addSection, removeSection } = useSections();
+   const { getSectionsForGrade, loadSectionsForGrade, addSection, removeSection } = useSections();
 
   const [gradeLevel, setGradeLevel] = useState<GradeLevel>(defaultGrade);
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+    void loadSectionsForGrade(gradeLevel);
+  }, [gradeLevel, loadSectionsForGrade]);
 
   const gradeSections = getSectionsForGrade(gradeLevel);
 
@@ -27,15 +31,19 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
   }`;
   const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 
-  function handleAdd() {
-    const result = addSection(gradeLevel, name);
-    if (!result.ok) {
-      setError(result.error);
-      return;
-    }
-    setName("");
-    setError(null);
+  async function handleAdd() {
+  const result = await addSection(gradeLevel, name);
+  if (!result.ok) {
+    setError(result.error);
+    return;
   }
+  setName("");
+  setError(null);
+}
+
+async function handleRemove(id: string) {
+  await removeSection(id);
+}
 
   function isInUse(sectionName: string) {
     return subjects.some((s) => s.gradeLevel === gradeLevel && s.section === sectionName);
@@ -70,12 +78,14 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
               setName(e.target.value);
               setError(null);
             }}
-            onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+            onKeyDown={(e) => {
+  if (e.key === "Enter") void handleAdd();
+}}
             placeholder="e.g. Amethyst"
             className={inputClasses}
           />
           <button
-            onClick={handleAdd}
+            onClick={() => void handleAdd()}
             className="h-10 w-10 shrink-0 rounded-xl text-white inline-flex items-center justify-center transition-opacity hover:opacity-90"
             style={{ background: ACCENT }}
             aria-label="Add section"
@@ -98,7 +108,7 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
                 <div key={section.id} className="flex items-center justify-between px-3 py-2.5">
                   <span className={`text-sm font-semibold ${textPrimary}`}>{section.name}</span>
                   <button
-                    onClick={() => removeSection(section.id)}
+                   onClick={() => void handleRemove(section.id)}
                     disabled={inUse}
                     title={inUse ? "This section has subjects assigned — reassign or deactivate them first" : "Remove section"}
                     className={`w-7 h-7 rounded-lg flex items-center justify-center transition-colors ${

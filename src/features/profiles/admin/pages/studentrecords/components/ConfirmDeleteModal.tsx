@@ -24,8 +24,7 @@ export function ConfirmDeleteModal({ student, darkMode, onCancel, onConfirm }: C
           Remove student record?
         </h3>
         <p className={`text-sm mt-2 ${darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]"}`}>
-          This will permanently remove <span className="font-semibold">{formatFullName(student)}</span> (
-          {student.id}) from the student records. This action cannot be undone.
+          This will permanently remove <span className="font-semibold">{formatFullName(student)}</span> from the student records. This action cannot be undone.
         </p>
 
         <div className="flex gap-3 mt-6">

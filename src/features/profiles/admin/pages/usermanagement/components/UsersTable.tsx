@@ -24,6 +24,8 @@ const roleBadge = (role: UserAccount["role"]) => {
       return { color: "#1D70D6", bg: "#EAF2FF" };
     case "PARENT":
       return { color: "#7C3AED", bg: "#F3E8FF" };
+    default:
+      return { color: "#6B7280", bg: "#F1F5F9" };
   }
 };
 

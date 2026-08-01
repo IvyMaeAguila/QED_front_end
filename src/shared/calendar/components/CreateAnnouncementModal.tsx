@@ -1,9 +1,16 @@
 import { useState } from "react";
-import { X, Megaphone } from "lucide-react";
+import { X, Megaphone, Pencil } from "lucide-react";
 import { ACCENT, type AnnouncementAudience, type CalendarEvent, type CalendarTheme, type Role } from "../types/Calendar";
 import { toISODate } from "../data";
 import { AudienceTargetPicker } from "./AudienceTargetPicker";
+<<<<<<< Updated upstream:src/shared/calendar/components/CreateAnnouncementModal.tsx
 import { type GradeLevel } from "../../../features/profiles/admin/pages/studentrecords/types/Students";
+=======
+import type { GradeLevel } from "../../studentrecords/types/Students";
+import { createCalendarEvent, updateCalendarEvent } from "../services/calendar.service";
+import { fetchGradeLevels, fetchSectionsByGrade } from "../../classes/services/classes.service";
+
+>>>>>>> Stashed changes:src/features/profiles/admin/pages/calendar/components/CreateAnnouncementModal.tsx
 interface CreateAnnouncementModalProps extends CalendarTheme {
   posterRole: Role;
   posterName: string;
@@ -11,38 +18,42 @@ interface CreateAnnouncementModalProps extends CalendarTheme {
   availableSectionsForGrade: (gradeLevel: GradeLevel | undefined) => string[];
   lockedGradeLevel?: GradeLevel;
   lockedSection?: string;
+  editingEvent?: CalendarEvent; // ✅ idagdag — kung meron, edit mode
   onClose: () => void;
-  onCreate: (event: CalendarEvent) => void;
+  onCreated: () => void;
 }
 
 export function CreateAnnouncementModal({
   posterRole,
-  posterName,
   defaultDate,
   availableSectionsForGrade,
   lockedGradeLevel,
   lockedSection,
+  editingEvent,
   onClose,
-  onCreate,
+  onCreated,
   darkMode,
   panelBg,
   panelBorder,
   textPrimary,
   textMuted,
 }: CreateAnnouncementModalProps) {
-  const isTeacher = posterRole === "TEACHER";
+  const isEditing = Boolean(editingEvent);
+  const isTeacher = posterRole === "teacher";
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState(toISODate(defaultDate));
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [title, setTitle] = useState(editingEvent?.title ?? "");
+  const [description, setDescription] = useState(editingEvent?.description ?? "");
+  const [date, setDate] = useState(editingEvent?.date ?? toISODate(defaultDate));
+  const [startTime, setStartTime] = useState(editingEvent?.startTime ?? "");
+  const [endTime, setEndTime] = useState(editingEvent?.endTime ?? "");
   const [audience, setAudience] = useState<AnnouncementAudience>(
-    isTeacher
-      ? { roles: ["PARENT", "STUDENT"], gradeLevel: lockedGradeLevel, section: lockedSection }
-      : { roles: [] }
+    editingEvent?.audience ??
+      (isTeacher
+        ? { roles: ["parent"], gradeLevel: lockedGradeLevel, section: lockedSection }
+        : { roles: [] })
   );
   const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const inputClasses = `w-full h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors ${
     darkMode
@@ -56,22 +67,52 @@ export function CreateAnnouncementModal({
   }`;
   const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!title.trim()) return setError("Title is required.");
     if (!date) return setError("Date is required.");
     if (audience.roles.length === 0) return setError("Pick at least one audience.");
 
-    onCreate({
-      id: crypto.randomUUID(),
-      title: title.trim(),
-      description: description.trim() || undefined,
-      date,
-      startTime: startTime || undefined,
-      endTime: endTime || undefined,
-      audience,
-      createdByRole: posterRole,
-      createdByName: posterName,
-    });
+    setSubmitting(true);
+    setError(null);
+    try {
+      let gradeLevelId: number | null = null;
+      let sectionId: number | null = null;
+
+      if (audience.gradeLevel) {
+        const gradeLevels = await fetchGradeLevels();
+        const matchedGrade = gradeLevels.find((g) => g.grade_level === audience.gradeLevel);
+        gradeLevelId = matchedGrade?.id ?? null;
+
+        if (audience.section && gradeLevelId) {
+          const sections = await fetchSectionsByGrade(gradeLevelId);
+          const matchedSection = sections.find((s) => s.section_name === audience.section);
+          sectionId = matchedSection?.id ?? null;
+        }
+      }
+
+      const payload = {
+        title: title.trim(),
+        description: description.trim() || null,
+        calendarDate: date,
+        startTime: startTime || null,
+        endTime: endTime || null,
+        gradeLevelId,
+        sectionId,
+        roles: audience.roles,
+      };
+
+      if (isEditing && editingEvent) {
+        await updateCalendarEvent(editingEvent.id, payload);
+      } else {
+        await createCalendarEvent(payload);
+      }
+
+      onCreated();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to save announcement.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -82,8 +123,8 @@ export function CreateAnnouncementModal({
       >
         <div className="px-5 py-4 flex items-center justify-between shrink-0" style={{ background: ACCENT }}>
           <h3 className="text-white font-bold text-sm flex items-center gap-2">
-            <Megaphone size={15} />
-            New Announcement
+            {isEditing ? <Pencil size={15} /> : <Megaphone size={15} />}
+            {isEditing ? "Edit Announcement" : "New Announcement"}
           </h3>
           <button
             onClick={onClose}
@@ -153,10 +194,11 @@ export function CreateAnnouncementModal({
           </button>
           <button
             onClick={handleSubmit}
-            className="flex-1 h-10 rounded-xl text-xs font-bold text-white transition-opacity hover:opacity-90"
+            disabled={submitting}
+            className="flex-1 h-10 rounded-xl text-xs font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
             style={{ background: ACCENT }}
           >
-            Post Announcement
+            {submitting ? "Saving…" : isEditing ? "Save Changes" : "Post Announcement"}
           </button>
         </div>
       </div>

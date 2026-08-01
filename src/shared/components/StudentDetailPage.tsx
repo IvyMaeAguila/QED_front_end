@@ -28,12 +28,21 @@ import {
   LayoutGrid,
   AlignJustify,
 } from "lucide-react";
+<<<<<<< Updated upstream:src/shared/components/StudentDetailPage.tsx
 import { useStudents } from "../../features/profiles/admin/pages/studentrecords/context/StudentsContext";
 import { useClasses } from "../../features/profiles/admin/pages/classes/context/ClassesContext";
 import { useTeachers } from "../../features/profiles/admin/pages/classes/context/TeachersContext";
 import { formatTeacherName } from "../../features/profiles/admin/pages/classes/types/Teacher";
 import type { AdminThemeContext } from "../../features/profiles/admin/pages/AdminLayout";
 import type { Student } from "../../features/profiles/admin/pages/studentrecords/types/Students";
+=======
+import { useStudents } from "./context/StudentsContext";
+import { useClasses } from "../classes/context/ClassesContext";
+import { useTeachers } from "../classes/context/TeachersContext";
+import { formatTeacherName } from "../classes/types/Teacher";
+import type { AdminThemeContext } from ".././AdminLayout";
+import type { Student } from "./types/Students";
+>>>>>>> Stashed changes:src/features/profiles/admin/pages/studentrecords/StudentDetailPage.tsx
 import { useState } from "react";
 
 type StudentWithExtras = Student & {
@@ -235,7 +244,7 @@ export function StudentDetailPage() {
                 {fullName}
               </h1>
               <p className={`text-xs font-semibold mt-0.5 ${textMuted}`}>
-                LRN: {student.lrn} &bull; ID: {student.id}
+                LRN: {student.lrn} &bull; ID: {student.studentId}
               </p>
             </div>
           </div>

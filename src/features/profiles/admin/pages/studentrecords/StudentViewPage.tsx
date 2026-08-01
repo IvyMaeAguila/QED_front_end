@@ -4,7 +4,11 @@ import { useState } from "react";
 import { useStudents } from "./context/StudentsContext";
 import { formatFullName } from "./types/Students";
 import { ConfirmDeleteModal } from "./components/ConfirmDeleteModal";
+<<<<<<< Updated upstream
 import type { AdminThemeContext } from "../AdminLayout";
+=======
+import type { AdminThemeContext } from ".././AdminLayout";
+>>>>>>> Stashed changes
 
 export function StudentViewPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
@@ -34,7 +38,7 @@ export function StudentViewPage() {
   }
 
   const fields: { label: string; value: string }[] = [
-    { label: "Student ID", value: student.id },
+    { label: "Student ID", value: student.studentId },
     { label: "Full Name", value: formatFullName(student) },
     { label: "Gender", value: student.gender },
     { label: "Grade Level", value: student.gradeLevel },
@@ -95,7 +99,7 @@ export function StudentViewPage() {
           darkMode={darkMode}
           onCancel={() => setConfirmingDelete(false)}
           onConfirm={() => {
-            deleteStudent(student.id);
+            deleteStudent(student.dbId);
             navigate("/admin/students");
           }}
         />

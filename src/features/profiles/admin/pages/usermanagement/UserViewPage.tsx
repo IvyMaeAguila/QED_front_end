@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useUsers } from "./context/UsersContext";
 import { formatFullName, ROLE_LABELS } from "./types/user";
 import { ConfirmDeleteUserModal } from "./components/ConfirmDeleteUserModal";
-import type { AdminThemeContext } from "../../AdminLayout";
+import type { AdminThemeContext } from "../AdminLayout";
 
 const ACCENT = "#8B0D0D";
 
@@ -115,7 +115,7 @@ export function UserViewPage() {
             darkMode={darkMode}
             onCancel={() => setConfirmingDelete(false)}
             onConfirm={() => {
-              deleteUser(user.id);
+              deleteUser(user.id, user.role);
               navigate("/admin/users");
             }}
           />

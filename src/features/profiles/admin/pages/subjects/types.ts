@@ -9,6 +9,24 @@ export const GRADE_LEVELS: GradeLevel[] = [
   "Grade 6",
 ];
 
+export const GRADE_LEVEL_IDS: Record<GradeLevel, number> = {
+  "Grade 1": 1,
+  "Grade 2": 2,
+  "Grade 3": 3,
+  "Grade 4": 4,
+  "Grade 5": 5,
+  "Grade 6": 6,
+};
+
+export const GRADE_LEVEL_BY_ID: Record<number, GradeLevel> = {
+  1: "Grade 1",
+  2: "Grade 2",
+  3: "Grade 3",
+  4: "Grade 4",
+  5: "Grade 5",
+  6: "Grade 6",
+};
+
 export interface Subject {
   id: string;
   name: string;

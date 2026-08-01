@@ -1,43 +1,73 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Role, UserAccount, UserStatus } from "../types/user";
-import { seedUsers, getNextUserId } from "../data/usersData";
+import { UserService } from "../services/user-record.service"; // adjust path base sa actual location mo
 
 export type NewUserInput = Omit<UserAccount, "id" | "lastLogin">;
 export type UserUpdateInput = Omit<UserAccount, "id" | "lastLogin">;
 
 interface UsersContextValue {
   users: UserAccount[];
+  loading: boolean;
+  error: string | null;
+  refetchUsers: () => Promise<void>;
   getUser: (id: string) => UserAccount | undefined;
   getActivePrincipal: (excludeId?: string) => UserAccount | undefined;
-  addUser: (user: NewUserInput) => UserAccount;
-  updateUser: (id: string, updates: UserUpdateInput) => void;
-  deleteUser: (id: string) => void;
+  addUser: (user: NewUserInput) => Promise<UserAccount>;
+  updateUser: (id: string, updates: UserUpdateInput) => Promise<void>;
+  deleteUser: (id: string, role: string) => Promise<void>;
 }
 
 const UsersContext = createContext<UsersContextValue | undefined>(undefined);
 
 export function UsersProvider({ children }: { children: ReactNode }) {
-  const [users, setUsers] = useState<UserAccount[]>(seedUsers);
+  const [users, setUsers] = useState<UserAccount[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  async function refetchUsers() {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await UserService.getAllUsers();
+      setUsers(data);
+    } catch (err: any) {
+      setError(err.message || "Failed to load users");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    refetchUsers();
+  }, []);
 
   const value = useMemo<UsersContextValue>(
     () => ({
       users,
+      loading,
+      error,
+      refetchUsers,
       getUser: (id) => users.find((u) => u.id === id),
       getActivePrincipal: (excludeId) =>
         users.find((u) => u.role === "PRINCIPAL" && u.status === "Active" && u.id !== excludeId),
-      addUser: (input) => {
-        const newUser: UserAccount = { ...input, id: getNextUserId(users, input.role), lastLogin: null };
-        setUsers((prev) => [...prev, newUser]);
-        return newUser;
+
+      addUser: async (input) => {
+        const result = await UserService.addUser(input);
+        await refetchUsers(); // i-refresh yung list para makuha yung totoong ID galing DB
+        return result.data;
       },
-      updateUser: (id, updates) => {
+
+      updateUser: async (id, updates) => {
+        await UserService.updateUser(id, updates);
         setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, ...updates } : u)));
       },
-      deleteUser: (id) => {
+
+      deleteUser: async (id, role) => {
+        await UserService.deleteUser(id, role);
         setUsers((prev) => prev.filter((u) => u.id !== id));
       },
     }),
-    [users]
+    [users, loading, error]
   );
 
   return <UsersContext.Provider value={value}>{children}</UsersContext.Provider>;

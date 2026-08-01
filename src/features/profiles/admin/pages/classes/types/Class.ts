@@ -8,16 +8,22 @@ export interface SchedulePeriod {
   id: string;
   subject: string;
   teacherId: string; 
-  days: DayOfWeek[];
+  teacherName?: string;
   startTime: string; 
-  endTime: string; 
+  endTime: string;
+  days: DayOfWeek[]; 
 }
 
 export interface SchoolClass {
   id: string; 
-  gradeLevel: GradeLevel;
+  gradeLevelId: number;
+  gradeLevel: string;
+  sectionId: number; 
   section: string;
   adviserId: string; 
+  adviserName: string;
+  adviserEmail?: string | null;  
+  adviserContact?: string | null;
   schedule: SchedulePeriod[];
 }
 

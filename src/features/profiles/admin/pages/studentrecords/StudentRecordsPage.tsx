@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { IdCard } from "lucide-react";
 import { useStudents } from "./context/StudentsContext";
@@ -6,14 +6,20 @@ import { StudentsFilterBar } from "./components/Studentsfilterbar";
 import { StudentsTable } from "./components/Studentstable";
 import { ConfirmDeleteModal } from "./components/ConfirmDeleteModal";
 import type { Gender, GradeLevel, Student } from "./types/Students";
+<<<<<<< Updated upstream
 import type { AdminThemeContext } from "../AdminLayout";
+=======
+import type { AdminThemeContext } from ".././AdminLayout";
+>>>>>>> Stashed changes
 import { StudentImportExportToolbar } from "./components/StudentImportExportToolbar";
+import { useToast } from "./context/ToastContext";
 
 const ACCENT = "#8B0D0D";
 
 export function StudentRecordsPage() {
   const navigate = useNavigate();
   const { students, deleteStudent, addStudents } = useStudents();
+  const { showToast } = useToast();
 
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
@@ -47,6 +53,18 @@ export function StudentRecordsPage() {
   const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
   const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
   const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
+
+  async function handleConfirmDelete() {
+  if (!studentToDelete) return;
+  try {
+    await deleteStudent(studentToDelete.dbId);   // 👈 dbId, hindi student.id
+    setStudentToDelete(null);
+    showToast("Student deleted successfully!", "success");
+  } catch (error) {
+    console.error("Delete Error:", error);
+    showToast(error instanceof Error ? error.message : "Failed to delete student.");
+  }
+}
 
   return (
     <div className="max-w-7xl mx-auto mt-6 space-y-6 pb-12 px-4 sm:px-6">
@@ -102,10 +120,7 @@ export function StudentRecordsPage() {
           student={studentToDelete}
           darkMode={darkMode}
           onCancel={() => setStudentToDelete(null)}
-          onConfirm={() => {
-            deleteStudent(studentToDelete.id);
-            setStudentToDelete(null);
-          }}
+          onConfirm={handleConfirmDelete}
         />
       )}
     </div>

@@ -51,16 +51,11 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-function RoleRoute({
-  allowed,
-  children,
-}: {
-  allowed: Role[];
-  children: React.ReactNode;
-}) {
+function RoleRoute({ allowed, children }: { allowed: Role[]; children: React.ReactNode }) {
   const { user } = useAuth();
-  if (!user || !allowed.includes(user.role as Role)) {
-    return <Navigate to={getRoleHome(user?.role as Role)} replace />;
+  const normalizedRole = user?.role?.toUpperCase() as Role;
+  if (!user || !allowed.includes(normalizedRole)) {
+    return <Navigate to={getRoleHome(normalizedRole)} replace />;
   }
   return <>{children}</>;
 }
