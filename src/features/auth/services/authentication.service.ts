@@ -14,8 +14,8 @@ export interface LoginPayload {
 
 export interface LoginResponse {
   id: string;
-  email: string;
-  role: "TEACHER" | "ADMIN";
+  userName: string; 
+  role: "ADMIN" | "PRINCIPAL" | "TEACHER" | "PARENT"; 
   token: string;
 }
 
@@ -24,6 +24,7 @@ export const AuthService = {
     const response = await fetch(`${BASE_URL}/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify(payload),
     });
     if (!response.ok) {
@@ -37,6 +38,7 @@ export const AuthService = {
   const response = await fetch(`${BASE_URL}/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify(payload),
   });
 
@@ -49,9 +51,34 @@ export const AuthService = {
   // Unwrap: backend returns { message, user: { id, user_name, role, token } }
   return {
     id: data.user.id,
-    email: data.user.email ?? data.user.user_name, // walang email column, fallback sa user_name
+    userName: data.user.user_name,
     role: data.user.role,
     token: data.user.token,
   };
 },
+
+async getMe() {
+    const response = await fetch(`${BASE_URL}/me`, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (!response.ok) {
+      return null; // walang session, hindi error, normal lang na scenario ito
+    }
+    const data = await response.json();
+    return data.user;
+  },
+
+  async logout() {
+  const response = await fetch(`${BASE_URL}/logout`, {
+    method: "POST",
+    credentials: "include",
+  });
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Logout failed");
+  }
+  return response.json();
+},
 };
+

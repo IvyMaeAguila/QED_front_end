@@ -1,5 +1,10 @@
 const BASE_URL = 'http://localhost:7400/api/section';
 
+export interface GradeLevelRow {
+  id: number;
+  grade_level: string;
+}
+
 export interface SectionRow {
   id: number;
   grade_level_id: string;

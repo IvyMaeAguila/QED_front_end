@@ -142,7 +142,7 @@ export function ClassViewPage() {
                   }`}
                 >
                   <p className={`text-sm font-semibold ${textPrimary}`}>{formatFullName(s)}</p>
-                  <p className={`text-[11px] font-bold tabular-nums ${textMuted}`}>{s.id}</p>
+                  <p className={`text-[11px] font-bold tabular-nums ${textMuted}`}>{s.studentId}</p>
                 </button>
               ))}
             </div>

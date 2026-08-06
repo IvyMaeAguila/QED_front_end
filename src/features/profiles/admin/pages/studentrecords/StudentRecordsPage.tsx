@@ -6,11 +6,7 @@ import { StudentsFilterBar } from "./components/Studentsfilterbar";
 import { StudentsTable } from "./components/Studentstable";
 import { ConfirmDeleteModal } from "./components/ConfirmDeleteModal";
 import type { Gender, GradeLevel, Student } from "./types/Students";
-<<<<<<< Updated upstream
-import type { AdminThemeContext } from "../AdminLayout";
-=======
 import type { AdminThemeContext } from ".././AdminLayout";
->>>>>>> Stashed changes
 import { StudentImportExportToolbar } from "./components/StudentImportExportToolbar";
 import { useToast } from "./context/ToastContext";
 
@@ -32,6 +28,7 @@ export function StudentRecordsPage() {
   );
   const [search, setSearch] = useState("");
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
+  
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -42,7 +39,7 @@ export function StudentRecordsPage() {
         return false;
       if (q) {
         const haystack =
-          `${s.id} ${s.lastName} ${s.firstName} ${s.middleName}`.toLowerCase();
+          `${s.studentId} ${s.lastName} ${s.firstName} ${s.middleName}`.toLowerCase();
         if (!haystack.includes(q)) return false;
       }
       return true;
@@ -94,7 +91,7 @@ export function StudentRecordsPage() {
 
         <StudentImportExportToolbar
           filteredStudents={filtered}
-          allStudentIds={students.map((s) => s.id)}
+          allStudentIds={students.map((s) => s.studentId)}
           allLrns={students.map((s) => s.lrn)}
           onImportStudents={(newStudents) => addStudents(newStudents)}
           darkMode={darkMode}

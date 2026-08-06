@@ -1,12 +1,26 @@
 import { useState, type FormEvent } from "react";
-import { useNavigate, useParams, useLocation, useOutletContext } from "react-router-dom";
+import {
+  useNavigate,
+  useParams,
+  useLocation,
+  useOutletContext,
+} from "react-router-dom";
 import { ArrowLeft, Save, AlertTriangle, UserPlus } from "lucide-react";
 import { useUsers } from "./context/UsersContext";
 import { principalConflict } from "./context/UsersContext";
-import { ROLES, ROLE_LABELS, STATUSES, type Role, type UserStatus } from "./types/user";
+import {
+  ROLES,
+  ROLE_LABELS,
+  STATUSES,
+  type Role,
+  type UserStatus,
+} from "./types/user";
 import { formatFullName } from "./types/user";
 
-import { generateUsername, generateRandomPassword } from "./../../../../auth/utils/credentials";
+import {
+  generateUsername,
+  generateRandomPassword,
+} from "./../../../../auth/utils/credentials";
 import { AuthService } from "./../../../../auth/services/authentication.service";
 
 import type { AdminThemeContext } from "./../AdminLayout";
@@ -41,15 +55,17 @@ function toStr(value: unknown): string {
 }
 
 export function UserFormPage() {
-  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
+  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
+    useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const location = useLocation();
-  const { userId } = useParams<{ userId: string }>();
+  const { role, userId } = useParams<{ role: string; userId: string }>();
   const { getUser, addUser, updateUser, getActivePrincipal } = useUsers();
 
   const isEditing = Boolean(userId);
-  const existing = userId ? getUser(userId) : undefined;
-  const presetRole = (location.state as { presetRole?: Role } | null)?.presetRole;
+  const existing = role && userId ? getUser(role, userId) : undefined;
+  const presetRole = (location.state as { presetRole?: Role } | null)
+    ?.presetRole;
 
   const [form, setForm] = useState<FormState>(
     existing
@@ -62,7 +78,7 @@ export function UserFormPage() {
           contactNumber: toStr(existing.contactNumber),
           status: existing.status,
         }
-      : { ...emptyForm, role: presetRole ?? emptyForm.role }
+      : { ...emptyForm, role: presetRole ?? emptyForm.role },
   );
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
 
@@ -73,7 +89,9 @@ export function UserFormPage() {
   if (isEditing && !existing) {
     return (
       <div className="max-w-7xl mx-auto mt-6 px-4 sm:px-6 pb-12">
-        <section className={`rounded-xl border shadow-xs p-8 text-center ${panelBg} ${panelBorder}`}>
+        <section
+          className={`rounded-xl border shadow-xs p-8 text-center ${panelBg} ${panelBorder}`}
+        >
           <p className={`text-sm font-semibold ${textMuted}`}>
             No user found with ID <span className="font-bold">{userId}</span>.
           </p>
@@ -109,11 +127,11 @@ export function UserFormPage() {
 
     if (!lastName.trim()) next.lastName = "Last name is required.";
     if (!firstName.trim()) next.firstName = "First name is required.";
-    // if (form.middleName && form.middleName.trim().length > 1)
-    //   next.middleName = "Enter a middle name.";
     if (!email.trim()) next.email = "Email is required.";
-    else if (!/^\S+@\S+\.\S+$/.test(email.trim())) next.email = "Enter a valid email address.";
-    if (!contactNumber.trim()) next.contactNumber = "Contact number is required.";
+    else if (!/^\S+@\S+\.\S+$/.test(email.trim()))
+      next.email = "Enter a valid email address.";
+    if (!contactNumber.trim())
+      next.contactNumber = "Contact number is required.";
     setErrors(next);
     return Object.keys(next).length === 0;
   }
@@ -124,7 +142,7 @@ export function UserFormPage() {
     if (conflict) return;
 
     try {
-      let userId = existing?.id;
+      let currentUserId = existing?.id;
       let generatedPassword: string | null = null;
       let userName: string | null = null;
 
@@ -139,11 +157,11 @@ export function UserFormPage() {
           role: form.role,
         });
 
-        userId = authResult.user.id; // <-- this becomes teachers_table.user_id
+        currentUserId = authResult.user.id; // <-- this becomes teachers_table.user_id
       }
 
       const payload = {
-        userId, // now actually defined
+        userId: currentUserId,
         lastName: toStr(form.lastName).trim(),
         firstName: toStr(form.firstName).trim(),
         middleName: toStr(form.middleName).trim(),
@@ -171,17 +189,15 @@ export function UserFormPage() {
         return;
       }
 
-      const targetId = data.data?.id || existing?.id;
-
       if (isEditing && existing) {
-        updateUser(existing.id, payload);
+        updateUser(existing.id, existing.role, payload);
       } else {
         addUser(payload);
       }
 
       if (generatedPassword && userName) {
         alert(
-          `User added successfully!\n\nUsername: ${userName}\nPassword: ${generatedPassword}\n\nPlease share this with the user securely.`
+          `User added successfully!\n\nUsername: ${userName}\nPassword: ${generatedPassword}\n\nPlease share this with the user securely.`,
         );
       } else {
         alert("User updated successfully!");
@@ -203,7 +219,9 @@ export function UserFormPage() {
               type="button"
               onClick={() => navigate("/admin/users")}
               className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-colors ${
-                darkMode ? "border-[#374151] hover:bg-white/10 text-white" : "border-[#E5E7EB] hover:bg-[#F6F7FB] text-[#374151]"
+                darkMode
+                  ? "border-[#374151] hover:bg-white/10 text-white"
+                  : "border-[#E5E7EB] hover:bg-[#F6F7FB] text-[#374151]"
               }`}
             >
               <ArrowLeft size={14} />
@@ -214,7 +232,9 @@ export function UserFormPage() {
             </h2>
           </div>
           <span className={`text-xs font-semibold ${textMuted}`}>
-            {isEditing ? `Updating record ${existing?.id}` : "This user will be assigned the next available ID"}
+            {isEditing
+              ? `Updating record ${existing?.id}`
+              : "This user will be assigned the next available ID"}
           </span>
         </div>
 
@@ -222,13 +242,21 @@ export function UserFormPage() {
           {conflict && (
             <div
               className={`flex items-start gap-3 rounded-xl border p-3.5 ${
-                darkMode ? "bg-[#7F1D1D]/15 border-[#7F1D1D]" : "bg-[#FEF3C7] border-[#FCD34D]"
+                darkMode
+                  ? "bg-[#7F1D1D]/15 border-[#7F1D1D]"
+                  : "bg-[#FEF3C7] border-[#FCD34D]"
               }`}
             >
-              <AlertTriangle size={18} className="text-[#B45309] shrink-0 mt-0.5" />
-              <p className={`text-xs font-semibold leading-relaxed ${darkMode ? "text-[#FCD34D]" : "text-[#92400E]"}`}>
-                {formatFullName(conflict)} ({conflict.id}) is already the active Principal. Only one active
-                Principal is allowed — deactivate their account first, or edit their record directly instead of
+              <AlertTriangle
+                size={18}
+                className="text-[#B45309] shrink-0 mt-0.5"
+              />
+              <p
+                className={`text-xs font-semibold leading-relaxed ${darkMode ? "text-[#FCD34D]" : "text-[#92400E]"}`}
+              >
+                {formatFullName(conflict)} ({conflict.id}) is already the active
+                Principal. Only one active Principal is allowed — deactivate
+                their account first, or edit their record directly instead of
                 creating a new one.
               </p>
             </div>
@@ -243,17 +271,27 @@ export function UserFormPage() {
                 onChange={(e) => setForm({ ...form, lastName: e.target.value })}
                 placeholder="Herrera"
               />
-              {errors.lastName && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.lastName}</p>}
+              {errors.lastName && (
+                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                  {errors.lastName}
+                </p>
+              )}
             </div>
             <div>
               <label className={labelClasses}>First Name</label>
               <input
                 className={inputClasses}
                 value={form.firstName}
-                onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, firstName: e.target.value })
+                }
                 placeholder="Bienvenido"
               />
-              {errors.firstName && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.firstName}</p>}
+              {errors.firstName && (
+                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                  {errors.firstName}
+                </p>
+              )}
             </div>
           </div>
 
@@ -264,19 +302,26 @@ export function UserFormPage() {
                 className={inputClasses}
                 value={form.middleName}
                 maxLength={1}
-                onChange={(e) => setForm({ ...form, middleName: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, middleName: e.target.value })
+                }
                 placeholder="S"
               />
               {errors.middleName && (
-                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.middleName}</p>
+                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                  {errors.middleName}
+                </p>
               )}
             </div>
             <div>
               <label className={labelClasses}>Role</label>
               <select
-                className={inputClasses}
+                className={`${inputClasses} font-bold disabled:opacity-50 disabled:cursor-not-allowed`}
                 value={form.role}
-                onChange={(e) => setForm({ ...form, role: e.target.value as Role })}
+                disabled={isEditing}
+                onChange={(e) =>
+                  setForm({ ...form, role: e.target.value as Role })
+                }
               >
                 {ROLES.map((r) => (
                   <option key={r} value={r}>
@@ -296,7 +341,11 @@ export function UserFormPage() {
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               placeholder="name@qedschool.edu"
             />
-            {errors.email && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                {errors.email}
+              </p>
+            )}
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4">
@@ -305,11 +354,16 @@ export function UserFormPage() {
               <input
                 className={inputClasses}
                 value={form.contactNumber}
-                onChange={(e) => setForm({ ...form, contactNumber: e.target.value })}
+                maxLength={11}
+                onChange={(e) =>
+                  setForm({ ...form, contactNumber: e.target.value })
+                }
                 placeholder="0917-123-4567"
               />
               {errors.contactNumber && (
-                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.contactNumber}</p>
+                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                  {errors.contactNumber}
+                </p>
               )}
             </div>
             <div>
@@ -317,7 +371,9 @@ export function UserFormPage() {
               <select
                 className={inputClasses}
                 value={form.status}
-                onChange={(e) => setForm({ ...form, status: e.target.value as UserStatus })}
+                onChange={(e) =>
+                  setForm({ ...form, status: e.target.value as UserStatus })
+                }
               >
                 {STATUSES.map((s) => (
                   <option key={s} value={s}>
@@ -344,7 +400,9 @@ export function UserFormPage() {
               type="submit"
               disabled={Boolean(conflict)}
               className={`h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 transition-colors ${
-                conflict ? "opacity-50 cursor-not-allowed" : "hover:bg-[#6B0000]"
+                conflict
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-[#6B0000]"
               }`}
               style={{ background: ACCENT }}
             >

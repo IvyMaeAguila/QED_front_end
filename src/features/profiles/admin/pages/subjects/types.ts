@@ -43,6 +43,22 @@ export interface Section {
   name: string;
 }
 
+export interface Teacher {
+  id: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  middleName: string | null;
+  email: string;
+  contactNumber: string;
+}
+
+export function formatTeacherName(
+  teacher: Pick<Teacher, "firstName" | "lastName">
+) {
+  return `${teacher.firstName} ${teacher.lastName}`;
+}
+
 export interface SubjectsTheme {
   darkMode: boolean;
   panelBg: string;

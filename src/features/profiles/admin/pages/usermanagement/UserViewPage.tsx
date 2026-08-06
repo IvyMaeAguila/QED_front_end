@@ -11,11 +11,11 @@ const ACCENT = "#8B0D0D";
 export function UserViewPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
-  const { userId } = useParams<{ userId: string }>();
+  const { role, userId } = useParams<{ role: string; userId: string }>();
   const { getUser, deleteUser } = useUsers();
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
-  const user = userId ? getUser(userId) : undefined;
+  const user = role && userId ? getUser(role.toUpperCase(), userId) : undefined;
 
   const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
   const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
@@ -71,9 +71,6 @@ export function UserViewPage() {
               {user.role === "PRINCIPAL" && <Crown size={14} className="text-amber-500 ml-1 shrink-0" />}
             </h2>
           </div>
-          <span className={`text-xs font-semibold ${textMuted}`}>
-            ID: {user.id}
-          </span>
         </div>
 
         <div className="p-6">
@@ -88,7 +85,7 @@ export function UserViewPage() {
 
           <div className="flex gap-3 mt-8">
             <button
-              onClick={() => navigate(`/admin/users/${user.id}/edit`)}
+              onClick={() => navigate(`/admin/users/${user.role.toLowerCase()}/${user.id}/edit`)}
               className="h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 transition-colors hover:bg-[#6B0000]"
               style={{ background: ACCENT }}
             >

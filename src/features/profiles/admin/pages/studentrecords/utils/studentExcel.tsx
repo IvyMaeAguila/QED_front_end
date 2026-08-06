@@ -114,32 +114,32 @@ export async function parseStudentsExcelFile(
 }
 
 
-export async function exportStudentsToExcel(
-  students: Student[],
-  filename = "students-export.xlsx"
-) {
-  const headers = Object.keys(STUDENT_COLUMN_MAP);
-  const workbook = new ExcelJS.Workbook();
-  const worksheet = workbook.addWorksheet("Students");
+// export async function exportStudentsToExcel(
+//   students: Student[],
+//   filename = "students-export.xlsx"
+// ) {
+//   const headers = Object.keys(STUDENT_COLUMN_MAP);
+//   const workbook = new ExcelJS.Workbook();
+//   const worksheet = workbook.addWorksheet("Students");
 
-  worksheet.columns = headers.map((h) => ({
-    header: h,
-    key: h,
-    width: Math.max(h.length + 2, 14),
-  }));
-  worksheet.getRow(1).font = { bold: true };
+//   worksheet.columns = headers.map((h) => ({
+//     header: h,
+//     key: h,
+//     width: Math.max(h.length + 2, 14),
+//   }));
+//   worksheet.getRow(1).font = { bold: true };
 
-students.forEach((s) => {
-  const row: Record<string, string> = {};
-  for (const [header, field] of Object.entries(STUDENT_COLUMN_MAP)) {
-    const value = s[field]; 
-    row[header] = String(value ?? "");
-  }
-  worksheet.addRow(row);
-});
+// students.forEach((s) => {
+//   const row: Record<string, string> = {};
+//   for (const [header, field] of Object.entries(STUDENT_COLUMN_MAP)) {
+//     const value = s[field]; 
+//     row[header] = String(value ?? "");
+//   }
+//   worksheet.addRow(row);
+// });
 
-  await downloadWorkbook(workbook, filename);
-}
+//   await downloadWorkbook(workbook, filename);
+// }
 
 export async function downloadStudentImportTemplate(
   filename = "student-import-template.xlsx"
@@ -170,4 +170,33 @@ async function downloadWorkbook(workbook: ExcelJS.Workbook, filename: string) {
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+}
+
+export async function exportStudentsToExcel(
+  students: Student[],
+  filename = "students-export.xlsx"
+) {
+  const headers = Object.keys(STUDENT_COLUMN_MAP);
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet("Students");
+
+  worksheet.columns = headers.map((h) => ({
+    header: h,
+    key: h,
+    width: Math.max(h.length + 2, 14),
+  }));
+  worksheet.getRow(1).font = { bold: true };
+
+  students.forEach((s) => {
+    const row: Record<string, string> = {};
+    for (const [header, field] of Object.entries(STUDENT_COLUMN_MAP)) {
+      // "Student ID" dapat ang studentId (student number), hindi ang
+      // internal DB id na nasa `id` pagkatapos ma-save.
+      const value = field === "id" ? s.studentId ?? s.id : s[field];
+      row[header] = String(value ?? "");
+    }
+    worksheet.addRow(row);
+  });
+
+  await downloadWorkbook(workbook, filename);
 }

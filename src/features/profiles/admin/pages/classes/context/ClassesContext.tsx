@@ -9,7 +9,6 @@ interface ClassesContextValue {
   error: string | null;
   getClass: (id: string) => SchoolClass | undefined;
   deleteClass: (id: string) => Promise<void>;
-  updateClass: (id: string, updates: Omit<SchoolClass, "id">) => void;
   refreshClasses: () => void;
 }
 
@@ -82,10 +81,6 @@ export function ClassesProvider({ children }: { children: ReactNode }) {
       deleteClass: async (id) => {
         await deleteClassApi(id);
         setClasses((prev) => prev.filter((c) => c.id !== id));
-      },
-      updateClass: (id, updates) => {
-        // TODO: palitan kapag may /updateClass endpoint na sa backend
-        setClasses((prev) => prev.map((c) => (c.id === id ? { ...updates, id } : c)));
       },
       refreshClasses: () => setReloadFlag((f) => f + 1),
     }),

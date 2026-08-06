@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import {
   ArrowRight,
@@ -15,14 +15,36 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
-// Temporarily avoid depending on the admin subjects context (module not present)
-// Provide an empty subjects array so the page renders without the missing module.
 import { GRADE_LEVELS, type GradeLevel } from "../../../admin/pages/subjects/types";
 import { useStudents } from "../../../admin/pages/studentrecords/context/StudentsContext";
 import { useAuth } from "@shared/AuthContext";
 import { FilterDropdown } from "@shared/components/FilterDropdown";
+import { assignedSubjectsService, type AssignedSubject } from "./services/subjects.service";
 
 type ViewMode = "subjects" | "graph";
+
+// Shape na inaasahan ng UI mo (parang katumbas ng dating "Subject" type)
+interface DisplaySubject {
+  id: number;
+  name: string;
+  gradeLevel: string;
+  section: string;
+}
+
+function mapToDisplaySubject(row: AssignedSubject): DisplaySubject {
+  return {
+    id: row.subjectSectionId,
+    name: row.subjectName,
+    gradeLevel: row.gradeLevel,
+    section: row.sectionName,
+  };
+}
+
+// "Grade 4" -> 4. Base sa format ng grade_level.grade_level sa DB.
+function gradeLevelToId(gradeLevel: string): number {
+  const match = gradeLevel.match(/\d+/);
+  return match ? Number(match[0]) : 0;
+}
 
 function iconFor(name: string): LucideIcon {
   const n = name.toLowerCase();
@@ -41,45 +63,94 @@ export function SubjectsPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
-  const subjects: any[] = [];
   const { students } = useStudents();
   const { user } = useAuth();
+
+  const [subjects, setSubjects] = useState<DisplaySubject[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [view, setView] = useState<ViewMode>("subjects");
   const [search, setSearch] = useState("");
   const [gradeLevel, setGradeLevel] = useState<GradeLevel>(GRADE_LEVELS[0]);
 
-  // Only the subjects assigned to this teacher, and only active ones.
-  // ASSUMPTION: user.id matches Subject.teacherId. Adjust the field name
-  // below if your AuthContext exposes the teacher's id differently.
-  const mySubjects = useMemo(
-    () =>
-      subjects.filter(
-        (s) => s.status === "Active" && (!user?.id || s.teacherId === user.id)
-      ),
-    [subjects, user]
-  );
+  useEffect(() => {
+    if (!user?.id) return;
 
-  const gradeStudents = useMemo(
-    () => students.filter((s) => s.gradeLevel === gradeLevel),
-    [students, gradeLevel]
-  );
+    const fetchSubjects = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const rows = await assignedSubjectsService.getAssignedSubjects();
+        setSubjects(rows.map(mapToDisplaySubject));
+      } catch (err) {
+        console.error("Failed to fetch teacher subjects:", err);
+        setError("Failed to load your subjects.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSubjects();
+  }, [user?.id]);
+
+  const gradeLevelId = useMemo(() => gradeLevelToId(gradeLevel), [gradeLevel]);
+
+// Mga section na naka-assign talaga sa teacher para sa kasalukuyang grade level
+// (gamit ang `subjects`, hindi `filteredSubjects`, para hindi apektado ng search text)
+const assignedSectionNames = useMemo(
+  () =>
+    Array.from(
+      new Set(
+        subjects
+          .filter((s) => s.gradeLevel === gradeLevel)
+          .map((s) => s.section)
+      )
+    ),
+  [subjects, gradeLevel]
+);
+
+// Total Student card: estudyante lang sa mga section na naka-assign sa teacher
+const gradeStudents = useMemo(
+  () =>
+    students.filter(
+      (s) =>
+        s.gradeLevelId === gradeLevelId &&
+        assignedSectionNames.includes(s.section)
+    ),
+  [students, gradeLevelId, assignedSectionNames]
+);
+
+  
 
   const filteredSubjects = useMemo(
     () =>
-      mySubjects.filter(
+      subjects.filter(
         (s) =>
           s.gradeLevel === gradeLevel &&
           s.name.toLowerCase().includes(search.toLowerCase())
       ),
-    [mySubjects, gradeLevel, search]
+    [subjects, gradeLevel, search]
+  );
+
+  // Students na eksaktong nasa section ng specific subject (hindi na yung buong
+  // grade level total na paulit-ulit lang sa bawat card dati).
+  const studentsForSubject = useMemo(
+    () => (subject: DisplaySubject) =>
+      students.filter(
+        (s) => s.gradeLevelId === gradeLevelId && s.section === subject.section
+      ),
+    [students, gradeLevelId]
   );
 
   const inputBg = darkMode ? "bg-[#0B1120]" : "bg-[#F8FAFC]";
   const border = panelBorder;
   const accent = "#8B0D0D";
 
-  const maxCount = Math.max(1, gradeStudents.length);
+  const maxCount = Math.max(
+    1,
+    ...filteredSubjects.map((s) => studentsForSubject(s).length)
+  );
 
   return (
     <div>
@@ -163,87 +234,107 @@ export function SubjectsPage() {
         />
       </div>
 
-      {/* Subjects grid or graph */}
-      {view === "subjects" ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-          {filteredSubjects.map((subject) => {
-            const Icon = iconFor(subject.name);
-            return (
-              <div
-                key={subject.id}
-                className="rounded-2xl overflow-hidden flex flex-col"
-                style={{ boxShadow: "0 8px 24px -4px rgba(85,0,0,0.2)" }}
-              >
-                <div
-                  className="p-6 text-white flex-1"
-                  style={{ background: "linear-gradient(135deg, #5C0000 0%, #8B0D0D 100%)" }}
-                >
-                  <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center mb-4">
-                    <Icon size={20} />
-                  </div>
-                  <h3 className="text-lg font-bold leading-snug">{subject.name}</h3>
-                  <p className="text-xs font-semibold text-white/70 mt-0.5">
-                    {subject.gradeLevel}
-                    {subject.section && ` - ${subject.section}`}
-                  </p>
-                  <div className="flex items-center gap-1.5 mt-4 text-xs font-semibold text-white/80">
-                    <Users size={13} />
-                    {gradeStudents.length} students
-                  </div>
-                </div>
-                <button
-                  onClick={() => navigate(`/teacher/subjects/${subject.id}`)}
-                  className={`w-full py-3 text-xs font-bold uppercase tracking-wider ${panelBg} hover:bg-black/5 transition-colors`}
-                  style={{ color: accent }}
-                >
-                  View Details
-                </button>
-              </div>
-            );
-          })}
-          {filteredSubjects.length === 0 && (
-            <div
-              className={`col-span-full rounded-2xl border py-16 text-center ${panelBg} ${border}`}
-            >
-              <p className={`text-xs font-semibold ${textMuted}`}>
-                No subjects assigned to you for {gradeLevel} yet.
-              </p>
-            </div>
-          )}
+      {/* Loading / Error states */}
+      {loading && (
+        <div className={`rounded-2xl border py-16 text-center ${panelBg} ${border}`}>
+          <p className={`text-xs font-semibold ${textMuted}`}>Loading subjects...</p>
         </div>
-      ) : (
-        <div
-          className={`rounded-2xl border p-6 ${panelBg} ${border}`}
-          style={{ boxShadow: "0 4px 20px -2px rgba(0,0,0,0.05), 0 2px 10px -2px rgba(0,0,0,0.03)" }}
-        >
-          <p className={`text-xs font-bold uppercase tracking-wider mb-5 ${textMuted}`}>
-            Students per Subject — {gradeLevel}
-          </p>
-          <div className="flex flex-col gap-3">
-            {filteredSubjects.map((subject) => (
-              <div key={subject.id} className="flex items-center gap-3">
-                <span className={`text-xs font-semibold w-56 truncate ${textPrimary}`}>
-                  {subject.name}
-                </span>
-                <div className={`flex-1 h-2.5 rounded-full overflow-hidden ${inputBg}`}>
+      )}
+
+      {!loading && error && (
+        <div className={`rounded-2xl border py-16 text-center ${panelBg} ${border}`}>
+          <p className="text-xs font-semibold text-red-500">{error}</p>
+        </div>
+      )}
+
+      {/* Subjects grid or graph */}
+      {!loading && !error && (
+        view === "subjects" ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+            {filteredSubjects.map((subject) => {
+              const Icon = iconFor(subject.name);
+              const subjectStudentCount = studentsForSubject(subject).length;
+              return (
+                <div
+                  key={subject.id}
+                  className="rounded-2xl overflow-hidden flex flex-col"
+                  style={{ boxShadow: "0 8px 24px -4px rgba(85,0,0,0.2)" }}
+                >
                   <div
-                    className="h-full rounded-full"
-                    style={{
-                      width: `${(gradeStudents.length / maxCount) * 100}%`,
-                      background: accent,
-                    }}
-                  />
+                    className="p-6 text-white flex-1"
+                    style={{ background: "linear-gradient(135deg, #5C0000 0%, #8B0D0D 100%)" }}
+                  >
+                    <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center mb-4">
+                      <Icon size={20} />
+                    </div>
+                    <h3 className="text-lg font-bold leading-snug">{subject.name}</h3>
+                    <p className="text-xs font-semibold text-white/70 mt-0.5">
+                      {subject.gradeLevel}
+                      {subject.section && ` - ${subject.section}`}
+                    </p>
+                    <div className="flex items-center gap-1.5 mt-4 text-xs font-semibold text-white/80">
+                      <Users size={13} />
+                      {subjectStudentCount} students
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => navigate(`/teacher/subjects/${subject.id}`)}
+                    className={`w-full py-3 text-xs font-bold uppercase tracking-wider ${panelBg} hover:bg-black/5 transition-colors`}
+                    style={{ color: accent }}
+                  >
+                    View Details
+                  </button>
                 </div>
-                <span className={`text-xs font-bold w-8 text-right ${textPrimary}`}>
-                  {gradeStudents.length}
-                </span>
-              </div>
-            ))}
+              );
+            })}
             {filteredSubjects.length === 0 && (
-              <p className={`text-xs font-semibold ${textMuted}`}>No subjects to chart yet.</p>
+              <div
+                className={`col-span-full rounded-2xl border py-16 text-center ${panelBg} ${border}`}
+              >
+                <p className={`text-xs font-semibold ${textMuted}`}>
+                  No subjects assigned to you for {gradeLevel} yet.
+                </p>
+              </div>
             )}
           </div>
-        </div>
+        ) : (
+          <div
+            className={`rounded-2xl border p-6 ${panelBg} ${border}`}
+            style={{ boxShadow: "0 4px 20px -2px rgba(0,0,0,0.05), 0 2px 10px -2px rgba(0,0,0,0.03)" }}
+          >
+            <p className={`text-xs font-bold uppercase tracking-wider mb-5 ${textMuted}`}>
+              Students per Subject — {gradeLevel}
+            </p>
+            <div className="flex flex-col gap-3">
+              {filteredSubjects.map((subject) => {
+                const subjectStudentCount = studentsForSubject(subject).length;
+                return (
+                  <div key={subject.id} className="flex items-center gap-3">
+                    <span className={`text-xs font-semibold w-56 truncate ${textPrimary}`}>
+                      {subject.name}
+                      {subject.section && ` (${subject.section})`}
+                    </span>
+                    <div className={`flex-1 h-2.5 rounded-full overflow-hidden ${inputBg}`}>
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${(subjectStudentCount / maxCount) * 100}%`,
+                          background: accent,
+                        }}
+                      />
+                    </div>
+                    <span className={`text-xs font-bold w-8 text-right ${textPrimary}`}>
+                      {subjectStudentCount}
+                    </span>
+                  </div>
+                );
+              })}
+              {filteredSubjects.length === 0 && (
+                <p className={`text-xs font-semibold ${textMuted}`}>No subjects to chart yet.</p>
+              )}
+            </div>
+          </div>
+        )
       )}
     </div>
   );

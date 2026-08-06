@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream:src/shared/calendar/components/AudienceTargetPicker.tsx
 import { ACCENT, POSTABLE_ROLES_BY_POSTER, ROLE_LABELS, type Role, type AnnouncementAudience } from "../types/Calendar";
 import { GRADE_LEVELS, type GradeLevel } from "../../../features/profiles/admin/pages/studentrecords/types/Students";
-=======
-import { ACCENT, POSTABLE_ROLES_BY_POSTER, ROLE_LABELS, type Role, type AudienceRole, type AnnouncementAudience } from "../types/Calendar";
-import { GRADE_LEVELS, type GradeLevel } from "../../studentrecords/types/Students";
->>>>>>> Stashed changes:src/features/profiles/admin/pages/calendar/components/AudienceTargetPicker.tsx
 
 interface AudienceTargetPickerProps {
   posterRole: Role;
@@ -30,7 +25,7 @@ export function AudienceTargetPicker({
   lockedSection,
 }: AudienceTargetPickerProps) {
   const postableRoles = POSTABLE_ROLES_BY_POSTER[posterRole];
-  const isTeacher = posterRole === "teacher";
+  const isTeacher = posterRole === "TEACHER";
 
   const inputClasses = `w-full h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors ${
     darkMode
@@ -39,7 +34,7 @@ export function AudienceTargetPicker({
   }`;
   const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 
-  function toggleRole(role: AudienceRole) {
+  function toggleRole(role: Role) {
     const roles = audience.roles.includes(role)
       ? audience.roles.filter((r) => r !== role)
       : [...audience.roles, role];

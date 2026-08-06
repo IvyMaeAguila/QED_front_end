@@ -11,12 +11,12 @@ const DAY_NAME_MAP: Record<DayOfWeek, string> = {
   Thu: "Thursday",
   Fri: "Friday",
 };
- 
+
 export interface GradeLevelOption {
   id: number;
   grade_level: string;
 }
- 
+
 export interface SectionOption {
   id: number;
   section_name: string;
@@ -58,7 +58,7 @@ export interface ClassRecord {
     days: string[];
   }[];
 }
- 
+
 interface CreateClassPayload {
   gradeLevelId: number;
   sectionId: number;
@@ -66,7 +66,11 @@ interface CreateClassPayload {
   adviserId: string;
   schedule: SchedulePeriod[];
 }
- 
+
+// Same shape as create — the backend's updateClass expects gradeLevel, section,
+// adviserId, and the full replacement schedule, exactly like createClass.
+export type UpdateClassPayload = CreateClassPayload;
+
 async function handleJsonResponse(res: Response) {
   const data = await res.json();
   if (!res.ok || !data.success) {
@@ -74,21 +78,29 @@ async function handleJsonResponse(res: Response) {
   }
   return data;
 }
- 
+
 export async function fetchGradeLevels(): Promise<GradeLevelOption[]> {
   const res = await fetch(`${BASE_URL}/gradeLevels`);
   const data = await handleJsonResponse(res);
   return data.data;
 }
- 
-export async function fetchSectionsByGrade(gradeLevelId: number): Promise<SectionOption[]> {
-  const res = await fetch(`${BASE_URL}/sections?gradeLevelId=${gradeLevelId}`);
+
+export async function fetchSectionsByGrade(
+  gradeLevelId: number,
+  excludeClassId?: string | number,
+): Promise<SectionOption[]> {
+  const params = new URLSearchParams({ gradeLevelId: String(gradeLevelId) });
+  if (excludeClassId) params.set("excludeClassId", String(excludeClassId));
+  const res = await fetch(`${BASE_URL}/sections?${params.toString()}`);
   const data = await handleJsonResponse(res);
   return data.data;
 }
 
-export async function fetchTeachers(): Promise<TeacherOption[]> {
-  const res = await fetch(`${BASE_URL}/teacher`);
+export async function fetchTeachers(excludeClassId?: string | number): Promise<TeacherOption[]> {
+  const params = new URLSearchParams();
+  if (excludeClassId) params.set("excludeClassId", String(excludeClassId));
+  const qs = params.toString();
+  const res = await fetch(`${BASE_URL}/teacher${qs ? `?${qs}` : ""}`);
   const data = await handleJsonResponse(res);
   return data.data;
 }
@@ -98,25 +110,47 @@ export async function fetchSubjectsByGrade(gradeLevelId: number): Promise<Subjec
   const data = await handleJsonResponse(res);
   return data.data;
 }
- 
- 
+
+function buildScheduleBody(schedule: SchedulePeriod[]) {
+  return schedule.map((p) => ({
+    subject: p.subject,
+    teacherId: Number(p.teacherId),
+    startTime: p.startTime,
+    endTime: p.endTime,
+    days: p.days.map((d) => DAY_NAME_MAP[d]),
+  }));
+}
+
 export async function createClass(payload: CreateClassPayload) {
   const body = {
     gradeLevel: payload.gradeLevelId, // int, matches grade_level_id
     section: payload.sectionId, // int, matches section_id
     subjects: payload.subjectName,
     adviserId: Number(payload.adviserId), // int
-    schedule: payload.schedule.map((p) => ({
-      subject: p.subject,
-      teacherId: Number(p.teacherId),
-      startTime: p.startTime,
-      endTime: p.endTime,
-      days: p.days.map((d) => DAY_NAME_MAP[d]),
-    })),
+    schedule: buildScheduleBody(payload.schedule),
   };
 
   const res = await fetch(`${BASE_URL}/addClass`, {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  return handleJsonResponse(res); // { success, message, classId }
+}
+
+// PUT /updateClass/:id — replaces the class's grade/section/adviser and its
+// entire schedule (backend deletes the old schedule rows and re-inserts these).
+export async function updateClassApi(id: string | number, payload: UpdateClassPayload) {
+  const body = {
+    gradeLevel: payload.gradeLevelId,
+    section: payload.sectionId,
+    adviserId: Number(payload.adviserId),
+    schedule: buildScheduleBody(payload.schedule),
+  };
+
+  const res = await fetch(`${BASE_URL}/updateClass/${id}`, {
+    method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });

@@ -2,13 +2,6 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate, useParams, useOutletContext } from "react-router-dom";
 import { ArrowLeft, Save, Plus, Trash2 } from "lucide-react";
 import { useClasses } from "./context/ClassesContext";
-<<<<<<< Updated upstream
-import { useTeachers } from "./context/TeachersContext";
-import { formatTeacherName } from "./types/Teacher";
-import { GRADE_LEVELS, type GradeLevel } from "../studentrecords/types/Students";
-import { DAYS_OF_WEEK, type DayOfWeek, type SchedulePeriod } from "./types/Class";
-import type { AdminThemeContext } from "../AdminLayout";
-=======
 import {
   DAYS_OF_WEEK,
   type DayOfWeek,
@@ -16,6 +9,7 @@ import {
 } from "./types/Class";
 import {
   createClass,
+  updateClassApi,
   fetchGradeLevels,
   fetchSectionsByGrade,
   type GradeLevelOption,
@@ -27,7 +21,6 @@ import {
   type SubjectOption,
 } from "./services/classes.service";
 import type { AdminThemeContext } from ".././AdminLayout";
->>>>>>> Stashed changes
 
 interface FormState {
   gradeLevelId: number | "";
@@ -53,7 +46,7 @@ export function ClassFormPage() {
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const { classId } = useParams<{ classId: string }>();
-  const { getClass, updateClass } = useClasses();
+const { getClass, refreshClasses } = useClasses(); 
 
   const isEditing = Boolean(classId);
   const existing = classId ? getClass(classId) : undefined;
@@ -105,7 +98,7 @@ export function ClassFormPage() {
   useEffect(() => {
     let active = true;
     setLoadingTeachers(true);
-    fetchTeachers()
+    fetchTeachers(existing?.id)
       .then((data) => {
         if (active) setTeachers(data);
       })
@@ -119,17 +112,17 @@ export function ClassFormPage() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [existing?.id]);
 
   // 3. Whenever gradeLevelId changes, fetch matching sections and reset sectionId
-  useEffect(() => {
+   useEffect(() => {
     if (form.gradeLevelId === "") {
       setSections([]);
       return;
     }
     let active = true;
     setLoadingSections(true);
-    fetchSectionsByGrade(form.gradeLevelId)
+    fetchSectionsByGrade(form.gradeLevelId, existing?.id)
       .then((data) => {
         if (active) setSections(data);
       })
@@ -254,8 +247,6 @@ export function ClassFormPage() {
     if (!validate()) return;
     if (form.gradeLevelId === "" || form.sectionId === "") return;
 
-    // period.subject holds a subject *id* (string) since it's now a dropdown —
-    // resolve it back to the subject_name here before sending/saving
     const cleanedSchedule = form.schedule
       .filter((p) => p.subject.trim() && p.teacherId && p.days.length > 0)
       .map((p) => ({
@@ -268,34 +259,24 @@ export function ClassFormPage() {
     setSubmitting(true);
     try {
       if (isEditing && existing) {
-        // TODO: gawa ng /updateClass backend route — sa ngayon local update lang ito
-
-        const selectedAdviser = teachers.find(
-          (t) => String(t.id) === form.adviserId,
-        );
-        const adviserName = selectedAdviser
-          ? `${selectedAdviser.first_name} ${selectedAdviser.last_name}`
-          : "Unassigned";
-        updateClass(existing.id, {
-          gradeLevelId: form.gradeLevelId as number,
-          gradeLevel: gradeLevels.find((g) => g.id === form.gradeLevelId)
-            ?.grade_level as any,
-            sectionId: form.sectionId as number,  
-          section:
-            sections.find((s) => s.id === form.sectionId)?.section_name ?? "",
-          adviserId: form.adviserId,
-          adviserName,
-          schedule: cleanedSchedule,
-        });
-        navigate(`/admin/classes`);
-      } else {
-        const result = await createClass({
+        await updateClassApi(existing.id, {
           gradeLevelId: form.gradeLevelId,
           sectionId: form.sectionId,
           subjectName: form.subjectName,
           adviserId: form.adviserId,
           schedule: cleanedSchedule,
         });
+        refreshClasses();
+        navigate(`/admin/classes`);
+      } else {
+        await createClass({
+          gradeLevelId: form.gradeLevelId,
+          sectionId: form.sectionId,
+          subjectName: form.subjectName,
+          adviserId: form.adviserId,
+          schedule: cleanedSchedule,
+        });
+        refreshClasses();
         navigate(`/admin/classes`);
       }
     } catch (err) {
@@ -306,7 +287,6 @@ export function ClassFormPage() {
       setSubmitting(false);
     }
   }
-
   return (
     <section
       className={`rounded-xl border shadow-sm overflow-hidden ${panelBg} ${panelBorder}`}

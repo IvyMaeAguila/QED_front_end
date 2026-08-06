@@ -256,7 +256,7 @@ export function StudentFormPage() {
             </h2>
           </div>
           <span className={`text-xs font-semibold ${textMuted}`}>
-            {isEditing ? `Updating record ${existing?.id}` : "Enter a unique student ID for this record"}
+            {isEditing ? `Updating ${existing?.studentId}'s record` : "Enter a unique student ID for this record"}
           </span>
         </div>
 
@@ -266,13 +266,8 @@ export function StudentFormPage() {
               <label className={labelClasses}>Student ID</label>
               <input
                 className={inputClasses}
-<<<<<<< Updated upstream
-                value={form.id}
-                maxLength={8}
-=======
                 value={form.studentId}
->>>>>>> Stashed changes
-                disabled={isEditing}
+                // disabled={isEditing}
                 onChange={(e) => setForm({ ...form, studentId: e.target.value })}
                 placeholder="A23-0001"
               />

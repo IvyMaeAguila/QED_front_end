@@ -6,6 +6,7 @@ interface ModalShellProps extends SubjectsTheme {
   icon: React.ComponentType<{ size?: number; className?: string }>;
   onClose: () => void;
   children: React.ReactNode;
+  closeDisabled?: boolean;
 }
 
 export function ModalShell({
@@ -15,9 +16,13 @@ export function ModalShell({
   children,
   panelBg,
   panelBorder,
+  closeDisabled = false,
 }: ModalShellProps) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40"
+      onClick={closeDisabled ? undefined : onClose}
+    >
       <div
         className={`w-full max-w-md rounded-2xl border shadow-xl overflow-hidden ${panelBg} ${panelBorder}`}
         onClick={(e) => e.stopPropagation()}
@@ -28,8 +33,11 @@ export function ModalShell({
             {title}
           </h3>
           <button
-            onClick={onClose}
-            className="w-7 h-7 rounded-lg flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors"
+            onClick={closeDisabled ? undefined : onClose}
+            disabled={closeDisabled}
+            className={`w-7 h-7 rounded-lg flex items-center justify-center bg-white/10 transition-colors ${
+              closeDisabled ? "opacity-40 cursor-not-allowed" : "hover:bg-white/20"
+            }`}
           >
             <X size={14} className="text-white" />
           </button>

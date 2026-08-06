@@ -5,12 +5,12 @@ import {
   UserRoundCheck,
 } from "lucide-react";
 
-export const stats = [
-  { label: "Total Users", value: 188, Icon: UserRound },
-  { label: "Total Students", value: 180, Icon: GraduationCap },
-  { label: "Total Teachers", value: 7, Icon: UserRoundCheck },
-  { label: "Total Parents", value: 180, Icon: Users },
-];
+export const statsConfig = [
+  { key: "totalUsers", label: "Total Users", Icon: UserRound },
+  { key: "totalStudents", label: "Total Students", Icon: GraduationCap },
+  { key: "totalTeachers", label: "Total Teachers", Icon: UserRoundCheck },
+  { key: "totalParents", label: "Total Parents", Icon: Users },
+] as const;
 
 export const loginBars = [
   { day: "Mon", value: 46, active: false },

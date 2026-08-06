@@ -1,34 +1,33 @@
 import type { GradeLevel } from "../../../features/profiles/admin/pages/studentrecords/types/Students";
 
-// Roles na pwedeng piliin sa "Send To" — wala nang admin dahil laging
-// nakikita ng admin ang LAHAT ng events, kaya hindi na kailangang i-target siya.
-export type AudienceRole = "principal" | "teacher" | "parent";
+export type Role = "ADMIN" | "PRINCIPAL" | "TEACHER" | "PARENT";
 
-// Roles ng mga taong pwedeng gumamit ng calendar (viewer/poster identity).
-// Kasama pa rin dito ang "admin" kahit hindi na siya target-able.
-export type Role = "admin" | AudienceRole;
-
-export const ROLE_LABELS: Record<AudienceRole, string> = {
-  principal: "Principal",
-  teacher: "Teachers",
-  parent: "Parents",
+export const ROLE_LABELS: Record<Role, string> = {
+  ADMIN: "Admins",
+  PRINCIPAL: "Principal",
+  TEACHER: "Teachers",
+  PARENT: "Parents",
 };
 
-export const POSTABLE_ROLES_BY_POSTER: Record<Role, AudienceRole[]> = {
-  admin: ["principal", "teacher", "parent"],
-  principal: ["principal", "teacher", "parent"],
-  teacher: ["parent"],
-  parent: [],
+// ADMIN is intentionally never a target here — admins already see every
+// announcement principals/teachers create (see canViewerSeeEvent), and the
+// backend's calendar_target_roles table doesn't accept "admin" as a target
+// role, so offering it as a "Send To" option would just 400 on submit.
+export const POSTABLE_ROLES_BY_POSTER: Record<Role, Role[]> = {
+  ADMIN: ["PRINCIPAL", "TEACHER", "PARENT"],
+  PRINCIPAL: ["PRINCIPAL", "TEACHER", "PARENT"],
+  TEACHER: ["PARENT"],
+  PARENT: [],
 };
 
 export interface AnnouncementAudience {
-  roles: AudienceRole[];
+  roles: Role[];
   gradeLevel?: GradeLevel;
   section?: string;
 }
 
 export interface CalendarEvent {
-  id: string;
+  id: number;
   title: string;
   description?: string;
   date: string;
@@ -37,33 +36,22 @@ export interface CalendarEvent {
   audience: AnnouncementAudience;
   createdByRole: Role;
   createdByName: string;
-  createdById?: number; // ✅ idagdag — user_id ng gumawa, para sa edit-permission check
 }
 
 export interface ViewerContext {
   role: Role;
-  userId?: number; // ✅ idagdag — user_id ng kasalukuyang naka-login
   gradeLevel?: GradeLevel;
   section?: string;
 }
 
 export function canViewerSeeEvent(event: CalendarEvent, viewer: ViewerContext): boolean {
-  // Admins can see ALL events regardless of target audience — full visibility.
-  if (viewer.role === "admin") return true;
+  // Admins see every announcement, no matter who it was targeted at.
+  if (viewer.role === "ADMIN") return true;
 
-  if (!event.audience.roles.includes(viewer.role as AudienceRole)) return false;
+  if (!event.audience.roles.includes(viewer.role)) return false;
   if (event.audience.gradeLevel && event.audience.gradeLevel !== viewer.gradeLevel) return false;
   if (event.audience.section && event.audience.section !== viewer.section) return false;
   return true;
-}
-
-// ✅ idagdag — pwedeng mag-edit ang gumawa mismo, o si admin (kahit sino gumawa)
-export function canEditEvent(event: CalendarEvent, viewer: ViewerContext): boolean {
-  if (viewer.role === "admin") return true;
-  if (viewer.userId != null && event.createdById != null) {
-    return viewer.userId === event.createdById;
-  }
-  return false;
 }
 
 export interface CalendarTheme {

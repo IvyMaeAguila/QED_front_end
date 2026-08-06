@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Settings, X, Moon, Sun, Bell, GraduationCap, Info, Pencil, Check, Landmark } from "lucide-react";
+import { Settings, X, Moon, Sun, Bell, GraduationCap, Info, Pencil, Check, Landmark, Loader2 } from "lucide-react";
 import { useSettings } from "../context/SettingsContext";
 import { ToggleRow } from "./ToggleRow";
 
@@ -11,6 +11,8 @@ export function SettingsMenu() {
     toggleDarkMode,
     schoolYear,
     setSchoolYear,
+    schoolYearLoading,
+    schoolYearError,
     schoolAcronym,
     setSchoolAcronym,
     schoolName,
@@ -25,6 +27,8 @@ export function SettingsMenu() {
 
   const [editingYear, setEditingYear] = useState(false);
   const [yearDraft, setYearDraft] = useState(schoolYear);
+  const [yearSaving, setYearSaving] = useState(false);
+  const [yearSaveError, setYearSaveError] = useState<string | null>(null);
   const yearInputRef = useRef<HTMLInputElement>(null);
 
   const [editingAcronym, setEditingAcronym] = useState(false);
@@ -53,6 +57,7 @@ export function SettingsMenu() {
   useEffect(() => {
     if (editingYear) {
       setYearDraft(schoolYear);
+      setYearSaveError(null);
       yearInputRef.current?.focus();
       yearInputRef.current?.select();
     }
@@ -74,12 +79,31 @@ export function SettingsMenu() {
     }
   }, [editingName, schoolName]);
 
-  function commitYear() {
+  // Now properly awaits + catches the backend call. Stays in edit mode and shows
+  // the error message on failure instead of silently reverting with no feedback.
+  async function commitYear() {
     const trimmed = yearDraft.trim();
-    if (trimmed && trimmed !== schoolYear) {
-      setSchoolYear(trimmed);
+
+    if (!trimmed) {
+      setEditingYear(false);
+      return;
     }
-    setEditingYear(false);
+    if (trimmed === schoolYear) {
+      setEditingYear(false);
+      return;
+    }
+
+    setYearSaving(true);
+    setYearSaveError(null);
+    try {
+      await setSchoolYear(trimmed);
+      setEditingYear(false);
+    } catch (err) {
+      setYearSaveError(err instanceof Error ? err.message : "Failed to save school year.");
+      // stay in editing mode so the person can see the error and retry
+    } finally {
+      setYearSaving(false);
+    }
   }
 
   function handleYearKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -88,6 +112,7 @@ export function SettingsMenu() {
       commitYear();
     } else if (e.key === "Escape") {
       setYearDraft(schoolYear);
+      setYearSaveError(null);
       setEditingYear(false);
     }
   }
@@ -270,35 +295,42 @@ export function SettingsMenu() {
               </p>
 
               {editingYear ? (
-                <div className={rowBase}>
-                  <input
-                    ref={yearInputRef}
-                    value={yearDraft}
-                    onChange={(e) => setYearDraft(e.target.value)}
-                    onKeyDown={handleYearKeyDown}
-                    onBlur={commitYear}
-                    placeholder="2025-2026"
-                    className={`flex-1 bg-transparent outline-none text-xs font-bold ${
-                      darkMode ? "text-white" : "text-[#111827]"
-                    }`}
-                  />
-                  <button
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={commitYear}
-                    className="w-6 h-6 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] hover:bg-[#6B0000]/10 transition-colors"
-                    title="Save"
-                  >
-                    <Check size={14} />
-                  </button>
-                </div>
+                <>
+                  <div className={rowBase}>
+                    <input
+                      ref={yearInputRef}
+                      value={yearDraft}
+                      onChange={(e) => setYearDraft(e.target.value)}
+                      onKeyDown={handleYearKeyDown}
+                      placeholder="2026-2027"
+                      disabled={yearSaving}
+                      className={`flex-1 bg-transparent outline-none text-xs font-bold disabled:opacity-60 ${
+                        darkMode ? "text-white" : "text-[#111827]"
+                      }`}
+                    />
+                    <button
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={commitYear}
+                      disabled={yearSaving}
+                      className="w-6 h-6 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] hover:bg-[#6B0000]/10 transition-colors disabled:opacity-50"
+                      title="Save"
+                    >
+                      {yearSaving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
+                    </button>
+                  </div>
+                  {yearSaveError && (
+                    <p className="text-[11px] font-bold text-[#B91C1C]">{yearSaveError}</p>
+                  )}
+                </>
               ) : (
                 <div className={rowBase}>
                   <span className={`text-xs font-bold ${darkMode ? "text-white" : "text-[#111827]"}`}>
-                    {schoolYear}
+                    {schoolYearLoading ? "Loading…" : schoolYear}
                   </span>
                   <button
                     onClick={() => setEditingYear(true)}
-                    className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] transition-colors ${
+                    disabled={schoolYearLoading}
+                    className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] transition-colors disabled:opacity-50 ${
                       darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
                     }`}
                     title="Edit school year"
@@ -306,6 +338,9 @@ export function SettingsMenu() {
                     <Pencil size={13} />
                   </button>
                 </div>
+              )}
+              {!editingYear && schoolYearError && (
+                <p className="text-[11px] font-bold text-[#B91C1C]">{schoolYearError}</p>
               )}
             </div>
 

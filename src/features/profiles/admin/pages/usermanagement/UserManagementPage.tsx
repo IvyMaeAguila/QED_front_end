@@ -15,7 +15,6 @@ export function UserManagementPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const { users, loading, error, deleteUser, getActivePrincipal } = useUsers();
-  
 
   const [roleFilter, setRoleFilter] = useState("All Roles");
   const [statusFilter, setStatusFilter] = useState<UserStatus | "All Statuses">("All Statuses");
@@ -36,7 +35,7 @@ export function UserManagementPage() {
       return true;
     });
   }, [users, roleFilter, statusFilter, search]);
-  
+
   const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
   const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
   const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
@@ -72,7 +71,9 @@ export function UserManagementPage() {
 
         {activePrincipal ? (
           <button
-            onClick={() => navigate(`/admin/users/${activePrincipal.id}`)}
+            onClick={() =>
+              navigate(`/admin/users/${activePrincipal.role.toLowerCase()}/${activePrincipal.id}`)
+            }
             className={`h-9 px-4 rounded-xl text-xs font-bold border inline-flex items-center gap-2 shrink-0 transition-colors ${
               darkMode
                 ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
@@ -123,8 +124,8 @@ export function UserManagementPage() {
           panelBorder={panelBorder}
           textPrimary={textPrimary}
           textMuted={textMuted}
-          onView={(user) => navigate(`/admin/users/${user.id}`)}
-          onEdit={(user) => navigate(`/admin/users/${user.id}/edit`)}
+          onView={(user) => navigate(`/admin/users/${user.role.toLowerCase()}/${user.id}`)}
+          onEdit={(user) => navigate(`/admin/users/${user.role.toLowerCase()}/${user.id}/edit`)}
           onDelete={(user) => setUserToDelete(user)}
         />
       </section>

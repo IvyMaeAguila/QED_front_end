@@ -81,7 +81,8 @@ export function UsersTable({
               const rBadge = roleBadge(user.role);
               const sBadge = statusBadge(user.status);
               return (
-                <tr key={user.id} className={`border-t ${panelBorder} hover:bg-black/2 transition-colors`}>
+                // <tr key={user.id} className={`border-t ${panelBorder} hover:bg-black/2 transition-colors`}>
+                <tr key={`${user.role}-${user.id}`} className={`border-t ${panelBorder} hover:bg-black/2 transition-colors`}>
                   <td className={`px-5 py-4 font-extrabold tabular-nums whitespace-nowrap ${textPrimary}`}>
                     {user.id}
                   </td>
@@ -130,7 +131,8 @@ export function UsersTable({
           const rBadge = roleBadge(user.role);
           const sBadge = statusBadge(user.status);
           return (
-            <div key={user.id} className="p-4 space-y-3">
+            // <div key={user.id} className="p-4 space-y-3">
+            <div key={`${user.role}-${user.id}`} className="p-4 space-y-3">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className={`font-extrabold text-base ${textPrimary}`}>{formatFullName(user)}</p>

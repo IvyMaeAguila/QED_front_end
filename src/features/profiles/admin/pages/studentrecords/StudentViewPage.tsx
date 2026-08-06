@@ -4,11 +4,7 @@ import { useState } from "react";
 import { useStudents } from "./context/StudentsContext";
 import { formatFullName } from "./types/Students";
 import { ConfirmDeleteModal } from "./components/ConfirmDeleteModal";
-<<<<<<< Updated upstream
 import type { AdminThemeContext } from "../AdminLayout";
-=======
-import type { AdminThemeContext } from ".././AdminLayout";
->>>>>>> Stashed changes
 
 export function StudentViewPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();

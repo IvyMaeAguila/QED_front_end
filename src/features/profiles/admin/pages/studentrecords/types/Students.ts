@@ -11,7 +11,7 @@ export type GradeLevel =
 export interface Student {
   id: string; 
   dbId: number; 
-  gradeLevelId: number;  // 👈 para sa pag-preselect ng dropdown pag nag-e-edit
+  gradeLevelId: number; 
   sectionId: number;
   studentId: string;
   lrn: string;

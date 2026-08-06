@@ -1,6 +1,5 @@
 import {
   Navigate,
-  BrowserRouter,
   Routes,
   Route,
   useNavigate,
@@ -51,7 +50,13 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-function RoleRoute({ allowed, children }: { allowed: Role[]; children: React.ReactNode }) {
+function RoleRoute({
+  allowed,
+  children,
+}: {
+  allowed: Role[];
+  children: React.ReactNode;
+}) {
   const { user } = useAuth();
   const normalizedRole = user?.role?.toUpperCase() as Role;
   if (!user || !allowed.includes(normalizedRole)) {
@@ -81,12 +86,14 @@ export function getRoleHome(role?: Role): string {
 }
 
 function AdminSection() {
+  const { logout } = useAuth();
+
   return (
     <StudentsProvider>
       <UsersProvider>
         <TeachersProvider>
           <ClassesProvider>
-            <AdminLayout onLogout={() => console.log("Logging out...")} />
+            <AdminLayout onLogout={logout} />
           </ClassesProvider>
         </TeachersProvider>
       </UsersProvider>
@@ -97,68 +104,66 @@ function AdminSection() {
 export function AppRouter() {
   return (
     <SettingsProvider>
-      <BrowserRouter>
-        <DebugRoute />
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
+      <DebugRoute />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
 
-          {/* ADMIN */}
+        {/* ADMIN */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <RoleRoute allowed={["ADMIN"]}>
+                <AdminSection />
+              </RoleRoute>
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<AdminDashboardHome />} />
+          <Route path="students" element={<StudentRecordsPage />} />
+          <Route path="students/new" element={<StudentFormPage />} />
+          <Route path="students/:studentId" element={<StudentDetailPage />} />
           <Route
-            path="/admin"
-            element={
-              <ProtectedRoute>
-                <RoleRoute allowed={["ADMIN"]}>
-                  <AdminSection />
-                </RoleRoute>
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<AdminDashboardHome />} />
-            <Route path="students" element={<StudentRecordsPage />} />
-            <Route path="students/new" element={<StudentFormPage />} />
-            <Route path="students/:studentId" element={<StudentDetailPage />} />
-            <Route
-              path="students/:studentId/edit"
-              element={<StudentFormPage />}
-            />
-            <Route path="users" element={<UserManagementPage />} />
-            <Route path="users/new" element={<UserFormPage />} />
-            <Route path="users/:userId" element={<UserViewPage />} />
-            <Route path="users/:userId/edit" element={<UserFormPage />} />
-            <Route path="classes" element={<ClassesPage />} />
-            <Route path="classes/new" element={<ClassFormPage />} />
-            <Route path="classes/:classId" element={<ClassViewPage />} />
-            <Route path="classes/:classId/edit" element={<ClassFormPage />} />
-            <Route path="subjects" element={<ManageSubjectsPage />} />
-            <Route path="calendar" element={<CalendarPage />} />
-            <Route path="help" element={<HelpSupportPage />} />
-          </Route>
+            path="students/:studentId/edit"
+            element={<StudentFormPage />}
+          />
+          <Route path="users" element={<UserManagementPage />} />
+          <Route path="users/new" element={<UserFormPage />} />
+          <Route path="users/:role/:userId" element={<UserViewPage />} />
+          <Route path="users/:role/:userId/edit" element={<UserFormPage />} />
+          <Route path="classes" element={<ClassesPage />} />
+          <Route path="classes/new" element={<ClassFormPage />} />
+          <Route path="classes/:classId" element={<ClassViewPage />} />
+          <Route path="classes/:classId/edit" element={<ClassFormPage />} />
+          <Route path="subjects" element={<ManageSubjectsPage />} />
+          <Route path="calendar" element={<CalendarPage />} />
+          <Route path="help" element={<HelpSupportPage />} />
+        </Route>
 
-          {/* TEACHER */}
-          <Route
-            path="/teacher"
-            element={
-              <ProtectedRoute>
-                <RoleRoute allowed={["TEACHER"]}>
-                  <TeacherSection />
-                </RoleRoute>
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<TeacherDashboardHome />} />
-            <Route path="subjects" element={<SubjectsPage />} />
-            <Route path="grades" element={<GradesPage />} />
-            {/* <Route path="holistic" element={<TeacherHolisticAssessmentPage />} /> */}
-            <Route path="holistic" element={<HolisticOverviewPage />} />
-            {/* <Route path="holistic/:studentId/assess" element={<TeacherHolisticAssessmentPage />} /> */}
-            <Route path="students/:studentId" element={<StudentDetailPage />} />
-            <Route path="advisory" element={<AdvisoryRosterPage />} />
-            <Route path="calendar" element={<TeacherCalendarPage />} />
-            <Route path="help" element={<div>Help page</div>} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+        {/* TEACHER */}
+        <Route
+          path="/teacher"
+          element={
+            <ProtectedRoute>
+              <RoleRoute allowed={["TEACHER"]}>
+                <TeacherSection />
+              </RoleRoute>
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<TeacherDashboardHome />} />
+          <Route path="subjects" element={<SubjectsPage />} />
+          <Route path="grades" element={<GradesPage />} />
+          {/* <Route path="holistic" element={<TeacherHolisticAssessmentPage />} /> */}
+          <Route path="holistic" element={<HolisticOverviewPage />} />
+          {/* <Route path="holistic/:studentId/assess" element={<TeacherHolisticAssessmentPage />} /> */}
+          <Route path="students/:studentId" element={<StudentDetailPage />} />
+          <Route path="advisory" element={<AdvisoryRosterPage />} />
+          <Route path="calendar" element={<TeacherCalendarPage />} />
+          <Route path="help" element={<div>Help page</div>} />
+        </Route>
+      </Routes>
     </SettingsProvider>
   );
 }

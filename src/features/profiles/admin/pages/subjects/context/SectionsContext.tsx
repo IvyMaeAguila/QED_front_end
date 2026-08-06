@@ -67,11 +67,6 @@ export function SectionsProvider({ children }: { children: ReactNode }) {
       return { ok: false, error: err instanceof Error ? err.message : "Failed to add section." };
     }
   }
-<<<<<<< Updated upstream
-  //
-  function removeSection(id: string) {
-    setSections((prev) => prev.filter((s) => s.id !== id));
-=======
 
   async function removeSection(id: string) {
     try {
@@ -80,7 +75,6 @@ export function SectionsProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       console.error("Failed to remove section:", err);
     }
->>>>>>> Stashed changes
   }
 
   return (

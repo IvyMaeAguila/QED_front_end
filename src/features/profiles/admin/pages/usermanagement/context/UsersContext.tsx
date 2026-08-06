@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Role, UserAccount, UserStatus } from "../types/user";
-import { UserService } from "../services/user-record.service"; // adjust path base sa actual location mo
+import { UserService } from "../services/user-record.service";
 
 export type NewUserInput = Omit<UserAccount, "id" | "lastLogin">;
 export type UserUpdateInput = Omit<UserAccount, "id" | "lastLogin">;
@@ -10,10 +10,10 @@ interface UsersContextValue {
   loading: boolean;
   error: string | null;
   refetchUsers: () => Promise<void>;
-  getUser: (id: string) => UserAccount | undefined;
+  getUser: (role: string, id: string) => UserAccount | undefined;
   getActivePrincipal: (excludeId?: string) => UserAccount | undefined;
   addUser: (user: NewUserInput) => Promise<UserAccount>;
-  updateUser: (id: string, updates: UserUpdateInput) => Promise<void>;
+  updateUser: (id: string, role: string, updates: UserUpdateInput) => Promise<void>;
   deleteUser: (id: string, role: string) => Promise<void>;
 }
 
@@ -47,24 +47,33 @@ export function UsersProvider({ children }: { children: ReactNode }) {
       loading,
       error,
       refetchUsers,
-      getUser: (id) => users.find((u) => u.id === id),
+
+      getUser: (role, id) =>
+        users.find((u) => u.id === id && u.role === role.toUpperCase()),
+
       getActivePrincipal: (excludeId) =>
         users.find((u) => u.role === "PRINCIPAL" && u.status === "Active" && u.id !== excludeId),
 
       addUser: async (input) => {
         const result = await UserService.addUser(input);
-        await refetchUsers(); // i-refresh yung list para makuha yung totoong ID galing DB
+        await refetchUsers();
         return result.data;
       },
 
-      updateUser: async (id, updates) => {
+      updateUser: async (id, role, updates) => {
         await UserService.updateUser(id, updates);
-        setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, ...updates } : u)));
+        setUsers((prev) =>
+          prev.map((u) =>
+            u.id === id && u.role === role.toUpperCase() ? { ...u, ...updates } : u
+          )
+        );
       },
 
       deleteUser: async (id, role) => {
         await UserService.deleteUser(id, role);
-        setUsers((prev) => prev.filter((u) => u.id !== id));
+        setUsers((prev) =>
+          prev.filter((u) => !(u.id === id && u.role === role.toUpperCase()))
+        );
       },
     }),
     [users, loading, error]

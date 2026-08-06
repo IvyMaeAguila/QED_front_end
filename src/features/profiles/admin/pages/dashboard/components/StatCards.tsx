@@ -1,4 +1,7 @@
-import { stats } from "../data/Dashboarddata";
+import { useEffect, useState } from "react";
+import { statsConfig } from "../data/Dashboarddata";
+import { DashboardService } from "../services/totalCounts.service";
+import type { DashboardCounts } from "../services/totalCounts.service";
 
 interface StatCardsProps {
   panelBg: string;
@@ -7,11 +10,28 @@ interface StatCardsProps {
 }
 
 export function StatCards({ panelBg, panelBorder, textPrimary }: StatCardsProps) {
+  const [counts, setCounts] = useState<DashboardCounts | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    DashboardService.getDashboardCounts()
+      .then(setCounts)
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const valueFor = (key: keyof DashboardCounts) => {
+    if (loading) return "...";
+    if (error) return "—";
+    return counts?.[key] ?? 0;
+  };
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-      {stats.map(({ label, value, Icon }) => (
+      {statsConfig.map(({ key, label, Icon }) => (
         <div
-          key={label}
+          key={key}
           className={`rounded-2xl border p-5 shadow-sm transition-shadow hover:shadow-md ${panelBg} ${panelBorder}`}
         >
           <div className="flex items-center justify-between">
@@ -26,7 +46,7 @@ export function StatCards({ panelBg, panelBorder, textPrimary }: StatCardsProps)
             </div>
           </div>
           <p className={`mt-2 text-4xl font-black leading-none tracking-tight tabular-nums ${textPrimary}`}>
-            {value}
+            {valueFor(key)}
           </p>
         </div>
       ))}
