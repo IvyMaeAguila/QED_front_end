@@ -3,3 +3,16 @@
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+@theme {
+  --color-maroon: #8f0000;
+  --color-maroon-dark: #710000;
+
+  --color-surface: #efefef;
+  --color-surface-dark: #1a1a1a;
+
+  --radius-xl2: 1rem;
+
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-panel: 0 4px 14px rgba(0,0,0,0.12);
+}

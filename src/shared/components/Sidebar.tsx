@@ -1,11 +1,21 @@
 import { Link, useLocation } from "react-router-dom";
 import { HelpCircle, LogOut, X, type LucideIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import { LogoComponent } from "./Logo";
 
 export interface NavItem {
   label: string;
   Icon: LucideIcon;
-  to: string;
+  to?: string;
+  // For nav items that aren't a plain route link (e.g. hover flyout,
+  // mobile redirect). If provided, Sidebar renders this instead of a <Link>.
+  render?: (args: {
+    isActive: boolean;
+    onCloseSidebar: () => void;
+    darkMode: boolean;
+  }) => ReactNode;
+  // Used to compute isActive when `render` is used and there's no `to`.
+  activeMatch?: string;
 }
 
 interface SidebarProps {
@@ -62,15 +72,26 @@ export function Sidebar({
 
       <nav className="flex-1 min-h-0 overflow-y-auto px-3 space-y-1">
         {navItems.map((item) => {
-          const isActive =
-            item.to === homeTo
+          const isActive = item.to
+            ? item.to === homeTo
               ? location.pathname === homeTo
-              : location.pathname.startsWith(item.to);
+              : location.pathname.startsWith(item.to)
+            : item.activeMatch
+            ? location.pathname.startsWith(item.activeMatch)
+            : false;
+
+          if (item.render) {
+            return (
+              <div key={item.label}>
+                {item.render({ isActive, onCloseSidebar: onClose, darkMode })}
+              </div>
+            );
+          }
 
           return (
             <Link
               key={item.label}
-              to={item.to}
+              to={item.to!}
               onClick={onClose}
               className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-[13px] transition-all duration-300 cubic-bezier(0.16, 1, 0.3, 1) active:scale-[0.98] ${
                 isActive
@@ -93,7 +114,7 @@ export function Sidebar({
 
       <div className="p-5 border-t border-white/10">
         <Link
-          to={helpItem.to}
+          to={helpItem.to!}
           onClick={onClose}
           className="flex items-center gap-3 text-[13px] text-white/55 hover:text-white hover:bg-white/10 px-3 py-2.5 rounded-xl cursor-pointer mb-2 transition-all duration-300 cubic-bezier(0.16, 1, 0.3, 1) hover:shadow-lg hover:shadow-black/5 hover:translate-x-1 active:scale-[0.98]"
         >

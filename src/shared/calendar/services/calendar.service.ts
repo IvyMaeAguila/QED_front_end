@@ -1,51 +1,42 @@
 // calendar.service.ts
-import type { AnnouncementAudience, CalendarEvent, Role } from "../types/Calendar";
+import type { CalendarActivity, CalendarHoliday, HolidayType } from "../types/Calendar";
 
 const BASE_URL = "http://localhost:7400/api/calendar"; // palitan ng actual base url mo
 
-type BackendRole = "admin" | "principal" | "teacher" | "parent";
-
-interface CalendarEventRecordDTO {
+// --------------------------------------------------------
+// DTO shapes — palitan kung iba ang field names ng backend mo
+// --------------------------------------------------------
+interface CalendarActivityRecordDTO {
   id: number;
   title: string;
-  description: string | null;
-  calendarDate: string;
-  startTime: string | null;
-  endTime: string | null;
-  gradeLevelId: number | null;
-  gradeLevel: string; // "All Grade Levels" kung null
-  sectionId: number | null;
-  section: string; // "All Sections" kung null
+  date: string;
   createdBy: number | null;
-  createdByRole: BackendRole | null;
-  createdByName: string | null;
   createdAt: string;
-  roles: BackendRole[];
 }
 
-function toBackendRole(role: Role): BackendRole {
-  return role.toLowerCase() as BackendRole;
+interface CalendarHolidayRecordDTO {
+  id: number;
+  title: string;
+  date: string;
+  type: HolidayType | null;
+  createdBy: number | null;
+  createdAt: string;
 }
 
-function toFrontendRole(role: string): Role {
-  return role.toUpperCase() as Role;
-}
-
-function recordToEvent(record: CalendarEventRecordDTO): CalendarEvent {
+function activityRecordToActivity(record: CalendarActivityRecordDTO): CalendarActivity {
   return {
     id: record.id,
     title: record.title,
-    description: record.description ?? undefined,
-    date: record.calendarDate,
-    startTime: record.startTime ?? undefined,
-    endTime: record.endTime ?? undefined,
-    audience: {
-      roles: record.roles.map(toFrontendRole),
-      gradeLevel: record.gradeLevelId ? (record.gradeLevel as unknown as AnnouncementAudience["gradeLevel"]) : undefined,
-      section: record.sectionId ? record.section : undefined,
-    },
-    createdByRole: record.createdByRole ? toFrontendRole(record.createdByRole) : "ADMIN",
-    createdByName: record.createdByName ?? "Unknown",
+    date: record.date,
+  };
+}
+
+function holidayRecordToHoliday(record: CalendarHolidayRecordDTO): CalendarHoliday {
+  return {
+    id: record.id,
+    title: record.title,
+    date: record.date,
+    type: record.type ?? undefined,
   };
 }
 
@@ -57,80 +48,132 @@ async function handleJsonResponse(res: Response) {
   return data;
 }
 
+// ==========================================================
+// ACTIVITIES
+// ==========================================================
+
 // --------------------------------------------------------
-// Fetch all calendar events
+// Fetch all activities
 // --------------------------------------------------------
-export async function fetchCalendarEvents(): Promise<CalendarEvent[]> {
-  const res = await fetch(`${BASE_URL}/`);
+export async function fetchCalendarActivities(): Promise<CalendarActivity[]> {
+  const res = await fetch(`${BASE_URL}/activities`);
   const data = await handleJsonResponse(res);
-  return (data.data as CalendarEventRecordDTO[]).map(recordToEvent);
+  return (data.data as CalendarActivityRecordDTO[]).map(activityRecordToActivity);
 }
 
 // --------------------------------------------------------
-// Fetch single calendar event by id
+// Create activities (bulk — supports the "+ Add Another" rows
+// from AddCalendarEntriesModal, saved all at once)
 // --------------------------------------------------------
-export async function fetchCalendarEventById(id: number): Promise<CalendarEvent> {
-  const res = await fetch(`${BASE_URL}/${id}`);
-  const data = await handleJsonResponse(res);
-  return recordToEvent(data.data as CalendarEventRecordDTO);
-}
-
-// --------------------------------------------------------
-// Create calendar event
-// --------------------------------------------------------
-export interface CreateCalendarEventInput {
+export interface CreateCalendarActivityInput {
   title: string;
-  description?: string;
   date: string;
-  startTime?: string;
-  endTime?: string;
-  audience: AnnouncementAudience;
-  gradeLevelId?: number | null;
-  sectionId?: number | null;
   createdBy?: number | null;
 }
 
-export async function createCalendarEvent(input: CreateCalendarEventInput): Promise<number> {
+export async function createCalendarActivities(
+  entries: CreateCalendarActivityInput[],
+  createdBy?: number | null
+): Promise<CalendarActivity[]> {
   const body = {
-    title: input.title,
-    description: input.description ?? null,
-    calendarDate: input.date,
-    startTime: input.startTime ?? null,
-    endTime: input.endTime ?? null,
-    gradeLevelId: input.gradeLevelId ?? null,
-    sectionId: input.sectionId ?? null,
-    roles: input.audience.roles.map(toBackendRole),
-    createdBy: input.createdBy ?? null,
+    entries: entries.map((e) => ({
+      title: e.title,
+      date: e.date,
+      createdBy: e.createdBy ?? createdBy ?? null,
+    })),
   };
 
-  const res = await fetch(`${BASE_URL}/addEvent`, {
+
+  const res = await fetch(`${BASE_URL}/activities/add`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
 
-  const data = await handleJsonResponse(res); // { success, message, calendarId }
-  return data.calendarId as number;
+  const data = await handleJsonResponse(res);
+  return (data.data as CalendarActivityRecordDTO[]).map(activityRecordToActivity);
 }
 
 // --------------------------------------------------------
-// Update calendar event
+// Update single activity
 // --------------------------------------------------------
-export type UpdateCalendarEventInput = CreateCalendarEventInput;
+export async function updateCalendarActivity(id: number, input: CreateCalendarActivityInput): Promise<void> {
+  const body = { title: input.title, date: input.date };
 
-export async function updateCalendarEvent(id: number, input: UpdateCalendarEventInput): Promise<void> {
+const res = await fetch(`${BASE_URL}/activities/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  await handleJsonResponse(res);
+}
+
+// --------------------------------------------------------
+// Delete activity (soft delete)
+// --------------------------------------------------------
+export async function deleteCalendarActivityApi(id: number): Promise<void> {
+  const res = await fetch(`${BASE_URL}/activities/${id}`, { method: "DELETE" });
+  await handleJsonResponse(res); // { success, message }
+}
+
+// ==========================================================
+// HOLIDAYS
+// ==========================================================
+
+// --------------------------------------------------------
+// Fetch all holidays
+// --------------------------------------------------------
+export async function fetchCalendarHolidays(): Promise<CalendarHoliday[]> {
+  const res = await fetch(`${BASE_URL}/holidays`);
+  const data = await handleJsonResponse(res);
+  return (data.data as CalendarHolidayRecordDTO[]).map(holidayRecordToHoliday);
+}
+
+// --------------------------------------------------------
+// Create holidays (bulk)
+// --------------------------------------------------------
+export interface CreateCalendarHolidayInput {
+  title: string;
+  date: string;
+  type?: HolidayType;
+  createdBy?: number | null;
+}
+
+export async function createCalendarHolidays(
+  entries: CreateCalendarHolidayInput[],
+  createdBy?: number | null
+): Promise<CalendarHoliday[]> {
   const body = {
-    title: input.title,
-    description: input.description ?? null,
-    calendarDate: input.date,
-    startTime: input.startTime ?? null,
-    endTime: input.endTime ?? null,
-    gradeLevelId: input.gradeLevelId ?? null,
-    sectionId: input.sectionId ?? null,
-    roles: input.audience.roles.map(toBackendRole),
+    entries: entries.map((e) => ({
+      title: e.title,
+      date: e.date,
+      holidayType: e.type ?? "regular",
+      createdBy: e.createdBy ?? createdBy ?? null,
+    })),
   };
 
-  const res = await fetch(`${BASE_URL}/${id}`, {
+  const res = await fetch(`${BASE_URL}/holidays/add`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  const data = await handleJsonResponse(res); // { success, message, data: CalendarHolidayRecordDTO[] }
+  return (data.data as CalendarHolidayRecordDTO[]).map(holidayRecordToHoliday);
+}
+
+// --------------------------------------------------------
+// Update single holiday
+// --------------------------------------------------------
+export async function updateCalendarHoliday(id: number, input: CreateCalendarHolidayInput): Promise<void> {
+  const body = {
+    title: input.title,
+    date: input.date,
+    holidayType: input.type ?? "regular",
+  };
+
+  const res = await fetch(`${BASE_URL}/holidays/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
@@ -138,11 +181,10 @@ export async function updateCalendarEvent(id: number, input: UpdateCalendarEvent
 
   await handleJsonResponse(res); // { success, message }
 }
-
 // --------------------------------------------------------
-// Delete calendar event (soft delete)
+// Delete holiday (soft delete)
 // --------------------------------------------------------
-export async function deleteCalendarEventApi(id: number): Promise<void> {
-  const res = await fetch(`${BASE_URL}/${id}`, { method: "DELETE" });
+export async function deleteCalendarHolidayApi(id: number): Promise<void> {
+  const res = await fetch(`${BASE_URL}/holidays/${id}`, { method: "DELETE" });
   await handleJsonResponse(res); // { success, message }
 }

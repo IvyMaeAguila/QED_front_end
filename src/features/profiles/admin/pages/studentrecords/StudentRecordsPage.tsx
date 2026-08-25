@@ -8,7 +8,7 @@ import { ConfirmDeleteModal } from "./components/ConfirmDeleteModal";
 import type { Gender, GradeLevel, Student } from "./types/Students";
 import type { AdminThemeContext } from ".././AdminLayout";
 import { StudentImportExportToolbar } from "./components/StudentImportExportToolbar";
-import { useToast } from "./context/ToastContext";
+import { useToast } from "../../../../../shared/context/ToastContext";
 
 const ACCENT = "#8B0D0D";
 

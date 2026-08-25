@@ -3,24 +3,50 @@ import { Eye, EyeOff } from "lucide-react";
 import Logo from "../../shared/images/QED_Logo.png";
 import { UserIDIcon, PasswordIcon } from "./components/LoginIcon";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../shared/AuthContext";
+import { useAuth } from "./context/AuthContext";
 import { AuthService } from "../auth/services/authentication.service";
+import { ForgotPasswordModal } from "../../shared/components/manage_password/ForgotPasswordModal";
+import { OtpVerificationModal } from "../../shared/components/manage_password/OtpVerificationModal";
+import { ResetPasswordModal } from "../../shared/components/manage_password/ResetPasswordModal";
 
 interface LoginModalProps {
   open: boolean;
   onClose: () => void;
 }
 
+function getRoleHome(role?: string): string {
+  switch (role?.toUpperCase()) {
+    case "ADMIN":
+      return "/admin";
+    case "PRINCIPAL":
+      return "/principal";
+    case "TEACHER":
+      return "/teacher";
+    case "PARENT":
+      return "/parent";
+    default:
+      return "/login";
+  }
+}
+
+type ForgotPasswordStep = "closed" | "email" | "otp" | "reset";
+
 export function LoginPanel({ open, onClose }: LoginModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const login = useAuth().login;
+  const { login } = useAuth();
 
   const [userName, setuserName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  // Forgot password flow state
+  const [forgotStep, setForgotStep] = useState<ForgotPasswordStep>("closed");
+  const [resetUserName, setResetUserName] = useState("");
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetToken, setResetToken] = useState("");
 
   useEffect(() => {
     if (!open) return;
@@ -55,11 +81,8 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
         password,
       });
 
-      console.log("Logged in user:", user); // 👈 dito, i-check kung may laman lahat (id, role, token) — walang undefined
-
-      login({ id: user.id, email: user.email, role: user.role }, user.token);
-
-      navigate(user.role === "TEACHER" ? "/teacher" : "/admin");
+      login(user, user.token, user.mustChangePassword);
+      navigate(getRoleHome(user.role));
     } catch (err) {
       setError(
         err instanceof Error
@@ -194,7 +217,6 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
             </div>
 
             {/* Password */}
-            {/* Password */}
             <div className="flex flex-col gap-1.5">
               <label className="text-[11px] font-semibold text-[#5d5d5d] tracking-wide uppercase">
                 Password
@@ -246,7 +268,11 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
                 Remember me
               </span>
             </label>
-            <button className="text-[11px] text-[#550000] hover:text-[#bb0000] font-medium transition-colors">
+            <button
+              type="button"
+              onClick={() => setForgotStep("email")}
+              className="text-[11px] text-[#550000] hover:text-[#bb0000] font-medium transition-colors"
+            >
               Forgot password?
             </button>
           </div>
@@ -280,6 +306,37 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
           to   { opacity: 1; transform: scale(1)    translateY(0); }
         }
       `}</style>
+
+      {/* Forgot password flow */}
+      {forgotStep === "email" && (
+        <ForgotPasswordModal
+          onClose={() => setForgotStep("closed")}
+          onOtpSent={(userName, email) => {
+            setResetUserName(userName);
+            setResetEmail(email);
+            setForgotStep("otp");
+          }}
+        />
+      )}
+      {forgotStep === "otp" && (
+        <OtpVerificationModal
+          userName={resetUserName}
+          email={resetEmail}
+          onClose={() => setForgotStep("closed")}
+          onResend={() => setForgotStep("email")}
+          onVerified={(token) => {
+            setResetToken(token);
+            setForgotStep("reset");
+          }}
+        />
+      )}
+      {forgotStep === "reset" && (
+        <ResetPasswordModal
+          resetToken={resetToken}
+          onClose={() => setForgotStep("closed")}
+          onSuccess={() => setForgotStep("closed")}
+        />
+      )}
     </div>
   );
 }

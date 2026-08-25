@@ -1,5 +1,5 @@
-const USER_BASE_URL = "http://localhost:7400/api/user"; // adjust sa totoong prefix mo
-const STUDENT_BASE_URL = "http://localhost:7400/api/student"; // adjust din ito base sa route mount mo
+const USER_BASE_URL = "http://localhost:7400/api/user"; 
+const STUDENT_BASE_URL = "http://localhost:7400/api/student"; 
 
 export interface UserCountsResponse {
   totalUsers: number;

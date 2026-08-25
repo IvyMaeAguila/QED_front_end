@@ -17,7 +17,7 @@ import type { LucideIcon } from "lucide-react";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
 import { GRADE_LEVELS, type GradeLevel } from "../../../admin/pages/subjects/types";
 import { useStudents } from "../../../admin/pages/studentrecords/context/StudentsContext";
-import { useAuth } from "@shared/AuthContext";
+import { useAuth } from "../../../../auth/context/AuthContext";
 import { FilterDropdown } from "@shared/components/FilterDropdown";
 import { assignedSubjectsService, type AssignedSubject } from "./services/subjects.service";
 

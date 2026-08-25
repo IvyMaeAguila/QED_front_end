@@ -5,7 +5,7 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
-import { useAuth } from "../shared/AuthContext";
+import { useAuth } from "../features/auth/context/AuthContext";
 import { AdminLayout } from "../features/profiles/admin/pages/AdminLayout";
 import { AdminDashboardHome } from "../features/profiles/admin/pages/dashboard/AdminDashboardHome";
 import { StudentsProvider } from "../features/profiles/admin/pages/studentrecords/context/StudentsContext";
@@ -22,9 +22,9 @@ import { ClassFormPage } from "../features/profiles/admin/pages/classes/ClassFor
 import { ClassViewPage } from "../features/profiles/admin/pages/classes/ClassViewPage";
 import LandingPage from "../features/Landing/LandingPage";
 import { LoginPanel } from "../features/auth/LoginPanel";
-import { StudentDetailPage } from "../shared/components/StudentDetailPage";
+// import { StudentDetailPage } from "../shared/components/StudentDetailPage";
 import { ManageSubjectsPage } from "../features/profiles/admin/pages/subjects/ManageSubjectsPage";
-import { CalendarPage } from "../shared/calendar/CalendarPage";
+import { CalendarPage } from "../features/profiles/admin/pages/calendar/CalendarPage";
 import { HelpSupportPage } from "../features/profiles/admin/pages/help/HelpSupportPage";
 import { SettingsProvider } from "../features/profiles/admin/pages/settings/context/SettingsContext";
 import { TeacherSection } from "./TeacherSection";
@@ -34,6 +34,11 @@ import { AdvisoryRosterPage } from "../features/profiles/teacher/pages/roster/Ad
 import { GradesPage } from "../features/profiles/teacher/pages/grades/GradePage";
 import { HolisticOverviewPage } from "../features/profiles/teacher/pages/holistic/HolisticOverviewPage";
 import { SubjectsPage } from "../features/profiles/teacher/pages/subjects/SubjectPage";
+import { ParentSection } from "./ParentSection";
+import ParentDashboardHome from "../features/profiles/parent/pages/dashboard/ParentDashboardHome";
+import { EnrolledChildrenPage } from "../features/profiles/parent/pages/EnrollledStudent/EnrolledChildrenPage";
+import StudentDetailPage from "../features/profiles/parent/pages/Student/studentDetailPage";
+import { CalendarPageView } from "../features/profiles/parent/pages/calendar/CalendarPageView";
 
 function DebugRoute() {
   const location = useLocation();
@@ -108,7 +113,6 @@ export function AppRouter() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
-
         {/* ADMIN */}
         <Route
           path="/admin"
@@ -140,7 +144,6 @@ export function AppRouter() {
           <Route path="calendar" element={<CalendarPage />} />
           <Route path="help" element={<HelpSupportPage />} />
         </Route>
-
         {/* TEACHER */}
         <Route
           path="/teacher"
@@ -162,6 +165,25 @@ export function AppRouter() {
           <Route path="advisory" element={<AdvisoryRosterPage />} />
           <Route path="calendar" element={<TeacherCalendarPage />} />
           <Route path="help" element={<div>Help page</div>} />
+        </Route>
+        // PARENT
+        <Route
+          path="/parent"
+          element={
+            <ProtectedRoute>
+              <RoleRoute allowed={["PARENT"]}>
+                <ParentSection />
+              </RoleRoute>
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<ParentDashboardHome />} />
+          <Route path="enrolled-children" element={<EnrolledChildrenPage />} />
+          <Route
+            path="students/:studentId"
+            element={<StudentDetailPage />}
+          />
+          <Route path="calendar" element={<CalendarPageView />} />
         </Route>
       </Routes>
     </SettingsProvider>

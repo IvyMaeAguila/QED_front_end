@@ -1,4 +1,4 @@
-import { useAuth } from "../shared/AuthContext"; // ✅ idagdag ang import
+import { useAuth } from "../features/auth/context/AuthContext"; 
 import { TeacherLayout } from "../features/profiles/teacher/pages/TeacherLayout";
 import { ClassesProvider } from "../features/profiles/admin/pages/classes/context/ClassesContext";
 import { TeachersProvider } from "../features/profiles/admin/pages/classes/context/TeachersContext";

@@ -1,8 +1,9 @@
 import { BrowserRouter } from "react-router-dom";
 import { AppRouter } from "./routes/AppRouter";
-import { AuthProvider } from "./shared/AuthContext";
-import { ToastProvider } from "./features/profiles/admin/pages/studentrecords/context/ToastContext";
+import { AuthProvider } from "./features/auth/context/AuthContext";
+import { ToastProvider } from "./shared/context/ToastContext";
 import { TeachersProvider } from "./features/profiles/admin/pages/classes/context/TeachersContext";
+import { ForceChangePasswordGate } from "@shared/components/manage_password/ForceChangePasswordGate";
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
         <AuthProvider>
           <TeachersProvider>
             <AppRouter />
+            <ForceChangePasswordGate />
           </TeachersProvider>
         </AuthProvider>
       </ToastProvider>

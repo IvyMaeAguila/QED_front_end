@@ -1,11 +1,11 @@
-import { useState, type FormEvent } from "react";
+import { useState, useRef, type FormEvent } from "react";
 import {
   useNavigate,
   useParams,
   useLocation,
   useOutletContext,
 } from "react-router-dom";
-import { ArrowLeft, Save, AlertTriangle, UserPlus } from "lucide-react";
+import { ArrowLeft, Save, AlertTriangle, CheckCircle, UserPlus } from "lucide-react";
 import { useUsers } from "./context/UsersContext";
 import { principalConflict } from "./context/UsersContext";
 import {
@@ -23,6 +23,10 @@ import {
 } from "./../../../../auth/utils/credentials";
 import { AuthService } from "./../../../../auth/services/authentication.service";
 
+// Self-contained modal built for the admin theme — see AdminFeedbackModal.tsx.
+// TODO: palitan ng tamang relative path papunta sa file mo
+import AdminFeedbackModal from "../../modal/adminFeedbackModal";
+
 import type { AdminThemeContext } from "./../AdminLayout";
 
 const ACCENT = "#8B0D0D";
@@ -35,6 +39,22 @@ interface FormState {
   email: string;
   contactNumber: string;
   status: UserStatus;
+}
+
+// Payload sent to /addUser and /editUser. userName/generatedPassword are only
+// included on create (see handleSubmit) so the backend knows to send the
+// credentials email — they're never sent, or persisted, on edit.
+interface AddUserPayload {
+  userId?: string;
+  lastName: string;
+  firstName: string;
+  middleName: string;
+  role: Role;
+  email: string;
+  contactNumber: string;
+  status: UserStatus;
+  userName?: string;
+  generatedPassword?: string;
 }
 
 const emptyForm: FormState = {
@@ -60,7 +80,7 @@ export function UserFormPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { role, userId } = useParams<{ role: string; userId: string }>();
-  const { getUser, addUser, updateUser, getActivePrincipal } = useUsers();
+  const { getUser, refetchUsers, getActivePrincipal } = useUsers();
 
   const isEditing = Boolean(userId);
   const existing = role && userId ? getUser(role, userId) : undefined;
@@ -81,6 +101,30 @@ export function UserFormPage() {
       : { ...emptyForm, role: presetRole ?? emptyForm.role },
   );
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  // Ref, not state — state updates are batched/async and won't block a
+  // second handleSubmit call that fires in the same tick (e.g. Enter key
+  // + button click nearly simultaneously). The ref updates synchronously.
+  const isSubmittingRef = useRef(false);
+
+  // Replaces native alert() for success/error feedback. onCloseAction lets
+  // the success case navigate away only after the user dismisses the modal
+  // (unlike alert(), Modal doesn't block execution, so we can't navigate
+  // right after calling it — that would yank the modal away before they
+  // read it).
+  const [feedbackModal, setFeedbackModal] = useState<{
+    open: boolean;
+    variant: "success" | "error";
+    title: string;
+    message: string;
+    onCloseAction?: () => void;
+  }>({ open: false, variant: "success", title: "", message: "" });
+
+  function closeFeedbackModal() {
+    const action = feedbackModal.onCloseAction;
+    setFeedbackModal((prev) => ({ ...prev, open: false }));
+    action?.();
+  }
 
   const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
   const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
@@ -140,7 +184,10 @@ export function UserFormPage() {
     e.preventDefault();
     if (!validate()) return;
     if (conflict) return;
+    if (isSubmittingRef.current) return; // synchronous guard — blocks same-tick duplicate fires
 
+    isSubmittingRef.current = true;
+    setIsSubmitting(true); // drives the button's disabled/label UI
     try {
       let currentUserId = existing?.id;
       let generatedPassword: string | null = null;
@@ -160,7 +207,7 @@ export function UserFormPage() {
         currentUserId = authResult.user.id; // <-- this becomes teachers_table.user_id
       }
 
-      const payload = {
+      const payload: AddUserPayload = {
         userId: currentUserId,
         lastName: toStr(form.lastName).trim(),
         firstName: toStr(form.firstName).trim(),
@@ -169,6 +216,11 @@ export function UserFormPage() {
         email: toStr(form.email).trim(),
         contactNumber: toStr(form.contactNumber).trim(),
         status: form.status,
+        // only present on create — backend uses these to send the
+        // credentials email, and should never persist the plain password
+        ...(generatedPassword && userName
+          ? { userName, generatedPassword }
+          : {}),
       };
 
       const endpoint =
@@ -185,28 +237,52 @@ export function UserFormPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(`Error: ${data.message || "Failed to save user's record."}`);
+        setFeedbackModal({
+          open: true,
+          variant: "error",
+          title: "Couldn't Save User",
+          message: data.message || "Failed to save user's record.",
+        });
         return;
       }
 
-      if (isEditing && existing) {
-        updateUser(existing.id, existing.role, payload);
-      } else {
-        addUser(payload);
-      }
+      // The raw fetch above already performed the create/update — just
+      // refresh the context's local list from the server. Do NOT call
+      // context's addUser/updateUser here, they'd fire a second
+      // POST/PUT to the same endpoint.
+      await refetchUsers();
 
-      if (generatedPassword && userName) {
-        alert(
-          `User added successfully!\n\nUsername: ${userName}\nPassword: ${generatedPassword}\n\nPlease share this with the user securely.`,
-        );
-      } else {
-        alert("User updated successfully!");
-      }
-
-      navigate(`/admin/users`);
+      setFeedbackModal({
+        open: true,
+        variant: "success",
+        title: generatedPassword && userName ? "User Added" : "User Updated",
+        message:
+          generatedPassword && userName
+            ? `Credentials were sent to ${payload.email}.`
+            : "User updated successfully!",
+        onCloseAction: () => navigate("/admin/users"),
+      });
     } catch (error) {
-      console.error("API Connection Error:", error);
-      alert("Can't connect to the server. Make sure the backend is running.");
+      console.error("Submission error:", error);
+      // Show the backend's actual message when we have one (e.g. duplicate
+      // username, duplicate email) instead of implying it's a connection
+      // problem — those are two very different things for the admin to act on.
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Can't connect to the server. Make sure the backend is running.";
+      const isDuplicateUsername = /already taken/i.test(message);
+      setFeedbackModal({
+        open: true,
+        variant: "error",
+        title: isDuplicateUsername
+          ? "Username Already Taken"
+          : "Couldn't Save User",
+        message,
+      });
+    } finally {
+      isSubmittingRef.current = false;
+      setIsSubmitting(false);
     }
   }
 
@@ -398,20 +474,50 @@ export function UserFormPage() {
             </button>
             <button
               type="submit"
-              disabled={Boolean(conflict)}
+              disabled={Boolean(conflict) || isSubmitting}
               className={`h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 transition-colors ${
-                conflict
+                conflict || isSubmitting
                   ? "opacity-50 cursor-not-allowed"
                   : "hover:bg-[#6B0000]"
               }`}
               style={{ background: ACCENT }}
             >
               <Save size={14} />
-              {isEditing ? "Save Changes" : "Add User"}
+              {isSubmitting
+                ? "Saving..."
+                : isEditing
+                  ? "Save Changes"
+                  : "Add User"}
             </button>
           </div>
         </form>
       </section>
+
+      <AdminFeedbackModal
+        open={feedbackModal.open}
+        onClose={closeFeedbackModal}
+        title={feedbackModal.title}
+        message={feedbackModal.message}
+        darkMode={darkMode}
+        icon={
+          feedbackModal.variant === "success" ? (
+            <CheckCircle size={16} />
+          ) : (
+            <AlertTriangle size={16} />
+          )
+        }
+      >
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={closeFeedbackModal}
+            className="h-9 px-4 rounded-xl text-xs font-bold text-white transition-colors hover:bg-[#6B0000]"
+            style={{ background: ACCENT }}
+          >
+            OK
+          </button>
+        </div>
+      </AdminFeedbackModal>
     </div>
   );
 }

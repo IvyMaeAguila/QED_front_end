@@ -1,7 +1,8 @@
 import { Menu } from "lucide-react";
 import { useSettings } from "../../features/profiles/admin/pages/settings/context/SettingsContext";
-import { ProfileMenu } from "../../features/profiles/admin/pages/settings/components/ProfileMenu";
+// import { ProfileMenu } from "../../features/profiles/admin/pages/settings/components/ProfileMenu";
 import { SettingsMenu } from "../../features/profiles/admin/pages/settings/components/SettingsMenu";
+import { ProfileMenu } from "../../shared/profile/components/ProfileMenu";
 
 interface HeaderProps {
   onMenuClick: () => void;
