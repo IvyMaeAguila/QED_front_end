@@ -1,8 +1,7 @@
 import type { Student } from "../../dashboard/types/student";
+import { API_CONFIG } from '../../../../../../config/api.config';
 
-const API_BASE_URL = "http://localhost:7400";
-
-const LINKEDCHILDREN_API = "/api/linkedChildren"
+const LINKEDCHILDREN_API = `${API_CONFIG.baseURL}/api/linkedChildren`;
 
 export interface StudentVerifyRequest {
     studentNumber: string;
@@ -57,7 +56,7 @@ function mapStudentRow(row: StudentData): Student {
 export const verificationService = {
     verifyStudent: async (data: StudentVerifyRequest): Promise<StudentVerifyResponse> => {
         try {
-            const response = await fetch(`${API_BASE_URL}${LINKEDCHILDREN_API}/`, {
+            const response = await fetch(`${LINKEDCHILDREN_API}/`, {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -84,7 +83,7 @@ export const verificationService = {
 
     confirmLink: async (data: StudentVerifyRequest): Promise<LinkConfirmResponse> => {
     try {
-        const response = await fetch(`${API_BASE_URL}${LINKEDCHILDREN_API}/confirm`, {
+        const response = await fetch(`${LINKEDCHILDREN_API}/confirm`, {
             method: "POST",
             credentials: "include",
             headers: {
@@ -113,7 +112,7 @@ export const verificationService = {
 export const enrolledChildrenService = {
     getEnrolledChildren: async (): Promise<EnrolledChildrenResponse> => {
         try {
-            const response = await fetch(`${API_BASE_URL}${LINKEDCHILDREN_API}/`, {
+            const response = await fetch(`${LINKEDCHILDREN_API}/`, {
                 method: "GET",
                 credentials: "include",
                 headers: {

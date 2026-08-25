@@ -1,7 +1,8 @@
 // calendar.service.ts
 import type { CalendarActivity, CalendarHoliday, HolidayType } from "../types/Calendar";
+import { API_CONFIG } from '../../../config/api.config';
 
-const BASE_URL = "http://localhost:7400/api/calendar"; // palitan ng actual base url mo
+const BASE_URL = `${API_CONFIG.baseURL}/api/calendar`; // palitan ng actual base url mo
 
 // --------------------------------------------------------
 // DTO shapes — palitan kung iba ang field names ng backend mo

@@ -15,7 +15,7 @@ export function QuickDateCard({ panelBg, panelBorder, textPrimary, textMuted }: 
 
   return (
     <div
-      className={`rounded-2xl p-8 border flex flex-col items-center justify-center text-center h-full min-h-[220px] ${panelBg} ${panelBorder}`}
+      className={`rounded-2xl p-8 border flex flex-col items-center justify-center text-center h-full min-h-55 ${panelBg} ${panelBorder}`}
       style={{ boxShadow: "0 4px 20px -2px rgba(0,0,0,0.05), 0 2px 10px -2px rgba(0,0,0,0.03)" }}
     >
       <p className={`text-xs font-bold uppercase tracking-[0.2em] mb-2 ${textMuted}`}>

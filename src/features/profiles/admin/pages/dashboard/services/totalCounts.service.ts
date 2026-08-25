@@ -1,5 +1,8 @@
-const USER_BASE_URL = "http://localhost:7400/api/user"; 
-const STUDENT_BASE_URL = "http://localhost:7400/api/student"; 
+import { API_CONFIG } from '../../../../../../config/api.config';
+
+
+const USER_BASE_URL = `${API_CONFIG.baseURL}/api/user`; 
+const STUDENT_BASE_URL = `${API_CONFIG.baseURL}/api/student`; 
 
 export interface UserCountsResponse {
   totalUsers: number;

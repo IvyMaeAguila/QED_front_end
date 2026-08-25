@@ -1,7 +1,8 @@
 import type { DayOfWeek, SchedulePeriod } from "../types/Class";
+import { API_CONFIG } from '../../../../../../config/api.config';
 
 
-const BASE_URL = "http://localhost:7400/api/classes";// palitan ng actual base url mo
+const BASE_URL = `${API_CONFIG.baseURL}/api/classes`;// palitan ng actual base url mo
 
 // Backend expects full day names, frontend uses short codes
 const DAY_NAME_MAP: Record<DayOfWeek, string> = {

@@ -9,7 +9,7 @@ interface WelcomeBannerProps {
 export function WelcomeBanner({ name, classesToday, pendingGrades }: WelcomeBannerProps) {
   return (
     <div
-      className="relative overflow-hidden rounded-2xl p-8 sm:p-10 text-white h-full flex flex-col justify-center min-h-[220px]"
+      className="relative overflow-hidden rounded-2xl p-8 sm:p-10 text-white h-full flex flex-col justify-center min-h-55"
       style={{
         background: "linear-gradient(135deg, #550000 0%, #BB0000 100%)",
         boxShadow: "0 12px 32px rgba(85,0,0,0.25)",
@@ -18,11 +18,11 @@ export function WelcomeBanner({ name, classesToday, pendingGrades }: WelcomeBann
       <GraduationCap
         size={280}
         strokeWidth={1}
-        className="absolute -right-10 -bottom-14 opacity-[0.07] pointer-events-none rotate-[15deg]"
+        className="absolute -right-10 -bottom-14 opacity-[0.07] pointer-events-none rotate-15"
       />
 
       <div className="relative">
-        <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/10 text-white/80 text-[11px] font-bold tracking-[0.1em] uppercase mb-4 border border-white/10">
+        <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/10 text-white/80 text-[11px] font-bold tracking-widest uppercase mb-4 border border-white/10">
           Welcome back
         </span>
         <h1 className="text-2xl sm:text-[32px] font-black leading-tight tracking-tight">

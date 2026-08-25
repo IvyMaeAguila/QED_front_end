@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
-import { GRADE_LEVEL_IDS, GRADE_LEVEL_BY_ID, type Subject, type GradeLevel } from "../types";
+import { GRADE_LEVEL_IDS, GRADE_LEVEL_BY_ID, type Subject, type GradeLevel } from "../types/types";
 import { fetchSubjectSectionsByGrade, type SubjectSectionByGradeRow } from "../services/subject.service";
 
 interface SubjectSectionsContextValue {

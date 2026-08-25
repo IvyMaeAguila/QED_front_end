@@ -1,6 +1,7 @@
 import type { UserProfile, Role } from "../../../shared/profile/types/types";
+import { API_CONFIG } from '../../../config/api.config';
 
-const BASE_URL = "http://localhost:7400/api/auth";
+const BASE_URL = `${API_CONFIG.baseURL}/api/auth`;
 
 export interface RegisterPayload {
   userName: string;

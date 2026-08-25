@@ -1,3 +1,4 @@
+import { API_CONFIG } from '../../../../../config/api.config';
 import { useState, useRef, type FormEvent } from "react";
 import {
   useNavigate,
@@ -225,8 +226,8 @@ export function UserFormPage() {
 
       const endpoint =
         isEditing && existing
-          ? `http://localhost:7400/api/user/editUser/${existing.id}`
-          : "http://localhost:7400/api/user/addUser";
+          ? `${API_CONFIG.baseURL}/api/user/editUser/${existing.id}`
+          : `${API_CONFIG.baseURL}/api/user/addUser`;
 
       const response = await fetch(endpoint, {
         method: isEditing && existing ? "PUT" : "POST",

@@ -1,4 +1,6 @@
-const BASE_URL = "http://localhost:7400/api/sy"; // adjust to match your router mount path
+import { API_CONFIG } from '../../../../../../config/api.config';
+
+const BASE_URL = `${API_CONFIG.baseURL}/api/sy`; 
  
 // Tugma sa response shape ng sy.controller.js: { success, message, data }
 export interface ApiResponse<T> {

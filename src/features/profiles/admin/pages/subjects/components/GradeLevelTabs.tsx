@@ -1,29 +1,38 @@
-import { ACCENT, GRADE_LEVELS, type GradeLevel, type SubjectsTheme } from "../types";
+import { ACCENT, GRADE_LEVELS, type GradeLevel, type SubjectsTheme } from "../types/types";
 
-interface GradeLevelTabsProps extends Pick<SubjectsTheme, "darkMode"> {
+interface GradeLevelTabsProps extends Pick<SubjectsTheme, "panelBorder" | "textPrimary" | "textMuted"> {
   activeGrade: GradeLevel;
   onChange: (grade: GradeLevel) => void;
 }
 
-export function GradeLevelTabs({ activeGrade, onChange, darkMode }: GradeLevelTabsProps) {
+// Same underline-tab language as AdminTopTabs, one level down — filters the
+// current tab's content by grade instead of switching routes.
+export function GradeLevelTabs({
+  activeGrade,
+  onChange,
+  panelBorder,
+  textPrimary,
+  textMuted,
+}: GradeLevelTabsProps) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className={`flex items-center gap-8 border-b overflow-x-auto ${panelBorder}`}>
       {GRADE_LEVELS.map((grade) => {
         const isActive = grade === activeGrade;
         return (
           <button
             key={grade}
             onClick={() => onChange(grade)}
-            className={`h-10 px-5 rounded-xl text-sm font-bold border-2 transition-all duration-200 ${
-              isActive
-                ? "text-white shadow-sm scale-[1.02]"
-                : darkMode
-                ? "bg-transparent border-[#8B0D0D]/50 text-[#D1D5DB] hover:border-[#8B0D0D] hover:bg-[#8B0D0D]/10"
-                : "bg-white border-[#8B0D0D]/30 text-[#8B0D0D] hover:border-[#8B0D0D] hover:bg-[#8B0D0D]/5"
+            className={`relative pb-3 whitespace-nowrap text-sm font-bold transition-colors ${
+              isActive ? textPrimary : `${textMuted} hover:${textPrimary}`
             }`}
-            style={isActive ? { background: ACCENT, borderColor: ACCENT } : undefined}
           >
             {grade}
+            {isActive && (
+              <span
+                className="absolute inset-x-0 -bottom-px h-0.5 rounded-full"
+                style={{ backgroundColor: ACCENT }}
+              />
+            )}
           </button>
         );
       })}

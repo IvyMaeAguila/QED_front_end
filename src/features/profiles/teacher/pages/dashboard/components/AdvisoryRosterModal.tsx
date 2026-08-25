@@ -37,7 +37,7 @@ function RosterColumn({
   textMuted: string;
 }) {
   return (
-    <section className={`min-w-0 flex-1 overflow-hidden rounded-2xl border ${darkMode ? "border-white/10" : "border-black/[0.06]"}`}>
+    <section className={`min-w-0 flex-1 overflow-hidden rounded-2xl border ${darkMode ? "border-white/10" : "border-black/6"}`}>
       <div className="flex items-center justify-between gap-3 px-5 py-4" style={{ backgroundColor: tint }}>
         <div className="flex items-center gap-2.5">
           <span className="flex h-8 w-8 items-center justify-center rounded-xl text-white" style={{ backgroundColor: color }}>
@@ -53,7 +53,7 @@ function RosterColumn({
         </span>
       </div>
 
-      <div className={`divide-y ${darkMode ? "divide-white/10" : "divide-black/[0.06]"}`}>
+      <div className={`divide-y ${darkMode ? "divide-white/10" : "divide-black/6"}`}>
         {students.map((student) => (
           <div key={student.id} className={`flex items-center gap-3 px-5 py-3.5 ${darkMode ? "hover:bg-white/[0.035]" : "hover:bg-black/[0.012]"} transition-colors`}>
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${color}20`, color }}>
@@ -94,7 +94,7 @@ export function AdvisoryRosterModal({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
+      className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6"
       style={{ backgroundColor: "rgba(10, 10, 15, 0.56)", backdropFilter: "blur(7px)" }}
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();

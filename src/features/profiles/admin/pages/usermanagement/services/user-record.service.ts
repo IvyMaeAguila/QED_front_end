@@ -1,4 +1,6 @@
-const BASE_URL = "http://localhost:7400/api/user";
+import { API_CONFIG } from '../../../../../../config/api.config';
+
+const BASE_URL = `${API_CONFIG.baseURL}/api/user`;
 
 export const UserService = {
   async getAllUsers() {

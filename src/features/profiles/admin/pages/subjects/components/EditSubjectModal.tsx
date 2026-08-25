@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Pencil, Loader2, AlertCircle } from "lucide-react";
 import { useTeachers } from "../../classes/context/TeachersContext";
 import { formatTeacherName } from "../../classes/types/Teacher";
-import { ACCENT, type Subject, type SubjectsTheme } from "../types";
+import { ACCENT, type Subject, type SubjectsTheme } from "../types/types";
 import { useSections } from "../context/SectionsContext";
 import { ModalShell } from "./ModalShell";
 

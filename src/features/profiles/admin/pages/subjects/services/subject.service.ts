@@ -1,4 +1,6 @@
-const BASE_URL = "http://localhost:7400/api/subject";
+import { API_CONFIG } from '../../../../../../config/api.config';
+
+const BASE_URL = `${API_CONFIG.baseURL}/api/subject`;
 
 // Tugma sa response shape ng subject.controller.js: { success, message, data }
 export interface ApiResponse<T> {

@@ -1,4 +1,6 @@
-const BASE_URL = 'http://localhost:7400/api/section';
+import { API_CONFIG } from '../../../../../../config/api.config';
+
+const BASE_URL = `${API_CONFIG.baseURL}/api/section`;
 
 export interface GradeLevelRow {
   id: number;

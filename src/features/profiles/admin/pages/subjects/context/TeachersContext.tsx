@@ -6,7 +6,7 @@ import {
   type ReactNode,
 } from "react";
 
-import type { Teacher } from "../types";
+import type { Teacher } from "../types/types";
 import { fetchTeachers, type TeacherRow } from "../services/teacher.service";
 
 interface TeachersContextValue {

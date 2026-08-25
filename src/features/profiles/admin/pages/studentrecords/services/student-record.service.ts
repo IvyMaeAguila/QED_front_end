@@ -1,6 +1,7 @@
+import { API_CONFIG } from '../../../../../../config/api.config';
 import type { Student } from "../types/Students";
 
-const BASE_URL = "http://localhost:7400/api/student";
+const BASE_URL = `${API_CONFIG.baseURL}/api/student`;
 
 export interface GradeLevelResponse {
   id: number;

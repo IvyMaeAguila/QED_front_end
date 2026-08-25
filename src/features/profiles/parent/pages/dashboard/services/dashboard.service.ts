@@ -1,5 +1,6 @@
-const API_BASE_URL = 'http://localhost:7400';
-const PROFILE_API_BASE = '/api/profile';
+import { API_CONFIG } from '../../../../../../config/api.config';
+
+const PROFILE_API_BASE = `${API_CONFIG.baseURL}/api/profile`;
 
 export interface UserData {
   id: string;
@@ -16,7 +17,7 @@ interface ProfileResponse {
 }
 
 export async function getUserData(): Promise<UserData> {
-  const response = await fetch(`${API_BASE_URL}${PROFILE_API_BASE}/`, {
+  const response = await fetch(`${PROFILE_API_BASE}/`, {
     method: "GET",
     credentials: "include", // sends the auth cookie automatically
     headers: {

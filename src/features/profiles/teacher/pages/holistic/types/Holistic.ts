@@ -7,9 +7,6 @@ export interface RatingLevel {
   bg: string;
 }
 
-// Reuses the same 5-level status vocabulary as PerformanceByGrade's legend
-// (Excellent/Good/Fair/Needs Improvement/Critical) so a "3" here means the
-// same thing as "Fair" anywhere else in the app.
 export const RATING_LEVELS: RatingLevel[] = [
   { value: 1, label: "Critical", color: "#EF4444", bg: "#FEF2F2" },
   { value: 2, label: "Needs Improvement", color: "#FB923C", bg: "#FFF7ED" },
@@ -30,8 +27,6 @@ export const HOLISTIC_AXES: { key: HolisticAxisKey; label: string; description: 
   { key: "behavioral", label: "Behavioral", description: "Attendance, Discipline" },
 ];
 
-// MATATAG runs on 3 terms per year, matching the grading structure discussed
-// earlier (WW/PT/QA weights per term), not the old 4-quarter system.
 export type Term = 1 | 2 | 3;
 export const TERMS: Term[] = [1, 2, 3];
 
@@ -41,7 +36,7 @@ export interface HolisticAssessment {
   scores: Record<HolisticAxisKey, number | null>;
   notes: Record<HolisticAxisKey, string>;
   assessedByTeacherId: string;
-  updatedAt: string; // ISO timestamp
+  updatedAt: string; 
 }
 
 export function emptyScores(): Record<HolisticAxisKey, number | null> {
