@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { ACCENT, type SubjectsTheme } from "../types";
+import { ACCENT, type SubjectsTheme } from "../types/types";
 
 interface ModalShellProps extends SubjectsTheme {
   title: string;

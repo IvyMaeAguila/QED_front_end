@@ -4,9 +4,9 @@ import { ArrowUpRight } from "lucide-react";
 export interface StatItem {
   label: string;
   value: string | number;
-  unit?: string; // e.g. "Students", "Enrolled", "Courses"
+  unit?: string; 
   Icon: LucideIcon;
-  variant?: "primary" | "default"; // primary = gradient hero card
+  variant?: "primary" | "default"; 
   onClick?: () => void;
 }
 
@@ -18,8 +18,6 @@ interface StatCardsProps {
   textMuted: string;
 }
 
-// Cycle through tints of the QED accent so each card reads distinctly
-// without leaving the maroon palette.
 const ICON_TINTS = ["#8B0D0D", "#A31515", "#6B0000"];
 
 export function StatCards({ stats, panelBg, panelBorder, textPrimary, textMuted }: StatCardsProps) {

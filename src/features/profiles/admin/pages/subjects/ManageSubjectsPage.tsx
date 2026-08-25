@@ -2,7 +2,13 @@ import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { Plus, School } from "lucide-react";
 import type { AdminThemeContext } from "../AdminLayout";
-import { ACCENT, GRADE_LEVEL_IDS, type GradeLevel, type Subject } from "./types";
+import {
+  ACCENT,
+  GRADE_LEVEL_IDS,
+  type GradeLevel,
+  type Subject,
+} from "./types/types";
+import { AdminTopTabs } from "./components/AdminTopTabs";
 import { SubjectFilters } from "./components/SubjectFilters";
 import { GradeLevelTabs } from "./components/GradeLevelTabs";
 import { SubjectCard } from "./components/SubjectCard";
@@ -19,7 +25,10 @@ import {
 } from "./services/subject.service";
 import { GradeLevelsProvider } from "./context/gradeLevelsContext";
 import { SubjectsCatalogProvider } from "./context/SubjectsCatalogContext";
-import { SubjectSectionsProvider, useSubjectSections } from "./context/SubjectSectionsContext";
+import {
+  SubjectSectionsProvider,
+  useSubjectSections,
+} from "./context/SubjectSectionsContext";
 
 export function ManageSubjectsPage() {
   return (
@@ -50,10 +59,14 @@ function ManageSubjectsPageContent() {
   const [activeGrade, setActiveGrade] = useState<GradeLevel>("Grade 1");
   const [search, setSearch] = useState("");
   const [teacherFilter, setTeacherFilter] = useState<string>("all");
-  const [statusFilter, setStatusFilter] = useState<"all" | "Active" | "Inactive">("all");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "Active" | "Inactive"
+  >("all");
 
   const [editingSubject, setEditingSubject] = useState<Subject | null>(null);
-  const [assigningSubject, setAssigningSubject] = useState<Subject | null>(null);
+  const [assigningSubject, setAssigningSubject] = useState<Subject | null>(
+    null,
+  );
   const [addingSubject, setAddingSubject] = useState(false);
   const [managingSections, setManagingSections] = useState(false);
 
@@ -66,7 +79,6 @@ function ManageSubjectsPageContent() {
   const [savingAssign, setSavingAssign] = useState(false);
   const [assignError, setAssignError] = useState<string | null>(null);
 
-  // I-fetch yung mga naka-assign nang subjects tuwing magpapalit ng grade tab
   useEffect(() => {
     void loadSubjectsForGrade(activeGrade);
   }, [activeGrade, loadSubjectsForGrade]);
@@ -74,33 +86,37 @@ function ManageSubjectsPageContent() {
   const gradeSubjects = getSubjectsForGrade(activeGrade);
 
   const filtered = gradeSubjects.filter((s) => {
-    if (search.trim() && !s.name.toLowerCase().includes(search.trim().toLowerCase())) return false;
+    if (
+      search.trim() &&
+      !s.name.toLowerCase().includes(search.trim().toLowerCase())
+    )
+      return false;
     if (teacherFilter !== "all" && s.teacherId !== teacherFilter) return false;
     if (statusFilter !== "all" && s.status !== statusFilter) return false;
     return true;
   });
 
-   async function toggleStatus(subject: Subject) {
-   const newStatus = subject.status === "Active" ? "Inactive" : "Active";
+  async function toggleStatus(subject: Subject) {
+    const newStatus = subject.status === "Active" ? "Inactive" : "Active";
 
-   // optimistic update muna para mabilis yung feel ng UI
-   updateLocalSubject(subject.id, { status: newStatus });
+    // optimistic update muna para mabilis yung feel ng UI
+    updateLocalSubject(subject.id, { status: newStatus });
 
-   try {
-     await updateSubjectAssignment(subject.id, {
-       gradeLevelId: GRADE_LEVEL_IDS[subject.gradeLevel],
-       subjectName: subject.name,
-       sectionName: subject.section,
-       teacherId: subject.teacherId,
-       schoolYear: subject.schoolYear,
-       status: newStatus,
-     });
-   } catch (err) {
-     console.error("Failed to toggle status:", err);
-     // ibalik yung status kung na-fail sa backend
-     updateLocalSubject(subject.id, { status: subject.status });
-   }
- }
+    try {
+      await updateSubjectAssignment(subject.id, {
+        gradeLevelId: GRADE_LEVEL_IDS[subject.gradeLevel],
+        subjectName: subject.name,
+        sectionName: subject.section,
+        teacherId: subject.teacherId,
+        schoolYear: subject.schoolYear,
+        status: newStatus,
+      });
+    } catch (err) {
+      console.error("Failed to toggle status:", err);
+      // ibalik yung status kung na-fail sa backend
+      updateLocalSubject(subject.id, { status: subject.status });
+    }
+  }
 
   async function addSubject(newSubject: Omit<Subject, "id">) {
     setSavingSubject(true);
@@ -120,13 +136,18 @@ function ManageSubjectsPageContent() {
       setAddingSubject(false);
     } catch (err) {
       console.error("Failed to add subject:", err);
-      setAddSubjectError(err instanceof Error ? err.message : "Failed to add subject.");
+      setAddSubjectError(
+        err instanceof Error ? err.message : "Failed to add subject.",
+      );
     } finally {
       setSavingSubject(false);
     }
   }
 
-  async function saveEditedSubject(subject: Subject, updates: Partial<Subject>) {
+  async function saveEditedSubject(
+    subject: Subject,
+    updates: Partial<Subject>,
+  ) {
     setSavingEdit(true);
     setEditSubjectError(null);
     try {
@@ -142,13 +163,18 @@ function ManageSubjectsPageContent() {
       setEditingSubject(null);
     } catch (err) {
       console.error("Failed to update subject:", err);
-      setEditSubjectError(err instanceof Error ? err.message : "Failed to update subject.");
+      setEditSubjectError(
+        err instanceof Error ? err.message : "Failed to update subject.",
+      );
     } finally {
       setSavingEdit(false);
     }
   }
 
-  async function saveAssignedTeacher(subject: Subject, updates: Partial<Subject>) {
+  async function saveAssignedTeacher(
+    subject: Subject,
+    updates: Partial<Subject>,
+  ) {
     setSavingAssign(true);
     setAssignError(null);
     try {
@@ -161,7 +187,9 @@ function ManageSubjectsPageContent() {
       setAssigningSubject(null);
     } catch (err) {
       console.error("Failed to assign teacher:", err);
-      setAssignError(err instanceof Error ? err.message : "Failed to assign teacher.");
+      setAssignError(
+        err instanceof Error ? err.message : "Failed to assign teacher.",
+      );
     } finally {
       setSavingAssign(false);
     }
@@ -169,9 +197,17 @@ function ManageSubjectsPageContent() {
 
   return (
     <div className="space-y-6 pb-12">
+      <AdminTopTabs
+        panelBorder={panelBorder}
+        textPrimary={textPrimary}
+        textMuted={textMuted}
+      />
+
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>Manage Subjects</h1>
+          <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>
+            Manage Subjects
+          </h1>
           <p className={`text-sm font-semibold mt-1 ${textMuted}`}>
             Manage default curriculum subjects and teacher assignments.
           </p>
@@ -211,12 +247,21 @@ function ManageSubjectsPageContent() {
         statusFilter={statusFilter}
         onStatusFilterChange={setStatusFilter}
       />
-
-      <GradeLevelTabs activeGrade={activeGrade} onChange={setActiveGrade} darkMode={darkMode} />
+      <GradeLevelTabs
+        activeGrade={activeGrade}
+        onChange={setActiveGrade}
+        panelBorder={panelBorder}
+        textPrimary={textPrimary}
+        textMuted={textMuted}
+      />
 
       {filtered.length === 0 ? (
-        <div className={`rounded-2xl border shadow-sm p-12 text-center ${panelBg} ${panelBorder}`}>
-          <p className={`text-sm font-semibold ${textMuted}`}>No subjects match the current filters.</p>
+        <div
+          className={`rounded-2xl border shadow-sm p-12 text-center ${panelBg} ${panelBorder}`}
+        >
+          <p className={`text-sm font-semibold ${textMuted}`}>
+            No subjects match the current filters.
+          </p>
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">

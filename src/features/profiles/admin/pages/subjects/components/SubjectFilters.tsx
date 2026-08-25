@@ -1,7 +1,7 @@
 import { Search, ChevronDown } from "lucide-react";
 import { useTeachers } from "../../classes/context/TeachersContext";
 import { formatTeacherName } from "../../classes/types/Teacher";
-import type { SubjectsTheme } from "../types";
+import type { SubjectsTheme } from "../types/types";
 
 interface SubjectFiltersProps extends SubjectsTheme {
   search: string;

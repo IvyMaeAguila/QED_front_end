@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { fetchGradeLevels } from "../../classes/services/classes.service";
-import type { GradeLevel } from "../types";
+import type { GradeLevel } from "../types/types";
 
 interface GradeLevelsContextValue {
   gradeLevels: GradeLevel[];

@@ -11,10 +11,25 @@ interface LoginModalProps {
   onClose: () => void;
 }
 
+function getRoleHome(role?: string): string {
+  switch (role?.toUpperCase()) {
+    case "ADMIN":
+      return "/admin";
+    case "PRINCIPAL":
+      return "/principal";
+    case "TEACHER":
+      return "/teacher";
+    case "PARENT":
+      return "/parent";
+    default:
+      return "/login";
+  }
+}
+
 export function LoginPanel({ open, onClose }: LoginModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const login = useAuth().login;
+  const { login } = useAuth();
 
   const [userName, setuserName] = useState("");
   const [password, setPassword] = useState("");
@@ -55,11 +70,10 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
         password,
       });
 
-      console.log("Logged in user:", user); // 👈 dito, i-check kung may laman lahat (id, role, token) — walang undefined
 
-      login({ id: user.id, email: user.email, role: user.role }, user.token);
+      login({ id: user.id, role: user.role }, user.token);
 
-      navigate(user.role === "TEACHER" ? "/teacher" : "/admin");
+      navigate(getRoleHome(user.role));
     } catch (err) {
       setError(
         err instanceof Error
@@ -193,7 +207,6 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
               </div>
             </div>
 
-            {/* Password */}
             {/* Password */}
             <div className="flex flex-col gap-1.5">
               <label className="text-[11px] font-semibold text-[#5d5d5d] tracking-wide uppercase">

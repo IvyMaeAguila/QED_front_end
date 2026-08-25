@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
-import { GRADE_LEVEL_IDS } from "../types";
-import type { GradeLevel } from "../types";
+import { GRADE_LEVEL_IDS } from "../types/types";
+import type { GradeLevel } from "../types/types";
 import { fetchSubjectsByGrade, type ElemSubjectRow } from "../services/subject.service";
 
 interface SubjectsCatalogContextValue {

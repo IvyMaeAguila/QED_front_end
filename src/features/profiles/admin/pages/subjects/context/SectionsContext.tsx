@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
-import { type Section, GRADE_LEVEL_IDS, GRADE_LEVEL_BY_ID } from "../types";
-import type { GradeLevel } from "../types";
+import { type Section, GRADE_LEVEL_IDS, GRADE_LEVEL_BY_ID } from "../types/types";
+import type { GradeLevel } from "../types/types";
 import { fetchSectionsByGrade, createSection, deleteSection, type SectionRow } from "../services/section.service";
 
 type AddSectionResult = { ok: true } | { ok: false; error: string };

@@ -18,6 +18,10 @@ interface SidebarProps {
   homeTo: string;
 }
 
+// The actual "Apple" deceleration curve (used across iOS/macOS sheet and
+// panel transitions) — starts fast, settles gently.
+const APPLE_EASE = "ease-[cubic-bezier(0.32,0.72,0,1)]";
+
 export function Sidebar({
   open,
   onClose,
@@ -31,12 +35,14 @@ export function Sidebar({
 
   return (
     <aside
-      className={`w-60 max-w-[85vw] h-full flex flex-col text-white transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) ${
+      className={`absolute lg:relative inset-y-0 left-0 z-30 w-60 max-w-[85vw] h-full flex flex-col text-white rounded-r-[28px] lg:rounded-none shadow-[8px_0_30px_-12px_rgba(0,0,0,0.35)] transition-transform duration-500 ${APPLE_EASE} ${
         darkMode ? "bg-[#0F172A]" : "bg-[#4A0000]"
       } ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
     >
       <div className="p-6 flex items-center gap-3">
-        <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 ease-out hover:scale-105">
+        <div
+          className={`w-10 h-10 bg-white/10 rounded-2xl flex items-center justify-center shrink-0 transition-transform duration-300 ${APPLE_EASE} hover:scale-105`}
+        >
           <LogoComponent size="sm" />
         </div>
 
@@ -50,7 +56,7 @@ export function Sidebar({
         <button
           onClick={onClose}
           aria-label="Close menu"
-          className="lg:hidden w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-white/10 hover:bg-white/20 transition-all duration-300 cubic-bezier(0.16, 1, 0.3, 1) active:scale-95"
+          className={`lg:hidden w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-white/10 hover:bg-white/20 transition-all duration-300 ${APPLE_EASE} active:scale-90`}
         >
           <X size={16} />
         </button>
@@ -72,41 +78,51 @@ export function Sidebar({
               key={item.label}
               to={item.to}
               onClick={onClose}
-              className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-[13px] transition-all duration-300 cubic-bezier(0.16, 1, 0.3, 1) active:scale-[0.98] ${
+              className={`group flex items-center justify-between px-3 py-2.5 rounded-2xl text-[13px] transition-all duration-300 ${APPLE_EASE} active:scale-[0.97] ${
                 isActive
-                  ? "bg-white/10 text-white shadow-xl shadow-black/15 translate-x-1"
-                  : "text-white/55 hover:bg-white/10 hover:text-white hover:shadow-lg hover:shadow-black/5 hover:translate-x-1"
+                  ? "bg-white/12 text-white shadow-lg shadow-black/15 translate-x-1"
+                  : "text-white/55 hover:bg-white/10 hover:text-white hover:translate-x-1"
               }`}
             >
               <div className="flex items-center gap-3 min-w-0">
-                <item.Icon size={16} className="shrink-0 transition-transform duration-300 ease-out" />
+                <item.Icon
+                  size={16}
+                  className={`shrink-0 transition-transform duration-300 ${APPLE_EASE} group-hover:scale-110`}
+                />
                 <span className="truncate">{item.label}</span>
               </div>
 
               {isActive && (
-                <div className="w-1.5 h-1.5 rounded-full bg-[#C98A2B] shrink-0 transition-all duration-300 animate-pulse" />
+                <div className="w-1.5 h-1.5 rounded-full bg-[#C98A2B] shrink-0 animate-[softPulse_2.2s_ease-in-out_infinite]" />
               )}
             </Link>
           );
         })}
       </nav>
 
-      <div className="p-5 border-t border-white/10">
+      <div className="p-5 border-t border-white/10 space-y-1">
         <Link
           to={helpItem.to}
           onClick={onClose}
-          className="flex items-center gap-3 text-[13px] text-white/55 hover:text-white hover:bg-white/10 px-3 py-2.5 rounded-xl cursor-pointer mb-2 transition-all duration-300 cubic-bezier(0.16, 1, 0.3, 1) hover:shadow-lg hover:shadow-black/5 hover:translate-x-1 active:scale-[0.98]"
+          className={`flex items-center gap-3 text-[13px] text-white/55 hover:text-white hover:bg-white/10 px-3 py-2.5 rounded-2xl cursor-pointer transition-all duration-300 ${APPLE_EASE} hover:translate-x-1 active:scale-[0.97]`}
         >
           <HelpCircle size={16} className="shrink-0" /> {helpItem.label}
         </Link>
 
         <div
           onClick={onLogout}
-          className="flex items-center gap-3 text-[13px] text-white/55 hover:text-white hover:bg-white/10 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-300 cubic-bezier(0.16, 1, 0.3, 1) hover:shadow-lg hover:shadow-black/5 hover:translate-x-1 active:scale-[0.98]"
+          className={`flex items-center gap-3 text-[13px] text-white/55 hover:text-white hover:bg-white/10 px-3 py-2.5 rounded-2xl cursor-pointer transition-all duration-300 ${APPLE_EASE} hover:translate-x-1 active:scale-[0.97]`}
         >
           <LogOut size={16} className="shrink-0" /> Log Out
         </div>
       </div>
+
+      <style>{`
+        @keyframes softPulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.55; transform: scale(0.85); }
+        }
+      `}</style>
     </aside>
   );
 }

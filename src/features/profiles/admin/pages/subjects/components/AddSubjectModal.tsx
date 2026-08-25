@@ -7,7 +7,7 @@ import {
   type GradeLevel,
   type Subject,
   type SubjectsTheme,
-} from "../types";
+} from "../types/types";
 import { useSections } from "../context/SectionsContext";
 import { ModalShell } from "./ModalShell";
 import { useGradeLevels } from "../context/gradeLevelsContext";

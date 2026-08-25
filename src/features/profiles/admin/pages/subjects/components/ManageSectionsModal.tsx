@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { School, Plus, Trash2 } from "lucide-react";
-import { ACCENT, GRADE_LEVELS, type GradeLevel, type Subject, type SubjectsTheme } from "../types";
+import { ACCENT, GRADE_LEVELS, type GradeLevel, type Subject, type SubjectsTheme } from "../types/types";
 import { useSections } from "../context/SectionsContext";
 import { ModalShell } from "./ModalShell";
 

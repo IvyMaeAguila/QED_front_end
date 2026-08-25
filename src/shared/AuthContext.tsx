@@ -5,9 +5,9 @@ type Role = 'ADMIN' | 'PRINCIPAL' | 'TEACHER' | 'PARENT'
 
 type User = {
     id: string
-    email: string
+    email?: string
     role: Role
-    name: string
+    name?: string
     gradeLevel?: GradeLevel   // only present when role === 'TEACHER'
     section?: string
 }

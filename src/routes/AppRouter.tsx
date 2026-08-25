@@ -32,8 +32,14 @@ import { TeacherDashboardHome } from "../features/profiles/teacher/pages/dashboa
 import { TeacherCalendarPage } from "../features/profiles/teacher/pages/calendar/TeacherCalendarPage";
 import { AdvisoryRosterPage } from "../features/profiles/teacher/pages/roster/AdvisoryRosterPage";
 import { GradesPage } from "../features/profiles/teacher/pages/grades/GradePage";
-import { HolisticOverviewPage } from "../features/profiles/teacher/pages/holistic/HolisticOverviewPage";
 import { SubjectsPage } from "../features/profiles/teacher/pages/subjects/SubjectPage";
+import { SubjectDetailPage } from "../features/profiles/teacher/pages/subjects/detail/SubjectDetailPage";
+import { SubjectRecordsPage } from "../features/profiles/teacher/pages/subjects/detail/SubjectRecordsPage";
+import { HolisticOverviewPage } from "../features/profiles/teacher/pages/holistic/HolisticOverviewPage";
+import { StudentHolisticProfilePage } from "../features/profiles/teacher/pages/holistic/StudentHolisticProfilePage";
+import { HolisticDomainTrendsPage } from "../features/profiles/teacher/pages/holistic/HolisticDomainTrendsPage";
+import { SubjectClassListPage } from "../features/profiles/teacher/pages/subjects/SubjectClassListPage";
+import { AcademicYearPage } from "../features/profiles/admin/pages/subjects/AcademicYearPage";
 
 function DebugRoute() {
   const location = useLocation();
@@ -137,6 +143,8 @@ export function AppRouter() {
           <Route path="classes/:classId" element={<ClassViewPage />} />
           <Route path="classes/:classId/edit" element={<ClassFormPage />} />
           <Route path="subjects" element={<ManageSubjectsPage />} />
+          <Route path="subjects" element={<ManageSubjectsPage />} />
+          <Route path="academic-year" element={<AcademicYearPage />} />
           <Route path="calendar" element={<CalendarPage />} />
           <Route path="help" element={<HelpSupportPage />} />
         </Route>
@@ -154,10 +162,28 @@ export function AppRouter() {
         >
           <Route index element={<TeacherDashboardHome />} />
           <Route path="subjects" element={<SubjectsPage />} />
+          <Route path="subjects/:subjectId" element={<SubjectDetailPage />} />
+          <Route
+            path="subjects/:subjectId/records"
+            element={<SubjectRecordsPage />}
+          />
+          <Route
+            path="subjects/:subjectSectionId/students"
+            element={<SubjectClassListPage />}
+          />
+
           <Route path="grades" element={<GradesPage />} />
-          {/* <Route path="holistic" element={<TeacherHolisticAssessmentPage />} /> */}
+
           <Route path="holistic" element={<HolisticOverviewPage />} />
-          {/* <Route path="holistic/:studentId/assess" element={<TeacherHolisticAssessmentPage />} /> */}
+          <Route
+            path="holistic/:studentId"
+            element={<StudentHolisticProfilePage />}
+          />
+          <Route
+            path="holistic/domain-trends"
+            element={<HolisticDomainTrendsPage />}
+          />
+
           <Route path="students/:studentId" element={<StudentDetailPage />} />
           <Route path="advisory" element={<AdvisoryRosterPage />} />
           <Route path="calendar" element={<TeacherCalendarPage />} />
