@@ -12,7 +12,7 @@ export interface GradeLevelResponse {
 interface StudentRow {
   id: number;
   grade_level_id: number;
-  section_id: number;
+  section_id: number | null;
   student_number: string;
   learner_reference_number: string;
   first_name: string;
@@ -20,7 +20,7 @@ interface StudentRow {
   middle_name: string;
   gender: string;
   grade_level_name: string;  
-  section_name: string;
+  section_name: string | null;
   is_deleted?: number;
 }
 
@@ -37,7 +37,7 @@ function mapStudentRow(row: StudentRow): Student {
     middleName: row.middle_name,
     gender: row.gender as Student["gender"],
     gradeLevel: row.grade_level_name as Student["gradeLevel"],
-    section: row.section_name,
+    section: row.section_name ?? null, 
   };
 }
 

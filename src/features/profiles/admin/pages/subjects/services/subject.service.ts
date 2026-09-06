@@ -117,3 +117,15 @@ export async function assignTeacherToSubject(
   if (!res.ok) throw new Error(json.message || "Failed to assign teacher.");
   return json.data as { id: number; section_id: number; teacher_id: string | number | null };
 }
+
+export async function toggleSubjectStatus(
+  id: string
+): Promise<{ id: number; status: "Active" | "Inactive" }> {
+  const res = await fetch(`${BASE_URL}/toggleStatus/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+  });
+  const json: ApiResponse<{ id: number; status: "Active" | "Inactive" }> = await res.json();
+  if (!res.ok) throw new Error(json.message || "Failed to toggle status.");
+  return json.data as { id: number; status: "Active" | "Inactive" };
+}

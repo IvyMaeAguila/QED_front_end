@@ -21,6 +21,7 @@ import { SectionsProvider } from "./context/SectionsContext";
 import { useSettings } from "../settings/context/SettingsContext";
 import {
   addSubject as addSubjectApi,
+  toggleSubjectStatus as toggleSubjectStatusApi,
   // saveSubjectAssignment,
   // updateSubjectAssignment,
   // assignTeacherToSubject,
@@ -103,29 +104,18 @@ function ManageSubjectsPageContent() {
   });
 
   async function toggleStatus(subject: Subject) {
-    const newStatus = subject.status === "Active" ? "Inactive" : "Active";
+  const newStatus = subject.status === "Active" ? "Inactive" : "Active";
 
-    // optimistic update muna para mabilis yung feel ng UI
-    updateLocalSubject(subject.id, { status: newStatus });
+  updateLocalSubject(subject.id, { status: newStatus });
 
-    try {
-      // TODO: kailangan ng dedicated "update subject status" endpoint dito —
-      // hiwalay na si updateSubjectAssignment (section-level) ang dating tawag,
-      // pero commented out pa rin sa service, kaya wag muna kalimutang i-wire
-      // pagsapit ng section assignment work.
-    } catch (err) {
-      console.error("Failed to toggle status:", err);
-      // ibalik yung status kung na-fail sa backend
-      updateLocalSubject(subject.id, { status: subject.status });
-    }
+  try {
+    await toggleSubjectStatusApi(subject.id);
+  } catch (err) {
+    console.error("Failed to toggle status:", err);
+    updateLocalSubject(subject.id, { status: subject.status });
   }
+}
 
-  // Plain "Add Subject": name + gradeLevel + schoolYear lang, walang section/teacher.
-  // Kaya dapat addSubject() (POST /api/subject/addSubject) ang tawagin dito,
-  // hindi saveSubjectAssignment() (POST /api/subject/addSubjectSection).
-  // NewSubjectInput (mula sa AddSubjectModal) ay walang section/teacherId,
-  // kaya dinedefault na lang natin ito bago ipasok sa local Subject list —
-  // dito pa lang ma-a-assign ang section/teacher sa hiwalay na flow.
   async function addSubject(newSubject: NewSubjectInput) {
     setSavingSubject(true);
     setAddSubjectError(null);

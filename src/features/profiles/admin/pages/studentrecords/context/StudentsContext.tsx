@@ -47,7 +47,7 @@ export function StudentsProvider({ children }: { children: ReactNode }) {
       if (a.gradeLevelId !== b.gradeLevelId) {
         return a.gradeLevelId - b.gradeLevelId;
       }
-      return a.section.localeCompare(b.section);
+      return (a.section ?? "").localeCompare(b.section ?? "");
     });
   }
 

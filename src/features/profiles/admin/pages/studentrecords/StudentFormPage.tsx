@@ -77,9 +77,9 @@ export function StudentFormPage() {
     Partial<Record<keyof FormState, string>>
   >({});
 
-  // 👇 kapag iisa lang (o wala) ang section sa grade level na 'to, hindi na ito kailangan piliin ng user.
-  // Dalawa pataas lang ang section ay lalabas bilang dropdown at magiging required.
-  const sectionIsSelectable = sections.length >= 2;
+  // 👇 kahit isa lang ang section, dapat pa rin pwedeng piliin ng user (hindi disabled).
+  // Disabled/hindi selectable lang talaga kapag walang available na section.
+  const sectionIsSelectable = sections.length >= 1;
 
   useEffect(() => {
     let isMounted = true;
@@ -89,9 +89,9 @@ export function StudentFormPage() {
         const data = await fetchGradeLevels();
         if (isMounted) {
           setGradeLevels(data);
-          if (!isEditing && data.length > 0) {
-            setForm((prev) => ({ ...prev, gradeLevel: String(data[0].id) }));
-          }
+          // 👇 wala nang auto-select dito. Sa "Add" mode, manatiling "Select grade level…"
+          // ang naka-display hangga't hindi pa pumipili ang user. Sa "Edit" mode, hindi
+          // na ito ginagamit dahil naka-set na agad ang form.gradeLevel mula sa existing student.
         }
       } catch (err) {
         if (isMounted) {
@@ -125,17 +125,18 @@ export function StudentFormPage() {
         if (isMounted) {
           setSections(data);
 
-          if (data.length >= 2) {
-            // 👇 dalawa pataas ang section — kailangan pumili ng user.
-            // panatilihin ang existing section kung nasa listahan pa rin, kung hindi, i-default sa una.
-            const stillValid =
-              existing && data.some((s) => String(s.id) === form.section);
+          if (data.length >= 1) {
+            // 👇 kahit isa lang o marami pang section, kailangan pa ring pumili ng user.
+            // panatilihin ang existing section kung nasa listahan pa rin (valid pa siya).
+            // kung wala talagang naka-assign na section sa student (o hindi na valid),
+            // iwanan na lang na blangko para lumabas ang "Select section" placeholder —
+            // hindi na dapat mag-auto-select ng section para sa user.
+            const stillValid = data.some(
+              (s) => String(s.id) === form.section,
+            );
             if (!stillValid) {
-              setForm((prev) => ({ ...prev, section: String(data[0].id) }));
+              setForm((prev) => ({ ...prev, section: "" }));
             }
-          } else if (data.length === 1) {
-            // 👇 iisa lang ang section — auto-assign na lang, wala nang ipapakitang dropdown.
-            setForm((prev) => ({ ...prev, section: String(data[0].id) }));
           } else {
             // 👇 walang section sa grade level na 'to.
             setForm((prev) => ({ ...prev, section: "" }));
@@ -392,7 +393,6 @@ export function StudentFormPage() {
             </div>
           </div>
 
-          {/* 👇 Kapag dalawa pataas ang section sa grade level, dun lang lalabas ang field na 'to. */}
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className={labelClasses}>Grade Level</label>
@@ -404,12 +404,28 @@ export function StudentFormPage() {
                 }
               >
                 {loadingGrades && <option value="">Loading...</option>}
-                {gradeError && <option value="">Failed to load grades</option>}
-                {gradeLevels.map((g) => (
-                  <option key={g.id} value={g.id}>
-                    {g.grade_level}
-                  </option>
-                ))}
+
+                {!loadingGrades && gradeError && (
+                  <option value="">Failed to load grades</option>
+                )}
+
+                {!loadingGrades && !gradeError && gradeLevels.length === 0 && (
+                  <option value="">No grade levels found</option>
+                )}
+
+                {/* 👇 lalabas lang ito sa "Add" mode. Sa "Edit" mode, hindi na kailangan
+                    dahil naka-set na agad ang form.gradeLevel galing sa existing student. */}
+                {!loadingGrades &&
+                  !gradeError &&
+                  gradeLevels.length > 0 &&
+                  !isEditing && <option value="">Select grade level…</option>}
+
+                {!loadingGrades &&
+                  gradeLevels.map((g) => (
+                    <option key={g.id} value={g.id}>
+                      {g.grade_level}
+                    </option>
+                  ))}
               </select>
               {errors.gradeLevel && (
                 <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
@@ -428,6 +444,9 @@ export function StudentFormPage() {
                 {loadingSections && <option value="">Loading...</option>}
                 {!loadingSections && sections.length === 0 && (
                   <option value="">No section available</option>
+                )}
+                {!loadingSections && sections.length > 0 && (
+                  <option value="">Select section</option>
                 )}
                 {sections.map((s) => (
                   <option key={s.id} value={s.id}>

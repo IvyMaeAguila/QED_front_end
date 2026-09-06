@@ -12,7 +12,7 @@ export interface Student {
   id: string; 
   dbId: number; 
   gradeLevelId: number; 
-  sectionId: number;
+  sectionId: number | null;
   studentId: string;
   lrn: string;
   lastName: string;
@@ -20,7 +20,7 @@ export interface Student {
   middleName: string; 
   gender: Gender;
   gradeLevel: GradeLevel;
-  section: string; 
+  section: string | null; 
 }
 
 export function formatFullName(s: Pick<Student, "lastName" | "firstName" | "middleName">) {
