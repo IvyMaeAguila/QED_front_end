@@ -50,44 +50,59 @@ export async function fetchSubjectsByGrade(gradeLevel: string): Promise<ElemSubj
   return json.data ?? [];
 }
 
-export async function saveSubjectAssignment(payload: {
+export async function addSubject(payload: {
   gradeLevelId: number;
   subjectName: string;
-  sectionName: string;
-  teacherId: string | null;
   schoolYear: string;
-  status?: "Active" | "Inactive";
-}): Promise<SubjectSectionRow> {
-  const res = await fetch(`${BASE_URL}/addSubjectSection`, {
+}): Promise<ElemSubjectRow> {
+  const res = await fetch(`${BASE_URL}/addSubject`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
-  const json: ApiResponse<SubjectSectionRow> = await res.json();
-  if (!res.ok) throw new Error(json.message || "Failed to save subject.");
-  return json.data as SubjectSectionRow;
+  const json: ApiResponse<ElemSubjectRow> = await res.json();
+  if (!res.ok) throw new Error(json.message || "Failed to add subject.");
+  return json.data as ElemSubjectRow;
 }
 
-export async function updateSubjectAssignment(
-  id: string,
-  payload: {
-    gradeLevelId: number;
-    subjectName: string;
-    sectionName: string;
-    teacherId: string | null;
-    schoolYear: string;
-    status: "Active" | "Inactive";
-  }
-): Promise<SubjectSectionRow> {
-  const res = await fetch(`${BASE_URL}/updateSubjectSection/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  const json: ApiResponse<SubjectSectionRow> = await res.json();
-  if (!res.ok) throw new Error(json.message || "Failed to update subject.");
-  return json.data as SubjectSectionRow;
-}
+// export async function saveSubjectAssignment(payload: {
+//   gradeLevelId: number;
+//   subjectName: string;
+//   sectionName: string;
+//   teacherId: string | null;
+//   schoolYear: string;
+//   status?: "Active" | "Inactive";
+// }): Promise<SubjectSectionRow> {
+//   const res = await fetch(`${BASE_URL}/addSubjectSection`, {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(payload),
+//   });
+//   const json: ApiResponse<SubjectSectionRow> = await res.json();
+//   if (!res.ok) throw new Error(json.message || "Failed to save subject.");
+//   return json.data as SubjectSectionRow;
+// }
+
+// export async function updateSubjectAssignment(
+//   id: string,
+//   payload: {
+//     gradeLevelId: number;
+//     subjectName: string;
+//     sectionName: string;
+//     teacherId: string | null;
+//     schoolYear: string;
+//     status: "Active" | "Inactive";
+//   }
+// ): Promise<SubjectSectionRow> {
+//   const res = await fetch(`${BASE_URL}/updateSubjectSection/${id}`, {
+//     method: "PUT",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(payload),
+//   });
+//   const json: ApiResponse<SubjectSectionRow> = await res.json();
+//   if (!res.ok) throw new Error(json.message || "Failed to update subject.");
+//   return json.data as SubjectSectionRow;
+// }
 
 export async function assignTeacherToSubject(
   id: string,

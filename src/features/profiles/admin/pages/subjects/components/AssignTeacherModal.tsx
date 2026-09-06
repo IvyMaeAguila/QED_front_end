@@ -70,9 +70,9 @@ export function AssignTeacherModal({
         <label className={labelClasses}>Section</label>
         <input
           value={section}
-          onChange={(e) => setSection(e.target.value)}
-          disabled={saving}
-          className={saving ? disabledInputClasses : inputClasses}
+          // onChange={(e) => setSection(e.target.value)}
+          disabled
+          className={disabledInputClasses}
         />
       </div>
       <div>

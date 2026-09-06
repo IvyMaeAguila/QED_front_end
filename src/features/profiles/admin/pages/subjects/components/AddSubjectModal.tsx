@@ -4,6 +4,7 @@ import {
   ACCENT,
   type GradeLevel,
   type Subject,
+  type NewSubjectInput,
   type SubjectsTheme,
 } from "../types/types";
 import { ModalShell } from "./ModalShell";
@@ -14,7 +15,8 @@ interface AddSubjectModalProps extends SubjectsTheme {
   defaultGrade: GradeLevel;
   schoolYear: string;
   onClose: () => void;
-  onAdd: (newSubject: Omit<Subject, "id">) => void | Promise<void>;
+  onAdd: (newSubject: NewSubjectInput) => void | Promise<void>;
+  onManageSections: () => void;
   saving?: boolean;
   error?: string | null;
 }
@@ -73,7 +75,13 @@ export function AddSubjectModal({
   }
 
   function handleAdd() {
-    if (!canSubmit || gradeLevel === "") return;
+    // Check muna ang gradeLevel bago i-reference si canSubmit — kung
+    // paglipatin ang pagkakasunod, na-narrow na ni TS ang gradeLevel
+    // papuntang GradeLevel dahil sa canSubmit's alias chain (noGradeSelected),
+    // kaya nagiging "no overlap" error itong comparison sa "".
+    if (gradeLevel === "") return;
+    if (!canSubmit) return;
+
     void onAdd({
       name: trimmedName,
       gradeLevel,

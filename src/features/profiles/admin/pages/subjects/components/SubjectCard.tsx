@@ -6,14 +6,14 @@ import { ACCENT, type Subject, type SubjectsTheme } from "../types/types";
 
 interface SubjectCardProps extends SubjectsTheme {
   subject: Subject;
-  onEdit: () => void;
+  // onEdit: () => void;
   onAssign: () => void;
   onToggleStatus: () => void;
 }
 
 export function SubjectCard({
   subject,
-  onEdit,
+  // onEdit,
   onAssign,
   onToggleStatus,
   darkMode,
@@ -138,9 +138,8 @@ export function SubjectCard({
             </div>
           </div>
 
-          {/* actions */}
           <div className="flex gap-2 mt-4">
-            <button
+            {/* <button
               onClick={onEdit}
               title="Edit Subject"
               className={`h-10 w-10 shrink-0 rounded-xl border inline-flex items-center justify-center transition-colors ${panelBorder} ${
@@ -148,7 +147,7 @@ export function SubjectCard({
               }`}
             >
               <Pencil size={15} />
-            </button>
+            </button> */}
             <button
               onClick={onToggleStatus}
               className={`flex-1 h-10 rounded-xl text-xs font-bold border inline-flex items-center justify-center transition-colors ${

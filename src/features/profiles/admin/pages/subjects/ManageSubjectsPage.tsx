@@ -7,21 +7,23 @@ import {
   GRADE_LEVEL_IDS,
   type GradeLevel,
   type Subject,
+  type NewSubjectInput,
 } from "./types/types";
 import { AdminTopTabs } from "./components/AdminTopTabs";
 import { SubjectFilters } from "./components/SubjectFilters";
 import { GradeLevelTabs } from "./components/GradeLevelTabs";
 import { SubjectCard } from "./components/SubjectCard";
-import { EditSubjectModal } from "./components/EditSubjectModal";
+// import { EditSubjectModal } from "./components/EditSubjectModal";
 import { AssignTeacherModal } from "./components/AssignTeacherModal";
 import { AddSubjectModal } from "./components/AddSubjectModal";
 import { ManageSectionsModal } from "./components/ManageSectionsModal";
 import { SectionsProvider } from "./context/SectionsContext";
 import { useSettings } from "../settings/context/SettingsContext";
 import {
-  saveSubjectAssignment,
-  updateSubjectAssignment,
-  assignTeacherToSubject,
+  addSubject as addSubjectApi,
+  // saveSubjectAssignment,
+  // updateSubjectAssignment,
+  // assignTeacherToSubject,
 } from "./services/subject.service";
 import { GradeLevelsProvider } from "./context/gradeLevelsContext";
 import { SubjectsCatalogProvider } from "./context/SubjectsCatalogContext";
@@ -57,6 +59,9 @@ function ManageSubjectsPageContent() {
   } = useSubjectSections();
 
   const [activeGrade, setActiveGrade] = useState<GradeLevel>("Grade 1");
+  // Pangalan ng section (Subject.section), hindi ang section id — para direktang
+  // ma-compare sa subject.section pag-filter. null = "All Sections"/walang section filter.
+  const [activeSection, setActiveSection] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [teacherFilter, setTeacherFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<
@@ -93,6 +98,7 @@ function ManageSubjectsPageContent() {
       return false;
     if (teacherFilter !== "all" && s.teacherId !== teacherFilter) return false;
     if (statusFilter !== "all" && s.status !== statusFilter) return false;
+    if (activeSection && s.section !== activeSection) return false;
     return true;
   });
 
@@ -103,14 +109,10 @@ function ManageSubjectsPageContent() {
     updateLocalSubject(subject.id, { status: newStatus });
 
     try {
-      await updateSubjectAssignment(subject.id, {
-        gradeLevelId: GRADE_LEVEL_IDS[subject.gradeLevel],
-        subjectName: subject.name,
-        sectionName: subject.section,
-        teacherId: subject.teacherId,
-        schoolYear: subject.schoolYear,
-        status: newStatus,
-      });
+      // TODO: kailangan ng dedicated "update subject status" endpoint dito —
+      // hiwalay na si updateSubjectAssignment (section-level) ang dating tawag,
+      // pero commented out pa rin sa service, kaya wag muna kalimutang i-wire
+      // pagsapit ng section assignment work.
     } catch (err) {
       console.error("Failed to toggle status:", err);
       // ibalik yung status kung na-fail sa backend
@@ -118,20 +120,28 @@ function ManageSubjectsPageContent() {
     }
   }
 
-  async function addSubject(newSubject: Omit<Subject, "id">) {
+  // Plain "Add Subject": name + gradeLevel + schoolYear lang, walang section/teacher.
+  // Kaya dapat addSubject() (POST /api/subject/addSubject) ang tawagin dito,
+  // hindi saveSubjectAssignment() (POST /api/subject/addSubjectSection).
+  // NewSubjectInput (mula sa AddSubjectModal) ay walang section/teacherId,
+  // kaya dinedefault na lang natin ito bago ipasok sa local Subject list —
+  // dito pa lang ma-a-assign ang section/teacher sa hiwalay na flow.
+  async function addSubject(newSubject: NewSubjectInput) {
     setSavingSubject(true);
     setAddSubjectError(null);
     try {
-      const row = await saveSubjectAssignment({
+      const row = await addSubjectApi({
         gradeLevelId: GRADE_LEVEL_IDS[newSubject.gradeLevel],
         subjectName: newSubject.name,
-        sectionName: newSubject.section,
-        teacherId: newSubject.teacherId,
         schoolYear: newSubject.schoolYear,
-        status: newSubject.status,
       });
 
-      addLocalSubject({ ...newSubject, id: String(row.id) });
+      addLocalSubject({
+        ...newSubject,
+        section: "",
+        teacherId: null,
+        id: String(row.id),
+      });
       setActiveGrade(newSubject.gradeLevel);
       setAddingSubject(false);
     } catch (err) {
@@ -144,56 +154,56 @@ function ManageSubjectsPageContent() {
     }
   }
 
-  async function saveEditedSubject(
-    subject: Subject,
-    updates: Partial<Subject>,
-  ) {
-    setSavingEdit(true);
-    setEditSubjectError(null);
-    try {
-      await updateSubjectAssignment(subject.id, {
-        gradeLevelId: GRADE_LEVEL_IDS[subject.gradeLevel],
-        subjectName: updates.name ?? subject.name,
-        sectionName: updates.section ?? subject.section,
-        teacherId: updates.teacherId ?? subject.teacherId,
-        schoolYear: updates.schoolYear ?? subject.schoolYear,
-        status: updates.status ?? subject.status,
-      });
-      updateLocalSubject(subject.id, updates);
-      setEditingSubject(null);
-    } catch (err) {
-      console.error("Failed to update subject:", err);
-      setEditSubjectError(
-        err instanceof Error ? err.message : "Failed to update subject.",
-      );
-    } finally {
-      setSavingEdit(false);
-    }
-  }
+  // async function saveEditedSubject(
+  //   subject: Subject,
+  //   updates: Partial<Subject>,
+  // ) {
+  //   setSavingEdit(true);
+  //   setEditSubjectError(null);
+  //   try {
+  //     await updateSubjectAssignment(subject.id, {
+  //       gradeLevelId: GRADE_LEVEL_IDS[subject.gradeLevel],
+  //       subjectName: updates.name ?? subject.name,
+  //       sectionName: updates.section ?? subject.section,
+  //       teacherId: updates.teacherId ?? subject.teacherId,
+  //       schoolYear: updates.schoolYear ?? subject.schoolYear,
+  //       status: updates.status ?? subject.status,
+  //     });
+  //     updateLocalSubject(subject.id, updates);
+  //     setEditingSubject(null);
+  //   } catch (err) {
+  //     console.error("Failed to update subject:", err);
+  //     setEditSubjectError(
+  //       err instanceof Error ? err.message : "Failed to update subject.",
+  //     );
+  //   } finally {
+  //     setSavingEdit(false);
+  //   }
+  // }
 
-  async function saveAssignedTeacher(
-    subject: Subject,
-    updates: Partial<Subject>,
-  ) {
-    setSavingAssign(true);
-    setAssignError(null);
-    try {
-      await assignTeacherToSubject(subject.id, {
-        gradeLevelId: GRADE_LEVEL_IDS[subject.gradeLevel],
-        sectionName: updates.section ?? subject.section,
-        teacherId: updates.teacherId ?? subject.teacherId,
-      });
-      updateLocalSubject(subject.id, updates);
-      setAssigningSubject(null);
-    } catch (err) {
-      console.error("Failed to assign teacher:", err);
-      setAssignError(
-        err instanceof Error ? err.message : "Failed to assign teacher.",
-      );
-    } finally {
-      setSavingAssign(false);
-    }
-  }
+  // async function saveAssignedTeacher(
+  //   subject: Subject,
+  //   updates: Partial<Subject>,
+  // ) {
+  //   setSavingAssign(true);
+  //   setAssignError(null);
+  //   try {
+  //     await assignTeacherToSubject(subject.id, {
+  //       gradeLevelId: GRADE_LEVEL_IDS[subject.gradeLevel],
+  //       sectionName: updates.section ?? subject.section,
+  //       teacherId: updates.teacherId ?? subject.teacherId,
+  //     });
+  //     updateLocalSubject(subject.id, updates);
+  //     setAssigningSubject(null);
+  //   } catch (err) {
+  //     console.error("Failed to assign teacher:", err);
+  //     setAssignError(
+  //       err instanceof Error ? err.message : "Failed to assign teacher.",
+  //     );
+  //   } finally {
+  //     setSavingAssign(false);
+  //   }
+  // }
 
   return (
     <div className="space-y-6 pb-12">
@@ -250,6 +260,8 @@ function ManageSubjectsPageContent() {
       <GradeLevelTabs
         activeGrade={activeGrade}
         onChange={setActiveGrade}
+        activeSection={activeSection}
+        onSectionChange={setActiveSection}
         panelBorder={panelBorder}
         textPrimary={textPrimary}
         textMuted={textMuted}
@@ -270,7 +282,7 @@ function ManageSubjectsPageContent() {
               key={subject.id}
               subject={subject}
               {...theme}
-              onEdit={() => setEditingSubject(subject)}
+              // onEdit={() => setEditingSubject(subject)}
               onAssign={() => setAssigningSubject(subject)}
               onToggleStatus={() => toggleStatus(subject)}
             />
@@ -278,7 +290,7 @@ function ManageSubjectsPageContent() {
         </div>
       )}
 
-      {editingSubject && (
+      {/* {editingSubject && (
         <EditSubjectModal
           subject={editingSubject}
           {...theme}
@@ -294,9 +306,12 @@ function ManageSubjectsPageContent() {
           saving={savingEdit}
           error={editSubjectError}
         />
-      )}
+      )} */}
 
-      {assigningSubject && (
+      {/* TODO: si AssignTeacherModal ay tumatawag pa rin ng saveAssignedTeacher,
+          pero commented out pa yun sa itaas — kailangan i-restore/i-wire ulit
+          bago gamitin ulit itong modal. */}
+      {/* {assigningSubject && (
         <AssignTeacherModal
           subject={assigningSubject}
           {...theme}
@@ -308,7 +323,7 @@ function ManageSubjectsPageContent() {
           saving={savingAssign}
           error={assignError}
         />
-      )}
+      )} */}
 
       {addingSubject && (
         <AddSubjectModal

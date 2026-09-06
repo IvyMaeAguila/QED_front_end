@@ -37,6 +37,16 @@ export interface Subject {
   status: "Active" | "Inactive";
 }
 
+// Payload ng AddSubjectModal — grade level + subject name lang ang
+// nase-save dito (catalog entry sa elem_subjects). Walang section/teacher;
+// yun ay sa ibang flow na (subject-section assignment).
+export interface NewSubjectInput {
+  name: string;
+  gradeLevel: GradeLevel;
+  schoolYear: string;
+  status: "Active" | "Inactive";
+}
+
 export interface Section {
   id: string;
   gradeLevel: GradeLevel;
