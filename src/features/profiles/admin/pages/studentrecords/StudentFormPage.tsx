@@ -16,7 +16,7 @@ import { useToast } from "../../../../../shared/context/ToastContext";
 const ACCENT = "#8B0D0D";
 
 interface FormState {
-  studentId: string;   // 👈 iisa na lang — ito ang "Student ID" display field (student_number)
+  studentId: string; // 👈 iisa na lang — ito ang "Student ID" display field (student_number)
   lastName: string;
   firstName: string;
   middleName: string;
@@ -41,7 +41,8 @@ const LRN_PATTERN = /^\d{12}$/;
 const ID_PATTERN = /^[A-Z]\d{2}-\d{4}$/;
 
 export function StudentFormPage() {
-  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
+  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
+    useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const { studentId } = useParams<{ studentId: string }>();
   const { getStudent, updateStudent, students, refetch } = useStudents();
@@ -66,13 +67,19 @@ export function StudentFormPage() {
           middleName: existing.middleName,
           lrn: existing.lrn,
           gender: existing.gender,
-          gradeLevel: String(existing.gradeLevelId),  
-          section: String(existing.sectionId),   
+          gradeLevel: String(existing.gradeLevelId),
+          section: existing.sectionId != null ? String(existing.sectionId) : "",
         }
       : emptyForm,
   );
 
-  const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof FormState, string>>
+  >({});
+
+  // 👇 kapag iisa lang (o wala) ang section sa grade level na 'to, hindi na ito kailangan piliin ng user.
+  // Dalawa pataas lang ang section ay lalabas bilang dropdown at magiging required.
+  const sectionIsSelectable = sections.length >= 2;
 
   useEffect(() => {
     let isMounted = true;
@@ -88,7 +95,9 @@ export function StudentFormPage() {
         }
       } catch (err) {
         if (isMounted) {
-          setGradeError(err instanceof Error ? err.message : "Failed to load grade levels");
+          setGradeError(
+            err instanceof Error ? err.message : "Failed to load grade levels",
+          );
         }
       } finally {
         if (isMounted) setLoadingGrades(false);
@@ -116,11 +125,19 @@ export function StudentFormPage() {
         if (isMounted) {
           setSections(data);
 
-          // 👇 kapag editing, panatilihin ang existing section kung nasa listahan pa rin
-          const stillValid = existing && data.some((s) => String(s.id) === form.section);
-          if (!stillValid && data.length > 0) {
+          if (data.length >= 2) {
+            // 👇 dalawa pataas ang section — kailangan pumili ng user.
+            // panatilihin ang existing section kung nasa listahan pa rin, kung hindi, i-default sa una.
+            const stillValid =
+              existing && data.some((s) => String(s.id) === form.section);
+            if (!stillValid) {
+              setForm((prev) => ({ ...prev, section: String(data[0].id) }));
+            }
+          } else if (data.length === 1) {
+            // 👇 iisa lang ang section — auto-assign na lang, wala nang ipapakitang dropdown.
             setForm((prev) => ({ ...prev, section: String(data[0].id) }));
-          } else if (data.length === 0) {
+          } else {
+            // 👇 walang section sa grade level na 'to.
             setForm((prev) => ({ ...prev, section: "" }));
           }
         }
@@ -149,9 +166,12 @@ export function StudentFormPage() {
   if (isEditing && !existing) {
     return (
       <div className="max-w-7xl mx-auto mt-6 px-4 sm:px-6 pb-12">
-        <section className={`rounded-xl border shadow-xs p-8 text-center ${panelBg} ${panelBorder}`}>
+        <section
+          className={`rounded-xl border shadow-xs p-8 text-center ${panelBg} ${panelBorder}`}
+        >
           <p className={`text-sm font-semibold ${textMuted}`}>
-            No student found with ID <span className="font-bold">{studentId}</span>.
+            No student found with ID{" "}
+            <span className="font-bold">{studentId}</span>.
           </p>
           <button
             onClick={() => navigate("/admin/students")}
@@ -182,7 +202,9 @@ export function StudentFormPage() {
       next.studentId = "Student ID must be in the format A##-####.";
     } else if (
       !isEditing &&
-      students.some((s) => s.id.toLowerCase() === form.studentId.trim().toLowerCase())
+      students.some(
+        (s) => s.id.toLowerCase() === form.studentId.trim().toLowerCase(),
+      )
     ) {
       next.studentId = "This Student ID is already taken.";
     }
@@ -194,7 +216,9 @@ export function StudentFormPage() {
     } else if (!LRN_PATTERN.test(form.lrn.trim())) {
       next.lrn = "LRN must be exactly 12 digits.";
     }
-    if (!form.section.trim()) next.section = "Section is required.";
+    // 👇 section required lang kapag dalawa pataas talaga ang section sa napiling grade level
+    if (sectionIsSelectable && !form.section.trim())
+      next.section = "Section is required.";
     if (!form.gradeLevel.trim()) next.gradeLevel = "Grade level is required.";
 
     setErrors(next);
@@ -212,8 +236,8 @@ export function StudentFormPage() {
       firstName: form.firstName.trim(),
       middleName: form.middleName.trim(),
       gender: form.gender,
-      gradeLevel: (form.gradeLevel),
-      section: (form.section),
+      gradeLevel: form.gradeLevel,
+      section: form.section ? form.section : null,
     };
 
     try {
@@ -230,9 +254,11 @@ export function StudentFormPage() {
     } catch (error) {
       console.error("API Connection Error:", error);
       showToast(
-    error instanceof Error ? error.message : "Can't connect to the server. Make sure the backend is working.",
-    "error",
-  );
+        error instanceof Error
+          ? error.message
+          : "Can't connect to the server. Make sure the backend is working.",
+        "error",
+      );
     }
   }
 
@@ -245,7 +271,9 @@ export function StudentFormPage() {
               type="button"
               onClick={() => navigate("/admin/students")}
               className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-colors ${
-                darkMode ? "border-[#374151] hover:bg-white/10 text-white" : "border-[#E5E7EB] hover:bg-[#F6F7FB] text-[#374151]"
+                darkMode
+                  ? "border-[#374151] hover:bg-white/10 text-white"
+                  : "border-[#E5E7EB] hover:bg-[#F6F7FB] text-[#374151]"
               }`}
             >
               <ArrowLeft size={14} />
@@ -256,7 +284,9 @@ export function StudentFormPage() {
             </h2>
           </div>
           <span className={`text-xs font-semibold ${textMuted}`}>
-            {isEditing ? `Updating ${existing?.studentId}'s record` : "Enter a unique student ID for this record"}
+            {isEditing
+              ? `Updating ${existing?.studentId}'s record`
+              : "Enter a unique student ID for this record"}
           </span>
         </div>
 
@@ -268,10 +298,16 @@ export function StudentFormPage() {
                 className={inputClasses}
                 value={form.studentId}
                 // disabled={isEditing}
-                onChange={(e) => setForm({ ...form, studentId: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, studentId: e.target.value })
+                }
                 placeholder="A23-0001"
               />
-              {errors.studentId && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.studentId}</p>}
+              {errors.studentId && (
+                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                  {errors.studentId}
+                </p>
+              )}
             </div>
             <div>
               <label className={labelClasses}>LRN</label>
@@ -280,10 +316,16 @@ export function StudentFormPage() {
                 value={form.lrn}
                 maxLength={12}
                 inputMode="numeric"
-                onChange={(e) => setForm({ ...form, lrn: e.target.value.replace(/\D/g, "") })}
+                onChange={(e) =>
+                  setForm({ ...form, lrn: e.target.value.replace(/\D/g, "") })
+                }
                 placeholder="123456789012"
               />
-              {errors.lrn && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.lrn}</p>}
+              {errors.lrn && (
+                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                  {errors.lrn}
+                </p>
+              )}
             </div>
           </div>
 
@@ -296,17 +338,27 @@ export function StudentFormPage() {
                 onChange={(e) => setForm({ ...form, lastName: e.target.value })}
                 placeholder="Dela Cruz"
               />
-              {errors.lastName && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.lastName}</p>}
+              {errors.lastName && (
+                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                  {errors.lastName}
+                </p>
+              )}
             </div>
             <div>
               <label className={labelClasses}>First Name</label>
               <input
                 className={inputClasses}
                 value={form.firstName}
-                onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, firstName: e.target.value })
+                }
                 placeholder="Juan"
               />
-              {errors.firstName && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.firstName}</p>}
+              {errors.firstName && (
+                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                  {errors.firstName}
+                </p>
+              )}
             </div>
           </div>
 
@@ -316,7 +368,9 @@ export function StudentFormPage() {
               <input
                 className={inputClasses}
                 value={form.middleName}
-                onChange={(e) => setForm({ ...form, middleName: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, middleName: e.target.value })
+                }
                 placeholder="Manalo"
               />
             </div>
@@ -325,7 +379,9 @@ export function StudentFormPage() {
               <select
                 className={inputClasses}
                 value={form.gender}
-                onChange={(e) => setForm({ ...form, gender: e.target.value as Gender })}
+                onChange={(e) =>
+                  setForm({ ...form, gender: e.target.value as Gender })
+                }
               >
                 {GENDERS.map((g) => (
                   <option key={g} value={g}>
@@ -336,13 +392,16 @@ export function StudentFormPage() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          {/* 👇 Kapag dalawa pataas ang section sa grade level, dun lang lalabas ang field na 'to. */}
+          <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className={labelClasses}>Grade Level</label>
               <select
                 className={inputClasses}
                 value={form.gradeLevel}
-                onChange={(e) => setForm({ ...form, gradeLevel: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, gradeLevel: e.target.value })
+                }
               >
                 {loadingGrades && <option value="">Loading...</option>}
                 {gradeError && <option value="">Failed to load grades</option>}
@@ -352,24 +411,35 @@ export function StudentFormPage() {
                   </option>
                 ))}
               </select>
-              {errors.gradeLevel && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.gradeLevel}</p>}
+              {errors.gradeLevel && (
+                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                  {errors.gradeLevel}
+                </p>
+              )}
             </div>
             <div>
               <label className={labelClasses}>Section</label>
               <select
-                className={inputClasses}
+                className={`${inputClasses} ${!sectionIsSelectable ? "opacity-60 cursor-not-allowed" : ""}`}
                 value={form.section}
+                disabled={!sectionIsSelectable}
                 onChange={(e) => setForm({ ...form, section: e.target.value })}
               >
                 {loadingSections && <option value="">Loading...</option>}
-                {!loadingSections && sections.length === 0 && <option value="">No sections available</option>}
+                {!loadingSections && sections.length === 0 && (
+                  <option value="">No section available</option>
+                )}
                 {sections.map((s) => (
                   <option key={s.id} value={s.id}>
                     {s.section_name}
                   </option>
                 ))}
               </select>
-              {errors.section && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">{errors.section}</p>}
+              {errors.section && (
+                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                  {errors.section}
+                </p>
+              )}
             </div>
           </div>
 
@@ -378,7 +448,9 @@ export function StudentFormPage() {
               type="button"
               onClick={() => navigate("/admin/students")}
               className={`h-10 px-4 rounded-xl text-xs font-bold border transition-colors ${
-                darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+                darkMode
+                  ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
+                  : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
               }`}
             >
               Cancel
