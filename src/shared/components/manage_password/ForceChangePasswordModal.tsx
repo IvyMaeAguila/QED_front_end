@@ -3,7 +3,7 @@ import { useState, useMemo } from "react";
 import { Eye, EyeOff, Check } from "lucide-react";
 import { PasswordIcon } from "../../../features/auth/components/LoginIcon";
 import { AuthService } from "../../../features/auth/services/authentication.service";
-import { useAuth } from "../../../features/auth/context/AuthContext";
+import { useAuth } from "../../../features/auth/context/authContext";
 
 export function ForceChangePasswordModal() {
   const { clearMustChangePassword } = useAuth();

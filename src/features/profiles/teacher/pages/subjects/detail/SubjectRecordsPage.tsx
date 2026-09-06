@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { ArrowLeft, Check, Pencil } from "lucide-react";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
@@ -8,7 +8,7 @@ import type { SubjectDetailTab } from "./components/TabNav";
 import { AttendanceRecordsSection } from "./AttendanceRecordsPage";
 import { AssessmentRecordsSection } from "./AssessmentRecordsPage";
 import { HolisticRecordsSection } from "./HolisticRecordsPage";
-import { saveScore } from "../services/subjectGrading.service";
+import { fetchItems, fetchScores, saveScore } from "../services/subjectGrading.service";
 import { getComponentWeights, inferSubjectCategory, type SubjectCategory } from "./utils/GradeWeights";
 
 const ACCENT = "#6B0000";
@@ -47,10 +47,59 @@ export function SubjectRecordsPage() {
   const [term, setTerm] = useState(state?.selectedTerm ?? "");
 
   const [isEditing, setIsEditing] = useState(false);
-  const [localScores, setLocalScores] = useState<ScoreMap>(() => state?.scores ?? {});
+
+  // Do NOT seed items/localScores from location.state. That stale snapshot
+  // was causing the page to flash old (pre-edit) values immediately on
+  // render, then visibly swap to the correct data once the fetch below
+  // resolved — which looked like slowness/lag even though the fetch itself
+  // was fine. Instead we start with nothing and show a loading state until
+  // the first real fetch from the server completes, so the user only ever
+  // sees correct data, never a stale flash.
+  const [items, setItems] = useState<GradeItem[] | null>(null);
+  const [localScores, setLocalScores] = useState<ScoreMap>({});
+  const [isLoadingRecords, setIsLoadingRecords] = useState(false);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const tab = state?.tab;
   const isAssessment = tab === "writtenWorks" || tab === "performanceTask" || tab === "exams";
+
+  useEffect(() => {
+    if (!subjectId || !isAssessment || !tab) return;
+
+    let cancelled = false;
+    setIsLoadingRecords(true);
+    setLoadError(null);
+
+    // IMPORTANT: do NOT filter by `tab` here. AssessmentRecordsSection
+    // needs items from ALL THREE components (writtenWorks, performanceTask,
+    // exams) in one array — it splits them into column groups itself.
+    // Filtering server-side by the single tab this page was opened from
+    // silently drops the other two groups' items, which is why Performance
+    // Task / Exams appeared to go empty after an edit triggered a refetch.
+    Promise.all([
+      fetchItems(subjectId, { term: term || undefined }),
+      fetchScores(subjectId),
+    ])
+      .then(([freshItems, freshScores]) => {
+        if (cancelled) return;
+        setItems(freshItems);
+        setLocalScores(freshScores);
+        setHasLoadedOnce(true);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        console.error("Failed to load records:", err);
+        setLoadError("Could not load the latest records. Showing last known data.");
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoadingRecords(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [subjectId, isAssessment, tab, term]);
 
   const weights = useMemo(() => {
     if (!state) return { ww: 30, pt: 50, exam: 20 };
@@ -75,6 +124,7 @@ export function SubjectRecordsPage() {
     const value = trimmed === "" ? null : Number(trimmed);
     if (value !== null && (Number.isNaN(value) || value < 0 || value > maxItems)) return;
 
+    // Optimistic local update so typing feels instant.
     setLocalScores((prev) => {
       const studentScores = { ...(prev[studentId] ?? {}) };
       if (value === null) {
@@ -88,6 +138,14 @@ export function SubjectRecordsPage() {
     if (!subjectId) return;
     saveScore(subjectId, studentId, itemId, value).catch((err) => {
       console.error("Failed to save score:", err);
+      // If the save actually failed, resync from the server rather than
+      // leaving the UI showing a value that never really persisted.
+      setLoadError("Failed to save a score. Please retry.");
+      fetchScores(subjectId)
+        .then(setLocalScores)
+        .catch(() => {
+          /* best-effort resync; keep optimistic value if this also fails */
+        });
     });
   }
 
@@ -144,6 +202,7 @@ export function SubjectRecordsPage() {
                     ? "Edit mode — changes save immediately. Click Done when finished."
                     : "A complete record for all enrolled students."}
             </p>
+            {loadError && <p className="mt-1 text-xs font-bold text-red-600">{loadError}</p>}
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -196,11 +255,17 @@ export function SubjectRecordsPage() {
         />
       )}
 
-      {isAssessment && (
+      {isAssessment && !hasLoadedOnce && isLoadingRecords && (
+        <div className={`${cardClasses} px-5 py-16 text-center`}>
+          <p className={`font-semibold ${textMuted}`}>Loading records…</p>
+        </div>
+      )}
+
+      {isAssessment && hasLoadedOnce && (
         <AssessmentRecordsSection
           title={title}
           roster={roster}
-          items={state.items}
+          items={items ?? []}
           scores={localScores}
           weights={weights}
           term={term}

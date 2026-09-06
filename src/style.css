@@ -1,18 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
+
 @keyframes toast-in {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @theme {
-  --color-maroon: #8f0000;
-  --color-maroon-dark: #710000;
+  /* --- font: Inter app-wide --- */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  --color-surface: #efefef;
-  --color-surface-dark: #1a1a1a;
+  /* --- maroon: same gradient identity, still #550000 -> #BB0000, but the
+     solid mid-tone used for chart fills/icon chips is pulled back very
+     slightly so it reads as a rich maroon rather than a near-black red. --- */
+  --color-maroon: #8f1414;
+  --color-maroon-dark: #5c0a0a;
+  --color-maroon-light: #bb0000;
+
+  /* --- surfaces: dark mode lightened from near-black to a soft charcoal
+     with a faint warm tint, so panels separate from the page instead of
+     disappearing into pure black — reads calmer and more professional. --- */
+  --color-surface: #f3f2f2;
+  --color-surface-dark: #1f1d1d;
 
   --radius-xl2: 1rem;
 
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.08);
-  --shadow-panel: 0 4px 14px rgba(0,0,0,0.12);
+  /* --- shadows: kept soft/neutral for cards; panel/primary shadows eased
+     down in opacity so the maroon glow reads as elevation, not a stain. --- */
+  --shadow-card: 0 4px 20px -2px rgba(0,0,0,0.05), 0 2px 10px -2px rgba(0,0,0,0.03);
+  --shadow-panel: 0 12px 32px rgba(85,0,0,0.18);
+  --shadow-primary: 0 12px 28px rgba(85,0,0,0.18);
+
+  /* --- deep gradient stop pulled back from near-black maroon to a softer,
+     more legible dark red — avoids the "too dark" corner on the hero. --- */
+  --color-maroon-black: #4a1010;
+  --color-maroon-soft: #f8edee;
+  --color-maroon-soft-dark: #5c0a0a26;
+
+  /* --- gold — unchanged, already balanced --- */
+  --color-gold: #c9a227;
+  --color-gold-dark: #8a6b14;
+  --color-gold-soft: #fbf1d8;
+  --color-gold-soft-dark: #c9a22726;
+
+  /* --- medal metals for #2 / #3 rank — slightly warmed so they don't read
+     as flat/cold gray next to gold and bronze --- */
+  --color-silver: #a8adb5;
+  --color-silver-dark: #71767d;
+  --color-bronze: #b29163;
+  --color-bronze-dark: #82613f;
+
+  /* --- semantic: trend up / positive — desaturated from a bright signal
+     green to a muted forest tone, easier on the eyes at a glance --- */
+  --color-green: #3f8a5f;
+  --color-green-soft: #e7f4ec;
+  --color-green-soft-dark: #3f8a5f26;
+
+  /* --- semantic: trend down / alert — desaturated from a hard stop-sign
+     red to a muted brick tone, so it reads as "attention" not "error" --- */
+  --color-red: #b5453f;
+  --color-red-soft: #f9ebea;
+  --color-red-soft-dark: #b5453f26;
+
+  /* --- neutral chart/grid lines — warm-tinted so they sit comfortably
+     next to the maroon palette instead of a cold flat gray --- */
+  --color-grid-line: #ede3e3;
+  --color-grid-line-dark: #333333;
+  --color-axis: #7a6a6a;
+  --color-axis-dark: #aaaaaa;
+
+  /* --- glassmorphism: iOS/iPhone-style frosted glass — very light,
+     mostly-neutral translucency (like Control Center panels) with a
+     faint maroon warmth instead of a heavy tint, so it reads as "glass
+     over the app" rather than "a solid maroon card." --- */
+  --color-glass: rgba(255, 250, 250, 0.55);
+  --color-glass-dark: rgba(40, 24, 24, 0.45);
+  --color-glass-border: rgba(255, 255, 255, 0.6);
+  --color-glass-border-dark: rgba(255, 255, 255, 0.1);
+  --shadow-glass: 0 8px 32px -6px rgba(85, 0, 0, 0.12), 0 2px 8px -2px rgba(85, 0, 0, 0.06);
+}
+
+/* ---------------------------------------------------------------------
+   Glassmorphism utilities — iOS/iPhone-style frosted panels (heavy blur
+   + saturation boost + a bright inset top edge to fake the glass catching
+   light, the way Control Center / widget panels do). Pick light/dark by
+   the same `darkMode` boolean every other surface already branches on:
+   className={darkMode ? "glass-dark" : "glass"}.
+   --------------------------------------------------------------------- */
+@utility glass {
+  background: var(--color-glass);
+  border: 1px solid var(--color-glass-border);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  box-shadow: var(--shadow-glass), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+@utility glass-dark {
+  background: var(--color-glass-dark);
+  border: 1px solid var(--color-glass-border-dark);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  box-shadow: var(--shadow-glass), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* ---------------------------------------------------------------------
+   Reusable gradient utilities — single-class equivalents of the maroon
+   identity gradient, since CSS custom properties alone can't express a
+   multi-stop `background` shorthand as a plain @theme color token.
+   Use like any other utility: className="bg-maroon-gradient".
+   --------------------------------------------------------------------- */
+@utility bg-maroon-gradient {
+  background: linear-gradient(135deg, var(--color-maroon-dark) 0%, var(--color-maroon-light) 100%);
+}
+@utility bg-maroon-gradient-vertical {
+  background: linear-gradient(180deg, var(--color-maroon-dark) 0%, var(--color-maroon-light) 100%);
+}
+@theme {
+  /* Illustration system — for line-art assets like PeopleIllustration.
+     Keeps stroke weight/opacity consistent across cards instead of
+     each usage picking its own values. */
+  --illustration-stroke-width: 2.5;
+  --illustration-opacity: 0.8;
+  --illustration-opacity-dark: 0.9; /* line art needs a touch more opacity on dark surfaces to read at the same visual weight */
 }

@@ -1,5 +1,5 @@
 // src/shared/components/manage_password/ForceChangePasswordGate.tsx
-import { useAuth } from "../../../features/auth/context/AuthContext";
+import { useAuth } from "../../../features/auth/context/authContext";
 import { ForceChangePasswordModal } from "./ForceChangePasswordModal";
 import { useLocation } from "react-router-dom";
 
