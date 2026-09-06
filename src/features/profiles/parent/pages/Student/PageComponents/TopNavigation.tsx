@@ -1,10 +1,11 @@
-import { LayoutDashboard, BookOpen, FileBarChart, UserCircle } from "lucide-react";
+import { LayoutDashboard, BookOpen, FileBarChart, UserCircle, Flower } from "lucide-react";
 
-export type StudentDetailTab = "overview" | "academic" | "progressReport" | "studentProfile";
+export type StudentDetailTab = "overview" | "academic" | "holistic" | "progressReport" | "studentProfile";
 
 const TABS: { key: StudentDetailTab; label: string; icon: typeof LayoutDashboard }[] = [
   { key: "overview", label: "Overview", icon: LayoutDashboard },
   { key: "academic", label: "Academic", icon: BookOpen },
+  { key: "holistic", label: "Holistic", icon: Flower },
   { key: "progressReport", label: "Progress Report", icon: FileBarChart },
   { key: "studentProfile", label: "Student Profile", icon: UserCircle },
 ];

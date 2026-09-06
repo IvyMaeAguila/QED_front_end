@@ -18,8 +18,8 @@ export interface SchoolClass {
   id: string; 
   gradeLevelId: number;
   gradeLevel: string;
-  sectionId: number; 
-  section: string;
+  sectionId: number | null; 
+  section: string | null;
   adviserId: string; 
   adviserName: string;
   adviserEmail?: string | null;  
@@ -28,7 +28,7 @@ export interface SchoolClass {
 }
 
 export function formatClassName(c: Pick<SchoolClass, "gradeLevel" | "section">) {
-  return `${c.gradeLevel} • ${c.section}`;
+  return c.section ? `${c.gradeLevel} - ${c.section}` : c.gradeLevel;
 }
 
 export function formatTimeRange(startTime: string, endTime: string) {

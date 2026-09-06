@@ -1,31 +1,32 @@
-export type Quarter = "Q1" | "Q2" | "Q3" | "Q4";
+export type Term = "T1" | "T2" | "T3";
 
-export const QUARTERS: Quarter[] = ["Q1", "Q2", "Q3", "Q4"];
+export type TermFilter = Term | "OVERALL";
 
-export const QUARTER_LABELS: Record<Quarter, string> = {
-  Q1: "1st Quarter",
-  Q2: "2nd Quarter",
-  Q3: "3rd Quarter",
-  Q4: "4th Quarter",
+export const TERMS: Term[] = ["T1", "T2", "T3"];
+
+export const TERM_LABELS: Record<Term, string> = {
+  T1: "1st Term",
+  T2: "2nd Term",
+  T3: "3rd Term",
 };
 
-export const QUARTER_SHORT_LABELS: Record<Quarter, string> = {
-  Q1: "1st",
-  Q2: "2nd",
-  Q3: "3rd",
-  Q4: "4th",
+export const TERM_SHORT_LABELS: Record<Term, string> = {
+  T1: "1st",
+  T2: "2nd",
+  T3: "3rd",
 };
 
 export interface PeriodicRatingRow {
   learningArea: string;
-  scores: Partial<Record<Quarter, number>>;
+  scores: Partial<Record<Term, number>>;
   finalRating: string;
 }
 
-export interface QuarterlyAverageEntry {
-  quarter: Quarter;
+export interface TermAverageEntry {
+  term: Term;
   average: number | null;
   ratingLabel: string | null;
+  released: boolean
 }
 
 export type HolisticDomainKey = "cognitive" | "emotional" | "social" | "behavioral";
@@ -39,7 +40,7 @@ export interface HolisticDomainScore {
 }
 
 export interface HolisticAssessmentEntry {
-  quarter: Quarter;
+  term: TermFilter;
   domains: HolisticDomainScore[];
 }
 
@@ -51,8 +52,8 @@ export interface AttendanceMonthRow {
   tardy: number;
 }
 
-export interface AttendanceQuarterEntry {
-  quarter: Quarter;
+export interface AttendanceTermEntry {
+  term: Term;
   months: AttendanceMonthRow[];
 }
 
@@ -66,7 +67,7 @@ export interface ProgressReportMeta {
 export interface ProgressReportData {
   meta: ProgressReportMeta;
   periodicRatings: PeriodicRatingRow[];
-  quarterlyAverages: QuarterlyAverageEntry[];
+  termAverages: TermAverageEntry[];
   holisticAssessments: HolisticAssessmentEntry[];
-  attendanceByQuarter: AttendanceQuarterEntry[];
+  attendanceByTerm: AttendanceTermEntry[];
 }

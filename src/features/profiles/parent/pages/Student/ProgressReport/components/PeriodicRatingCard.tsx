@@ -1,16 +1,17 @@
 import type { AdminThemeContext } from "../../../../../admin/pages/AdminLayout";
 import { ClipboardList } from "lucide-react";
-import { QUARTERS, QUARTER_SHORT_LABELS, type PeriodicRatingRow } from "../types/types";
+import { TERMS, TERM_SHORT_LABELS, type PeriodicRatingRow, type TermAverageEntry } from "../types/types";
 import SectionHeader from "../../../ui/SectionHeader";
 import type { DetailStudent } from "../../GlobalTypes/types";
 
 interface PeriodicRatingCardProps {
   rows: PeriodicRatingRow[];
+  termAverages: TermAverageEntry[];
   theme: AdminThemeContext;
   student: DetailStudent;
 }
 
-export function PeriodicRatingCard({ rows, theme, student }: PeriodicRatingCardProps) {
+export function PeriodicRatingCard({ rows, termAverages, theme, student }: PeriodicRatingCardProps) {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
 
   return (
@@ -18,7 +19,7 @@ export function PeriodicRatingCard({ rows, theme, student }: PeriodicRatingCardP
       <SectionHeader
         icon={ClipboardList}
         title="Periodic Rating"
-        about={`Provides a comprehensive overview of ${student.firstName}'s performance across all subjects for the selected quarter.`}
+        about={`Provides a comprehensive overview of ${student.firstName}'s performance across all terms for the selected term.`}
         theme={theme}
       />
 
@@ -29,9 +30,9 @@ export function PeriodicRatingCard({ rows, theme, student }: PeriodicRatingCardP
               <th className={`px-3 py-2 text-left text-[11px] font-semibold uppercase ${textMuted}`}>
                 Learning Areas
               </th>
-              {QUARTERS.map((q) => (
-                <th key={q} className={`px-3 py-2 text-center text-[11px] font-semibold uppercase ${textMuted}`}>
-                  {QUARTER_SHORT_LABELS[q].replace(/[a-z]/g, "")}
+              {TERMS.map((t) => (
+                <th key={t} className={`px-3 py-2 text-center text-[11px] font-semibold uppercase ${textMuted}`}>
+                  {TERM_SHORT_LABELS[t]}
                 </th>
               ))}
               <th className={`px-3 py-2 text-left text-[11px] font-semibold uppercase ${textMuted}`}>
@@ -43,17 +44,17 @@ export function PeriodicRatingCard({ rows, theme, student }: PeriodicRatingCardP
             {rows.map((row) => (
               <tr key={row.learningArea} className={`border-t ${panelBorder}`}>
                 <td className={`px-3 py-2.5 text-sm font-semibold ${textPrimary}`}>{row.learningArea}</td>
-                {QUARTERS.map((q) => {
-                  const score = row.scores[q];
+                {TERMS.map((t) => {
+                  const score = row.scores[t];
                   const isLow = typeof score === "number" && score < 85;
                   return (
                     <td
-                      key={q}
+                      key={t}
                       className={`px-3 py-2.5 text-center text-sm font-bold ${
                         score === undefined ? textMuted : isLow ? "text-red-500" : textPrimary
                       }`}
                     >
-                      {score ?? "—"}
+                      {score ?? ""}
                     </td>
                   );
                 })}
@@ -61,6 +62,28 @@ export function PeriodicRatingCard({ rows, theme, student }: PeriodicRatingCardP
               </tr>
             ))}
           </tbody>
+          <tfoot>
+            <tr className={`border-t-2 ${panelBorder} ${darkMode ? "bg-white/5" : "bg-[#F6F7FB]"}`}>
+              <td className={`px-3 py-2.5 text-sm font-bold uppercase ${textPrimary}`}>
+                Term Average
+              </td>
+              {TERMS.map((t) => {
+                const entry = termAverages.find((e) => e.term === t);
+                const avg = entry?.average;
+                return (
+                  <td
+                    key={t}
+                    className={`px-3 py-2.5 text-center text-sm font-bold ${
+                      avg === null || avg === undefined ? textMuted : textPrimary
+                    }`}
+                  >
+                    {avg !== null && avg !== undefined ? `${avg}%` : ""}
+                  </td>
+                );
+              })}
+              <td />
+            </tr>
+          </tfoot>
         </table>
       </div>
     </div>

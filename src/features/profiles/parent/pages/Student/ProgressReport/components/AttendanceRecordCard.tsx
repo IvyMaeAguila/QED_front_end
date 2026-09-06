@@ -1,12 +1,12 @@
 import { Calendar } from "lucide-react";
 import type { AdminThemeContext } from "../../../../../admin/pages/AdminLayout";
-import type { AttendanceQuarterEntry } from "../types/types";
+import type { AttendanceTermEntry } from "../types/types";
 import SectionHeader from "../../../ui/SectionHeader";
 import type { DetailStudent } from "../../GlobalTypes/types";
 
 
 interface AttendanceRecordCardProps {
-  record: AttendanceQuarterEntry | undefined;
+  record: AttendanceTermEntry | undefined;
   theme: AdminThemeContext;
   student: DetailStudent;
 }

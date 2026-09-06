@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AlertTriangle } from "lucide-react";
-import type { CalendarTheme } from "../types/Calendar";
+import type { CalendarTheme } from "../calendar/types/Calendar";
 
 interface DeleteConfirmModalProps extends CalendarTheme {
   entryTitle: string;
@@ -33,7 +33,10 @@ export function DeleteConfirmModal({
   }
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40"
+      onClick={onClose}
+    >
       <div
         className={`w-full max-w-sm rounded-2xl border shadow-xl overflow-hidden flex flex-col ${panelBg} ${panelBorder}`}
         onClick={(e) => e.stopPropagation()}
@@ -43,7 +46,9 @@ export function DeleteConfirmModal({
             <AlertTriangle size={20} className="text-[#B91C1C]" />
           </div>
           <div>
-            <p className={`text-sm font-bold ${textPrimary}`}>Delete this entry?</p>
+            <p className={`text-sm font-bold ${textPrimary}`}>
+              Delete this entry?
+            </p>
             <p className={`text-xs font-semibold mt-1 ${textMuted}`}>
               "{entryTitle}" will be permanently removed. This can't be undone.
             </p>
@@ -56,7 +61,9 @@ export function DeleteConfirmModal({
             onClick={onClose}
             disabled={deleting}
             className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 ${
-              darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+              darkMode
+                ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
+                : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
             }`}
           >
             Cancel

@@ -11,6 +11,7 @@ import {
   type GradeLevel,
 } from "../studentrecords/types/Students";
 import type { AdminThemeContext } from "../AdminLayout";
+import { DeleteConfirmModal } from "@shared/components/DeleteConfirmationModal";
 
 export function ClassesPage() {
   const navigate = useNavigate();
@@ -22,6 +23,11 @@ export function ClassesPage() {
   const [gradeFilter, setGradeFilter] = useState<GradeLevel | "All Grades">(
     "All Grades",
   );
+
+  const [classToDelete, setClassToDelete] = useState<{
+    id: string;
+    label: string;
+  } | null>(null);
 
   const filtered = useMemo(
     () =>
@@ -106,21 +112,35 @@ export function ClassesPage() {
                   textMuted={textMuted}
                   onView={() => navigate(c.id)}
                   onEdit={() => navigate(`${c.id}/edit`)}
-                  onDelete={async () => {
-                    if (
-                      confirm(
-                        `Delete ${c.gradeLevel} • ${c.section}? This cannot be undone.`,
-                      )
-                    ) {
-                      await deleteClass(c.id);
-                    }
-                  }}
+                  onDelete={() =>
+                    setClassToDelete({
+                      id: c.id,
+                      label: c.section
+                        ? `${c.gradeLevel} - ${c.section}`
+                        : c.gradeLevel,
+                    })
+                  }
                 />
               );
             })}
           </div>
         )}
       </main>
+      {classToDelete && (
+        <DeleteConfirmModal
+          entryTitle={classToDelete.label}
+          darkMode={darkMode}
+          panelBg={panelBg}
+          panelBorder={panelBorder}
+          textPrimary={textPrimary}
+          textMuted={textMuted}
+          onClose={() => setClassToDelete(null)}
+          onConfirm={async () => {
+            await deleteClass(classToDelete.id);
+            setClassToDelete(null);
+          }}
+        />
+      )}
     </div>
   );
 }

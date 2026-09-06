@@ -1,6 +1,6 @@
 import MissedActivities from "./components/MissedActivities";
 import InterventionSupport from "./components/InterventionSupport";
-import ClassSchedule from "./components/ClassSchedule";
+import ClassSchedule from "../Academic/components/ClassSchedule";
 import type {
   MissedActivity,
   InterventionFlag,
@@ -10,7 +10,6 @@ import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
 import type { DetailStudent } from "../../Student/GlobalTypes/types";
 
 interface AcademicTabProps {
-  missedActivities: MissedActivity[];
   interventionFlags: InterventionFlag[];
   student: DetailStudent;
   schedule: ScheduleItem[];
@@ -18,7 +17,7 @@ interface AcademicTabProps {
 }
 
 export default function AcademicTab({
-  missedActivities,
+
   interventionFlags,
   schedule,
   student,
@@ -27,17 +26,17 @@ export default function AcademicTab({
   const { textPrimary } = theme;
 
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-      <h1 className={`text-lg font-bold sm:hidden ${textPrimary}`}>
-        Academic Support
-      </h1>
-      <div className="flex flex-1 flex-col gap-4">
-        <MissedActivities activities={missedActivities} theme={theme} student={student}/>
-        <InterventionSupport flags={interventionFlags} theme={theme} student={student} />
-      </div>
-      <div className="w-full sm:max-w-xs">
-        <ClassSchedule items={schedule} theme={theme} student={student}/>
-      </div>
-    </div>
+    <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
+  <h1 className={`text-lg font-bold lg:hidden ${textPrimary}`}>
+    Academic Support
+  </h1>
+  <div className="flex flex-1 flex-col gap-4">
+    <MissedActivities theme={theme} student={student} />
+    <InterventionSupport flags={interventionFlags} theme={theme} student={student} />
+  </div>
+  <div className="w-full lg:w-[500px] lg:shrink-0">
+    <ClassSchedule theme={theme} student={student} />
+  </div>
+</div>
   );
 }

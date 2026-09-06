@@ -19,7 +19,7 @@ import {
   EditEntryModal,
   type EditEntryValue,
 } from "../../../../../shared/calendar/components/EditEntryModal";
-import { DeleteConfirmModal } from "../../../../../shared/calendar/components/DeleteConfirmationModal";
+import { DeleteConfirmModal } from "../../../../../shared/components/DeleteConfirmationModal";
 import { ExpandedListModal } from "../../../../../shared/calendar/components/ExpandedListModal";
 import { toISODate } from "../../../../../shared/calendar/data";
 import type { AdminThemeContext } from "../AdminLayout";

@@ -11,7 +11,7 @@ export function TeacherSection() {
     <StudentsProvider>
       <TeachersProvider>
         <ClassesProvider>
-          <TeacherLayout onLogout={logout} /> {/* ✅ palitan */}
+          <TeacherLayout onLogout={logout} /> 
         </ClassesProvider>
       </TeachersProvider>
     </StudentsProvider>

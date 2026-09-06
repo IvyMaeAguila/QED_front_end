@@ -42,8 +42,8 @@ export interface ClassRecord {
   id: number;
   gradeLevelId: number;
   gradeLevel: string;
-  sectionId: number;
-  section: string;
+  sectionId: number | null; // optional na ngayon ang section
+  section: string | null;
   adviserId: number;
   adviserName: string;
   adviserEmail: string | null;
@@ -60,9 +60,11 @@ export interface ClassRecord {
   }[];
 }
 
+// "section" ay SECTION NAME (text), hindi na section_id — tinatanggap ito ng
+// backend bilang free-text at ise-search/i-resolve papunta sa grade_level_sections.
 interface CreateClassPayload {
   gradeLevelId: number;
-  sectionId: number;
+  section?: string | null;
   subjectName: string;
   adviserId: string;
   schedule: SchedulePeriod[];
@@ -86,6 +88,9 @@ export async function fetchGradeLevels(): Promise<GradeLevelOption[]> {
   return data.data;
 }
 
+// Hindi na ginagamit ng form mismo bilang value ng section input (free-text
+// na ito ngayon), pero ginagamit pa rin para sa datalist/autocomplete
+// suggestions ng existing section names.
 export async function fetchSectionsByGrade(
   gradeLevelId: number,
   excludeClassId?: string | number,
@@ -102,6 +107,12 @@ export async function fetchTeachers(excludeClassId?: string | number): Promise<T
   if (excludeClassId) params.set("excludeClassId", String(excludeClassId));
   const qs = params.toString();
   const res = await fetch(`${BASE_URL}/teacher${qs ? `?${qs}` : ""}`);
+  const data = await handleJsonResponse(res);
+  return data.data;
+}
+
+export async function fetchAllTeachers(): Promise<TeacherOption[]> {
+  const res = await fetch(`${BASE_URL}/teacher/all`);
   const data = await handleJsonResponse(res);
   return data.data;
 }
@@ -124,10 +135,10 @@ function buildScheduleBody(schedule: SchedulePeriod[]) {
 
 export async function createClass(payload: CreateClassPayload) {
   const body = {
-    gradeLevel: payload.gradeLevelId, // int, matches grade_level_id
-    section: payload.sectionId, // int, matches section_id
+    gradeLevel: payload.gradeLevelId,
+    section: payload.section?.trim() ? payload.section.trim() : null,
     subjects: payload.subjectName,
-    adviserId: Number(payload.adviserId), // int
+    adviserId: Number(payload.adviserId), 
     schedule: buildScheduleBody(payload.schedule),
   };
 
@@ -145,7 +156,7 @@ export async function createClass(payload: CreateClassPayload) {
 export async function updateClassApi(id: string | number, payload: UpdateClassPayload) {
   const body = {
     gradeLevel: payload.gradeLevelId,
-    section: payload.sectionId,
+    section: payload.section?.trim() ? payload.section.trim() : null,
     adviserId: Number(payload.adviserId),
     schedule: buildScheduleBody(payload.schedule),
   };

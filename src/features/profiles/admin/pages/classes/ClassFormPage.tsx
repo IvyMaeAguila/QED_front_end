@@ -15,7 +15,11 @@ import {
   type GradeLevelOption,
   type SectionOption,
 } from "./services/classes.service";
-import { fetchTeachers, type TeacherOption } from "./services/classes.service";
+import {
+  fetchTeachers,
+  fetchAllTeachers,
+  type TeacherOption,
+} from "./services/classes.service";
 import {
   fetchSubjectsByGrade,
   type SubjectOption,
@@ -24,7 +28,7 @@ import type { AdminThemeContext } from ".././AdminLayout";
 
 interface FormState {
   gradeLevelId: number | "";
-  sectionId: number | "";
+  section: string; // SECTION NAME (text) na, hindi na ID — value mismo ng dropdown option
   subjectName: string | "";
   adviserId: string;
   schedule: SchedulePeriod[];
@@ -46,10 +50,16 @@ export function ClassFormPage() {
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const { classId } = useParams<{ classId: string }>();
-const { getClass, refreshClasses } = useClasses(); 
+  const { getClass, refreshClasses } = useClasses();
 
   const isEditing = Boolean(classId);
   const existing = classId ? getClass(classId) : undefined;
+
+  const [advisableTeachers, setAdvisableTeachers] = useState<TeacherOption[]>(
+    [],
+  ); // for Class Adviser
+  const [allTeachers, setAllTeachers] = useState<TeacherOption[]>([]); // for Subject Teacher
+  const [loadingAllTeachers, setLoadingAllTeachers] = useState(true);
 
   const [gradeLevels, setGradeLevels] = useState<GradeLevelOption[]>([]);
   const [sections, setSections] = useState<SectionOption[]>([]);
@@ -65,13 +75,13 @@ const { getClass, refreshClasses } = useClasses();
 
   const [form, setForm] = useState<FormState>({
     gradeLevelId: existing?.gradeLevelId ?? "",
-    sectionId: existing?.sectionId ?? "", 
+    section: existing?.section ?? "",
     subjectName: "",
     adviserId: existing?.adviserId ?? "",
     schedule: existing?.schedule ?? [],
   });
   const [errors, setErrors] = useState<
-    Partial<Record<"gradeLevelId" | "sectionId" | "adviserId", string>>
+    Partial<Record<"gradeLevelId" | "section" | "adviserId", string>>
   >({});
 
   // 1. Load grade levels once on mount
@@ -100,7 +110,7 @@ const { getClass, refreshClasses } = useClasses();
     setLoadingTeachers(true);
     fetchTeachers(existing?.id)
       .then((data) => {
-        if (active) setTeachers(data);
+        if (active) setAdvisableTeachers(data);
       })
       .catch((err) => {
         console.error(err);
@@ -114,8 +124,27 @@ const { getClass, refreshClasses } = useClasses();
     };
   }, [existing?.id]);
 
-  // 3. Whenever gradeLevelId changes, fetch matching sections and reset sectionId
-   useEffect(() => {
+  useEffect(() => {
+    let active = true;
+    setLoadingAllTeachers(true);
+    fetchAllTeachers()
+      .then((data) => {
+        if (active) setAllTeachers(data);
+      })
+      .catch((err) => {
+        console.error(err);
+        if (active) setSubmitError("Failed to load teachers.");
+      })
+      .finally(() => {
+        if (active) setLoadingAllTeachers(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  // 3. Whenever gradeLevelId changes, fetch matching sections
+  useEffect(() => {
     if (form.gradeLevelId === "") {
       setSections([]);
       return;
@@ -165,18 +194,18 @@ const { getClass, refreshClasses } = useClasses();
   }, [form.gradeLevelId]);
 
   useEffect(() => {
-  if (!isEditing || subjectsResolved) return;
-  if (subjects.length === 0) return;
+    if (!isEditing || subjectsResolved) return;
+    if (subjects.length === 0) return;
 
-  setForm((f) => ({
-    ...f,
-    schedule: f.schedule.map((p) => {
-      const match = subjects.find((s) => s.subject_name === p.subject);
-      return match ? { ...p, subject: String(match.id) } : p;
-    }),
-  }));
-  setSubjectsResolved(true);
-}, [subjects, isEditing, subjectsResolved]);
+    setForm((f) => ({
+      ...f,
+      schedule: f.schedule.map((p) => {
+        const match = subjects.find((s) => s.subject_name === p.subject);
+        return match ? { ...p, subject: String(match.id) } : p;
+      }),
+    }));
+    setSubjectsResolved(true);
+  }, [subjects, isEditing, subjectsResolved]);
 
   if (isEditing && !existing) {
     return (
@@ -231,11 +260,10 @@ const { getClass, refreshClasses } = useClasses();
 
   function validate(): boolean {
     const next: Partial<
-      Record<"gradeLevelId" | "sectionId" | "adviserId", string>
+      Record<"gradeLevelId" | "section" | "adviserId", string>
     > = {};
     if (form.gradeLevelId === "")
       next.gradeLevelId = "Grade level is required.";
-    if (form.sectionId === "") next.sectionId = "Section is required.";
     if (!form.adviserId) next.adviserId = "Class adviser is required.";
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -245,7 +273,7 @@ const { getClass, refreshClasses } = useClasses();
     e.preventDefault();
     setSubmitError(null);
     if (!validate()) return;
-    if (form.gradeLevelId === "" || form.sectionId === "") return;
+    if (form.gradeLevelId === "") return;
 
     const cleanedSchedule = form.schedule
       .filter((p) => p.subject.trim() && p.teacherId && p.days.length > 0)
@@ -261,7 +289,7 @@ const { getClass, refreshClasses } = useClasses();
       if (isEditing && existing) {
         await updateClassApi(existing.id, {
           gradeLevelId: form.gradeLevelId,
-          sectionId: form.sectionId,
+          section: form.section,
           subjectName: form.subjectName,
           adviserId: form.adviserId,
           schedule: cleanedSchedule,
@@ -271,7 +299,7 @@ const { getClass, refreshClasses } = useClasses();
       } else {
         await createClass({
           gradeLevelId: form.gradeLevelId,
-          sectionId: form.sectionId,
+          section: form.section,
           subjectName: form.subjectName,
           adviserId: form.adviserId,
           schedule: cleanedSchedule,
@@ -304,7 +332,7 @@ const { getClass, refreshClasses } = useClasses();
           </h3>
           <p className="text-xs text-white/70 mt-0.5 truncate">
             {isEditing
-              ? `Updating ${existing?.gradeLevel} • ${existing?.section}`
+              ? `Updating ${existing?.gradeLevel} - ${existing?.section}`
               : "Students matching the grade and section below sync automatically"}
           </p>
         </div>
@@ -328,7 +356,7 @@ const { getClass, refreshClasses } = useClasses();
                 setForm((f) => ({
                   ...f,
                   gradeLevelId: e.target.value ? Number(e.target.value) : "",
-                  sectionId: "", // reset section kapag nagpalit ng grade level
+                  section: "", // reset section kapag nagpalit ng grade level
                   // reset subject ng bawat period dahil grade-specific na yung subject list
                   schedule: f.schedule.map((p) => ({ ...p, subject: "" })),
                 }))
@@ -351,16 +379,13 @@ const { getClass, refreshClasses } = useClasses();
           </div>
 
           <div>
-            <label className={labelClasses}>Section</label>
+            <label className={labelClasses}>Section (Optional)</label>
             <select
               className={inputClasses}
-              value={form.sectionId}
+              value={form.section}
               disabled={form.gradeLevelId === "" || loadingSections}
               onChange={(e) =>
-                setForm((f) => ({
-                  ...f,
-                  sectionId: e.target.value ? Number(e.target.value) : "",
-                }))
+                setForm((f) => ({ ...f, section: e.target.value }))
               }
             >
               <option value="">
@@ -369,18 +394,18 @@ const { getClass, refreshClasses } = useClasses();
                   : loadingSections
                     ? "Loading…"
                     : sections.length === 0
-                      ? "No sections found"
+                      ? "No available section"
                       : "Select section…"}
               </option>
               {sections.map((s) => (
-                <option key={s.id} value={s.id}>
+                <option key={s.id} value={s.section_name}>
                   {s.section_name}
                 </option>
               ))}
             </select>
-            {errors.sectionId && (
+            {errors.section && (
               <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
-                {errors.sectionId}
+                {errors.section}
               </p>
             )}
           </div>
@@ -397,7 +422,7 @@ const { getClass, refreshClasses } = useClasses();
             <option value="">
               {loadingTeachers ? "Loading…" : "Select a teacher…"}
             </option>
-            {teachers.map((t) => (
+            {advisableTeachers.map((t) => (
               <option key={t.id} value={t.id}>
                 {t.last_name}, {t.first_name}
               </option>
@@ -471,15 +496,15 @@ const { getClass, refreshClasses } = useClasses();
                   <select
                     className={inputClasses}
                     value={period.teacherId}
-                    disabled={loadingTeachers}
+                    disabled={loadingAllTeachers}
                     onChange={(e) =>
                       updatePeriod(period.id, { teacherId: e.target.value })
                     }
                   >
                     <option value="">
-                      {loadingTeachers ? "Loading…" : "Subject teacher…"}
+                      {loadingAllTeachers ? "Loading…" : "Subject teacher…"}
                     </option>
-                    {teachers.map((t) => (
+                    {allTeachers.map((t) => (
                       <option key={t.id} value={t.id}>
                         {t.last_name}, {t.first_name}
                       </option>

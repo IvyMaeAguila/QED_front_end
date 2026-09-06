@@ -1,12 +1,12 @@
 import type { ProgressReportData } from "../types/types";
-import { QUARTERS, QUARTER_LABELS } from "../types/types";
+import { TERMS, TERM_LABELS } from "../types/types";
 
 interface FormalReportTemplateProps {
   data: ProgressReportData;
 }
 
 export function FormalReportTemplate({ data }: FormalReportTemplateProps) {
-  const { meta, periodicRatings, quarterlyAverages, holisticAssessments, attendanceByQuarter } = data;
+  const { meta, periodicRatings, termAverages, holisticAssessments, attendanceByTerm } = data;
 
   return (
     <div
@@ -50,8 +50,8 @@ export function FormalReportTemplate({ data }: FormalReportTemplateProps) {
         <thead>
           <tr>
             <th style={th}>Learning Areas</th>
-            {QUARTERS.map((q) => (
-              <th key={q} style={th}>{QUARTER_LABELS[q].split(" ")[0]}</th>
+            {TERMS.map((t) => (
+              <th key={t} style={th}>{TERM_LABELS[t].split(" ")[0]}</th>
             ))}
             <th style={th}>Final Rating</th>
           </tr>
@@ -60,8 +60,8 @@ export function FormalReportTemplate({ data }: FormalReportTemplateProps) {
           {periodicRatings.map((row) => (
             <tr key={row.learningArea}>
               <td style={td}>{row.learningArea}</td>
-              {QUARTERS.map((q) => (
-                <td key={q} style={{ ...td, textAlign: "center" }}>{row.scores[q] ?? "—"}</td>
+              {TERMS.map((t) => (
+                <td key={t} style={{ ...td, textAlign: "center" }}>{row.scores[t] ?? "—"}</td>
               ))}
               <td style={td}>{row.finalRating}</td>
             </tr>
@@ -69,20 +69,20 @@ export function FormalReportTemplate({ data }: FormalReportTemplateProps) {
         </tbody>
       </table>
 
-      <h2 style={sectionTitle}>Quarterly Average</h2>
+      <h2 style={sectionTitle}>Term Average</h2>
       <table style={table}>
         <thead>
           <tr>
-            {QUARTERS.map((q) => (
-              <th key={q} style={th}>{QUARTER_LABELS[q]}</th>
+            {TERMS.map((t) => (
+              <th key={t} style={th}>{TERM_LABELS[t]}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           <tr>
-            {quarterlyAverages.map((q) => (
-              <td key={q.quarter} style={{ ...td, textAlign: "center" }}>
-                {q.average !== null ? `${q.average}% (${q.ratingLabel})` : "—"}
+            {termAverages.map((t) => (
+              <td key={t.term} style={{ ...td, textAlign: "center" }}>
+                {t.average !== null ? `${t.average}% (${t.ratingLabel})` : "—"}
               </td>
             ))}
           </tr>
@@ -91,10 +91,10 @@ export function FormalReportTemplate({ data }: FormalReportTemplateProps) {
 
       <h2 style={sectionTitle}>Holistic Development Assessment</h2>
       {holisticAssessments.map((entry) => (
-        <table key={entry.quarter} style={{ ...table, marginBottom: "8px" }}>
+        <table key={entry.term} style={{ ...table, marginBottom: "8px" }}>
           <thead>
             <tr>
-              <th style={th}>{QUARTER_LABELS[entry.quarter]}</th>
+              <th style={th}>{TERM_LABELS[entry.term]}</th>
               {entry.domains.map((d) => (
                 <th key={d.key} style={th}>{d.label}</th>
               ))}
@@ -114,11 +114,11 @@ export function FormalReportTemplate({ data }: FormalReportTemplateProps) {
       ))}
 
       <h2 style={sectionTitle}>Record of Attendance</h2>
-      {attendanceByQuarter.map((entry) => (
-        <table key={entry.quarter} style={table}>
+      {attendanceByTerm.map((entry) => (
+        <table key={entry.term} style={table}>
           <thead>
             <tr>
-              <th style={th}>Month ({QUARTER_LABELS[entry.quarter]})</th>
+              <th style={th}>Month ({TERM_LABELS[entry.term]})</th>
               <th style={th}>School Days</th>
               <th style={th}>Present</th>
               <th style={th}>Absent</th>

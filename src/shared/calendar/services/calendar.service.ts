@@ -2,11 +2,8 @@
 import type { CalendarActivity, CalendarHoliday, HolidayType } from "../types/Calendar";
 import { API_CONFIG } from '../../../config/api.config';
 
-const BASE_URL = `${API_CONFIG.baseURL}/api/calendar`; // palitan ng actual base url mo
+const BASE_URL = `${API_CONFIG.baseURL}/api/calendar`; 
 
-// --------------------------------------------------------
-// DTO shapes — palitan kung iba ang field names ng backend mo
-// --------------------------------------------------------
 interface CalendarActivityRecordDTO {
   id: number;
   title: string;
@@ -85,7 +82,7 @@ export async function createCalendarActivities(
   };
 
 
-  const res = await fetch(`${BASE_URL}/activities/add`, {
+  const res = await fetch(`${BASE_URL}/activities`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),

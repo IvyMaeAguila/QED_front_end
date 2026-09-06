@@ -15,16 +15,3 @@ export const COLORS = {
   line: "#e5e7eb",
   panel: "#f7f7f8",
 };
-
-export const SCHOOL_YEAR_MONTHS: MonthOption[] = [
-  { key: "2026-06", label: "June 2026" },
-  { key: "2026-07", label: "July 2026" },
-  { key: "2026-08", label: "August 2026" },
-  { key: "2026-09", label: "September 2026" },
-  { key: "2026-10", label: "October 2026" },
-  { key: "2026-11", label: "November 2026" },
-  { key: "2026-12", label: "December 2026" },
-  { key: "2027-01", label: "January 2027" },
-  { key: "2027-02", label: "February 2027" },
-  { key: "2027-03", label: "March 2027" },
-];

@@ -25,8 +25,32 @@ export const MOCK_TERMS: Term[] = [
   {
     key: "q2",
     label: "2nd Quarter",
-    released: false,
-    subjects: [],
+    released: true,
+    releaseDate: "December 8, 2026",
+    average: 80.4,
+    subjects: [
+      { subject: "Filipino", grade: 90 },
+      { subject: "English", grade: 98 },
+      { subject: "Math", grade: 89 },
+      { subject: "Science", grade: 93 },
+      { subject: "Araling Panlipunan", grade: 81 },
+      { subject: "MAPEH", grade: 84 },
+    ],
+  },
+  {
+    key: "q2",
+    label: "2nd Quarter",
+    released: true,
+    releaseDate: "December 8, 2026",
+    average: 80.4,
+    subjects: [
+      { subject: "Filipino", grade: 90 },
+      { subject: "English", grade: 98 },
+      { subject: "Math", grade: 89 },
+      { subject: "Science", grade: 93 },
+      { subject: "Araling Panlipunan", grade: 81 },
+      { subject: "MAPEH", grade: 84 },
+    ],
   },
 ];
 

@@ -2,14 +2,11 @@ import { useState, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { ArrowLeft, Download } from "lucide-react";
 import AttendanceOverview from "./Overview/components/AttendanceOverview";
-import PerformanceAnalytics from "./Overview/components/PerformanceAnalytics";
-import HolisticAnalytics from "./Overview/components/HolisticAnalytics";
+import TermAverageTrendChart from "./Overview/components/PerformanceAnalytics";
+import StudentNarrativeSnapshot from "./Overview/components/HolisticAverage";
 import AcademicTab from "./Academic/AcademicTab";
-import {
-  mockMissedActivities,
-  mockInterventionFlags,
-  mockSchedule,
-} from "./Academic/data/MockData";
+import HolisticTab from "./Holistic/HoisticWeeklyReportTab";
+import { mockInterventionFlags, mockSchedule } from "./Academic/data/MockData";
 import { TabNav, type StudentDetailTab } from "./PageComponents/TopNavigation";
 import StudentInfoTable from "./PageComponents/StudentInfoTable";
 import { useStudentDetail } from "./Overview/useStudentDetail";
@@ -19,9 +16,10 @@ import {
   ProgressReportProvider,
   useProgressReport,
 } from "./ProgressReport/context/ProgressReportContext";
+import { TermPerformanceProvider } from "./Overview/context/PerformanceAnalyticsContext";
 import { useFormalReportDownload } from "./ProgressReport/hooks/useFormalreportDownload";
 import type { DetailStudent } from "./GlobalTypes/types";
-import {StudentProfileTab} from "./StudentProfile/StudentProfileTab";
+import { StudentProfileTab } from "./StudentProfile/StudentProfileTab";
 
 // Small inner component so it can consume ProgressReportContext
 function ProgressReportSection({
@@ -39,30 +37,30 @@ function ProgressReportSection({
 
   return (
     <>
-  <div className="flex flex-col gap-1 mt-4 mb-2">
-    <h1 className={`text-lg font-bold ${theme.textPrimary}`}>
-      Progess Report
-    </h1>
-    <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-      <p className={`text-sm ${theme.textMuted} self-start sm:self-auto`}>
-        Monitor your child's class performance, attendance, and holistic
-        development across all quarters.
-      </p>
+      <div className="flex flex-col gap-1 mt-4 mb-2">
+        <h1 className={`text-lg font-bold ${theme.textPrimary}`}>
+          Progess Report
+        </h1>
+        <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+          <p className={`text-sm ${theme.textMuted} self-start sm:self-auto`}>
+            Monitor your child's class performance, attendance, and holistic
+            development across all quarters.
+          </p>
 
-      <button
-        type="button"
-        onClick={handleDownload}
-        disabled={downloading}
-        className="flex shrink-0 items-center gap-1.5 rounded-lg bg-[#8B0D0D] px-3 py-2 text-xs font-semibold text-white hover:opacity-90 disabled:opacity-50"
-      >
-        <Download size={14} /> {downloading ? "Preparing…" : "Download PDF"}
-      </button>
-    </div>
-  </div>
+          <button
+            type="button"
+            onClick={handleDownload}
+            disabled={downloading}
+            className="flex shrink-0 items-center gap-1.5 rounded-lg bg-[#8B0D0D] px-3 py-2 text-xs font-semibold text-white hover:opacity-90 disabled:opacity-50"
+          >
+            <Download size={14} /> {downloading ? "Preparing…" : "Download PDF"}
+          </button>
+        </div>
+      </div>
 
-  <StudentInfoTable student={student} theme={theme} />
-  <ProgressReportTab theme={theme} student={student} />
-</>
+      <StudentInfoTable student={student} theme={theme} />
+      <ProgressReportTab theme={theme} student={student} />
+    </>
   );
 }
 
@@ -73,11 +71,16 @@ export default function StudentDetailPage() {
   const theme = useOutletContext<AdminThemeContext>();
   const { darkMode, textMuted } = theme;
 
+  // TODO: wire this to your real active-term source (e.g. fetchGradingPeriodsGlobal /
+  // a term selector elsewhere on the page). Whatever changes when the term switches —
+  // termNumber, "2026-Term2", etc. — pass it here so HolisticTab resets its date buttons.
+  const currentTerm = 1;
+
   useEffect(() => {
     setActiveTab("overview");
   }, [studentId]);
 
-  if (!student) {
+  if (!student || !studentId) {
     return (
       <div
         className={`flex min-h-screen w-full flex-col items-center justify-center gap-3 ${darkMode ? "bg-[#0B1120]" : ""}`}
@@ -111,7 +114,7 @@ export default function StudentDetailPage() {
 
         <div className="flex flex-col gap-4">
           {activeTab === "overview" && (
-            <>
+            <TermPerformanceProvider studentId={studentId}>
               <div className="flex flex-col gap-1 mt-4 mb-2">
                 <h1 className={`text-lg font-bold ${theme.textPrimary}`}>
                   Overview
@@ -124,10 +127,14 @@ export default function StudentDetailPage() {
               <StudentInfoTable student={student} theme={theme} />
               <AttendanceOverview student={student} theme={theme} />
               <div className="flex flex-col gap-4 sm:flex-row">
-                <PerformanceAnalytics student={student} theme={theme} />
-                <HolisticAnalytics student={student} theme={theme} />
+                <div className="sm:w-1/2 sm:flex-1 sm:basis-0">
+                  <TermAverageTrendChart student={student} theme={theme} />
+                </div>
+                <div className="sm:w-1/2 sm:flex-1 sm:basis-0">
+                  <StudentNarrativeSnapshot student={student} theme={theme} />
+                </div>
               </div>
-            </>
+            </TermPerformanceProvider>
           )}
 
           {activeTab === "academic" && (
@@ -143,7 +150,6 @@ export default function StudentDetailPage() {
               </div>
               <StudentInfoTable student={student} theme={theme} />
               <AcademicTab
-                missedActivities={mockMissedActivities}
                 interventionFlags={mockInterventionFlags}
                 schedule={mockSchedule}
                 theme={theme}
@@ -152,8 +158,29 @@ export default function StudentDetailPage() {
             </>
           )}
 
+          {activeTab === "holistic" && (
+            <>
+              <div className="flex flex-col gap-1 mt-4 mb-2">
+                <h1 className={`text-lg font-bold ${theme.textPrimary}`}>
+                  Holistic Development
+                </h1>
+                <p className={`text-sm ${textMuted}`}>
+                  Track your child's cognitive, emotional, social, and
+                  behavioral development across every subject.
+                </p>
+              </div>
+              <StudentInfoTable student={student} theme={theme} />
+              <HolisticTab
+                key={currentTerm}
+                termKey={currentTerm}
+                theme={theme}
+                student={student}
+              />
+            </>
+          )}
+
           {activeTab === "progressReport" && (
-            <ProgressReportProvider>
+            <ProgressReportProvider studentId={studentId}>
               <ProgressReportSection theme={theme} student={student} />
             </ProgressReportProvider>
           )}

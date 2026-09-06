@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { School, Plus, Trash2 } from "lucide-react";
+import { School, Plus, Trash2, Pencil, Check, X } from "lucide-react";
 import { ACCENT, GRADE_LEVELS, type GradeLevel, type Subject, type SubjectsTheme } from "../types/types";
 import { useSections } from "../context/SectionsContext";
+import type { Section } from "../types/types";
 import { ModalShell } from "./ModalShell";
 
 interface ManageSectionsModalProps extends SubjectsTheme {
@@ -12,15 +13,31 @@ interface ManageSectionsModalProps extends SubjectsTheme {
 
 export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme }: ManageSectionsModalProps) {
   const { darkMode, textMuted, textPrimary } = theme;
-   const { getSectionsForGrade, loadSectionsForGrade, addSection, removeSection } = useSections();
+  const {
+    getSectionsForGrade,
+    loadSectionsForGrade,
+    loadSectionIdsUsedByClasses,
+    sectionIdsUsedByClasses,
+    addSection,
+    editSection,
+    removeSection,
+  } = useSections();
 
   const [gradeLevel, setGradeLevel] = useState<GradeLevel>(defaultGrade);
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState("");
+  const [editError, setEditError] = useState<string | null>(null);
+
+  const [removingId, setRemovingId] = useState<string | null>(null);
+  const [removeError, setRemoveError] = useState<{ id: string; message: string } | null>(null);
+
+  useEffect(() => {
     void loadSectionsForGrade(gradeLevel);
-  }, [gradeLevel, loadSectionsForGrade]);
+    void loadSectionIdsUsedByClasses();
+  }, [gradeLevel, loadSectionsForGrade, loadSectionIdsUsedByClasses]);
 
   const gradeSections = getSectionsForGrade(gradeLevel);
 
@@ -32,21 +49,58 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
   const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 
   async function handleAdd() {
-  const result = await addSection(gradeLevel, name);
-  if (!result.ok) {
-    setError(result.error);
-    return;
+    const result = await addSection(gradeLevel, name);
+    if (!result.ok) {
+      setError(result.error);
+      return;
+    }
+    setName("");
+    setError(null);
   }
-  setName("");
-  setError(null);
-}
 
-async function handleRemove(id: string) {
-  await removeSection(id);
-}
+  function startEdit(id: string, currentName: string) {
+    setEditingId(id);
+    setEditingName(currentName);
+    setEditError(null);
+  }
 
-  function isInUse(sectionName: string) {
-    return subjects.some((s) => s.gradeLevel === gradeLevel && s.section === sectionName);
+  function cancelEdit() {
+    setEditingId(null);
+    setEditingName("");
+    setEditError(null);
+  }
+
+  async function handleEditSave(id: string) {
+    const result = await editSection(id, editingName);
+    if (!result.ok) {
+      setEditError(result.error);
+      return;
+    }
+    setEditingId(null);
+    setEditingName("");
+    setEditError(null);
+  }
+
+  async function handleRemove(id: string) {
+    setRemoveError(null);
+    setRemovingId(id);
+    const result = await removeSection(id);
+    setRemovingId(null);
+    if (!result.ok) {
+      setRemoveError({ id, message: result.error });
+    }
+  }
+
+  // "In use" kapag may subject na naka-assign dito (SubjectSectionsContext data)
+  // O kung naka-link na ito sa isang existing class (classes.section_id) —
+  // yung pangalawang check ang dating kulang, kaya delatable pa rin dati
+  // ang mga section na ginagamit na ng Classes page.
+  function isInUse(section: Section) {
+    const usedBySubject = subjects.some(
+      (s) => s.gradeLevel === gradeLevel && s.section === section.name,
+    );
+    const usedByClass = sectionIdsUsedByClasses.has(section.id);
+    return usedBySubject || usedByClass;
   }
 
   return (
@@ -58,6 +112,8 @@ async function handleRemove(id: string) {
           onChange={(e) => {
             setGradeLevel(e.target.value as GradeLevel);
             setError(null);
+            setRemoveError(null);
+            cancelEdit();
           }}
           className={inputClasses}
         >
@@ -79,8 +135,8 @@ async function handleRemove(id: string) {
               setError(null);
             }}
             onKeyDown={(e) => {
-  if (e.key === "Enter") void handleAdd();
-}}
+              if (e.key === "Enter") void handleAdd();
+            }}
             placeholder="e.g. Amethyst"
             className={inputClasses}
           />
@@ -103,24 +159,88 @@ async function handleRemove(id: string) {
             <p className={`text-xs font-semibold px-3 py-3 ${textMuted}`}>No sections yet for this grade.</p>
           ) : (
             gradeSections.map((section) => {
-              const inUse = isInUse(section.name);
+              const inUse = isInUse(section);
+              const isEditing = editingId === section.id;
+              const isRemoving = removingId === section.id;
+              const removeErrorForThis = removeError?.id === section.id ? removeError.message : null;
+
+              if (isEditing) {
+                return (
+                  <div key={section.id} className="px-3 py-2.5">
+                    <div className="flex items-center gap-2">
+                      <input
+                        autoFocus
+                        value={editingName}
+                        onChange={(e) => {
+                          setEditingName(e.target.value);
+                          setEditError(null);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") void handleEditSave(section.id);
+                          if (e.key === "Escape") cancelEdit();
+                        }}
+                        className={`${inputClasses} h-8`}
+                      />
+                      <button
+                        onClick={() => void handleEditSave(section.id)}
+                        className="w-7 h-7 shrink-0 rounded-lg flex items-center justify-center text-white"
+                        style={{ background: ACCENT }}
+                        aria-label="Save"
+                      >
+                        <Check size={14} />
+                      </button>
+                      <button
+                        onClick={cancelEdit}
+                        className={`w-7 h-7 shrink-0 rounded-lg flex items-center justify-center ${
+                          darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#374151] hover:bg-[#F6F7FB]"
+                        }`}
+                        aria-label="Cancel"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                    {editError && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1.5">{editError}</p>}
+                  </div>
+                );
+              }
+
               return (
-                <div key={section.id} className="flex items-center justify-between px-3 py-2.5">
-                  <span className={`text-sm font-semibold ${textPrimary}`}>{section.name}</span>
-                  <button
-                   onClick={() => void handleRemove(section.id)}
-                    disabled={inUse}
-                    title={inUse ? "This section has subjects assigned — reassign or deactivate them first" : "Remove section"}
-                    className={`w-7 h-7 rounded-lg flex items-center justify-center transition-colors ${
-                      inUse
-                        ? "opacity-30 cursor-not-allowed"
-                        : darkMode
-                        ? "text-[#F87171] hover:bg-[#7F1D1D]/20"
-                        : "text-[#B91C1C] hover:bg-[#FEE2E2]"
-                    }`}
-                  >
-                    <Trash2 size={14} />
-                  </button>
+                <div key={section.id} className="px-3 py-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className={`text-sm font-semibold ${textPrimary}`}>{section.name}</span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => startEdit(section.id, section.name)}
+                        title="Edit section"
+                        className={`w-7 h-7 rounded-lg flex items-center justify-center transition-colors ${
+                          darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#374151] hover:bg-[#F6F7FB]"
+                        }`}
+                      >
+                        <Pencil size={14} />
+                      </button>
+                      <button
+                        onClick={() => void handleRemove(section.id)}
+                        disabled={inUse || isRemoving}
+                        title={
+                          inUse
+                            ? "This section is in use (assigned to a class or subject) — reassign or remove that first"
+                            : "Remove section"
+                        }
+                        className={`w-7 h-7 rounded-lg flex items-center justify-center transition-colors ${
+                          inUse || isRemoving
+                            ? "opacity-30 cursor-not-allowed"
+                            : darkMode
+                            ? "text-[#F87171] hover:bg-[#7F1D1D]/20"
+                            : "text-[#B91C1C] hover:bg-[#FEE2E2]"
+                        }`}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+                  {removeErrorForThis && (
+                    <p className="text-[11px] font-semibold text-[#B91C1C] mt-1.5">{removeErrorForThis}</p>
+                  )}
                 </div>
               );
             })

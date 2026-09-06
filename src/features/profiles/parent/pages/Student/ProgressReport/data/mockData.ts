@@ -9,23 +9,22 @@ export const mockProgressReportData: ProgressReportData = {
   },
 
   periodicRatings: [
-    { learningArea: "Language", scores: { Q1: 97 }, finalRating: "Outstanding" },
-    { learningArea: "Reading & Literacy", scores: { Q1: 75 }, finalRating: "Fairly Satisfactory" },
-    { learningArea: "Mathematics", scores: { Q1: 97 }, finalRating: "Outstanding" },
-    { learningArea: "Makabansa", scores: { Q1: 97 }, finalRating: "Outstanding" },
-    { learningArea: "GMRC", scores: { Q1: 97 }, finalRating: "Outstanding" },
+    { learningArea: "Language", scores: { T1: 97 }, finalRating: "Outstanding" },
+    { learningArea: "Reading & Literacy", scores: { T1: 75 }, finalRating: "Fairly Satisfactory" },
+    { learningArea: "Mathematics", scores: { T1: 97 }, finalRating: "Outstanding" },
+    { learningArea: "Makabansa", scores: { T1: 97 }, finalRating: "Outstanding" },
+    { learningArea: "GMRC", scores: { T1: 97 }, finalRating: "Outstanding" },
   ],
 
-  quarterlyAverages: [
-    { quarter: "Q1", average: 100, ratingLabel: "Outstanding" },
-    { quarter: "Q2", average: null, ratingLabel: null },
-    { quarter: "Q3", average: null, ratingLabel: null },
-    { quarter: "Q4", average: null, ratingLabel: null },
+  termAverages: [
+    { term: "T1", average: 100, ratingLabel: "Outstanding" },
+    { term: "T2", average: null, ratingLabel: null },
+    { term: "T3", average: null, ratingLabel: null },
   ],
 
   holisticAssessments: [
     {
-      quarter: "Q1",
+      term: "T1",
       domains: [
         { key: "cognitive", label: "Cognitive", score: 4.2, maxScore: 5, subtitle: "Performance, Comprehension" },
         { key: "emotional", label: "Emotional", score: 3.8, maxScore: 5, subtitle: "Motivation, Engagement" },
@@ -35,9 +34,9 @@ export const mockProgressReportData: ProgressReportData = {
     },
   ],
 
-  attendanceByQuarter: [
+  attendanceByTerm: [
     {
-      quarter: "Q1",
+      term: "T1",
       months: [
         { month: "August", schoolDays: 20, present: 17, absent: 3, tardy: 5 },
         { month: "September", schoolDays: 18, present: 18, absent: 0, tardy: 3 },
