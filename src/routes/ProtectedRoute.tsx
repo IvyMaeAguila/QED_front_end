@@ -1,6 +1,6 @@
 // src/routes/ProtectedRoute.tsx
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../features/auth/context/AuthContext";
+import { useAuth } from "../features/auth/context/authContext";
 import { ForceChangePasswordGate } from "../shared/components/manage_password/ForceChangePasswordGate";
 
 export function ProtectedRoute() {

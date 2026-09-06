@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { User, ChevronDown, Pencil, Check } from "lucide-react";
 import { useSettings } from "../../../features/profiles/admin/pages/settings/context/SettingsContext";
-import { useAuth } from "../../../features/auth/context/AuthContext";
+import { useAuth } from "../../../features/auth/context/authContext";
 import { PROFILE_FIELD_CONFIG } from "../../profile/config/ProfileFieldConfig";
 import type { UserProfile } from "../../profile/types/types";
 

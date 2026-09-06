@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import {
   BookOpen, Search, User, CheckCircle2, AlertTriangle,
   Download, Send, Loader2,
@@ -389,8 +389,8 @@ export function GradesPage() {
               </thead>
               <tbody>
                 {groupedStudents.map((group) => (
-                  <>
-                    <tr key={`group-${group.label}`} className={darkMode ? "bg-white/5" : "bg-[#F8EDEE]"}>
+                  <Fragment key={group.label}>
+                    <tr className={darkMode ? "bg-white/5" : "bg-[#F8EDEE]"}>
                       <td
                         colSpan={2 + gradebook.subjects.length}
                         className="sticky left-0 px-5 py-2 text-xs font-extrabold uppercase tracking-wider text-[#6B0000]"
@@ -437,7 +437,7 @@ export function GradesPage() {
                         </td>
                       </tr>
                     ))}
-                  </>
+                  </Fragment>
                 ))}
               </tbody>
             </table>

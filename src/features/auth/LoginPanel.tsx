@@ -3,7 +3,7 @@ import { Eye, EyeOff } from "lucide-react";
 import Logo from "../../shared/images/QED_Logo.png";
 import { UserIDIcon, PasswordIcon } from "./components/LoginIcon";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "./context/authContext";
 import { AuthService } from "../auth/services/authentication.service";
 import { ForgotPasswordModal } from "../../shared/components/manage_password/ForgotPasswordModal";
 import { OtpVerificationModal } from "../../shared/components/manage_password/OtpVerificationModal";

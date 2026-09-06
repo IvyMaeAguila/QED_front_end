@@ -5,7 +5,7 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
-import { useAuth } from "../features/auth/context/AuthContext";
+import { useAuth } from "../features/auth/context/authContext";
 import { AdminLayout } from "../features/profiles/admin/pages/AdminLayout";
 import { AdminDashboardHome } from "../features/profiles/admin/pages/dashboard/AdminDashboardHome";
 import { StudentsProvider } from "../features/profiles/admin/pages/studentrecords/context/StudentsContext";
@@ -46,8 +46,24 @@ import { HolisticDomainTrendsPage } from "../features/profiles/teacher/pages/hol
 import { SubjectClassListPage } from "../features/profiles/teacher/pages/subjects/SubjectClassListPage";
 import { AcademicYearPage } from "../features/profiles/admin/pages/subjects/AcademicYearPage";
 
+// 🆕 PRINCIPAL
+import { PrincipalSection } from "./PrincipalSection";
+import { PrincipalDashboardHome } from "../features/profiles/principal/pages/dashboard/PrincipalDashboardHome";
+// import { PrincipalTeachersPage } from "../features/profiles/principal/pages/teachers/PrincipalTeachersPage";
+// import { PrincipalStudentsPage } from "../features/profiles/principal/pages/students/PrincipalStudentsPage";
+// import { PrincipalReportsPage } from "../features/profiles/principal/pages/reports/PrincipalReportsPage";
+// import { PrincipalApprovalsPage } from "../features/profiles/principal/pages/approvals/PrincipalApprovalsPage";
+
 // 🆕 Import ng ForceChangePasswordGate
 import { ForceChangePasswordGate } from "../shared/components/manage_password/ForceChangePasswordGate";
+import { PrincipalStudentsPage } from "../features/profiles/principal/pages/students/PrincipalStudentPage";
+import { ClassListPage } from "../features/profiles/principal/pages/students/ClassListPage";
+import { PrincipalTeachersPage } from "../features/profiles/principal/pages/teachers/PrincipalTeachersPage";
+import { TeacherSchedulePage } from "../features/profiles/principal/pages/teachers/TeacherSchedulePage";
+import { AnalyticsPage } from "../features/profiles/principal/pages/reports/AnalyticsPage";
+import { PrincipalGradebooksPage } from "../features/profiles/principal/pages/gradebooks/PrincipalGradebooksPage";
+import { PrincipalGradeSheetPage } from "../features/profiles/principal/pages/gradebooks/PrincipalGradeSheetPage";
+import { HolisticPerformanceAnalyticsPage } from "../features/profiles/principal/pages/reports/HolisticPerformanceAnalyticsPage";
 
 function DebugRoute() {
   const location = useLocation();
@@ -158,10 +174,38 @@ export function AppRouter() {
           <Route path="classes/:classId" element={<ClassViewPage />} />
           <Route path="classes/:classId/edit" element={<ClassFormPage />} />
           <Route path="subjects" element={<ManageSubjectsPage />} />
-          <Route path="subjects" element={<ManageSubjectsPage />} />
           <Route path="academic-year" element={<AcademicYearPage />} />
           <Route path="calendar" element={<CalendarPage />} />
           <Route path="help" element={<HelpSupportPage />} />
+        </Route>
+
+        {/* PRINCIPAL */}
+        <Route
+          path="/principal"
+          element={
+            <ProtectedRoute>
+              <RoleRoute allowed={["PRINCIPAL"]}>
+                <PrincipalSection />
+              </RoleRoute>
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<PrincipalDashboardHome />} />
+          <Route path="students" element={<PrincipalStudentsPage />} />
+          <Route path="students/:grade" element={<ClassListPage />} />
+          <Route path="teachers" element={<PrincipalTeachersPage />} />
+          <Route path="teachers/:teacherId" element={<TeacherSchedulePage />} />
+          <Route path="reports" element={<AnalyticsPage />} />
+          <Route path="holistic-performance-analytics" element={<HolisticPerformanceAnalyticsPage />} />
+          <Route path="gradebooks" element={<PrincipalGradebooksPage />} />
+          <Route path="gradebook/:grade" element={<PrincipalGradeSheetPage />} />
+
+          {/* <Route path="teachers" element={<PrincipalTeachersPage />} /> */}
+          {/* <Route path="students" element={<PrincipalStudentsPage />} /> */}
+          {/* <Route path="reports" element={<PrincipalReportsPage />} /> */}
+          {/* <Route path="approvals" element={<PrincipalApprovalsPage />} /> */}
+          <Route path="calendar" element={<CalendarPage />} />
+          <Route path="help" element={<div>Help page</div>} />
         </Route>
 
         {/* TEACHER */}
@@ -215,10 +259,7 @@ export function AppRouter() {
         >
           <Route index element={<ParentDashboardHome />} />
           <Route path="enrolled-children" element={<EnrolledChildrenPage />} />
-          <Route
-            path="students/:studentId"
-            element={<StudentDetailPage />}
-          />
+          <Route path="students/:studentId" element={<StudentDetailPage />} />
           <Route path="calendar" element={<CalendarPageView />} />
         </Route>
       </Routes>

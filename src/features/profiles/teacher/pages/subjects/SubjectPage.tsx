@@ -21,7 +21,7 @@ import {
   type GradeLevel,
 } from "../../../admin/pages/subjects/types/types";
 import { useStudents } from "../../../admin/pages/studentrecords/context/StudentsContext";
-import { useAuth } from "../../../../auth/context/AuthContext";
+import { useAuth } from "../../../../auth/context/authContext";
 import { FilterDropdown } from "@shared/components/FilterDropdown";
 import {
   assignedSubjectsService,

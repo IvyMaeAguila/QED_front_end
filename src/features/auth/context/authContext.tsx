@@ -1,4 +1,3 @@
-// src/shared/AuthContext.tsx
 import { createContext, useContext, useState, useEffect } from "react";
 import type { UserProfile } from "../../../shared/profile/types/types";
 import { AuthService } from "../services/authentication.service"; // adjust path
