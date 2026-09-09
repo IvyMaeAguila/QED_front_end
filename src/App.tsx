@@ -9,8 +9,8 @@ export default function App() {
     <BrowserRouter>
       <ToastProvider>
         <AuthProvider>
-            <AppRouter />
-            <ForceChangePasswordGate />
+          <AppRouter />
+          <ForceChangePasswordGate />
         </AuthProvider>
       </ToastProvider>
     </BrowserRouter>

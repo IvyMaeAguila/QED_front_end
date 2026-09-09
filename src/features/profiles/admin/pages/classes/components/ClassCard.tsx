@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { GraduationCap, Users, Clock, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { GraduationCap, Users, Clock, MoreVertical, Pencil, Trash2, User } from "lucide-react";
 import type { SchoolClass } from "../types/Class";
 import { formatClassName, formatTimeRange } from "../types/Class";
 
@@ -14,6 +14,7 @@ const PALETTE = {
 interface ClassCardProps {
   schoolClass: SchoolClass;
   adviserName: string;
+  room: string;
   studentCount: number;
   darkMode: boolean;
   panelBg: string;
@@ -28,6 +29,7 @@ interface ClassCardProps {
 export function ClassCard({
   schoolClass,
   adviserName,
+  room,
   studentCount,
   darkMode,
   panelBg,
@@ -117,7 +119,10 @@ export function ClassCard({
 
       <div className={`px-4 sm:px-5 py-4 space-y-3 ${panelBg}`}>
         <div className="flex items-center justify-between gap-3 text-sm">
-          <span className={`shrink-0 ${textMuted}`}>Adviser</span>
+          <span className={`inline-flex items-center gap-1.5 shrink-0 ${textMuted}`}>
+            <User size={13} />
+            Adviser
+          </span>
           <span className={`font-semibold text-right truncate ${textPrimary}`} title={adviserName}>
             {adviserName}
           </span>
@@ -131,6 +136,16 @@ export function ClassCard({
             {scheduleLabel}
           </span>
         </div>
+        <div className="flex items-center justify-between gap-3 text-sm">
+          <span className={`inline-flex items-center gap-1.5 shrink-0 ${textMuted}`}>
+            <User size={13} />
+            Room
+          </span>
+          <span className={`font-semibold text-right truncate ${textPrimary}`} title={room}>
+            {room}
+          </span>
+        </div>
+        
 
         <button
           onClick={onView}

@@ -30,6 +30,7 @@ function mapRecordToSchoolClass(c: ClassRecord): SchoolClass & { studentCount: n
     gradeLevel: c.gradeLevel,
     sectionId: c.sectionId, 
     section: c.section,
+    room: c.room,
     adviserId: String(c.adviserId),
     adviserName: c.adviserName,
     adviserEmail: c.adviserEmail,

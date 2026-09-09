@@ -104,6 +104,7 @@ export function ClassesPage() {
                   key={c.id}
                   schoolClass={c}
                   adviserName={c.adviserName || "Unassigned"}
+                  room={c.room || "Unasigned"}
                   studentCount={studentCount}
                   darkMode={darkMode}
                   panelBg={panelBg}

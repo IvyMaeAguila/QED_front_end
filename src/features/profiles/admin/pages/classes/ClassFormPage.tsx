@@ -28,7 +28,8 @@ import type { AdminThemeContext } from ".././AdminLayout";
 
 interface FormState {
   gradeLevelId: number | "";
-  section: string; // SECTION NAME (text) na, hindi na ID — value mismo ng dropdown option
+  section: string; 
+  room: string;
   subjectName: string | "";
   adviserId: string;
   schedule: SchedulePeriod[];
@@ -76,6 +77,7 @@ export function ClassFormPage() {
   const [form, setForm] = useState<FormState>({
     gradeLevelId: existing?.gradeLevelId ?? "",
     section: existing?.section ?? "",
+    room: existing?.room ?? "",
     subjectName: "",
     adviserId: existing?.adviserId ?? "",
     schedule: existing?.schedule ?? [],
@@ -290,6 +292,7 @@ export function ClassFormPage() {
         await updateClassApi(existing.id, {
           gradeLevelId: form.gradeLevelId,
           section: form.section,
+          room: form.room,
           subjectName: form.subjectName,
           adviserId: form.adviserId,
           schedule: cleanedSchedule,
@@ -300,6 +303,7 @@ export function ClassFormPage() {
         await createClass({
           gradeLevelId: form.gradeLevelId,
           section: form.section,
+          room: form.room,
           subjectName: form.subjectName,
           adviserId: form.adviserId,
           schedule: cleanedSchedule,
@@ -411,28 +415,43 @@ export function ClassFormPage() {
           </div>
         </div>
 
-        <div>
-          <label className={labelClasses}>Class Adviser</label>
-          <select
-            className={inputClasses}
-            value={form.adviserId}
-            disabled={loadingTeachers}
-            onChange={(e) => setForm({ ...form, adviserId: e.target.value })}
-          >
-            <option value="">
-              {loadingTeachers ? "Loading…" : "Select a teacher…"}
-            </option>
-            {advisableTeachers.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.last_name}, {t.first_name}
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label className={labelClasses}>Class Adviser</label>
+            <select
+              className={inputClasses}
+              value={form.adviserId}
+              disabled={loadingTeachers}
+              onChange={(e) => setForm({ ...form, adviserId: e.target.value })}
+            >
+              <option value="">
+                {loadingTeachers ? "Loading…" : "Select a teacher…"}
               </option>
-            ))}
-          </select>
-          {errors.adviserId && (
-            <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
-              {errors.adviserId}
-            </p>
-          )}
+              {advisableTeachers.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.last_name}, {t.first_name}
+                </option>
+              ))}
+            </select>
+            {errors.adviserId && (
+              <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                {errors.adviserId}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label className={labelClasses}>Room Number</label>
+            <input
+              className={inputClasses}
+              value={form.room}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, room: e.target.value }))
+              }
+              placeholder="NEL 101"
+            />
+
+          </div>
         </div>
 
         <div>

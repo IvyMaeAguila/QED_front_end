@@ -196,9 +196,15 @@ export function AppRouter() {
           <Route path="teachers" element={<PrincipalTeachersPage />} />
           <Route path="teachers/:teacherId" element={<TeacherSchedulePage />} />
           <Route path="reports" element={<AnalyticsPage />} />
-          <Route path="holistic-performance-analytics" element={<HolisticPerformanceAnalyticsPage />} />
+          <Route
+            path="holistic-performance-analytics"
+            element={<HolisticPerformanceAnalyticsPage />}
+          />
           <Route path="gradebooks" element={<PrincipalGradebooksPage />} />
-          <Route path="gradebook/:grade" element={<PrincipalGradeSheetPage />} />
+          <Route
+            path="gradebook/:grade"
+            element={<PrincipalGradeSheetPage />}
+          />
 
           {/* <Route path="teachers" element={<PrincipalTeachersPage />} /> */}
           {/* <Route path="students" element={<PrincipalStudentsPage />} /> */}

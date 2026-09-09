@@ -20,6 +20,7 @@ export interface SchoolClass {
   gradeLevel: string;
   sectionId: number | null; 
   section: string | null;
+  room: string | null;
   adviserId: string; 
   adviserName: string;
   adviserEmail?: string | null;  

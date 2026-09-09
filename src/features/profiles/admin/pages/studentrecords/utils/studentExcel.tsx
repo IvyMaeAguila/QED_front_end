@@ -20,7 +20,6 @@ const REQUIRED_FIELDS: (keyof Student)[] = [
   "lastName",
   "gender",
   "gradeLevel",
-  "section",
 ];
 
 const LRN_PATTERN = /^\d{12}$/; 
