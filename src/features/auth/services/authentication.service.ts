@@ -99,10 +99,20 @@ export const AuthService = {
       method: "GET",
       credentials: "include",
     });
+
     if (!response.ok) {
-      return null; // walang session, hindi error, normal lang na scenario ito
+      // unexpected server error lang dapat ito ngayon (500, etc),
+      // hindi na ito ang gamit para sa "walang session" case
+      return null;
     }
+
     const data = await response.json();
+
+    if (!data.user) {
+      // 200 pero walang session — normal na scenario ito, hindi error
+      return null;
+    }
+
     return {
       ...mapToUserProfile(data.user),
       mustChangePassword: !!data.user.mustChangePassword,

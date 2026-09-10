@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { GradeLevelSummary } from "../data/types";
-import { getGradeLevels, getSchoolYear } from "../services/studentsService";
+import { getGradeLevels, getSchoolYear } from "../services/students.service";
 
 interface UsePrincipalStudentsOverviewResult {
   gradeLevels: GradeLevelSummary[];

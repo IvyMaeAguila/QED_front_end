@@ -14,16 +14,16 @@ export interface SectionInfo {
   room: string;
 }
 
-// One row on PrincipalStudentsPage's grade-level grid.
 export interface GradeLevelSummary {
+  gradeId: number;
   grade: string;
-  section: string;
+  section: string | null;
+  classId: number | null;
   totalStudents: number;
 }
 
-// Everything ClassListPage needs for one grade, assembled by the service
-// from SectionInfo + the roster (see studentsService.getClassList).
 export interface ClassList {
+  classId: number | null;
   grade: string;
   sectionInfo: SectionInfo;
   roster: Student[];

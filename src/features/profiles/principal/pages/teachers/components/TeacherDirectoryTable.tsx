@@ -61,18 +61,22 @@ export function TeacherDirectoryTable({
               >
                 <td className={`py-4 pr-4 font-bold ${textPrimary}`}>{t.fullName}</td>
                 <td className={`py-4 pr-4 ${textPrimary}`}>
-                  {t.gradeLevel} &middot; {t.advisorySection}
+                  {t.gradeLevel && t.advisorySection
+                    ? `${t.gradeLevel} \u00B7 ${t.advisorySection}`
+                    : t.gradeLevel || t.advisorySection || ""}
                 </td>
                 <td className="py-4 pr-4">
-                  <span
-                    className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full"
-                    style={{
-                      backgroundColor: darkMode ? "var(--color-maroon-soft-dark)" : "var(--color-maroon-soft)",
-                      color: "var(--color-maroon)",
-                    }}
-                  >
-                    <DoorOpen className="h-3.5 w-3.5" /> {t.room}
-                  </span>
+                  {t.room && (
+                    <span
+                      className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full"
+                      style={{
+                        backgroundColor: darkMode ? "var(--color-maroon-soft-dark)" : "var(--color-maroon-soft)",
+                        color: "var(--color-maroon)",
+                      }}
+                    >
+                      <DoorOpen className="h-3.5 w-3.5" /> {t.room}
+                    </span>
+                  )}
                 </td>
                 <td className="py-4 pr-4">
                   <span className="text-xs font-bold uppercase tracking-wide flex items-center gap-1 text-maroon">

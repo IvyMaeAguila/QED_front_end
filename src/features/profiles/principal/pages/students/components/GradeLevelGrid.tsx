@@ -3,7 +3,7 @@ import type { GradeLevelSummary } from "../data/types";
 
 interface GradeLevelGridProps {
   gradeLevels: GradeLevelSummary[];
-  onViewClassList: (grade: string) => void;
+  onViewClassList: (gradeLevel: GradeLevelSummary) => void;
   panelBg: string;
   panelBorder: string;
   textPrimary: string;
@@ -24,7 +24,7 @@ export function GradeLevelGrid({
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
       {gradeLevels.map((g) => (
         <GradeLevelCard
-          key={g.grade}
+          key={g.classId ?? `grade-${g.gradeId}`}
           gradeLevel={g}
           onViewClassList={onViewClassList}
           panelBg={panelBg}

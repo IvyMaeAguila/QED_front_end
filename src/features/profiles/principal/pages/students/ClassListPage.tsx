@@ -1,7 +1,7 @@
 import { useOutletContext, useNavigate, useParams } from "react-router-dom";
 import { BackButton } from "../../../shared/components/DashboardUI";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
-import { useClassList } from "./hooks/useClassList";
+import { useClassList, type ClassListTarget } from "./hooks/useClassList";
 import { ClassSummaryStats } from "./components/ClassSummaryStats";
 import { ClassRoster } from "./components/ClassRoster";
 import { ClassNotFound } from "./components/ClassNotFound";
@@ -9,19 +9,31 @@ import { ClassNotFound } from "./components/ClassNotFound";
 export function ClassListPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
-  const { grade } = useParams<{ grade: string }>();
+  const { classId, gradeId } = useParams<{ classId?: string; gradeId?: string }>();
 
-  const gradeLabel = grade ? decodeURIComponent(grade) : "";
-  const { classList, schoolYear, loading, notFound } = useClassList(gradeLabel);
+  let target: ClassListTarget | undefined;
+  let isInvalidId = false;
+
+  if (classId !== undefined) {
+    const parsed = Number(classId);
+    if (Number.isNaN(parsed)) isInvalidId = true;
+    else target = { type: "class", id: parsed };
+  } else if (gradeId !== undefined) {
+    const parsed = Number(gradeId);
+    if (Number.isNaN(parsed)) isInvalidId = true;
+    else target = { type: "grade", id: parsed };
+  }
+
+  const { classList, schoolYear, loading, notFound } = useClassList(target);
 
   if (loading) {
     return <p className={`text-sm ${textMuted}`}>Loading class list…</p>;
   }
 
-  if (notFound || !classList) {
+  if (notFound || !classList || isInvalidId) {
     return (
       <ClassNotFound
-        gradeLabel={gradeLabel}
+        gradeLabel={classId ?? gradeId ?? ""}
         panelBg={panelBg}
         panelBorder={panelBorder}
         textPrimary={textPrimary}
