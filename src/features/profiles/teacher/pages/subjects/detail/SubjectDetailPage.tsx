@@ -4,7 +4,6 @@ import { ArrowLeft } from "lucide-react";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
 import type { RosterStudent } from "./data";
 import type {
-  AttendanceMap,
   GradeItem,
   GradingPeriod,
   HolisticAxisKey,
@@ -12,14 +11,11 @@ import type {
   ScoreMap,
 } from "./types/Grading";
 import { TabNav, type SubjectDetailTab } from "./components/TabNav";
-import { AttendanceTab } from "./components/AttendanceTab";
 import { AssessmentTab } from "./components/AssessmentTab";
 import { HolisticTab } from "./components/HolisticTab";
 import { ConfirmDialog } from "./components/ConfirmDialog";
 import {
   fetchSubjectSectionInfo,
-  fetchAttendance,
-  saveAttendance,
   fetchItems,
   addItem as addItemApi,
   deleteItem,
@@ -43,14 +39,13 @@ export function SubjectDetailPage() {
   const navigate = useNavigate();
   const { subjectId } = useParams<{ subjectId: string }>();
 
-  const [activeTab, setActiveTab] = useState<SubjectDetailTab>("attendance");
+  const [activeTab, setActiveTab] = useState<SubjectDetailTab>("writtenWorks");
 
   const [subjectName, setSubjectName] = useState<string>("");
   const [subjectCode, setSubjectCode] = useState<string>("");
   const [subjectCategory, setSubjectCategory] = useState<string | null>(null);
   const [gradeLevel, setGradeLevel] = useState<string>("");
   const [roster, setRoster] = useState<RosterStudent[]>([]);
-  const [attendance, setAttendance] = useState<AttendanceMap>({});
   const [items, setItems] = useState<GradeItem[]>([]);
   const [scores, setScores] = useState<ScoreMap>({});
   const [holistic, setHolistic] = useState<HolisticMap>({});
@@ -102,7 +97,6 @@ export function SubjectDetailPage() {
       setSubjectCategory(cached.subjectCategory);
       setGradeLevel(cached.gradeLevel);
       setRoster(cached.roster);
-      setAttendance(cached.attendance);
       setItems(cached.items);
       setScores(cached.scores);
       setHolistic(cached.holistic);
@@ -198,16 +192,6 @@ export function SubjectDetailPage() {
         );
       }
 
-      let nextAttendance: AttendanceMap = {};
-      try {
-        const att = await fetchAttendance(subjectId);
-        if (cancelled) return;
-        nextAttendance = att.data;
-        setAttendance(nextAttendance);
-      } catch (err) {
-        console.error("Failed to load attendance:", err);
-      }
-
       if (cancelled) return;
 
       setCachedSubjectDetail(subjectId, {
@@ -216,7 +200,6 @@ export function SubjectDetailPage() {
         subjectCategory: nextSubjectCategory,
         gradeLevel: nextGradeLevel,
         roster: nextRoster,
-        attendance: nextAttendance,
         items: nextItems,
         scores: nextScores,
         holistic: nextHolistic,
@@ -233,28 +216,6 @@ export function SubjectDetailPage() {
       cancelled = true;
     };
   }, [subjectId]);
-
-  async function handleAttendanceChange(
-    studentId: string,
-    dateISO: string,
-    status: AttendanceMap[string][string],
-  ) {
-    setAttendance((prev) => {
-      const next = {
-        ...prev,
-        [studentId]: { ...prev[studentId], [dateISO]: status },
-      };
-      if (subjectId) patchCachedSubjectDetail(subjectId, { attendance: next });
-      return next;
-    });
-
-    if (!subjectId) return;
-    try {
-      await saveAttendance(subjectId, studentId, dateISO, status);
-    } catch (err) {
-      console.error("Failed to save attendance:", err);
-    }
-  }
 
   async function handleAddItem(item: GradeItem) {
     if (!subjectId) return;
@@ -361,7 +322,6 @@ export function SubjectDetailPage() {
           roster,
           items,
           scores,
-          attendance,
           holistic,
           terms,
           selectedTerm,
@@ -408,7 +368,7 @@ export function SubjectDetailPage() {
         </div>
 
         <div className="flex gap-2">
-          {[0, 1, 2, 3, 4].map((i) => (
+          {[0, 1, 2, 3].map((i) => (
             <Bone key={i} className="h-9 w-28 rounded-lg" />
           ))}
         </div>
@@ -546,20 +506,6 @@ export function SubjectDetailPage() {
         textPrimary={textPrimary}
         textMuted={textMuted}
       />
-
-      {activeTab === "attendance" && (
-        <AttendanceTab
-          roster={roster}
-          attendance={attendance}
-          onChange={handleAttendanceChange}
-          onOpenRecords={openRecords}
-          darkMode={darkMode}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-        />
-      )}
 
       {(activeTab === "writtenWorks" ||
         activeTab === "performanceTask" ||

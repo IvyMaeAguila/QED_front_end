@@ -204,6 +204,7 @@ export function TeacherDashboardHome() {
               panelBorder={panelBorder}
               textPrimary={textPrimary}
               darkMode={darkMode}
+              onViewFull={() => navigate("/teacher/attendance/records")}
             />
           )}
         </div>

@@ -46,7 +46,7 @@ import { HolisticDomainTrendsPage } from "../features/profiles/teacher/pages/hol
 import { SubjectClassListPage } from "../features/profiles/teacher/pages/subjects/SubjectClassListPage";
 import { AcademicYearPage } from "../features/profiles/admin/pages/subjects/AcademicYearPage";
 
-// 🆕 PRINCIPAL
+
 import { PrincipalSection } from "./PrincipalSection";
 import { PrincipalDashboardHome } from "../features/profiles/principal/pages/dashboard/PrincipalDashboardHome";
 // import { PrincipalTeachersPage } from "../features/profiles/principal/pages/teachers/PrincipalTeachersPage";
@@ -64,6 +64,8 @@ import { AnalyticsPage } from "../features/profiles/principal/pages/reports/Anal
 import { PrincipalGradebooksPage } from "../features/profiles/principal/pages/gradebooks/PrincipalGradebooksPage";
 import { PrincipalGradeSheetPage } from "../features/profiles/principal/pages/gradebooks/PrincipalGradeSheetPage";
 import { HolisticPerformanceAnalyticsPage } from "../features/profiles/principal/pages/reports/HolisticPerformanceAnalyticsPage";
+import { TeacherAttendancePage } from "../features/profiles/teacher/pages/attendance/TeacherAttendancePage";
+import { TeacherAttendanceRecordsPage } from "../features/profiles/teacher/pages/attendance/TeacherAttendanceRecordsPage";
 
 function DebugRoute() {
   const location = useLocation();
@@ -227,6 +229,8 @@ export function AppRouter() {
           }
         >
           <Route index element={<TeacherDashboardHome />} />
+          <Route path="attendance" element={<TeacherAttendancePage/>} />
+          <Route path="attendance/records" element={<TeacherAttendanceRecordsPage/>} />
           <Route path="subjects" element={<SubjectsPage />} />
           <Route path="subjects/:subjectId" element={<SubjectDetailPage />} />
           <Route
