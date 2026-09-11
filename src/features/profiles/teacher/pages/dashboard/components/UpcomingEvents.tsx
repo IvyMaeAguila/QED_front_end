@@ -2,8 +2,10 @@ import { CalendarDays, Sparkles } from "lucide-react";
 
 export interface EventItem {
   id: string;
-  time: string;
   title: string;
+  type: "activity" | "holiday";
+  // "Today" | "Tomorrow" | formatted date (e.g. "Sep 23") — computed sa backend
+  dateLabel: string;
 }
 
 interface UpcomingEventsProps {
@@ -23,6 +25,17 @@ export function UpcomingEvents({
   textMuted,
   darkMode,
 }: UpcomingEventsProps) {
+  const typeBadgeStyle = (type: EventItem["type"]) =>
+    type === "holiday"
+      ? {
+          background: darkMode ? "rgba(217,119,6,0.15)" : "#FEF3C7",
+          color: "#B45309",
+        }
+      : {
+          background: darkMode ? "rgba(139,13,13,0.15)" : "#FDEEEE",
+          color: "#8B0D0D",
+        };
+
   return (
     <div
       className={`h-full flex flex-col rounded-2xl border overflow-hidden ${panelBg} ${panelBorder}`}
@@ -91,12 +104,20 @@ export function UpcomingEvents({
                   >
                     {event.title}
                   </p>
-                  <span
-                    className="text-[10.5px] font-bold px-2 py-1 rounded-md whitespace-nowrap shrink-0"
-                    style={{ background: darkMode ? "rgba(255,255,255,0.04)" : "#F8FAFC" }}
-                  >
-                    <span className={textMuted}>{event.time}</span>
-                  </span>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <span
+                      className="text-[10px] font-bold px-2 py-1 rounded-md whitespace-nowrap capitalize"
+                      style={typeBadgeStyle(event.type)}
+                    >
+                      {event.type}
+                    </span>
+                    <span
+                      className="text-[10.5px] font-bold px-2 py-1 rounded-md whitespace-nowrap"
+                      style={{ background: darkMode ? "rgba(255,255,255,0.04)" : "#F8FAFC" }}
+                    >
+                      <span className={textMuted}>{event.dateLabel}</span>
+                    </span>
+                  </div>
                 </div>
 
                 {i !== events.length - 1 && (

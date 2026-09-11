@@ -1,6 +1,10 @@
 import { API_CONFIG } from '../../../../../../config/api.config';
+import type { EventItem } from '../components/UpcomingEvents';
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/teacherDashboard`;
+
+// Hiwalay na base URL ‘to dahil hiwalay ring naka-mount ang school-calendar
+// routes sa backend (/api/school-calendar), hindi siya nasa ilalim ng /api/teacherDashboard.
 
 export interface DashboardSummary {
   name: string;
@@ -53,4 +57,13 @@ export async function fetchAttendanceSummary(): Promise<AttendanceSummary> {
 
   const data = await handleJsonResponse(res);
   return data;
+}
+
+export async function fetchUpcomingEvents(limit = 5): Promise<EventItem[]> {
+  const res = await fetch(`${BASE_URL}/upcoming?limit=${limit}`, {
+    credentials: "include",
+  });
+
+  const data = await handleJsonResponse(res);
+  return data.data;
 }

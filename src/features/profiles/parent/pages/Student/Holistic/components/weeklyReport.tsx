@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AlertTriangle,
   Brain,
@@ -103,8 +103,9 @@ function BandGauge({ value, textMuted }: { value: number | null; textMuted: stri
   );
 }
 
-/** Internal shape used to drive whichever period (current or a past date) is on screen. */
-type SelectedPeriod = "current" | number; // number = index into `history`
+/** Only two periods are ever shown: the live snapshot, or the single most recent
+ * past evaluation (history[0]) for a before/after comparison. */
+type SelectedPeriod = "current" | "previous";
 
 export interface WholeChildSnapshotProps extends WholeChildSnapshotData {
   /** The student this snapshot belongs to. Not yet used for rendering, but kept
@@ -112,13 +113,12 @@ export interface WholeChildSnapshotProps extends WholeChildSnapshotData {
    * ClassSchedule) and for future use (e.g. personalized empty states, recommendations). */
   student?: DetailStudent;
   /** Identifies the current grading term/period (e.g. termNumber, or `${schoolYear}-${term}`).
-   * Whenever this value changes, the date-button selection resets back to "Latest" — so
-   * switching from Term 1 to Term 2 clears the old term's buttons/selection automatically.
-   * Pass the new term's `history` alongside it. */
+   * Whenever this value changes, the selection resets back to "Latest". */
   termKey?: string | number;
-  /** Past evaluation periods for the CURRENT term, most recent first. When provided (and
-   * non-empty), a row of date buttons appears — clicking one swaps the card to that day's
-   * evaluation. The current/latest evaluation is selected by default. */
+  /** Past evaluation periods for the current term, most recent first. Only the FIRST
+   * entry (history[0]) is ever used — it becomes the single "Previous" comparison point.
+   * Any additional entries are ignored. Pass an empty array (or omit) to hide the
+   * Latest/Previous toggle entirely. */
   history?: HistoryEntry[];
   /** Card title. Defaults to "Whole-Child Snapshot". */
   title?: string;
@@ -149,20 +149,24 @@ export function WholeChildSnapshot({
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useSnapshotTheme();
   const [selected, setSelected] = useState<SelectedPeriod>("current");
 
-  // New term (or any change in termKey) → forget the old term's date-button selection
+  // New term (or any change in termKey) → forget the old term's selection
   // and jump back to viewing the latest evaluation.
   useEffect(() => {
     setSelected("current");
   }, [termKey]);
+
+  // Only the most recent past entry is ever used for comparison.
+  const previousEntry = history[0] ?? null;
 
   const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
   const subtleFill = darkMode ? "bg-white/5" : "bg-black/[0.03]";
   const subtleHover = darkMode ? "hover:bg-white/5" : "hover:bg-black/5";
 
   const isCurrent = selected === "current";
-  const activeEntry = isCurrent ? null : history[selected as number] ?? null;
+  const activeEntry = isCurrent ? null : previousEntry;
 
-  // What actually gets rendered in the grid below — either the live snapshot or a past entry.
+  // What actually gets rendered in the grid below — either the live snapshot or the
+  // single previous entry.
   const displayedAverages = activeEntry ? activeEntry.domainAverages : domainAverages;
   const displayedDateLabel = activeEntry ? activeEntry.date ?? activeEntry.label : lastEvaluation;
 
@@ -185,11 +189,11 @@ export function WholeChildSnapshot({
         )}
       </div>
 
-      {evaluationCount > 0 && (
+      {evaluationCount > 0 && previousEntry && (
         <div className={`flex flex-wrap items-center gap-x-2 gap-y-2 border-b px-5 py-3 ${panelBorder}`}>
           <span className={`mr-1 inline-flex items-center gap-1.5 text-xs font-semibold ${textMuted}`}>
             <CalendarClock size={13} />
-            {isCurrent ? "Viewing latest" : "Viewing"}
+            {isCurrent ? "Viewing latest" : "Viewing previous"}
             {displayedDateLabel ? ` · ${displayedDateLabel}` : ""}
           </span>
           <div className="ml-auto flex flex-wrap items-center gap-1.5">
@@ -207,26 +211,21 @@ export function WholeChildSnapshot({
             >
               Latest
             </button>
-            {history.map((entry, i) => {
-              const active = selected === i;
-              return (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setSelected(i)}
-                  aria-pressed={active}
-                  className={`rounded-full border px-2.5 py-1 text-[11px] font-extrabold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
-                    active ? "text-white" : `${panelBorder} ${textMuted} ${subtleHover}`
-                  }`}
-                  style={{
-                    ...(active ? { background: ACCENT, borderColor: ACCENT } : {}),
-                    ["--tw-ring-color" as string]: ACCENT,
-                  }}
-                >
-                  {entry.date ?? entry.label}
-                </button>
-              );
-            })}
+            <button
+              type="button"
+              onClick={() => setSelected("previous")}
+              aria-pressed={!isCurrent}
+              className={`rounded-full border px-2.5 py-1 text-[11px] font-extrabold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                !isCurrent ? "text-white" : `${panelBorder} ${textMuted} ${subtleHover}`
+              }`}
+              style={{
+                ...(!isCurrent ? { background: ACCENT, borderColor: ACCENT } : {}),
+                ["--tw-ring-color" as string]: ACCENT,
+              }}
+            >
+              Previous
+              {previousEntry.date ?? previousEntry.label ? ` · ${previousEntry.date ?? previousEntry.label}` : ""}
+            </button>
           </div>
         </div>
       )}

@@ -31,6 +31,7 @@ export interface Subject {
   id: string;
   name: string;
   gradeLevel: GradeLevel;
+  isGraded : boolean;
   section: string;
   teacherId: string | null;
   schoolYear: string;
@@ -43,6 +44,7 @@ export interface Subject {
 export interface NewSubjectInput {
   name: string;
   gradeLevel: GradeLevel;
+  isGraded: boolean;
   schoolYear: string;
   status: "Active" | "Inactive";
 }

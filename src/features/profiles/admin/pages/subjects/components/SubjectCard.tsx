@@ -1,19 +1,18 @@
-import { useState } from "react";
-import { BookOpen, User, School, Calendar, MoreVertical, Pencil, UserPlus } from "lucide-react";
+import { BookOpen, User, School, Calendar, Pencil, GraduationCap, CircleDashed } from "lucide-react";
 import { useTeachers } from "../../classes/context/TeachersContext";
 import { formatTeacherName } from "../../classes/types/Teacher";
 import { ACCENT, type Subject, type SubjectsTheme } from "../types/types";
 
 interface SubjectCardProps extends SubjectsTheme {
   subject: Subject;
-  // onEdit: () => void;
+  onEdit: () => void;
   onAssign: () => void;
   onToggleStatus: () => void;
 }
 
 export function SubjectCard({
   subject,
-  // onEdit,
+  onEdit,
   onAssign,
   onToggleStatus,
   darkMode,
@@ -24,8 +23,8 @@ export function SubjectCard({
 }: SubjectCardProps) {
   const { teachers } = useTeachers();
   const teacher = teachers.find((t) => t.id === subject.teacherId);
-  const [menuOpen, setMenuOpen] = useState(false);
   const isActive = subject.status === "Active";
+  const isGraded = subject.isGraded;
 
   return (
     <div className="relative pr-1 pb-1">
@@ -64,37 +63,18 @@ export function SubjectCard({
               <h3 className={`text-base font-bold leading-tight truncate ${textPrimary}`}>{subject.name}</h3>
               <p className={`text-xs font-semibold mt-0.5 ${textMuted}`}>{subject.gradeLevel}</p>
             </div>
-            <div className="ml-auto relative shrink-0">
-              <button
-                onClick={() => setMenuOpen((v) => !v)}
-                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-                  darkMode ? "text-[#9CA3AF] hover:bg-white/5" : "text-[#9CA3AF] hover:bg-black/5"
-                }`}
-                aria-label="More options"
+            <div className="ml-auto shrink-0">
+              <span
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold"
+                style={
+                  isGraded
+                    ? { background: darkMode ? `${ACCENT}26` : `${ACCENT}14`, color: ACCENT }
+                    : { background: darkMode ? "#FFFFFF14" : "#F3F4F6", color: darkMode ? "#9CA3AF" : "#6B7280" }
+                }
               >
-                <MoreVertical size={16} />
-              </button>
-              {menuOpen && (
-                <div
-                  className={`absolute right-0 top-9 z-10 w-44 rounded-xl border shadow-lg py-1 ${
-                    darkMode ? "bg-[#1B1112] border-[#332022]" : "bg-white border-[#E5E7EB]"
-                  }`}
-                  onMouseLeave={() => setMenuOpen(false)}
-                >
-                  <button
-                    onClick={() => {
-                      setMenuOpen(false);
-                      onAssign();
-                    }}
-                    className={`w-full text-left px-3 py-2 text-xs font-bold flex items-center gap-2 ${
-                      darkMode ? "text-[#D8B978] hover:bg-white/5" : "text-[#7A1420] hover:bg-[#FBF4E4]"
-                    }`}
-                  >
-                    <UserPlus size={13} />
-                    Assign Teacher
-                  </button>
-                </div>
-              )}
+                {isGraded ? <GraduationCap size={12} /> : <CircleDashed size={12} />}
+                {isGraded ? "Graded" : "Non-Graded"}
+              </span>
             </div>
           </div>
 
@@ -116,9 +96,18 @@ export function SubjectCard({
                 <User size={13} />
                 Teacher
               </span>
-              <span className={`font-semibold text-right truncate max-w-[60%] ${teacher ? textPrimary : textMuted}`}>
-                {teacher ? formatTeacherName(teacher) : "Not Assigned"}
-              </span>
+              {teacher ? (
+                <span className={`font-semibold text-right truncate max-w-[60%] ${textPrimary}`}>
+                  {formatTeacherName(teacher)}
+                </span>
+              ) : (
+                <button
+                  onClick={onAssign}
+                  className={`font-semibold text-right truncate max-w-[60%] underline decoration-dotted ${textMuted}`}
+                >
+                  Not Assigned
+                </button>
+              )}
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className={`inline-flex items-center gap-1.5 ${textMuted}`}>
@@ -139,7 +128,7 @@ export function SubjectCard({
           </div>
 
           <div className="flex gap-2 mt-4">
-            {/* <button
+            <button
               onClick={onEdit}
               title="Edit Subject"
               className={`h-10 w-10 shrink-0 rounded-xl border inline-flex items-center justify-center transition-colors ${panelBorder} ${
@@ -147,7 +136,7 @@ export function SubjectCard({
               }`}
             >
               <Pencil size={15} />
-            </button> */}
+            </button>
             <button
               onClick={onToggleStatus}
               className={`flex-1 h-10 rounded-xl text-xs font-bold border inline-flex items-center justify-center transition-colors ${

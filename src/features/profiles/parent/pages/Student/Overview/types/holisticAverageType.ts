@@ -5,7 +5,7 @@
  * Averages only cognitive, emotional, and behavioral — no "social" domain
  * at the per-student level (unlike the class-wide trends page).
  */
-export type StudentDomainKey = "cognitive" | "emotional" | "behavioral";
+export type StudentDomainKey = "cognitive" | "emotional" | "behavioral" | "social";
 
 /**
  * Whether the report card for this term has been released to the
