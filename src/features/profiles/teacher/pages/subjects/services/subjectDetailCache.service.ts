@@ -13,7 +13,6 @@ export interface CachedSubjectDetail {
   subjectCategory: string | null;
   gradeLevel: string;
   roster: RosterStudent[];
-  attendance: AttendanceMap;
   items: GradeItem[];
   scores: ScoreMap;
   holistic: HolisticMap;

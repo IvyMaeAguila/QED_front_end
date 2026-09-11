@@ -1,9 +1,8 @@
 import { ClipboardCheck, BookOpen, GraduationCap, FileText, Sparkles } from "lucide-react";
 
-export type SubjectDetailTab = "attendance" | "writtenWorks" | "performanceTask" | "exams" | "holistic";
+export type SubjectDetailTab =  "writtenWorks" | "performanceTask" | "exams" | "holistic";
 
 const TABS: { key: SubjectDetailTab; label: string; icon: typeof ClipboardCheck }[] = [
-  { key: "attendance", label: "Attendance", icon: ClipboardCheck },
   { key: "writtenWorks", label: "Written Works", icon: BookOpen },
   { key: "performanceTask", label: "Performance Task", icon: GraduationCap },
   { key: "exams", label: "Exams", icon: FileText },
@@ -20,8 +19,8 @@ interface TabNavProps {
 
 export function TabNav({ active, onChange, darkMode, textPrimary, textMuted }: TabNavProps) {
   return (
-    <div
-      className={`flex items-stretch gap-1 rounded-xl p-1.5 ${darkMode ? "bg-white/5" : "bg-[#F1F2F4]"}`}
+   <div
+      className={`flex items-stretch gap-1 rounded-xl p-1.5 ${darkMode ? "bg-white/5" : "bg-white"}`}
     >
       {TABS.map((tab) => {
         const isActive = tab.key === active;
@@ -31,8 +30,8 @@ export function TabNav({ active, onChange, darkMode, textPrimary, textMuted }: T
             onClick={() => onChange(tab.key)}
             className={`flex-1 flex items-center justify-center gap-2 h-11 rounded-lg text-sm transition-all ${
               isActive
-                ? `font-bold ${textPrimary} ${darkMode ? "bg-white/10" : "bg-white"} shadow-sm`
-                : `font-medium ${textMuted} hover:${darkMode ? "text-white" : "text-[#374151]"}`
+                ? `font-bold text-white bg-[#880000] shadow-sm`
+                : `font-medium ${textMuted} hover:bg-[#880000] hover:text-white`
             }`}
           >
             <tab.icon size={16} />
