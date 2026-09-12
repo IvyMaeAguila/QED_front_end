@@ -16,7 +16,6 @@ import {
   type SectionOption,
 } from "./services/classes.service";
 import {
-  fetchTeachers,
   fetchAllTeachers,
   type TeacherOption,
 } from "./services/classes.service";
@@ -25,10 +24,11 @@ import {
   type SubjectOption,
 } from "./services/classes.service";
 import type { AdminThemeContext } from ".././AdminLayout";
+import { useToast } from "@shared/context/ToastContext";
 
 interface FormState {
   gradeLevelId: number | "";
-  section: string; 
+  section: string;
   room: string;
   subjectName: string | "";
   adviserId: string;
@@ -52,13 +52,11 @@ export function ClassFormPage() {
   const navigate = useNavigate();
   const { classId } = useParams<{ classId: string }>();
   const { getClass, refreshClasses } = useClasses();
+  const { showToast } = useToast();
 
   const isEditing = Boolean(classId);
   const existing = classId ? getClass(classId) : undefined;
 
-  const [advisableTeachers, setAdvisableTeachers] = useState<TeacherOption[]>(
-    [],
-  ); // for Class Adviser
   const [allTeachers, setAllTeachers] = useState<TeacherOption[]>([]); // for Subject Teacher
   const [loadingAllTeachers, setLoadingAllTeachers] = useState(true);
 
@@ -68,7 +66,6 @@ export function ClassFormPage() {
   const [subjects, setSubjects] = useState<SubjectOption[]>([]);
   const [loadingGradeLevels, setLoadingGradeLevels] = useState(true);
   const [loadingSections, setLoadingSections] = useState(false);
-  const [loadingTeachers, setLoadingTeachers] = useState(true);
   const [loadingSubjects, setLoadingSubjects] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -105,26 +102,6 @@ export function ClassFormPage() {
       active = false;
     };
   }, []);
-
-  // 2. Load teachers once on mount (para sa Class Adviser at Subject Teacher dropdowns)
-  useEffect(() => {
-    let active = true;
-    setLoadingTeachers(true);
-    fetchTeachers(existing?.id)
-      .then((data) => {
-        if (active) setAdvisableTeachers(data);
-      })
-      .catch((err) => {
-        console.error(err);
-        if (active) setSubmitError("Failed to load teachers.");
-      })
-      .finally(() => {
-        if (active) setLoadingTeachers(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [existing?.id]);
 
   useEffect(() => {
     let active = true;
@@ -299,6 +276,7 @@ export function ClassFormPage() {
         });
         refreshClasses();
         navigate(`/admin/classes`);
+        showToast("Class updated successfully!", "success");
       } else {
         await createClass({
           gradeLevelId: form.gradeLevelId,
@@ -310,10 +288,17 @@ export function ClassFormPage() {
         });
         refreshClasses();
         navigate(`/admin/classes`);
+        showToast("Class created successfully!", "success");
       }
     } catch (err) {
       setSubmitError(
         err instanceof Error ? err.message : "Something went wrong.",
+      );
+      showToast(
+        err instanceof Error
+          ? err.message
+          : "Failed to add class.",
+        "error",
       );
     } finally {
       setSubmitting(false);
@@ -421,13 +406,13 @@ export function ClassFormPage() {
             <select
               className={inputClasses}
               value={form.adviserId}
-              disabled={loadingTeachers}
+              disabled={loadingAllTeachers}
               onChange={(e) => setForm({ ...form, adviserId: e.target.value })}
             >
               <option value="">
-                {loadingTeachers ? "Loading…" : "Select a teacher…"}
+                {loadingAllTeachers ? "Loading…" : "Select a teacher…"}
               </option>
-              {advisableTeachers.map((t) => (
+              {allTeachers.map((t) => (
                 <option key={t.id} value={t.id}>
                   {t.last_name}, {t.first_name}
                 </option>
@@ -445,12 +430,9 @@ export function ClassFormPage() {
             <input
               className={inputClasses}
               value={form.room}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, room: e.target.value }))
-              }
+              onChange={(e) => setForm((f) => ({ ...f, room: e.target.value }))}
               placeholder="NEL 101"
             />
-
           </div>
         </div>
 

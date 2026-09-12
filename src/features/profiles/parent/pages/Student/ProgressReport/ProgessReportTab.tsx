@@ -1,5 +1,5 @@
-// ProgessReportTab.tsx
-// import { Download } from "lucide-react";
+// ProgressReportTab.tsx
+import { Download } from "lucide-react";
 import type { AdminThemeContext } from "../../../../../profiles/admin/pages/AdminLayout";
 import { useProgressReport } from "./context/ProgressReportContext";
 import { PeriodicRatingCard } from "./components/PeriodicRatingCard";
@@ -8,7 +8,7 @@ import { HolisticDevelopmentCard } from "./components/HolisticDevelopmentCard";
 import { AttendanceRecordCard } from "./components/AttendanceRecordCard";
 import { FormalReportTemplate } from "./components/FormalReportTemplate";
 import { TermTabs } from "./components/TermTabs";
-// import { useFormalReportDownload } from "./hooks/useFormalreportDownload";
+import { useFormalReportDownload } from "./hooks/useFormalreportDownload";
 import type { DetailStudent } from "../GlobalTypes/types";
 
 interface ProgressReportTabProps {
@@ -28,11 +28,6 @@ export function ProgressReportContent({
     currentAttendance,
   } = useProgressReport();
   const { darkMode, textPrimary } = theme;
-
-  // const { downloading, handleDownload } = useFormalReportDownload({
-  //   elementId: "formal-progress-report",
-  //   fileName: `${data.meta.learner}-progress-report.pdf`,
-  // });
 
   return (
     <div className="flex flex-col gap-4">
@@ -71,11 +66,11 @@ export function ProgressReportContent({
       </div>
 
       <HolisticDevelopmentCard
-  assessment={currentHolisticAssessment}
-  selectedTerm={selectedTerm}
-  theme={theme}
-  student={student}
-/>
+        assessment={currentHolisticAssessment}
+        selectedTerm={selectedTerm}
+        theme={theme}
+        student={student}
+      />
 
       <AttendanceRecordCard
         record={currentAttendance}

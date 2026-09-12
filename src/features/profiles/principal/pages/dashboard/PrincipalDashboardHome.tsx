@@ -12,9 +12,9 @@ import { TodaysAttendanceSection } from "./components/TodaysAttendanceSection";
 import { SubjectPerformanceSection } from "./components/SubjectPerformanceSection";
 import { HolisticDevelopmentSection } from "./components/HolisticDevelopmentSection";
 import { AcademicPerformanceSection } from "./components/AcademicPerformanceSection";
-
-// TODO: derive from active school year context once that's wired up.
-const SCHOOL_YEAR_LABEL = "2025-2026";
+import { fetchActiveAcademicYear } from "./services/principalDashboardService";
+import { useEffect, useState } from "react";
+import type { AcademicYear } from "../../../admin/pages/subjects/types/academicyear";
 
 export function PrincipalDashboardHome() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
@@ -22,6 +22,8 @@ export function PrincipalDashboardHome() {
   const { user } = useAuth();
   const { data, loading, error, rankingTerm, setRankingTerm } =
     usePrincipalDashboardData();
+
+  const [academicYear, setAcademicYear] = useState<AcademicYear | null>(null);
 
   const today = new Date();
   const dateStr = today.toLocaleDateString("en-US", {
@@ -34,6 +36,14 @@ export function PrincipalDashboardHome() {
     ? "var(--color-grid-line-dark)"
     : "var(--color-grid-line)";
   const axisColor = darkMode ? "var(--color-axis-dark)" : "var(--color-axis)";
+
+  useEffect(() => {
+  fetchActiveAcademicYear()
+    .then((data) => {
+      setAcademicYear(data);
+    })
+    .catch((err) => console.error(err.message));
+}, []);
 
   if (loading || !data) return <DashboardSkeleton textMuted={textMuted} />;
   if (error) return <DashboardError error={error} textMuted={textMuted} />;
@@ -61,7 +71,7 @@ export function PrincipalDashboardHome() {
             <span className="font-bold text-white underline underline-offset-4 decoration-white/40">
               {data.currentTerm}
             </span>{" "}
-            of School Year {SCHOOL_YEAR_LABEL}.
+            of School Year {academicYear?.label}
           </p>
         </div>
       </div>

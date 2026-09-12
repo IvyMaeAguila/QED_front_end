@@ -1,4 +1,7 @@
 // src/features/profiles/principal/pages/dashboard/services/principalDashboardService.ts
+import { API_CONFIG } from '../../../../../../config/api.config';
+
+const BASE_URL = `${API_CONFIG.baseURL}/api`;
 
 import type {
   Term,
@@ -29,6 +32,8 @@ import {
 } from "../data/mockData";
 import { getGradeLevels } from "../../students/services/students.service";
 import { getTeachers } from "../../teachers/services/teachers.service";
+import type { AcademicYearRow } from "../../../../admin/pages/subjects/services/academicyear.service";
+import type { ApiResponse } from "../../../../admin/pages/subjects/services/academicyear.service";
 
 const MOCK_DELAY_MS = 300;
 function resolveAfterDelay<T>(value: T): Promise<T> {
@@ -58,14 +63,31 @@ export async function getOverview(): Promise<OverviewData> {
   };
 }
 
-export function getTodaysAttendance(): Promise<TodaysAttendance> {
-  // TODO: GET /api/principal/attendance/today
-  return resolveAfterDelay(TODAYS_ATTENDANCE);
+export async function fetchActiveAcademicYear(): Promise<AcademicYearRow> {
+  const res = await fetch(`${BASE_URL}/academic-year/getAcademicYear`);
+  const json: ApiResponse<AcademicYearRow> = await res.json();
+  if (!res.ok || !json.data) throw new Error(json.message || "Failed to fetch academic year.");
+  return json.data;
 }
 
-export function getAttendanceByGrade(): Promise<GradeAttendance[]> {
-  // TODO: GET /api/principal/attendance/by-grade?term=...
-  return resolveAfterDelay(ATTENDANCE_BY_GRADE);
+export async function getTodaysAttendance(): Promise<TodaysAttendance> {
+  const res = await fetch(`${BASE_URL}/dashboard/getTodaysAttendance`, {
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch today's attendance (${res.status})`);
+  }
+  return res.json();
+}
+ 
+export async function getAttendanceByGrade(): Promise<GradeAttendance[]> {
+  const res = await fetch(`${BASE_URL}/dashboard/getAttendanceByGrade`, {
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch attendance by grade (${res.status})`);
+  }
+  return res.json();
 }
 
 export function getPerformanceByGrade(): Promise<GradePerformance[]> {

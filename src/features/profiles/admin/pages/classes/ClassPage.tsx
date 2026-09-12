@@ -11,7 +11,7 @@ import {
   type GradeLevel,
 } from "../studentrecords/types/Students";
 import type { AdminThemeContext } from "../AdminLayout";
-import { DeleteConfirmModal } from "@shared/components/DeleteConfirmationModal";
+import { DangerConfirmModal } from "@shared/components/DangerConfirmModal";
 
 export function ClassesPage() {
   const navigate = useNavigate();
@@ -37,6 +37,14 @@ export function ClassesPage() {
     [classes, gradeFilter],
   );
 
+  // Tinatanggap ang class id na kasalukuyang naka-set sa classToDelete.
+  // I-null out lang ang state kapag tagumpay — kung mag-throw ito,
+  // hahawakan ng DangerConfirmModal ang error at hindi ito magsasara.
+  async function handleDeleteClass() {
+    if (!classToDelete) return;
+    await deleteClass(classToDelete.id);
+    setClassToDelete(null);
+  }
   return (
     <div className="space-y-6">
       <header className="flex justify-between items-center p-2">
@@ -128,18 +136,26 @@ export function ClassesPage() {
         )}
       </main>
       {classToDelete && (
-        <DeleteConfirmModal
-          entryTitle={classToDelete.label}
+        <DangerConfirmModal
+          title="Delete this class?"
+          description={
+            <>
+              This will also delete all schedules, subjects, grades, attendance,
+              and holistic ratings tied to {classToDelete.label}. This can't be
+              undone.
+            </>
+          }
+          confirmPhrase="EUCandelaria"
+          confirmLabel="Delete class"
+          successMessage="Class deleted successfully!"
+          errorMessage="Failed to delete class."
+          onClose={() => setClassToDelete(null)}
+          onConfirm={handleDeleteClass}
           darkMode={darkMode}
           panelBg={panelBg}
           panelBorder={panelBorder}
           textPrimary={textPrimary}
           textMuted={textMuted}
-          onClose={() => setClassToDelete(null)}
-          onConfirm={async () => {
-            await deleteClass(classToDelete.id);
-            setClassToDelete(null);
-          }}
         />
       )}
     </div>

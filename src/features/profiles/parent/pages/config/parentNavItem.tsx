@@ -4,7 +4,7 @@ import {
   CalendarDays,
   ClipboardList,
 } from "lucide-react";
-import type { NavItem } from "@shared/components/Sidebar"; // i-adjust path base sa actual import mo
+import type { NavItem } from "@shared/components/Sidebar"; 
 import EnrolledChildrenNavItem from "../dashboard/components/EnrolledChildrenNavItem";
 
 export const PARENT_NAV_ITEMS: NavItem[] = [

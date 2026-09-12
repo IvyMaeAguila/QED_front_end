@@ -22,7 +22,7 @@ import { ClassFormPage } from "../features/profiles/admin/pages/classes/ClassFor
 import { ClassViewPage } from "../features/profiles/admin/pages/classes/ClassViewPage";
 import LandingPage from "../features/Landing/LandingPage";
 import { LoginPanel } from "../features/auth/LoginPanel";
-// import { StudentDetailPage } from "../shared/components/StudentDetailPage";
+import { StudentDetailPage } from "../shared/components/StudentDetailPage";
 import { ManageSubjectsPage } from "../features/profiles/admin/pages/subjects/ManageSubjectsPage";
 import { CalendarPage } from "../features/profiles/admin/pages/calendar/CalendarPage";
 import { HelpSupportPage } from "../features/profiles/admin/pages/help/HelpSupportPage";
@@ -36,7 +36,7 @@ import { SubjectsPage } from "../features/profiles/teacher/pages/subjects/Subjec
 import { ParentSection } from "./ParentSection";
 import ParentDashboardHome from "../features/profiles/parent/pages/dashboard/ParentDashboardHome";
 import { EnrolledChildrenPage } from "../features/profiles/parent/pages/EnrollledStudent/EnrolledChildrenPage";
-import StudentDetailPage from "../features/profiles/parent/pages/Student/studentDetailPage";
+import ChildDetailPage from "../features/profiles/parent/pages/Student/ChildDetailPage";
 import { CalendarPageView } from "../features/profiles/parent/pages/calendar/CalendarPageView";
 import { SubjectDetailPage } from "../features/profiles/teacher/pages/subjects/detail/SubjectDetailPage";
 import { SubjectRecordsPage } from "../features/profiles/teacher/pages/subjects/detail/SubjectRecordsPage";
@@ -270,7 +270,7 @@ export function AppRouter() {
         >
           <Route index element={<ParentDashboardHome />} />
           <Route path="enrolled-children" element={<EnrolledChildrenPage />} />
-          <Route path="students/:studentId" element={<StudentDetailPage />} />
+          <Route path="students/:studentId" element={<ChildDetailPage />} />
           <Route path="calendar" element={<CalendarPageView />} />
         </Route>
       </Routes>

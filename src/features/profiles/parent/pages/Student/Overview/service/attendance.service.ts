@@ -74,7 +74,6 @@ function buildCacheKey(studentId: number, month: number, year: number): string {
   return `${studentId}-${month}-${year}`;
 }
 
-const cache = new Map<string, MonthlyAttendance>();
 const inFlightRequests = new Map<string, Promise<MonthlyAttendance>>();
 
 const AttendanceService = {
@@ -84,11 +83,6 @@ const AttendanceService = {
     year: number
   ): Promise<MonthlyAttendance> {
     const cacheKey = buildCacheKey(studentId, month, year);
-
-    const cached = cache.get(cacheKey);
-    if (cached) {
-      return cached;
-    }
 
     const inFlight = inFlightRequests.get(cacheKey);
     if (inFlight) {
@@ -119,9 +113,7 @@ const AttendanceService = {
         throw new Error(result.message || "Failed to fetch monthly attendance.");
       }
 
-      const mapped = mapToMonthlyAttendance(result.data);
-      cache.set(cacheKey, mapped);
-      return mapped;
+      return mapToMonthlyAttendance(result.data);
     })();
 
     inFlightRequests.set(cacheKey, request);
@@ -130,14 +122,6 @@ const AttendanceService = {
       return await request;
     } finally {
       inFlightRequests.delete(cacheKey);
-    }
-  },
-
-  clearCache(studentId?: number, month?: number, year?: number) {
-    if (studentId !== undefined && month !== undefined && year !== undefined) {
-      cache.delete(buildCacheKey(studentId, month, year));
-    } else {
-      cache.clear();
     }
   },
 };

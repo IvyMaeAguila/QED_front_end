@@ -1,11 +1,11 @@
-import { LayoutDashboard, BookOpen, FileBarChart, UserCircle, Flower } from "lucide-react";
+import { LayoutDashboard, BookOpen, FileBarChart, UserCircle, SquareStar } from "lucide-react";
 
 export type StudentDetailTab = "overview" | "academic" | "holistic" | "progressReport" | "studentProfile";
 
 const TABS: { key: StudentDetailTab; label: string; icon: typeof LayoutDashboard }[] = [
   { key: "overview", label: "Overview", icon: LayoutDashboard },
   { key: "academic", label: "Academic", icon: BookOpen },
-  { key: "holistic", label: "Holistic", icon: Flower },
+  { key: "holistic", label: "Holistic", icon: SquareStar },
   { key: "progressReport", label: "Progress Report", icon: FileBarChart },
   { key: "studentProfile", label: "Student Profile", icon: UserCircle },
 ];
@@ -31,8 +31,8 @@ export function TabNav({ active, onChange, darkMode, textPrimary, textMuted }: T
             onClick={() => onChange(tab.key)}
             className={`flex flex-1 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-3 h-11 text-sm transition-all ${
               isActive
-                ? `font-bold ${textPrimary} ${darkMode ? "bg-white/10" : "bg-white"} shadow-sm`
-                : `font-medium ${textMuted} ${darkMode ? "hover:text-white" : "hover:text-[#374151]"}`
+                ? `font-bold ${textPrimary} ${darkMode ? "bg-[#711111]" : "bg-[#711111]"} shadow-sm text-white`
+                : `font-medium ${textMuted} ${darkMode ? "hover:text-white hover:bg-[#711111]" : "hover:text-white hover:bg-[#711111]"}`
             }`}
           >
             <tab.icon size={16} className="shrink-0" />

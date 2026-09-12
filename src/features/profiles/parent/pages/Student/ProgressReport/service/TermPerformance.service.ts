@@ -1,5 +1,6 @@
 import { API_CONFIG } from '../../../../../../../config/api.config';
 import type { BackendTerm } from "../utils/transformProgressReport";
+import type { ProgressReportMeta } from "../types/types";
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/termPerformanceProgress`;
 
@@ -23,13 +24,28 @@ function buildCacheKey(studentId: string): string {
   return studentId;
 }
 
-const cache = new Map<string, BackendTerm[]>();
-const inFlightRequests = new Map<string, Promise<BackendTerm[]>>();
+/** Combined shape returned by the term-performance endpoint: per-term
+ * grade data plus the learner/section/adviser/school-year header info. */
+export interface StudentTermPerformanceResult {
+  terms: BackendTerm[];
+  meta: ProgressReportMeta;
+}
+
+const EMPTY_META: ProgressReportMeta = {
+  learner: "",
+  gradeSection: "",
+  classAdviser: "",
+  schoolYear: "",
+};
+
+const cache = new Map<string, StudentTermPerformanceResult>();
+const inFlightRequests = new Map<string, Promise<StudentTermPerformanceResult>>();
 
 /**
  * Fetches per-term, per-subject grade history for a single student
- * (parent progress-report view). Backed by
- * GET /api/termPerformanceProgress/:studentId/term-performance
+ * (parent progress-report view), along with the learner's meta info
+ * (name, grade & section, class adviser, school year) for the report
+ * header. Backed by GET /api/termPerformanceProgress/:studentId/term-performance
  *
  * Uses cookie-based auth (credentials: "include"), matching the same
  * pattern as studentTermPerformance.service.ts used on the Overview tab.
@@ -41,7 +57,7 @@ const inFlightRequests = new Map<string, Promise<BackendTerm[]>>();
 export async function fetchStudentTermPerformance(
   studentId: string,
   options?: { force?: boolean }
-): Promise<BackendTerm[]> {
+): Promise<StudentTermPerformanceResult> {
   const cacheKey = buildCacheKey(studentId);
 
   if (!options?.force) {
@@ -56,13 +72,17 @@ export async function fetchStudentTermPerformance(
     return inFlight;
   }
 
-  const request = (async () => {
-    const res = await authedFetch(`${BASE_URL}/${studentId}/term-performance`);
-    const json = await handleJsonResponse(res);
-    const data = json.data as BackendTerm[];
-    cache.set(cacheKey, data);
-    return data;
-  })();
+const request = (async () => {
+  const res = await authedFetch(`${BASE_URL}/${studentId}/term-performance`);
+  const json = await handleJsonResponse(res);
+
+  const result: StudentTermPerformanceResult = {
+    terms: json.data as BackendTerm[],
+    meta: (json.meta as ProgressReportMeta) ?? EMPTY_META,
+  };
+  cache.set(cacheKey, result);
+  return result;
+})();
 
   inFlightRequests.set(cacheKey, request);
 

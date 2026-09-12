@@ -44,14 +44,20 @@ export function toPeriodicRatingRows(backendTerms: BackendTerm[]): PeriodicRatin
     });
 
     const values = Object.values(scores).filter((v): v is number => typeof v === "number");
-    const finalAvg = values.length
+
+    // Only compute + show the final rating once all 3 terms (T1, T2, T3)
+    // have a grade for this subject. If any term is still missing/
+    // unreleased, leave finalRating blank so the report doesn't imply
+    // a final grade before the school year is actually complete.
+    const isComplete = TERM_ORDER.every((term) => typeof scores[term] === "number");
+    const finalAvg = isComplete
       ? Math.round((values.reduce((a, b) => a + b, 0) / values.length) * 100) / 100
       : null;
 
     return {
       learningArea: subject,
       scores,
-      finalRating: getRatingLabel(finalAvg) ?? "",
+      finalRating: finalAvg !== null ? finalAvg.toFixed(1) : "",
     };
   });
 }

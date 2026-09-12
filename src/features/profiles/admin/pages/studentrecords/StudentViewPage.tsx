@@ -38,7 +38,7 @@ export function StudentViewPage() {
     { label: "Full Name", value: formatFullName(student) },
     { label: "Gender", value: student.gender },
     { label: "Grade Level", value: student.gradeLevel },
-    { label: "Section", value: student.section },
+    { label: "Section", value: student.section ?? "" },
   ];
 
   return (

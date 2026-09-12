@@ -59,23 +59,20 @@ export function AttendanceRecordCard({ record, theme, student }: AttendanceRecor
                   <td className={`px-3 py-2.5 text-right ${textPrimary}`}>{m.tardy}</td>
                 </tr>
               ))}
-              <tr className="border-t border-[#8B0D0D]/30 bg-[#8B0D0D]/5 font-bold">
-                <td className="px-3 py-2.5 text-[#8B0D0D]">Total</td>
-                <td className="px-3 py-2.5 text-right text-[#8B0D0D]">{totals.schoolDays}</td>
-                <td className="px-3 py-2.5 text-right text-[#8B0D0D]">{totals.present}</td>
-                <td className="px-3 py-2.5 text-right text-[#8B0D0D]">{totals.absent}</td>
-                <td className="px-3 py-2.5 text-right text-[#8B0D0D]">{totals.tardy}</td>
-              </tr>
+             
             </tbody>
           </table>
         </div>
 
         <div className="flex flex-1 flex-col gap-3">
-          <div className={`rounded-xl border ${panelBorder} p-4`}>
-            <p className={`text-[10px] font-semibold uppercase tracking-wide ${textMuted}`}>Attendance Rate</p>
-            <p className="mt-1 text-2xl font-bold text-[#8B0D0D]">{attendanceRate}%</p>
-            <div className={`mt-2 h-2 w-full rounded-full ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"}`}>
-              <div className="h-2 rounded-full bg-[#8B0D0D]" style={{ width: `${attendanceRate}%` }} />
+          <div className="grid grid-cols-2 gap-3">
+            <div className={`rounded-xl border ${panelBorder} p-3 text-center`}>
+              <p className={`text-[10px] font-semibold uppercase ${textMuted}`}>Total School Days</p>
+              <p className={`mt-1 text-lg font-bold ${textPrimary}`}>{totals.schoolDays}</p>
+            </div>
+            <div className={`rounded-xl border ${panelBorder} p-3 text-center`}>
+              <p className={`text-[10px] font-semibold uppercase ${textMuted}`}>Present</p>
+              <p className={`mt-1 text-lg font-bold ${textPrimary}`}>{totals.present}</p>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">

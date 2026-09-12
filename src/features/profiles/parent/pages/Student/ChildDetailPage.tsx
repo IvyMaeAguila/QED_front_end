@@ -64,7 +64,7 @@ function ProgressReportSection({
   );
 }
 
-export default function StudentDetailPage() {
+export default function ChildDetailPage() {
   const navigate = useNavigate();
   const { student, studentId } = useStudentDetail();
   const [activeTab, setActiveTab] = useState<StudentDetailTab>("overview");

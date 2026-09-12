@@ -16,6 +16,11 @@ export const TERM_SHORT_LABELS: Record<Term, string> = {
   T3: "3rd",
 };
 
+export const TERM_FILTER_LABELS: Record<TermFilter, string> = {
+  ...TERM_LABELS,
+  OVERALL: "Overall",
+};
+
 export interface PeriodicRatingRow {
   learningArea: string;
   scores: Partial<Record<Term, number>>;
@@ -26,7 +31,7 @@ export interface TermAverageEntry {
   term: Term;
   average: number | null;
   ratingLabel: string | null;
-  released: boolean
+  released: boolean;
 }
 
 export type HolisticDomainKey = "cognitive" | "emotional" | "social" | "behavioral";
@@ -50,11 +55,17 @@ export interface AttendanceMonthRow {
   present: number;
   absent: number;
   tardy: number;
+  excused: number;
 }
 
 export interface AttendanceTermEntry {
-  term: Term;
-  months: AttendanceMonthRow[];
+  term: TermFilter;
+  present: number;
+  absent: number;
+  tardiness: number;
+  excused?: number;
+  totalDays: number;
+  months: AttendanceMonthRow[]; // <-- idinagdag
 }
 
 export interface ProgressReportMeta {

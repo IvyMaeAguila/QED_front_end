@@ -103,7 +103,7 @@ function StudentNarrativeSnapshotContent({
     >
       <SectionHeader
         icon={Sparkles}
-        title="Narrative Snapshot"
+        title="Term Snapshot"
         about={`A plain-language read of ${student.firstName}'s holistic standing — averaged across cognitive, emotional, behavioral, and social ratings. This section only fills in once the quarterly report card is released.`}
         theme={theme}
       />
