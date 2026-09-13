@@ -1,11 +1,3 @@
-
-
-// Single source of truth for the shape of principal-dashboard data.
-// mockData.ts is typed against these interfaces today; when the backend
-// is ready, principalDashboardService.ts swaps its mock-backed functions
-// for real fetch calls returning the same shapes — nothing in
-// components/ or PrincipalDashboardHome.tsx needs to change.
-
 export type Term = "Term 1" | "Term 2" | "Term 3";
 export type Trend = "up" | "down" | "flat";
 
@@ -23,9 +15,16 @@ export interface TodaysAttendance {
   concerning: number; 
 }
 
+export interface GradePerformanceSection {
+  sectionId: number;
+  section: string;
+  score: number;
+}
+
 export interface GradePerformance {
   grade: string;
-  score: number;
+  score: number | null;
+  sections: GradePerformanceSection[]; 
 }
 
 export interface PerformanceTrendPoint {
@@ -36,11 +35,30 @@ export interface PerformanceTrendPoint {
   emotional: number;
   behavioral: number;
   social: number;
+  holisticAverage: number;
+  overall: number
+}
+
+export interface GradeAttendanceSection {
+  sectionId: number | null;
+  section: string | null;
+  present: number;
+  absent: number;
+  total: number;
+  attendance: number;
+  hasRecorded: boolean; 
 }
 
 export interface GradeAttendance {
+  gradeLevelId: number;
   grade: string;
+  type: "grade" | "section";
+  present?: number;
+  absent?: number;
+  total?: number;
   attendance: number;
+  hasRecorded?: boolean;
+  sections?: GradeAttendanceSection[];
 }
 
 export interface TopSubjectPerGrade {

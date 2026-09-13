@@ -33,29 +33,29 @@ export const TODAYS_ATTENDANCE: TodaysAttendance = {
   concerning: 3,
 };
 
-export const PERFORMANCE_BY_GRADE: GradePerformance[] = [
-  { grade: "Grade 1", score: 88 },
-  { grade: "Grade 2", score: 85 },
-  { grade: "Grade 3", score: 79 },
-  { grade: "Grade 4", score: 81 },
-  { grade: "Grade 5", score: 76 },
-  { grade: "Grade 6", score: 83 },
-];
+// export const PERFORMANCE_BY_GRADE: GradePerformance[] = [
+//   { grade: "Grade 1", score: 88 },
+//   { grade: "Grade 2", score: 85 },
+//   { grade: "Grade 3", score: 79 },
+//   { grade: "Grade 4", score: 81 },
+//   { grade: "Grade 5", score: 76 },
+//   { grade: "Grade 6", score: 83 },
+// ];
 
-export const PERFORMANCE_TREND: PerformanceTrendPoint[] = [
-  { term: "Term 1", performance: 82, attendance: 94, cognitive: 4.1, emotional: 3.9, behavioral: 4.0, social: 3.8 },
-  { term: "Term 2", performance: 79, attendance: 91, cognitive: 3.9, emotional: 3.8, behavioral: 3.9, social: 3.7 },
-  { term: "Term 3", performance: 85, attendance: 95, cognitive: 4.3, emotional: 4.1, behavioral: 4.2, social: 4.0 },
-];
+// export const PERFORMANCE_TREND: PerformanceTrendPoint[] = [
+//   { term: "Term 1", performance: 82, attendance: 94, cognitive: 4.1, emotional: 3.9, behavioral: 4.0, social: 3.8 },
+//   { term: "Term 2", performance: 79, attendance: 91, cognitive: 3.9, emotional: 3.8, behavioral: 3.9, social: 3.7 },
+//   { term: "Term 3", performance: 85, attendance: 95, cognitive: 4.3, emotional: 4.1, behavioral: 4.2, social: 4.0 },
+// ];
 
-export const ATTENDANCE_BY_GRADE: GradeAttendance[] = [
-  { grade: "Grade 1", attendance: 96 },
-  { grade: "Grade 2", attendance: 95 },
-  { grade: "Grade 3", attendance: 90 },
-  { grade: "Grade 4", attendance: 93 },
-  { grade: "Grade 5", attendance: 88 },
-  { grade: "Grade 6", attendance: 94 },
-];
+// export const ATTENDANCE_BY_GRADE: GradeAttendance[] = [
+//   { grade: "Grade 1", attendance: 96 },
+//   { grade: "Grade 2", attendance: 95 },
+//   { grade: "Grade 3", attendance: 90 },
+//   { grade: "Grade 4", attendance: 93 },
+//   { grade: "Grade 5", attendance: 88 },
+//   { grade: "Grade 6", attendance: 94 },
+// ];
 
 // TODO: replace with real API data — the single top-scoring subject for
 // each grade, current term
@@ -91,44 +91,6 @@ export const SUBJECT_RANKING_BY_TERM: SubjectRankingByTerm = {
     { rank: 3, subject: "English", grade: "Grade 4", score: 91, trend: "up" },
     { rank: 4, subject: "Filipino", grade: "Grade 2", score: 89, trend: "flat" },
     { rank: 5, subject: "Araling Panlipunan", grade: "Grade 5", score: 87, trend: "up" },
-  ],
-};
-
-export const HOLISTIC_DOMAINS: HolisticDomain[] = [
-  { domain: "Cognitive", score: 4.3 },
-  { domain: "Emotional", score: 4.1 },
-  { domain: "Behavioral", score: 4.2 },
-  { domain: "Social", score: 4.0 },
-];
-
-export const HOLISTIC_RUBRIC: HolisticRubric = {
-  Cognitive: [
-    "Cannot demonstrate understanding",
-    "Struggles to understand lessons",
-    "Understands basic concepts but needs support",
-    "Understands most concepts with minimal guidance",
-    "Consistently understands and applies concepts independently",
-  ],
-  Emotional: [
-    "Shows negative attitude toward learning",
-    "Frequently unmotivated",
-    "Sometimes disengaged or unsure",
-    "Generally positive and engaged",
-    "Highly motivated and confident",
-  ],
-  Behavioral: [
-    "Consistently problematic behavior",
-    "Frequently disruptive",
-    "Sometimes distracted",
-    "Minor issues but generally disciplined",
-    "Always follows rules and stays focused",
-  ],
-  Social: [
-    "Avoids or disrupts group work",
-    "Rarely interacts",
-    "Participates occasionally",
-    "Works well with peers",
-    "Actively collaborates and leads",
   ],
 };
 

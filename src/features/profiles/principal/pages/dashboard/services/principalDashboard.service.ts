@@ -1,4 +1,3 @@
-// src/features/profiles/principal/pages/dashboard/services/principalDashboardService.ts
 import { API_CONFIG } from '../../../../../../config/api.config';
 
 const BASE_URL = `${API_CONFIG.baseURL}/api`;
@@ -11,19 +10,15 @@ import type {
   PerformanceTrendPoint,
   GradeAttendance,
   TopSubjectPerGrade,
-  SubjectRankingItem,
   SubjectRankingByTerm,
   HolisticDomain,
   HolisticRubric,
   AttentionItem,
   PrincipalDashboardData,
 } from "../data/types";
+import { HOLISTIC_RUBRIC } from "../utils/HolisticRubrics";
 import {
   CURRENT_TERM,
-  PERFORMANCE_BY_GRADE,
-  PERFORMANCE_TREND,
-  HOLISTIC_DOMAINS,
-  HOLISTIC_RUBRIC,
   ATTENTION_ITEMS,
 } from "../data/mockData";
 import { getGradeLevels } from "../../students/services/students.service";
@@ -50,25 +45,107 @@ async function getOverviewAttendance(): Promise<{ attendance: number }> {
   return res.json();
 }
 
+
+interface GradingPeriodRow {
+  id: number;
+  school_year_id: number;
+  term_number: number;
+  term_label: string;
+  start_date: string;
+  end_date: string;
+}
+
+interface SchoolWideStudentRow {
+  student_id: number;
+  student_number: string;
+  last_name: string;
+  first_name: string;
+  overall_average: number | null;
+}
+
+interface SchoolWideSectionRow {
+  section_id: number | null;
+  section_name: string;
+  students: SchoolWideStudentRow[];
+}
+
+interface SchoolWideGradeLevelRow {
+  grade_level_id: number | null;
+  grade_level: string;
+  sections: SchoolWideSectionRow[];
+}
+
+interface SchoolWideAcademicPerformanceResponse {
+  success: boolean;
+  term: GradingPeriodRow;
+  grade_levels: SchoolWideGradeLevelRow[];
+  message?: string;
+}
+
+interface ApiIntegrationResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+}
+
+interface PerformanceTrendResponse {
+  success: boolean;
+  data: PerformanceTrendPoint[];
+  message?: string;
+}
+
+async function getSchoolWideAcademicPerformance(): Promise<SchoolWideAcademicPerformanceResponse> {
+  const res = await fetch(`${BASE_URL}/dashboard/academicPerformance`, {
+    credentials: "include",
+  });
+
+  const json: SchoolWideAcademicPerformanceResponse = await res.json();
+
+  if (!res.ok || !json.success) {
+    throw new Error(json.message || `Failed to fetch school-wide academic performance (${res.status})`);
+  }
+
+  return json;
+}
+
+function computeAcademicPerf(data: SchoolWideAcademicPerformanceResponse): number {
+  const averages: number[] = [];
+
+  for (const grade of data.grade_levels) {
+    for (const section of grade.sections) {
+      for (const student of section.students) {
+        const value = Number(student.overall_average);
+        if (student.overall_average !== null && student.overall_average !== undefined && !Number.isNaN(value)) {
+          averages.push(value);
+        }
+      }
+    }
+  }
+
+  if (averages.length === 0) return 0;
+
+  const mean = averages.reduce((sum, avg) => sum + avg, 0) / averages.length;
+  return Math.round(mean * 100) / 100;
+}
+
 export async function getOverview(): Promise<OverviewData> {
-  const [gradeLevels, teachers, attendanceRate] = await Promise.all([
+  const [gradeLevels, teachers, attendanceRate, schoolWidePerf] = await Promise.all([
     getGradeLevels(),
     getTeachers(),
     getOverviewAttendance(),
+    getSchoolWideAcademicPerformance(),
   ]);
 
   const totalStudents = gradeLevels.reduce((sum, g) => sum + g.totalStudents, 0);
   const totalTeachers = teachers.length;
   const attendance = attendanceRate.attendance;
+  const academicPerf = computeAcademicPerf(schoolWidePerf);
 
-  // TODO: academicPerf and needsIntervention still need real endpoints.
-  // Wiring them to 0 for now instead of pulling from mock data so the
-  // overview object doesn't silently mix real + fake numbers.
   return {
     totalStudents,
     totalTeachers,
     attendance,
-    academicPerf: 0,
+    academicPerf,
     needsIntervention: 0,
   };
 }
@@ -100,16 +177,6 @@ export async function getAttendanceByGrade(): Promise<GradeAttendance[]> {
   return res.json();
 }
 
-export function getPerformanceByGrade(): Promise<GradePerformance[]> {
-  // TODO: GET /api/principal/performance/by-grade?term=...
-  return resolveAfterDelay(PERFORMANCE_BY_GRADE);
-}
-
-export function getPerformanceTrend(): Promise<PerformanceTrendPoint[]> {
-  // TODO: GET /api/principal/performance/trend
-  return resolveAfterDelay(PERFORMANCE_TREND);
-}
-
 export async function getTopSubjectPerGrade(): Promise<TopSubjectPerGrade[]> {
   const res = await fetch(`${BASE_URL}/dashboard/topSubjectPerGrade`, {
     credentials: "include",
@@ -130,13 +197,81 @@ export async function getSubjectRankingByTerm(): Promise<SubjectRankingByTerm> {
   return res.json();
 }
 
-export function getHolisticDomains(): Promise<HolisticDomain[]> {
-  // TODO: GET /api/principal/holistic/domains?term=...
-  return resolveAfterDelay(HOLISTIC_DOMAINS);
+export async function getHolisticOverview(): Promise<HolisticDomain[]> {
+  const res = await fetch(`${BASE_URL}/dashboard/holisticDomain`, {
+    method: "GET",
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch holistic overview: ${res.status}`);
+  }
+  const json: ApiIntegrationResponse<HolisticDomain[]> = await res.json();
+  if (!json.success) {
+    throw new Error(json.message ?? "Failed to fetch holistic overview");
+  }
+  return json.data;
 }
 
 export function getHolisticRubric(): Promise<HolisticRubric> {
   return resolveAfterDelay(HOLISTIC_RUBRIC);
+}
+
+export async function getHolisticDevelopmentData(): Promise<{
+  holisticDomains: HolisticDomain[];
+  holisticRubric: HolisticRubric;
+}> {
+  const [holisticDomains, holisticRubric] = await Promise.all([
+    getHolisticOverview(),
+    getHolisticRubric(),
+  ]);
+
+  return { holisticDomains, holisticRubric };
+}
+
+export async function getPerformanceByGrade(): Promise<GradePerformance[]> {
+  const res = await fetch(`${BASE_URL}/dashboard/performanceByGrade`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch performance by grade: ${res.status}`);
+  }
+
+  const json: ApiIntegrationResponse<GradePerformance[]> = await res.json();
+
+  if (!json.success) {
+    throw new Error(json.message ?? "Failed to fetch performance by grade");
+  }
+
+  return json.data;
+}
+
+export async function getPerformanceTrend(): Promise<PerformanceTrendPoint[]> {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${BASE_URL}/dashboard/performanceTrend`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => null);
+    throw new Error(
+      errorBody?.message ?? `Failed to fetch performance trend (status ${response.status})`
+    );
+  }
+
+  const result: PerformanceTrendResponse = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message ?? "Failed to fetch performance trend.");
+  }
+
+  return result.data;
 }
 
 export function getAttentionItems(): Promise<AttentionItem[]> {
@@ -165,7 +300,7 @@ export async function getPrincipalDashboardData(): Promise<PrincipalDashboardDat
     getPerformanceTrend(),
     getAttendanceByGrade(),
     getTopSubjectPerGrade(),
-    getHolisticDomains(),
+    getHolisticOverview(),
     getHolisticRubric(),
     getAttentionItems(),
     getSubjectRankingByTerm(),
