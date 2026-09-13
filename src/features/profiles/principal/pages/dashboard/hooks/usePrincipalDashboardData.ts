@@ -5,7 +5,7 @@
 // component that renders the dropdown.
 import { useEffect, useState, useCallback } from "react";
 import type { PrincipalDashboardData, Term } from "../data/types";
-import { getPrincipalDashboardData } from "../services/principalDashboardService";
+import { getPrincipalDashboardData } from "../services/principalDashboard.service";
 
 interface UsePrincipalDashboardDataResult {
   data: PrincipalDashboardData | null;

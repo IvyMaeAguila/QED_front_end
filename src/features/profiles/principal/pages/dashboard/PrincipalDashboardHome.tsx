@@ -12,7 +12,8 @@ import { TodaysAttendanceSection } from "./components/TodaysAttendanceSection";
 import { SubjectPerformanceSection } from "./components/SubjectPerformanceSection";
 import { HolisticDevelopmentSection } from "./components/HolisticDevelopmentSection";
 import { AcademicPerformanceSection } from "./components/AcademicPerformanceSection";
-import { fetchActiveAcademicYear } from "./services/principalDashboardService";
+import { fetchActiveAcademicYear } from "./services/principalDashboard.service";
+import { FullRankingModal } from "./components/FullRankingModal";
 import { useEffect, useState } from "react";
 import type { AcademicYear } from "../../../admin/pages/subjects/types/academicyear";
 
@@ -24,6 +25,7 @@ export function PrincipalDashboardHome() {
     usePrincipalDashboardData();
 
   const [academicYear, setAcademicYear] = useState<AcademicYear | null>(null);
+  const [showFullRanking, setShowFullRanking] = useState(false);
 
   const today = new Date();
   const dateStr = today.toLocaleDateString("en-US", {
@@ -38,17 +40,20 @@ export function PrincipalDashboardHome() {
   const axisColor = darkMode ? "var(--color-axis-dark)" : "var(--color-axis)";
 
   useEffect(() => {
-  fetchActiveAcademicYear()
-    .then((data) => {
-      setAcademicYear(data);
-    })
-    .catch((err) => console.error(err.message));
-}, []);
+    fetchActiveAcademicYear()
+      .then((data) => {
+        setAcademicYear(data);
+      })
+      .catch((err) => console.error(err.message));
+  }, []);
 
+  // Early returns muna bago i-access ang anumang property ng `data` —
+  // dito pa lang alam ni TypeScript na hindi na null ang `data` sa ibaba.
   if (loading || !data) return <DashboardSkeleton textMuted={textMuted} />;
   if (error) return <DashboardError error={error} textMuted={textMuted} />;
 
-  const ranking = data.subjectRankingByTerm[rankingTerm];
+  const fullRanking = data.subjectRankingByTerm[rankingTerm] ?? [];
+  const top5Ranking = fullRanking.slice(0, 5);
 
   return (
     <div className="flex flex-col gap-8 font-sans">
@@ -100,15 +105,30 @@ export function PrincipalDashboardHome() {
 
       <SubjectPerformanceSection
         topSubjectPerGrade={data.topSubjectPerGrade}
-        ranking={ranking}
+        ranking={top5Ranking}
         rankingTerm={rankingTerm}
         onRankingTermChange={setRankingTerm}
+        onExpandRanking={() => setShowFullRanking(true)}
         panelBg={panelBg}
         panelBorder={panelBorder}
         textPrimary={textPrimary}
         textMuted={textMuted}
         darkMode={darkMode}
       />
+
+      {showFullRanking && (
+        <FullRankingModal
+          ranking={fullRanking}
+          term={rankingTerm}
+          onTermChange={setRankingTerm}
+          onClose={() => setShowFullRanking(false)}
+          panelBg={panelBg}
+          panelBorder={panelBorder}
+          textPrimary={textPrimary}
+          textMuted={textMuted}
+          darkMode={darkMode}
+        />
+      )}
 
       <HolisticDevelopmentSection
         domains={data.holisticDomains}

@@ -12,6 +12,7 @@ import type {
   GradeAttendance,
   TopSubjectPerGrade,
   SubjectRankingItem,
+  SubjectRankingByTerm,
   HolisticDomain,
   HolisticRubric,
   AttentionItem,
@@ -19,13 +20,8 @@ import type {
 } from "../data/types";
 import {
   CURRENT_TERM,
-  OVERVIEW,
-  TODAYS_ATTENDANCE,
   PERFORMANCE_BY_GRADE,
   PERFORMANCE_TREND,
-  ATTENDANCE_BY_GRADE,
-  TOP_SUBJECT_PER_GRADE,
-  SUBJECT_RANKING_BY_TERM,
   HOLISTIC_DOMAINS,
   HOLISTIC_RUBRIC,
   ATTENTION_ITEMS,
@@ -44,22 +40,36 @@ export function getCurrentTerm(): Promise<Term> {
   return resolveAfterDelay(CURRENT_TERM);
 }
 
+async function getOverviewAttendance(): Promise<{ attendance: number }> {
+  const res = await fetch(`${BASE_URL}/dashboard/attendanceRate`, {
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch overview attendance (${res.status})`);
+  }
+  return res.json();
+}
+
 export async function getOverview(): Promise<OverviewData> {
-  // totalStudents is live (derived from the same cached grade-levels data
-  // the Students page uses); the rest stays mock until their endpoints exist.
-  // TODO: GET /api/principal/overview — swap remaining mock fields once ready
-  const [gradeLevels, teachers] = await Promise.all([
+  const [gradeLevels, teachers, attendanceRate] = await Promise.all([
     getGradeLevels(),
     getTeachers(),
-
+    getOverviewAttendance(),
   ]);
+
   const totalStudents = gradeLevels.reduce((sum, g) => sum + g.totalStudents, 0);
   const totalTeachers = teachers.length;
+  const attendance = attendanceRate.attendance;
 
+  // TODO: academicPerf and needsIntervention still need real endpoints.
+  // Wiring them to 0 for now instead of pulling from mock data so the
+  // overview object doesn't silently mix real + fake numbers.
   return {
-    ...OVERVIEW,
     totalStudents,
-    totalTeachers
+    totalTeachers,
+    attendance,
+    academicPerf: 0,
+    needsIntervention: 0,
   };
 }
 
@@ -79,7 +89,7 @@ export async function getTodaysAttendance(): Promise<TodaysAttendance> {
   }
   return res.json();
 }
- 
+
 export async function getAttendanceByGrade(): Promise<GradeAttendance[]> {
   const res = await fetch(`${BASE_URL}/dashboard/getAttendanceByGrade`, {
     credentials: "include",
@@ -100,14 +110,24 @@ export function getPerformanceTrend(): Promise<PerformanceTrendPoint[]> {
   return resolveAfterDelay(PERFORMANCE_TREND);
 }
 
-export function getTopSubjectPerGrade(): Promise<TopSubjectPerGrade[]> {
-  // TODO: GET /api/principal/subjects/top-per-grade?term=...
-  return resolveAfterDelay(TOP_SUBJECT_PER_GRADE);
+export async function getTopSubjectPerGrade(): Promise<TopSubjectPerGrade[]> {
+  const res = await fetch(`${BASE_URL}/dashboard/topSubjectPerGrade`, {
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch top subject per grade (${res.status})`);
+  }
+  return res.json();
 }
 
-export function getSubjectRanking(term: Term): Promise<SubjectRankingItem[]> {
-  // TODO: GET /api/principal/subjects/ranking?term=...
-  return resolveAfterDelay(SUBJECT_RANKING_BY_TERM[term]);
+export async function getSubjectRankingByTerm(): Promise<SubjectRankingByTerm> {
+  const res = await fetch(`${BASE_URL}/dashboard/subjectRankingByTerm`, {
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch subject ranking (${res.status})`);
+  }
+  return res.json();
 }
 
 export function getHolisticDomains(): Promise<HolisticDomain[]> {
@@ -125,8 +145,6 @@ export function getAttentionItems(): Promise<AttentionItem[]> {
 }
 
 export async function getPrincipalDashboardData(): Promise<PrincipalDashboardData> {
-  const terms: Term[] = ["Term 1", "Term 2", "Term 3"];
-
   const [
     currentTerm,
     overview,
@@ -138,7 +156,7 @@ export async function getPrincipalDashboardData(): Promise<PrincipalDashboardDat
     holisticDomains,
     holisticRubric,
     attentionItems,
-    rankingsByTerm,
+    subjectRankingByTerm,
   ] = await Promise.all([
     getCurrentTerm(),
     getOverview(),
@@ -150,13 +168,8 @@ export async function getPrincipalDashboardData(): Promise<PrincipalDashboardDat
     getHolisticDomains(),
     getHolisticRubric(),
     getAttentionItems(),
-    Promise.all(terms.map((t) => getSubjectRanking(t))),
+    getSubjectRankingByTerm(),
   ]);
-
-  const subjectRankingByTerm = terms.reduce((acc, term, i) => {
-    acc[term] = rankingsByTerm[i];
-    return acc;
-  }, {} as PrincipalDashboardData["subjectRankingByTerm"]);
 
   return {
     currentTerm,
