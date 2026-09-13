@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Term, RankedSubject } from "../data/types";
-import { getTermOptions, getGradeOptions, getSubjectRanking } from "../services/analyticsService";
+import { getTermOptions, getGradeOptions, getSubjectRanking } from "../services/reports.service";
 import { aggregateWholeElementary, filterAndRankByGrade, getLowestPerforming } from "../utils/ranking";
 
 interface UseSubjectAnalyticsResult {

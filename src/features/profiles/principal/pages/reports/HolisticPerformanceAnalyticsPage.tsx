@@ -59,10 +59,6 @@ export function HolisticPerformanceAnalyticsPage() {
           />
         )}
       </SectionCard>
-
-      <p className={`text-xs italic ${textMuted}`}>
-        Prototype using mock data — data source, exact color scale, and cell interactions (click-through to a detail view, etc.) still to be refined.
-      </p>
     </div>
   );
 }
