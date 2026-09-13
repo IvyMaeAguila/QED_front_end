@@ -14,7 +14,6 @@ export function TeacherAttendanceRecordsPage() {
 
   const [section, setSection] = useState<AdvisorySection | null | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
-
   const [viewMode, setViewMode] = useState<"month" | "summary">("month");
 
   useEffect(() => {
@@ -26,7 +25,11 @@ export function TeacherAttendanceRecordsPage() {
       .catch((err) => {
         if (cancelled) return;
         console.error("Failed to load advisory section:", err);
-        setError("Couldn't load your advisory class. Please try again.");
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Couldn't load your advisory class. Please try again.",
+        );
       });
     return () => {
       cancelled = true;
@@ -34,6 +37,10 @@ export function TeacherAttendanceRecordsPage() {
   }, []);
 
   const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
+
+  const displaySectionName = section
+    ? section.sectionName?.trim() || section.gradeLevel
+    : "Advisory Class";
 
   return (
     <div className="w-full min-h-full pb-10">
@@ -45,35 +52,33 @@ export function TeacherAttendanceRecordsPage() {
             </button>
             <div>
               <p className="text-[10px] font-extrabold uppercase tracking-[0.18em]" style={{ color: ACCENT }}>
-                {section ? section.sectionName : "Advisory Class"}
+                {displaySectionName}
               </p>
               <h1 className={`mt-1 text-xl font-black tracking-tight ${textPrimary}`}>Attendance Records</h1>
               <p className={`mt-1 text-xs font-medium ${textMuted}`}>Click a cell to edit — changes save immediately.</p>
             </div>
           </div>
 
-          <div className={`flex items-center p-0.5 rounded-lg border ${panelBorder} bg-black/5 dark:bg-white/5 self-start sm:self-center`}>
-            <button
-              onClick={() => setViewMode("month")}
-              className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${
-                viewMode === "month"
-                  ? "bg-[#800000] text-white dark:text-white shadow-sm"
-                  : `${textMuted} hover:${textPrimary}`
-              }`}
-            >
-              Month
-            </button>
-            <button
-              onClick={() => setViewMode("summary")}
-              className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${
-                viewMode === "summary"
-                  ? "bg-[#800000] text-white dark:text-white shadow-sm"
-                  : `${textMuted} hover:${textPrimary}`
-              }`}
-            >
-              Summary
-            </button>
-          </div>
+          {section && (
+            <div className={`flex items-center p-0.5 rounded-lg border ${panelBorder} bg-black/5 dark:bg-white/5 self-start sm:self-center`}>
+              <button
+                onClick={() => setViewMode("month")}
+                className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${
+                  viewMode === "month" ? "bg-[#800000] text-white dark:text-white shadow-sm" : `${textMuted} hover:${textPrimary}`
+                }`}
+              >
+                Month
+              </button>
+              <button
+                onClick={() => setViewMode("summary")}
+                className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${
+                  viewMode === "summary" ? "bg-[#800000] text-white dark:text-white shadow-sm" : `${textMuted} hover:${textPrimary}`
+                }`}
+              >
+                Summary
+              </button>
+            </div>
+          )}
         </div>
 
         {error && (
@@ -99,7 +104,7 @@ export function TeacherAttendanceRecordsPage() {
           <>
             {viewMode === "month" ? (
               <AttendanceCalendarSection
-                sectionId={section.sectionId}
+                sectionId={section.classId}
                 roster={section.roster}
                 terms={section.terms}
                 darkMode={darkMode}
@@ -110,7 +115,7 @@ export function TeacherAttendanceRecordsPage() {
               />
             ) : (
               <AttendanceMonthSummarySection
-                sectionId={section.sectionId}
+                sectionId={section.classId}
                 roster={section.roster}
                 terms={section.terms}
                 darkMode={darkMode}

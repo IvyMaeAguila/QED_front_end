@@ -9,8 +9,9 @@ function authedFetch(url: string, init?: RequestInit) {
 }
 
 export interface AdvisorySection {
-  sectionId: string;
-  sectionName: string;
+  classId: string;          // always present — real attendance key
+  sectionId: string | null; // present only if this grade level uses named sections
+  sectionName: string;      // falls back to gradeLevel when no section name exists
   gradeLevel: string;
   roster: RosterStudent[];
   terms: GradingPeriod[];
@@ -23,19 +24,19 @@ export async function fetchAdvisorySection(): Promise<AdvisorySection | null> {
   return res.json();
 }
 
-export async function fetchAdvisoryAttendance(sectionId: string): Promise<{ data: AttendanceMap }> {
-  const res = await authedFetch(`${BASE_URL}/${sectionId}`);
+export async function fetchAdvisoryAttendance(classId: string): Promise<{ data: AttendanceMap }> {
+  const res = await authedFetch(`${BASE_URL}/${classId}`);
   if (!res.ok) throw new Error(`Failed to fetch attendance (${res.status})`);
   return res.json();
 }
 
 export async function saveAdvisoryAttendance(
-  sectionId: string,
+  classId: string,
   studentId: string,
   dateISO: string,
   status: AttendanceStatus,
 ): Promise<void> {
-  const res = await authedFetch(`${BASE_URL}/${sectionId}`, {
+  const res = await authedFetch(`${BASE_URL}/${classId}`, {
     method: "POST",
     body: JSON.stringify({ studentId, date: dateISO, status }),
   });

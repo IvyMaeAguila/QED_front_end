@@ -46,7 +46,7 @@ export function TeacherAttendancePage() {
         if (cancelled) return;
         setSection(sec);
         if (!sec) return;
-        const att = await fetchAdvisoryAttendance(sec.sectionId);
+        const att = await fetchAdvisoryAttendance(sec.classId);
         if (cancelled) return;
         setAttendance(att.data);
       })
@@ -75,7 +75,7 @@ export function TeacherAttendancePage() {
       [studentId]: { ...prev[studentId], [iso]: next },
     }));
 
-    saveAdvisoryAttendance(section.sectionId, studentId, iso, next).catch(
+    saveAdvisoryAttendance(section.classId, studentId, iso, next).catch(
       (err) => {
         console.error("Failed to save attendance:", err);
         setAttendance((prev) => ({
@@ -99,7 +99,7 @@ export function TeacherAttendancePage() {
         [student.id]: { ...prev[student.id], [iso]: PRESENT },
       }));
 
-      saveAdvisoryAttendance(section.sectionId, student.id, iso, PRESENT).catch(
+      saveAdvisoryAttendance(section.classId, student.id, iso, PRESENT).catch(
         (err) => {
           console.error("Failed to save attendance:", err);
           setAttendance((prev) => ({
@@ -143,6 +143,10 @@ export function TeacherAttendancePage() {
     day: "numeric",
   });
 
+
+  const displaySectionName = section
+    ? section.sectionName?.trim() || `Advisory (${section.gradeLevel})`
+    : "";
 
   function renderStudentRow(student: RosterEntry) {
     const status = attendance[student.id]?.[iso] ?? null;
@@ -245,7 +249,7 @@ export function TeacherAttendancePage() {
               <h1
                 className={`text-lg font-black tracking-tight ${textPrimary}`}
               >
-                Attendance — {section.sectionName}
+                Attendance — {displaySectionName}
               </h1>
               <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
                 {todayLabel} · {markedCount}/{section.roster.length} marked

@@ -22,13 +22,15 @@ import {
 import { useStudents } from "../../../admin/pages/studentrecords/context/StudentsContext";
 import { useAuth } from "../../../../auth/context/authContext";
 import {
-  OverviewCard,
   Dropdown,
 } from "../../../shared/components/DashboardUI";
 import {
   assignedSubjectsService,
   type AssignedSubject,
 } from "./services/subjects.service";
+// NOTE: adjust this import path to match where your dashboard service
+// file actually lives relative to this page (it exports fetchTeacherStats).
+import { fetchTeacherStats } from "../dashboard/services/dashboard.service";
 
 interface DisplaySubject {
   id: number;
@@ -125,10 +127,7 @@ const GOLD = "#D4AF37";
 const GOLD_LIGHT = "#F0D68F";
 const CREAM = "#FFFDF5";
 
-const FAMILY_THEME: Record<
-  SubjectFamily,
-  { gradient: string; orbFrom: string; orbTo: string; orbCore: string }
-> = {
+const FAMILY_THEME: Record<SubjectFamily, { gradient: string; orbFrom: string; orbTo: string; orbCore: string }> = {
   math: {
     gradient: "from-[#4A0000] via-[#6B0000] to-[#B8860B]",
     orbFrom: GOLD_LIGHT,
@@ -274,6 +273,19 @@ function currentSchoolYearLabel(): string {
   return `SY ${startYear}–${startYear + 1}`;
 }
 
+// TeacherProfile.gradeLevel is typed against a GradeLevel declared in a
+// different module (.../studentrecords/types/Students) than the GradeLevel
+// used on this page (.../subjects/types/types). Even if the two are
+// structurally the same string-literal union, TS may treat them as
+// distinct types and reject a direct assignment. Bridge through `string`
+// so this doesn't depend on the two type declarations being merged, then
+// re-narrow against this page's own GRADE_LEVELS list — if the value
+// doesn't match anything in that list (e.g. stale/mismatched data), we
+// fall back rather than silently accepting a bad value.
+function toPageGradeLevel(value: string | undefined): GradeLevel | undefined {
+  return GRADE_LEVELS.find((g) => g === value) as GradeLevel | undefined;
+}
+
 export function SubjectsPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
@@ -286,7 +298,41 @@ export function SubjectsPage() {
   const [error, setError] = useState<string | null>(null);
 
   const [search, setSearch] = useState("");
-  const [gradeLevel, setGradeLevel] = useState<GradeFilter>(GRADE_LEVELS[0]);
+
+  // Grid filter — purely for browsing "what subjects do I teach". Defaults
+  // to All Grades so every assigned subject is visible immediately; this
+  // used to default to GRADE_LEVELS[0], which silently hid any subject
+  // taught in a different grade level unless you happened to switch the
+  // dropdown yourself.
+  const [gradeFilter, setGradeFilter] = useState<GradeFilter>(ALL_GRADES);
+
+  // Advisory class — a fixed fact about this teacher (their homeroom),
+  // NOT something the subject-grid filter should control. `user` is a
+  // UserProfile union and `gradeLevel`/`section` only exist on
+  // TeacherProfile, so we narrow by role before reading them. `gradeLevel`
+  // is bridged through `toPageGradeLevel` because TeacherProfile's
+  // GradeLevel comes from a different module than this page's GradeLevel;
+  // both fields are optional on TeacherProfile (a teacher might not have
+  // an advisory assigned yet), hence the fallbacks.
+  const advisoryGradeLevel: GradeLevel =
+    toPageGradeLevel(
+      user?.role === "TEACHER" ? (user.gradeLevel as string | undefined) : undefined,
+    ) ?? GRADE_LEVELS[0];
+
+  const advisorySection: string | undefined =
+    user?.role === "TEACHER" ? user.section : undefined;
+
+  // Advisory student COUNT — sourced from the same server-computed stat
+  // the main dashboard uses (TeacherStats.totalStudents from
+  // /api/teacherDashboard/stats), instead of recomputing it locally by
+  // filtering StudentsContext with gradeLevelToId's regex match. That
+  // local approach assumed a grade level's numeric id equals the digits
+  // in its label (e.g. "Grade 5" -> 5), which doesn't hold if
+  // grade_level.id in the DB doesn't match the literal grade number —
+  // and it silently disagreed with the dashboard's own total as a
+  // result. Sourcing both from the same endpoint keeps them in sync by
+  // construction.
+  const [advisoryStudentCount, setAdvisoryStudentCount] = useState(0);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -308,32 +354,29 @@ export function SubjectsPage() {
     fetchSubjects();
   }, [user?.id]);
 
-  const isAllGrades = gradeLevel === ALL_GRADES;
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const fetchStats = async () => {
+      try {
+        const stats = await fetchTeacherStats();
+        // Despite the name, advisoryClassCount is the headcount of
+        // students in this teacher's advisory class, not a count of
+        // classes. totalStudents is across everything the teacher
+        // teaches, not just advisory, so it's the wrong field here.
+        setAdvisoryStudentCount(stats.advisoryClassCount);
+      } catch (err) {
+        console.error("Failed to fetch teacher stats:", err);
+      }
+    };
+
+    fetchStats();
+  }, [user?.id]);
+
+  const isAllGrades = gradeFilter === ALL_GRADES;
   const gradeLevelId = useMemo(
-    () => (isAllGrades ? null : gradeLevelToId(gradeLevel)),
-    [gradeLevel, isAllGrades],
-  );
-
-  // Pairs of "gradeId|section" this teacher is actually assigned to — used
-  // instead of bare section names so sections that share a name across
-  // different grade levels don't get conflated when "All Grades" is active.
-  const assignedGradeSectionPairs = useMemo(
-    () =>
-      new Set(
-        subjects.map((s) => `${gradeLevelToId(s.gradeLevel)}|${s.section}`),
-      ),
-    [subjects],
-  );
-
-  const gradeStudents = useMemo(
-    () =>
-      students.filter((s) => {
-        if (!isAllGrades && s.gradeLevelId !== gradeLevelId) return false;
-        return assignedGradeSectionPairs.has(
-          `${s.gradeLevelId}|${s.section ?? ""}`,
-        );
-      }),
-    [students, gradeLevelId, isAllGrades, assignedGradeSectionPairs],
+    () => (isAllGrades ? null : gradeLevelToId(gradeFilter)),
+    [gradeFilter, isAllGrades],
   );
 
   const filteredSubjects = useMemo(
@@ -393,7 +436,8 @@ export function SubjectsPage() {
           </div>
         </div>
 
-        {/* Advisory banner */}
+        {/* Advisory banner — always your actual advisory class, independent
+            of the subject-grid filter below */}
         <div className="rounded-2xl overflow-hidden shadow-primary bg-maroon-gradient">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 p-6 sm:p-7">
             <div className="flex items-center gap-4 min-w-0">
@@ -405,11 +449,12 @@ export function SubjectsPage() {
                   Your Advisory Class
                 </p>
                 <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white mt-0.5 truncate">
-                  {gradeLevel}
+                  {advisoryGradeLevel}
+                  {advisorySection && ` · ${advisorySection}`}
                 </h2>
                 <p className="text-xs font-medium text-white/70 mt-1">
-                  {gradeStudents.length} student
-                  {gradeStudents.length === 1 ? "" : "s"}
+                  {advisoryStudentCount} student
+                  {advisoryStudentCount === 1 ? "" : "s"}
                 </p>
               </div>
             </div>
@@ -462,8 +507,8 @@ export function SubjectsPage() {
                   Grade Level
                 </span>
                 <Dropdown
-                  value={gradeLevel}
-                  onChange={(v) => setGradeLevel(v as GradeFilter)}
+                  value={gradeFilter}
+                  onChange={(v) => setGradeFilter(v as GradeFilter)}
                   options={GRADE_FILTER_OPTIONS}
                   panelBg={panelBg}
                   panelBorder={panelBorder}
@@ -478,7 +523,7 @@ export function SubjectsPage() {
                 >
                   {isAllGrades
                     ? "No subjects assigned to you yet."
-                    : `No subjects assigned to you for ${gradeLevel} yet.`}
+                    : `No subjects assigned to you for ${gradeFilter} yet.`}
                 </p>
               ) : (
                 <div className="p-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
@@ -494,29 +539,17 @@ export function SubjectsPage() {
                         key={subject.id}
                         className={`group relative rounded-2xl border shadow-card overflow-hidden flex flex-col transition-all hover:-translate-y-0.5 hover:shadow-lg ${panelBg} ${panelBorder}`}
                       >
-                        {/* Banner — maroon-to-gold brand gradient, scooped
-                            bottom-right corner reveals the panel background
-                            beneath it, like a card cut from a single sheet
-                            rather than a stacked block. A thin gold seam
-                            along the bottom marks the transition. */}
                         <div
                           className={`relative h-28 bg-linear-to-br ${theme.gradient} rounded-tl-2xl rounded-tr-2xl rounded-bl-none rounded-br-[42px]`}
                         >
-                          {/* soft abstract fog shapes — warm gold glow instead
-                              of a neutral shadow, to keep the palette on-brand */}
                           <div className="absolute -left-4 -top-6 h-20 w-20 rounded-full bg-white/10 blur-xl" />
                           <div className="absolute right-6 bottom-2 h-14 w-14 rounded-full bg-[#D4AF37]/25 blur-lg" />
-
-                          {/* hairline gold seam under the scoop */}
                           <div className="absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-[#D4AF37]/70 to-transparent" />
 
-                          {/* school year badge */}
                           <span className="absolute top-3 left-3 text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full bg-white/15 text-[#FFFFFF] backdrop-blur-sm">
                             {schoolYear}
                           </span>
 
-                          {/* abstract glass orb, motif keyed to the subject,
-                              rendered in cream-to-maroon with a gold core */}
                           <svg
                             viewBox="0 0 50 50"
                             className="absolute -right-3 top-4 h-16 w-16 drop-shadow-md"
@@ -565,7 +598,6 @@ export function SubjectsPage() {
                           </span>
                         </div>
 
-                        {/* Content panel */}
                         <div className="flex flex-col gap-3 p-5 pt-4 flex-1">
                           <div>
                             <h3 className={`text-sm font-bold truncate ${textPrimary}`}>
@@ -609,7 +641,6 @@ export function SubjectsPage() {
                           </div>
                         </div>
 
-                        {/* gold ring on hover, subtle premium touch */}
                         <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-transparent group-hover:ring-[#D4AF37]/40 transition-all" />
                       </div>
                     );

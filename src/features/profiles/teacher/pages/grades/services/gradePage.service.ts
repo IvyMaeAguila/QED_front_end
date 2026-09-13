@@ -14,10 +14,15 @@ async function handleJsonResponse(res: Response) {
   return data;
 }
 
+
 export interface GradebookSubject {
   subjectSectionId: string;
   subjectId: number;
   subjectName: string;
+  submitted: boolean;
+  submittedByName: string | null;
+  submittedAt: string | null;
+  isOwnAdvisory: boolean;
 }
 
 export interface ExamScore {
@@ -25,12 +30,24 @@ export interface ExamScore {
   max: number;
 }
 
+// SUBMISSION-BASED SYNC: `status` is now the source of truth for how to
+// render a cell, not just `isComplete`/`average`. "not_submitted" means no
+// scores entered/complete yet; "pending" means scores are complete but the
+// subject teacher hasn't hit submit; "submitted" means the average is
+// real and visible, and submittedByName identifies who submitted it.
+//
+// `average` is only ever non-null when status === "submitted" — the
+// backend enforces this (see advisoryGrading.controller.js), so a
+// "pending" cell will never leak a number here even though the grade is
+// technically computed.
+export type GradeSubmissionState = "not_submitted" | "pending" | "submitted";
+
 export interface SubjectGradeCell {
-  st1: ExamScore | null;
-  st2: ExamScore | null;
-  te: ExamScore | null;
-  isComplete: boolean;
+  status: GradeSubmissionState;
   average: number | null;
+  submittedByName: string | null;
+  submittedAt: string | null;
+  isOwnAdvisory: boolean;
 }
 
 export interface GradebookStudent {
@@ -72,4 +89,39 @@ export async function submitClassGrades(gradingPeriodId: string): Promise<void> 
     body: JSON.stringify({ gradingPeriodId }),
   });
   await handleJsonResponse(res);
+}
+
+export interface VisibilityStudent {
+  studentId: string;
+  firstName: string;
+  lastName: string;
+  middleName: string | null;
+  gender: "M" | "F";
+  parentName: string | null;
+  parentContactNumber: string | null;
+  parentEmail: string | null;
+  isVisible: boolean;
+  updatedAt: string | null;
+}
+ 
+export async function fetchGradeVisibility(gradingPeriodId: string): Promise<VisibilityStudent[]> {
+  const res = await authedFetch(`${BASE_URL}/visibility?gradingPeriodId=${gradingPeriodId}`);
+  const json = await handleJsonResponse(res);
+  return json.data.students;
+}
+ 
+export interface SetGradeVisibilityParams {
+  gradingPeriodId: string;
+  visible: boolean;
+  studentIds?: string[];
+  applyToAll?: boolean;
+}
+ 
+export async function setGradeVisibility(params: SetGradeVisibilityParams): Promise<number> {
+  const res = await authedFetch(`${BASE_URL}/visibility`, {
+    method: "POST",
+    body: JSON.stringify(params),
+  });
+  const json = await handleJsonResponse(res);
+  return json.data.updatedCount as number;
 }

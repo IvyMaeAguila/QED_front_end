@@ -1,4 +1,5 @@
-import { Fragment, useMemo } from "react";
+import { Fragment, useEffect, useId, useMemo, useState } from "react";
+import { AlertTriangle, CheckCircle2, Send, Users, X } from "lucide-react";
 import type { RosterStudent } from "./data";
 import {
   formatShortDate,
@@ -7,6 +8,7 @@ import {
   type ScoreMap,
 } from "./types/Grading";
 import { computeInitialGrade, computePS, computeWS } from "./utils/GradeWeights";
+import { submitGrades } from "../services/subjectGrading.service";
 
 const ACCENT = "#6B0000";
 const INCOMPLETE_COLOR = "#CA8A04"; // amber — signals "not finished yet", distinct from a real score
@@ -38,12 +40,22 @@ interface ComponentColumnGroup {
 }
 
 interface AssessmentRecordsSectionProps {
+  // Needed to actually submit grades against the right subject/section.
+  subjectSectionId: string;
   title: string;
   roster: GenderedStudent[];
   items: GradeItem[];
   scores: ScoreMap;
   weights: { ww: number; pt: number; exam: number };
   term: string;
+  // Editing and term selection are owned entirely by the parent page
+  // (SubjectRecordsPage), which already renders the term <select> and the
+  // "Edit Records" / "Done" toggle in its own header. This section used to
+  // render a SECOND term dropdown and a SECOND edit toggle here, both
+  // wired to optional no-op callbacks — two controls doing the same job,
+  // visible in two places at once, and one of them didn't even do
+  // anything. Removed. This section now only consumes `isEditing`/`term`
+  // to decide how to render, it doesn't offer its own way to change them.
   isEditing: boolean;
   onScoreChange: (studentId: string, itemId: string, maxItems: number, rawValue: string) => void;
   darkMode: boolean;
@@ -51,6 +63,17 @@ interface AssessmentRecordsSectionProps {
   panelBorder: string;
   textPrimary: string;
   textMuted: string;
+  // NEW: when this subject *is* the teacher's own advisory class, there is
+  // no separate adviser to send grades to — the teacher IS the adviser —
+  // so the "Submit Grades" control has nothing meaningful to do and is
+  // hidden entirely. When false (subject taught to a class the teacher is
+  // NOT the adviser of), grades get sent to that class's adviser, so the
+  // submit + confirmation flow renders as normal.
+  isOwnAdvisory?: boolean;
+  // Optional display name of the receiving adviser, used only in the
+  // confirmation copy ("send to <adviserName>'s gradesheet"). Falls back
+  // to a generic phrase if not provided.
+  adviserName?: string;
 }
 
 // -----------------------------------------------------------------------
@@ -110,7 +133,54 @@ function columnLabel(item: GradeItem, groupKey: ComponentColumnGroup["key"]) {
   return groupKey === "exams" ? (item.examType as ExamType) : formatShortDate(item.date);
 }
 
+// Shared by both the on-screen row and the pre-submit confirmation preview
+// so the two never drift apart — same weighted scores in, same Initial
+// Grade out, everywhere it's shown.
+function computeStudentGrade(
+  student: GenderedStudent,
+  groups: ComponentColumnGroup[],
+  scores: ScoreMap,
+): { initialGrade: number | null; anyGroupIncomplete: boolean } {
+  const weightedScores: number[] = [];
+  let anyGroupIncomplete = false;
+
+  groups.forEach((group) => {
+    const { total, highestPossible, totalItems, isComplete } = studentTotals(group.items, student.id, scores);
+    const ps = computePS(total, highestPossible);
+    const ws = computeWS(ps, group.weight);
+    if (totalItems > 0 && !isComplete) anyGroupIncomplete = true;
+    if (ws !== null) weightedScores.push(ws);
+  });
+
+  const initialGrade = computeInitialGrade(
+    weightedScores[0] ?? null,
+    weightedScores[1] ?? null,
+    weightedScores[2] ?? null,
+  );
+
+  return { initialGrade, anyGroupIncomplete };
+}
+
+// DepEd-style descriptor bands for the rounded Term (Quarterly) Grade.
+function getRemarksAndDescription(termGrade: number): { remarks: "PASSED" | "FAILED"; description: string } {
+  if (termGrade >= 90) return { remarks: "PASSED", description: "Advancing" };
+  if (termGrade >= 80) return { remarks: "PASSED", description: "Benchmarking" };
+  if (termGrade >= 75) return { remarks: "PASSED", description: "Connecting" };
+  if (termGrade >= 65) return { remarks: "FAILED", description: "Developing" };
+  return { remarks: "FAILED", description: "Emerging" };
+}
+
+interface StudentGradePreview {
+  id: string;
+  name: string;
+  previewGrade: number; // Initial Grade, 2 decimals — matches the "Initial Grade" column
+  termGrade: number;    // rounded whole number — what actually posts to the adviser's sheet
+  remarks: "PASSED" | "FAILED";
+  description: string;
+}
+
 export function AssessmentRecordsSection({
+  subjectSectionId,
   title,
   roster,
   items,
@@ -124,7 +194,10 @@ export function AssessmentRecordsSection({
   panelBorder,
   textPrimary,
   textMuted,
+  isOwnAdvisory = false,
+  adviserName,
 }: AssessmentRecordsSectionProps) {
+  const titleId = useId();
   const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
   const cellInputClasses = `w-14 rounded-md border px-1 py-0.5 text-center text-xs font-bold outline-none ${panelBorder} ${
     darkMode ? "bg-[#0B1120] text-white" : "bg-white text-[#111827]"
@@ -145,6 +218,99 @@ export function AssessmentRecordsSection({
     const female = roster.filter((s) => s.gender === "F");
     return { male, female };
   }, [roster]);
+
+  // Grades can only be submitted once every group that actually has items
+  // is fully scored for every enrolled student — otherwise we'd be
+  // submitting Initial Grades that are silently based on 0s for ungraded
+  // work.
+  const isFullyGraded = useMemo(() => {
+    if (roster.length === 0) return false;
+    return roster.every((student) =>
+      groups.every((group) => {
+        if (group.items.length === 0) return true;
+        return studentTotals(group.items, student.id, scores).isComplete;
+      }),
+    );
+  }, [roster, groups, scores]);
+
+  // Builds the specific, human-readable list of what's still missing, so
+  // the snackbar can say more than just "incomplete" — e.g. call out that
+  // the Summative Tests/Exams column specifically isn't done yet, which is
+  // the single most common reason submission gets blocked.
+  const incompleteReasons = useMemo(() => {
+    const reasons: string[] = [];
+    groups.forEach((group) => {
+      if (group.items.length === 0) return;
+      const anyMissing = roster.some((student) => !studentTotals(group.items, student.id, scores).isComplete);
+      if (anyMissing) reasons.push(group.label);
+    });
+    return reasons;
+  }, [groups, roster, scores]);
+
+  // Per-student figures shown in the confirmation modal right before the
+  // actual submit call fires — the teacher gets one last look at exactly
+  // what will land on the adviser's gradesheet.
+  const gradePreviews: StudentGradePreview[] = useMemo(() => {
+    return roster.map((student) => {
+      const { initialGrade } = computeStudentGrade(student, groups, scores);
+      const previewGrade = initialGrade ?? 0;
+      const termGrade = Math.round(previewGrade);
+      const { remarks, description } = getRemarksAndDescription(termGrade);
+      return { id: student.id, name: student.name, previewGrade, termGrade, remarks, description };
+    });
+  }, [roster, groups, scores]);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [justSubmitted, setJustSubmitted] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [snackbar, setSnackbar] = useState<{ type: "error" | "success"; message: string } | null>(null);
+
+  // Auto-dismiss the snackbar so it doesn't linger indefinitely.
+  useEffect(() => {
+    if (!snackbar) return;
+    const timeout = window.setTimeout(() => setSnackbar(null), 5000);
+    return () => window.clearTimeout(timeout);
+  }, [snackbar]);
+
+  // Clicking "Submit Grades" no longer just no-ops behind a disabled
+  // state — it actively validates and tells the teacher *why* it can't
+  // proceed yet (snackbar), or opens the confirmation preview when it can.
+  function handleSubmitClick() {
+    if (isSubmitting) return;
+    if (!isFullyGraded) {
+      const detail =
+        incompleteReasons.length > 0
+          ? `Missing scores in: ${incompleteReasons.join(", ")}.`
+          : "Some students still have ungraded items.";
+      setSnackbar({
+        type: "error",
+        message: `Cannot submit — all grades must be complete first. ${detail}`,
+      });
+      return;
+    }
+    setSubmitError(null);
+    setShowConfirmModal(true);
+  }
+
+  async function handleConfirmSubmit() {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    setSubmitError(null);
+    try {
+      await submitGrades(subjectSectionId, term);
+      setShowConfirmModal(false);
+      setJustSubmitted(true);
+      setSnackbar({ type: "success", message: "Grades submitted to the adviser's gradesheet." });
+      window.setTimeout(() => setJustSubmitted(false), 3000);
+    } catch (err) {
+      console.error("Failed to submit grades:", err);
+      setSubmitError("Failed to submit grades. Please try again.");
+      setSnackbar({ type: "error", message: "Failed to submit grades. Please try again." });
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   const columnCount = 1 + groups.reduce((sum, g) => sum + g.items.length + 3, 0) + 1;
 
@@ -248,7 +414,59 @@ export function AssessmentRecordsSection({
   }
 
   return (
-    <section className={cardClasses} aria-label={title}>
+    <section className={cardClasses} aria-labelledby={titleId}>
+      {/* Header: title on its own line, then a single control row. Term
+          selection and edit mode live only in the parent page's header now
+          — this row just reflects context (student count) and, when this
+          subject isn't the teacher's own advisory class, offers the one
+          action that's actually this section's own: submitting the grades
+          computed from the table below to that class's adviser. */}
+      <div className={`border-b ${panelBorder} ${darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}`}>
+        <div className="px-4 pt-4">
+          <h2 id={titleId} className={`text-sm font-black uppercase tracking-wide ${textPrimary}`}>
+            {title}
+          </h2>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <div
+              className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 ${panelBorder} ${
+                darkMode ? "bg-white/5" : "bg-white"
+              }`}
+            >
+              <Users className="h-3.5 w-3.5" style={{ color: ACCENT }} />
+              <span className={`text-xs font-black tabular-nums ${textPrimary}`}>{roster.length}</span>
+              <span className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>
+                {roster.length === 1 ? "Student" : "Students"}
+              </span>
+            </div>
+
+            {justSubmitted && (
+              <span className="inline-flex items-center gap-1 text-xs font-bold" style={{ color: "#16A34A" }}>
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                Grades submitted
+              </span>
+            )}
+          </div>
+
+          {/* Own-advisory subjects have no separate adviser to send to, so
+              the submit control simply isn't rendered here. */}
+          {!isOwnAdvisory && (
+            <button
+              type="button"
+              onClick={handleSubmitClick}
+              disabled={isSubmitting}
+              title={isSubmitting ? "Submitting…" : "Submit Grades"}
+              className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-maroon-gradient px-4 text-xs font-bold uppercase tracking-wide text-white shadow-primary transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Send className="h-3.5 w-3.5" />
+              {isSubmitting ? "Submitting…" : "Submit Grades"}
+            </button>
+          )}
+        </div>
+      </div>
+
       <div className="overflow-x-auto">
         <table className="w-full min-w-max text-xs border-collapse">
           <thead>
@@ -356,6 +574,127 @@ export function AssessmentRecordsSection({
         <p className={`px-5 py-6 text-center text-sm font-semibold ${textMuted}`}>
           No Written Works, Performance Task, or Exam items recorded yet for this term.
         </p>
+      )}
+
+      {/* Confirmation modal — last look before grades leave this page and
+          land on the adviser's gradesheet. Only reachable once every
+          component is fully scored (handleSubmitClick already gates that). */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div
+            className={`flex max-h-[85vh] w-full max-w-2xl flex-col rounded-2xl border shadow-xl ${panelBorder} ${
+              darkMode ? "bg-[#111827]" : "bg-white"
+            }`}
+          >
+            <div className={`flex items-center justify-between border-b px-5 py-4 ${panelBorder}`}>
+              <div>
+                <h3 className={`text-sm font-black uppercase tracking-wide ${textPrimary}`}>Confirm Submission</h3>
+                <p className={`mt-1 text-xs font-semibold ${textMuted}`}>
+                  This sends {roster.length} {roster.length === 1 ? "grade" : "grades"} to{" "}
+                  {adviserName ? `${adviserName}'s` : "the adviser's"} gradesheet. Review before confirming.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowConfirmModal(false)}
+                className={`rounded-lg p-1.5 ${darkMode ? "hover:bg-white/10" : "hover:bg-black/5"}`}
+                aria-label="Close"
+              >
+                <X className={`h-4 w-4 ${textMuted}`} />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto px-5 py-3">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className={`border-b ${panelBorder} ${textMuted}`}>
+                    <th className="py-2 text-left font-black uppercase">Student</th>
+                    <th className="py-2 text-center font-black uppercase">Preview Grade</th>
+                    <th className="py-2 text-center font-black uppercase">Term Grade</th>
+                    <th className="py-2 text-center font-black uppercase">Remarks</th>
+                    <th className="py-2 text-left font-black uppercase">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {gradePreviews.map((preview) => (
+                    <tr key={preview.id} className={`border-b ${panelBorder}`}>
+                      <td className={`py-2 font-bold ${textPrimary}`}>{preview.name}</td>
+                      <td className="py-2 text-center font-bold tabular-nums" style={{ color: ACCENT }}>
+                        {preview.previewGrade.toFixed(2)}
+                      </td>
+                      <td className="py-2 text-center font-black tabular-nums" style={{ color: ACCENT }}>
+                        {preview.termGrade}
+                      </td>
+                      <td className="py-2 text-center">
+                        <span
+                          className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-black uppercase"
+                          style={{
+                            backgroundColor: preview.remarks === "PASSED" ? "#DCFCE7" : "#FEE2E2",
+                            color: preview.remarks === "PASSED" ? "#16A34A" : "#DC2626",
+                          }}
+                        >
+                          {preview.remarks}
+                        </span>
+                      </td>
+                      <td className={`py-2 font-semibold ${textMuted}`}>{preview.description}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {submitError && (
+              <div className="px-5 pb-1">
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-red-600">
+                  <AlertTriangle className="h-3.5 w-3.5" />
+                  {submitError}
+                </span>
+              </div>
+            )}
+
+            <div className={`flex items-center justify-end gap-2 border-t px-5 py-4 ${panelBorder}`}>
+              <button
+                type="button"
+                onClick={() => setShowConfirmModal(false)}
+                disabled={isSubmitting}
+                className={`h-9 rounded-xl border px-4 text-xs font-bold uppercase tracking-wide disabled:cursor-not-allowed disabled:opacity-50 ${panelBorder} ${textPrimary}`}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmSubmit}
+                disabled={isSubmitting}
+                className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-maroon-gradient px-4 text-xs font-bold uppercase tracking-wide text-white shadow-primary transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <Send className="h-3.5 w-3.5" />
+                {isSubmitting ? "Submitting…" : "Confirm & Submit"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Snackbar — surfaces both the "grades incomplete" block and any
+          submission failure/success, without needing the button itself
+          to stay permanently disabled. */}
+      {snackbar && (
+        <div className="fixed bottom-5 left-1/2 z-50 w-full max-w-md -translate-x-1/2 px-4">
+          <div
+            className="flex items-start gap-2 rounded-xl px-4 py-3 text-xs font-bold text-white shadow-xl"
+            style={{ backgroundColor: snackbar.type === "error" ? "#DC2626" : "#16A34A" }}
+          >
+            {snackbar.type === "error" ? (
+              <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+            ) : (
+              <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+            )}
+            <span className="flex-1">{snackbar.message}</span>
+            <button type="button" onClick={() => setSnackbar(null)} aria-label="Dismiss">
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </div>
       )}
     </section>
   );

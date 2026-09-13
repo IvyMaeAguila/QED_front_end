@@ -43,9 +43,19 @@ export function SubjectDetailPage() {
 
   const [subjectName, setSubjectName] = useState<string>("");
   const [subjectCode, setSubjectCode] = useState<string>("");
+
   const [subjectCategory, setSubjectCategory] = useState<string | null>(null);
   const [gradeLevel, setGradeLevel] = useState<string>("");
   const [roster, setRoster] = useState<RosterStudent[]>([]);
+
+  // Whether the logged-in teacher is this section's own adviser (drives
+  // hiding "Submit Grades" on AssessmentRecordsSection), plus that
+  // section's adviser's display name for the confirm-submit copy when
+  // it's false. Both come from the backend via fetchSubjectSectionInfo —
+  // the frontend has no independent way to know this.
+  const [isOwnAdvisory, setIsOwnAdvisory] = useState(false);
+  const [adviserName, setAdviserName] = useState<string | null>(null);
+
   const [items, setItems] = useState<GradeItem[]>([]);
   const [scores, setScores] = useState<ScoreMap>({});
   const [holistic, setHolistic] = useState<HolisticMap>({});
@@ -103,6 +113,8 @@ export function SubjectDetailPage() {
       setHolisticWeekStartDate(cached.holisticWeekStartDate);
       setTerms(cached.terms);
       setSelectedTerm(cached.selectedTerm);
+      setIsOwnAdvisory(cached.isOwnAdvisory);
+      setAdviserName(cached.adviserName);
       setLoading(false);
       setError(null);
       return () => {
@@ -143,12 +155,16 @@ export function SubjectDetailPage() {
       const nextSubjectCategory = inferSubjectCategory(info.subjectName);
       const nextGradeLevel = info.gradeLevel;
       const nextRoster = info.roster;
+      const nextIsOwnAdvisory = info.isOwnAdvisory;
+      const nextAdviserName = info.adviserName;
 
       setSubjectName(nextSubjectName);
       setSubjectCode(nextSubjectCode);
       setSubjectCategory(nextSubjectCategory);
       setGradeLevel(nextGradeLevel);
       setRoster(nextRoster);
+      setIsOwnAdvisory(nextIsOwnAdvisory);
+      setAdviserName(nextAdviserName);
 
       let nextTerms: GradingPeriod[] = [];
       let nextSelectedTerm = "";
@@ -206,6 +222,8 @@ export function SubjectDetailPage() {
         holisticWeekStartDate: nextHolisticWeekStartDate,
         terms: nextTerms,
         selectedTerm: nextSelectedTerm,
+        isOwnAdvisory: nextIsOwnAdvisory,
+        adviserName: nextAdviserName,
       });
 
       setLoading(false);
@@ -325,6 +343,8 @@ export function SubjectDetailPage() {
           holistic,
           terms,
           selectedTerm,
+          isOwnAdvisory,
+          adviserName,
         },
       });
     });
