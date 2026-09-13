@@ -11,10 +11,6 @@ import {
 import { fetchAdvisoryAttendance, saveAdvisoryAttendance } from "./services/attendance.service.ts";
 import { StudentAttendanceSummaryModal } from "./StudentAttendanceSummaryModal";
 
-// Generic attendance calendar keyed by sectionId (the advisory section) —
-// no notion of "subject" here at all. Editing behavior (click a cell,
-// cycles through statuses, saves immediately) matches the old
-// per-subject AttendanceRecordsSection this replaces.
 
 const ACCENT = "#6B0000";
 const WEEKDAY_LETTERS = ["S", "M", "T", "W", "T", "F", "S"];
@@ -28,7 +24,6 @@ interface AttendanceCalendarSectionProps {
   panelBorder: string;
   textPrimary: string;
   textMuted: string;
-  /** If false, cells render but cannot be clicked/edited. Defaults to true. */
   editable?: boolean;
 }
 
@@ -51,8 +46,6 @@ function yearMonth(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 }
 
-// Picks the month to show by default: today's month if it falls within
-// the term, otherwise the term's start month (e.g. for past/future terms).
 function defaultViewDate(term: GradingPeriod | undefined): Date {
   if (!term) return new Date();
   const today = new Date();
@@ -75,9 +68,6 @@ function enumerateDates(startISO: string, endISO: string): string[] {
   return out;
 }
 
-// Tolerant of case differences and full-word values ("Female"/"female")
-// rather than requiring an exact "F" match, since the raw DB value isn't
-// guaranteed to be normalized.
 function isFemale(student: RosterStudent): boolean {
   const g = String((student as { gender?: string }).gender ?? "").trim().toUpperCase();
   return g === "F" || g === "FEMALE";
@@ -101,7 +91,7 @@ export function AttendanceCalendarSection({
     const t = terms.find((t) => t.id === selectedTermId) ?? terms[0];
     return defaultViewDate(t);
   });
-  // Which student's "View Summary" modal is open, if any.
+
   const [summaryStudent, setSummaryStudent] = useState<RosterStudent | null>(null);
 
   const term = terms.find((t) => t.id === selectedTermId) ?? terms[0];
@@ -133,11 +123,6 @@ export function AttendanceCalendarSection({
     const summary: Record<string, { present: number; total: number }> = {};
     if (!term) return summary;
 
-    // "Total" is the number of distinct dates within the term that the
-    // teacher has actually marked attendance for this section — not a
-    // calendar/weekday calculation. Marking more students (or re-marking)
-    // on a date already counted doesn't add another day; only a date
-    // nobody has touched yet increments the total.
     const markedDates = new Set<string>();
     for (const iso of termDates) {
       const hasMark = roster.some((student) => attendance[student.id]?.[iso]);

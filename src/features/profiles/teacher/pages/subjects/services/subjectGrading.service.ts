@@ -1,8 +1,6 @@
 import { API_CONFIG } from '../../../../../../config/api.config';
 
 import type {
-  AttendanceMap,
-  AttendanceStatus,
   GradeItem,
   GradingPeriod,
   HolisticAxisKey,
@@ -68,30 +66,12 @@ export async function fetchSubjectSectionInfo(subjectSectionId: string) {
     gradeLevel: string;
     sectionName: string;
     roster: { id: string; name: string; gender: "M" | "F" }[];
+    isOwnAdvisory: boolean;
+    adviserName: string | null;
   };
 }
 
-// ---------- Attendance ----------
-export async function fetchAttendance(
-  subjectSectionId: string
-): Promise<{ data: AttendanceMap; presentTotals: Record<string, number> }> {
-  const res = await authedFetch(`${BASE_URL}/${subjectSectionId}/attendance`);
-  const json = await handleJsonResponse(res);
-  return { data: json.data, presentTotals: json.presentTotals ?? {} };
-}
 
-export async function saveAttendance(
-  subjectSectionId: string,
-  studentId: string,
-  date: string,
-  status: AttendanceStatus
-): Promise<void> {
-  const res = await authedFetch(`${BASE_URL}/${subjectSectionId}/attendance`, {
-    method: "PUT",
-    body: JSON.stringify({ studentId, date, status }),
-  });
-  await handleJsonResponse(res);
-}
 
 // ---------- Items (Written Works / Performance Task / Exams) ----------
 export async function fetchItems(

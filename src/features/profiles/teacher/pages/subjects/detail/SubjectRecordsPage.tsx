@@ -1,15 +1,32 @@
 import { useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigate, useOutletContext, useParams } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  useOutletContext,
+  useParams,
+} from "react-router-dom";
 import { ArrowLeft, Check, Pencil } from "lucide-react";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
 import type { RosterStudent } from "./data";
-import type { AttendanceMap, GradeItem, GradingPeriod, HolisticMap, ScoreMap } from "./types/Grading";
+import type {
+  GradeItem,
+  GradingPeriod,
+  HolisticMap,
+  ScoreMap,
+} from "./types/Grading";
 import type { SubjectDetailTab } from "./components/TabNav";
-import { AttendanceRecordsSection } from "./AttendanceRecordsPage";
 import { AssessmentRecordsSection } from "./AssessmentRecordsPage";
 import { HolisticRecordsSection } from "./HolisticRecordsPage";
-import { fetchItems, fetchScores, saveScore } from "../services/subjectGrading.service";
-import { getComponentWeights, inferSubjectCategory, type SubjectCategory } from "./utils/GradeWeights";
+import {
+  fetchItems,
+  fetchScores,
+  saveScore,
+} from "../services/subjectGrading.service";
+import {
+  getComponentWeights,
+  inferSubjectCategory,
+  type SubjectCategory,
+} from "./utils/GradeWeights";
 
 const ACCENT = "#6B0000";
 
@@ -23,14 +40,14 @@ interface RecordsLocationState {
   roster: GenderedStudent[];
   items: GradeItem[];
   scores: ScoreMap;
-  attendance: AttendanceMap;
   holistic: HolisticMap;
   terms: GradingPeriod[];
   selectedTerm: string;
+  isOwnAdvisory?: boolean;
+  adviserName?: string;
 }
 
 const RECORDS_TITLES: Record<SubjectDetailTab, string> = {
-  attendance: "Attendance Records",
   holistic: "Holistic Assessment Records",
   writtenWorks: "Class Record",
   performanceTask: "Class Record",
@@ -38,7 +55,8 @@ const RECORDS_TITLES: Record<SubjectDetailTab, string> = {
 } as Record<SubjectDetailTab, string>;
 
 export function SubjectRecordsPage() {
-  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
+  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
+    useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const location = useLocation();
   const { subjectId } = useParams<{ subjectId: string }>();
@@ -62,7 +80,8 @@ export function SubjectRecordsPage() {
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const tab = state?.tab;
-  const isAssessment = tab === "writtenWorks" || tab === "performanceTask" || tab === "exams";
+  const isAssessment =
+    tab === "writtenWorks" || tab === "performanceTask" || tab === "exams";
 
   useEffect(() => {
     if (!subjectId || !isAssessment || !tab) return;
@@ -90,7 +109,9 @@ export function SubjectRecordsPage() {
       .catch((err) => {
         if (cancelled) return;
         console.error("Failed to load records:", err);
-        setLoadError("Could not load the latest records. Showing last known data.");
+        setLoadError(
+          "Could not load the latest records. Showing last known data.",
+        );
       })
       .finally(() => {
         if (!cancelled) setIsLoadingRecords(false);
@@ -103,26 +124,35 @@ export function SubjectRecordsPage() {
 
   const weights = useMemo(() => {
     if (!state) return { ww: 30, pt: 50, exam: 20 };
-    const category: SubjectCategory = (state.subjectCategory as SubjectCategory) || inferSubjectCategory(state.subjectName);
+    const category: SubjectCategory =
+      (state.subjectCategory as SubjectCategory) ||
+      inferSubjectCategory(state.subjectName);
     return getComponentWeights(state.gradeLevel, category);
   }, [state]);
-
 
   const selectedTermNumber = useMemo(() => {
     if (!state) return undefined;
     return state.terms.find((t) => t.id === term)?.termNumber;
   }, [state, term]);
 
-
   const selectedTermStartDate = useMemo(() => {
     if (!state) return undefined;
     return state.terms.find((t) => t.id === term)?.startDate;
   }, [state, term]);
 
-  function handleScoreChange(studentId: string, itemId: string, maxItems: number, rawValue: string) {
+  function handleScoreChange(
+    studentId: string,
+    itemId: string,
+    maxItems: number,
+    rawValue: string,
+  ) {
     const trimmed = rawValue.trim();
     const value = trimmed === "" ? null : Number(trimmed);
-    if (value !== null && (Number.isNaN(value) || value < 0 || value > maxItems)) return;
+    if (
+      value !== null &&
+      (Number.isNaN(value) || value < 0 || value > maxItems)
+    )
+      return;
 
     // Optimistic local update so typing feels instant.
     setLocalScores((prev) => {
@@ -166,15 +196,22 @@ export function SubjectRecordsPage() {
         <div className="flex items-start gap-3">
           {backButton}
           <div>
-            <p className="text-xs font-extrabold uppercase tracking-[0.18em]" style={{ color: ACCENT }}>
+            <p
+              className="text-xs font-extrabold uppercase tracking-[0.18em]"
+              style={{ color: ACCENT }}
+            >
               Subject Records
             </p>
-            <h1 className={`mt-1 text-3xl font-black ${textPrimary}`}>Records</h1>
+            <h1 className={`mt-1 text-3xl font-black ${textPrimary}`}>
+              Records
+            </h1>
           </div>
         </div>
         <div className={`${cardClasses} px-5 py-16 text-center`}>
           <p className={`font-bold ${textPrimary}`}>No records data</p>
-          <p className={`mt-1 text-sm ${textMuted}`}>Open this page from a subject tab to view its records.</p>
+          <p className={`mt-1 text-sm ${textMuted}`}>
+            Open this page from a subject tab to view its records.
+          </p>
         </div>
       </div>
     );
@@ -189,24 +226,31 @@ export function SubjectRecordsPage() {
         <div className="flex items-start gap-3">
           {backButton}
           <div>
-            <p className="text-xs font-extrabold uppercase tracking-[0.18em]" style={{ color: ACCENT }}>
+            <p
+              className="text-xs font-extrabold uppercase tracking-[0.18em]"
+              style={{ color: ACCENT }}
+            >
               {subjectName}
             </p>
-            <h1 className={`mt-1 text-3xl font-black tracking-tight ${textPrimary}`}>{title}</h1>
+            <h1
+              className={`mt-1 text-3xl font-black tracking-tight ${textPrimary}`}
+            >
+              {title}
+            </h1>
             <p className={`mt-1 text-sm font-medium ${textMuted}`}>
-              {tab === "attendance"
-                ? "Click a cell to edit — changes save immediately."
-                : tab === "holistic"
-                  ? "Read-only history. Enter this week's ratings from the Holistic tab."
-                  : isEditing
-                    ? "Edit mode — changes save immediately. Click Done when finished."
-                    : "A complete record for all enrolled students."}
+              {tab === "holistic"
+                ? "Read-only history. Enter this week's ratings from the Holistic tab."
+                : isEditing
+                  ? "Edit mode — changes save immediately. Click Done when finished."
+                  : "A complete record for all enrolled students."}
             </p>
-            {loadError && <p className="mt-1 text-xs font-bold text-red-600">{loadError}</p>}
+            {loadError && (
+              <p className="mt-1 text-xs font-bold text-red-600">{loadError}</p>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-2">
-          {tab !== "attendance" && terms.length > 0 && (
+          {terms.length > 0 && (
             <select
               value={term}
               onChange={(e) => setTerm(e.target.value)}
@@ -236,24 +280,14 @@ export function SubjectRecordsPage() {
               {isEditing ? "Done" : "Edit Records"}
             </button>
           )}
-          <span className="w-fit rounded-xl px-3 py-2 text-xs font-extrabold" style={{ backgroundColor: "#F8EDEE", color: ACCENT }}>
+          <span
+            className="w-fit rounded-xl px-3 py-2 text-xs font-extrabold"
+            style={{ backgroundColor: "#F8EDEE", color: ACCENT }}
+          >
             {roster.length} student{roster.length === 1 ? "" : "s"}
           </span>
         </div>
       </div>
-
-      {tab === "attendance" && subjectId && (
-        <AttendanceRecordsSection
-          subjectSectionId={subjectId}
-          roster={roster}
-          terms={terms}
-          darkMode={darkMode}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-        />
-      )}
 
       {isAssessment && !hasLoadedOnce && isLoadingRecords && (
         <div className={`${cardClasses} px-5 py-16 text-center`}>
@@ -261,8 +295,9 @@ export function SubjectRecordsPage() {
         </div>
       )}
 
-      {isAssessment && hasLoadedOnce && (
+      {isAssessment && hasLoadedOnce && subjectId && (
         <AssessmentRecordsSection
+          subjectSectionId={subjectId}
           title={title}
           roster={roster}
           items={items ?? []}
@@ -276,6 +311,8 @@ export function SubjectRecordsPage() {
           panelBorder={panelBorder}
           textPrimary={textPrimary}
           textMuted={textMuted}
+          isOwnAdvisory={state.isOwnAdvisory}
+          adviserName={state.adviserName}
         />
       )}
 

@@ -1,5 +1,4 @@
 import type {
-  AttendanceMap,
   GradeItem,
   GradingPeriod,
   HolisticMap,
@@ -19,6 +18,14 @@ export interface CachedSubjectDetail {
   holisticWeekStartDate: string;
   terms: GradingPeriod[];
   selectedTerm: string;
+  // Whether the logged-in teacher is this section's own adviser. Comes
+  // straight from fetchSubjectSectionInfo (backend-derived), cached here
+  // alongside everything else so a cache hit doesn't lose it and cause
+  // the Submit Grades button to flash back on for advisory subjects.
+  isOwnAdvisory: boolean;
+  // Display name of this section's adviser, used only in the confirm-
+  // submit copy when isOwnAdvisory is false. Null if none is assigned.
+  adviserName: string | null;
   cachedAt: number;
 }
 
