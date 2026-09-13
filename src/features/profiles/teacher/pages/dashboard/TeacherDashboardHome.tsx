@@ -5,6 +5,7 @@ import {
   fetchDashboardSummary,
   fetchTeacherStats,
   fetchAttendanceSummary,
+  fetchUpcomingEvents,
   type DashboardSummary,
   type TeacherStats,
   type AttendanceSummary,
@@ -17,8 +18,8 @@ import { TodayAttendance } from "./components/TodayAttendance";
 import { MiniCalendar } from "./components/MiniCalendar";
 import { TodayAgenda } from "./components/TodayAgenda";
 import { UpcomingEvents } from "./components/UpcomingEvents";
+import type { EventItem } from "./components/UpcomingEvents";
 import {
-  TEACHER_EVENTS,
   TEACHER_AGENDA,
 } from "./data/TeacherDashboardData";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
@@ -31,6 +32,7 @@ export function TeacherDashboardHome() {
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [statsData, setStatsData] = useState<TeacherStats | null>(null);
   const [attendance, setAttendance] = useState<AttendanceSummary | null>(null);
+  const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -38,11 +40,13 @@ export function TeacherDashboardHome() {
       fetchDashboardSummary(),
       fetchTeacherStats(),
       fetchAttendanceSummary(),
+      fetchUpcomingEvents(),
     ])
-      .then(([summaryData, stats, attendanceData]) => {
+      .then(([summaryData, stats, attendanceData, eventsData]) => {
         setSummary(summaryData);
         setStatsData(stats);
         setAttendance(attendanceData);
+        setEvents(eventsData);
         setLoading(false);
       })
       .catch((err) => {
@@ -225,7 +229,7 @@ export function TeacherDashboardHome() {
           darkMode={darkMode}
         />
         <UpcomingEvents
-          events={TEACHER_EVENTS}
+          events={events}
           panelBg={panelBg}
           panelBorder={panelBorder}
           textPrimary={textPrimary}

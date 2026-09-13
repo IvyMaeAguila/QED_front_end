@@ -7,7 +7,7 @@ import WelcomeBanner from "../dashboard/components/WelcomeBanner";
 import OnboardingCarousel from "../dashboard/components/OnboadingCarousel";
 import { useParentDashboard } from "./context/ParentDashboardContext";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
-import { useAuth } from "../../../../auth/context/AuthContext"; // adjust path kung iba sa project mo
+import { useAuth } from "../../../../auth/context/authContext"; // adjust path kung iba sa project mo
 
 const TODAY = { day: 8, month: "August", year: 2026 };
 
@@ -16,8 +16,14 @@ interface ParentOutletContext extends AdminThemeContext {
 }
 
 export default function ParentDashboardHome() {
-  const { darkMode, panelBg, panelBorder, textPrimary, textMuted, openLinkModal } =
-    useOutletContext<ParentOutletContext>();
+  const {
+    darkMode,
+    panelBg,
+    panelBorder,
+    textPrimary,
+    textMuted,
+    openLinkModal,
+  } = useOutletContext<ParentOutletContext>();
   const navigate = useNavigate();
 
   const { students, dailyUpdates, events, viewMode, setViewMode } =
@@ -55,11 +61,7 @@ export default function ParentDashboardHome() {
       </div>
 
       <div className="flex flex-col gap-5">
-        <TodayDateCard
-          {...TODAY}
-          panelBg={panelBg}
-          textMuted={textMuted}
-        />
+        <TodayDateCard {...TODAY} panelBg={panelBg} textMuted={textMuted} />
         <DailyUpdateCard
           updates={dailyUpdates}
           panelBg={panelBg}

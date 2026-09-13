@@ -13,7 +13,7 @@ import { AdminTopTabs } from "./components/AdminTopTabs";
 import { SubjectFilters } from "./components/SubjectFilters";
 import { GradeLevelTabs } from "./components/GradeLevelTabs";
 import { SubjectCard } from "./components/SubjectCard";
-// import { EditSubjectModal } from "./components/EditSubjectModal";
+import { EditSubjectModal } from "./components/EditSubjectModal";
 import { AssignTeacherModal } from "./components/AssignTeacherModal";
 import { AddSubjectModal } from "./components/AddSubjectModal";
 import { ManageSectionsModal } from "./components/ManageSectionsModal";
@@ -22,9 +22,8 @@ import { useSettings } from "../settings/context/SettingsContext";
 import {
   addSubject as addSubjectApi,
   toggleSubjectStatus as toggleSubjectStatusApi,
-  // saveSubjectAssignment,
-  // updateSubjectAssignment,
-  // assignTeacherToSubject,
+  updateSubjectAssignment,
+  assignTeacherToSubject,
 } from "./services/subject.service";
 import { GradeLevelsProvider } from "./context/gradeLevelsContext";
 import { SubjectsCatalogProvider } from "./context/SubjectsCatalogContext";
@@ -32,6 +31,7 @@ import {
   SubjectSectionsProvider,
   useSubjectSections,
 } from "./context/SubjectSectionsContext";
+import { useToast } from "../../../../../shared/context/ToastContext";
 
 export function ManageSubjectsPage() {
   return (
@@ -84,6 +84,7 @@ function ManageSubjectsPageContent() {
 
   const [savingAssign, setSavingAssign] = useState(false);
   const [assignError, setAssignError] = useState<string | null>(null);
+    const { showToast } = useToast();
 
   useEffect(() => {
     void loadSubjectsForGrade(activeGrade);
@@ -123,6 +124,7 @@ function ManageSubjectsPageContent() {
       const row = await addSubjectApi({
         gradeLevelId: GRADE_LEVEL_IDS[newSubject.gradeLevel],
         subjectName: newSubject.name,
+        isGraded: newSubject.isGraded,
         schoolYear: newSubject.schoolYear,
       });
 
@@ -134,66 +136,45 @@ function ManageSubjectsPageContent() {
       });
       setActiveGrade(newSubject.gradeLevel);
       setAddingSubject(false);
+      showToast("Subject Added Successfully!", "success");
     } catch (err) {
       console.error("Failed to add subject:", err);
       setAddSubjectError(
         err instanceof Error ? err.message : "Failed to add subject.",
+      );
+      showToast(
+        err instanceof Error
+          ? err.message
+          : "Failed to add subject.",
+        "error",
       );
     } finally {
       setSavingSubject(false);
     }
   }
 
-  // async function saveEditedSubject(
-  //   subject: Subject,
-  //   updates: Partial<Subject>,
-  // ) {
-  //   setSavingEdit(true);
-  //   setEditSubjectError(null);
-  //   try {
-  //     await updateSubjectAssignment(subject.id, {
-  //       gradeLevelId: GRADE_LEVEL_IDS[subject.gradeLevel],
-  //       subjectName: updates.name ?? subject.name,
-  //       sectionName: updates.section ?? subject.section,
-  //       teacherId: updates.teacherId ?? subject.teacherId,
-  //       schoolYear: updates.schoolYear ?? subject.schoolYear,
-  //       status: updates.status ?? subject.status,
-  //     });
-  //     updateLocalSubject(subject.id, updates);
-  //     setEditingSubject(null);
-  //   } catch (err) {
-  //     console.error("Failed to update subject:", err);
-  //     setEditSubjectError(
-  //       err instanceof Error ? err.message : "Failed to update subject.",
-  //     );
-  //   } finally {
-  //     setSavingEdit(false);
-  //   }
-  // }
+    async function saveEditedSubject(
+    subject: Subject,
+    updates: Partial<Subject>,
+  ) {
+    setSavingEdit(true);
+    setEditSubjectError(null);
+    try {
+      const isGraded = updates.isGraded ?? subject.isGraded;
+      await updateSubjectAssignment(subject.id, { isGraded });
+      updateLocalSubject(subject.id, { isGraded });
+      setEditingSubject(null);
+    } catch (err) {
+      console.error("Failed to update subject:", err);
+      setEditSubjectError(
+        err instanceof Error ? err.message : "Failed to update subject.",
+      );
+    } finally {
+      setSavingEdit(false);
+    }
+  }
 
-  // async function saveAssignedTeacher(
-  //   subject: Subject,
-  //   updates: Partial<Subject>,
-  // ) {
-  //   setSavingAssign(true);
-  //   setAssignError(null);
-  //   try {
-  //     await assignTeacherToSubject(subject.id, {
-  //       gradeLevelId: GRADE_LEVEL_IDS[subject.gradeLevel],
-  //       sectionName: updates.section ?? subject.section,
-  //       teacherId: updates.teacherId ?? subject.teacherId,
-  //     });
-  //     updateLocalSubject(subject.id, updates);
-  //     setAssigningSubject(null);
-  //   } catch (err) {
-  //     console.error("Failed to assign teacher:", err);
-  //     setAssignError(
-  //       err instanceof Error ? err.message : "Failed to assign teacher.",
-  //     );
-  //   } finally {
-  //     setSavingAssign(false);
-  //   }
-  // }
+
 
   return (
     <div className="space-y-6 pb-12">
@@ -272,7 +253,7 @@ function ManageSubjectsPageContent() {
               key={subject.id}
               subject={subject}
               {...theme}
-              // onEdit={() => setEditingSubject(subject)}
+              onEdit={() => setEditingSubject(subject)}
               onAssign={() => setAssigningSubject(subject)}
               onToggleStatus={() => toggleStatus(subject)}
             />
@@ -280,7 +261,7 @@ function ManageSubjectsPageContent() {
         </div>
       )}
 
-      {/* {editingSubject && (
+      {editingSubject && (
         <EditSubjectModal
           subject={editingSubject}
           {...theme}
@@ -296,25 +277,7 @@ function ManageSubjectsPageContent() {
           saving={savingEdit}
           error={editSubjectError}
         />
-      )} */}
-
-      {/* TODO: si AssignTeacherModal ay tumatawag pa rin ng saveAssignedTeacher,
-          pero commented out pa yun sa itaas — kailangan i-restore/i-wire ulit
-          bago gamitin ulit itong modal. */}
-      {/* {assigningSubject && (
-        <AssignTeacherModal
-          subject={assigningSubject}
-          {...theme}
-          onClose={() => {
-            setAssigningSubject(null);
-            setAssignError(null);
-          }}
-          onAssign={(updates) => saveAssignedTeacher(assigningSubject, updates)}
-          saving={savingAssign}
-          error={assignError}
-        />
-      )} */}
-
+      )}
       {addingSubject && (
         <AddSubjectModal
           subjects={gradeSubjects}

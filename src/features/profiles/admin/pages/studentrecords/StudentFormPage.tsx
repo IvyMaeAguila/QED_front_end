@@ -235,7 +235,7 @@ export function StudentFormPage() {
       lrn: form.lrn.trim(),
       lastName: form.lastName.trim(),
       firstName: form.firstName.trim(),
-      middleName: form.middleName.trim(),
+      middleName: form.middleName ? form.middleName : null ,
       gender: form.gender,
       gradeLevel: form.gradeLevel,
       section: form.section ? form.section : null,

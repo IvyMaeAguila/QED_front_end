@@ -1,19 +1,18 @@
-// src/features/profiles/principal/pages/teachers/data/types.ts
 
 export interface TeacherSummary {
   teacherId: string;
   fullName: string;
-  advisorySection: string; // e.g. "Section A"
-  gradeLevel: string; // e.g. "Grade 1"
-  room: string;
+  advisorySection: string | null;
+  gradeLevel: string | null; // e.g. "Grade 1"
+  room: string | null;
 }
 
 export interface ScheduleEntry {
   day: string;
   time: string;
   subject: string;
-  gradeSection: string;
-  room: string;
+  gradeSection: string | null;
+  room: string | null;
 }
 
 // The detail view needs everything a summary row has, plus the schedule —

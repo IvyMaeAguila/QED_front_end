@@ -42,8 +42,9 @@ export interface ClassRecord {
   id: number;
   gradeLevelId: number;
   gradeLevel: string;
-  sectionId: number | null; // optional na ngayon ang section
+  sectionId: number | null; 
   section: string | null;
+  room: string | null;
   adviserId: number;
   adviserName: string;
   adviserEmail: string | null;
@@ -65,6 +66,7 @@ export interface ClassRecord {
 interface CreateClassPayload {
   gradeLevelId: number;
   section?: string | null;
+  room?: string | null;
   subjectName: string;
   adviserId: string;
   schedule: SchedulePeriod[];
@@ -137,6 +139,7 @@ export async function createClass(payload: CreateClassPayload) {
   const body = {
     gradeLevel: payload.gradeLevelId,
     section: payload.section?.trim() ? payload.section.trim() : null,
+    room: payload.room?.trim() ? payload.room.trim() : null,
     subjects: payload.subjectName,
     adviserId: Number(payload.adviserId), 
     schedule: buildScheduleBody(payload.schedule),
@@ -157,6 +160,7 @@ export async function updateClassApi(id: string | number, payload: UpdateClassPa
   const body = {
     gradeLevel: payload.gradeLevelId,
     section: payload.section?.trim() ? payload.section.trim() : null,
+    room: payload.room?.trim() ? payload.room.trim() : null,
     adviserId: Number(payload.adviserId),
     schedule: buildScheduleBody(payload.schedule),
   };

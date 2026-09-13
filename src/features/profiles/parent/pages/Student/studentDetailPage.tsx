@@ -114,7 +114,7 @@ export default function StudentDetailPage() {
 
         <div className="flex flex-col gap-4">
           {activeTab === "overview" && (
-            <TermPerformanceProvider studentId={studentId}>
+            <ProgressReportProvider studentId={studentId}>
               <div className="flex flex-col gap-1 mt-4 mb-2">
                 <h1 className={`text-lg font-bold ${theme.textPrimary}`}>
                   Overview
@@ -126,17 +126,16 @@ export default function StudentDetailPage() {
               </div>
               <StudentInfoTable student={student} theme={theme} />
               <AttendanceOverview student={student} theme={theme} />
-              <div className="flex flex-col gap-4 sm:flex-row">
-                <div className="sm:w-1/2 sm:flex-1 sm:basis-0">
+              <div className="flex flex-col gap-4 sm:flex-row items-stretch h-[320px] sm:h-[280px]">
+                <div className="sm:w-1/2 sm:flex-1 sm:basis-0 min-h-0">
                   <TermAverageTrendChart student={student} theme={theme} />
                 </div>
-                <div className="sm:w-1/2 sm:flex-1 sm:basis-0">
+                <div className="sm:w-1/2 sm:flex-1 sm:basis-0 min-h-0">
                   <StudentNarrativeSnapshot student={student} theme={theme} />
                 </div>
               </div>
-            </TermPerformanceProvider>
+            </ProgressReportProvider>
           )}
-
           {activeTab === "academic" && (
             <>
               <div className="flex flex-col gap-1 mt-4 mb-2">

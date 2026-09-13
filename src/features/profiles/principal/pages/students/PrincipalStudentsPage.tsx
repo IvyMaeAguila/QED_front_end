@@ -35,7 +35,7 @@ export function PrincipalStudentsPage() {
       ) : (
         <GradeLevelGrid
           gradeLevels={gradeLevels}
-          onViewClassList={(grade) => navigate(`/principal/students/${encodeURIComponent(grade)}`)}
+          onViewClassList={(classId) => navigate(`/principal/students/${classId}`)}
           panelBg={panelBg}
           panelBorder={panelBorder}
           textPrimary={textPrimary}

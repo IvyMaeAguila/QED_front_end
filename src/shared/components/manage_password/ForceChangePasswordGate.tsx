@@ -14,7 +14,7 @@ export function ForceChangePasswordGate() {
 
   // 2. Kung ang kasalukuyang path ay hindi protected → huwag mag-render
   const isProtected = PROTECTED_PATHS.some((path) =>
-    location.pathname.startsWith(path)
+    location.pathname.startsWith(path),
   );
   if (!isProtected) return null;
 

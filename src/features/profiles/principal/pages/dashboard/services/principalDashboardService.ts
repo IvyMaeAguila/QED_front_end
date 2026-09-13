@@ -1,14 +1,5 @@
 // src/features/profiles/principal/pages/dashboard/services/principalDashboardService.ts
-//
-// Every function here is async and mock-backed for now. When the backend
-// is ready, replace each function body with a real fetch/axios call that
-// resolves to the same shape (defined in data/types.ts) — nothing in
-// hooks/ or components/ needs to change.
-//
-// Kept as separate per-section functions (rather than one giant
-// getPrincipalDashboardData call) because the real endpoints will likely
-// be separate too (e.g. subject ranking is paginated/term-filtered
-// server-side, attendance is a different service than academics).
+
 import type {
   Term,
   OverviewData,
@@ -36,10 +27,9 @@ import {
   HOLISTIC_RUBRIC,
   ATTENTION_ITEMS,
 } from "../data/mockData";
+import { getGradeLevels } from "../../students/services/students.service";
+import { getTeachers } from "../../teachers/services/teachers.service";
 
-// Simulates network latency so loading states are visible/testable during
-// development. Remove once real calls are wired in — real requests won't
-// need an artificial delay.
 const MOCK_DELAY_MS = 300;
 function resolveAfterDelay<T>(value: T): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), MOCK_DELAY_MS));
@@ -49,9 +39,23 @@ export function getCurrentTerm(): Promise<Term> {
   return resolveAfterDelay(CURRENT_TERM);
 }
 
-export function getOverview(): Promise<OverviewData> {
-  // TODO: GET /api/principal/overview
-  return resolveAfterDelay(OVERVIEW);
+export async function getOverview(): Promise<OverviewData> {
+  // totalStudents is live (derived from the same cached grade-levels data
+  // the Students page uses); the rest stays mock until their endpoints exist.
+  // TODO: GET /api/principal/overview — swap remaining mock fields once ready
+  const [gradeLevels, teachers] = await Promise.all([
+    getGradeLevels(),
+    getTeachers(),
+
+  ]);
+  const totalStudents = gradeLevels.reduce((sum, g) => sum + g.totalStudents, 0);
+  const totalTeachers = teachers.length;
+
+  return {
+    ...OVERVIEW,
+    totalStudents,
+    totalTeachers
+  };
 }
 
 export function getTodaysAttendance(): Promise<TodaysAttendance> {
@@ -90,8 +94,6 @@ export function getHolisticDomains(): Promise<HolisticDomain[]> {
 }
 
 export function getHolisticRubric(): Promise<HolisticRubric> {
-  // Rubric text is close to static reference data (unlikely to change per
-  // term) — still served async so the hook doesn't special-case it.
   return resolveAfterDelay(HOLISTIC_RUBRIC);
 }
 
@@ -100,10 +102,6 @@ export function getAttentionItems(): Promise<AttentionItem[]> {
   return resolveAfterDelay(ATTENTION_ITEMS);
 }
 
-// Convenience aggregate for the hook: fetches every section in parallel.
-// subjectRankingByTerm is fetched for all three terms up front so the
-// term dropdown in SubjectPerformanceSection can switch instantly without
-// a refetch — revisit if the real endpoint makes that expensive.
 export async function getPrincipalDashboardData(): Promise<PrincipalDashboardData> {
   const terms: Term[] = ["Term 1", "Term 2", "Term 3"];
 

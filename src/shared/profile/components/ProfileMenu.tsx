@@ -29,7 +29,7 @@ export function ProfileMenu() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  if (!user || !draft) return null; 
+  if (!user || !draft) return null;
 
   const fields = PROFILE_FIELD_CONFIG[user.role];
   const mutedText = darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]";

@@ -37,9 +37,13 @@ export function AddSubjectModal({
   // "" = wala pang napiling grade level — sadyang hindi ito ni-default sa defaultGrade
   const [gradeLevel, setGradeLevel] = useState<GradeLevel | "">("");
   const [name, setName] = useState("");
+  // default true — karamihan ng subjects ay graded; i-uncheck lang para sa
+  // mga subject na walang numerical grade (e.g. Values Education sa ibang schools)
+  const [isGraded, setIsGraded] = useState(true);
 
   useEffect(() => {
     setName("");
+    setIsGraded(true);
   }, [gradeLevel]);
 
   function handleGradeChange(grade: string) {
@@ -85,6 +89,7 @@ export function AddSubjectModal({
     void onAdd({
       name: trimmedName,
       gradeLevel,
+      isGraded,
       schoolYear,
       status: "Active",
     });
@@ -98,22 +103,6 @@ export function AddSubjectModal({
       closeDisabled={saving}
       {...theme}
     >
-      <p className={`text-[11px] font-semibold -mt-1 ${textMuted}`}>
-        Pumili ng grade level, tapos i-type ang pangalan ng subject na idadagdag.
-      </p>
-
-      {error && (
-        <div
-          className={`flex items-start gap-2 rounded-xl border px-3 py-2.5 text-xs font-semibold ${
-            darkMode
-              ? "border-[#7F1D1D] bg-[#7F1D1D]/20 text-[#F87171]"
-              : "border-[#FEE2E2] bg-[#FEF2F2] text-[#B91C1C]"
-          }`}
-        >
-          <AlertCircle size={14} className="mt-0.5 shrink-0" />
-          <span>{error}</span>
-        </div>
-      )}
 
       <div>
         <label className={labelClasses}>Grade Level</label>
@@ -152,9 +141,45 @@ export function AddSubjectModal({
         />
         {isDuplicate && (
           <p className="mt-1 text-[11px] font-semibold text-[#B91C1C]">
-            Meron nang subject na ganito sa grade level na ito para sa school year na ito.
+            This subject is already available
           </p>
         )}
+      </div>
+
+      <div>
+        <label className={labelClasses}>Grading Type</label>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => setIsGraded(true)}
+            disabled={saving || noGradeSelected}
+            className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+              isGraded
+                ? "text-white border-transparent"
+                : darkMode
+                  ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
+                  : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+            }`}
+            style={isGraded ? { background: ACCENT } : undefined}
+          >
+            Graded
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsGraded(false)}
+            disabled={saving || noGradeSelected}
+            className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+              !isGraded
+                ? "text-white border-transparent"
+                : darkMode
+                  ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
+                  : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+            }`}
+            style={!isGraded ? { background: ACCENT } : undefined}
+          >
+            Non-graded
+          </button>
+        </div>
       </div>
 
       <div className="flex gap-3 pt-2">

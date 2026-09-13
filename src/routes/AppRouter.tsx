@@ -194,13 +194,20 @@ export function AppRouter() {
         >
           <Route index element={<PrincipalDashboardHome />} />
           <Route path="students" element={<PrincipalStudentsPage />} />
-          <Route path="students/:grade" element={<ClassListPage />} />
+          <Route path="students/class/:classId" element={<ClassListPage />} />
+          <Route path="students/grade/:gradeId" element={<ClassListPage />} />
           <Route path="teachers" element={<PrincipalTeachersPage />} />
           <Route path="teachers/:teacherId" element={<TeacherSchedulePage />} />
           <Route path="reports" element={<AnalyticsPage />} />
-          <Route path="holistic-performance-analytics" element={<HolisticPerformanceAnalyticsPage />} />
+          <Route
+            path="holistic-performance-analytics"
+            element={<HolisticPerformanceAnalyticsPage />}
+          />
           <Route path="gradebooks" element={<PrincipalGradebooksPage />} />
-          <Route path="gradebook/:grade" element={<PrincipalGradeSheetPage />} />
+          <Route
+            path="gradebook/:grade"
+            element={<PrincipalGradeSheetPage />}
+          />
 
           {/* <Route path="teachers" element={<PrincipalTeachersPage />} /> */}
           {/* <Route path="students" element={<PrincipalStudentsPage />} /> */}
