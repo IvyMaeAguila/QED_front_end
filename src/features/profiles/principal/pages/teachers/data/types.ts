@@ -3,8 +3,13 @@ export interface TeacherSummary {
   teacherId: string;
   fullName: string;
   advisorySection: string | null;
-  gradeLevel: string | null; // e.g. "Grade 1"
+  gradeLevel: string | null;
   room: string | null;
+  advisories: {
+    gradeLevel: string | null;
+    section: string | null;
+    room: string | null;
+  }[];
 }
 
 export interface ScheduleEntry {

@@ -12,6 +12,35 @@ interface TeacherDirectoryTableProps {
   darkMode: boolean;
 }
 
+function formatAdvisories(t: TeacherSummary): string {
+  const advisories = t.advisories?.length
+    ? t.advisories
+    : t.gradeLevel || t.advisorySection
+    ? [{ gradeLevel: t.gradeLevel, section: t.advisorySection, room: t.room }]
+    : [];
+
+  if (advisories.length === 0) return "";
+
+  return advisories
+    .map((a) =>
+      a.gradeLevel && a.section
+        ? `${a.gradeLevel} \u00B7 ${a.section}`
+        : a.gradeLevel || a.section || ""
+    )
+    .filter(Boolean)
+    .join(" | ");
+}
+
+function formatRooms(t: TeacherSummary): string[] {
+  const advisories = t.advisories?.length
+    ? t.advisories
+    : t.room
+    ? [{ gradeLevel: t.gradeLevel, section: t.advisorySection, room: t.room }]
+    : [];
+
+  return advisories.map((a) => a.room).filter((r): r is string => Boolean(r));
+}
+
 export function TeacherDirectoryTable({
   teachers,
   onSelectTeacher,
@@ -52,39 +81,43 @@ export function TeacherDirectoryTable({
             </tr>
           </thead>
           <tbody>
-            {teachers.map((t) => (
-              <tr
-                key={t.teacherId}
-                onClick={() => onSelectTeacher(t.teacherId)}
-                className="cursor-pointer transition-colors hover:bg-maroon/5"
-                style={{ borderTop: `1px solid ${darkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)"}` }}
-              >
-                <td className={`py-4 pr-4 font-bold ${textPrimary}`}>{t.fullName}</td>
-                <td className={`py-4 pr-4 ${textPrimary}`}>
-                  {t.gradeLevel && t.advisorySection
-                    ? `${t.gradeLevel} \u00B7 ${t.advisorySection}`
-                    : t.gradeLevel || t.advisorySection || ""}
-                </td>
-                <td className="py-4 pr-4">
-                  {t.room && (
-                    <span
-                      className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full"
-                      style={{
-                        backgroundColor: darkMode ? "var(--color-maroon-soft-dark)" : "var(--color-maroon-soft)",
-                        color: "var(--color-maroon)",
-                      }}
-                    >
-                      <DoorOpen className="h-3.5 w-3.5" /> {t.room}
+            {teachers.map((t) => {
+              const advisoryText = formatAdvisories(t);
+              const rooms = formatRooms(t);
+
+              return (
+                <tr
+                  key={t.teacherId}
+                  onClick={() => onSelectTeacher(t.teacherId)}
+                  className="cursor-pointer transition-colors hover:bg-maroon/5"
+                  style={{ borderTop: `1px solid ${darkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)"}` }}
+                >
+                  <td className={`py-4 pr-4 font-bold ${textPrimary}`}>{t.fullName}</td>
+                  <td className={`py-4 pr-4 ${textPrimary}`}>{advisoryText}</td>
+                  <td className="py-4 pr-4">
+                    <div className="flex flex-wrap gap-1.5">
+                      {rooms.map((room, idx) => (
+                        <span
+                          key={`${t.teacherId}-room-${idx}`}
+                          className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full"
+                          style={{
+                            backgroundColor: darkMode ? "var(--color-maroon-soft-dark)" : "var(--color-maroon-soft)",
+                            color: "var(--color-maroon)",
+                          }}
+                        >
+                          <DoorOpen className="h-3.5 w-3.5" /> {room}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                  <td className="py-4 pr-4">
+                    <span className="text-xs font-bold uppercase tracking-wide flex items-center gap-1 text-maroon">
+                      View Schedule <ChevronRight className="h-3 w-3" />
                     </span>
-                  )}
-                </td>
-                <td className="py-4 pr-4">
-                  <span className="text-xs font-bold uppercase tracking-wide flex items-center gap-1 text-maroon">
-                    View Schedule <ChevronRight className="h-3 w-3" />
-                  </span>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
