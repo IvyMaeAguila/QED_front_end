@@ -123,7 +123,6 @@ function iconFor(family: SubjectFamily): LucideIcon {
 const MAROON_DEEP = "#4A0000";
 const MAROON = "#6B0000";
 const MAROON_BRIGHT = "#8B0000";
-const GOLD = "#D4AF37";
 const GOLD_LIGHT = "#F0D68F";
 const CREAM = "#FFFDF5";
 

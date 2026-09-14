@@ -17,7 +17,7 @@ interface TabNavProps {
   textMuted: string;
 }
 
-export function TabNav({ active, onChange, darkMode, textPrimary, textMuted }: TabNavProps) {
+export function TabNav({ active, onChange, darkMode, textMuted }: TabNavProps) {
   return (
    <div
       className={`flex items-stretch gap-1 rounded-xl p-1.5 ${darkMode ? "bg-white/5" : "bg-white"}`}

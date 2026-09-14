@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, Eye, Loader2, User } from "lucide-react";
+import { ChevronLeft, ChevronRight,  Loader2 } from "lucide-react";
 import type { RosterStudent } from "../subjects/detail/data";
 import {
   ATTENDANCE_CYCLE,
