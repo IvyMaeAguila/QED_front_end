@@ -80,8 +80,7 @@ export default function TermAverageTrendChart({
   student,
   theme,
 }: TermAverageTrendChartProps) {
-  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
-  const hairline = darkMode ? "border-white/[0.08]" : "border-black/[0.06]";
+  const { darkMode, panelBg, panelBorder, textMuted } = theme;
 
   const { data, loading, error } = useProgressReport();
   const studentName = student.fullName;
@@ -120,16 +119,8 @@ export default function TermAverageTrendChart({
 
   return (
     <div
-       className={`flex h-[340px] flex-col rounded-2xl border ${panelBorder} ${panelBg} shadow-[0_1px_2px_rgba(0,0,0,0.04)]`}
+       className={`flex h-85 flex-col rounded-2xl border ${panelBorder} ${panelBg} shadow-[0_1px_2px_rgba(0,0,0,0.04)]`}
     >
-      {/* <div className={`flex flex-wrap items-center justify-between gap-3 border-b px-6 py-5 ${hairline}`}>
-        <div>
-          <h2 className={`text-[15px] font-semibold ${textPrimary}`}>Term average</h2>
-          <p className={`mt-0.5 text-[12px] font-medium ${textMuted}`}>
-            Hover a point to see{studentName ? ` ${studentName}'s` : ""} grades per subject that term
-          </p>
-        </div>
-      </div> */}
 
       <SectionHeader
         icon={Sparkles}

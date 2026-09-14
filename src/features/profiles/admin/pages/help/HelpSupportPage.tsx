@@ -1,6 +1,6 @@
 import { useOutletContext } from "react-router-dom";
 import { Mail, Phone, MessageCircleQuestion, BookOpen, LifeBuoy } from "lucide-react";
-import type { AdminThemeContext } from "../../AdminLayout";
+import type { AdminThemeContext } from "../../pages/AdminLayout";
 
 interface FaqItem {
   question: string;

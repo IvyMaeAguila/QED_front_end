@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { GraduationCap, Users, Clock, MoreVertical, Pencil, Trash2, User } from "lucide-react";
 import type { SchoolClass } from "../types/Class";
 import { formatClassName, formatTimeRange } from "../types/Class";

@@ -25,7 +25,7 @@ export function AttendanceRecordCard({ record, theme, student }: AttendanceRecor
     { schoolDays: 0, present: 0, absent: 0, tardy: 0 },
   );
 
-  const attendanceRate = totals.schoolDays > 0 ? Math.round((totals.present / totals.schoolDays) * 100) : 0;
+  // const attendanceRate = totals.schoolDays > 0 ? Math.round((totals.present / totals.schoolDays) * 100) : 0;
 
   return (
     <div className={`rounded-2xl border ${panelBorder} ${panelBg} pb-5 px-5`}>

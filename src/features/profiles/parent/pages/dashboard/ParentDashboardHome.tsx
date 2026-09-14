@@ -24,9 +24,8 @@ export default function ParentDashboardHome() {
     textMuted,
     openLinkModal,
   } = useOutletContext<ParentOutletContext>();
-  const navigate = useNavigate();
 
-  const { students, dailyUpdates, events, viewMode, setViewMode } =
+  const { students, dailyUpdates, viewMode, setViewMode } =
     useParentDashboard();
 
   const { user, isLoading: isProfileLoading } = useAuth();

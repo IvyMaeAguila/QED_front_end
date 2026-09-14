@@ -36,7 +36,7 @@ function mapRow(row: SectionRow): Section {
 
 export function SectionsProvider({ children }: { children: ReactNode }) {
   const [sections, setSections] = useState<Section[]>([]);
-  const [loadedGrades, setLoadedGrades] = useState<Set<string>>(new Set());
+  const [, setLoadedGrades] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(false);
   const [sectionIdsUsedByClasses, setSectionIdsUsedByClasses] = useState<Set<string>>(new Set());
 

@@ -1,6 +1,5 @@
 import { API_CONFIG } from '../../../../../../config/api.config';
 import type { Term, RankedSubject, HeatmapRow, ViewMode } from "../data/types";
-import {  VIEW_OPTIONS, GRADE_ROWS, SUBJECT_ROWS } from "../data/mockData";
 
 const BASE_URL = `${API_CONFIG.baseURL}/api`;
 
@@ -10,10 +9,10 @@ interface ApiResponse<T> {
   message?: string;
 }
 
-const MOCK_DELAY_MS = 300;
-function resolveAfterDelay<T>(value: T): Promise<T> {
-  return new Promise((resolve) => setTimeout(() => resolve(value), MOCK_DELAY_MS));
-}
+// const MOCK_DELAY_MS = 300;
+// function resolveAfterDelay<T>(value: T): Promise<T> {
+//   return new Promise((resolve) => setTimeout(() => resolve(value), MOCK_DELAY_MS));
+// }
 
 export async function getTermOptions(): Promise<Term[]> {
   const res = await fetch(`${BASE_URL}/reports/term-options`, {

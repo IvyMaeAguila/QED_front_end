@@ -6,7 +6,7 @@ import TermAverageTrendChart from "./Overview/components/PerformanceAnalytics";
 import StudentNarrativeSnapshot from "./Overview/components/HolisticAverage";
 import AcademicTab from "./Academic/AcademicTab";
 import HolisticTab from "./Holistic/HoisticWeeklyReportTab";
-import { mockInterventionFlags, mockSchedule } from "./Academic/data/MockData";
+import { mockInterventionFlags } from "./Academic/data/MockData";
 import { TabNav, type StudentDetailTab } from "./PageComponents/TopNavigation";
 import StudentInfoTable from "./PageComponents/StudentInfoTable";
 import { useStudentDetail } from "./Overview/useStudentDetail";
@@ -16,7 +16,6 @@ import {
   ProgressReportProvider,
   useProgressReport,
 } from "./ProgressReport/context/ProgressReportContext";
-import { TermPerformanceProvider } from "./Overview/context/PerformanceAnalyticsContext";
 import { useFormalReportDownload } from "./ProgressReport/hooks/useFormalreportDownload";
 import type { DetailStudent } from "./GlobalTypes/types";
 import { StudentProfileTab } from "./StudentProfile/StudentProfileTab";
@@ -222,7 +221,6 @@ export default function ChildDetailPage() {
               <StudentInfoTable student={student} theme={theme} />
               <AcademicTab
                 interventionFlags={mockInterventionFlags}
-                schedule={mockSchedule}
                 theme={theme}
                 student={student}
               />

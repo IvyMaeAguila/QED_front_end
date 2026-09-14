@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BookOpen, Loader2, AlertCircle } from "lucide-react";
+import { BookOpen, Loader2 } from "lucide-react";
 import {
   ACCENT,
   type GradeLevel,

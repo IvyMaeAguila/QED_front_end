@@ -11,7 +11,7 @@ interface RawScheduleItem {
   days: ScheduleDay[];
 }
 
-const BASE_URL = `${API_CONFIG.baseURL}api/classSchedule`;
+const BASE_URL = `${API_CONFIG.baseURL}/api/classSchedule`;
 
 // In-memory cache keyed by studentId — survives navigating away and back
 // (resets on full page reload since it's module-level state)

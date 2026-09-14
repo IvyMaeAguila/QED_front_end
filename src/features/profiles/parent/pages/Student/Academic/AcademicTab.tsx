@@ -2,7 +2,6 @@ import MissedActivities from "./components/MissedActivities";
 import InterventionSupport from "./components/InterventionSupport";
 import ClassSchedule from "../Academic/components/ClassSchedule";
 import type {
-  MissedActivity,
   InterventionFlag,
   ScheduleItem,
 } from "./types/types";
@@ -12,14 +11,12 @@ import type { DetailStudent } from "../../Student/GlobalTypes/types";
 interface AcademicTabProps {
   interventionFlags: InterventionFlag[];
   student: DetailStudent;
-  schedule: ScheduleItem[];
   theme: AdminThemeContext;
 }
 
 export default function AcademicTab({
 
   interventionFlags,
-  schedule,
   student,
   theme,
 }: AcademicTabProps) {
@@ -34,7 +31,7 @@ export default function AcademicTab({
     <MissedActivities theme={theme} student={student} />
     <InterventionSupport flags={interventionFlags} theme={theme} student={student} />
   </div>
-  <div className="w-full lg:w-[500px] lg:shrink-0">
+  <div className="w-full lg:w-125 lg:shrink-0">
     <ClassSchedule theme={theme} student={student} />
   </div>
 </div>

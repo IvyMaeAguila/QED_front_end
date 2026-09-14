@@ -2,9 +2,7 @@ import { useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { Plus, Filter } from "lucide-react";
 import { useClasses } from "./context/ClassesContext";
-import { useTeachers } from "./context/TeachersContext";
 import { useStudents } from "../studentrecords/context/StudentsContext";
-import { formatTeacherName } from "./types/Teacher";
 import { ClassCard } from "./components/ClassCard";
 import {
   GRADE_LEVELS,
@@ -16,7 +14,6 @@ import { DangerConfirmModal } from "@shared/components/DangerConfirmModal";
 export function ClassesPage() {
   const navigate = useNavigate();
   const { classes, deleteClass } = useClasses();
-  const { students } = useStudents();
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
 

@@ -33,8 +33,6 @@ export default function VerifyStudentModal({
     ? "flex-1 rounded-lg border border-[#1F2937] py-2.5 text-sm font-semibold text-gray-300 transition-colors hover:bg-[#1a1a1a]"
     : "flex-1 rounded-lg border border-gray-200 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-surface";
 
-    const { showToast } = useToast();
-
   return (
     <Modal
       open={open}

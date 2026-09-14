@@ -133,7 +133,6 @@ export interface WholeChildSnapshotProps extends WholeChildSnapshotData {
 }
 
 export function WholeChildSnapshot({
-  student,
   termKey,
   history = [],
   title = "Whole-Child Snapshot",

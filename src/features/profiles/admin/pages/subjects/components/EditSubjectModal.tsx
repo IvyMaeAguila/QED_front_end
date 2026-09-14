@@ -26,11 +26,9 @@ export function EditSubjectModal({
 }: EditSubjectModalProps) {
   const { teachers } = useTeachers();
   const { getSectionsForGrade, loadSectionsForGrade } = useSections();
-  const [name, setName] = useState(subject.name);
-  const [schoolYear, setSchoolYear] = useState(subject.schoolYear);
+  const [name] = useState(subject.name);
   const [teacherId, setTeacherId] = useState(subject.teacherId ?? "");
   const [section, setSection] = useState(subject.section ?? "");
-  const [status, setStatus] = useState(subject.status);
   const [isGraded, setIsGraded] = useState(subject.isGraded);  
   const { darkMode, textMuted } = theme;
 
@@ -61,10 +59,10 @@ export function EditSubjectModal({
     if (saving) return;
     void onSave({
       name: name.trim() || subject.name,
-      schoolYear,
+      schoolYear: subject.schoolYear,
       teacherId: teacherId || null,
       section,
-      status,
+      status: subject.status,
       isGraded,
     });
   }

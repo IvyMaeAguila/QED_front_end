@@ -24,12 +24,11 @@ import LandingPage from "../features/Landing/LandingPage";
 import { LoginPanel } from "../features/auth/LoginPanel";
 import { StudentDetailPage } from "../shared/components/StudentDetailPage";
 import { ManageSubjectsPage } from "../features/profiles/admin/pages/subjects/ManageSubjectsPage";
-import { CalendarPage } from "../features/profiles/admin/pages/calendar/CalendarPage";
+import { CalendarPage } from "../shared/calendar/CalendarPage";
 import { HelpSupportPage } from "../features/profiles/admin/pages/help/HelpSupportPage";
 import { SettingsProvider } from "../features/profiles/admin/pages/settings/context/SettingsContext";
 import { TeacherSection } from "./TeacherSection";
 import { TeacherDashboardHome } from "../features/profiles/teacher/pages/dashboard/TeacherDashboardHome";
-import { TeacherCalendarPage } from "../features/profiles/teacher/pages/calendar/TeacherCalendarPage";
 import { AdvisoryRosterPage } from "../features/profiles/teacher/pages/roster/AdvisoryRosterPage";
 import { GradesPage } from "../features/profiles/teacher/pages/grades/GradePage";
 import { SubjectsPage } from "../features/profiles/teacher/pages/subjects/SubjectPage";
@@ -37,7 +36,7 @@ import { ParentSection } from "./ParentSection";
 import ParentDashboardHome from "../features/profiles/parent/pages/dashboard/ParentDashboardHome";
 import { EnrolledChildrenPage } from "../features/profiles/parent/pages/EnrollledStudent/EnrolledChildrenPage";
 import ChildDetailPage from "../features/profiles/parent/pages/Student/ChildDetailPage";
-import { CalendarPageView } from "../features/profiles/parent/pages/calendar/CalendarPageView";
+import { CalendarPageView } from "../shared/calendar/CalendarPageView";
 import { SubjectDetailPage } from "../features/profiles/teacher/pages/subjects/detail/SubjectDetailPage";
 import { SubjectRecordsPage } from "../features/profiles/teacher/pages/subjects/detail/SubjectRecordsPage";
 import { HolisticOverviewPage } from "../features/profiles/teacher/pages/holistic/HolisticOverviewPage";
@@ -45,7 +44,6 @@ import { StudentHolisticProfilePage } from "../features/profiles/teacher/pages/h
 import { HolisticDomainTrendsPage } from "../features/profiles/teacher/pages/holistic/HolisticDomainTrendsPage";
 import { SubjectClassListPage } from "../features/profiles/teacher/pages/subjects/SubjectClassListPage";
 import { AcademicYearPage } from "../features/profiles/admin/pages/subjects/AcademicYearPage";
-
 
 import { PrincipalSection } from "./PrincipalSection";
 import { PrincipalDashboardHome } from "../features/profiles/principal/pages/dashboard/PrincipalDashboardHome";
@@ -229,8 +227,11 @@ export function AppRouter() {
           }
         >
           <Route index element={<TeacherDashboardHome />} />
-          <Route path="attendance" element={<TeacherAttendancePage/>} />
-          <Route path="attendance/records" element={<TeacherAttendanceRecordsPage/>} />
+          <Route path="attendance" element={<TeacherAttendancePage />} />
+          <Route
+            path="attendance/records"
+            element={<TeacherAttendanceRecordsPage />}
+          />
           <Route path="subjects" element={<SubjectsPage />} />
           <Route path="subjects/:subjectId" element={<SubjectDetailPage />} />
           <Route
@@ -253,7 +254,7 @@ export function AppRouter() {
           />
           <Route path="students/:studentId" element={<StudentDetailPage />} />
           <Route path="advisory" element={<AdvisoryRosterPage />} />
-          <Route path="calendar" element={<TeacherCalendarPage />} />
+          <Route path="calendar" element={<CalendarPageView />} />
           <Route path="help" element={<div>Help page</div>} />
         </Route>
 
