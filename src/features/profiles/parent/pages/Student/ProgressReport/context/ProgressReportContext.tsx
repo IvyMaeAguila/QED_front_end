@@ -16,6 +16,7 @@ import { toAttendanceByTerm } from "../utils/transformAttendance";
 import { fetchStudentTermPerformance } from "../service/TermPerformance.service";
 import { fetchStudentHolisticTermAverages } from "../service/HolisticPerformance.service";
 import AttendanceService from "../service/AttendanceSummary.service";
+import { fetchStudentGradeVisibility, type TermVisibilityEntry } from "../service/GradeVisibility.service";
 
 interface ProgressReportContextValue {
   data: ProgressReportData;
@@ -26,8 +27,10 @@ interface ProgressReportContextValue {
   currentTermAverage: TermAverageEntry | undefined;
   currentHolisticAssessment: HolisticAssessmentEntry | undefined;
   currentAttendance: AttendanceTermEntry | undefined;
-  /** Bypasses the service-layer cache and re-fetches from the backend. */
   refetch: () => void;
+  visibility: TermVisibilityEntry[];
+  /** Visibility entry (isVisible/termEnded/available) para sa currently selected term. */
+  selectedTermVisibility: TermVisibilityEntry | undefined;
 }
 
 const ProgressReportContext = createContext<ProgressReportContextValue | undefined>(undefined);
@@ -55,6 +58,11 @@ function getLatestReleasedTerm(termAverages: TermAverageEntry[]): Term {
   return "T1";
 }
 
+/** Kinukuha ang term_number (1, 2, 3) mula sa "T1"/"T2"/"T3" string
+ * para ma-match sa termNumber na galing sa grading_periods table. */
+function termToTermNumber(term: Term): number {
+  return parseInt(term.replace(/\D/g, ""), 10);
+}
 
 function computeOverallHolisticAssessment(
   assessments: HolisticAssessmentEntry[],
@@ -146,6 +154,7 @@ export function ProgressReportProvider({
   const [loading, setLoading] = useState(!providedData);
   const [error, setError] = useState<string | null>(null);
   const [refetchTick, setRefetchTick] = useState(0);
+  const [visibility, setVisibility] = useState<TermVisibilityEntry[]>([]);
 
   const userSelectedRef = useRef(false);
 
@@ -169,10 +178,11 @@ export function ProgressReportProvider({
       setLoading(true);
       setError(null);
       try {
-        const [termResult, holisticResult, attendanceResult] = await Promise.allSettled([
+        const [termResult, holisticResult, attendanceResult, visibilityResult] = await Promise.allSettled([
           fetchStudentTermPerformance(studentId!, { force: refetchTick > 0 }),
           fetchStudentHolisticTermAverages(studentId!, { force: refetchTick > 0 }),
           AttendanceService.getAttendanceSummary(Number(studentId)),
+          fetchStudentGradeVisibility(studentId!, { force: refetchTick > 0 }),
         ]);
 
         if (cancelled) return;
@@ -201,6 +211,13 @@ export function ProgressReportProvider({
           console.error("Failed to load attendance summary:", attendanceResult.reason);
         }
 
+        const visibilityData =
+          visibilityResult.status === "fulfilled" ? visibilityResult.value : [];
+
+        if (visibilityResult.status === "rejected") {
+          console.error("Failed to load grade visibility:", visibilityResult.reason);
+        }
+
         setFetchedData({
 
           meta: backendResult.meta,
@@ -209,6 +226,8 @@ export function ProgressReportProvider({
           holisticAssessments,
           attendanceByTerm,
         });
+
+        setVisibility(visibilityData);
 
         if (!userSelectedRef.current) {
           setSelectedTermState(getLatestReleasedTerm(termAverages));
@@ -257,6 +276,27 @@ export function ProgressReportProvider({
     return data.attendanceByTerm.find((a) => a.term === selectedTerm);
   }, [data.attendanceByTerm, selectedTerm]);
 
+  const selectedTermVisibility = useMemo((): TermVisibilityEntry | undefined => {
+    if (visibility.length === 0) return undefined;
+
+    if (selectedTerm === "OVERALL") {
+      const allAvailable = visibility.every((v) => v.available);
+      const allTermEnded = visibility.every((v) => v.termEnded);
+      const allVisible = visibility.every((v) => v.isVisible);
+      return {
+        gradingPeriodId: -1,
+        termNumber: -1,
+        termLabel: "OVERALL",
+        isVisible: allVisible,
+        termEnded: allTermEnded,
+        available: allAvailable,
+      };
+    }
+
+    const termNumber = termToTermNumber(selectedTerm);
+    return visibility.find((v) => v.termNumber === termNumber);
+  }, [visibility, selectedTerm]);
+
   const refetch = () => setRefetchTick((n) => n + 1);
 
   const value: ProgressReportContextValue = {
@@ -269,6 +309,8 @@ export function ProgressReportProvider({
     currentHolisticAssessment,
     currentAttendance,
     refetch,
+    visibility,
+    selectedTermVisibility,
   };
 
   return <ProgressReportContext.Provider value={value}>{children}</ProgressReportContext.Provider>;

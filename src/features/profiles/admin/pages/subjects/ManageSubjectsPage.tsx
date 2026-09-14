@@ -14,7 +14,6 @@ import { SubjectFilters } from "./components/SubjectFilters";
 import { GradeLevelTabs } from "./components/GradeLevelTabs";
 import { SubjectCard } from "./components/SubjectCard";
 import { EditSubjectModal } from "./components/EditSubjectModal";
-import { AssignTeacherModal } from "./components/AssignTeacherModal";
 import { AddSubjectModal } from "./components/AddSubjectModal";
 import { ManageSectionsModal } from "./components/ManageSectionsModal";
 import { SectionsProvider } from "./context/SectionsContext";
@@ -22,8 +21,7 @@ import { useSettings } from "../settings/context/SettingsContext";
 import {
   addSubject as addSubjectApi,
   toggleSubjectStatus as toggleSubjectStatusApi,
-  updateSubjectAssignment,
-  assignTeacherToSubject,
+  updateSubjectAssignment
 } from "./services/subject.service";
 import { GradeLevelsProvider } from "./context/gradeLevelsContext";
 import { SubjectsCatalogProvider } from "./context/SubjectsCatalogContext";
@@ -70,7 +68,7 @@ function ManageSubjectsPageContent() {
   >("all");
 
   const [editingSubject, setEditingSubject] = useState<Subject | null>(null);
-  const [assigningSubject, setAssigningSubject] = useState<Subject | null>(
+  const [ , setAssigningSubject] = useState<Subject | null>(
     null,
   );
   const [addingSubject, setAddingSubject] = useState(false);
@@ -82,8 +80,6 @@ function ManageSubjectsPageContent() {
   const [savingEdit, setSavingEdit] = useState(false);
   const [editSubjectError, setEditSubjectError] = useState<string | null>(null);
 
-  const [savingAssign, setSavingAssign] = useState(false);
-  const [assignError, setAssignError] = useState<string | null>(null);
     const { showToast } = useToast();
 
   useEffect(() => {

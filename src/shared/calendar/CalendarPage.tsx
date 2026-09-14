@@ -1,34 +1,27 @@
 import { useEffect, useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { CalendarRange, CalendarHeart } from "lucide-react";
-import { MonthGrid } from "../../../../../shared/calendar/components/MonthGrid";
-import { ManageCalendarButton } from "../../../../../shared/calendar/components/ManageCalendarButton";
-import {
-  ActivitiesCard,
-  ActivityGroupList,
-} from "../../../../../shared/calendar/components/ActivitiesCard";
-import {
-  HolidaysCard,
-  HolidayGroupList,
-} from "../../../../../shared/calendar/components/HolidaysCard";
+import { MonthGrid } from "./components/MonthGrid";
+import { ManageCalendarButton } from "./components/ManageCalendarButton";
+import { ActivitiesCard, ActivityGroupList } from "./components/ActivitiesCard";
+import { HolidaysCard, HolidayGroupList } from "./components/HolidaysCard";
 import {
   AddCalendarEntriesModal,
   type DraftEntry,
-} from "../../../../../shared/calendar/components/AddCalendarEntriesModal";
+} from "./components/AddCalendarEntriesModal";
 import {
   EditEntryModal,
   type EditEntryValue,
-} from "../../../../../shared/calendar/components/EditEntryModal";
-import { DeleteConfirmModal } from "../../../../../shared/components/DeleteConfirmationModal";
-import { ExpandedListModal } from "../../../../../shared/calendar/components/ExpandedListModal";
-import { toISODate } from "../../../../../shared/calendar/data";
-import type { AdminThemeContext } from "../AdminLayout";
+} from "./components/EditEntryModal";
+import { DeleteConfirmModal } from "../components/DeleteConfirmationModal";
+import { ExpandedListModal } from "./components/ExpandedListModal";
+import type { AdminThemeContext } from "../../features/profiles/admin/pages/AdminLayout";
 import {
   CALENDAR_MANAGER_ROLES,
   type CalendarActivity,
   type CalendarHoliday,
   type Role,
-} from "../../../../../shared/calendar/types/Calendar";
+} from "./types/Calendar";
 import {
   fetchCalendarActivities,
   fetchCalendarHolidays,
@@ -38,7 +31,7 @@ import {
   updateCalendarHoliday,
   deleteCalendarActivityApi,
   deleteCalendarHolidayApi,
-} from "../../../../../shared/calendar/services/calendar.service";
+} from "./services/calendar.service";
 
 interface CalendarPageProps {
   viewerRole?: Role;

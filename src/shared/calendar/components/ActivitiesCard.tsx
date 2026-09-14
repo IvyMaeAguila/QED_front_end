@@ -148,7 +148,6 @@ export function ActivitiesCard({
   viewDate,
   darkMode,
   panelBg,
-  textPrimary,
   textMuted,
 }: ActivitiesCardProps) {
   // Ipapakita lang dito sa card ang mga activity ng buwang

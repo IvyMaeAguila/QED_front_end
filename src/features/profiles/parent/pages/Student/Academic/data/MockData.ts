@@ -1,45 +1,45 @@
-import type { MissedActivity, InterventionFlag, ScheduleItem } from "../types/types";
+import type { InterventionFlag, ScheduleItem } from "../types/types";
 
-// Walang missed activities — para lumabas yung empty state
-// export const mockMissedActivities: MissedActivity[] = [];
+// // Walang missed activities — para lumabas yung empty state
+// // export const mockMissedActivities: MissedActivity[] = [];
 
-// May missed activities — grouped by date sa UI, kaya inayos order by dueDate
-// export const mockMissedActivitiesWithData: MissedActivity[] = [
-//   {
-//     id: "ma-1",
-//     topic: "Alphabet Tracing Worksheet",
-//     subject: "Language",
-//     type: "Written Works",
-//     maxItems: "10",
-//     dueDate: "Aug 5, 2026",
-//   },
-//   {
-//     id: "ma-2",
-//     topic: "Counting 1-20 Activity Sheet",
-//     subject: "Mathematics",
-//     type: "Written Works",
-//     itemScore: "15",
-//     dueDate: "Aug 7, 2026",
-//   },
-//   {
-//     id: "ma-3",
-//     topic: "Show and Tell: My Family",
-//     subject: "Makabansa",
-//     type: "Performance Task",
-//     itemScore: "15",
-//     dueDate: "Aug 8, 2026",
-//   },
-//   {
-//     id: "ma-4",
-//     topic: "Basic Shapes Quiz",
-//     subject: "Mathematics",
-//     type: "Examination",
-//     itemScore: "15",
-//     dueDate: "Aug 8, 2026",
-//   },
-// ];
+// // May missed activities — grouped by date sa UI, kaya inayos order by dueDate
+// // export const mockMissedActivitiesWithData: MissedActivity[] = [
+// //   {
+// //     id: "ma-1",
+// //     topic: "Alphabet Tracing Worksheet",
+// //     subject: "Language",
+// //     type: "Written Works",
+// //     maxItems: "10",
+// //     dueDate: "Aug 5, 2026",
+// //   },
+// //   {
+// //     id: "ma-2",
+// //     topic: "Counting 1-20 Activity Sheet",
+// //     subject: "Mathematics",
+// //     type: "Written Works",
+// //     itemScore: "15",
+// //     dueDate: "Aug 7, 2026",
+// //   },
+// //   {
+// //     id: "ma-3",
+// //     topic: "Show and Tell: My Family",
+// //     subject: "Makabansa",
+// //     type: "Performance Task",
+// //     itemScore: "15",
+// //     dueDate: "Aug 8, 2026",
+// //   },
+// //   {
+// //     id: "ma-4",
+// //     topic: "Basic Shapes Quiz",
+// //     subject: "Mathematics",
+// //     type: "Examination",
+// //     itemScore: "15",
+// //     dueDate: "Aug 8, 2026",
+// //   },
+// // ];
 
-// No flagged concerns — matching yung green "no concern" state sa reference
+// // No flagged concerns — matching yung green "no concern" state sa reference
 export const mockInterventionFlags: InterventionFlag[] = [];
 
 // May flagged concern(s) — para i-test yung red warning state

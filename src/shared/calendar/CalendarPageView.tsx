@@ -1,26 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { CalendarRange, CalendarHeart } from "lucide-react";
-import { MonthGrid } from "../../../../../shared/calendar/components/MonthGrid";
-import {
-  ActivitiesCard,
-  ActivityGroupList,
-} from "../../../../../shared/calendar/components/ActivitiesCard";
-import {
-  HolidaysCard,
-  HolidayGroupList,
-} from "../../../../../shared/calendar/components/HolidaysCard";
-import { ExpandedListModal } from "../../../../../shared/calendar/components/ExpandedListModal";
-import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
+import { MonthGrid } from "./components/MonthGrid";
+import { ActivitiesCard, ActivityGroupList } from "./components/ActivitiesCard";
+import { HolidaysCard, HolidayGroupList } from "./components/HolidaysCard";
+import { ExpandedListModal } from "./components/ExpandedListModal";
+import type { AdminThemeContext } from "../../features/profiles/admin/pages/AdminLayout";
 import {
   type CalendarActivity,
   type CalendarHoliday,
   type Role,
-} from "../../../../../shared/calendar/types/Calendar";
+} from "./types/Calendar";
 import {
   fetchCalendarActivities,
   fetchCalendarHolidays,
-} from "../../../../../shared/calendar/services/calendar.service";
+} from "./services/calendar.service";
 
 interface CalendarPageProps {
   viewerRole?: Role;
@@ -30,7 +24,7 @@ type ExpandTarget = "activity" | "holiday" | null;
 
 // Read-only calendar view for Teacher / Parent.
 // Walang add/edit/delete dito — Admin lang ang may access doon sa CalendarPage (management version).
-export function CalendarPageView({ viewerRole = "TEACHER" }: CalendarPageProps) {
+export function CalendarPageView({}: CalendarPageProps) {
   const theme = useOutletContext<AdminThemeContext>();
   if (!theme) return null;
 

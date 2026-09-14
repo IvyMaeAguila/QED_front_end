@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { mockDailyUpdates, mockEvents } from "../data/mockData";
+import { mockDailyUpdates } from "../data/mockData";
 import {
   verificationService,
   enrolledChildrenService,
@@ -17,7 +17,6 @@ import type {
   DailyUpdate,
   LinkStudentInput,
   MatchedStudentRecord,
-  SchoolEvent,
   Student,
 } from "../types/student";
 import { useToast } from "@shared/context/ToastContext";
@@ -28,7 +27,6 @@ interface ParentDashboardContextValue {
   studentsError: string | null;
   refetchStudents: () => Promise<void>;
   dailyUpdates: DailyUpdate[];
-  events: SchoolEvent[];
   viewMode: CardViewMode;
   setViewMode: (mode: CardViewMode) => void;
 
@@ -190,7 +188,6 @@ export function ParentDashboardProvider({ children }: { children: ReactNode }) {
       studentsError,
       refetchStudents: fetchStudents,
       dailyUpdates: mockDailyUpdates,
-      events: mockEvents,
       viewMode,
       setViewMode,
       isVerifyModalOpen,

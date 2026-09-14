@@ -23,7 +23,7 @@ export default function MissedActivities({ theme, student }: MissedActivitiesPro
 
 function MissedActivitiesContent({ theme, student }: MissedActivitiesProps) {
   const { activities, loading, error } = useMissedActivities();
-  const { darkMode, panelBg, panelBorder, textPrimary } = theme;
+  const { darkMode, panelBg, panelBorder } = theme;
 
   const emptyIconBg = darkMode ? "bg-white/5" : "bg-gray-100";
   const emptyIcon = darkMode ? "text-gray-500" : "text-gray-400";

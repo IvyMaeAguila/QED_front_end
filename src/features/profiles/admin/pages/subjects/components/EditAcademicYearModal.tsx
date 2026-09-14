@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import { ACCENT } from "../types/types";
-import type { AcademicYear, TermStatus } from "../types/academicyear";
+import type { AcademicYear, SchoolYearStatus } from "../types/academicyear";
 
 interface EditAcademicYearModalProps {
   academicYear: AcademicYear;
@@ -16,7 +16,7 @@ interface EditAcademicYearModalProps {
   error?: string | null;
 }
 
-const STATUS_OPTIONS: TermStatus[] = ["Active", "Upcoming", "Completed"];
+const STATUS_OPTIONS: SchoolYearStatus[] = ["Active", "Inactive"];
 
 export function EditAcademicYearModal({
   academicYear,
@@ -31,9 +31,9 @@ export function EditAcademicYearModal({
   error = null,
 }: EditAcademicYearModalProps) {
   const [label, setLabel] = useState(academicYear.label);
-  const [startDate, setStartDate] = useState(academicYear.startDate);
-  const [endDate, setEndDate] = useState(academicYear.endDate);
-  const [status, setStatus] = useState<TermStatus>(academicYear.status);
+  const [startDate, setStartDate] = useState(academicYear.startDate ?? "");
+  const [endDate, setEndDate] = useState(academicYear.endDate ?? "");
+  const [status, setStatus] = useState<SchoolYearStatus>(academicYear.status);
 
   const inputClasses = `w-full h-10 px-3 rounded-lg text-sm font-semibold border outline-none transition-colors ${
     darkMode
@@ -43,7 +43,13 @@ export function EditAcademicYearModal({
   const labelClasses = `block text-xs font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 
   function handleSave() {
-    onSave({ label, startDate, endDate, status });
+    onSave({
+      ...academicYear,
+      label,
+      startDate: startDate || null,
+      endDate: endDate || null,
+      status,
+    });
   }
 
   return (
@@ -106,7 +112,7 @@ export function EditAcademicYearModal({
             <select
               className={inputClasses}
               value={status}
-              onChange={(e) => setStatus(e.target.value as TermStatus)}
+              onChange={(e) => setStatus(e.target.value as SchoolYearStatus)}
             >
               {STATUS_OPTIONS.map((option) => (
                 <option key={option} value={option}>

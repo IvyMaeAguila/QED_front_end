@@ -161,7 +161,6 @@ export function HolidaysCard({
   viewDate,
   darkMode,
   panelBg,
-  textPrimary,
   textMuted,
 }: HolidaysCardProps) {
   // Ipapakita lang dito sa card ang mga holiday ng buwang

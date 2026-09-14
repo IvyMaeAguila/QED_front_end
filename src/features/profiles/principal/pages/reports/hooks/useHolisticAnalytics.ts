@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Term, ViewMode, HeatmapRow } from "../data/types";
-import { getTermOptions, getViewOptions, getHolisticRows } from "../services/analyticsService";
+import { getTermOptions, getViewOptions, getHolisticRows } from "../services/reports.service";
 
 interface UseHolisticAnalyticsResult {
   term: Term;

@@ -1,4 +1,4 @@
-import { AlertTriangle, CheckCircle2, Sparkles } from "lucide-react";
+import { AlertTriangle, CheckCircle2 } from "lucide-react";
 import type { InterventionFlag } from "../types/types";
 import type { AdminThemeContext } from "../../../../../admin/pages/AdminLayout";
 import SectionHeader from "../../../ui/SectionHeader";
@@ -15,7 +15,7 @@ export default function InterventionSupport({
   theme,
   student,
 }: InterventionSupportProps) {
-  const { darkMode, panelBg, panelBorder, textPrimary } = theme;
+  const { darkMode, panelBg, panelBorder } = theme;
 
   const okBg = darkMode ? "bg-green-900/20" : "bg-green-50";
   const okIcon = darkMode ? "text-green-400" : "text-green-600";

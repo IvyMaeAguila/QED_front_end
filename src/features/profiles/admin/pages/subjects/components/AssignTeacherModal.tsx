@@ -22,7 +22,7 @@ export function AssignTeacherModal({
   ...theme
 }: AssignTeacherModalProps) {
   const { teachers } = useTeachers();
-  const [section, setSection] = useState(subject.section);
+  const [section] = useState(subject.section);
   const [teacherId, setTeacherId] = useState(subject.teacherId ?? "");
   const { darkMode } = theme;
 

@@ -62,7 +62,6 @@ export function ClassFormPage() {
 
   const [gradeLevels, setGradeLevels] = useState<GradeLevelOption[]>([]);
   const [sections, setSections] = useState<SectionOption[]>([]);
-  const [teachers, setTeachers] = useState<TeacherOption[]>([]);
   const [subjects, setSubjects] = useState<SubjectOption[]>([]);
   const [loadingGradeLevels, setLoadingGradeLevels] = useState(true);
   const [loadingSections, setLoadingSections] = useState(false);

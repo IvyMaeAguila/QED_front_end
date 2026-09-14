@@ -25,7 +25,7 @@ function computeGwa(entries: TermAverageEntry[]): number | null {
 }
 
 export function TermAverageCard({ entries, selectedTerm, theme, student }: TermAverageCardProps) {
-  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
+  const { darkMode, panelBg, panelBorder, textMuted } = theme;
 
   const isOverall = selectedTerm === "OVERALL";
 

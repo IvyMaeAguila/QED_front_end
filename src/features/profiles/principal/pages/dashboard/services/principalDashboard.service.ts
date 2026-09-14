@@ -3,7 +3,6 @@ import { API_CONFIG } from '../../../../../../config/api.config';
 const BASE_URL = `${API_CONFIG.baseURL}/api`;
 
 import type {
-  Term,
   OverviewData,
   TodaysAttendance,
   GradePerformance,
@@ -16,11 +15,8 @@ import type {
   AttentionItem,
   PrincipalDashboardData,
 } from "../data/types";
+import { ATTENTION_ITEMS } from "../data/mockData";
 import { HOLISTIC_RUBRIC } from "../utils/HolisticRubrics";
-import {
-  CURRENT_TERM,
-  ATTENTION_ITEMS,
-} from "../data/mockData";
 import { getGradeLevels } from "../../students/services/students.service";
 import { getTeachers } from "../../teachers/services/teachers.service";
 import type { AcademicYearRow } from "../../../../admin/pages/subjects/services/academicyear.service";
@@ -31,10 +27,16 @@ function resolveAfterDelay<T>(value: T): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), MOCK_DELAY_MS));
 }
 
-export function getCurrentTerm(): Promise<Term> {
-  return resolveAfterDelay(CURRENT_TERM);
+export async function fetchActiveTerm(): Promise<ActiveTermRow> {
+  const res = await fetch(`${BASE_URL}/term/active`, {
+    credentials: "include",
+  });
+  const json: ApiResponse<ActiveTermRow> = await res.json();
+  if (!res.ok || !json.data) {
+    throw new Error(json.message || "Failed to fetch active term.");
+  }
+  return json.data;
 }
-
 async function getOverviewAttendance(): Promise<{ attendance: number }> {
   const res = await fetch(`${BASE_URL}/dashboard/attendanceRate`, {
     credentials: "include",
@@ -92,6 +94,17 @@ interface PerformanceTrendResponse {
   success: boolean;
   data: PerformanceTrendPoint[];
   message?: string;
+}
+
+export interface ActiveTermRow {
+  id: number;
+  schoolYearId: number;
+  schoolYear: string;
+  termNumber: number;
+  name: string; 
+  startDate: string;
+  endDate: string;
+  status: "Upcoming" | "Active" | "Completed";
 }
 
 async function getSchoolWideAcademicPerformance(): Promise<SchoolWideAcademicPerformanceResponse> {
@@ -281,7 +294,6 @@ export function getAttentionItems(): Promise<AttentionItem[]> {
 
 export async function getPrincipalDashboardData(): Promise<PrincipalDashboardData> {
   const [
-    currentTerm,
     overview,
     todaysAttendance,
     performanceByGrade,
@@ -293,7 +305,6 @@ export async function getPrincipalDashboardData(): Promise<PrincipalDashboardDat
     attentionItems,
     subjectRankingByTerm,
   ] = await Promise.all([
-    getCurrentTerm(),
     getOverview(),
     getTodaysAttendance(),
     getPerformanceByGrade(),
@@ -307,7 +318,6 @@ export async function getPrincipalDashboardData(): Promise<PrincipalDashboardDat
   ]);
 
   return {
-    currentTerm,
     overview,
     todaysAttendance,
     performanceByGrade,

@@ -1,6 +1,4 @@
 import { API_CONFIG } from '../../../../../../../config/api.config';
-import type { BackendTerm } from "../utils/transformProgressReport";
-import type { ProgressReportMeta } from "../types/types";
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/termPerformanceProgress`;
 
@@ -24,27 +22,24 @@ function buildCacheKey(studentId: string): string {
   return studentId;
 }
 
-/** Combined shape returned by the term-performance endpoint: per-term
- * grade data plus the learner/section/adviser/school-year header info. */
-export interface StudentTermPerformanceResult {
-  terms: BackendTerm[];
-  meta: ProgressReportMeta;
+/** Per-term visibility status as returned by the visibility endpoint. */
+export interface TermVisibilityEntry {
+  gradingPeriodId: number;
+  termNumber: number;
+  termLabel: string;
+  isVisible: boolean;
+  termEnded: boolean;
+  /** true kapag pwede nang tignan ng parent (is_visible AND tapos na term) */
+  available: boolean;
 }
 
-const EMPTY_META: ProgressReportMeta = {
-  learner: "",
-  gradeSection: "",
-  classAdviser: "",
-  schoolYear: "",
-};
+const cache = new Map<string, TermVisibilityEntry[]>();
+const inFlightRequests = new Map<string, Promise<TermVisibilityEntry[]>>();
 
-const cache = new Map<string, StudentTermPerformanceResult>();
-const inFlightRequests = new Map<string, Promise<StudentTermPerformanceResult>>();
-
-export async function fetchStudentTermPerformance(
+export async function fetchStudentGradeVisibility(
   studentId: string,
   options?: { force?: boolean }
-): Promise<StudentTermPerformanceResult> {
+): Promise<TermVisibilityEntry[]> {
   const cacheKey = buildCacheKey(studentId);
 
   if (!options?.force) {
@@ -59,17 +54,14 @@ export async function fetchStudentTermPerformance(
     return inFlight;
   }
 
-const request = (async () => {
-  const res = await authedFetch(`${BASE_URL}/${studentId}/term-performance`);
-  const json = await handleJsonResponse(res);
+  const request = (async () => {
+    const res = await authedFetch(`${BASE_URL}/${studentId}/visibility`);
+    const json = await handleJsonResponse(res);
 
-  const result: StudentTermPerformanceResult = {
-    terms: json.data as BackendTerm[],
-    meta: (json.meta as ProgressReportMeta) ?? EMPTY_META,
-  };
-  cache.set(cacheKey, result);
-  return result;
-})();
+    const result = json.data as TermVisibilityEntry[];
+    cache.set(cacheKey, result);
+    return result;
+  })();
 
   inFlightRequests.set(cacheKey, request);
 
@@ -80,7 +72,7 @@ const request = (async () => {
   }
 }
 
-export function clearStudentTermPerformanceProgressCache(studentId?: string) {
+export function clearStudentGradeVisibilityCache(studentId?: string) {
   if (studentId !== undefined) {
     cache.delete(buildCacheKey(studentId));
   } else {

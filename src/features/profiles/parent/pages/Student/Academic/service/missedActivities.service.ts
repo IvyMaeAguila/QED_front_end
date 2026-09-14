@@ -1,6 +1,8 @@
+import { API_CONFIG } from '../../../../../../../config/api.config';
+
 import type { MissedActivity } from "../types/types";
 
-const API_BASE_URL = "http://localhost:7400/api/missedActivities";
+const API_BASE_URL = `${API_CONFIG.baseURL}/api/missedActivities`;
 
 interface RawMissedActivity {
   item_id: number;

@@ -6,7 +6,7 @@ import TermAverageTrendChart from "./Overview/components/PerformanceAnalytics";
 import StudentNarrativeSnapshot from "./Overview/components/HolisticAverage";
 import AcademicTab from "./Academic/AcademicTab";
 import HolisticTab from "./Holistic/HoisticWeeklyReportTab";
-import { mockInterventionFlags, mockSchedule } from "./Academic/data/MockData";
+import { mockInterventionFlags } from "./Academic/data/MockData";
 import { TabNav, type StudentDetailTab } from "./PageComponents/TopNavigation";
 import StudentInfoTable from "./PageComponents/StudentInfoTable";
 import { useStudentDetail } from "./Overview/useStudentDetail";
@@ -16,24 +16,98 @@ import {
   ProgressReportProvider,
   useProgressReport,
 } from "./ProgressReport/context/ProgressReportContext";
-import { TermPerformanceProvider } from "./Overview/context/PerformanceAnalyticsContext";
 import { useFormalReportDownload } from "./ProgressReport/hooks/useFormalreportDownload";
 import type { DetailStudent } from "./GlobalTypes/types";
 import { StudentProfileTab } from "./StudentProfile/StudentProfileTab";
+import { Skeleton } from "@shared/components/SkeletonLoading";
+import ProgressReportUnavailableModal from "./ProgressReport/utils/ProgressReportUnavailableModal";
+
+function ProgressReportSkeleton() {
+  return (
+    <div className="flex flex-col gap-4 mt-4">
+      <Skeleton className="h-6 w-40" />
+      <div className="flex justify-between">
+        <Skeleton className="h-4 w-80" />
+        <Skeleton className="h-8 w-35 rounded-lg" />
+      </div>
+      <div className="flex flex-col gap-3">
+        <Skeleton className="mb-5 h-24 w-full rounded-lg" />
+        <div className="flex justify-between">
+          <div className="flex flex-col gap-2">
+            <Skeleton className="h-4 w-10" />
+            <Skeleton className="h-4 w-10" />
+          </div>
+          <div className="flex gap-1">
+            <Skeleton className="h-8 w-18 rounded-lg" />
+            <Skeleton className="h-8 w-18 rounded-lg" />
+            <Skeleton className="h-8 w-18 rounded-lg" />
+            <Skeleton className="h-8 w-18 rounded-lg" />
+          </div>
+        </div>
+        <div className="flex gap-5">
+          <Skeleton className="h-60 w-180 rounded-lg" />
+          <Skeleton className="h-60 w-100 rounded-lg" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // Small inner component so it can consume ProgressReportContext
 function ProgressReportSection({
   theme,
   student,
+  onUnavailableAcknowledge,
 }: {
   theme: AdminThemeContext;
   student: DetailStudent;
+  onUnavailableAcknowledge?: () => void;
 }) {
-  const { data } = useProgressReport();
+  const { data, loading, selectedTerm, selectedTermVisibility } = useProgressReport();
   const { downloading, handleDownload } = useFormalReportDownload({
     elementId: "formal-progress-report",
     fileName: `${data.meta.learner}-progress-report.pdf`,
   });
+
+  const isLocked = !(selectedTermVisibility?.available ?? false);
+
+  const [modalOpen, setModalOpen] = useState(false);
+
+  // Ipakita lang ang modal kapag TAPOS na ang loading AT locked pa rin ang term.
+  // Ang buong section (heading, button, table) ay mananatiling skeleton
+  // habang bukas ang modal na ito.
+  useEffect(() => {
+    if (loading) {
+      setModalOpen(false);
+      return;
+    }
+    setModalOpen(isLocked);
+  }, [loading, isLocked, selectedTerm]);
+
+  function handleModalClose() {
+    setModalOpen(false);
+    onUnavailableAcknowledge?.();
+  }
+
+  // Habang naglo-load PA, o naka-lock ang term (unavailable), manatiling
+  // skeleton ang BUONG section — kasama ang heading, download button, at
+  // StudentInfoTable — hindi lang yung mga card sa loob ng tab.
+  if (loading || isLocked) {
+    return (
+      <>
+        <ProgressReportSkeleton />
+        {!loading && isLocked && (
+          <ProgressReportUnavailableModal
+            open={modalOpen}
+            onClose={handleModalClose}
+            theme={theme}
+            isVisible={selectedTermVisibility?.isVisible ?? false}
+            termEnded={selectedTermVisibility?.termEnded ?? false}
+          />
+        )}
+      </>
+    );
+  }
 
   return (
     <>
@@ -71,9 +145,6 @@ export default function ChildDetailPage() {
   const theme = useOutletContext<AdminThemeContext>();
   const { darkMode, textMuted } = theme;
 
-  // TODO: wire this to your real active-term source (e.g. fetchGradingPeriodsGlobal /
-  // a term selector elsewhere on the page). Whatever changes when the term switches —
-  // termNumber, "2026-Term2", etc. — pass it here so HolisticTab resets its date buttons.
   const currentTerm = 1;
 
   useEffect(() => {
@@ -150,7 +221,6 @@ export default function ChildDetailPage() {
               <StudentInfoTable student={student} theme={theme} />
               <AcademicTab
                 interventionFlags={mockInterventionFlags}
-                schedule={mockSchedule}
                 theme={theme}
                 student={student}
               />
@@ -180,7 +250,11 @@ export default function ChildDetailPage() {
 
           {activeTab === "progressReport" && (
             <ProgressReportProvider studentId={studentId}>
-              <ProgressReportSection theme={theme} student={student} />
+              <ProgressReportSection
+                theme={theme}
+                student={student}
+                onUnavailableAcknowledge={() => setActiveTab("overview")}
+              />
             </ProgressReportProvider>
           )}
 

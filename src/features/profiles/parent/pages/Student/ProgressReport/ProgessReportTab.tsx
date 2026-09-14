@@ -1,5 +1,3 @@
-// ProgressReportTab.tsx
-import { Download } from "lucide-react";
 import type { AdminThemeContext } from "../../../../../profiles/admin/pages/AdminLayout";
 import { useProgressReport } from "./context/ProgressReportContext";
 import { PeriodicRatingCard } from "./components/PeriodicRatingCard";
@@ -8,7 +6,6 @@ import { HolisticDevelopmentCard } from "./components/HolisticDevelopmentCard";
 import { AttendanceRecordCard } from "./components/AttendanceRecordCard";
 import { FormalReportTemplate } from "./components/FormalReportTemplate";
 import { TermTabs } from "./components/TermTabs";
-import { useFormalReportDownload } from "./hooks/useFormalreportDownload";
 import type { DetailStudent } from "../GlobalTypes/types";
 
 interface ProgressReportTabProps {
@@ -16,10 +13,7 @@ interface ProgressReportTabProps {
   student: DetailStudent;
 }
 
-export function ProgressReportContent({
-  theme,
-  student,
-}: ProgressReportTabProps) {
+export function ProgressReportContent({ theme, student }: ProgressReportTabProps) {
   const {
     data,
     selectedTerm,
@@ -84,9 +78,6 @@ export function ProgressReportContent({
   );
 }
 
-export default function ProgressReportTab({
-  theme,
-  student,
-}: ProgressReportTabProps) {
+export default function ProgressReportTab({ theme, student }: ProgressReportTabProps) {
   return <ProgressReportContent theme={theme} student={student} />;
 }

@@ -102,7 +102,6 @@ export interface AttentionItem {
 // calls (see principalDashboardService.ts) — both return pieces typed
 // against this interface.
 export interface PrincipalDashboardData {
-  currentTerm: Term;
   overview: OverviewData;
   todaysAttendance: TodaysAttendance;
   performanceByGrade: GradePerformance[];

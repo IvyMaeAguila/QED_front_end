@@ -1,8 +1,7 @@
 import type { ProgressReportData, Term } from "../types/types";
-import { TERMS, TERM_LABELS, TERM_FILTER_LABELS } from "../types/types";
+import { TERMS, TERM_FILTER_LABELS } from "../types/types";
 import DepEd from "../../../../../../../assets/images/DepEd.png";
 import EUC from "../../../../../../../assets/images/EUC.webp";
-import { EuroIcon } from "lucide-react";
 
 interface FormalReportTemplateProps {
   data: ProgressReportData;
@@ -91,14 +90,14 @@ export function FormalReportTemplate({ data }: FormalReportTemplateProps) {
     return { ...domain, scoresByTerm, finalScore };
   });
 
-  const holisticGeneralAvgByTerm = TERMS.map((_, i) => {
-    const scores = holisticRows
-      .map((r) => r.scoresByTerm[i])
-      .filter((s): s is number => s !== null);
-    return scores.length > 0
-      ? scores.reduce((a, b) => a + b, 0) / scores.length
-      : null;
-  });
+  // const holisticGeneralAvgByTerm = TERMS.map((_, i) => {
+  //   const scores = holisticRows
+  //     .map((r) => r.scoresByTerm[i])
+  //     .filter((s): s is number => s !== null);
+  //   return scores.length > 0
+  //     ? scores.reduce((a, b) => a + b, 0) / scores.length
+  //     : null;
+  // });
   const holisticFinalScores = holisticRows
     .map((r) => r.finalScore)
     .filter((s): s is number => s !== null);
