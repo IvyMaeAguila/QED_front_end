@@ -585,14 +585,6 @@ export function FormalReportTemplate({ data }: FormalReportTemplateProps) {
   );
 }
 
-const circleBase: React.CSSProperties = {
-  position: "absolute",
-  top: "0px",
-  width: "42px",
-  height: "42px",
-  borderRadius: "50%",
-  background: "#3E6FC4",
-};
 
 const sectionTitle: React.CSSProperties = {
   fontSize: "12.5px",

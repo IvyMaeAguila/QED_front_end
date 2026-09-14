@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { Plus, Filter } from "lucide-react";
 import { useClasses } from "./context/ClassesContext";
-import { useStudents } from "../studentrecords/context/StudentsContext";
 import { ClassCard } from "./components/ClassCard";
 import {
   GRADE_LEVELS,
@@ -65,7 +64,7 @@ export function ClassesPage() {
                 setGradeFilter(e.target.value as GradeLevel | "All Grades")
               }
               className="h-10 pl-4 pr-10 rounded-xl text-xs font-bold bg-white text-[#650000] border border-[#650000] outline-none cursor-pointer appearance-none 
-              hover:bg-linear-to-r hover:from-[#550000] hover:to-[#bb0000] hover:text-white transition-all duration-300"
+              hover:bg-linear-to-r hover:from-[#550000] hover:to-maroon-light hover:text-white transition-all duration-300"
             >
               <option value="All Grades">All Grades</option>
               {GRADE_LEVELS.map((g) => (

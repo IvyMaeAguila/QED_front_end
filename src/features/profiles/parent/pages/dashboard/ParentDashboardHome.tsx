@@ -1,4 +1,4 @@
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import DailyUpdateCard from "../dashboard/components/DailyUpdateCard";
 import EventsCard from "../dashboard/components/EventsCard";
 import StudentsSection from "../dashboard/components/StudentsSection";

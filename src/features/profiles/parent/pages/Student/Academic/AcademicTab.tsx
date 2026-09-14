@@ -3,7 +3,6 @@ import InterventionSupport from "./components/InterventionSupport";
 import ClassSchedule from "../Academic/components/ClassSchedule";
 import type {
   InterventionFlag,
-  ScheduleItem,
 } from "./types/types";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
 import type { DetailStudent } from "../../Student/GlobalTypes/types";
