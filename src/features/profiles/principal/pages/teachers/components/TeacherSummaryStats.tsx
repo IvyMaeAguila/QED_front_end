@@ -23,7 +23,7 @@ export function TeacherSummaryStats({
     <MiniStatRow panelBg={panelBg} panelBorder={panelBorder}>
       <MiniStat
         label="Advisory"
-        value={`${teacher.gradeLevel} · ${teacher.advisorySection}`}
+        value={`${teacher.gradeLevel ?? ""} · ${teacher.advisorySection ?? ""}`}
         icon={GraduationCap}
         textPrimary={textPrimary}
         textMuted={textMuted}
@@ -32,7 +32,7 @@ export function TeacherSummaryStats({
       />
       <MiniStat
         label="Room"
-        value={teacher.room}
+        value={teacher.room ?? ""}
         icon={DoorOpen}
         textPrimary={textPrimary}
         textMuted={textMuted}
