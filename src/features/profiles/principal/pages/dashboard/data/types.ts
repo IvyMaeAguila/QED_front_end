@@ -112,4 +112,5 @@ export interface PrincipalDashboardData {
   holisticDomains: HolisticDomain[];
   holisticRubric: HolisticRubric;
   attentionItems: AttentionItem[];
+  currentTerm: Term;
 }

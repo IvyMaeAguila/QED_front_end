@@ -3,6 +3,7 @@ import { API_CONFIG } from '../../../../../../config/api.config';
 const BASE_URL = `${API_CONFIG.baseURL}/api`;
 
 import type {
+  Term,
   OverviewData,
   TodaysAttendance,
   GradePerformance,
@@ -28,7 +29,7 @@ function resolveAfterDelay<T>(value: T): Promise<T> {
 }
 
 export async function fetchActiveTerm(): Promise<ActiveTermRow> {
-  const res = await fetch(`${BASE_URL}/term/active`, {
+  const res = await fetch(`${BASE_URL}/dashboard/active-term`, {
     credentials: "include",
   });
   const json: ApiResponse<ActiveTermRow> = await res.json();
@@ -47,6 +48,10 @@ async function getOverviewAttendance(): Promise<{ attendance: number }> {
   return res.json();
 }
 
+function mapToTerm(name: string): Term {
+  if (name === "Term 1" || name === "Term 2" || name === "Term 3") return name;
+  throw new Error(`Unexpected term name from API: ${name}`);
+}
 
 interface GradingPeriodRow {
   id: number;
@@ -304,6 +309,7 @@ export async function getPrincipalDashboardData(): Promise<PrincipalDashboardDat
     holisticRubric,
     attentionItems,
     subjectRankingByTerm,
+    activeTerm
   ] = await Promise.all([
     getOverview(),
     getTodaysAttendance(),
@@ -315,6 +321,7 @@ export async function getPrincipalDashboardData(): Promise<PrincipalDashboardDat
     getHolisticRubric(),
     getAttentionItems(),
     getSubjectRankingByTerm(),
+    fetchActiveTerm(), 
   ]);
 
   return {
@@ -328,5 +335,6 @@ export async function getPrincipalDashboardData(): Promise<PrincipalDashboardDat
     holisticDomains,
     holisticRubric,
     attentionItems,
+    currentTerm: mapToTerm(activeTerm.name),
   };
 }
