@@ -27,6 +27,12 @@ export const GRADE_LEVEL_BY_ID: Record<number, GradeLevel> = {
   6: "Grade 6",
 };
 
+export interface WeightDistributionItem {
+  id: string;
+  assessmentType: string;
+  weight: number;
+}
+
 export interface Subject {
   id: string;
   name: string;
@@ -36,6 +42,7 @@ export interface Subject {
   teacherId: string | null;
   schoolYear: string;
   status: "Active" | "Inactive";
+  weightDistribution?: WeightDistributionItem[];
 }
 
 // Payload ng AddSubjectModal — grade level + subject name lang ang
@@ -47,6 +54,7 @@ export interface NewSubjectInput {
   isGraded: boolean;
   schoolYear: string;
   status: "Active" | "Inactive";
+  weightDistribution: WeightDistributionItem[];
 }
 
 export interface Section {
