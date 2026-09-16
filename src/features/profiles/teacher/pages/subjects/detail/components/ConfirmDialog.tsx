@@ -23,46 +23,68 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   const textPrimary = darkMode ? "text-white" : "text-[#111827]";
   const textMuted = darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]";
+  const panelBorder = darkMode ? "border-white/10" : "border-black/10";
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/40" onClick={onCancel}>
+    <div
+      className="fixed inset-0 z-100 flex items-center justify-center p-4"
+      style={{ backgroundColor: "rgba(10,10,15,0.56)", backdropFilter: "blur(6px)" }}
+      onClick={onCancel}
+    >
       <div
-        className={`w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl ${darkMode ? "bg-[#111827]" : "bg-white"}`}
+        role="dialog"
+        aria-modal="true"
+        className={`w-full max-w-sm overflow-hidden rounded-2xl border shadow-card ${panelBorder} ${
+          darkMode ? "bg-[#111827]" : "bg-white"
+        }`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-5">
-          <div className="flex items-start gap-3">
-            <span
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
-              style={{ backgroundColor: danger ? "#FEE2E2" : "#F8EDEE", color: danger ? "#DC2626" : ACCENT }}
-            >
-              <AlertTriangle size={18} />
-            </span>
-            <div className="min-w-0">
-              <h3 className={`font-extrabold ${textPrimary}`}>{title}</h3>
-              <p className={`mt-1 text-xs font-medium ${textMuted}`}>{message}</p>
-            </div>
-            <button onClick={onCancel} className={`ml-auto shrink-0 ${textMuted}`} aria-label="Cancel">
-              <X size={16} />
-            </button>
+        <div className={`flex items-start gap-3 border-b px-4 py-3 ${panelBorder}`}>
+          <span
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
+            style={{ backgroundColor: danger ? "#FEE2E2" : "#F8EDEE", color: danger ? "#DC2626" : ACCENT }}
+          >
+            <AlertTriangle size={15} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className={`text-xs font-bold ${textPrimary}`}>{title}</p>
+            <p className={`mt-0.5 text-[11px] font-medium ${textMuted}`}>{message}</p>
           </div>
-          <div className="mt-5 flex justify-end gap-2">
-            <button
-              onClick={onCancel}
-              className={`h-10 rounded-xl border px-4 text-xs font-bold ${
-                darkMode ? "border-[#374151] text-[#D1D5DB]" : "border-[#E5E7EB] text-[#374151]"
-              }`}
-            >
-              Cancel
-            </button>
-            <button
-              onClick={onConfirm}
-              className="h-10 rounded-xl px-4 text-xs font-extrabold text-white transition-opacity hover:opacity-90"
-              style={{ background: danger ? "#DC2626" : ACCENT }}
-            >
-              {confirmLabel}
-            </button>
-          </div>
+          <button
+            onClick={onCancel}
+            aria-label="Cancel"
+            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition-colors ${
+              darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#64748B] hover:bg-black/5"
+            }`}
+          >
+            <X size={14} />
+          </button>
+        </div>
+
+        <div className="flex justify-end gap-2 px-4 py-3">
+          <button
+            onClick={onCancel}
+            className={`flex h-8 items-center rounded-lg border px-3 text-[11px] font-bold transition-colors ${
+              darkMode
+                ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
+                : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
+            }`}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="flex h-8 items-center rounded-lg px-3 text-[11px] font-extrabold text-white transition-colors"
+            style={{ backgroundColor: danger ? "#DC2626" : "#800000" }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = danger ? "#B91C1C" : "#650000";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = danger ? "#DC2626" : "#800000";
+            }}
+          >
+            {confirmLabel}
+          </button>
         </div>
       </div>
     </div>

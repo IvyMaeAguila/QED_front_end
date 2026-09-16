@@ -36,6 +36,7 @@ export function AddItemModal({
   onConfirm,
   darkMode,
   panelBg,
+  panelBorder,
   textMuted,
 }: AddItemModalProps) {
   const isExam = tab === "exams";
@@ -124,44 +125,57 @@ export function AddItemModal({
     });
   }
 
-  const fieldRow = `w-full h-12 px-3.5 rounded-xl border text-sm font-semibold outline-none transition-colors flex items-center gap-2.5 ${
-    darkMode ? "bg-[#0B1120] border-[#374151]" : "bg-[#F1F1F1] border-transparent"
+  const fieldRow = `flex h-8 w-full items-center gap-2 rounded-lg border px-2.5 text-[11px] font-bold outline-none transition-colors ${
+    darkMode ? "border-white/10 bg-white/5" : "border-black/10 bg-[#F8FAFC]"
   }`;
-  const inputBare = `flex-1 bg-transparent outline-none ${darkMode ? "text-white placeholder:text-[#6B7280]" : "text-[#111827] placeholder:text-[#9CA3AF]"}`;
+  const inputBare = `flex-1 bg-transparent outline-none ${
+    darkMode ? "text-white placeholder:text-[#6B7280]" : "text-[#111827] placeholder:text-[#9CA3AF]"
+  }`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-100 flex items-center justify-center p-4"
+      style={{ backgroundColor: "rgba(10,10,15,0.56)", backdropFilter: "blur(6px)" }}
+      onClick={onClose}
+    >
       <div
-        className={`w-full max-w-md rounded-2xl overflow-hidden shadow-xl ${panelBg}`}
+        role="dialog"
+        aria-modal="true"
+        className={`w-full max-w-md overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-6 py-5 relative" style={{ background: ACCENT }}>
+        <div className={`flex items-center justify-between gap-3 border-b px-4 py-2.5 ${panelBorder}`}>
+          <div className="min-w-0">
+            <p className={`truncate text-xs font-bold uppercase tracking-wide ${textPrimary}`}>{subjectName}</p>
+            <p className={`text-[11px] font-medium ${textMuted}`}>
+              {isEdit ? "Edit" : "Add"} {ASSESSMENT_TAB_LABELS[tab]}
+            </p>
+          </div>
           <button
             onClick={onClose}
-            className="absolute right-4 top-4 w-7 h-7 rounded-lg flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors"
+            aria-label="Close"
+            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition-colors ${
+              darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#64748B] hover:bg-black/5"
+            }`}
           >
-            <X size={15} className="text-white" />
+            <X size={14} />
           </button>
-          <h3 className="text-white text-2xl font-black">{subjectName}</h3>
-          <p className="text-white/70 text-sm font-semibold mt-0.5">
-            {isEdit ? "Edit" : "Add"} {ASSESSMENT_TAB_LABELS[tab]}
-          </p>
         </div>
 
-        <div className="p-6 space-y-3">
-          <div className={fieldRow}>
-            <Calendar size={16} className={textMuted} />
+        <div className="space-y-2 p-4">
+          <label className={fieldRow}>
+            <Calendar size={13} className={textMuted} />
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className={`${inputBare} font-bold`}
+              className={inputBare}
             />
-          </div>
+          </label>
 
           {isExam && (
-            <div className={fieldRow}>
-              <ListChecks size={16} className={textMuted} />
+            <label className={fieldRow}>
+              <ListChecks size={13} className={textMuted} />
               <select
                 value={examType}
                 onChange={(e) => setExamType(e.target.value as ExamType)}
@@ -173,13 +187,13 @@ export function AddItemModal({
                   </option>
                 ))}
               </select>
-            </div>
+            </label>
           )}
 
           {!isExam &&
             (newTopicMode ? (
               <div className={fieldRow}>
-                <Tag size={16} className={textMuted} />
+                <Tag size={13} className={textMuted} />
                 <input
                   value={newTopicName}
                   onChange={(e) => setNewTopicName(e.target.value)}
@@ -193,20 +207,22 @@ export function AddItemModal({
                 <button
                   onClick={handleCreateTopicInline}
                   disabled={creatingTopic || !newTopicName.trim()}
-                  className="shrink-0 rounded-lg px-2.5 py-1 text-xs font-extrabold text-white transition-opacity hover:opacity-90 disabled:opacity-40"
-                  style={{ background: ACCENT }}
+                  className="shrink-0 rounded-md bg-[#800000] px-2 py-1 text-[11px] font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-40"
                 >
                   Save
                 </button>
                 {topics.length > 0 && (
-                  <button onClick={() => setNewTopicMode(false)} className={`shrink-0 text-xs font-bold ${textMuted}`}>
+                  <button
+                    onClick={() => setNewTopicMode(false)}
+                    className={`shrink-0 text-[11px] font-bold ${textMuted}`}
+                  >
                     Cancel
                   </button>
                 )}
               </div>
             ) : (
               <div className={fieldRow}>
-                <Tag size={16} className={textMuted} />
+                <Tag size={13} className={textMuted} />
                 <select
                   value={selectedTopicId}
                   onChange={(e) => setSelectedTopicId(e.target.value)}
@@ -224,16 +240,16 @@ export function AddItemModal({
                 </select>
                 <button
                   onClick={() => setNewTopicMode(true)}
-                  className={`shrink-0 flex items-center gap-1 text-xs font-bold ${textMuted} hover:${textPrimary}`}
+                  className={`flex shrink-0 items-center gap-1 text-[11px] font-bold ${textMuted}`}
                 >
-                  <Plus size={13} />
+                  <Plus size={12} />
                   New
                 </button>
               </div>
             ))}
 
           <label className={fieldRow}>
-            <span className={`text-xs font-bold uppercase tracking-wide ${textMuted}`}>
+            <span className={`shrink-0 text-[11px] font-bold uppercase tracking-wide ${textMuted}`}>
               {isExam ? "Score" : "Total items"}
             </span>
             <input
@@ -248,13 +264,12 @@ export function AddItemModal({
             />
           </label>
 
-          {error && <p className="text-xs font-bold text-[#DC2626]">{error}</p>}
+          {error && <p className="text-[11px] font-bold text-[#DC2626]">{error}</p>}
 
           <button
             onClick={handleConfirm}
             disabled={submitting}
-            className="w-full h-12 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90 mt-2 disabled:opacity-60"
-            style={{ background: ACCENT }}
+            className="mt-1 flex h-9 w-full items-center justify-center rounded-lg bg-[#800000] text-xs font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-60"
           >
             {submitting ? "Saving..." : isEdit ? "Save Changes" : "Confirm"}
           </button>

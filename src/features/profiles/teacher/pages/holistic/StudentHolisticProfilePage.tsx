@@ -10,7 +10,6 @@ import {
   Loader2,
   Minus,
   Shield,
-  Sparkles,
   TrendingDown,
   TrendingUp,
   Users,
@@ -25,18 +24,26 @@ import {
 } from "./services/holistic.service";
 import { fetchGradingPeriodsGlobal } from "./services/holistic.service";
 
-const ACCENT = "#6B0000";
+// Matches --color-maroon in global.css, and the ACCENT used on the Domain
+// Trends page — was a different, unrelated hex here before.
+const ACCENT = "#8F1414";
 
 type RiskLevel = "HIGH" | "MEDIUM" | "NONE";
 type ChartDomainKey = keyof DomainAverages;
 type ScoreBand = 1 | 2 | 3 | 4 | 5;
 
+// Same green -> gold -> red gradient as the Domain Trends page's BANDS,
+// anchored to the theme's --color-green / --color-gold / --color-red
+// tokens. This page was previously using stock Tailwind palette colors
+// (red-500, orange-400, amber-500, emerald-400, green-500) — a student's
+// "Good" rating shouldn't render in a different color depending on which
+// page you're looking at it from.
 const BANDS = [
-  { from: 1.0, to: 1.5, remark: "Critical", color: "#EF4444" },
-  { from: 1.5, to: 2.5, remark: "Needs Improvement", color: "#FB923C" },
-  { from: 2.5, to: 3.5, remark: "Average", color: "#F59E0B" },
-  { from: 3.5, to: 4.5, remark: "Good", color: "#34D399" },
-  { from: 4.5, to: 5.001, remark: "Excellent", color: "#22C55E" },
+  { from: 1.0, to: 1.5, remark: "Critical", color: "#B5453F" },
+  { from: 1.5, to: 2.5, remark: "Needs Improvement", color: "#D08A4F" },
+  { from: 2.5, to: 3.5, remark: "Average", color: "#C9A227" },
+  { from: 3.5, to: 4.5, remark: "Good", color: "#8FBF7A" },
+  { from: 4.5, to: 5.001, remark: "Excellent", color: "#3F8A5F" },
 ] as const;
 
 const evaluationFor = (average: number) => {
@@ -87,15 +94,17 @@ const interpretationFor = (domain: ChartDomainKey, value: number): string => {
   return DOMAIN_INTERPRETATIONS[domain][rounded];
 };
 
+// Aligned to the same three semantic tokens as BANDS above, instead of
+// the separate red-500/amber-500/green-500 set this used before.
 const RISK_BADGE: Record<RiskLevel, { label: string; color: string }> = {
-  HIGH: { label: "High Risk", color: "#EF4444" },
-  MEDIUM: { label: "Needs Attention", color: "#F59E0B" },
-  NONE: { label: "No Risk", color: "#22C55E" },
+  HIGH: { label: "High Risk", color: "#B5453F" },
+  MEDIUM: { label: "Needs Attention", color: "#C9A227" },
+  NONE: { label: "No Risk", color: "#3F8A5F" },
 };
 
 const TREND_META: Record<string, { label: string; color: string | null; Icon: LucideIcon }> = {
-  Improving: { label: "Improving", color: "#22C55E", Icon: TrendingUp },
-  Declining: { label: "Declining", color: "#EF4444", Icon: TrendingDown },
+  Improving: { label: "Improving", color: "#3F8A5F", Icon: TrendingUp },
+  Declining: { label: "Declining", color: "#B5453F", Icon: TrendingDown },
   Stable: { label: "Stable", color: null, Icon: Minus },
 };
 
@@ -205,7 +214,10 @@ export function StudentHolisticProfilePage() {
       : null;
   }, [profile, activeTab]);
 
-  const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
+  // Now shadow-card, matching the token every other card on Domain Trends
+  // uses — this was shadow-sm, a different (flatter) elevation for what
+  // is visually the same kind of card.
+  const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
   const subtleFill = darkMode ? "bg-white/5" : "bg-black/[0.03]";
   const subtleHover = darkMode ? "hover:bg-white/5" : "hover:bg-black/5";
 
@@ -235,8 +247,8 @@ export function StudentHolisticProfilePage() {
         </div>
       ) : error ? (
         <div className={`${cardClasses} flex flex-col items-center gap-2 px-5 py-16 text-center`}>
-          <AlertCircle size={20} className="text-red-500" />
-          <p className="text-sm font-semibold text-red-500">{error}</p>
+          <AlertCircle size={20} style={{ color: "#B5453F" }} />
+          <p className="text-sm font-semibold" style={{ color: "#B5453F" }}>{error}</p>
         </div>
       ) : !profile ? null : (
         <>
@@ -350,27 +362,23 @@ export function StudentHolisticProfilePage() {
 
                             <BandGauge value={value} textMuted={textMuted} />
 
+                            {/* No decorative icon here now — matches the Domain
+                                Trends page, where the same "ghost sparkle +
+                                small sparkle label" treatment was removed in
+                                favor of plain text. */}
                             <div
-                              className={`relative mt-3 overflow-hidden rounded-xl border-l-[3px] px-3 py-2.5 ${subtleFill}`}
+                              className={`mt-3 overflow-hidden rounded-xl border-l-[3px] px-3 py-2.5 ${subtleFill}`}
                               style={{
                                 borderColor: domainEval ? domainEval.color : darkMode ? "#ffffff20" : "#E5E7EB",
                               }}
                             >
-                              <Sparkles
-                                size={34}
-                                className="pointer-events-none absolute -bottom-2 -right-2 opacity-[0.05]"
-                                style={{ color: domainEval ? domainEval.color : textMuted }}
-                              />
-                              <div className="relative flex items-center gap-1">
-                                <Sparkles size={11} style={{ color: domainEval ? domainEval.color : undefined }} className={domainEval ? "" : textMuted} />
-                                <span
-                                  className="text-[10px] font-extrabold uppercase tracking-wider"
-                                  style={{ color: domainEval ? domainEval.color : undefined }}
-                                >
-                                  {domainEval ? "Insight" : "Pending"}
-                                </span>
-                              </div>
-                              <p className={`relative mt-1 text-[13px] font-bold leading-snug ${textPrimary}`}>
+                              <span
+                                className={`text-[10px] font-extrabold uppercase tracking-wider ${domainEval ? "" : textMuted}`}
+                                style={{ color: domainEval ? domainEval.color : undefined }}
+                              >
+                                {domainEval ? "Insight" : "Pending"}
+                              </span>
+                              <p className={`mt-1 text-[13px] font-bold leading-snug ${textPrimary}`}>
                                 {domainEval && value !== null
                                   ? interpretationFor(domain, value)
                                   : "Awaiting evaluation data."}
@@ -389,7 +397,7 @@ export function StudentHolisticProfilePage() {
                           <div className={`mt-6 space-y-2 border-t pt-5 ${panelBorder}`}>
                             <p className={`text-xs font-extrabold uppercase tracking-wide ${textMuted}`}>Recommended actions</p>
                             {subj.recommendations.map((rec, i) => {
-                              const color = rec.priority === "High" ? "#EF4444" : "#F59E0B";
+                              const color = rec.priority === "High" ? "#B5453F" : "#C9A227";
                               return (
                                 <div key={i} className={`flex items-start gap-3 rounded-xl border p-3 ${panelBorder}`}>
                                   <span className="mt-0.5 shrink-0" style={{ color }}>
@@ -436,7 +444,7 @@ export function StudentHolisticProfilePage() {
                           className="rounded-full px-2.5 py-1 text-[10px] font-bold"
                           style={{ backgroundColor: `${RISK_BADGE[subj.riskLevel].color}18`, color: RISK_BADGE[subj.riskLevel].color }}
                         >
-                          {subj.evaluationCount === 0 ? "NO DATA" : RISK_BADGE[subj.riskLevel].label.toUpperCase()}
+                          {subj.evaluationCount === 0 ? "No data" : RISK_BADGE[subj.riskLevel].label}
                         </span>
                       </div>
 

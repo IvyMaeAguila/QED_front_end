@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useOutletContext } from "react-router-dom";
 import ExcelJS from "exceljs";
-import { ArrowLeft, Search, Users } from "lucide-react";
+import { ChevronLeft, Download, Loader2, Search, User, Users } from "lucide-react";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
 import {
   subjectClassListService,
@@ -9,8 +9,6 @@ import {
 } from "./services/subjectClassList.service";
 
 const ACCENT = "#6B0000";
-const SYSTEM_FONT =
-  '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
 
 function middleInitial(middleName?: string | null) {
   return middleName ? `${middleName.charAt(0)}.` : "";
@@ -74,9 +72,10 @@ export function SubjectClassListPage() {
 
   const maleCount = students.filter((s) => s.gender === "Male").length;
   const femaleCount = students.filter((s) => s.gender === "Female").length;
+  const filteredCount = maleRoster.length + femaleRoster.length;
 
-  const inputBg = darkMode ? "bg-white/[0.06]" : "bg-black/[0.03]";
-  const cardClasses = `rounded-[28px] border ${panelBg} ${panelBorder}`;
+  const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
+  const displaySectionName = sectionName ? `${gradeLevel} · Section ${sectionName}` : gradeLevel;
 
   const handleExport = async () => {
     const workbook = new ExcelJS.Workbook();
@@ -114,131 +113,181 @@ export function SubjectClassListPage() {
     URL.revokeObjectURL(url);
   };
 
-  if (loading) {
+  function renderStudentRow(student: SubjectClassListStudent, index: number) {
     return (
-      <div className="space-y-8 pb-16" style={{ fontFamily: SYSTEM_FONT }}>
-        <div className={`h-40 rounded-[28px] border animate-pulse ${panelBg} ${panelBorder}`} />
-        <div className={`h-64 rounded-[28px] border animate-pulse ${panelBg} ${panelBorder}`} />
-      </div>
+      <tr
+        key={student.studentId}
+        className={`border-t ${darkMode ? "border-white/10" : "border-black/10"}`}
+      >
+        <td className={`px-4 py-2 text-[11px] font-bold tabular-nums ${textMuted}`}>{index + 1}</td>
+        <td className="px-4 py-2">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span
+              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
+                darkMode ? "bg-white/10" : "bg-black/5"
+              } ${textMuted}`}
+            >
+              <User size={13} />
+            </span>
+            <span className={`truncate text-xs font-bold ${textPrimary}`}>
+              {student.lastName}, {student.firstName} {middleInitial(student.middleName)}
+            </span>
+          </div>
+        </td>
+        <td className={`px-4 py-2 text-xs font-medium tabular-nums ${textMuted}`}>
+          {student.studentNumber}
+        </td>
+      </tr>
     );
   }
-
-  if (error) {
-    return (
-      <div className="space-y-4 pb-16" style={{ fontFamily: SYSTEM_FONT }}>
-        <button onClick={() => navigate(-1)} className={`flex items-center gap-2 text-sm font-semibold ${textMuted}`}>
-          <ArrowLeft size={16} /> Back
-        </button>
-        <div className={`${cardClasses} py-16 text-center`}>
-          <p className="text-[13px] font-medium text-red-500">{error}</p>
-        </div>
-      </div>
-    );
-  }
-
-  const renderRosterTable = (label: string, roster: SubjectClassListStudent[]) => (
-    <div className={cardClasses}>
-      <div className={`px-6 py-4 border-b ${panelBorder}`}>
-        <p className="text-[13px] font-semibold uppercase tracking-wider" style={{ color: ACCENT }}>
-          {label} ({roster.length})
-        </p>
-      </div>
-      <div className="p-6 pt-0">
-        <table
-          className={`w-full text-left border-collapse border ${panelBorder}`}
-        >
-          <thead>
-            <tr className={darkMode ? "bg-white/4" : "bg-black/2"}>
-              <th className={`border ${panelBorder} px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wide ${textMuted} w-12`}>
-                No.
-              </th>
-              <th className={`border ${panelBorder} px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wide ${textMuted}`}>
-                Name
-              </th>
-              <th className={`border ${panelBorder} px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wide ${textMuted}`}>
-                Student ID
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {roster.map((s, i) => (
-              <tr key={s.studentId}>
-                <td className={`border ${panelBorder} px-4 py-2.5 text-[13px] ${textMuted}`}>{i + 1}</td>
-                <td className={`border ${panelBorder} px-4 py-2.5 text-[13px] font-medium ${textPrimary}`}>
-                  {s.lastName}, {s.firstName} {middleInitial(s.middleName)}
-                </td>
-                <td className={`border ${panelBorder} px-4 py-2.5 text-[13px] ${textMuted}`}>{s.studentNumber}</td>
-              </tr>
-            ))}
-            {roster.length === 0 && (
-              <tr>
-                <td colSpan={3} className={`border ${panelBorder} px-4 py-8 text-center text-[13px] font-medium ${textMuted}`}>
-                  No students found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
 
   return (
-    <div className="space-y-10 pb-16" style={{ fontFamily: SYSTEM_FONT }}>
-      <button onClick={() => navigate(-1)} className={`flex items-center gap-2 text-sm font-semibold ${textMuted}`}>
-        <ArrowLeft size={16} /> Back to Subjects
-      </button>
-
-      <div>
-        <p className="text-[13px] font-semibold uppercase tracking-[0.14em] mb-3" style={{ color: ACCENT }}>
-          {gradeLevel}
-          {sectionName && ` · Section ${sectionName}`}
-        </p>
-        <h1 className={`text-[40px] sm:text-[48px] leading-[1.05] font-semibold tracking-tight ${textPrimary}`}>
-          {subjectName}
-        </h1>
-      </div>
-
-      <div className={`flex flex-wrap items-center justify-between gap-6 border-y ${panelBorder} py-8`}>
-        <div className="flex flex-wrap gap-x-12 gap-y-6">
-          <div className="min-w-30">
-            <div className={`flex items-center gap-2 text-[13px] font-medium ${textMuted}`}>
-              <Users size={14} style={{ color: ACCENT }} />
-              Total Students
+    <div className="w-full min-h-full pb-12">
+      <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-2.5">
+            <button
+              onClick={() => navigate(-1)}
+              aria-label="Go back"
+              className={`mt-1 shrink-0 ${textMuted}`}
+            >
+              <ChevronLeft size={22} />
+            </button>
+            <div>
+              <p
+                className="text-[10px] font-extrabold uppercase tracking-[0.18em]"
+                style={{ color: ACCENT }}
+              >
+                {displaySectionName}
+              </p>
+              <h1 className={`mt-1 text-xl font-black tracking-tight ${textPrimary}`}>
+                {subjectName || "Class List"}
+              </h1>
+              <p className={`mt-1 text-xs font-medium ${textMuted}`}>
+                {students.length} student{students.length === 1 ? "" : "s"} · {maleCount} male ·{" "}
+                {femaleCount} female
+              </p>
             </div>
-            <p className={`text-4xl font-semibold tracking-tight mt-1 ${textPrimary}`}>{students.length}</p>
           </div>
-          <div className="min-w-30">
-            <div className={`text-[13px] font-medium ${textMuted}`}>Male</div>
-            <p className={`text-4xl font-semibold tracking-tight mt-1 ${textPrimary}`}>{maleCount}</p>
-          </div>
-          <div className="min-w-30">
-            <div className={`text-[13px] font-medium ${textMuted}`}>Female</div>
-            <p className={`text-4xl font-semibold tracking-tight mt-1 ${textPrimary}`}>{femaleCount}</p>
-          </div>
+
+          <button
+            onClick={handleExport}
+            disabled={loading || !!error || students.length === 0}
+            className={`flex h-8 shrink-0 items-center gap-1.5 self-start rounded-lg border bg-[#800000] px-3 text-[11px] font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-40 sm:self-center ${
+              darkMode ? "border-white/10" : "border-black/10"
+            }`}
+          >
+            <Download size={12} />
+            Export to Excel
+          </button>
         </div>
-        <button
-          onClick={handleExport}
-          className="h-11 px-6 rounded-full text-[13px] font-semibold text-white transition-opacity hover:opacity-90"
-          style={{ background: ACCENT }}
-        >
-          Export to Excel
-        </button>
-      </div>
 
-      <div className="relative flex-1 min-w-55 max-w-xs">
-        <Search size={15} className={`absolute left-4 top-1/2 -translate-y-1/2 ${textMuted}`} />
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search student"
-          className={`h-11 pl-10 pr-4 w-full text-[13px] font-medium rounded-full border outline-none transition focus:ring-2 ${inputBg} ${panelBorder} ${textPrimary}`}
-        />
-      </div>
+        {error ? (
+          <div className={`${cardClasses} px-5 py-14 text-center`}>
+            <p className="text-xs font-semibold text-red-500">{error}</p>
+          </div>
+        ) : loading ? (
+          <div className={`${cardClasses} flex items-center justify-center gap-2 px-5 py-14`}>
+            <Loader2 size={15} className={`animate-spin ${textMuted}`} />
+            <p className={`text-xs font-semibold ${textMuted}`}>Loading class list...</p>
+          </div>
+        ) : (
+          <>
+            <div
+              className={`flex flex-col gap-2.5 rounded-xl border px-3 py-2 sm:flex-row sm:items-center sm:justify-between ${panelBg} ${panelBorder}`}
+            >
+              <div className="relative w-full sm:w-72">
+                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5 text-gray-400">
+                  <Search size={13} />
+                </span>
+                <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search student..."
+                  aria-label="Search student by name or ID"
+                  className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-[11px] font-medium outline-none transition-colors placeholder:text-gray-400 focus:border-maroon ${panelBg} ${panelBorder} ${textPrimary}`}
+                />
+              </div>
+              <p className={`text-[11px] font-bold ${textMuted}`}>
+                Showing {filteredCount} of {students.length}
+              </p>
+            </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {renderRosterTable("Male", maleRoster)}
-        {renderRosterTable("Female", femaleRoster)}
+            <div className={cardClasses}>
+              <div
+                className={`flex items-center gap-1.5 border-b px-4 py-2.5 ${panelBorder}`}
+              >
+                <Users size={13} style={{ color: ACCENT }} />
+                <p className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>
+                  Class List
+                </p>
+              </div>
+
+              {filteredCount === 0 ? (
+                <p className={`px-4 py-10 text-center text-xs font-medium ${textMuted}`}>
+                  No students found matching "{search}".
+                </p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-max text-sm">
+                    <thead>
+                      <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
+                        <th
+                          className={`w-12 px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}
+                        >
+                          No.
+                        </th>
+                        <th
+                          className={`px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}
+                        >
+                          Name
+                        </th>
+                        <th
+                          className={`px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}
+                        >
+                          Student ID
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {maleRoster.length > 0 && (
+                        <>
+                          <tr>
+                            <td
+                              colSpan={3}
+                              className={`px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
+                                darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
+                              } ${textPrimary}`}
+                            >
+                              Male
+                            </td>
+                          </tr>
+                          {maleRoster.map((s, i) => renderStudentRow(s, i))}
+                        </>
+                      )}
+
+                      {femaleRoster.length > 0 && (
+                        <>
+                          <tr>
+                            <td
+                              colSpan={3}
+                              className={`px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
+                                darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
+                              } ${textPrimary}`}
+                            >
+                              Female
+                            </td>
+                          </tr>
+                          {femaleRoster.map((s, i) => renderStudentRow(s, i))}
+                        </>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

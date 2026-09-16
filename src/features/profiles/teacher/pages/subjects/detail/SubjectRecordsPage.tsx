@@ -5,7 +5,7 @@ import {
   useOutletContext,
   useParams,
 } from "react-router-dom";
-import { ArrowLeft, Check, Pencil } from "lucide-react";
+import { ArrowLeft, Check, ClipboardList, Loader2, Pencil } from "lucide-react";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
 import type { RosterStudent } from "./data";
 import type {
@@ -179,7 +179,7 @@ export function SubjectRecordsPage() {
     });
   }
 
-  const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
+  const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
   const backButton = (
     <button
       onClick={() => navigate(-1)}
@@ -192,26 +192,25 @@ export function SubjectRecordsPage() {
 
   if (!state) {
     return (
-      <div className="space-y-6 pb-12">
-        <div className="flex items-start gap-3">
-          {backButton}
-          <div>
-            <p
-              className="text-xs font-extrabold uppercase tracking-[0.18em]"
-              style={{ color: ACCENT }}
-            >
-              Subject Records
-            </p>
-            <h1 className={`mt-1 text-3xl font-black ${textPrimary}`}>
-              Records
-            </h1>
+      <div className="w-full min-h-full pb-12">
+        <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
+          <div className="flex items-start gap-2.5">
+            {backButton}
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-maroon">
+              <ClipboardList size={28} />
+            </span>
+            <div>
+              <h1 className={`text-lg font-black tracking-tight ${textPrimary}`}>
+                Records
+              </h1>
+            </div>
           </div>
-        </div>
-        <div className={`${cardClasses} px-5 py-16 text-center`}>
-          <p className={`font-bold ${textPrimary}`}>No records data</p>
-          <p className={`mt-1 text-sm ${textMuted}`}>
-            Open this page from a subject tab to view its records.
-          </p>
+          <div className={`${cardClasses} px-5 py-14 text-center`}>
+            <p className={`text-sm font-bold ${textPrimary}`}>No records data</p>
+            <p className={`mt-1 text-xs ${textMuted}`}>
+              Open this page from a subject tab to view its records.
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -219,116 +218,128 @@ export function SubjectRecordsPage() {
 
   const { subjectName, roster, terms } = state;
   const title = RECORDS_TITLES[tab as SubjectDetailTab];
+  const subtitle =
+    tab === "holistic"
+      ? "Read-only history — enter this week's ratings from the Holistic tab."
+      : isEditing
+        ? "Edit mode — changes save immediately. Click Done when finished."
+        : "A complete record for all enrolled students.";
 
   return (
-    <div className="space-y-6 pb-12">
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-        <div className="flex items-start gap-3">
-          {backButton}
-          <div>
-            <p
-              className="text-xs font-extrabold uppercase tracking-[0.18em]"
-              style={{ color: ACCENT }}
-            >
-              {subjectName}
-            </p>
-            <h1
-              className={`mt-1 text-3xl font-black tracking-tight ${textPrimary}`}
-            >
-              {title}
-            </h1>
-            <p className={`mt-1 text-sm font-medium ${textMuted}`}>
-              {tab === "holistic"
-                ? "Read-only history. Enter this week's ratings from the Holistic tab."
-                : isEditing
-                  ? "Edit mode — changes save immediately. Click Done when finished."
-                  : "A complete record for all enrolled students."}
-            </p>
-            {loadError && (
-              <p className="mt-1 text-xs font-bold text-red-600">{loadError}</p>
-            )}
+    <div className="w-full min-h-full pb-0">
+      <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-2.5">
+            {backButton}
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-maroon">
+              <ClipboardList size={28} />
+            </span>
+            <div>
+              <h1 className={`text-lg font-black tracking-tight ${textPrimary}`}>
+                {subjectName} — {title}
+              </h1>
+              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+                {subtitle}
+              </p>
+              {loadError && (
+                <p className="mt-1 text-xs font-semibold text-red-500">
+                  {loadError}
+                </p>
+              )}
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          {terms.length > 0 && (
-            <select
-              value={term}
-              onChange={(e) => setTerm(e.target.value)}
-              className={`h-10 rounded-xl border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
-              aria-label="Term"
-            >
-              {terms.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.label}
-                </option>
-              ))}
-            </select>
-          )}
-          {isAssessment && (
-            <button
-              onClick={() => setIsEditing((v) => !v)}
-              className={`flex h-10 items-center gap-1.5 rounded-xl px-4 text-xs font-extrabold transition-colors ${
-                isEditing
-                  ? "text-white"
-                  : darkMode
-                    ? "border border-white/10 text-white/80 hover:bg-white/5"
-                    : "border border-black/10 text-[#111827] hover:bg-black/5"
-              }`}
-              style={isEditing ? { background: ACCENT } : undefined}
-            >
-              {isEditing ? <Check size={14} /> : <Pencil size={14} />}
-              {isEditing ? "Done" : "Edit Records"}
-            </button>
-          )}
+
+        <div
+          className={`flex flex-wrap items-center justify-between gap-2.5 rounded-xl border px-3 py-2 ${panelBg} ${panelBorder}`}
+        >
           <span
-            className="w-fit rounded-xl px-3 py-2 text-xs font-extrabold"
+            className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-extrabold"
             style={{ backgroundColor: "#F8EDEE", color: ACCENT }}
           >
             {roster.length} student{roster.length === 1 ? "" : "s"}
           </span>
+
+          {(terms.length > 0 || isAssessment) && (
+            <div className="flex items-center gap-2.5">
+              {terms.length > 0 && (
+                <select
+                  value={term}
+                  onChange={(e) => setTerm(e.target.value)}
+                  className={`h-8 rounded-lg border px-2.5 text-[11px] font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
+                  aria-label="Term"
+                >
+                  {terms.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.label}
+                    </option>
+                  ))}
+                </select>
+              )}
+
+              {isAssessment && (
+                <button
+                  onClick={() => setIsEditing((v) => !v)}
+                  className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-[11px] font-extrabold transition-colors ${
+                    isEditing
+                      ? "border-black/10 bg-[#800000] text-white hover:bg-[#650000]"
+                      : darkMode
+                        ? "border-white/10 text-white/80 hover:bg-white/5"
+                        : "border-black/10 text-[#111827] hover:bg-black/5"
+                  }`}
+                >
+                  {isEditing ? <Check size={12} /> : <Pencil size={12} />}
+                  {isEditing ? "Done" : "Edit Records"}
+                </button>
+              )}
+            </div>
+          )}
         </div>
+
+        {isAssessment && !hasLoadedOnce && isLoadingRecords && (
+          <div className={`${cardClasses} flex items-center justify-center gap-2 px-5 py-14`}>
+            <Loader2 size={15} className={`animate-spin ${textMuted}`} />
+            <p className={`text-xs font-semibold ${textMuted}`}>
+              Loading records…
+            </p>
+          </div>
+        )}
+
+        {isAssessment && hasLoadedOnce && subjectId && (
+          <AssessmentRecordsSection
+            subjectSectionId={subjectId}
+            title={title}
+            roster={roster}
+            items={items ?? []}
+            scores={localScores}
+            weights={weights}
+            term={term}
+            isEditing={isEditing}
+            onScoreChange={handleScoreChange}
+            darkMode={darkMode}
+            panelBg={panelBg}
+            panelBorder={panelBorder}
+            textPrimary={textPrimary}
+            textMuted={textMuted}
+            isOwnAdvisory={state.isOwnAdvisory}
+            adviserName={state.adviserName}
+          />
+        )}
+
+        {tab === "holistic" && subjectId && (
+          <HolisticRecordsSection
+            subjectSectionId={subjectId}
+            roster={roster}
+            termNumber={selectedTermNumber}
+            termStartDate={selectedTermStartDate}
+            darkMode={darkMode}
+            panelBg={panelBg}
+            panelBorder={panelBorder}
+            textPrimary={textPrimary}
+            textMuted={textMuted}
+          />
+        )}
       </div>
-
-      {isAssessment && !hasLoadedOnce && isLoadingRecords && (
-        <div className={`${cardClasses} px-5 py-16 text-center`}>
-          <p className={`font-semibold ${textMuted}`}>Loading records…</p>
-        </div>
-      )}
-
-      {isAssessment && hasLoadedOnce && subjectId && (
-        <AssessmentRecordsSection
-          subjectSectionId={subjectId}
-          title={title}
-          roster={roster}
-          items={items ?? []}
-          scores={localScores}
-          weights={weights}
-          term={term}
-          isEditing={isEditing}
-          onScoreChange={handleScoreChange}
-          darkMode={darkMode}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-          isOwnAdvisory={state.isOwnAdvisory}
-          adviserName={state.adviserName}
-        />
-      )}
-
-      {tab === "holistic" && subjectId && (
-        <HolisticRecordsSection
-          subjectSectionId={subjectId}
-          roster={roster}
-          termNumber={selectedTermNumber}
-          termStartDate={selectedTermStartDate}
-          darkMode={darkMode}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-        />
-      )}
     </div>
   );
 }
