@@ -11,7 +11,6 @@ import {
 } from "../types/Grading";
 import { createTopic, fetchTopics, type Topic } from "../../services/subjectGrading.service";
 
-const ACCENT = "#6B0000";
 
 interface AddItemModalProps {
   subjectSectionId: string;
