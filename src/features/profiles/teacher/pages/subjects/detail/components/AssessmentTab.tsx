@@ -10,6 +10,8 @@ import {
   User,
 } from "lucide-react";
 import type { RosterStudent } from "../data";
+
+type GenderedStudent = RosterStudent & { gender?: "M" | "F" };
 import {
   formatDisplayDate,
   type AssessmentTabKey,
@@ -23,11 +25,20 @@ import { ConfirmDialog } from "./ConfirmDialog";
 
 const ACCENT = "#6B0000";
 
+// Mirrors the ATTENDANCE_META legend on the attendance page: the same colors
+// used by the score inputs, spelled out once so the tints are readable.
+const SCORE_LEGEND = [
+  { label: "90% and up", color: "#157F3B" },
+  { label: "80–89%", color: "#1D70D6" },
+  { label: "75–79%", color: "#B45309" },
+  { label: "Below 75%", color: "#C2255C" },
+];
+
 interface AssessmentTabProps {
   subjectSectionId: string;
   subjectName: string;
   tab: AssessmentTabKey;
-  roster: RosterStudent[];
+  roster: GenderedStudent[];
   items: GradeItem[];
   scores: ScoreMap;
   terms: GradingPeriod[];
@@ -112,6 +123,17 @@ export function AssessmentTab({
     [roster, search],
   );
 
+  function isFemale(student: GenderedStudent): boolean {
+    const g = String(student.gender ?? "").trim().toUpperCase();
+    return g === "F" || g === "FEMALE";
+  }
+
+  const grouped = useMemo(() => {
+    const female = filtered.filter((s) => isFemale(s));
+    const male = filtered.filter((s) => !isFemale(s));
+    return { male, female };
+  }, [filtered]);
+
   const isDirty = useMemo(() => {
     for (const student of roster) {
       for (const item of tabItems) {
@@ -185,105 +207,182 @@ export function AssessmentTab({
 
   const selectedItem = tabItems.find((i) => i.id === selectedItemId) ?? null;
 
-  const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
-  const toolbarBtn = `inline-flex h-11 items-center gap-1.5 rounded-xl border px-3.5 text-xs font-bold transition-colors ${
+  const columnCount = 1 + Math.max(tabItems.length, 1);
+
+  const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
+  const stickyCell = darkMode ? "bg-[#111827]" : "bg-white";
+  const groupBand = `px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
+    darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
+  } ${textPrimary}`;
+  const toolButton = `flex h-7 items-center gap-1 rounded-md border px-2.5 text-[11px] font-extrabold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
     darkMode
-      ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-      : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+      ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
+      : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
   }`;
 
+  function renderStudentRow(student: GenderedStudent) {
+    return (
+      <tr
+        key={student.id}
+        className={`border-t ${darkMode ? "border-white/10" : "border-black/10"}`}
+      >
+        <td className={`sticky left-0 z-10 px-4 py-2 ${stickyCell}`}>
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span
+              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
+                darkMode ? "bg-white/10" : "bg-black/5"
+              } ${textMuted}`}
+            >
+              <User size={13} />
+            </span>
+            <span className={`truncate text-xs font-bold ${textPrimary}`}>
+              {student.name}
+            </span>
+          </div>
+        </td>
+        {tabItems.map((item) => {
+          const value = draftScores[student.id]?.[item.id] ?? null;
+          const percent = value !== null ? (value / item.maxItems) * 100 : null;
+          const style = scoreStyle(percent);
+          return (
+            <td key={item.id} className="px-3 py-2 text-center">
+              <input
+                type="number"
+                min={0}
+                max={item.maxItems}
+                value={value ?? ""}
+                aria-label={`${student.name} score for ${item.activityName}, out of ${item.maxItems}`}
+                onChange={(e) => {
+                  const raw = e.target.value;
+                  setDraftScores((prev) => ({
+                    ...prev,
+                    [student.id]: {
+                      ...prev[student.id],
+                      [item.id]:
+                        raw === ""
+                          ? null
+                          : Math.max(0, Math.min(item.maxItems, Number(raw))),
+                    },
+                  }));
+                }}
+                placeholder="—"
+                className="h-7 w-14 rounded-lg text-center text-[11px] font-black tabular-nums outline-none transition-colors focus:ring-2"
+                style={
+                  {
+                    backgroundColor:
+                      darkMode && value !== null
+                        ? `${style.color}25`
+                        : darkMode
+                          ? "#ffffff10"
+                          : style.background,
+                    color: value !== null ? style.color : "#9CA3AF",
+                    "--tw-ring-color": `${ACCENT}55`,
+                  } as CSSProperties
+                }
+              />
+            </td>
+          );
+        })}
+      </tr>
+    );
+  }
+
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <label className="relative flex w-full items-center sm:w-auto sm:min-w-88">
-          <span className="sr-only">Search student by name</span>
-          <Search
-            size={15}
-            className={`pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 ${textMuted}`}
-          />
+    <div className="w-full space-y-4">
+      {/* Search + legend + Topics / Full Records */}
+      <div
+        className={`flex flex-col gap-2.5 rounded-xl border px-3 py-2 lg:flex-row lg:items-center lg:justify-between ${panelBg} ${panelBorder}`}
+      >
+        <div className="relative w-full lg:w-72">
+          <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5 text-gray-400">
+            <Search size={13} />
+          </span>
           <input
+            type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search student by name"
+            placeholder="Search student..."
             aria-label="Search student by name"
-            className={`h-11 w-full rounded-xl border py-2 pl-10 pr-4 text-sm font-semibold outline-none transition focus:ring-2 ${panelBg} ${panelBorder} ${textPrimary}`}
-            style={{ "--tw-ring-color": `${ACCENT}55` } as CSSProperties}
+            className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-[11px] font-medium outline-none transition-colors placeholder:text-gray-400 focus:border-maroon ${panelBg} ${panelBorder} ${textPrimary}`}
           />
-        </label>
+        </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2.5">
+          {SCORE_LEGEND.map((entry) => (
+            <span
+              key={entry.label}
+              className="flex items-center gap-1 text-[11px] font-bold"
+              style={{ color: entry.color }}
+            >
+              <i
+                className="h-2 w-2 rounded-full"
+                style={{ backgroundColor: entry.color }}
+              />
+              {entry.label}
+            </span>
+          ))}
+
+          <span
+            className={`hidden h-5 w-px lg:block ${darkMode ? "bg-white/10" : "bg-black/10"}`}
+          />
+
           {tab !== "exams" && (
             <button
               onClick={() => setTopicManagerOpen(true)}
-              className={toolbarBtn}
+              className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-[11px] font-extrabold transition-colors ${
+                darkMode
+                  ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
+                  : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
+              }`}
             >
-              <Tag size={14} />
+              <Tag size={12} style={{ color: ACCENT }} />
               Topics
             </button>
           )}
           <button
             onClick={onOpenRecords}
-            className="inline-flex h-11 items-center gap-1.5 rounded-xl px-4 text-xs font-extrabold text-white transition-opacity hover:opacity-90"
-            style={{ background: ACCENT }}
+            className={`flex h-8 items-center gap-1.5 rounded-lg border bg-[#800000] px-3 text-[11px] font-extrabold text-white transition-colors hover:bg-[#650000] ${
+              darkMode ? "border-white/10" : "border-black/10"
+            }`}
           >
-            Records
+            <ClipboardList size={12} />
+            Full Records
           </button>
         </div>
       </div>
 
+      {/* Score sheet */}
       <section className={cardClasses} aria-label={subjectName}>
         <div
-          className={`flex flex-col gap-4 border-b px-5 py-5 lg:flex-row lg:items-center lg:justify-between ${panelBorder}`}
+          className={`flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 ${panelBorder}`}
         >
-          <div className="flex items-start gap-3">
-            <span
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white"
-              style={{ backgroundColor: ACCENT }}
+          <div className="flex min-w-0 items-center gap-2">
+            <p
+              className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textPrimary}`}
             >
-              <ClipboardList size={18} />
-            </span>
-            <div>
-              <h2 className={`font-extrabold ${textPrimary}`}>{subjectName}</h2>
-              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
-                {tabItems.length} item{tabItems.length === 1 ? "" : "s"} ·{" "}
-                {filtered.length} student{filtered.length === 1 ? "" : "s"}
-                {isDirty && (
-                  <span
-                    className="ml-2 font-extrabold"
-                    style={{ color: ACCENT }}
-                  >
-                    · Unsaved changes
-                  </span>
-                )}
-              </p>
-            </div>
+              <ClipboardList size={13} style={{ color: ACCENT }} />
+              Score Sheet
+            </p>
+            <p className={`truncate text-[11px] font-medium ${textMuted}`}>
+              · {tabItems.length} item{tabItems.length === 1 ? "" : "s"} ·{" "}
+              {filtered.length} student{filtered.length === 1 ? "" : "s"}
+              {isDirty && (
+                <span className="ml-1 font-extrabold" style={{ color: ACCENT }}>
+                  · Unsaved changes
+                </span>
+              )}
+            </p>
           </div>
 
-          <div
-            role="group"
-            aria-label="Item actions"
-            className={`inline-flex h-11 items-stretch overflow-hidden rounded-xl border ${panelBorder}`}
-          >
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className={`inline-flex items-center gap-1.5 px-4 text-xs font-bold transition-colors disabled:opacity-60 ${
-                darkMode
-                  ? "text-[#D1D5DB] hover:bg-white/10"
-                  : "text-[#374151] hover:bg-[#F6F7FB]"
-              }`}
-            >
+          <div role="group" aria-label="Item actions" className="flex items-center gap-2">
+            <button onClick={handleSave} disabled={saving} className={toolButton}>
               {savedFlash ? (
-                <CheckCircle2 size={14} className="text-emerald-500" />
+                <CheckCircle2 size={12} className="text-emerald-500" />
               ) : (
-                <Save size={14} />
+                <Save size={12} style={{ color: ACCENT }} />
               )}
               {saving ? "Saving..." : savedFlash ? "Saved" : "Save"}
             </button>
-
-            <div
-              className={`w-px ${darkMode ? "bg-[#374151]" : "bg-[#E5E7EB]"}`}
-            />
 
             <button
               onClick={() => selectedItem && setConfirmingDelete(true)}
@@ -298,15 +397,15 @@ export function AssessmentTab({
                   ? `Delete ${selectedItem.activityName}`
                   : "Select an item column to enable delete"
               }
-              className="inline-flex items-center gap-1.5 px-4 text-xs font-bold text-[#DC2626] transition-colors enabled:hover:bg-[#DC2626]/10 disabled:opacity-40"
+              className={`flex h-7 items-center gap-1 rounded-md border px-2.5 text-[11px] font-extrabold text-[#DC2626] transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+                darkMode
+                  ? "border-white/10 bg-white/5 enabled:hover:bg-[#DC2626]/15"
+                  : "border-black/10 bg-white enabled:hover:bg-[#FEF2F2]"
+              }`}
             >
-              <Trash2 size={14} />
+              <Trash2 size={12} />
               Delete
             </button>
-
-            <div
-              className={`w-px ${darkMode ? "bg-[#374151]" : "bg-[#E5E7EB]"}`}
-            />
 
             <button
               onClick={() => setModalOpen(true)}
@@ -321,32 +420,25 @@ export function AssessmentTab({
                   ? "Finish and save scores for the current item before adding a new one"
                   : "Add item"
               }
-              className={`inline-flex items-center gap-1.5 px-4 text-xs font-bold transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
-                darkMode
-                  ? "text-[#D1D5DB] hover:bg-white/10"
-                  : "text-[#374151] hover:bg-[#F6F7FB]"
-              }`}
+              className={toolButton}
             >
-              <Plus size={14} />
-              Add
+              <Plus size={12} style={{ color: ACCENT }} />
+              Add Item
             </button>
           </div>
         </div>
 
         {filtered.length === 0 ? (
-          <div className="px-5 py-16 text-center">
-            <p className={`font-bold ${textPrimary}`}>No students found</p>
-            <p className={`mt-1 text-sm ${textMuted}`}>
-              Try a different search.
-            </p>
-          </div>
+          <p className={`px-4 py-5 text-center text-xs font-medium ${textMuted}`}>
+            No students found matching "{search}".
+          </p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-max text-sm">
               <thead>
-                <tr className={darkMode ? "bg-white/3" : "bg-[#F8FAFC]"}>
+                <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
                   <th
-                    className={`sticky left-0 z-10 min-w-60 px-5 py-4 text-left text-[11px] font-extrabold uppercase tracking-wider ${
+                    className={`sticky left-0 z-10 min-w-56 px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${
                       darkMode ? "bg-[#111827]" : "bg-[#F8FAFC]"
                     } ${textMuted}`}
                   >
@@ -354,18 +446,15 @@ export function AssessmentTab({
                   </th>
                   {tabItems.length === 0 ? (
                     <th
-                      className={`px-5 py-4 text-left text-[11px] font-bold ${textMuted}`}
+                      className={`px-4 py-2 text-left text-[11px] font-bold ${textMuted}`}
                     >
-                      No items yet — tap Add
+                      No items yet — tap Add Item
                     </th>
                   ) : (
                     tabItems.map((item) => {
                       const isSelected = item.id === selectedItemId;
                       return (
-                        <th
-                          key={item.id}
-                          className="min-w-36 px-1 py-2 text-center align-top"
-                        >
+                        <th key={item.id} className="min-w-32 px-1.5 py-1.5 align-top">
                           <button
                             onClick={() =>
                               setSelectedItemId(isSelected ? null : item.id)
@@ -373,22 +462,22 @@ export function AssessmentTab({
                             role="radio"
                             aria-checked={isSelected}
                             aria-label={`Select ${item.activityName} on ${formatDisplayDate(item.date)} to enable delete`}
-                            className={`w-full rounded-xl border-2 px-2 py-2.5 text-center transition-colors focus:outline-none focus-visible:ring-2 ${
+                            className={`w-full rounded-lg border px-2 py-1.5 text-center transition-colors focus:outline-none focus-visible:ring-2 ${
                               isSelected
                                 ? darkMode
                                   ? "border-[#F87171] bg-[#F87171]/10"
                                   : "border-[#DC2626] bg-[#FEF2F2]"
-                                : "border-transparent hover:border-dashed hover:border-current"
+                                : darkMode
+                                  ? "border-white/10 hover:bg-white/5"
+                                  : "border-black/10 hover:bg-black/5"
                             }`}
                             style={
-                              {
-                                "--tw-ring-color": `${ACCENT}55`,
-                              } as CSSProperties
+                              { "--tw-ring-color": `${ACCENT}55` } as CSSProperties
                             }
                           >
                             <div className="relative flex min-h-4 items-center justify-center">
                               <p
-                                className={`text-xs font-extrabold leading-none ${textPrimary}`}
+                                className={`text-[11px] font-black leading-none ${textPrimary}`}
                               >
                                 {formatDisplayDate(item.date)}
                               </p>
@@ -413,7 +502,7 @@ export function AssessmentTab({
                             )}
 
                             <p
-                              className="mt-1 truncate text-[9px] font-bold uppercase leading-none tracking-wide"
+                              className="mt-1 truncate text-[10px] font-bold leading-none"
                               style={{ color: ACCENT }}
                               title={item.topic}
                             >
@@ -428,84 +517,27 @@ export function AssessmentTab({
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((student, index) => (
-                  <tr
-                    key={student.id}
-                    className={`border-t transition-colors ${panelBorder} ${
-                      index % 2 === 1
-                        ? darkMode
-                          ? "bg-white/1.5"
-                          : "bg-black/[0.012]"
-                        : ""
-                    } ${darkMode ? "hover:bg-white/5" : "hover:bg-[#FFF8F8]"}`}
-                  >
-                    <td
-                      className={`sticky left-0 z-10 px-5 py-4 ${darkMode ? "bg-[#111827]" : "bg-white"}`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span
-                          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${darkMode ? "bg-[#3A2222]" : "bg-[#F8EDEE]"}`}
-                        >
-                          <User size={16} style={{ color: ACCENT }} />
-                        </span>
-                        <div className="min-w-0">
-                          <p
-                            className={`truncate font-extrabold ${textPrimary}`}
-                          >
-                            {student.name}
-                          </p>
-                          <p
-                            className={`mt-0.5 text-xs font-medium ${textMuted}`}
-                          >
-                            Student ID: {student.id}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    {tabItems.map((item) => {
-                      const value = draftScores[student.id]?.[item.id] ?? null;
-                      const percent =
-                        value !== null ? (value / item.maxItems) * 100 : null;
-                      const style = scoreStyle(percent);
-                      return (
-                        <td key={item.id} className="px-3 py-4 text-center">
-                          <input
-                            type="number"
-                            min={0}
-                            max={item.maxItems}
-                            value={value ?? ""}
-                            aria-label={`${student.name} score for ${item.activityName}, out of ${item.maxItems}`}
-                            onChange={(e) => {
-                              const raw = e.target.value;
-                              setDraftScores((prev) => ({
-                                ...prev,
-                                [student.id]: {
-                                  ...prev[student.id],
-                                  [item.id]:
-                                    raw === ""
-                                      ? null
-                                      : Math.max(
-                                          0,
-                                          Math.min(item.maxItems, Number(raw)),
-                                        ),
-                                },
-                              }));
-                            }}
-                            placeholder="—"
-                            className="h-9 w-16 rounded-lg text-center text-xs font-black tabular-nums outline-none transition-colors"
-                            style={{
-                              backgroundColor:
-                                darkMode && value !== null
-                                  ? `${style.color}25`
-                                  : style.background,
-                              color: style.color,
-                            }}
-                          />
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
+                {grouped.male.length > 0 && (
+                  <>
+                    <tr>
+                      <td colSpan={columnCount} className={groupBand}>
+                        Male
+                      </td>
+                    </tr>
+                    {grouped.male.map((student) => renderStudentRow(student))}
+                  </>
+                )}
+
+                {grouped.female.length > 0 && (
+                  <>
+                    <tr>
+                      <td colSpan={columnCount} className={groupBand}>
+                        Female
+                      </td>
+                    </tr>
+                    {grouped.female.map((student) => renderStudentRow(student))}
+                  </>
+                )}
               </tbody>
             </table>
           </div>
@@ -551,18 +583,18 @@ export function AssessmentTab({
           <TopicManagerModal
             subjectSectionId={subjectSectionId}
             onClose={() => setTopicManagerOpen(false)}
-            onTopicsChanged={() => {
-            }}
+            onTopicsChanged={() => {}}
             darkMode={darkMode}
             panelBg={panelBg}
             panelBorder={panelBorder}
             textMuted={textMuted}
           />
         )}
+
         {toast && (
           <div
             role="status"
-            className="fixed bottom-5 right-5 z-50 max-w-sm rounded-xl bg-emerald-600 px-4 py-3 text-sm font-bold text-white shadow-xl"
+            className="fixed bottom-5 right-5 z-50 max-w-sm rounded-xl bg-emerald-600 px-4 py-3 text-xs font-bold text-white shadow-xl"
           >
             {toast}
           </div>

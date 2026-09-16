@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
-  ArrowLeft,
   ChevronDown,
   TrendingDown,
   TrendingUp,
@@ -10,6 +9,7 @@ import {
   Heart,
   Compass,
   Users2,
+  Activity,
 } from "lucide-react";
 import {
   CartesianGrid,
@@ -23,6 +23,7 @@ import {
 } from "recharts";
 import { useOutletContext, useNavigate, useSearchParams } from "react-router-dom";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
+import { BackButton } from "../../../shared/components/DashboardUI";
 import {
   fetchGradingPeriodsGlobal,
   type GradingPeriod,
@@ -33,7 +34,20 @@ import {
   type DomainWeekPoint,
 } from "./services/holisticTrends.service";
 
-const ACCENT = "#6B0000";
+// Matches --color-maroon in global.css. Kept as a literal hex (not var())
+// so the `${ACCENT}xx` alpha-suffix trick used throughout this file still
+// works — CSS custom properties can't have a hex alpha byte appended.
+const ACCENT = "#8F1414";
+
+// A single, on-brand neutral for icon blocks outside the chart itself.
+// The four domains only need distinct hues where they're genuinely
+// disambiguating something on screen at once — the multi-line chart and
+// its legend. Repeating those same four hues on every scorecard and
+// interpretation row on top of the green/gold/red status badges made the
+// page feel busy, so this reuses the same brand maroon as everything
+// else (not the near-black --color-maroon-black gradient stop, which
+// read as too dark here).
+const NEUTRAL_ICON = ACCENT;
 
 const CHART_DOMAIN_META = {
   cognitive: { label: "Cognitive", tagline: "How well concepts are landing", color: "#2563EB", Icon: Brain },
@@ -44,12 +58,18 @@ const CHART_DOMAIN_META = {
 
 type ChartDomainKey = keyof typeof CHART_DOMAIN_META;
 
+// A genuine green -> gold -> red gradient, anchored to the app's own
+// semantic tokens (--color-green / --color-gold / --color-red) at the
+// Excellent / Average / Critical stops, with two transitional tones in
+// between. Previously this jumped green -> blue -> brown -> pink -> red,
+// which doesn't read as a "better to worse" scale, and "Average"
+// (#B45309) was an exact hex collision with the Behavioral domain line.
 const BANDS = [
-  { from: 4.5, to: 5.0, label: "Excellent", color: "#22C55E" },
-  { from: 3.5, to: 4.5, label: "Good", color: "#34D399" },
-  { from: 2.5, to: 3.5, label: "Average", color: "#F59E0B" },
-  { from: 1.5, to: 2.5, label: "Needs Improvement", color: "#FB923C" },
-  { from: 1.0, to: 1.5, label: "Critical", color: "#EF4444" },
+  { from: 4.5, to: 5.0, label: "Excellent", color: "#3F8A5F" },
+  { from: 3.5, to: 4.5, label: "Good", color: "#8FBF7A" },
+  { from: 2.5, to: 3.5, label: "Average", color: "#C9A227" },
+  { from: 1.5, to: 2.5, label: "Needs Improvement", color: "#D08A4F" },
+  { from: 1.0, to: 1.5, label: "Critical", color: "#B5453F" },
 ];
 
 function bandFor(value: number) {
@@ -107,32 +127,51 @@ function formatWeekLong(iso: string) {
   })}`;
 }
 
-function CustomTooltip({ active, payload }: any) {
+// Now dark-mode aware — previously this hardcoded a white card and
+// near-black text regardless of theme, so it broke as soon as the rest
+// of the page switched to dark mode. Recharts merges any extra props you
+// pass on the content element, so `darkMode` flows through from the
+// chart's own Tooltip usage below.
+function CustomTooltip({ active, payload, darkMode }: any) {
   if (!active || !payload?.length) return null;
   const row = payload[0]?.payload;
   if (!row) return null;
   return (
-    <div className="min-w-64 rounded-2xl border border-black/6 bg-white/95 px-4 py-3 shadow-xl backdrop-blur-sm">
-      <p className="text-sm font-semibold text-[#1A1A1A]">{row.weekLabel}</p>
-      <p className="text-[11px] font-medium text-[#8A8F98]">{formatWeekLong(row.weekStartDate)}</p>
-      <div className="mt-3 space-y-2.5">
+    <div
+      className={`min-w-56 rounded-xl border px-3.5 py-2.5 shadow-card backdrop-blur-sm ${
+        darkMode ? "border-white/10 bg-[#111827]/95" : "border-black/10 bg-white/95"
+      }`}
+    >
+      <p className={`text-xs font-bold ${darkMode ? "text-white" : "text-[#111827]"}`}>{row.weekLabel}</p>
+      <p className={`text-[10px] font-medium ${darkMode ? "text-white/50" : "text-[#8A8F98]"}`}>
+        {formatWeekLong(row.weekStartDate)}
+      </p>
+      <div className="mt-2 space-y-2">
         {payload.map((entry: any) => {
           const domain = entry.dataKey as ChartDomainKey;
           const value = entry.value !== null && entry.value !== undefined ? Number(entry.value) : null;
           const interpretation = interpretScore(domain, value);
           return (
             <div key={entry.dataKey}>
-              <div className="flex items-center justify-between gap-4 text-xs">
-                <span className="flex items-center gap-1.5 font-medium text-[#5B6069]">
+              <div className="flex items-center justify-between gap-4 text-[11px]">
+                <span
+                  className={`flex items-center gap-1.5 font-bold ${
+                    darkMode ? "text-white/70" : "text-[#5B6069]"
+                  }`}
+                >
                   <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: entry.color }} />
                   {entry.name}
                 </span>
-                <span className="font-semibold tabular-nums text-[#1A1A1A]">
+                <span className={`font-black tabular-nums ${darkMode ? "text-white" : "text-[#111827]"}`}>
                   {value !== null ? value.toFixed(1) : "\u2014"}
                 </span>
               </div>
               {interpretation && (
-                <p className="mt-0.5 pl-3 text-[10.5px] font-medium leading-snug text-[#8A8F98]">
+                <p
+                  className={`mt-0.5 pl-3 text-[10px] font-medium leading-snug ${
+                    darkMode ? "text-white/50" : "text-[#8A8F98]"
+                  }`}
+                >
                   {interpretation}
                 </p>
               )}
@@ -246,10 +285,7 @@ export function HolisticDomainTrendsPage() {
     });
   };
 
-  const surface = `rounded-2xl border ${panelBorder} ${panelBg} shadow-[0_1px_2px_rgba(0,0,0,0.04)]`;
-  const subtleFill = darkMode ? "bg-white/[0.04]" : "bg-black/[0.025]";
-  const subtleHover = darkMode ? "hover:bg-white/[0.06]" : "hover:bg-black/[0.04]";
-  const hairline = darkMode ? "border-white/[0.08]" : "border-black/[0.06]";
+  const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
 
   const activeSubjectName =
     activeTab === "overall"
@@ -257,419 +293,411 @@ export function HolisticDomainTrendsPage() {
       : trendsData?.subjects.find((s) => s.subjectSectionId === activeTab)?.subjectName ?? null;
 
   return (
-    <div className="space-y-7 pb-14">
-      {/* ---------- Header ---------- */}
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-        <div>
-          <button
-            type="button"
-            onClick={() => navigate(-1)}
-            className={`mb-3 inline-flex items-center gap-1.5 text-xs font-medium ${textMuted} transition-opacity hover:opacity-70`}
-          >
-            <ArrowLeft size={14} />
-            Back to overview
-          </button>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ color: ACCENT }}>
-            Student development
-          </p>
-          <h1 className={`mt-1.5 text-[28px] font-semibold tracking-tight ${textPrimary}`}>
-            Domain trends
-          </h1>
-          <p className={`mt-2 max-w-2xl text-[13.5px] font-medium leading-relaxed ${textMuted}`}>
-            Weekly ratings averaged across every student — pooled across all subjects, or narrowed to one.
-          </p>
-        </div>
+    <div className="w-full min-h-full pb-12">
+      <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
+        {/* ---------- Header ---------- */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-2.5">
+            <BackButton
+              onClick={() => navigate(-1)}
+              panelBg={panelBg}
+              panelBorder={panelBorder}
+              textPrimary={textPrimary}
+            />
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-maroon">
+              <Activity size={28} />
+            </span>
+            <div>
+              <h1 className={`text-lg font-black tracking-tight ${textPrimary}`}>Domain Trends</h1>
+              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+                Weekly ratings averaged across every student — pooled across subjects, or narrowed to one.
+              </p>
+            </div>
+          </div>
 
-        <div className="relative w-full shrink-0 sm:w-56">
-          <select
-            value={selectedTerm ?? ""}
-            onChange={(e) => setSelectedTerm(Number(e.target.value))}
-            className={`h-10 w-full appearance-none rounded-xl border px-3.5 pr-9 text-[13px] font-semibold outline-none transition focus:ring-2 ${panelBg} ${panelBorder} ${textPrimary}`}
-            style={{ "--tw-ring-color": `${ACCENT}40` } as CSSProperties}
-          >
-            {terms.map((t) => (
-              <option key={t.id} value={t.termNumber}>
-                {t.termLabel}
-                {t.isActive ? " · Current" : ""}
-              </option>
-            ))}
-          </select>
-          <ChevronDown
-            size={14}
-            className={`pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 ${textMuted}`}
-          />
-        </div>
-      </div>
-
-      {/* ---------- Subject tabs ---------- */}
-      {trendsData && trendsData.subjects.length > 0 && (
-        <div className={`inline-flex max-w-full flex-wrap gap-1 rounded-2xl border p-1 ${hairline} ${subtleFill}`}>
-          <button
-            onClick={() => setActiveTab("overall")}
-            className={`rounded-xl px-4 py-2 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
-              activeTab === "overall" ? "text-white shadow-sm" : `${textMuted} ${subtleHover}`
-            }`}
-            style={{
-              ...(activeTab === "overall" ? { background: ACCENT } : {}),
-              ["--tw-ring-color" as string]: ACCENT,
-            }}
-          >
-            Overall
-          </button>
-          {trendsData.subjects.map((subj) => (
-            <button
-              key={subj.subjectSectionId}
-              onClick={() => setActiveTab(subj.subjectSectionId)}
-              className={`rounded-xl px-4 py-2 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
-                activeTab === subj.subjectSectionId ? "text-white shadow-sm" : `${textMuted} ${subtleHover}`
-              }`}
-              style={{
-                ...(activeTab === subj.subjectSectionId ? { background: ACCENT } : {}),
-                ["--tw-ring-color" as string]: ACCENT,
-              }}
+          <div className="relative w-full shrink-0 sm:w-48">
+            <select
+              value={selectedTerm ?? ""}
+              onChange={(e) => setSelectedTerm(Number(e.target.value))}
+              disabled={terms.length === 0}
+              aria-label="Select term"
+              className={`h-8 w-full appearance-none rounded-lg border pl-3 pr-7 text-[11px] font-bold outline-none transition-colors focus:border-maroon disabled:opacity-50 ${panelBg} ${panelBorder} ${textPrimary}`}
             >
-              {subj.subjectName}
-            </button>
-          ))}
+              {terms.length === 0 && <option value="">No terms set up yet</option>}
+              {terms.map((t) => (
+                <option key={t.id} value={t.termNumber}>
+                  {t.termLabel}
+                  {t.isActive ? " · Current" : ""}
+                </option>
+              ))}
+            </select>
+            <ChevronDown
+              size={13}
+              className={`pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 ${textMuted}`}
+            />
+          </div>
         </div>
-      )}
 
-      {trendsLoading ? (
-        <div className={`${surface} py-24 text-center`}>
-          <p className={`text-[13px] font-medium ${textMuted}`}>Loading…</p>
-        </div>
-      ) : !trendsData ? null : chartRows.length === 0 ? (
-        <div className={`${surface} py-24 text-center`}>
-          <p className={`text-[13px] font-medium ${textMuted}`}>
-            No weekly records yet for this {activeTab === "overall" ? "term" : "subject"}.
-          </p>
-        </div>
-      ) : (
-        <>
-          {/* ---------- 1. Narrative snapshot — the overall result, first thing you see ---------- */}
-          <div className={`${surface} flex flex-col gap-5 p-6 sm:flex-row sm:items-center`}>
-            {compositeScore !== null && (
-              <div className="flex shrink-0 items-center gap-4">
-                <div
-                  className="flex h-16 w-16 flex-col items-center justify-center rounded-2xl border"
-                  style={{
-                    borderColor: `${bandFor(compositeScore).color}55`,
-                    backgroundColor: `${bandFor(compositeScore).color}0F`,
-                  }}
-                >
-                  <span className={`text-xl font-semibold tabular-nums ${textPrimary}`}>
-                    {compositeScore.toFixed(1)}
-                  </span>
-                  <span
-                    className="text-[8.5px] font-semibold uppercase tracking-wide"
-                    style={{ color: bandFor(compositeScore).color }}
+        {/* ---------- Subject tabs ---------- */}
+        {trendsData && trendsData.subjects.length > 0 && (
+          <div
+            className={`flex flex-wrap items-center gap-1.5 rounded-xl border px-3 py-2 ${panelBg} ${panelBorder}`}
+          >
+            <button
+              type="button"
+              onClick={() => setActiveTab("overall")}
+              className={`rounded-lg px-3 py-1.5 text-[11px] font-extrabold transition-colors ${
+                activeTab === "overall"
+                  ? "bg-maroon text-white"
+                  : `${textMuted} ${darkMode ? "hover:bg-white/10" : "hover:bg-black/5"}`
+              }`}
+            >
+              Overall
+            </button>
+            {trendsData.subjects.map((subj) => (
+              <button
+                key={subj.subjectSectionId}
+                type="button"
+                onClick={() => setActiveTab(subj.subjectSectionId)}
+                className={`rounded-lg px-3 py-1.5 text-[11px] font-extrabold transition-colors ${
+                  activeTab === subj.subjectSectionId
+                    ? "bg-maroon text-white"
+                    : `${textMuted} ${darkMode ? "hover:bg-white/10" : "hover:bg-black/5"}`
+                }`}
+              >
+                {subj.subjectName}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {trendsLoading ? (
+          <div className={cardClasses}>
+            <p className={`px-4 py-16 text-center text-xs font-medium ${textMuted}`}>Loading...</p>
+          </div>
+        ) : !trendsData ? null : chartRows.length === 0 ? (
+          <div className={cardClasses}>
+            <p className={`px-4 py-16 text-center text-xs font-medium ${textMuted}`}>
+              No weekly records yet for this {activeTab === "overall" ? "term" : "subject"}.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* ---------- 1. Narrative snapshot ---------- */}
+            <section className={cardClasses} aria-label="Domain trends snapshot">
+              <div className="flex flex-col sm:flex-row">
+                {compositeScore !== null && (
+                  <div
+                    className="flex shrink-0 flex-row items-center justify-between gap-3 px-5 py-4 sm:w-36 sm:flex-col sm:items-start sm:justify-center sm:gap-1"
+                    style={{ backgroundColor: ACCENT }}
                   >
-                    {bandFor(compositeScore).label}
-                  </span>
+                    <span className="text-3xl font-black leading-none tabular-nums text-white">
+                      {compositeScore.toFixed(1)}
+                    </span>
+                    <span className="text-[10.5px] font-bold uppercase tracking-wide text-white/70">
+                      Composite · {bandFor(compositeScore).label}
+                    </span>
+                  </div>
+                )}
+                <div className="min-w-0 flex-1 p-4 sm:p-5">
+                  <p className="text-[11px] font-bold uppercase tracking-wide" style={{ color: ACCENT }}>
+                    {activeTab === "overall" ? "Whole-class snapshot" : `${activeSubjectName} snapshot`}
+                  </p>
+                  <p className={`mt-1.5 text-xs font-medium leading-relaxed sm:text-sm ${textPrimary}`}>
+                    {strongestDomain && weakestDomain && strongestDomain.key !== weakestDomain.key ? (
+                      <>
+                        {activeTab === "overall" ? "This class" : "This group"} is showing the most strength in{" "}
+                        <span className="font-bold">
+                          {CHART_DOMAIN_META[strongestDomain.key].label.toLowerCase()}
+                        </span>
+                        , while{" "}
+                        <span className="font-bold">
+                          {CHART_DOMAIN_META[weakestDomain.key].label.toLowerCase()}
+                        </span>{" "}
+                        is the domain most worth a closer look this week.
+                      </>
+                    ) : (
+                      "Domain scores are holding steady across the board this week."
+                    )}
+                  </p>
+                  <p className={`mt-1.5 text-[11px] font-medium ${textMuted}`}>
+                    Based on {chartRows.length} week{chartRows.length === 1 ? "" : "s"} of ratings recorded so far in this term.
+                  </p>
                 </div>
               </div>
-            )}
-            <div className="min-w-0 flex-1">
-              <p
-                className="inline-flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-wider"
-                style={{ color: ACCENT }}
-              >
-                <Sparkles size={11} />
-                {activeTab === "overall" ? "Whole-class snapshot" : `${activeSubjectName} snapshot`}
-              </p>
-              <p className={`mt-1 text-[13.5px] font-medium leading-relaxed ${textPrimary}`}>
-                {strongestDomain && weakestDomain && strongestDomain.key !== weakestDomain.key ? (
-                  <>
-                    {activeTab === "overall" ? "This class" : "This group"} is showing the most strength in{" "}
-                    <span style={{ color: CHART_DOMAIN_META[strongestDomain.key].color }}>
-                      {CHART_DOMAIN_META[strongestDomain.key].label.toLowerCase()}
-                    </span>
-                    , while{" "}
-                    <span style={{ color: CHART_DOMAIN_META[weakestDomain.key].color }}>
-                      {CHART_DOMAIN_META[weakestDomain.key].label.toLowerCase()}
-                    </span>{" "}
-                    is the domain most worth a closer look this week.
-                  </>
-                ) : (
-                  "Domain scores are holding steady across the board this week."
-                )}
-              </p>
-              <p className={`mt-1.5 text-[11.5px] font-medium ${textMuted}`}>
-                Based on {chartRows.length} week{chartRows.length === 1 ? "" : "s"} of ratings recorded so far in this term.
-              </p>
-            </div>
-          </div>
+            </section>
 
-          {/* ---------- 2. Domain grade cards — compact scorecards above the chart ---------- */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {domainSummaries.map(({ key, latest, delta }) => {
-              const meta = CHART_DOMAIN_META[key];
-              const isHidden = hiddenDomains.has(key);
-              const band = latest !== null ? bandFor(latest) : null;
-              const DeltaIcon = delta === null ? null : delta > 0 ? TrendingUp : delta < 0 ? TrendingDown : Minus;
-              const deltaColor = delta === null ? undefined : delta > 0 ? "#22C55E" : delta < 0 ? "#EF4444" : "#9CA3AF";
-
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => toggleDomain(key)}
-                  className={`group relative flex items-center gap-4 overflow-hidden rounded-2xl border p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${hairline} ${panelBg}`}
-                  style={{ opacity: isHidden ? 0.5 : 1 }}
-                >
-                  <span
-                    className="absolute inset-y-0 left-0 w-0.75"
-                    style={{ backgroundColor: meta.color, opacity: isHidden ? 0.3 : 1 }}
-                  />
-                  <span
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl"
-                    style={{ backgroundColor: `${meta.color}14`, color: meta.color }}
-                  >
-                    <meta.Icon size={18} />
-                  </span>
-
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between gap-2">
-                      <p className={`truncate text-[11px] font-semibold uppercase tracking-wider ${textMuted}`}>
-                        {meta.label}
-                      </p>
-                      {band && (
-                        <span
-                          className="shrink-0 rounded-full px-2 py-0.5 text-[9px] font-semibold"
-                          style={{ backgroundColor: `${band.color}16`, color: band.color }}
-                        >
-                          {band.label}
-                        </span>
-                      )}
-                    </div>
-                    <div className="mt-0.5 flex items-baseline gap-1.5">
-                      <span className={`text-2xl font-semibold tabular-nums leading-none ${textPrimary}`}>
-                        {latest !== null ? latest.toFixed(1) : "\u2014"}
-                      </span>
-                      <span className={`text-[10.5px] font-semibold ${textMuted}`}>/ 5.0</span>
-                      {DeltaIcon && (
-                        <span
-                          className="ml-auto flex items-center gap-0.5 text-[10.5px] font-semibold"
-                          style={{ color: deltaColor }}
-                        >
-                          <DeltaIcon size={10} />
-                          {Math.abs(delta as number).toFixed(1)}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* ---------- 3. Trend chart ---------- */}
-          <div className={surface}>
-            <div className={`flex flex-wrap items-center justify-between gap-3 border-b px-6 py-5 ${hairline}`}>
-              <div>
-                <h2 className={`text-[15px] font-semibold ${textPrimary}`}>Weekly progression</h2>
-                <p className={`mt-0.5 text-[12px] font-medium ${textMuted}`}>
-                  Tap a card above to isolate or hide its line
-                </p>
-              </div>
-              <span
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-[10.5px] font-semibold"
-                style={{ backgroundColor: `${ACCENT}12`, color: ACCENT }}
-              >
-                {activeTab === "overall" ? "All subjects pooled" : activeSubjectName}
-              </span>
-            </div>
-
-            <div className="px-4 pb-6 pt-5 sm:px-6">
-              <div className="h-95 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RLineChart data={chartRows} margin={{ top: 8, right: 24, bottom: 0, left: -8 }}>
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                      stroke={darkMode ? "#FFFFFF12" : "#0000000A"}
-                      vertical={false}
-                    />
-                    {BANDS.map((band) => (
-                      <ReferenceArea
-                        key={band.label}
-                        y1={band.from}
-                        y2={band.to}
-                        fill={band.color}
-                        fillOpacity={darkMode ? 0.06 : 0.04}
-                        strokeWidth={0}
-                      />
-                    ))}
-                    <XAxis
-                      dataKey="weekTick"
-                      tick={{ fontSize: 11.5, fontWeight: 600, fill: darkMode ? "#9CA3AF" : "#8A8F98" }}
-                      axisLine={{ stroke: darkMode ? "#FFFFFF1A" : "#0000001A" }}
-                      tickLine={false}
-                      interval={0}
-                      padding={{ left: 40, right: 40 }}
-                    />
-                    <YAxis
-                      domain={[1, 5]}
-                      ticks={[1, 1.5, 2.5, 3.5, 4.5, 5]}
-                      tick={{ fontSize: 11, fontWeight: 500, fill: darkMode ? "#9CA3AF" : "#8A8F98" }}
-                      axisLine={false}
-                      tickLine={false}
-                      width={30}
-                    />
-                    <Tooltip
-                      content={<CustomTooltip />}
-                      cursor={{ stroke: ACCENT, strokeWidth: 1, strokeDasharray: "4 4" }}
-                    />
-                    {(Object.keys(CHART_DOMAIN_META) as ChartDomainKey[]).map((key) => {
-                      const meta = CHART_DOMAIN_META[key];
-                      const isHidden = hiddenDomains.has(key);
-                      return (
-                        <Line
-                          key={key}
-                          name={meta.label}
-                          dataKey={key}
-                          type="monotone"
-                          stroke={meta.color}
-                          strokeWidth={isHidden ? 1.5 : 2.5}
-                          strokeOpacity={isHidden ? 0.15 : 1}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          dot={
-                            isHidden
-                              ? false
-                              : { r: 3.5, strokeWidth: 2, stroke: darkMode ? "#15181C" : "#FFFFFF", fill: meta.color }
-                          }
-                          activeDot={
-                            isHidden
-                              ? false
-                              : { r: 6, strokeWidth: 2, stroke: darkMode ? "#15181C" : "#FFFFFF", fill: meta.color }
-                          }
-                          connectNulls
-                          isAnimationActive
-                          animationDuration={450}
-                        />
-                      );
-                    })}
-                  </RLineChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Legend, doubling as domain toggles */}
-              <div className={`mt-5 flex flex-wrap items-center justify-center gap-2 border-t pt-5 ${hairline}`}>
-                {(Object.keys(CHART_DOMAIN_META) as ChartDomainKey[]).map((key) => {
-                  const meta = CHART_DOMAIN_META[key];
-                  const isHidden = hiddenDomains.has(key);
-                  return (
-                    <button
-                      key={key}
-                      type="button"
-                      onClick={() => toggleDomain(key)}
-                      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12px] font-semibold transition-all ${hairline} ${subtleHover} ${
-                        isHidden ? "opacity-40" : ""
-                      }`}
-                    >
-                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: meta.color }} />
-                      <span className={textPrimary}>{meta.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-          {/* ---------- 4. Interpreted results — the dedicated, emphasized reading of the data ---------- */}
-          <div className={surface}>
-            <div className={`flex items-start gap-3 border-b px-6 py-5 ${hairline}`}>
-              <span
-                className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
-                style={{ backgroundColor: `${ACCENT}12`, color: ACCENT }}
-              >
-                <Sparkles size={15} />
-              </span>
-              <div>
-                <h2 className={`text-[16px] font-semibold ${textPrimary}`}>What the data means</h2>
-                <p className={`mt-0.5 text-[12.5px] font-medium ${textMuted}`}>
-                  A plain-language read of each domain's latest score, for{" "}
-                  {activeTab === "overall" ? "the whole class" : activeSubjectName}
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 divide-y divide-black/6 dark:divide-white/8 lg:grid-cols-2 lg:divide-y-0">
-              {domainSummaries.map(({ key, latest, delta }, i) => {
+            {/* ---------- 2. Domain scorecards ---------- */}
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {domainSummaries.map(({ key, latest, delta }) => {
                 const meta = CHART_DOMAIN_META[key];
                 const isHidden = hiddenDomains.has(key);
                 const band = latest !== null ? bandFor(latest) : null;
-                const interpretation = interpretScore(key, latest);
                 const DeltaIcon = delta === null ? null : delta > 0 ? TrendingUp : delta < 0 ? TrendingDown : Minus;
-                const deltaColor = delta === null ? undefined : delta > 0 ? "#22C55E" : delta < 0 ? "#EF4444" : "#9CA3AF";
-                const isRightCol = i % 2 === 1;
+                const deltaColor = delta === null ? undefined : delta > 0 ? "#3F8A5F" : delta < 0 ? "#B5453F" : "#9CA3AF";
 
                 return (
-                  <div
+                  <button
                     key={key}
-                    className={`relative flex gap-4 p-6 transition-opacity ${
-                      isRightCol ? "lg:border-l" : ""
-                    } ${hairline}`}
-                    style={{ opacity: isHidden ? 0.45 : 1 }}
+                    type="button"
+                    onClick={() => toggleDomain(key)}
+                    className={`relative flex items-stretch overflow-hidden rounded-2xl border text-left shadow-card transition-opacity ${panelBorder} ${panelBg}`}
+                    style={{ opacity: isHidden ? 0.5 : 1 }}
                   >
                     <span
-                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
-                      style={{ backgroundColor: `${meta.color}14`, color: meta.color }}
+                      className="flex w-14 shrink-0 items-center justify-center"
+                      style={{ backgroundColor: NEUTRAL_ICON }}
                     >
-                      <meta.Icon size={20} />
+                      <meta.Icon size={18} className="text-white" />
                     </span>
 
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                        <h3 className={`text-[14px] font-semibold ${textPrimary}`}>{meta.label}</h3>
-                        <span className={`text-[13px] font-semibold tabular-nums ${textMuted}`}>
-                          {latest !== null ? latest.toFixed(1) : "\u2014"}
-                          <span className="text-[11px] font-medium">/5.0</span>
-                        </span>
-                        {DeltaIcon && (
-                          <span
-                            className="flex items-center gap-0.5 text-[11px] font-semibold"
-                            style={{ color: deltaColor }}
-                          >
-                            <DeltaIcon size={10} />
-                            {Math.abs(delta as number).toFixed(1)}
-                          </span>
-                        )}
+                    <div className="min-w-0 flex-1 p-3.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className={`truncate text-[10.5px] font-bold uppercase tracking-wider ${textMuted}`}>
+                          {meta.label}
+                        </p>
                         {band && (
                           <span
-                            className="ml-auto rounded-full px-2.5 py-1 text-[9.5px] font-semibold"
+                            className="shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold"
                             style={{ backgroundColor: `${band.color}16`, color: band.color }}
                           >
                             {band.label}
                           </span>
                         )}
                       </div>
-
-                      {interpretation ? (
-                        <p className={`mt-2 text-[14px] font-medium leading-relaxed ${textPrimary}`}>
-                          {interpretation}
-                        </p>
-                      ) : (
-                        <p className={`mt-2 text-[13px] font-medium ${textMuted}`}>
-                          Not enough data yet to interpret this domain.
-                        </p>
-                      )}
-
-                      <button
-                        type="button"
-                        onClick={() => toggleDomain(key)}
-                        className={`mt-3 text-[11px] font-semibold ${textMuted} underline decoration-dotted underline-offset-2 transition-opacity hover:opacity-70`}
-                      >
-                        {isHidden ? "Show on chart" : "Hide from chart"}
-                      </button>
+                      <div className="mt-0.5 flex items-baseline gap-1.5">
+                        <span className={`text-lg font-black tabular-nums leading-none ${textPrimary}`}>
+                          {latest !== null ? latest.toFixed(1) : "\u2014"}
+                        </span>
+                        <span className={`text-[10px] font-bold ${textMuted}`}>/ 5.0</span>
+                        {DeltaIcon && (
+                          <span
+                            className="ml-auto flex items-center gap-0.5 text-[10px] font-bold"
+                            style={{ color: deltaColor }}
+                          >
+                            <DeltaIcon size={10} />
+                            {Math.abs(delta as number).toFixed(1)}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  </button>
                 );
               })}
             </div>
-          </div>
-        </>
-      )}
+
+            {/* ---------- 3. Trend chart ---------- */}
+            <section className={cardClasses} aria-label="Weekly domain progression chart">
+              <div
+                className={`flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 ${panelBorder}`}
+              >
+                <div className="flex min-w-0 items-center gap-2">
+                  <p className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textPrimary}`}>
+                    <Sparkles size={13} style={{ color: ACCENT }} />
+                    Weekly Progression
+                  </p>
+                  <p className={`truncate text-[11px] font-medium ${textMuted}`}>
+                    · Tap a card above to isolate or hide its line
+                  </p>
+                </div>
+                <span
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[10.5px] font-bold"
+                  style={{ backgroundColor: `${ACCENT}12`, color: ACCENT }}
+                >
+                  {activeTab === "overall" ? "All subjects pooled" : activeSubjectName}
+                </span>
+              </div>
+
+              <div className="px-3 pb-4 pt-4 sm:px-4">
+                <div className="h-80 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RLineChart data={chartRows} margin={{ top: 8, right: 20, bottom: 0, left: -8 }}>
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke={darkMode ? "var(--color-grid-line-dark)" : "var(--color-grid-line)"}
+                        vertical={false}
+                      />
+                      {BANDS.map((band) => (
+                        <ReferenceArea
+                          key={band.label}
+                          y1={band.from}
+                          y2={band.to}
+                          fill={band.color}
+                          fillOpacity={darkMode ? 0.06 : 0.04}
+                          strokeWidth={0}
+                        />
+                      ))}
+                      <XAxis
+                        dataKey="weekTick"
+                        tick={{ fontSize: 10.5, fontWeight: 700, fill: darkMode ? "var(--color-axis-dark)" : "var(--color-axis)" }}
+                        axisLine={{ stroke: darkMode ? "var(--color-grid-line-dark)" : "var(--color-grid-line)" }}
+                        tickLine={false}
+                        interval={0}
+                        padding={{ left: 30, right: 30 }}
+                      />
+                      <YAxis
+                        domain={[1, 5]}
+                        ticks={[1, 1.5, 2.5, 3.5, 4.5, 5]}
+                        tick={{ fontSize: 10, fontWeight: 600, fill: darkMode ? "var(--color-axis-dark)" : "var(--color-axis)" }}
+                        axisLine={false}
+                        tickLine={false}
+                        width={28}
+                      />
+                      <Tooltip
+                        content={<CustomTooltip darkMode={darkMode} />}
+                        cursor={{ stroke: ACCENT, strokeWidth: 1, strokeDasharray: "4 4" }}
+                      />
+                      {(Object.keys(CHART_DOMAIN_META) as ChartDomainKey[]).map((key) => {
+                        const meta = CHART_DOMAIN_META[key];
+                        const isHidden = hiddenDomains.has(key);
+                        return (
+                          <Line
+                            key={key}
+                            name={meta.label}
+                            dataKey={key}
+                            type="monotone"
+                            stroke={meta.color}
+                            strokeWidth={isHidden ? 1.5 : 2.5}
+                            strokeOpacity={isHidden ? 0.15 : 1}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            dot={
+                              isHidden
+                                ? false
+                                : { r: 3, strokeWidth: 2, stroke: darkMode ? "#111827" : "#FFFFFF", fill: meta.color }
+                            }
+                            activeDot={
+                              isHidden
+                                ? false
+                                : { r: 5, strokeWidth: 2, stroke: darkMode ? "#111827" : "#FFFFFF", fill: meta.color }
+                            }
+                            connectNulls
+                            isAnimationActive
+                            animationDuration={450}
+                          />
+                        );
+                      })}
+                    </RLineChart>
+                  </ResponsiveContainer>
+                </div>
+
+                {/* Legend, doubling as domain toggles */}
+                <div className={`mt-4 flex flex-wrap items-center justify-center gap-2 border-t pt-4 ${panelBorder}`}>
+                  {(Object.keys(CHART_DOMAIN_META) as ChartDomainKey[]).map((key) => {
+                    const meta = CHART_DOMAIN_META[key];
+                    const isHidden = hiddenDomains.has(key);
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => toggleDomain(key)}
+                        className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-bold transition-opacity ${panelBorder} ${
+                          darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
+                        } ${isHidden ? "opacity-40" : ""}`}
+                      >
+                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: meta.color }} />
+                        <span className={textPrimary}>{meta.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </section>
+
+            {/* ---------- 4. Interpreted results ---------- */}
+            <section className={cardClasses} aria-label="Interpreted domain results">
+              <div className={`border-b px-4 py-2.5 ${panelBorder}`}>
+                <p className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>What the data means</p>
+                <p className={`mt-0.5 text-[11px] font-medium ${textMuted}`}>
+                  A plain-language read of each domain's latest score, for{" "}
+                  {activeTab === "overall" ? "the whole class" : activeSubjectName}
+                </p>
+              </div>
+
+              <div
+                className={`grid grid-cols-1 divide-y lg:grid-cols-2 lg:divide-y-0 ${
+                  darkMode ? "divide-white/10" : "divide-black/10"
+                }`}
+              >
+                {domainSummaries.map(({ key, latest, delta }, i) => {
+                  const meta = CHART_DOMAIN_META[key];
+                  const isHidden = hiddenDomains.has(key);
+                  const band = latest !== null ? bandFor(latest) : null;
+                  const interpretation = interpretScore(key, latest);
+                  const DeltaIcon = delta === null ? null : delta > 0 ? TrendingUp : delta < 0 ? TrendingDown : Minus;
+                  const deltaColor = delta === null ? undefined : delta > 0 ? "#3F8A5F" : delta < 0 ? "#B5453F" : "#9CA3AF";
+                  const isRightCol = i % 2 === 1;
+
+                  return (
+                    <div
+                      key={key}
+                      className={`relative flex gap-3.5 px-4 py-5 transition-opacity ${
+                        isRightCol ? `lg:border-l ${panelBorder}` : ""
+                      }`}
+                      style={{ opacity: isHidden ? 0.45 : 1 }}
+                    >
+                      <span
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+                        style={{ backgroundColor: NEUTRAL_ICON }}
+                      >
+                        <meta.Icon size={17} className="text-white" />
+                      </span>
+
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-3">
+                          <h3 className={`text-sm font-bold ${textPrimary}`}>{meta.label}</h3>
+                          {band && (
+                            <span
+                              className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold"
+                              style={{ backgroundColor: `${band.color}16`, color: band.color }}
+                            >
+                              {band.label}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="mt-0.5 flex items-center gap-2">
+                          <span className={`text-xs font-bold tabular-nums ${textMuted}`}>
+                            {latest !== null ? latest.toFixed(1) : "\u2014"}
+                            <span className="text-[10px] font-medium">/5.0</span>
+                          </span>
+                          {DeltaIcon && (
+                            <span
+                              className="flex items-center gap-0.5 text-[10px] font-bold"
+                              style={{ color: deltaColor }}
+                            >
+                              <DeltaIcon size={10} />
+                              {Math.abs(delta as number).toFixed(1)}
+                            </span>
+                          )}
+                        </div>
+
+                        {interpretation ? (
+                          <p className={`mt-2 text-xs font-medium leading-relaxed ${textPrimary}`}>
+                            {interpretation}
+                          </p>
+                        ) : (
+                          <p className={`mt-2 text-[11px] font-medium ${textMuted}`}>
+                            Not enough data yet to interpret this domain.
+                          </p>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={() => toggleDomain(key)}
+                          className={`mt-2.5 text-[10.5px] font-bold ${textMuted} underline decoration-dotted underline-offset-2 transition-opacity hover:opacity-70`}
+                        >
+                          {isHidden ? "Show on chart" : "Hide from chart"}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          </>
+        )}
+      </div>
     </div>
   );
 }

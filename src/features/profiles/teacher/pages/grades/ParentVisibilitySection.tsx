@@ -6,6 +6,8 @@ import {
   type VisibilityStudent,
 } from "./services/gradePage.service";
 
+const ACCENT = "#6B0000";
+
 interface ParentVisibilitySectionProps {
   gradingPeriodId: string;
   termLabel: string;
@@ -110,14 +112,17 @@ export function ParentVisibilitySection({
     }
   }
 
-  const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
+  const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
+  const groupBand = `px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
+    darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
+  } ${textPrimary}`;
 
   return (
     <section className={cardClasses} aria-label="Parent grade visibility">
-      <div className={`flex flex-col gap-3 border-b px-5 py-5 sm:flex-row sm:items-center sm:justify-between ${panelBorder}`}>
-        <div>
-          <h2 className={`font-extrabold ${textPrimary}`}>Parent Visibility</h2>
-          <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+      <div className={`flex flex-col gap-2.5 border-b px-4 py-2.5 lg:flex-row lg:items-center lg:justify-between ${panelBorder}`}>
+        <div className="min-w-0">
+          <p className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>Parent Visibility</p>
+          <p className={`truncate text-[11px] font-medium ${textMuted}`}>
             {termLabel} · Choose which students' grades parents can currently see
           </p>
         </div>
@@ -125,119 +130,135 @@ export function ParentVisibilitySection({
           <button
             onClick={() => applyVisibility(true)}
             disabled={selected.size === 0 || applying !== null}
-            className="flex h-10 items-center gap-2 rounded-xl bg-[#157F3B] px-4 text-xs font-bold text-white transition disabled:opacity-50"
+            className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-[11px] font-extrabold text-[#157F3B] transition-colors disabled:opacity-50 ${
+              darkMode ? "border-white/10 bg-white/5 hover:bg-white/10" : "border-black/10 bg-white hover:bg-black/5"
+            }`}
           >
-            {applying === "show" ? <Loader2 size={14} className="animate-spin" /> : <Eye size={14} />}
+            {applying === "show" ? <Loader2 size={12} className="animate-spin" /> : <Eye size={12} />}
             Show to Parents{selected.size > 0 ? ` (${selected.size})` : ""}
           </button>
           <button
             onClick={() => applyVisibility(false)}
             disabled={selected.size === 0 || applying !== null}
-            className={`flex h-10 items-center gap-2 rounded-xl border px-4 text-xs font-bold transition disabled:opacity-50 ${
-              darkMode ? "border-white/15 text-white/80 hover:bg-white/10" : "border-black/10 text-black/70 hover:bg-black/4"
+            className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-[11px] font-extrabold transition-colors disabled:opacity-50 ${
+              darkMode
+                ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
+                : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
             }`}
           >
-            {applying === "hide" ? <Loader2 size={14} className="animate-spin" /> : <EyeOff size={14} />}
+            {applying === "hide" ? <Loader2 size={12} className="animate-spin" /> : <EyeOff size={12} />}
             Hide from Parents{selected.size > 0 ? ` (${selected.size})` : ""}
           </button>
         </div>
       </div>
 
       {loading ? (
-        <div className="px-5 py-16 text-center">
-          <Loader2 size={20} className={`mx-auto animate-spin ${textMuted}`} />
+        <div className="px-4 py-16 text-center">
+          <Loader2 size={18} className={`mx-auto animate-spin ${textMuted}`} />
         </div>
       ) : error ? (
-        <div className="px-5 py-16 text-center">
-          <p className="text-sm font-bold text-red-500">{error}</p>
-        </div>
+        <p className="px-4 py-16 text-center text-xs font-bold text-red-500">{error}</p>
       ) : students.length === 0 ? (
-        <div className="px-5 py-16 text-center">
-          <p className={`font-bold ${textPrimary}`}>No students found</p>
-          <p className={`mt-1 text-sm ${textMuted}`}>There are no students on record for this advisory class.</p>
+        <div className="px-4 py-16 text-center">
+          <p className={`text-sm font-bold ${textPrimary}`}>No students found</p>
+          <p className={`mt-1 text-xs ${textMuted}`}>There are no students on record for this advisory class.</p>
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-max text-sm">
             <thead>
-              <tr className={darkMode ? "bg-white/3" : "bg-[#F8FAFC]"}>
-                <th className="w-12 px-5 py-4">
+              <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
+                <th className="w-10 px-4 py-2">
                   <button onClick={toggleAll} aria-label="Select all students" className="flex items-center">
                     {allSelected ? (
-                      <CheckSquare size={16} className="text-[#6B0000]" />
+                      <CheckSquare size={15} style={{ color: ACCENT }} />
                     ) : someSelected ? (
-                      <CheckSquare size={16} className="text-[#6B0000] opacity-50" />
+                      <CheckSquare size={15} style={{ color: ACCENT, opacity: 0.5 }} />
                     ) : (
-                      <Square size={16} className={textMuted} />
+                      <Square size={15} className={textMuted} />
                     )}
                   </button>
                 </th>
-                <th className={`px-3 py-4 text-left text-[11px] font-extrabold uppercase tracking-wider ${textMuted}`}>Student</th>
-                <th className={`px-3 py-4 text-left text-[11px] font-extrabold uppercase tracking-wider ${textMuted}`}>Parent/Guardian</th>
-                <th className={`px-3 py-4 text-center text-[11px] font-extrabold uppercase tracking-wider ${textMuted}`}>Visible to Parents</th>
-                <th className={`px-3 py-4 text-left text-[11px] font-extrabold uppercase tracking-wider ${textMuted}`}>Last Updated</th>
+                <th className={`px-3 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>
+                  Student
+                </th>
+                <th className={`px-3 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>
+                  Parent/Guardian
+                </th>
+                <th className={`px-3 py-2 text-center text-[11px] font-black uppercase tracking-wider ${textMuted}`}>
+                  Visible to Parents
+                </th>
+                <th className={`px-3 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>
+                  Last Updated
+                </th>
               </tr>
             </thead>
             <tbody>
               {groupedStudents.map((group) => (
                 <Fragment key={group.label}>
-                  <tr className={darkMode ? "bg-white/5" : "bg-[#F8EDEE]"}>
-                    <td colSpan={5} className="px-5 py-2 text-xs font-extrabold uppercase tracking-wider text-[#6B0000]">
+                  <tr>
+                    <td colSpan={5} className={groupBand}>
                       {group.label} · {group.students.length} student{group.students.length === 1 ? "" : "s"}
                     </td>
                   </tr>
-                  {group.students.map((student, index) => (
+                  {group.students.map((student) => (
                     <tr
                       key={student.studentId}
-                      className={`border-t transition-colors ${panelBorder} ${
-                        index % 2 === 1 ? (darkMode ? "bg-white/1.5" : "bg-black/[0.012]") : ""
-                      } ${darkMode ? "hover:bg-white/5" : "hover:bg-[#FFF8F8]"}`}
+                      className={`border-t ${darkMode ? "border-white/10" : "border-black/10"}`}
                     >
-                      <td className="px-5 py-4">
+                      <td className="px-4 py-2">
                         <button
                           onClick={() => toggleOne(student.studentId)}
                           aria-label={`Select ${studentDisplayName(student)}`}
                           className="flex items-center"
                         >
                           {selected.has(student.studentId) ? (
-                            <CheckSquare size={16} className="text-[#6B0000]" />
+                            <CheckSquare size={15} style={{ color: ACCENT }} />
                           ) : (
-                            <Square size={16} className={textMuted} />
+                            <Square size={15} className={textMuted} />
                           )}
                         </button>
                       </td>
-                      <td className="px-3 py-4">
-                        <div className="flex items-center gap-3">
-                          <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${darkMode ? "bg-[#3A2222]" : "bg-[#F8EDEE]"}`}>
-                            <User size={16} className="text-[#6B0000]" />
+                      <td className="px-3 py-2">
+                        <div className="flex min-w-0 items-center gap-2.5">
+                          <span
+                            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
+                              darkMode ? "bg-white/10" : "bg-black/5"
+                            } ${textMuted}`}
+                          >
+                            <User size={13} />
                           </span>
-                          <p className={`font-extrabold ${textPrimary}`}>{studentDisplayName(student)}</p>
+                          <span className={`truncate text-xs font-bold ${textPrimary}`}>
+                            {studentDisplayName(student)}
+                          </span>
                         </div>
                       </td>
-                      <td className="px-3 py-4">
+                      <td className="px-3 py-2">
                         {student.parentName ? (
-                          <div>
-                            <p className={`font-bold ${textPrimary}`}>{student.parentName}</p>
+                          <div className="min-w-0">
+                            <p className={`truncate text-xs font-bold ${textPrimary}`}>{student.parentName}</p>
                             {student.parentContactNumber && (
-                              <p className={`text-xs ${textMuted}`}>{student.parentContactNumber}</p>
+                              <p className={`text-[11px] font-medium ${textMuted}`}>
+                                {student.parentContactNumber}
+                              </p>
                             )}
                           </div>
                         ) : (
-                          <span className={`text-xs italic ${textMuted}`}>No parent linked</span>
+                          <span className={`text-[11px] italic font-medium ${textMuted}`}>No parent linked</span>
                         )}
                       </td>
-                      <td className="px-3 py-4 text-center">
+                      <td className="px-3 py-2 text-center">
                         {student.isVisible ? (
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EAF8EF] px-3 py-1.5 text-xs font-extrabold text-[#157F3B]">
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#157F3B]">
                             <Eye size={12} /> Visible
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-extrabold text-gray-500 dark:bg-gray-500/20 dark:text-gray-400">
+                          <span className={`inline-flex items-center gap-1 text-[11px] font-bold ${textMuted}`}>
                             <EyeOff size={12} /> Hidden
                           </span>
                         )}
                       </td>
-                      <td className={`px-3 py-4 text-xs font-medium ${textMuted}`}>
+                      <td className={`px-3 py-2 text-[11px] font-medium ${textMuted}`}>
                         {student.updatedAt ? new Date(student.updatedAt).toLocaleString() : "—"}
                       </td>
                     </tr>

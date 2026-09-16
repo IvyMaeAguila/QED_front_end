@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronLeft, ChevronRight, Pencil } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Pencil, Sparkles, User } from "lucide-react";
 import type { RosterStudent } from "./data";
 import { HOLISTIC_COLUMNS, HOLISTIC_LEVELS, type HolisticAxisKey } from "./types/Grading";
 import {
@@ -9,6 +9,8 @@ import {
   type StudentWeeklyHolisticRecord,
   type WeeklyAxisScores,
 } from "../../holistic/services/holistic.service";
+
+type GenderedStudent = RosterStudent & { gender?: "M" | "F" };
 
 const ACCENT = "#6B0000";
 
@@ -23,7 +25,7 @@ const EMPTY_TREND: StudentWeeklyHolisticRecord["trend"] = {
 
 interface HolisticRecordsSectionProps {
   subjectSectionId: string;
-  roster: RosterStudent[];
+  roster: GenderedStudent[];
   termNumber?: number;
   termStartDate?: string;
   darkMode: boolean;
@@ -34,9 +36,9 @@ interface HolisticRecordsSectionProps {
 }
 
 interface MonthGroup {
-  key: string; 
-  label: string; 
-  weekStartDates: string[]; 
+  key: string;
+  label: string;
+  weekStartDates: string[];
 }
 
 function formatMonthLabel(monthKey: string): string {
@@ -116,7 +118,6 @@ export function HolisticRecordsSection({
   textPrimary,
   textMuted,
 }: HolisticRecordsSectionProps) {
-
   const [weeklyData, setWeeklyData] = useState<HolisticWeeklyMap>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -199,169 +200,232 @@ export function HolisticRecordsSection({
     };
   }, [selectedMonthKey, monthGroups]);
 
-  const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
-  const cellInputClasses = `w-10 rounded-md border px-1 py-0.5 text-center text-xs font-black outline-none ${panelBorder} ${
+  function isFemale(student: GenderedStudent): boolean {
+    const g = String(student.gender ?? "").trim().toUpperCase();
+    return g === "F" || g === "FEMALE";
+  }
+
+  const grouped = useMemo(() => {
+    const female = roster.filter((s) => isFemale(s));
+    const male = roster.filter((s) => !isFemale(s));
+    return { male, female };
+  }, [roster]);
+
+  const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
+  const cellInputClasses = `h-7 w-10 rounded-lg border text-center text-[11px] font-black tabular-nums outline-none ${panelBorder} ${
     darkMode ? "bg-[#0B1120] text-white" : "bg-white text-[#111827]"
   }`;
+  const stickyCell = darkMode ? "bg-[#111827]" : "bg-white";
+  const groupBand = `px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
+    darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
+  } ${textPrimary}`;
   const domainCount = HOLISTIC_COLUMNS.length;
+
+  function renderStudentRow(student: GenderedStudent, weekStartDates: string[]) {
+    const record = weeklyData[student.id];
+    const weekByDate = new Map(record?.weeks.map((w) => [w.weekStartDate, w]) ?? []);
+
+    return (
+      <tr key={student.id} className={`border-t ${darkMode ? "border-white/10" : "border-black/10"}`}>
+        <td className={`sticky left-0 z-10 px-4 py-2 ${stickyCell}`}>
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span
+              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
+                darkMode ? "bg-white/10" : "bg-black/5"
+              } ${textMuted}`}
+            >
+              <User size={13} />
+            </span>
+            <span className={`truncate text-xs font-bold ${textPrimary}`}>{student.name}</span>
+          </div>
+        </td>
+        {weekStartDates.map((week) => (
+          <Fragment key={week}>
+            {HOLISTIC_COLUMNS.map((column) => {
+              const axis = column.key as HolisticAxisKey;
+              const value = weekByDate.get(week)?.[axis] ?? null;
+              const level = value !== null ? HOLISTIC_LEVELS.find((l) => l.value === value) : undefined;
+              return (
+                <td key={`${week}-${column.key}`} className={`border px-1.5 py-2 text-center ${panelBorder}`}>
+                  {isEditing ? (
+                    <input
+                      type="number"
+                      min={1}
+                      max={5}
+                      step="1"
+                      inputMode="numeric"
+                      value={value ?? ""}
+                      aria-label={`${student.name} ${column.label} rating for week of ${week}`}
+                      onChange={(e) => handleCellChange(student.id, axis, week, e.target.value)}
+                      className={cellInputClasses}
+                    />
+                  ) : (
+                    <span
+                      className={`inline-flex h-7 w-7 items-center justify-center rounded-lg text-[11px] font-black tabular-nums ${
+                        level ? "text-white" : textMuted
+                      }`}
+                      style={level ? { backgroundColor: level.color } : undefined}
+                    >
+                      {value ?? "—"}
+                    </span>
+                  )}
+                </td>
+              );
+            })}
+          </Fragment>
+        ))}
+      </tr>
+    );
+  }
 
   return (
     <section className={cardClasses}>
-      <div className={`flex flex-col gap-3 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between ${panelBorder}`}>
-        <div>
-          <span className={`text-xs font-extrabold uppercase tracking-wider ${textPrimary}`}>Holistic ratings — weekly</span>
-          <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
-            {isEditing ? "Edit mode — changes save immediately. Click Done when finished." : "Weekly ratings for each domain."}
+      <div className={`flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 ${panelBorder}`}>
+        <div className="flex min-w-0 items-center gap-2">
+          <p className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textPrimary}`}>
+            <Sparkles size={13} style={{ color: ACCENT }} />
+            Weekly Holistic Ratings
+          </p>
+          <p className={`truncate text-[11px] font-medium ${textMuted}`}>
+            {isEditing ? "· Changes save as you type" : `· ${roster.length} student${roster.length === 1 ? "" : "s"}`}
           </p>
         </div>
+
         <div className="flex items-center gap-2">
           {displayGroup && (
             <div
               role="group"
               aria-label="Month"
-              className={`inline-flex h-9 items-center overflow-hidden rounded-xl border ${panelBorder}`}
+              className={`inline-flex h-7 items-center overflow-hidden rounded-md border ${
+                darkMode ? "border-white/10 bg-white/5" : "border-black/10 bg-white"
+              }`}
             >
               <button
                 onClick={() => setSelectedMonthKey((key) => (key ? shiftMonthKey(key, -1) : key))}
                 aria-label="Previous month"
-                className={`flex h-full items-center px-2 transition-colors ${darkMode ? "text-white/70 hover:bg-white/10" : "text-[#374151] hover:bg-black/5"}`}
+                className={`flex h-full items-center px-1.5 transition-colors ${
+                  darkMode ? "text-white/70 hover:bg-white/10" : "text-[#374151] hover:bg-black/5"
+                }`}
               >
-                <ChevronLeft size={15} />
+                <ChevronLeft size={13} />
               </button>
-              <span className={`px-2 text-xs font-extrabold ${textPrimary}`}>{displayGroup.label}</span>
+              <span className={`px-1.5 text-[11px] font-extrabold ${textPrimary}`}>{displayGroup.label}</span>
               <button
                 onClick={() => setSelectedMonthKey((key) => (key ? shiftMonthKey(key, 1) : key))}
                 aria-label="Next month"
-                className={`flex h-full items-center px-2 transition-colors ${darkMode ? "text-white/70 hover:bg-white/10" : "text-[#374151] hover:bg-black/5"}`}
+                className={`flex h-full items-center px-1.5 transition-colors ${
+                  darkMode ? "text-white/70 hover:bg-white/10" : "text-[#374151] hover:bg-black/5"
+                }`}
               >
-                <ChevronRight size={15} />
+                <ChevronRight size={13} />
               </button>
             </div>
           )}
           <button
             onClick={() => setIsEditing((v) => !v)}
-            className={`flex h-9 w-fit items-center gap-1.5 rounded-xl px-3.5 text-xs font-extrabold transition-colors ${
+            className={`flex h-7 items-center gap-1 rounded-md border px-2.5 text-[11px] font-extrabold transition-colors ${
               isEditing
-                ? "text-white"
+                ? "border-transparent text-white"
                 : darkMode
-                  ? "border border-white/10 text-white/80 hover:bg-white/5"
-                  : "border border-black/10 text-[#111827] hover:bg-black/5"
+                  ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
+                  : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
             }`}
             style={isEditing ? { background: ACCENT } : undefined}
           >
-            {isEditing ? <Check size={14} /> : <Pencil size={14} />}
+            {isEditing ? <Check size={12} /> : <Pencil size={12} style={{ color: ACCENT }} />}
             {isEditing ? "Done" : "Edit"}
           </button>
         </div>
       </div>
 
       {loading ? (
-        <p className={`px-5 py-12 text-center text-sm font-semibold ${textMuted}`}>Loading records…</p>
+        <p className={`px-4 py-12 text-center text-xs font-medium ${textMuted}`}>Loading records…</p>
       ) : error ? (
-        <p className="px-5 py-12 text-center text-sm font-semibold text-[#DC2626]">{error}</p>
+        <p className="px-4 py-12 text-center text-xs font-bold text-[#DC2626]">{error}</p>
       ) : roster.length === 0 ? (
-        <p className={`px-5 py-12 text-center text-sm font-semibold ${textMuted}`}>No students enrolled yet.</p>
+        <p className={`px-4 py-12 text-center text-xs font-medium ${textMuted}`}>No students enrolled yet.</p>
       ) : !displayGroup ? (
-        <p className={`px-5 py-12 text-center text-sm font-semibold ${textMuted}`}>Loading records…</p>
+        <p className={`px-4 py-12 text-center text-xs font-medium ${textMuted}`}>Loading records…</p>
       ) : (
         (() => {
           const group = displayGroup;
+          const columnCount = 1 + group.weekStartDates.length * domainCount;
           return (
-            <div>
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-max text-xs border-collapse">
-                  <thead>
-                    {/* Row 1: Week N, spanning that week's 4 domain columns */}
-                    <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-max border-collapse text-xs">
+                <thead>
+                  {/* Row 1: Week N, spanning that week's domain columns */}
+                  <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
+                    <th
+                      rowSpan={3}
+                      className={`sticky left-0 z-10 min-w-56 border px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${
+                        darkMode ? "bg-[#111827]" : "bg-[#F8FAFC]"
+                      } ${panelBorder} ${textMuted}`}
+                    >
+                      Learner's Name
+                    </th>
+                    {group.weekStartDates.map((week, i) => (
                       <th
-                        rowSpan={3}
-                        className={`sticky left-0 z-10 min-w-52 border px-4 py-3 text-left text-sm font-black uppercase ${darkMode ? "bg-[#111827]" : "bg-white"} ${panelBorder} ${textPrimary}`}
+                        key={week}
+                        colSpan={domainCount}
+                        className={`border px-2 py-2 text-center text-[11px] font-black uppercase tracking-wider ${panelBorder} ${textPrimary}`}
                       >
-                        Learner's Name
+                        Week {i + 1}
                       </th>
-                      {group.weekStartDates.map((week, i) => (
-                        <th
-                          key={week}
-                          colSpan={domainCount}
-                          className={`border px-2 py-3 text-center text-xs font-black uppercase ${panelBorder} ${textPrimary}`}
-                        >
-                          Week {i + 1}
-                        </th>
-                      ))}
-                    </tr>
-                    {/* Row 2: the date for that week, spanning the same 4 columns */}
-                    <tr className={darkMode ? "bg-white/4" : "bg-[#FAFBFC]"}>
-                      {group.weekStartDates.map((week) => (
-                        <th
-                          key={week}
-                          colSpan={domainCount}
-                          className={`border px-2 py-1.5 text-center text-[11px] font-bold normal-case ${panelBorder} ${textMuted}`}
-                        >
-                          {formatWeekRange(week)}
-                        </th>
-                      ))}
-                    </tr>
-                    {/* Row 3: the 4 domain sub-columns, repeated per week */}
-                    <tr className={darkMode ? "bg-white/3" : "bg-[#FAFBFC]"}>
-                      {group.weekStartDates.map((week) => (
-                        <Fragment key={week}>
-                          {HOLISTIC_COLUMNS.map((column) => (
-                            <th key={`${week}-${column.key}`} className={`min-w-16 border px-1.5 py-2 text-center font-bold ${panelBorder} ${textMuted}`}>
-                              {column.label}
-                            </th>
-                          ))}
-                        </Fragment>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {roster.map((student, index) => {
-                      const record = weeklyData[student.id];
-                      const weekByDate = new Map(record?.weeks.map((w) => [w.weekStartDate, w]) ?? []);
+                    ))}
+                  </tr>
+                  {/* Row 2: the date range for that week */}
+                  <tr className={darkMode ? "bg-white/5" : "bg-[#FAFBFC]"}>
+                    {group.weekStartDates.map((week) => (
+                      <th
+                        key={week}
+                        colSpan={domainCount}
+                        className={`border px-2 py-1.5 text-center text-[11px] font-bold normal-case ${panelBorder} ${textMuted}`}
+                      >
+                        {formatWeekRange(week)}
+                      </th>
+                    ))}
+                  </tr>
+                  {/* Row 3: the domain sub-columns, repeated per week */}
+                  <tr className={darkMode ? "bg-white/5" : "bg-[#FAFBFC]"}>
+                    {group.weekStartDates.map((week) => (
+                      <Fragment key={week}>
+                        {HOLISTIC_COLUMNS.map((column) => (
+                          <th
+                            key={`${week}-${column.key}`}
+                            className={`min-w-16 border px-1.5 py-1.5 text-center text-[11px] font-bold ${panelBorder} ${textMuted}`}
+                          >
+                            {column.label}
+                          </th>
+                        ))}
+                      </Fragment>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {grouped.male.length > 0 && (
+                    <>
+                      <tr>
+                        <td colSpan={columnCount} className={groupBand}>
+                          Male
+                        </td>
+                      </tr>
+                      {grouped.male.map((student) => renderStudentRow(student, group.weekStartDates))}
+                    </>
+                  )}
 
-                      return (
-                        <tr key={student.id} className={`border-t ${panelBorder} ${index % 2 ? (darkMode ? "bg-white/1.5" : "bg-black/[0.012]") : ""}`}>
-                          <td className={`sticky left-0 z-10 px-4 py-2.5 text-sm font-bold ${darkMode ? "bg-[#111827]" : "bg-white"} ${textPrimary}`}>
-                            {student.name}
-                          </td>
-                          {group.weekStartDates.map((week) => (
-                            <Fragment key={week}>
-                              {HOLISTIC_COLUMNS.map((column) => {
-                                const axis = column.key as HolisticAxisKey;
-                                const value = weekByDate.get(week)?.[axis] ?? null;
-                                const level = value !== null ? HOLISTIC_LEVELS.find((l) => l.value === value) : undefined;
-                                return (
-                                  <td key={`${week}-${column.key}`} className={`border px-1.5 py-2 text-center ${panelBorder}`}>
-                                    {isEditing ? (
-                                      <input
-                                        type="number"
-                                        min={1}
-                                        max={5}
-                                        step="1"
-                                        inputMode="numeric"
-                                        value={value ?? ""}
-                                        onChange={(e) => handleCellChange(student.id, axis, week, e.target.value)}
-                                        className={cellInputClasses}
-                                      />
-                                    ) : (
-                                      <span
-                                        className={`inline-flex h-6 w-6 items-center justify-center rounded-md text-xs font-black tabular-nums ${level ? "text-white" : textMuted}`}
-                                        style={level ? { backgroundColor: level.color } : undefined}
-                                      >
-                                        {value ?? "—"}
-                                      </span>
-                                    )}
-                                  </td>
-                                );
-                              })}
-                            </Fragment>
-                          ))}
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                  {grouped.female.length > 0 && (
+                    <>
+                      <tr>
+                        <td colSpan={columnCount} className={groupBand}>
+                          Female
+                        </td>
+                      </tr>
+                      {grouped.female.map((student) => renderStudentRow(student, group.weekStartDates))}
+                    </>
+                  )}
+                </tbody>
+              </table>
             </div>
           );
         })()

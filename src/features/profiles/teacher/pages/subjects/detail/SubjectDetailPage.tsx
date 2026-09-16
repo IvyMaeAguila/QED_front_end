@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, BookOpen } from "lucide-react";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
 import type { RosterStudent } from "./data";
 import type {
@@ -367,120 +367,116 @@ export function SubjectDetailPage() {
   );
 
   if (loading) {
-    const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
+    const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
 
     return (
-      <div className="max-w-6xl mx-auto space-y-6 pb-12">
+      <div className="w-full min-h-full pb-12">
         <style>{`
           @keyframes shimmer {
             100% { transform: translateX(100%); }
           }
         `}</style>
 
-        <div className="flex items-center gap-4">
-          <div className={`shrink-0 ${textMuted}`}>
-            <ArrowLeft size={22} className="opacity-30" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <Bone className="h-8 w-64" />
-            <Bone className="h-4 w-24 mt-2" />
-          </div>
-        </div>
-
-        <div className="flex gap-2">
-          {[0, 1, 2, 3].map((i) => (
-            <Bone key={i} className="h-9 w-28 rounded-lg" />
-          ))}
-        </div>
-
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <div className="flex flex-wrap items-center gap-4">
-              {[0, 1, 2, 3].map((i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <Bone className="h-9 w-9 rounded-xl" />
-                  <Bone className="h-3 w-16" />
-                </div>
-              ))}
+        <div className="w-full px-6 lg:px-8 pt-6 space-y-6">
+          <div className="flex items-start gap-2.5">
+            <ArrowLeft size={22} className={`mt-1 shrink-0 opacity-30 ${textMuted}`} />
+            <Bone className="h-9 w-9 rounded-xl shrink-0" />
+            <div className="min-w-0 flex-1">
+              <Bone className="h-4 w-40" />
+              <Bone className="h-3 w-24 mt-2" />
             </div>
-            <Bone className="h-3 w-28 mt-3" />
           </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <Bone className="h-11 w-40 rounded-xl" />
-            <Bone className="h-11 w-24 rounded-xl" />
-          </div>
-        </div>
 
-        <section className={cardClasses}>
+          <div className="flex gap-2">
+            {[0, 1, 2, 3].map((i) => (
+              <Bone key={i} className="h-9 w-28 rounded-lg" />
+            ))}
+          </div>
+
           <div
-            className={`flex flex-col gap-4 border-b px-5 py-5 sm:flex-row sm:items-center sm:justify-between ${panelBorder}`}
+            className={`flex items-center justify-between gap-2.5 rounded-xl border px-3 py-2 ${panelBg} ${panelBorder}`}
           >
-            <div className="flex items-start gap-3">
-              <Bone className="h-10 w-10 rounded-xl shrink-0" />
-              <div>
-                <Bone className="h-4 w-24" />
-                <Bone className="h-3 w-40 mt-2" />
+            <Bone className="h-7 w-24 rounded-lg" />
+            <div className="flex items-center gap-2">
+              <Bone className="h-8 w-32 rounded-lg" />
+              <Bone className="h-8 w-24 rounded-lg" />
+            </div>
+          </div>
+
+          <section className={cardClasses}>
+            <div
+              className={`flex flex-col gap-4 border-b px-5 py-5 sm:flex-row sm:items-center sm:justify-between ${panelBorder}`}
+            >
+              <div className="flex items-start gap-3">
+                <Bone className="h-10 w-10 rounded-xl shrink-0" />
+                <div>
+                  <Bone className="h-4 w-24" />
+                  <Bone className="h-3 w-40 mt-2" />
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Bone className="h-10 w-44 rounded-xl" />
+                <Bone className="h-10 w-10 rounded-xl shrink-0" />
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Bone className="h-10 w-44 rounded-xl" />
-              <Bone className="h-10 w-10 rounded-xl shrink-0" />
-            </div>
-          </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-max text-sm">
-              <thead>
-                <tr className={darkMode ? "bg-white/3" : "bg-[#F8FAFC]"}>
-                  <th
-                    className={`sticky left-0 z-10 min-w-60 px-5 py-4 text-left ${darkMode ? "bg-[#111827]" : "bg-[#F8FAFC]"}`}
-                  >
-                    <Bone className="h-3 w-16" />
-                  </th>
-                  <th className="min-w-28 px-3 py-4 text-center">
-                    <Bone className="h-3 w-14 mx-auto" />
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {[0, 1, 2, 3, 4, 5, 6].map((row) => (
-                  <tr key={row} className={`border-t ${panelBorder}`}>
-                    <td
-                      className={`sticky left-0 z-10 px-5 py-4 ${darkMode ? "bg-[#111827]" : "bg-white"}`}
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-max text-sm">
+                <thead>
+                  <tr className={darkMode ? "bg-white/3" : "bg-[#F8FAFC]"}>
+                    <th
+                      className={`sticky left-0 z-10 min-w-60 px-5 py-4 text-left ${darkMode ? "bg-[#111827]" : "bg-[#F8FAFC]"}`}
                     >
-                      <div className="flex items-center gap-3">
-                        <Bone className="h-9 w-9 rounded-full shrink-0" />
-                        <div className="min-w-0">
-                          <Bone className="h-4 w-32" />
-                          <Bone className="h-3 w-20 mt-1.5" />
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-3 py-4 text-center">
-                      <Bone className="h-7 w-11 rounded-lg mx-auto" />
-                    </td>
+                      <Bone className="h-3 w-16" />
+                    </th>
+                    <th className="min-w-28 px-3 py-4 text-center">
+                      <Bone className="h-3 w-14 mx-auto" />
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
+                </thead>
+                <tbody>
+                  {[0, 1, 2, 3, 4, 5, 6].map((row) => (
+                    <tr key={row} className={`border-t ${panelBorder}`}>
+                      <td
+                        className={`sticky left-0 z-10 px-5 py-4 ${darkMode ? "bg-[#111827]" : "bg-white"}`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <Bone className="h-9 w-9 rounded-full shrink-0" />
+                          <div className="min-w-0">
+                            <Bone className="h-4 w-32" />
+                            <Bone className="h-3 w-20 mt-1.5" />
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-3 py-4 text-center">
+                        <Bone className="h-7 w-11 rounded-lg mx-auto" />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
       </div>
     );
   }
   if (error) {
     return (
-      <div className="max-w-6xl mx-auto space-y-4 pb-12">
-        <button
-          onClick={() => navigate(-1)}
-          className={`flex items-center gap-2 text-sm font-bold ${textMuted}`}
-        >
-          <ArrowLeft size={18} /> Back
-        </button>
-        <div
-          className={`rounded-2xl border p-8 text-center ${panelBg} ${panelBorder}`}
-        >
-          <p className="text-sm font-semibold text-red-500">{error}</p>
+      <div className="w-full min-h-full pb-12">
+        <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
+          <button
+            onClick={() => navigate(-1)}
+            aria-label="Go back"
+            className={`shrink-0 transition-colors ${textMuted} hover:${textPrimary}`}
+          >
+            <ArrowLeft size={22} />
+          </button>
+          <div
+            className={`rounded-2xl border p-8 text-center shadow-card ${panelBg} ${panelBorder}`}
+          >
+            <p className="text-sm font-semibold text-red-500">{error}</p>
+          </div>
         </div>
       </div>
     );
@@ -488,7 +484,7 @@ export function SubjectDetailPage() {
 
   if (!subjectId) {
     return (
-      <div className={`max-w-6xl mx-auto p-8 ${textPrimary}`}>
+      <div className={`w-full min-h-full px-6 lg:px-8 pt-6 ${textPrimary}`}>
         No subject selected.
       </div>
     );
@@ -497,94 +493,98 @@ export function SubjectDetailPage() {
   const holisticLocked = [0, 6].includes(new Date().getDay());
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 pb-12">
-      <div className="flex items-center gap-4">
-        <button
-          onClick={handleBack}
-          aria-label="Go back"
-          className={`shrink-0 transition-colors ${textMuted} hover:${textPrimary}`}
-        >
-          <ArrowLeft size={22} />
-        </button>
-
-        <div className="min-w-0">
-          <h1
-            className={`text-3xl font-black tracking-tight truncate ${textPrimary}`}
+    <div className="w-full min-h-full pb-0">
+      <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
+        <div className="flex items-start gap-2.5">
+          <button
+            onClick={handleBack}
+            aria-label="Go back"
+            className={`mt-1 shrink-0 transition-colors ${textMuted} hover:${textPrimary}`}
           >
-            {subjectName}
-          </h1>
-          <p className={`text-sm font-medium mt-0.5 ${textMuted}`}>
-            {subjectCode}
-          </p>
+            <ArrowLeft size={22} />
+          </button>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-maroon">
+            <BookOpen size={28} />
+          </span>
+          <div className="min-w-0">
+            <h1
+              className={`text-lg font-black tracking-tight truncate ${textPrimary}`}
+            >
+              {subjectName}
+            </h1>
+            <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+              {subjectCode}
+            </p>
+          </div>
         </div>
+
+        <TabNav
+          active={activeTab}
+          onChange={handleTabChange}
+          darkMode={darkMode}
+          textPrimary={textPrimary}
+          textMuted={textMuted}
+        />
+
+        {(activeTab === "writtenWorks" ||
+          activeTab === "performanceTask" ||
+          activeTab === "exams") && (
+          <AssessmentTab
+            subjectSectionId={subjectId}
+            subjectName={subjectName}
+            tab={activeTab}
+            roster={roster}
+            items={items}
+            scores={scores}
+            terms={terms}
+            selectedTerm={selectedTerm}
+            onTermChange={setSelectedTerm}
+            onAddItem={handleAddItem}
+            onDeleteItem={handleDeleteItem}
+            onScoreChange={handleScoreChange}
+            onOpenRecords={openRecords}
+            onDirtyChange={setHasUnsavedChanges}
+            darkMode={darkMode}
+            panelBg={panelBg}
+            panelBorder={panelBorder}
+            textPrimary={textPrimary}
+            textMuted={textMuted}
+          />
+        )}
+
+        {activeTab === "holistic" && (
+          <HolisticTab
+            roster={roster}
+            ratings={holistic}
+            weekStartDate={holisticWeekStartDate}
+            termNumber={holisticTermNumber}
+            locked={holisticLocked}
+            onRate={handleHolisticRate}
+            onOpenRecords={openRecords}
+            darkMode={darkMode}
+            panelBg={panelBg}
+            panelBorder={panelBorder}
+            textPrimary={textPrimary}
+            textMuted={textMuted}
+          />
+        )}
+
+        {pendingAction && (
+          <ConfirmDialog
+            title="Leave without saving?"
+            message="You have scores that haven't been saved yet. If you leave now, those changes will be lost."
+            confirmLabel="Leave anyway"
+            danger
+            onCancel={() => setPendingAction(null)}
+            onConfirm={() => {
+              const action = pendingAction;
+              setPendingAction(null);
+              action();
+            }}
+            darkMode={darkMode}
+          />
+        )}
       </div>
-
-      <TabNav
-        active={activeTab}
-        onChange={handleTabChange}
-        darkMode={darkMode}
-        textPrimary={textPrimary}
-        textMuted={textMuted}
-      />
-
-      {(activeTab === "writtenWorks" ||
-        activeTab === "performanceTask" ||
-        activeTab === "exams") && (
-        <AssessmentTab
-          subjectSectionId={subjectId}
-          subjectName={subjectName}
-          tab={activeTab}
-          roster={roster}
-          items={items}
-          scores={scores}
-          terms={terms}
-          selectedTerm={selectedTerm}
-          onTermChange={setSelectedTerm}
-          onAddItem={handleAddItem}
-          onDeleteItem={handleDeleteItem}
-          onScoreChange={handleScoreChange}
-          onOpenRecords={openRecords}
-          onDirtyChange={setHasUnsavedChanges}
-          darkMode={darkMode}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-        />
-      )}
-
-      {activeTab === "holistic" && (
-        <HolisticTab
-          roster={roster}
-          ratings={holistic}
-          weekStartDate={holisticWeekStartDate}
-          termNumber={holisticTermNumber}
-          locked={holisticLocked}
-          onRate={handleHolisticRate}
-          onOpenRecords={openRecords}
-          darkMode={darkMode}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-        />
-      )}
-
-      {pendingAction && (
-        <ConfirmDialog
-          title="Leave without saving?"
-          message="You have scores that haven't been saved yet. If you leave now, those changes will be lost."
-          confirmLabel="Leave anyway"
-          danger
-          onCancel={() => setPendingAction(null)}
-          onConfirm={() => {
-            const action = pendingAction;
-            setPendingAction(null);
-            action();
-          }}
-          darkMode={darkMode}
-        />
-      )}
     </div>
   );
 }

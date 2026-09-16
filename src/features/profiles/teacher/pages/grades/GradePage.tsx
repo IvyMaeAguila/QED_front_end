@@ -18,15 +18,12 @@ import {
 import type { GradingPeriod } from "../subjects/detail/types/Grading";
 import { ParentVisibilitySection } from "./ParentVisibilitySection";
 
+const ACCENT = "#6B0000";
 const FILTER_OPTIONS = ["All Students", "Highest Grades", "Lowest Grades", "Boys", "Girls"];
 
-const gradeClasses = (grade: number | null | undefined) => {
-  if (grade === null || grade === undefined)
-    return "text-gray-500 bg-gray-100 dark:bg-gray-500/20 dark:text-gray-400";
-  if (grade >= 90) return "text-[#157F3B] bg-[#EAF8EF] dark:bg-[#157F3B]/20 dark:text-[#157F3B]";
-  if (grade >= 80) return "text-[#1D70D6] bg-[#EAF2FF] dark:bg-[#1D70D6]/20 dark:text-[#1D70D6]";
-  if (grade >= 75) return "text-[#B45309] bg-[#FFF4DB] dark:bg-[#B45309]/20 dark:text-[#B45309]";
-  return "text-[#C2255C] bg-[#FCE7F1] dark:bg-[#C2255C]/20 dark:text-[#C2255C]";
+const gradeTextColor = (grade: number | null | undefined) => {
+  if (grade === null || grade === undefined) return "text-gray-400 dark:text-gray-500";
+  return "text-[#800000]";
 };
 
 function studentDisplayName(s: { firstName: string; lastName: string; middleName: string | null }) {
@@ -235,140 +232,151 @@ export function GradesPage() {
   const gradeLevel = gradebook?.gradeLevel ?? students[0]?.gradeLevel ?? "";
   const isMatatag = /(?:grade\s*)?[1-3](?!\d)/i.test(gradeLevel);
   const curriculum = isMatatag ? "Matatag Curriculum" : "Intermediate Grades";
-  const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
+  const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
+  const groupBand = `px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
+    darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
+  } ${textPrimary}`;
+  const columnCount = 2 + (gradebook?.subjects.length ?? 0);
 
   return (
-    <div className="space-y-6 pb-12">
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-        <div>
-          <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-[#6B0000]">Advisory class</p>
-          <h1 className={`mt-1 text-3xl font-black tracking-tight ${textPrimary}`}>Gradebook</h1>
-          <p className={`mt-2 max-w-2xl text-sm font-medium ${textMuted}`}>
-            Final per-term grade records pulled from each subject teacher's recorded scores.
-          </p>
-        </div>
-        <span className="w-fit rounded-xl bg-[#F8EDEE] px-3 py-2 text-xs font-extrabold text-[#6B0000]">
-          {gradeLevel || "Advisory class"} · {curriculum}
-        </span>
-      </div>
-
-      {/* Tab switcher */}
-      <div className={`flex w-fit gap-1 rounded-xl border p-1 ${panelBorder} ${panelBg}`}>
-        <button
-          onClick={() => setActiveTab("gradebook")}
-          className={`rounded-lg px-4 py-2 text-xs font-bold transition ${
-            activeTab === "gradebook"
-              ? "bg-[#6B0000] text-white"
-              : `${textMuted} hover:bg-black/5 dark:hover:bg-white/5`
-          }`}
-        >
-          Gradebook
-        </button>
-        <button
-          onClick={() => setActiveTab("visibility")}
-          className={`rounded-lg px-4 py-2 text-xs font-bold transition ${
-            activeTab === "visibility"
-              ? "bg-[#6B0000] text-white"
-              : `${textMuted} hover:bg-black/5 dark:hover:bg-white/5`
-          }`}
-        >
-          Parent Visibility
-        </button>
-      </div>
-
-      {activeTab === "gradebook" ? (
-        <>
-          {/* Completeness + Submit + Export bar */}
-          <div className={`flex flex-col gap-3 rounded-2xl border p-4 sm:flex-row sm:items-center sm:justify-between ${panelBg} ${panelBorder}`}>
-            <div className="flex flex-wrap items-center gap-3">
-              {gradebookLoading ? (
-                <span className={`flex items-center gap-2 text-xs font-medium ${textMuted}`}>
-                  <Loader2 size={14} className="animate-spin" /> Checking records…
-                </span>
-              ) : allComplete ? (
-                <span className="flex items-center gap-1.5 rounded-full bg-[#EAF8EF] px-3 py-1.5 text-xs font-extrabold text-[#157F3B]">
-                  <CheckCircle2 size={14} /> Official · All subjects submitted
-                </span>
-              ) : (
-                <span className="flex items-center gap-1.5 rounded-full bg-[#FCE7F1] px-3 py-1.5 text-xs font-extrabold text-[#C2255C]">
-                  <AlertTriangle size={14} />
-                  Not yet official · {incompleteSubjectCount} subject{incompleteSubjectCount === 1 ? "" : "s"} not submitted
-                </span>
-              )}
-              {submitted && (
-                <span className={`text-xs font-medium ${textMuted}`}>
-                  Submitted {submittedAt ? new Date(submittedAt).toLocaleString() : ""}
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleExport}
-                disabled={!gradebook}
-                className={`flex h-10 items-center gap-2 rounded-xl border px-4 text-xs font-bold transition disabled:opacity-50 ${
-                  darkMode ? "border-white/15 text-white/80 hover:bg-white/10" : "border-black/10 text-black/70 hover:bg-black/4"
-                }`}
-              >
-                <Download size={14} /> Export CSV
-              </button>
-              <button
-                onClick={() => (allComplete ? handleSubmit() : setShowForceConfirm(true))}
-                disabled={submitting || gradebookLoading || !gradebook}
-                className="flex h-10 items-center gap-2 rounded-xl bg-[#6B0000] px-4 text-xs font-bold text-white transition disabled:opacity-60"
-              >
-                {submitting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-                {submitted ? "Re-submit Class Grades" : "Submit Class Grades"}
-              </button>
+    <div className="w-full min-h-full pb-12">
+      <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-2.5">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-maroon">
+              <BookOpen size={28} />
+            </span>
+            <div>
+              <h1 className={`text-lg font-black tracking-tight ${textPrimary}`}>Gradebook</h1>
+              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+                {gradeLevel || "Advisory class"} · {curriculum}
+              </p>
             </div>
           </div>
 
-          {showForceConfirm && (
-            <div className={`rounded-2xl border p-4 ${panelBg} ${panelBorder}`}>
-              <p className={`text-sm font-bold ${textPrimary}`}>Submit incomplete grades?</p>
-              <p className={`mt-1 text-xs font-medium ${textMuted}`}>
-                One or more subjects still haven't been submitted by their subject teacher yet. You can submit
-                now and reconcile later, or cancel and follow up with the subject teachers first.
-              </p>
-              <div className="mt-3 flex gap-2">
+          <div
+            className={`flex items-center self-start rounded-lg border p-0.5 sm:self-center ${panelBg} ${panelBorder}`}
+          >
+            <button
+              onClick={() => setActiveTab("gradebook")}
+              className={`h-7 rounded-md px-3 text-[11px] font-bold transition-colors ${
+                activeTab === "gradebook" ? "bg-[#800000] text-white" : `${textMuted} hover:${textPrimary}`
+              }`}
+            >
+              Gradebook
+            </button>
+            <button
+              onClick={() => setActiveTab("visibility")}
+              className={`h-7 rounded-md px-3 text-[11px] font-bold transition-colors ${
+                activeTab === "visibility" ? "bg-[#800000] text-white" : `${textMuted} hover:${textPrimary}`
+              }`}
+            >
+              Parent Visibility
+            </button>
+          </div>
+        </div>
+
+        {activeTab === "gradebook" ? (
+          <>
+            {/* Completeness + Submit + Export strip */}
+            <div
+              className={`flex flex-col gap-2.5 rounded-xl border px-3 py-2 sm:flex-row sm:items-center sm:justify-between ${panelBg} ${panelBorder}`}
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                {gradebookLoading ? (
+                  <span className={`flex items-center gap-1.5 text-[11px] font-bold ${textMuted}`}>
+                    <Loader2 size={12} className="animate-spin" /> Checking records…
+                  </span>
+                ) : allComplete ? (
+                  <span
+                    className="flex items-center gap-1.5 rounded-lg border border-[#157F3B]/25 bg-[#157F3B]/5 px-2.5 py-1 text-[11px] font-bold text-[#157F3B]"
+                  >
+                    <CheckCircle2 size={12} /> Official · All subjects submitted
+                  </span>
+                ) : (
+                  <span
+                    className="flex items-center gap-1.5 rounded-lg border border-[#C2255C]/25 bg-[#C2255C]/5 px-2.5 py-1 text-[11px] font-bold text-[#C2255C]"
+                  >
+                    <AlertTriangle size={12} />
+                    Not yet official · {incompleteSubjectCount} subject{incompleteSubjectCount === 1 ? "" : "s"} not submitted
+                  </span>
+                )}
+                {submitted && (
+                  <span className={`text-[11px] font-medium ${textMuted}`}>
+                    Submitted {submittedAt ? new Date(submittedAt).toLocaleString() : ""}
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
                 <button
-                  onClick={() => setShowForceConfirm(false)}
-                  className={`h-9 rounded-lg border px-4 text-xs font-bold ${panelBorder} ${textMuted}`}
+                  onClick={handleExport}
+                  disabled={!gradebook}
+                  className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-[11px] font-extrabold transition-colors disabled:opacity-50 ${
+                    darkMode
+                      ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
+                      : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
+                  }`}
                 >
-                  Cancel
+                  <Download size={12} /> Export CSV
                 </button>
                 <button
-                  onClick={handleSubmit}
-                  className="h-9 rounded-lg bg-[#6B0000] px-4 text-xs font-bold text-white"
+                  onClick={() => (allComplete ? handleSubmit() : setShowForceConfirm(true))}
+                  disabled={submitting || gradebookLoading || !gradebook}
+                  className={`flex h-8 items-center gap-1.5 rounded-lg border bg-[#800000] px-3 text-[11px] font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-60 ${
+                    darkMode ? "border-white/10" : "border-black/10"
+                  }`}
                 >
-                  Submit anyway
+                  {submitting ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
+                  {submitted ? "Re-submit Class Grades" : "Submit Class Grades"}
                 </button>
               </div>
             </div>
-          )}
 
-          <section className={cardClasses} aria-label="Advisory class grades">
-            <div className={`flex flex-col gap-4 border-b px-5 py-5 lg:flex-row lg:items-center lg:justify-between ${panelBorder}`}>
-              <div className="flex items-start gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#6B0000] text-white">
-                  <BookOpen size={18} />
-                </span>
-                <div>
-                  <h2 className={`font-extrabold ${textPrimary}`}>{gradebook?.sectionName || "Advisory Class"}</h2>
-                  <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
-                    {terms.find((t) => t.id === selectedTermId)?.label ?? "—"} · {filteredStudents.length} student{filteredStudents.length === 1 ? "" : "s"}
-                  </p>
+            {showForceConfirm && (
+              <div className={`rounded-xl border px-4 py-3 ${panelBg} ${panelBorder}`}>
+                <p className={`text-xs font-bold ${textPrimary}`}>Submit incomplete grades?</p>
+                <p className={`mt-1 text-[11px] font-medium ${textMuted}`}>
+                  One or more subjects still haven't been submitted by their subject teacher yet. You can submit
+                  now and reconcile later, or cancel and follow up with the subject teachers first.
+                </p>
+                <div className="mt-2.5 flex gap-2">
+                  <button
+                    onClick={() => setShowForceConfirm(false)}
+                    className={`flex h-8 items-center rounded-lg border px-3 text-[11px] font-bold transition-colors ${
+                      darkMode
+                        ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
+                        : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
+                    }`}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSubmit}
+                    className="flex h-8 items-center rounded-lg bg-[#800000] px-3 text-[11px] font-extrabold text-white transition-colors hover:bg-[#650000]"
+                  >
+                    Submit anyway
+                  </button>
                 </div>
               </div>
-              <div className="flex flex-col gap-2 sm:flex-row">
-                <div className="relative">
-                  <Search size={14} className={`pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 ${textMuted}`} />
-                  <input
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                    placeholder="Search student"
-                    className={`h-10 w-full rounded-xl border py-2 pl-9 pr-3 text-xs font-bold outline-none transition focus:ring-2 focus:ring-[#6B000055] sm:w-48 ${panelBg} ${panelBorder} ${textPrimary}`}
-                  />
-                </div>
+            )}
+
+            {/* Search + filter + term strip */}
+            <div
+              className={`flex flex-col gap-2.5 rounded-xl border px-3 py-2 lg:flex-row lg:items-center lg:justify-between ${panelBg} ${panelBorder}`}
+            >
+              <div className="relative w-full lg:w-64">
+                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5 text-gray-400">
+                  <Search size={13} />
+                </span>
+                <input
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Search student..."
+                  aria-label="Search student by name"
+                  className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-[11px] font-medium outline-none transition-colors placeholder:text-gray-400 focus:border-maroon ${panelBg} ${panelBorder} ${textPrimary}`}
+                />
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
                 <FilterDropdown label="Filter" value={studentFilter} options={FILTER_OPTIONS} onChange={setStudentFilter} darkMode={darkMode} />
                 <FilterDropdown
                   label="Term"
@@ -383,148 +391,149 @@ export function GradesPage() {
               </div>
             </div>
 
-            {gradebookLoading ? (
-              <div className="px-5 py-16 text-center">
-                <Loader2 size={20} className={`mx-auto animate-spin ${textMuted}`} />
+            <section className={cardClasses} aria-label="Advisory class grades">
+              <div className={`flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 ${panelBorder}`}>
+                <div className="flex min-w-0 items-center gap-2">
+                  <p className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textPrimary}`}>
+                    <BookOpen size={13} style={{ color: ACCENT }} />
+                    {gradebook?.sectionName || "Advisory Class"}
+                  </p>
+                  <p className={`truncate text-[11px] font-medium ${textMuted}`}>
+                    · {terms.find((t) => t.id === selectedTermId)?.label ?? "—"} · {filteredStudents.length} student
+                    {filteredStudents.length === 1 ? "" : "s"}
+                  </p>
+                </div>
               </div>
-            ) : gradebookError ? (
-              <div className="px-5 py-16 text-center">
-                <p className="text-sm font-bold text-red-500">{gradebookError}</p>
-              </div>
-            ) : !gradebook || filteredStudents.length === 0 ? (
-              <div className="px-5 py-16 text-center">
-                <p className={`font-bold ${textPrimary}`}>No records found</p>
-                <p className={`mt-1 text-sm ${textMuted}`}>Try changing the search, filter, or term.</p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-max text-sm">
-                  <thead>
-                    <tr className={darkMode ? "bg-white/3" : "bg-[#F8FAFC]"}>
-                      <th className={`sticky left-0 z-1 min-w-60 px-5 py-4 text-left text-[11px] font-extrabold uppercase tracking-wider ${darkMode ? "bg-[#111827]" : "bg-[#F8FAFC]"} ${textMuted}`}>Student</th>
-                      {gradebook.subjects.map((subject) => {
-                        const subjectComplete = filteredStudents.every(
-                          (s) => s.grades[subject.subjectSectionId]?.status === "submitted"
-                        );
-                        return (
-                          <th key={subject.subjectSectionId} className={`min-w-32 px-3 py-4 text-center text-[11px] font-extrabold uppercase tracking-wider ${textMuted}`}>
-                            <div className="flex flex-col items-center gap-1">
-                              <span>{subject.subjectName}</span>
-                              <span
-                                className={`h-1.5 w-1.5 rounded-full ${subjectComplete ? "bg-[#157F3B]" : "bg-[#C2255C]"}`}
-                                title={
-                                  subjectComplete
-                                    ? subject.submittedByName
-                                      ? `Submitted by ${subject.submittedByName}`
-                                      : subject.isOwnAdvisory
-                                        ? "All grades recorded"
-                                        : "Submitted"
-                                    : subject.isOwnAdvisory
-                                      ? "Grades not yet complete for one or more students"
-                                      : "Not yet submitted by the subject teacher for one or more students"
-                                }
-                              />
-                            </div>
-                          </th>
-                        );
-                      })}
-                      <th className={`min-w-32 px-3 py-4 text-center text-[11px] font-extrabold uppercase tracking-wider ${textMuted}`}>
-                        Overall Average
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {groupedStudents.map((group) => (
-                      <Fragment key={group.label}>
-                        <tr className={darkMode ? "bg-white/5" : "bg-[#F8EDEE]"}>
-                          <td
-                            colSpan={2 + gradebook.subjects.length}
-                            className="sticky left-0 px-5 py-2 text-xs font-extrabold uppercase tracking-wider text-[#6B0000]"
-                          >
-                            {group.label} · {group.students.length} student{group.students.length === 1 ? "" : "s"}
-                          </td>
-                        </tr>
-                        {group.students.map((student, index) => (
-                          <tr key={student.studentId} className={`border-t transition-colors ${panelBorder} ${index % 2 === 1 ? (darkMode ? "bg-white/1.5" : "bg-black/[0.012]") : ""} ${darkMode ? "hover:bg-white/5" : "hover:bg-[#FFF8F8]"}`}>
-                            <td className={`sticky left-0 z-1 px-5 py-4 ${darkMode ? "bg-[#111827]" : "bg-white"}`}>
-                              <div className="flex items-center gap-3">
-                                <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${darkMode ? "bg-[#3A2222]" : "bg-[#F8EDEE]"}`}>
-                                  <User size={16} className="text-[#6B0000]" />
-                                </span>
-                                <div className="min-w-0">
-                                  <p className={`truncate font-extrabold ${textPrimary}`}>{studentDisplayName(student)}</p>
-                                  <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>Student ID: {student.studentId}</p>
-                                </div>
-                              </div>
-                            </td>
-                            {gradebook.subjects.map((subject) => {
-                              const cell = student.grades[subject.subjectSectionId];
-                              const status = cell?.status ?? "not_submitted";
 
-                              return (
-                                <td key={subject.subjectSectionId} className="px-3 py-4 text-center">
-                                  <div className="flex flex-col items-center gap-1">
+              {gradebookLoading ? (
+                <div className="px-4 py-16 text-center">
+                  <Loader2 size={18} className={`mx-auto animate-spin ${textMuted}`} />
+                </div>
+              ) : gradebookError ? (
+                <p className="px-4 py-16 text-center text-xs font-bold text-red-500">{gradebookError}</p>
+              ) : !gradebook || filteredStudents.length === 0 ? (
+                <p className={`px-4 py-10 text-center text-xs font-medium ${textMuted}`}>
+                  No records found matching "{search}".
+                </p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-max text-sm">
+                    <thead>
+                      <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
+                        <th
+                          className={`sticky left-0 z-10 min-w-56 px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${
+                            darkMode ? "bg-[#111827]" : "bg-[#F8FAFC]"
+                          } ${textMuted}`}
+                        >
+                          Student
+                        </th>
+                        {gradebook.subjects.map((subject) => (
+                          <th
+                            key={subject.subjectSectionId}
+                            className={`min-w-28 px-3 py-2 text-center text-[11px] font-black uppercase tracking-wider ${textMuted}`}
+                          >
+                            {subject.subjectName}
+                          </th>
+                        ))}
+                        <th className={`min-w-28 px-3 py-2 text-center text-[11px] font-black uppercase tracking-wider ${textMuted}`}>
+                          Overall Average
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {groupedStudents.map((group) => (
+                        <Fragment key={group.label}>
+                          <tr>
+                            <td colSpan={columnCount} className={groupBand}>
+                              {group.label} · {group.students.length} student{group.students.length === 1 ? "" : "s"}
+                            </td>
+                          </tr>
+                          {group.students.map((student) => (
+                            <tr
+                              key={student.studentId}
+                              className={`border-t ${darkMode ? "border-white/10" : "border-black/10"}`}
+                            >
+                              <td className={`sticky left-0 z-10 px-4 py-2 ${darkMode ? "bg-[#111827]" : "bg-white"}`}>
+                                <div className="flex min-w-0 items-center gap-2.5">
+                                  <span
+                                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
+                                      darkMode ? "bg-white/10" : "bg-black/5"
+                                    } ${textMuted}`}
+                                  >
+                                    <User size={13} />
+                                  </span>
+                                  <span className={`truncate text-xs font-bold ${textPrimary}`}>
+                                    {studentDisplayName(student)}
+                                  </span>
+                                </div>
+                              </td>
+                              {gradebook.subjects.map((subject) => {
+                                const cell = student.grades[subject.subjectSectionId];
+                                const status = cell?.status ?? "not_submitted";
+
+                                return (
+                                  <td key={subject.subjectSectionId} className="px-3 py-2 text-center">
                                     {status === "submitted" ? (
                                       <span
-                                        className={`inline-flex min-w-11 justify-center rounded-lg px-2.5 py-1.5 text-xs font-black tabular-nums ${gradeClasses(cell?.average ?? null)}`}
+                                        className={`text-[13px] font-black tabular-nums ${gradeTextColor(cell?.average ?? null)}`}
                                         title={cell?.submittedByName ? `Submitted by ${cell.submittedByName}` : undefined}
                                       >
                                         {cell?.average ?? "—"}
                                       </span>
                                     ) : status === "pending" ? (
                                       <span
-                                        className="inline-flex items-center gap-1 rounded-lg bg-[#FFF4DB] px-2.5 py-1.5 text-[10px] font-black uppercase tracking-wide text-[#B45309]"
+                                        className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-[#B45309]"
                                         title="Scores are complete but the subject teacher hasn't submitted yet"
                                       >
-                                        <Clock size={11} /> Pending
+                                        <Clock size={10} /> Pending
                                       </span>
                                     ) : cell?.isOwnAdvisory ? (
                                       <span
-                                        className="inline-flex items-center gap-1 rounded-lg bg-gray-100 px-2.5 py-1.5 text-[10px] font-black uppercase tracking-wide text-gray-500 dark:bg-gray-500/20 dark:text-gray-400"
+                                        className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}
                                         title="No grades recorded yet for this subject"
                                       >
                                         No Grades Yet
                                       </span>
                                     ) : (
                                       <span
-                                        className="inline-flex items-center gap-1 rounded-lg bg-gray-100 px-2.5 py-1.5 text-[10px] font-black uppercase tracking-wide text-gray-500 dark:bg-gray-500/20 dark:text-gray-400"
+                                        className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}
                                         title="This subject's grade has not been submitted yet"
                                       >
                                         Not Submitted
                                       </span>
                                     )}
-                                  </div>
-                                </td>
-                              );
-                            })}
-                            <td className="px-3 py-4 text-center">
-                              <span
-                                className={`inline-flex min-w-11 justify-center rounded-lg px-2.5 py-1.5 text-xs font-black tabular-nums ${gradeClasses(overallAverage(student, gradebook.subjects))}`}
-                              >
-                                {overallAverage(student, gradebook.subjects) ?? "—"}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                      </Fragment>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </section>
-        </>
-      ) : (
-        <ParentVisibilitySection
-          gradingPeriodId={selectedTermId}
-          termLabel={terms.find((t) => t.id === selectedTermId)?.label ?? "—"}
-          darkMode={darkMode}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-        />
-      )}
+                                  </td>
+                                );
+                              })}
+                              <td className="px-3 py-2 text-center">
+                                <span
+                                  className={`text-[13px] font-black tabular-nums ${gradeTextColor(overallAverage(student, gradebook.subjects))}`}
+                                >
+                                  {overallAverage(student, gradebook.subjects) ?? "—"}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </Fragment>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </section>
+          </>
+        ) : (
+          <ParentVisibilitySection
+            gradingPeriodId={selectedTermId}
+            termLabel={terms.find((t) => t.id === selectedTermId)?.label ?? "—"}
+            darkMode={darkMode}
+            panelBg={panelBg}
+            panelBorder={panelBorder}
+            textPrimary={textPrimary}
+            textMuted={textMuted}
+          />
+        )}
+      </div>
     </div>
   );
 }

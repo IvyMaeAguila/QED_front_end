@@ -1,5 +1,5 @@
-import { Fragment, useEffect, useId, useMemo, useState } from "react";
-import { AlertTriangle, CheckCircle2, Send, Users, X } from "lucide-react";
+import { Fragment, useEffect, useMemo, useState } from "react";
+import { AlertTriangle, CheckCircle2, Send, X } from "lucide-react";
 import type { RosterStudent } from "./data";
 import {
   formatShortDate,
@@ -197,7 +197,6 @@ export function AssessmentRecordsSection({
   isOwnAdvisory = false,
   adviserName,
 }: AssessmentRecordsSectionProps) {
-  const titleId = useId();
   const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
   const cellInputClasses = `w-14 rounded-md border px-1 py-0.5 text-center text-xs font-bold outline-none ${panelBorder} ${
     darkMode ? "bg-[#0B1120] text-white" : "bg-white text-[#111827]"
@@ -414,7 +413,7 @@ export function AssessmentRecordsSection({
   }
 
   return (
-    <section className={cardClasses} aria-labelledby={titleId}>
+    <section className={cardClasses} aria-label={title}>
       {/* Header: title on its own line, then a single control row. Term
           selection and edit mode live only in the parent page's header now
           — this row just reflects context (student count) and, when this
@@ -422,26 +421,8 @@ export function AssessmentRecordsSection({
           action that's actually this section's own: submitting the grades
           computed from the table below to that class's adviser. */}
       <div className={`border-b ${panelBorder} ${darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}`}>
-        <div className="px-4 pt-4">
-          <h2 id={titleId} className={`text-sm font-black uppercase tracking-wide ${textPrimary}`}>
-            {title}
-          </h2>
-        </div>
-
         <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
           <div className="flex flex-wrap items-center gap-3">
-            <div
-              className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 ${panelBorder} ${
-                darkMode ? "bg-white/5" : "bg-white"
-              }`}
-            >
-              <Users className="h-3.5 w-3.5" style={{ color: ACCENT }} />
-              <span className={`text-xs font-black tabular-nums ${textPrimary}`}>{roster.length}</span>
-              <span className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>
-                {roster.length === 1 ? "Student" : "Students"}
-              </span>
-            </div>
-
             {justSubmitted && (
               <span className="inline-flex items-center gap-1 text-xs font-bold" style={{ color: "#16A34A" }}>
                 <CheckCircle2 className="h-3.5 w-3.5" />
