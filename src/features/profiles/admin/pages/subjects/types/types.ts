@@ -57,6 +57,11 @@ export interface NewSubjectInput {
   weightDistribution: WeightDistributionItem[];
 }
 
+export interface NewAssessmentType {
+  id: number;
+  assessmentName: string;
+}
+
 export interface Section {
   id: string;
   gradeLevel: GradeLevel;

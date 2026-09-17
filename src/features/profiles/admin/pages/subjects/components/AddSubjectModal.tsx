@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BookOpen, Loader2, Plus, Trash2 } from "lucide-react";
+import { BookOpen, Loader2, Plus, Trash2, Pencil } from "lucide-react";
 import {
   ACCENT,
   type GradeLevel,
@@ -10,6 +10,8 @@ import {
 } from "../types/types";
 import { ModalShell } from "./ModalShell";
 import { useGradeLevels } from "../context/gradeLevelsContext";
+import { useSubjectsCatalog } from "../context/SubjectsCatalogContext";
+import { createAssessmentType } from "../services/subject.service";
 
 interface AddSubjectModalProps extends SubjectsTheme {
   subjects: Subject[];
@@ -26,7 +28,10 @@ const ADD_NEW_VALUE = "__add_new__";
 
 function makeEmptyRow(): WeightDistributionItem {
   return {
-    id: typeof crypto !== "undefined" ? crypto.randomUUID() : `row-${Date.now()}-${Math.random()}`,
+    id:
+      typeof crypto !== "undefined"
+        ? crypto.randomUUID()
+        : `row-${Date.now()}-${Math.random()}`,
     assessmentType: "",
     weight: 0,
   };
@@ -44,23 +49,35 @@ export function AddSubjectModal({
   const { darkMode, textMuted } = theme;
 
   const { gradeLevels, loading: loadingGradeLevels } = useGradeLevels();
+  const {
+    assessmentTypes,
+    loadAssessmentTypes,
+    loading: loadingCatalog,
+  } = useSubjectsCatalog();
 
   const [gradeLevel, setGradeLevel] = useState<GradeLevel | "">("");
   const [name, setName] = useState("");
   const [isGraded, setIsGraded] = useState<boolean | null>(null);
 
-  const [weightDistribution, setWeightDistribution] = useState<WeightDistributionItem[]>([
-    makeEmptyRow(),
-  ]);
-
-  // Shared na listahan ng assessment type options — dito napupunta ang
-  // custom labels na idinagdag ng user, para magamit din sa ibang rows.
-  // Walang preset/defaults; lahat galing sa user input.
-  const [assessmentTypeOptions, setAssessmentTypeOptions] = useState<string[]>([]);
+  const [weightDistribution, setWeightDistribution] = useState<
+    WeightDistributionItem[]
+  >([makeEmptyRow()]);
 
   // Row id na kasalukuyang nasa "add new type" input mode
-  const [addingLabelForRowId, setAddingLabelForRowId] = useState<string | null>(null);
+  const [addingLabelForRowId, setAddingLabelForRowId] = useState<string | null>(
+    null,
+  );
   const [newLabelDraft, setNewLabelDraft] = useState("");
+  const [savingNewLabel, setSavingNewLabel] = useState(false);
+  const [newLabelError, setNewLabelError] = useState<string | null>(null);
+
+  // Kunin ang assessment types mula sa backend paglabas ng modal
+  useEffect(() => {
+    void loadAssessmentTypes();
+  }, [loadAssessmentTypes]);
+
+  // List ng option labels galing sa catalog (source of truth na ang backend)
+  const assessmentTypeOptions = assessmentTypes.map((t) => t.assessmentName);
 
   useEffect(() => {
     setName("");
@@ -68,6 +85,7 @@ export function AddSubjectModal({
     setWeightDistribution([makeEmptyRow()]);
     setAddingLabelForRowId(null);
     setNewLabelDraft("");
+    setNewLabelError(null);
   }, [gradeLevel]);
 
   function handleGradeChange(grade: string) {
@@ -88,7 +106,11 @@ export function AddSubjectModal({
     }
   }
 
-  function updateWeightRow(id: string, field: "assessmentType" | "weight", value: string) {
+  function updateWeightRow(
+    id: string,
+    field: "assessmentType" | "weight",
+    value: string,
+  ) {
     setWeightDistribution((prev) =>
       prev.map((row) =>
         row.id === id
@@ -106,31 +128,50 @@ export function AddSubjectModal({
       // Buksan ang inline input para mag-type ng bagong label
       setAddingLabelForRowId(rowId);
       setNewLabelDraft("");
+      setNewLabelError(null);
       return;
     }
     updateWeightRow(rowId, "assessmentType", value);
   }
 
-  function confirmNewLabel(rowId: string) {
+  async function confirmNewLabel(rowId: string) {
     const label = newLabelDraft.trim();
     if (label === "") {
       setAddingLabelForRowId(null);
       return;
     }
 
-    // Idagdag sa shared options kung wala pa (case-insensitive check)
-    setAssessmentTypeOptions((prev) =>
-      prev.some((opt) => opt.toLowerCase() === label.toLowerCase()) ? prev : [...prev, label],
+    const alreadyExists = assessmentTypes.some(
+      (t) => t.assessmentName.toLowerCase() === label.toLowerCase(),
     );
 
-    updateWeightRow(rowId, "assessmentType", label);
-    setAddingLabelForRowId(null);
-    setNewLabelDraft("");
+    if (alreadyExists) {
+      updateWeightRow(rowId, "assessmentType", label);
+      setAddingLabelForRowId(null);
+      setNewLabelDraft("");
+      return;
+    }
+
+    setSavingNewLabel(true);
+    setNewLabelError(null);
+    try {
+      await createAssessmentType({ assessmentName: label });
+      await loadAssessmentTypes(); // i-refresh ang shared catalog
+      updateWeightRow(rowId, "assessmentType", label);
+      setAddingLabelForRowId(null);
+      setNewLabelDraft("");
+    } catch (err) {
+      console.error("Failed to create assessment type:", err);
+      setNewLabelError("Failed to save new type. Try again.");
+    } finally {
+      setSavingNewLabel(false);
+    }
   }
 
   function cancelNewLabel() {
     setAddingLabelForRowId(null);
     setNewLabelDraft("");
+    setNewLabelError(null);
   }
 
   const inputClasses = `w-full h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors ${
@@ -154,14 +195,17 @@ export function AddSubjectModal({
         s.name.trim().toLowerCase() === trimmedName.toLowerCase(),
     );
 
-  const totalWeight = weightDistribution.reduce((sum, row) => sum + row.weight, 0);
+  const totalWeight = weightDistribution.reduce(
+    (sum, row) => sum + row.weight,
+    0,
+  );
   const hasEmptyWeightRow = weightDistribution.some(
     (row) => row.assessmentType.trim() === "" || row.weight <= 0,
   );
 
   const noGradingTypeSelected = isGraded === null;
   const weightDistributionInvalid =
-  isGraded === true && (hasEmptyWeightRow || totalWeight !== 100)
+    isGraded === true && (hasEmptyWeightRow || totalWeight !== 100);
 
   const canSubmit =
     !saving &&
@@ -199,7 +243,6 @@ export function AddSubjectModal({
       closeDisabled={saving}
       {...theme}
     >
-
       <div>
         <label className={labelClasses}>Grade Level</label>
         <select
@@ -231,7 +274,9 @@ export function AddSubjectModal({
           onChange={(e) => setName(e.target.value)}
           disabled={saving || noGradeSelected}
           placeholder={
-            noGradeSelected ? "Select a grade level first" : "e.g. Filipino, MAPEH"
+            noGradeSelected
+              ? "Select a grade level first"
+              : "e.g. Filipino, MAPEH"
           }
           className={noGradeSelected ? disabledInputClasses : inputClasses}
         />
@@ -246,42 +291,44 @@ export function AddSubjectModal({
         <label className={labelClasses}>Grading Type</label>
         <div className="flex gap-2">
           <button
-  type="button"
-  onClick={() => setIsGraded(true)}
-  disabled={saving || noGradeSelected}
-  className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
-    isGraded === true
-      ? "text-white border-transparent"
-      : darkMode
-        ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-        : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
-  }`}
-  style={isGraded === true ? { background: ACCENT } : undefined}
->
-  Graded
-</button>
-<button
-  type="button"
-  onClick={() => setIsGraded(false)}
-  disabled={saving || noGradeSelected}
-  className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
-    isGraded === false
-      ? "text-white border-transparent"
-      : darkMode
-        ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-        : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
-  }`}
-  style={isGraded === false ? { background: ACCENT } : undefined}
->
-  Non-graded
-</button>
+            type="button"
+            onClick={() => setIsGraded(true)}
+            disabled={saving || noGradeSelected}
+            className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+              isGraded === true
+                ? "text-white border-transparent"
+                : darkMode
+                  ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
+                  : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+            }`}
+            style={isGraded === true ? { background: ACCENT } : undefined}
+          >
+            Graded
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsGraded(false)}
+            disabled={saving || noGradeSelected}
+            className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+              isGraded === false
+                ? "text-white border-transparent"
+                : darkMode
+                  ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
+                  : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+            }`}
+            style={isGraded === false ? { background: ACCENT } : undefined}
+          >
+            Non-graded
+          </button>
         </div>
       </div>
 
       {isGraded === true && (
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className={`${labelClasses} mb-0`}>Weight Distribution</label>
+            <label className={`${labelClasses} mb-0`}>
+              Weight Distribution
+            </label>
             <button
               type="button"
               onClick={addWeightRow}
@@ -299,93 +346,99 @@ export function AddSubjectModal({
 
           <div className="space-y-2">
             {weightDistribution.map((row) => (
-              <div key={row.id} className="flex gap-2 items-center">
-                {addingLabelForRowId === row.id ? (
-                  <input
-                    type="text"
-                    autoFocus
-                    value={newLabelDraft}
-                    onChange={(e) => setNewLabelDraft(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        confirmNewLabel(row.id);
-                      } else if (e.key === "Escape") {
-                        cancelNewLabel();
+              <div key={row.id} className="flex flex-col gap-1">
+                <div className="flex gap-2 items-center">
+                  {addingLabelForRowId === row.id ? (
+                    <input
+                      type="text"
+                      autoFocus
+                      value={newLabelDraft}
+                      onChange={(e) => setNewLabelDraft(e.target.value)}
+                      disabled={savingNewLabel}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          void confirmNewLabel(row.id);
+                        } else if (e.key === "Escape") {
+                          cancelNewLabel();
+                        }
+                      }}
+                      onBlur={() => void confirmNewLabel(row.id)}
+                      placeholder="Type new assessment type…"
+                      className={`${inputClasses} flex-[2]`}
+                    />
+                  ) : (
+                    <select
+                      value={row.assessmentType}
+                      onChange={(e) =>
+                        handleAssessmentTypeSelect(row.id, e.target.value)
                       }
-                    }}
-                    onBlur={() => confirmNewLabel(row.id)}
-                    placeholder="Type new assessment type…"
-                    className={`${inputClasses} flex-[2]`}
-                  />
-                ) : (
-                  <select
-                    value={row.assessmentType}
-                    onChange={(e) => handleAssessmentTypeSelect(row.id, e.target.value)}
-                    disabled={saving || noGradeSelected}
-                    className={`${
-                      noGradeSelected ? disabledInputClasses : inputClasses
-                    } flex-[2]`}
-                  >
-                    <option value="" disabled>
-                      {assessmentTypeOptions.length === 0 ? "No types yet…" : "Select type…"}
-                    </option>
-                    {assessmentTypeOptions.map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt}
+                      disabled={saving || noGradeSelected || loadingCatalog}
+                      className={`${noGradeSelected ? disabledInputClasses : inputClasses} flex-[2]`}
+                    >
+                      <option value="" disabled>
+                        {loadingCatalog
+                          ? "Loading types…"
+                          : assessmentTypes.length === 0
+                            ? "No types yet…"
+                            : "Select type…"}
                       </option>
-                    ))}
-                    <option value={ADD_NEW_VALUE}>+ Add new type…</option>
-                  </select>
-                )}
+                      {assessmentTypes.map((t) => (
+                        <option key={t.id} value={t.assessmentName}>
+                          {t.assessmentName}
+                        </option>
+                      ))}
+                      <option value={ADD_NEW_VALUE}>+ Add new type…</option>
+                    </select>
+                  )}
 
-                <div className="relative flex-1">
-                  <input
-                    type="number"
-                    min={0}
-                    max={100}
-                    value={row.weight === 0 ? "" : row.weight}
-                    onChange={(e) => updateWeightRow(row.id, "weight", e.target.value)}
-                    disabled={saving || noGradeSelected}
-                    placeholder="0"
-                    className={`${
-                      noGradeSelected ? disabledInputClasses : inputClasses
-                    } pr-7`}
-                  />
-                  <span
-                    className={`pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold ${textMuted}`}
+                  <div className="relative flex-1">
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={row.weight === 0 ? "" : row.weight}
+                      onChange={(e) =>
+                        updateWeightRow(row.id, "weight", e.target.value)
+                      }
+                      disabled={saving || noGradeSelected}
+                      placeholder="0"
+                      className={`${
+                        noGradeSelected ? disabledInputClasses : inputClasses
+                      } pr-7`}
+                    />
+                    <span
+                      className={`pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold ${textMuted}`}
+                    >
+                      %
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeWeightRow(row.id)}
+                    disabled={
+                      saving ||
+                      noGradeSelected ||
+                      weightDistribution.length === 1
+                    }
+                    className={`h-10 w-10 shrink-0 inline-flex items-center justify-center rounded-xl border transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${
+                      darkMode
+                        ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
+                        : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+                    }`}
                   >
-                    %
-                  </span>
+                    <Trash2 size={14} />
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => removeWeightRow(row.id)}
-                  disabled={saving || noGradeSelected || weightDistribution.length === 1}
-                  className={`h-10 w-10 shrink-0 inline-flex items-center justify-center rounded-xl border transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${
-                    darkMode
-                      ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-                      : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
-                  }`}
-                >
-                  <Trash2 size={14} />
-                </button>
+                {addingLabelForRowId === row.id && newLabelError && (
+                  <p className="text-[11px] font-semibold text-[#B91C1C]">
+                    {newLabelError}
+                  </p>
+                )}
               </div>
             ))}
           </div>
-
-          <p
-            className={`mt-1.5 text-[11px] font-semibold ${
-              totalWeight === 100 ? textMuted : "text-[#B91C1C]"
-            }`}
-          >
-            Total: {totalWeight}% {totalWeight !== 100 && "(dapat umabot sa 100%)"}
-          </p>
         </div>
-      )}
-
-      {error && (
-        <p className="text-[11px] font-semibold text-[#B91C1C]">{error}</p>
       )}
 
       <div className="flex gap-3 pt-2">

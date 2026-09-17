@@ -25,6 +25,14 @@ export interface SubjectSectionRow {
   status: "Active" | "Inactive";
 }
 
+export interface SubjectWeightDistributionItem {
+  id: number;
+  assessment_type_id: number;
+  assessment_name: string;
+  weight_percent: number;
+  order_index: number;
+}
+
 export interface SubjectSectionByGradeRow {
   id: number;
   subject_name: string;
@@ -34,6 +42,12 @@ export interface SubjectSectionByGradeRow {
   teacher_id: number | string | null;
   school_year: string;
   status: "Active" | "Inactive";
+  weightDistribution: SubjectWeightDistributionItem[];
+}
+
+export interface NewAssessmentType {
+  id: number;
+  assessmentName: string;
 }
 
 export async function fetchSubjectSectionsByGrade(
@@ -57,6 +71,11 @@ export async function addSubject(payload: {
   isGraded: boolean;
   subjectName: string;
   schoolYear: string;
+  weightDistribution?: {
+    assessment_type_id: number;
+    weight_percent: number;
+    order_index: number;
+  }[];
 }): Promise<ElemSubjectRow> {
   const res = await fetch(`${BASE_URL}/addSubject`, {
     method: "POST",
@@ -67,7 +86,6 @@ export async function addSubject(payload: {
   if (!res.ok) throw new Error(json.message || "Failed to add subject.");
   return json.data as ElemSubjectRow;
 }
-
 
 export async function updateSubjectAssignment(
   id: string,
@@ -107,4 +125,58 @@ export async function toggleSubjectStatus(
   const json: ApiResponse<{ id: number; status: "Active" | "Inactive" }> = await res.json();
   if (!res.ok) throw new Error(json.message || "Failed to toggle status.");
   return json.data as { id: number; status: "Active" | "Inactive" };
+}
+
+export async function createAssessmentType(payload: {
+  assessmentName: string; 
+}): Promise<NewAssessmentType> {
+  const res = await fetch(`${BASE_URL}/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const json: ApiResponse<NewAssessmentType> = await res.json();
+  if (!res.ok) throw new Error(json.message || "Failed to add assessment type.");
+  return json.data as NewAssessmentType;
+}
+
+export async function getAssessmentTypes(): Promise<ApiResponse<NewAssessmentType[]>> {
+  const response = await fetch(`${BASE_URL}/`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to fetch assessment types: ${response.status}`);
+  }
+  const json = await response.json();
+  return {
+    ...json,
+    data: (json.data ?? []).map((row: { id: number; assessment_name: string }) => ({
+      id: row.id,
+      assessmentName: row.assessment_name,
+    })),
+  };
+}
+
+export async function updateAssessmentType(
+  id: number,
+  payload: { assessmentName: string }
+): Promise<NewAssessmentType> {
+  const res = await fetch(`${BASE_URL}/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const json: ApiResponse<NewAssessmentType> = await res.json();
+  if (!res.ok) throw new Error(json.message || "Failed to update assessment type.");
+  return json.data as NewAssessmentType;
+}
+
+export async function deleteAssessmentType(id: number): Promise<void> {
+  const res = await fetch(`${BASE_URL}/${id}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+  });
+  const json: ApiResponse<null> = await res.json();
+  if (!res.ok) throw new Error(json.message || "Failed to delete assessment type.");
 }

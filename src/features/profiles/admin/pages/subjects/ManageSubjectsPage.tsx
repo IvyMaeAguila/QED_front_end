@@ -29,6 +29,7 @@ import {
   SubjectSectionsProvider,
   useSubjectSections,
 } from "./context/SubjectSectionsContext";
+import { useSubjectsCatalog } from "./context/SubjectsCatalogContext";
 import { useToast } from "../../../../../shared/context/ToastContext";
 
 export function ManageSubjectsPage() {
@@ -50,6 +51,7 @@ function ManageSubjectsPageContent() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
 
   const { schoolYear } = useSettings();
+  const { assessmentTypes } = useSubjectsCatalog()
   const {
     getSubjectsForGrade,
     loadSubjectsForGrade,
@@ -114,40 +116,53 @@ function ManageSubjectsPageContent() {
 }
 
   async function addSubject(newSubject: NewSubjectInput) {
-    setSavingSubject(true);
-    setAddSubjectError(null);
-    try {
-      const row = await addSubjectApi({
-        gradeLevelId: GRADE_LEVEL_IDS[newSubject.gradeLevel],
-        subjectName: newSubject.name,
-        isGraded: newSubject.isGraded,
-        schoolYear: newSubject.schoolYear,
-      });
+  setSavingSubject(true);
+  setAddSubjectError(null);
+  try {
+    // I-map: assessmentType (pangalan) -> assessment_type_id (galing sa catalog)
+    const mappedWeightDistribution = newSubject.weightDistribution.map(
+      (row, index) => {
+        const match = assessmentTypes.find(
+          (t) => t.assessmentName === row.assessmentType,
+        );
+        return {
+          assessment_type_id: match?.id ?? 0,
+          weight_percent: row.weight,
+          order_index: index,
+        };
+      },
+    );
 
-      addLocalSubject({
-        ...newSubject,
-        section: "",
-        teacherId: null,
-        id: String(row.id),
-      });
-      setActiveGrade(newSubject.gradeLevel);
-      setAddingSubject(false);
-      showToast("Subject Added Successfully!", "success");
-    } catch (err) {
-      console.error("Failed to add subject:", err);
-      setAddSubjectError(
-        err instanceof Error ? err.message : "Failed to add subject.",
-      );
-      showToast(
-        err instanceof Error
-          ? err.message
-          : "Failed to add subject.",
-        "error",
-      );
-    } finally {
-      setSavingSubject(false);
-    }
+    const row = await addSubjectApi({
+      gradeLevelId: GRADE_LEVEL_IDS[newSubject.gradeLevel],
+      subjectName: newSubject.name,
+      isGraded: newSubject.isGraded,
+      schoolYear: newSubject.schoolYear,
+      weightDistribution: mappedWeightDistribution,
+    });
+
+    addLocalSubject({
+      ...newSubject,
+      section: "",
+      teacherId: null,
+      id: String(row.id),
+    });
+    setActiveGrade(newSubject.gradeLevel);
+    setAddingSubject(false);
+    showToast("Subject Added Successfully!", "success");
+  } catch (err) {
+    console.error("Failed to add subject:", err);
+    setAddSubjectError(
+      err instanceof Error ? err.message : "Failed to add subject.",
+    );
+    showToast(
+      err instanceof Error ? err.message : "Failed to add subject.",
+      "error",
+    );
+  } finally {
+    setSavingSubject(false);
   }
+}
 
     async function saveEditedSubject(
     subject: Subject,
