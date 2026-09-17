@@ -23,6 +23,14 @@ function mapRow(row: SubjectSectionByGradeRow): Subject {
     teacherId: row.teacher_id != null ? String(row.teacher_id) : null,
     schoolYear: row.school_year,
     status: row.status,
+    weightDistribution: (row.weightDistribution ?? [])
+      .slice()
+      .sort((a, b) => a.order_index - b.order_index)
+      .map((w) => ({
+        id: String(w.id),
+        assessmentType: w.assessment_name,
+        weight: Number(w.weight_percent),
+      })),
   };
 }
 
@@ -65,6 +73,8 @@ export function SubjectSectionsProvider({ children }: { children: ReactNode }) {
     </SubjectSectionsContext.Provider>
   );
 }
+
+
 
 export function useSubjectSections() {
   const ctx = useContext(SubjectSectionsContext);

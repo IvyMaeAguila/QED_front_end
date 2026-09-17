@@ -21,7 +21,8 @@ import { useSettings } from "../settings/context/SettingsContext";
 import {
   addSubject as addSubjectApi,
   toggleSubjectStatus as toggleSubjectStatusApi,
-  updateSubjectAssignment
+  updateSubjectAssignment,
+  toWeightPayload,
 } from "./services/subject.service";
 import { GradeLevelsProvider } from "./context/gradeLevelsContext";
 import { SubjectsCatalogProvider } from "./context/SubjectsCatalogContext";
@@ -172,13 +173,28 @@ function ManageSubjectsPageContent() {
     setEditSubjectError(null);
     try {
       const isGraded = updates.isGraded ?? subject.isGraded;
-      await updateSubjectAssignment(subject.id, { isGraded });
-      updateLocalSubject(subject.id, { isGraded });
+      const weightDistribution = isGraded
+        ? toWeightPayload(updates.weightDistribution ?? [], assessmentTypes)
+        : [];
+
+      await updateSubjectAssignment(subject.id, {
+        isGraded,
+        weightDistribution,
+      });
+      updateLocalSubject(subject.id, {
+        isGraded,
+        weightDistribution: isGraded ? updates.weightDistribution ?? [] : [],
+      });
       setEditingSubject(null);
+      showToast("Subject Updated Successfully!", "success");
     } catch (err) {
       console.error("Failed to update subject:", err);
       setEditSubjectError(
         err instanceof Error ? err.message : "Failed to update subject.",
+      );
+      showToast(
+        err instanceof Error ? err.message : "Failed to update subject.",
+        "error",
       );
     } finally {
       setSavingEdit(false);

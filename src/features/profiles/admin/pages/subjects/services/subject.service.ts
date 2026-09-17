@@ -45,6 +45,12 @@ export interface SubjectSectionByGradeRow {
   weightDistribution: SubjectWeightDistributionItem[];
 }
 
+export interface WeightDistributionPayloadItem {
+  assessment_type_id: number;
+  weight_percent: number;
+  order_index: number;
+}
+
 export interface NewAssessmentType {
   id: number;
   assessmentName: string;
@@ -71,11 +77,7 @@ export async function addSubject(payload: {
   isGraded: boolean;
   subjectName: string;
   schoolYear: string;
-  weightDistribution?: {
-    assessment_type_id: number;
-    weight_percent: number;
-    order_index: number;
-  }[];
+  weightDistribution?: WeightDistributionPayloadItem[];
 }): Promise<ElemSubjectRow> {
   const res = await fetch(`${BASE_URL}/addSubject`, {
     method: "POST",
@@ -87,18 +89,33 @@ export async function addSubject(payload: {
   return json.data as ElemSubjectRow;
 }
 
+export interface UpdateSubjectAssignmentResult {
+  id: number;
+  subject_id: number;
+  is_graded: boolean;
+  weight_distribution: {
+    assessment_type_id: number;
+    assessment_type_name: string | null;
+    weight_percent: number;
+    order_index: number;
+  }[];
+}
+
 export async function updateSubjectAssignment(
   id: string,
-  payload: { isGraded: boolean }
-): Promise<{ id: number; subject_id: number; is_graded: boolean }> {
+  payload: {
+    isGraded: boolean;
+    weightDistribution?: WeightDistributionPayloadItem[];
+  }
+): Promise<UpdateSubjectAssignmentResult> {
   const res = await fetch(`${BASE_URL}/updateSubjectSection/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
-  const json: ApiResponse<{ id: number; subject_id: number; is_graded: boolean }> = await res.json();
+  const json: ApiResponse<UpdateSubjectAssignmentResult> = await res.json();
   if (!res.ok) throw new Error(json.message || "Failed to update subject.");
-  return json.data as { id: number; subject_id: number; is_graded: boolean };
+  return json.data as UpdateSubjectAssignmentResult;
 }
 
 export async function assignTeacherToSubject(
@@ -128,7 +145,7 @@ export async function toggleSubjectStatus(
 }
 
 export async function createAssessmentType(payload: {
-  assessmentName: string; 
+  assessmentName: string;
 }): Promise<NewAssessmentType> {
   const res = await fetch(`${BASE_URL}/`, {
     method: "POST",
@@ -179,4 +196,25 @@ export async function deleteAssessmentType(id: number): Promise<void> {
   });
   const json: ApiResponse<null> = await res.json();
   if (!res.ok) throw new Error(json.message || "Failed to delete assessment type.");
+}
+
+export function toWeightPayload(
+  rows: { assessmentType: string; weight: number }[],
+  assessmentTypes: NewAssessmentType[]
+): WeightDistributionPayloadItem[] {
+  return rows
+    .map((row, index) => {
+      const match = assessmentTypes.find(
+        (t) =>
+          t.assessmentName.trim().toLowerCase() ===
+          row.assessmentType.trim().toLowerCase()
+      );
+      if (!match) return null;
+      return {
+        assessment_type_id: match.id,
+        weight_percent: Number(row.weight),
+        order_index: index,
+      };
+    })
+    .filter((x): x is WeightDistributionPayloadItem => x !== null);
 }
