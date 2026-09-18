@@ -19,7 +19,7 @@ function mapRow(row: SubjectSectionByGradeRow): Subject {
     name: row.subject_name,
     gradeLevel: GRADE_LEVEL_BY_ID[Number(row.grade_level_id)],
     section: row.section_name,
-    isGraded: row.is_graded,
+    isGraded: Boolean(row.is_graded),
     teacherId: row.teacher_id != null ? String(row.teacher_id) : null,
     schoolYear: row.school_year,
     status: row.status,

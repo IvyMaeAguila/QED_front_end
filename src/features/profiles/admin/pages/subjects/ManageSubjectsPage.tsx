@@ -166,42 +166,44 @@ function ManageSubjectsPageContent() {
 }
 
     async function saveEditedSubject(
-    subject: Subject,
-    updates: Partial<Subject>,
-  ) {
-    setSavingEdit(true);
-    setEditSubjectError(null);
-    try {
-      const isGraded = updates.isGraded ?? subject.isGraded;
-      const weightDistribution = isGraded
-        ? toWeightPayload(updates.weightDistribution ?? [], assessmentTypes)
-        : [];
+  subject: Subject,
+  updates: Partial<Subject>,
+) {
+  setSavingEdit(true);
+  setEditSubjectError(null);
+  try {
+    const isGraded = updates.isGraded ?? subject.isGraded;
+    const weightDistribution = isGraded
+      ? toWeightPayload(updates.weightDistribution ?? [], assessmentTypes)
+      : [];
 
-      await updateSubjectAssignment(subject.id, {
-        isGraded,
-        weightDistribution,
-      });
-      updateLocalSubject(subject.id, {
-        isGraded,
-        weightDistribution: isGraded ? updates.weightDistribution ?? [] : [],
-      });
-      setEditingSubject(null);
-      showToast("Subject Updated Successfully!", "success");
-    } catch (err) {
-      console.error("Failed to update subject:", err);
-      setEditSubjectError(
-        err instanceof Error ? err.message : "Failed to update subject.",
-      );
-      showToast(
-        err instanceof Error ? err.message : "Failed to update subject.",
-        "error",
-      );
-    } finally {
-      setSavingEdit(false);
-    }
+    await updateSubjectAssignment(subject.id, {
+      isGraded,
+      weightDistribution,
+    });
+
+    updateLocalSubject(subject.id, {
+      isGraded,
+      ...(isGraded
+        ? { weightDistribution: updates.weightDistribution ?? [] }
+        : {}),
+    });
+
+    setEditingSubject(null);
+    showToast("Subject Updated Successfully!", "success");
+  } catch (err) {
+    console.error("Failed to update subject:", err);
+    setEditSubjectError(
+      err instanceof Error ? err.message : "Failed to update subject.",
+    );
+    showToast(
+      err instanceof Error ? err.message : "Failed to update subject.",
+      "error",
+    );
+  } finally {
+    setSavingEdit(false);
   }
-
-
+}
 
   return (
     <div className="space-y-6 pb-12">

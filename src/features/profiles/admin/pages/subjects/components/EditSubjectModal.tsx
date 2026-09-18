@@ -130,7 +130,7 @@ export function EditSubjectModal({
       ...prev,
       {
         id: makeRowId(),
-        assessmentType: nextType?.assessmentName ?? "",
+        assessmentType: "",
         weight: 0,
       },
     ]);
