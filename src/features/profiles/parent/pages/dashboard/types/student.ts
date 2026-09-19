@@ -24,7 +24,7 @@ export interface DailyUpdate {
   id: string;
   studentId: string;
   studentName: string;
-  time: string; // display value, e.g. "7:30 am"
+  time: string; 
   message: string;
 }
 
