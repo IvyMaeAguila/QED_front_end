@@ -25,8 +25,8 @@ export default function ParentDashboardHome() {
     openLinkModal,
   } = useOutletContext<ParentOutletContext>();
 
-  const { students, dailyUpdates, viewMode, setViewMode } =
-    useParentDashboard();
+  const { students, viewMode, setViewMode } = useParentDashboard();
+  const { dailyUpdates, isLoadingDailyUpdates } = useParentDashboard();
 
   const { user, isLoading: isProfileLoading } = useAuth();
 
@@ -63,6 +63,7 @@ export default function ParentDashboardHome() {
         <TodayDateCard {...TODAY} panelBg={panelBg} textMuted={textMuted} />
         <DailyUpdateCard
           updates={dailyUpdates}
+          isLoading={isLoadingDailyUpdates}
           panelBg={panelBg}
           textPrimary={textPrimary}
           textMuted={textMuted}

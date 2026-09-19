@@ -1,8 +1,10 @@
+// DailyUpdateCard.tsx
 import { ClipboardList } from "lucide-react";
 import type { DailyUpdate } from "../types/student";
 
 interface DailyUpdateCardProps {
   updates: DailyUpdate[];
+  isLoading?: boolean;
   panelBg?: string;
   textPrimary?: string;
   textMuted?: string;
@@ -10,6 +12,7 @@ interface DailyUpdateCardProps {
 
 export default function DailyUpdateCard({
   updates,
+  isLoading = false,
   panelBg = "bg-white",
   textPrimary = "text-gray-700",
   textMuted = "text-gray-500",
@@ -23,7 +26,9 @@ export default function DailyUpdateCard({
         Daily Update
       </p>
 
-      {updates.length === 0 ? (
+      {isLoading ? (
+        <p className={`py-2 text-xs ${textMuted}`}>Loading updates...</p>
+      ) : updates.length === 0 ? (
         <p className={`py-2 text-xs ${textMuted}`}>
           Link your child to view daily updates.
         </p>
@@ -34,9 +39,11 @@ export default function DailyUpdateCard({
               key={update.id}
               className="border-l-2 border-maroon pl-3 text-xs leading-relaxed"
             >
-              <span className={`block font-semibold ${textMuted}`}>
-                {update.time}
-              </span>
+              {update.time && (
+                <span className={`block font-semibold ${textMuted}`}>
+                  {update.time}
+                </span>
+              )}
               <span className={textPrimary}>{update.message}</span>
             </li>
           ))}

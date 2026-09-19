@@ -1,3 +1,4 @@
+// src/features/ParentDashboard/context/ParentDashboardContext.tsx
 import {
   createContext,
   useCallback,
@@ -7,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { mockDailyUpdates } from "../data/mockData";
+import { dailyUpdateService } from "../services/dashboard.service";
 import {
   verificationService,
   enrolledChildrenService,
@@ -26,7 +27,12 @@ interface ParentDashboardContextValue {
   isLoadingStudents: boolean;
   studentsError: string | null;
   refetchStudents: () => Promise<void>;
+
   dailyUpdates: DailyUpdate[];
+  isLoadingDailyUpdates: boolean;
+  dailyUpdatesError: string | null;
+  refetchDailyUpdates: () => Promise<void>;
+
   viewMode: CardViewMode;
   setViewMode: (mode: CardViewMode) => void;
 
@@ -81,6 +87,13 @@ export function ParentDashboardProvider({ children }: { children: ReactNode }) {
   const [students, setStudents] = useState<Student[]>([]);
   const [isLoadingStudents, setIsLoadingStudents] = useState(false);
   const [studentsError, setStudentsError] = useState<string | null>(null);
+
+  const [dailyUpdates, setDailyUpdates] = useState<DailyUpdate[]>([]);
+  const [isLoadingDailyUpdates, setIsLoadingDailyUpdates] = useState(false);
+  const [dailyUpdatesError, setDailyUpdatesError] = useState<string | null>(
+    null,
+  );
+
   const [viewMode, setViewMode] = useState<CardViewMode>("grid");
 
   const [isVerifyModalOpen, setVerifyModalOpen] = useState(false);
@@ -114,9 +127,32 @@ export function ParentDashboardProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const fetchDailyUpdates = useCallback(async () => {
+    setIsLoadingDailyUpdates(true);
+    setDailyUpdatesError(null);
+
+    try {
+      const response = await dailyUpdateService.getDailyUpdatesForParent();
+
+      if (!response.success) {
+        setDailyUpdatesError(response.message || "Failed to load daily updates.");
+        setDailyUpdates([]);
+        return;
+      }
+
+      setDailyUpdates(response.dailyUpdates);
+    } catch (error) {
+      setDailyUpdatesError("Can't connect to server, try again.");
+      setDailyUpdates([]);
+    } finally {
+      setIsLoadingDailyUpdates(false);
+    }
+  }, []);
+
   useEffect(() => {
     fetchStudents();
-  }, [fetchStudents]);
+    fetchDailyUpdates();
+  }, [fetchStudents, fetchDailyUpdates]);
 
   const submitLinkForm = useCallback(async (input: LinkStudentInput) => {
     setIsVerifying(true);
@@ -158,7 +194,7 @@ export function ParentDashboardProvider({ children }: { children: ReactNode }) {
       if (!response.success) {
         setVerifyModalOpen(false);
         setPendingMatch(null);
-        showToast( response.message || "Student linked failed!", "error");
+        showToast(response.message || "Student linked failed!", "error");
         return;
       }
 
@@ -171,10 +207,11 @@ export function ParentDashboardProvider({ children }: { children: ReactNode }) {
 
       // refetch para siguradong tugma sa DB (adviser, section, etc.)
       fetchStudents();
+      fetchDailyUpdates();
     } finally {
       setIsConfirming(false);
     }
-  }, [pendingMatch, fetchStudents, showToast]);
+  }, [pendingMatch, fetchStudents, fetchDailyUpdates, showToast]);
 
   const rejectMatch = useCallback(() => {
     setVerifyModalOpen(false);
@@ -187,7 +224,10 @@ export function ParentDashboardProvider({ children }: { children: ReactNode }) {
       isLoadingStudents,
       studentsError,
       refetchStudents: fetchStudents,
-      dailyUpdates: mockDailyUpdates,
+      dailyUpdates,
+      isLoadingDailyUpdates,
+      dailyUpdatesError,
+      refetchDailyUpdates: fetchDailyUpdates,
       viewMode,
       setViewMode,
       isVerifyModalOpen,
@@ -204,6 +244,10 @@ export function ParentDashboardProvider({ children }: { children: ReactNode }) {
       isLoadingStudents,
       studentsError,
       fetchStudents,
+      dailyUpdates,
+      isLoadingDailyUpdates,
+      dailyUpdatesError,
+      fetchDailyUpdates,
       viewMode,
       isVerifyModalOpen,
       pendingMatch,
