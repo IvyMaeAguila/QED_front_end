@@ -59,7 +59,7 @@ export async function getUserData(): Promise<UserData> {
 export const dailyUpdateService = {
   async getDailyUpdatesForParent(): Promise<DailyUpdatesResponse> {
     try {
-      const response = await fetch(`${BASE_API}/dashboard/parent`, {
+      const response = await fetch(`${BASE_API}/parent-dashboard/parent`, {
         method: "GET",
         credentials: "include",
         headers: {

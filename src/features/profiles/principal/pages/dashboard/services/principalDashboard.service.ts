@@ -29,7 +29,7 @@ function resolveAfterDelay<T>(value: T): Promise<T> {
 }
 
 export async function fetchActiveTerm(): Promise<ActiveTermRow> {
-  const res = await fetch(`${BASE_URL}/dashboard/active-term`, {
+  const res = await fetch(`${BASE_URL}/principal-dashboard/active-term`, {
     credentials: "include",
   });
   const json: ApiResponse<ActiveTermRow> = await res.json();
@@ -39,7 +39,7 @@ export async function fetchActiveTerm(): Promise<ActiveTermRow> {
   return json.data;
 }
 async function getOverviewAttendance(): Promise<{ attendance: number }> {
-  const res = await fetch(`${BASE_URL}/dashboard/attendanceRate`, {
+  const res = await fetch(`${BASE_URL}/principal-dashboard/attendanceRate`, {
     credentials: "include",
   });
   if (!res.ok) {
@@ -113,14 +113,19 @@ export interface ActiveTermRow {
 }
 
 async function getSchoolWideAcademicPerformance(): Promise<SchoolWideAcademicPerformanceResponse> {
-  const res = await fetch(`${BASE_URL}/dashboard/academicPerformance`, {
+  const res = await fetch(`${BASE_URL}/principal-dashboard/academicPerformance`, {
     credentials: "include",
   });
+
+  // Handle 403 specifically to provide a better UX or redirect to a "Not Authorized" page
+  if (res.status === 403) {
+    throw new Error("Access Denied: You do not have permission to view academic performance data.");
+  }
 
   const json: SchoolWideAcademicPerformanceResponse = await res.json();
 
   if (!res.ok || !json.success) {
-    throw new Error(json.message || `Failed to fetch school-wide academic performance (${res.status})`);
+    throw new Error(json.message || `Failed to fetch data (${res.status})`);
   }
 
   return json;
@@ -176,7 +181,7 @@ export async function fetchActiveAcademicYear(): Promise<AcademicYearRow> {
 }
 
 export async function getTodaysAttendance(): Promise<TodaysAttendance> {
-  const res = await fetch(`${BASE_URL}/dashboard/getTodaysAttendance`, {
+  const res = await fetch(`${BASE_URL}/principal-dashboard/getTodaysAttendance`, {
     credentials: "include",
   });
   if (!res.ok) {
@@ -186,7 +191,7 @@ export async function getTodaysAttendance(): Promise<TodaysAttendance> {
 }
 
 export async function getAttendanceByGrade(): Promise<GradeAttendance[]> {
-  const res = await fetch(`${BASE_URL}/dashboard/getAttendanceByGrade`, {
+  const res = await fetch(`${BASE_URL}/principal-dashboard/getAttendanceByGrade`, {
     credentials: "include",
   });
   if (!res.ok) {
@@ -196,7 +201,7 @@ export async function getAttendanceByGrade(): Promise<GradeAttendance[]> {
 }
 
 export async function getTopSubjectPerGrade(): Promise<TopSubjectPerGrade[]> {
-  const res = await fetch(`${BASE_URL}/dashboard/topSubjectPerGrade`, {
+  const res = await fetch(`${BASE_URL}/principal-dashboard/topSubjectPerGrade`, {
     credentials: "include",
   });
   if (!res.ok) {
@@ -206,7 +211,7 @@ export async function getTopSubjectPerGrade(): Promise<TopSubjectPerGrade[]> {
 }
 
 export async function getSubjectRankingByTerm(): Promise<SubjectRankingByTerm> {
-  const res = await fetch(`${BASE_URL}/dashboard/subjectRankingByTerm`, {
+  const res = await fetch(`${BASE_URL}/principal-dashboard/subjectRankingByTerm`, {
     credentials: "include",
   });
   if (!res.ok) {
@@ -216,7 +221,7 @@ export async function getSubjectRankingByTerm(): Promise<SubjectRankingByTerm> {
 }
 
 export async function getHolisticOverview(): Promise<HolisticDomain[]> {
-  const res = await fetch(`${BASE_URL}/dashboard/holisticDomain`, {
+  const res = await fetch(`${BASE_URL}/principal-dashboard/holisticDomain`, {
     method: "GET",
     credentials: "include",
   });
@@ -247,7 +252,7 @@ export async function getHolisticDevelopmentData(): Promise<{
 }
 
 export async function getPerformanceByGrade(): Promise<GradePerformance[]> {
-  const res = await fetch(`${BASE_URL}/dashboard/performanceByGrade`, {
+  const res = await fetch(`${BASE_URL}/principal-dashboard/performanceByGrade`, {
     method: "GET",
     credentials: "include",
   });
@@ -268,8 +273,9 @@ export async function getPerformanceByGrade(): Promise<GradePerformance[]> {
 export async function getPerformanceTrend(): Promise<PerformanceTrendPoint[]> {
   const token = localStorage.getItem("token");
 
-  const response = await fetch(`${BASE_URL}/dashboard/performanceTrend`, {
+  const response = await fetch(`${BASE_URL}/principal-dashboard/performanceTrend`, {
     method: "GET",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
