@@ -59,7 +59,7 @@ export function UsersTable({
           <thead>
             <tr className={darkMode ? "bg-[#0B1120]" : "bg-[#F8FAFC]"}>
               {[
-                "Employee/Parent ID",
+                // "Employee/Parent ID",
                 "Full Name",
                 "Role",
                 "Email Address",
@@ -83,9 +83,9 @@ export function UsersTable({
               return (
                 // <tr key={user.id} className={`border-t ${panelBorder} hover:bg-black/2 transition-colors`}>
                 <tr key={`${user.role}-${user.id}`} className={`border-t ${panelBorder} hover:bg-black/2 transition-colors`}>
-                  <td className={`px-5 py-4 font-extrabold tabular-nums whitespace-nowrap ${textPrimary}`}>
+                  {/* <td className={`px-5 py-4 font-extrabold tabular-nums whitespace-nowrap ${textPrimary}`}>
                     {user.id}
-                  </td>
+                  </td> */}
                   <td className={`px-5 py-4 font-semibold whitespace-nowrap ${textPrimary}`}>
                     {formatFullName(user)}
                   </td>

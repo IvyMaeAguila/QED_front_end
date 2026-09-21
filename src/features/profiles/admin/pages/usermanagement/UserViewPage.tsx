@@ -42,7 +42,7 @@ export function UserViewPage() {
   }
 
   const fields: { label: string; value: string }[] = [
-    { label: "Employee/Parent ID", value: user.id },
+    // { label: "Employee/Parent ID", value: user.id },
     { label: "Full Name", value: formatFullName(user) },
     { label: "Role", value: ROLE_LABELS[user.role] },
     { label: "Email Address", value: user.email },

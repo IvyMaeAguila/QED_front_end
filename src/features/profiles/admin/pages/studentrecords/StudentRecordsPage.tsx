@@ -106,7 +106,7 @@ export function StudentRecordsPage() {
           panelBorder={panelBorder}
           textPrimary={textPrimary}
           textMuted={textMuted}
-          onView={(student) => navigate(`/admin/students/${student.id}`)}
+          // onView={(student) => navigate(`/admin/students/${student.id}`)}
           onEdit={(student) => navigate(`${student.id}/edit`)}
           onDelete={(student) => setStudentToDelete(student)}
         />

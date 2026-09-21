@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Logo from "../../shared/images/QED_Logo.png";
 import { UserIDIcon, PasswordIcon } from "./components/LoginIcon";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "./context/authContext";
 import { AuthService } from "../auth/services/authentication.service";
 import { ForgotPasswordModal } from "../../shared/components/manage_password/ForgotPasswordModal";
@@ -29,11 +29,23 @@ function getRoleHome(role?: string): string {
   }
 }
 
+// Kunin ang ?redirect= mula sa URL; tanggihan kung hindi ito internal path
+// (dapat nagsisimula sa "/" pero hindi "//") para maiwasan ang open redirect.
+function getSafeRedirect(search: string): string | null {
+  const params = new URLSearchParams(search);
+  const redirect = params.get("redirect");
+  if (redirect && redirect.startsWith("/") && !redirect.startsWith("//")) {
+    return redirect;
+  }
+  return null;
+}
+
 type ForgotPasswordStep = "closed" | "email" | "otp" | "reset";
 
 export function LoginPanel({ open, onClose }: LoginModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
 
   const [userName, setuserName] = useState("");
@@ -82,7 +94,9 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
       });
 
       login(user, user.token, user.mustChangePassword);
-      navigate(getRoleHome(user.role));
+
+      const redirectTo = getSafeRedirect(location.search);
+      navigate(redirectTo || getRoleHome(user.role));
     } catch (err) {
       setError(
         err instanceof Error

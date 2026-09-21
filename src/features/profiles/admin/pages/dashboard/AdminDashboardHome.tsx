@@ -1,7 +1,7 @@
 import { useOutletContext } from "react-router-dom";
 import { StatCards } from "./components/StatCards";
 import { LoginFrequency } from "./components/LoginFrequency";
-import { PerformanceByGrade } from "./components/PerformanceByGrade";
+// import { PerformanceByGrade } from "./components/PerformanceByGrade";
 import type { AdminThemeContext } from "../AdminLayout";
 
 export function AdminDashboardHome() {
@@ -11,7 +11,7 @@ export function AdminDashboardHome() {
     <>
       <StatCards panelBg={theme.panelBg} panelBorder={theme.panelBorder} textPrimary={theme.textPrimary} />
       <LoginFrequency {...theme} />
-      <PerformanceByGrade {...theme} />
+      {/* <PerformanceByGrade {...theme} /> */}
     </>
   );
 }

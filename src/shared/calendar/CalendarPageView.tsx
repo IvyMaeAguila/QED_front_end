@@ -13,7 +13,9 @@ import {
 } from "./types/Calendar";
 import {
   fetchCalendarActivities,
+  fetchAllCalendarActivities,
   fetchCalendarHolidays,
+  fetchAllCalendarHolidays,
 } from "./services/calendar.service";
 
 interface CalendarPageProps {
@@ -22,8 +24,6 @@ interface CalendarPageProps {
 
 type ExpandTarget = "activity" | "holiday" | null;
 
-// Read-only calendar view for Teacher / Parent.
-// Walang add/edit/delete dito — Admin lang ang may access doon sa CalendarPage (management version).
 export function CalendarPageView({}: CalendarPageProps) {
   const theme = useOutletContext<AdminThemeContext>();
   if (!theme) return null;
@@ -32,6 +32,8 @@ export function CalendarPageView({}: CalendarPageProps) {
 
   const [activities, setActivities] = useState<CalendarActivity[]>([]);
   const [holidays, setHolidays] = useState<CalendarHoliday[]>([]);
+  const [allActivities, setAllActivities] = useState<CalendarActivity[]>([]);
+  const [allHolidays, setAllHolidays] = useState<CalendarHoliday[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,11 +45,18 @@ export function CalendarPageView({}: CalendarPageProps) {
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    Promise.all([fetchCalendarActivities(), fetchCalendarHolidays()])
-      .then(([activityData, holidayData]) => {
+    Promise.all([
+      fetchCalendarActivities(),
+      fetchCalendarHolidays(),
+      fetchAllCalendarActivities(),
+      fetchAllCalendarHolidays(),
+    ])
+      .then(([activityData, holidayData, allActivityData, allHolidayData]) => {
         if (cancelled) return;
         setActivities(activityData);
         setHolidays(holidayData);
+        setAllActivities(allActivityData);
+        setAllHolidays(allHolidayData);
       })
       .catch((err) => {
         if (!cancelled)
@@ -103,8 +112,6 @@ export function CalendarPageView({}: CalendarPageProps) {
         />
 
         <div className="space-y-4">
-          {/* Walang ManageCalendarButton dito — Teacher/Parent ay view-only */}
-
           <ActivitiesCard
             activities={activities}
             viewDate={viewDate}
@@ -146,11 +153,8 @@ export function CalendarPageView({}: CalendarPageProps) {
           textPrimary={textPrimary}
           textMuted={textMuted}
         >
-          {/* NOTE: kung required ang onEdit/onDelete sa ActivityGroupList component mo,
-              gawin mo munang optional (onEdit?: ..., onDelete?: ...) doon, o magdagdag
-              ng `readOnly` prop na nagtatago ng edit/delete buttons kapag walang handlers. */}
           <ActivityGroupList
-            activities={activities}
+            activities={allActivities}
             darkMode={darkMode}
             textMuted={textMuted}
           />
@@ -169,7 +173,7 @@ export function CalendarPageView({}: CalendarPageProps) {
           textMuted={textMuted}
         >
           <HolidayGroupList
-            holidays={holidays}
+            holidays={allHolidays}
             darkMode={darkMode}
             textMuted={textMuted}
           />

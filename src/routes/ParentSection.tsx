@@ -1,16 +1,19 @@
 import { useAuth } from "../features/auth/context/authContext";
 import { ParentLayout } from "../features/profiles/parent/pages/ParentLayout";
 import { TeachersProvider } from "../features/profiles/admin/pages/classes/context/TeachersContext";
-import { ParentDashboardProvider } from "../features/profiles/parent/pages/dashboard/context/ParentDashboardContext"; // ✅ idagdag, i-adjust path
+import { ParentDashboardProvider } from "../features/profiles/parent/pages/dashboard/context/ParentDashboardContext";
+import { NotificationProvider } from "../shared/notification/NotificationContext";
 
 export function ParentSection() {
   const { logout } = useAuth();
 
   return (
-    <ParentDashboardProvider>
-      <TeachersProvider>
-        <ParentLayout onLogout={logout} />
-      </TeachersProvider>
-    </ParentDashboardProvider>
+    <NotificationProvider>
+      <ParentDashboardProvider>
+        <TeachersProvider>
+          <ParentLayout onLogout={logout} />
+        </TeachersProvider>
+      </ParentDashboardProvider>
+    </NotificationProvider>
   );
 }

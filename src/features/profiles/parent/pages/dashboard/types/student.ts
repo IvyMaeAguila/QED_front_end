@@ -1,8 +1,11 @@
-// Core domain types for the Parent role of QED.
-// Kept separate from the admin/teacher/principal types so each role's
-// contracts can evolve independently once the backend is wired in.
-
 export type AttendanceStatus = "present" | "absent" | "late" | "pending";
+
+export type PerformanceStatus =
+  | "excellent"
+  | "good"
+  | "fair"
+  | "needsImprovement"
+  | "pending";
 
 export interface Student {
   id: string;
@@ -11,13 +14,15 @@ export interface Student {
   middleInitial?: string;
   lastName: string;
   fullName?: string;
-  gradeLevel: string; // e.g. "Grade 2"
-  section: string; // e.g. "Rizal"
+  gradeLevel: string; 
+  section: string; 
   adviser: string;
   avatarUrl?: string;
-  attendanceRate?: number | null; // null = no data yet (pending status)
+  attendanceRate?: number | null; 
   attendanceStatus?: AttendanceStatus;
-  linked?: boolean; // false while awaiting parent verification
+  overallScore?: number | null; 
+  performanceStatus?: PerformanceStatus;
+  linked?: boolean; 
 }
 
 export interface DailyUpdate {
@@ -31,22 +36,18 @@ export interface DailyUpdate {
 export interface SchoolEvent {
   id: string;
   day: number;
-  month: string; // short label, e.g. "AUG"
+  month: string;
   title: string;
   holidayType: string;
   type: "activity" | "holiday";
 }
 
-// Payload the "Link Student" form collects before it is matched
-// against school records.
 export interface LinkStudentInput {
   idNumber: string;
   lastName: string;
   firstName: string;
 }
 
-// What comes back once the ID number matches a record on file.
-// This is what the parent is asked to verify in the confirmation modal.
 export interface MatchedStudentRecord {
   id: number;          
   idNumber: string;

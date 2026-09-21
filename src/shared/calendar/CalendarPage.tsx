@@ -24,7 +24,9 @@ import {
 } from "./types/Calendar";
 import {
   fetchCalendarActivities,
+  fetchAllCalendarActivities,
   fetchCalendarHolidays,
+  fetchAllCalendarHolidays,
   createCalendarActivities,
   createCalendarHolidays,
   updateCalendarActivity,
@@ -56,6 +58,8 @@ export function CalendarPage({ viewerRole = "ADMIN" }: CalendarPageProps) {
 
   const [activities, setActivities] = useState<CalendarActivity[]>([]);
   const [holidays, setHolidays] = useState<CalendarHoliday[]>([]);
+  const [allActivities, setAllActivities] = useState<CalendarActivity[]>([]);
+  const [allHolidays, setAllHolidays] = useState<CalendarHoliday[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -72,11 +76,18 @@ export function CalendarPage({ viewerRole = "ADMIN" }: CalendarPageProps) {
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    Promise.all([fetchCalendarActivities(), fetchCalendarHolidays()])
-      .then(([activityData, holidayData]) => {
+    Promise.all([
+      fetchCalendarActivities(),
+      fetchCalendarHolidays(),
+      fetchAllCalendarActivities(),
+      fetchAllCalendarHolidays(),
+    ])
+      .then(([activityData, holidayData, allActivityData, allHolidayData]) => {
         if (cancelled) return;
         setActivities(activityData);
         setHolidays(holidayData);
+        setAllActivities(allActivityData);
+        setAllHolidays(allHolidayData);
       })
       .catch((err) => {
         if (!cancelled)
@@ -108,6 +119,7 @@ export function CalendarPage({ viewerRole = "ADMIN" }: CalendarPageProps) {
       entries.map((e) => ({ title: e.title.trim(), date: e.date })),
     );
     setActivities((prev) => [...prev, ...created]);
+    setAllActivities((prev) => [...prev, ...created]);
     setManageTarget(null);
   }
 
@@ -120,6 +132,7 @@ export function CalendarPage({ viewerRole = "ADMIN" }: CalendarPageProps) {
       })),
     );
     setHolidays((prev) => [...prev, ...created]);
+    setAllHolidays((prev) => [...prev, ...created]);
     setManageTarget(null);
   }
 
@@ -130,20 +143,21 @@ export function CalendarPage({ viewerRole = "ADMIN" }: CalendarPageProps) {
         title: value.title,
         date: value.date,
       });
-      setActivities((prev) =>
+      const updater = (prev: CalendarActivity[]) =>
         prev.map((a) =>
           a.id === editState.entry.id
             ? { ...a, title: value.title, date: value.date }
             : a,
-        ),
-      );
+        );
+      setActivities(updater);
+      setAllActivities(updater);
     } else {
       await updateCalendarHoliday(editState.entry.id, {
         title: value.title,
         date: value.date,
         type: value.holidayType,
       });
-      setHolidays((prev) =>
+      const updater = (prev: CalendarHoliday[]) =>
         prev.map((h) =>
           h.id === editState.entry.id
             ? {
@@ -153,8 +167,9 @@ export function CalendarPage({ viewerRole = "ADMIN" }: CalendarPageProps) {
                 type: value.holidayType,
               }
             : h,
-        ),
-      );
+        );
+      setHolidays(updater);
+      setAllHolidays(updater);
     }
     setEditState(null);
   }
@@ -163,12 +178,16 @@ export function CalendarPage({ viewerRole = "ADMIN" }: CalendarPageProps) {
     if (!deleteState) return;
     if (deleteState.kind === "activity") {
       await deleteCalendarActivityApi(deleteState.entry.id);
-      setActivities((prev) =>
-        prev.filter((a) => a.id !== deleteState.entry.id),
-      );
+      const filterer = (prev: CalendarActivity[]) =>
+        prev.filter((a) => a.id !== deleteState.entry.id);
+      setActivities(filterer);
+      setAllActivities(filterer);
     } else {
       await deleteCalendarHolidayApi(deleteState.entry.id);
-      setHolidays((prev) => prev.filter((h) => h.id !== deleteState.entry.id));
+      const filterer = (prev: CalendarHoliday[]) =>
+        prev.filter((h) => h.id !== deleteState.entry.id);
+      setHolidays(filterer);
+      setAllHolidays(filterer);
     }
     setDeleteState(null);
   }
@@ -273,7 +292,7 @@ export function CalendarPage({ viewerRole = "ADMIN" }: CalendarPageProps) {
           textMuted={textMuted}
         >
           <ActivityGroupList
-            activities={activities}
+            activities={allActivities}
             darkMode={darkMode}
             textMuted={textMuted}
             onEdit={(a) => setEditState({ kind: "activity", entry: a })}
@@ -294,7 +313,7 @@ export function CalendarPage({ viewerRole = "ADMIN" }: CalendarPageProps) {
           textMuted={textMuted}
         >
           <HolidayGroupList
-            holidays={holidays}
+            holidays={allHolidays}
             darkMode={darkMode}
             textMuted={textMuted}
             onEdit={(h) => setEditState({ kind: "holiday", entry: h })}

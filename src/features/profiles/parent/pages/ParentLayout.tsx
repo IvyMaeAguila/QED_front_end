@@ -43,7 +43,7 @@ export function ParentLayout({ onLogout }: ParentLayoutProps) {
 
   return (
     <div
-      className={`flex h-screen w-full overflow-hidden transition-colors ${darkMode ? "bg-[#0B1120]" : "bg-[#F6F7FB]"}`}
+      className={`flex h-screen w-full overflow-hidden transition-colors overflowY: 'hidden' scrollbar-none ${darkMode ? "bg-[#0B1120]" : "bg-[#F6F7FB]"}`}
       style={{ fontFamily: "'Inter', sans-serif" }}
     >
       <div
@@ -68,7 +68,11 @@ export function ParentLayout({ onLogout }: ParentLayoutProps) {
       )}
 
       <div className="flex-1 flex flex-col h-full overflow-hidden">
-        <Header onMenuClick={() => setSidebarOpen(true)} onLogout={onLogout} />
+        <Header
+          onMenuClick={() => setSidebarOpen(true)}
+          onLogout={onLogout}
+          showNotifications
+        />
 
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet context={{ ...theme, openLinkModal }} />

@@ -160,7 +160,7 @@ export function AppRouter() {
           <Route index element={<AdminDashboardHome />} />
           <Route path="students" element={<StudentRecordsPage />} />
           <Route path="students/new" element={<StudentFormPage />} />
-          <Route path="students/:studentId" element={<StudentDetailPage />} />
+          {/* <Route path="students/:studentId" element={<StudentDetailPage />} /> */}
           <Route
             path="students/:studentId/edit"
             element={<StudentFormPage />}

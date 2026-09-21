@@ -1,5 +1,5 @@
 import { API_CONFIG } from '../../../../../../config/api.config';
-import type { DailyUpdate } from '../types/student';
+import type { DailyUpdate  } from '../types/student';
 
 const BASE_API = `${API_CONFIG.baseURL}/api`;
 
@@ -9,6 +9,18 @@ export interface UserData {
   contact_number?: string;
   email_address?: string;
   address?: string;
+}
+
+export interface PerformanceTrendPoint {
+  term: string;
+  performance: number | null;
+  attendance: number | null;
+  cognitive: number | null;
+  emotional: number | null;
+  behavioral: number | null;
+  social: number | null;
+  holisticAverage: number | null;
+  overall: number | null;
 }
 
 interface ProfileResponse {

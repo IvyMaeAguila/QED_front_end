@@ -34,6 +34,7 @@ import { useTeachers } from "../../features/profiles/admin/pages/classes/context
 import { formatTeacherName } from "../../features/profiles/admin/pages/classes/types/Teacher";
 import type { AdminThemeContext } from "../../features/profiles/admin/pages/AdminLayout";
 import type { Student } from "../../features/profiles/admin/pages/studentrecords/types/Students";
+import { HeroProfileBanner } from "./StudentHeroProfileBanner";
 import { useState } from "react";
 
 type StudentWithExtras = Student & {
@@ -47,16 +48,47 @@ type StudentWithExtras = Student & {
 
 const ACCENT = "#8B0D0D";
 
-type HolisticMetric = { label: string; icon: typeof Brain; note: string; score: number | null };
+type HolisticMetric = {
+  label: string;
+  icon: typeof Brain;
+  note: string;
+  score: number | null;
+};
 
 const HOLISTIC_AXES: HolisticMetric[] = [
-  { label: "Cognitive", icon: Brain, note: "Performance, Comprehension", score: null },
-  { label: "Emotional", icon: Heart, note: "Motivation, Engagement", score: null },
-  { label: "Social", icon: Users2, note: "Participation, Teamwork", score: null },
-  { label: "Behavioral", icon: Smile, note: "Attendance, Discipline", score: null },
+  {
+    label: "Cognitive",
+    icon: Brain,
+    note: "Performance, Comprehension",
+    score: null,
+  },
+  {
+    label: "Emotional",
+    icon: Heart,
+    note: "Motivation, Engagement",
+    score: null,
+  },
+  {
+    label: "Social",
+    icon: Users2,
+    note: "Participation, Teamwork",
+    score: null,
+  },
+  {
+    label: "Behavioral",
+    icon: Smile,
+    note: "Attendance, Discipline",
+    score: null,
+  },
 ];
 
-function HolisticRadarChart({ metrics, darkMode }: { metrics: HolisticMetric[]; darkMode: boolean }) {
+function HolisticRadarChart({
+  metrics,
+  darkMode,
+}: {
+  metrics: HolisticMetric[];
+  darkMode: boolean;
+}) {
   const size = 260;
   const center = size / 2;
   const maxRadius = 92;
@@ -66,11 +98,17 @@ function HolisticRadarChart({ metrics, darkMode }: { metrics: HolisticMetric[]; 
 
   const pointAt = (angleDeg: number, radius: number) => {
     const rad = (angleDeg * Math.PI) / 180;
-    return { x: center + radius * Math.cos(rad), y: center + radius * Math.sin(rad) };
+    return {
+      x: center + radius * Math.cos(rad),
+      y: center + radius * Math.sin(rad),
+    };
   };
 
   const valuePoints = metrics.map((m, i) => {
-    const fraction = m.score !== null ? Math.max(0, Math.min(m.score, 5)) / 5 : fallbackFraction;
+    const fraction =
+      m.score !== null
+        ? Math.max(0, Math.min(m.score, 5)) / 5
+        : fallbackFraction;
     return pointAt(angles[i], maxRadius * fraction);
   });
   const valuePath = valuePoints.map((p) => `${p.x},${p.y}`).join(" ");
@@ -84,7 +122,12 @@ function HolisticRadarChart({ metrics, darkMode }: { metrics: HolisticMetric[]; 
         {ringFractions.map((f) => (
           <polygon
             key={f}
-            points={angles.map((a) => { const p = pointAt(a, maxRadius * f); return `${p.x},${p.y}`; }).join(" ")}
+            points={angles
+              .map((a) => {
+                const p = pointAt(a, maxRadius * f);
+                return `${p.x},${p.y}`;
+              })
+              .join(" ")}
             fill="none"
             stroke={gridColor}
             strokeWidth={1}
@@ -92,7 +135,17 @@ function HolisticRadarChart({ metrics, darkMode }: { metrics: HolisticMetric[]; 
         ))}
         {angles.map((a, i) => {
           const p = pointAt(a, maxRadius);
-          return <line key={i} x1={center} y1={center} x2={p.x} y2={p.y} stroke={gridColor} strokeWidth={1} />;
+          return (
+            <line
+              key={i}
+              x1={center}
+              y1={center}
+              x2={p.x}
+              y2={p.y}
+              stroke={gridColor}
+              strokeWidth={1}
+            />
+          );
         })}
         <polygon
           points={valuePath}
@@ -103,19 +156,36 @@ function HolisticRadarChart({ metrics, darkMode }: { metrics: HolisticMetric[]; 
           strokeDasharray={hasAnyScore ? undefined : "4 3"}
         />
         {valuePoints.map((p, i) => (
-          <circle key={i} cx={p.x} cy={p.y} r={3.5} fill={hasAnyScore ? "#8B0D0D" : "#94A3B8"} />
+          <circle
+            key={i}
+            cx={p.x}
+            cy={p.y}
+            r={3.5}
+            fill={hasAnyScore ? "#8B0D0D" : "#94A3B8"}
+          />
         ))}
         {metrics.map((m, i) => {
           const p = pointAt(angles[i], maxRadius + 22);
           return (
-            <text key={m.label} x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle" fontSize="11" fontWeight={700} fill={labelColor}>
+            <text
+              key={m.label}
+              x={p.x}
+              y={p.y}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fontSize="11"
+              fontWeight={700}
+              fill={labelColor}
+            >
               {m.label}
             </text>
           );
         })}
       </svg>
       {!hasAnyScore && (
-        <p className={`text-[11px] font-semibold mt-1 ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
+        <p
+          className={`text-[11px] font-semibold mt-1 ${darkMode ? "text-slate-400" : "text-slate-500"}`}
+        >
           Awaiting assessment — showing baseline
         </p>
       )}
@@ -179,8 +249,6 @@ export function StudentDetailPage() {
   const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
   const fieldLabel = `text-[11px] font-bold uppercase tracking-wider ${textMuted}`;
   const fieldValue = `text-sm font-semibold mt-1 ${textPrimary}`;
-  const pillBase =
-    "px-3 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1.5";
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 pb-12">
@@ -209,101 +277,47 @@ export function StudentDetailPage() {
       </div>
 
       {/* Hero Profile Banner */}
-      <section className={`${cardClasses} relative`}>
-        <div
-          className="h-28 px-6 py-6 flex items-end"
-          style={{ background: ACCENT }}
-        ></div>
-        {/* Removed -mt-10 from this parent wrapper and adjusted alignment to center */}
-        <div className="px-6 pb-6 pt-0 relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5">
-            {/* Applied -mt-10 and z-10 directly to the avatar so ONLY the avatar overlaps the banner */}
-            <div
-              className={`-mt-10 w-20 h-20 rounded-2xl shadow-md border-4 flex items-center justify-center shrink-0 z-10 ${
-                darkMode
-                  ? "bg-slate-900 border-slate-900"
-                  : "bg-white border-white"
-              }`}
-              style={{ color: ACCENT }}
-            >
-              <span className="text-2xl font-black">{initials || "?"}</span>
-            </div>
-
-            {/* The name now sits safely below the banner on the correct background */}
-            <div className="mt-2 sm:mt-0">
-              <h1 className={`text-xl font-bold tracking-tight ${textPrimary}`}>
-                {fullName}
-              </h1>
-              <p className={`text-xs font-semibold mt-0.5 ${textMuted}`}>
-                LRN: {student.lrn} &bull; ID: {student.studentId}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-2 items-center mt-2 sm:mt-0">
-            <span
-              className={`${pillBase} ${darkMode ? "bg-slate-800 text-slate-200 border border-slate-700" : "bg-slate-100 text-slate-700 border border-slate-200"}`}
-            >
-              {student.gradeLevel} &bull; Section {student.section}
-            </span>
-            <span
-              className={`${pillBase} ${darkMode ? "bg-slate-800 text-slate-200 border border-slate-700" : "bg-slate-100 text-slate-700 border border-slate-200"}`}
-            >
-              {student.gender}
-            </span>
-            <span
-              className={`${pillBase} ${darkMode ? "bg-emerald-950/60 text-emerald-400 border border-emerald-800" : "bg-emerald-50 text-emerald-700 border border-emerald-200"}`}
-            >
-              <CheckCircle2 size={12} /> Active
-            </span>
-          </div>
-        </div>
-
-        {/* Metric Cards Row */}
-        <div
-          className={`grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x border-t ${panelBorder} ${darkMode ? "bg-slate-900/40" : "bg-slate-50/60"}`}
-        >
-          <div className="px-6 py-4 flex items-center gap-3.5">
-            <div
-              className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${darkMode ? "bg-emerald-950/60 text-emerald-400" : "bg-emerald-100 text-emerald-700"}`}
-            >
-              <Calendar size={18} />
-            </div>
-            <div>
-              <p className={fieldLabel}>Attendance Rate</p>
-              <p className={`text-base font-bold mt-0.5 ${textMuted}`}>
-                No records yet
-              </p>
-            </div>
-          </div>
-          <div className="px-6 py-4 flex items-center gap-3.5">
-            <div
-              className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${darkMode ? "bg-amber-950/60 text-amber-400" : "bg-amber-100 text-amber-700"}`}
-            >
-              <Zap size={18} />
-            </div>
-            <div>
-              <p className={fieldLabel}>Engagement Level</p>
-              <p className={`text-base font-bold mt-0.5 ${textMuted}`}>
-                Not evaluated
-              </p>
-            </div>
-          </div>
-          <div className="px-6 py-4 flex items-center gap-3.5">
-            <div
-              className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${darkMode ? "bg-rose-950/60 text-rose-400" : "bg-rose-100 text-rose-700"}`}
-            >
-              <TrendingUp size={18} />
-            </div>
-            <div>
-              <p className={fieldLabel}>Overall Average</p>
-              <p className={`text-base font-bold mt-0.5 ${textMuted}`}>
-                Not Graded Yet
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroProfileBanner
+        darkMode={darkMode}
+        initials={initials}
+        title={fullName}
+        subtitle={`LRN: ${student.lrn} • ID: ${student.studentId}`}
+        pills={[
+          { label: `${student.gradeLevel} • Section ${student.section}` },
+          { label: student.gender },
+        ]}
+        statusLabel="Active"
+        panelBg={panelBg}
+        panelBorder={panelBorder}
+        textPrimary={textPrimary}
+        textMuted={textMuted}
+        metrics={[
+          {
+            icon: <Calendar size={18} />,
+            label: "Attendance Rate",
+            value: "No records yet",
+            colorClasses: darkMode
+              ? "bg-emerald-950/60 text-emerald-400"
+              : "bg-emerald-100 text-emerald-700",
+          },
+          {
+            icon: <Zap size={18} />,
+            label: "Engagement Level",
+            value: "Not evaluated",
+            colorClasses: darkMode
+              ? "bg-amber-950/60 text-amber-400"
+              : "bg-amber-100 text-amber-700",
+          },
+          {
+            icon: <TrendingUp size={18} />,
+            label: "Overall Average",
+            value: "Not Graded Yet",
+            colorClasses: darkMode
+              ? "bg-rose-950/60 text-rose-400"
+              : "bg-rose-100 text-rose-700",
+          },
+        ]}
+      />
 
       {/* Information Grid: Personal & Guardian Details */}
       <div className="grid lg:grid-cols-2 gap-6">

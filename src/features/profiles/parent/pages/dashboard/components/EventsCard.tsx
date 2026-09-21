@@ -206,7 +206,7 @@ export default function EventsCard({
               </div>
             ) : (
               <p className={`py-1 text-xs ${textMuted}`}>
-                Walang activity ngayong buwan.
+                No upcoming activities recorded for this month.
               </p>
             )}
           </div>
@@ -227,7 +227,7 @@ export default function EventsCard({
               </div>
             ) : (
               <p className={`py-1 text-xs ${textMuted}`}>
-                Walang holiday ngayong buwan.
+                There are no official holidays scheduled for this month.
               </p>
             )}
           </div>

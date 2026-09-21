@@ -2,6 +2,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AppRouter } from "./routes/AppRouter";
 import { AuthProvider } from "./features/auth/context/authContext";
 import { ToastProvider } from "./shared/context/ToastContext";
+import { NotificationProvider } from "@shared/notification/NotificationContext";
 import { ForceChangePasswordGate } from "@shared/components/manage_password/ForceChangePasswordGate";
 
 export default function App() {
@@ -9,8 +10,10 @@ export default function App() {
     <BrowserRouter>
       <ToastProvider>
         <AuthProvider>
-          <AppRouter />
-          <ForceChangePasswordGate />
+          <NotificationProvider>
+            <AppRouter />
+            <ForceChangePasswordGate />
+          </NotificationProvider>
         </AuthProvider>
       </ToastProvider>
     </BrowserRouter>

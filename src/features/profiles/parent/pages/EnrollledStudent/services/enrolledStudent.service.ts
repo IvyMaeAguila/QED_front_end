@@ -1,4 +1,4 @@
-import type { Student } from "../../dashboard/types/student";
+import type { PerformanceStatus, Student } from "../../dashboard/types/student";
 import { API_CONFIG } from '../../../../../../config/api.config';
 
 const LINKEDCHILDREN_API = `${API_CONFIG.baseURL}/api/linkedChildren`;
@@ -17,6 +17,11 @@ export interface StudentData {
     grade_level: string;
     section_name: string;
     adviser_name: string;
+    // Kasama na lang ito ng getEnrolledChildren response — hindi babalik
+    // sa getChildren/verifyStudent (bago pa naman ma-link, wala pang
+    // performance data ang isang student).
+    overall_score?: number | null;
+    performance_status?: PerformanceStatus | null;
 }
 
 export interface StudentVerifyResponse {
@@ -49,6 +54,8 @@ function mapStudentRow(row: StudentData): Student {
         adviser: row.adviser_name,
         attendanceRate: null,
         attendanceStatus: "pending",
+        overallScore: row.overall_score ?? null,
+        performanceStatus: row.performance_status ?? "pending",
         linked: true,
     };
 }

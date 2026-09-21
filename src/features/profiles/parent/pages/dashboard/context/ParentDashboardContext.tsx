@@ -66,6 +66,10 @@ function toMatchedStudentRecord(student: Student): MatchedStudentRecord {
   };
 }
 
+// Ginagamit lang ito kapag walang ibinalik na buong `student` object ang
+// confirmLink response (edge case). `overallScore`/`performanceStatus` ay
+// wala pang laman dito dahil kababago lang ma-link — magre-refresh naman
+// agad ito sa tamang value pagkatapos ng fetchStudents() sa confirmMatch().
 function toStudentFallback(match: MatchedStudentRecord): Student {
   const [firstName, ...rest] = match.fullName.split(" ");
   return {
@@ -79,6 +83,8 @@ function toStudentFallback(match: MatchedStudentRecord): Student {
     adviser: match.adviser,
     attendanceRate: null,
     attendanceStatus: "pending",
+    overallScore: null,
+    performanceStatus: "pending",
     linked: true,
   };
 }
@@ -205,7 +211,8 @@ export function ParentDashboardProvider({ children }: { children: ReactNode }) {
       setPendingMatch(null);
       showToast("Student linked successfully!", "success");
 
-      // refetch para siguradong tugma sa DB (adviser, section, etc.)
+      // refetch para siguradong tugma sa DB (adviser, section, overallScore,
+      // performanceStatus, etc.)
       fetchStudents();
       fetchDailyUpdates();
     } finally {

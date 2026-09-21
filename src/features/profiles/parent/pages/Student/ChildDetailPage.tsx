@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext, useLocation, useSearchParams  } from "react-router-dom";
 import { ArrowLeft, Download } from "lucide-react";
 import AttendanceOverview from "./Overview/components/AttendanceOverview";
 import TermAverageTrendChart from "./Overview/components/PerformanceAnalytics";
@@ -45,8 +45,8 @@ function ProgressReportSkeleton() {
           </div>
         </div>
         <div className="flex gap-5">
-          <Skeleton className="h-60 w-180 rounded-lg" />
-          <Skeleton className="h-60 w-100 rounded-lg" />
+          <Skeleton className="h-100 w-262 rounded-lg" />
+          <Skeleton className="h-100 w-150 rounded-lg" />
         </div>
       </div>
     </div>
@@ -140,16 +140,27 @@ function ProgressReportSection({
 
 export default function ChildDetailPage() {
   const navigate = useNavigate();
-  const { student, studentId } = useStudentDetail();
-  const [activeTab, setActiveTab] = useState<StudentDetailTab>("overview");
+  const { student, studentId } = useStudentDetail()
   const theme = useOutletContext<AdminThemeContext>();
   const { darkMode, textMuted } = theme;
 
   const currentTerm = 1;
 
-  useEffect(() => {
-    setActiveTab("overview");
-  }, [studentId]);
+ const location = useLocation();
+const [searchParams] = useSearchParams();
+
+const requestedTab =
+  (location.state as { tab?: StudentDetailTab } | null)?.tab ??
+  (searchParams.get("tab") as StudentDetailTab | null) ??
+  undefined;
+
+const [activeTab, setActiveTab] = useState<StudentDetailTab>(
+  requestedTab ?? "overview"
+);
+
+useEffect(() => {
+  setActiveTab(requestedTab ?? "overview");
+}, [studentId, requestedTab, location.key]);
 
   if (!student || !studentId) {
     return (
@@ -197,7 +208,7 @@ export default function ChildDetailPage() {
               </div>
               <StudentInfoTable student={student} theme={theme} />
               <AttendanceOverview student={student} theme={theme} />
-              <div className="flex flex-col gap-4 sm:flex-row items-stretch h-[320px] sm:h-[280px]">
+              <div className="flex flex-col gap-4 sm:flex-row items-stretch h-80 sm:h-70">
                 <div className="sm:w-1/2 sm:flex-1 sm:basis-0 min-h-0">
                   <TermAverageTrendChart student={student} theme={theme} />
                 </div>

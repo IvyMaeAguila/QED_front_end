@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { GraduationCap, User } from "lucide-react";
-import type { AttendanceStatus, CardViewMode, Student } from "../types/student";
+import type { CardViewMode, PerformanceStatus, Student } from "../types/student";
 import CircularProgress from "../../ui/CircularProgress";
 
 interface StudentCardProps {
@@ -11,32 +11,38 @@ interface StudentCardProps {
 }
 
 const STATUS_STYLES: Record<
-  AttendanceStatus,
+  PerformanceStatus,
   { ring: string; badgeBg: string; badgeText: string; label: string }
 > = {
-  present: {
+  excellent: {
     ring: "#16a34a",
     badgeBg: "bg-green-50",
     badgeText: "text-green-700",
-    label: "Present today",
+    label: "Excellent",
   },
-  late: {
+  good: {
+    ring: "#2563eb",
+    badgeBg: "bg-blue-50",
+    badgeText: "text-blue-700",
+    label: "Good",
+  },
+  fair: {
     ring: "#d97706",
     badgeBg: "bg-amber-50",
     badgeText: "text-amber-700",
-    label: "Late today",
+    label: "Fair",
   },
-  absent: {
+  needsImprovement: {
     ring: "#dc2626",
     badgeBg: "bg-red-50",
     badgeText: "text-red-700",
-    label: "Absent today",
+    label: "Needs Improvement",
   },
   pending: {
     ring: "#9ca3af",
     badgeBg: "bg-gray-100",
     badgeText: "text-gray-500",
-    label: "Awaiting update",
+    label: "No Data Yet",
   },
 };
 
@@ -44,22 +50,26 @@ function StatusBadge({
   status,
   darkMode = false,
 }: {
-  status: AttendanceStatus;
+  status: PerformanceStatus;
   darkMode?: boolean;
 }) {
-  const safeStatus: AttendanceStatus = STATUS_STYLES[status] ? status : "pending";
+  const safeStatus: PerformanceStatus = STATUS_STYLES[status]
+    ? status
+    : "pending";
   const style = STATUS_STYLES[safeStatus];
 
-  const darkBadgeBg: Record<AttendanceStatus, string> = {
-    present: "bg-green-900/30",
-    late: "bg-amber-900/30",
-    absent: "bg-red-900/30",
+  const darkBadgeBg: Record<PerformanceStatus, string> = {
+    excellent: "bg-green-900/30",
+    good: "bg-blue-900/30",
+    fair: "bg-amber-900/30",
+    needsImprovement: "bg-red-900/30",
     pending: "bg-gray-800",
   };
-  const darkBadgeText: Record<AttendanceStatus, string> = {
-    present: "text-green-400",
-    late: "text-amber-400",
-    absent: "text-red-400",
+  const darkBadgeText: Record<PerformanceStatus, string> = {
+    excellent: "text-green-400",
+    good: "text-blue-400",
+    fair: "text-amber-400",
+    needsImprovement: "text-red-400",
     pending: "text-gray-400",
   };
   return (
@@ -73,17 +83,17 @@ function StatusBadge({
   );
 }
 
-function AttendanceRing({
+function PerformanceRing({
   student,
   darkMode,
 }: {
   student: Student;
   darkMode?: boolean;
 }) {
-  const safeStatus: AttendanceStatus = student.attendanceStatus ?? "pending";
+  const safeStatus: PerformanceStatus = student.performanceStatus ?? "pending";
   const style = STATUS_STYLES[safeStatus];
 
-  if (student.attendanceRate === null || student.attendanceRate === undefined) {
+  if (student.overallScore === null || student.overallScore === undefined) {
     return (
       <CircularProgress
         value={0}
@@ -98,11 +108,11 @@ function AttendanceRing({
 
   return (
     <CircularProgress
-      value={student.attendanceRate}
+      value={student.overallScore}
       progressColor={style.ring}
       size={56}
       strokeWidth={4}
-      label={`${student.attendanceRate}%`}
+      label={`${student.overallScore}%`}
       darkMode={darkMode}
     />
   );
@@ -155,12 +165,12 @@ export default function StudentCard({
 
         <div className="hidden sm:block">
           <StatusBadge
-            status={student.attendanceStatus ?? "pending"}
+            status={student.performanceStatus ?? "pending"}
             darkMode={darkMode}
           />
         </div>
 
-        <AttendanceRing student={student} darkMode={darkMode} />
+        <PerformanceRing student={student} darkMode={darkMode} />
 
         <button
           onClick={handleView}
@@ -195,12 +205,12 @@ export default function StudentCard({
           </p>
           <div className="mt-2">
             <StatusBadge
-              status={student.attendanceStatus ?? "pending"}
+              status={student.performanceStatus ?? "pending"}
               darkMode={darkMode}
             />
           </div>
         </div>
-        <AttendanceRing student={student} darkMode={darkMode} />
+        <PerformanceRing student={student} darkMode={darkMode} />
       </div>
 
       <div>

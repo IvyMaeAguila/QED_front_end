@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, Pencil, Trash2, MoreVertical } from "lucide-react";
+import { Pencil, Trash2, MoreVertical } from "lucide-react";
 import type { Student } from "../types/Students";
 import { formatFullName } from "../types/Students";
 
@@ -9,7 +9,7 @@ interface StudentsTableProps {
   panelBorder: string;
   textPrimary: string;
   textMuted: string;
-  onView: (student: Student) => void;
+  // onView: (student: Student) => void;
   onEdit: (student: Student) => void;
   onDelete: (student: Student) => void;
 }
@@ -25,7 +25,7 @@ export function StudentsTable({
   panelBorder,
   textPrimary,
   textMuted,
-  onView,
+  // onView,
   onEdit,
   onDelete,
 }: StudentsTableProps) {
@@ -60,8 +60,8 @@ export function StudentsTable({
               return (
                 <tr
                   key={student.id}
-                  onDoubleClick={() => onView(student)}
-                  title="Double-click to view details"
+                  // onDoubleClick={() => onView(student)}
+                  // title="Double-click to view details"
                   className={`border-t ${panelBorder} hover:bg-black/2 transition-colors cursor-pointer`}
                 >
                   <td className={`px-5 py-4 font-extrabold tabular-nums ${textPrimary}`}>{student.studentId}</td>
@@ -80,7 +80,7 @@ export function StudentsTable({
                     <div className="flex items-center justify-end">
                       <RowActionMenu
                         darkMode={darkMode}
-                        onView={() => onView(student)}
+                        // onView={() => onView(student)}
                         onEdit={() => onEdit(student)}
                         onDelete={() => onDelete(student)}
                       />
@@ -99,7 +99,7 @@ export function StudentsTable({
           return (
             <div
               key={student.id}
-              onDoubleClick={() => onView(student)}
+              // onDoubleClick={() => onView(student)}
               className="p-4 space-y-3 cursor-pointer"
             >
               <div className="flex items-start justify-between gap-3">
@@ -116,7 +116,7 @@ export function StudentsTable({
                   </span>
                   <RowActionMenu
                     darkMode={darkMode}
-                    onView={() => onView(student)}
+                    // onView={() => onView(student)}
                     onEdit={() => onEdit(student)}
                     onDelete={() => onDelete(student)}
                   />
@@ -136,12 +136,12 @@ export function StudentsTable({
 
 function RowActionMenu({
   darkMode,
-  onView,
+  // onView,
   onEdit,
   onDelete,
 }: {
   darkMode: boolean;
-  onView: () => void;
+  // onView: () => void;
   onEdit: () => void;
   onDelete: () => void;
 }) {
@@ -166,10 +166,10 @@ function RowActionMenu({
           }`}
           onMouseLeave={() => setOpen(false)}
         >
-          <button
+          {/* <button
             onClick={() => {
               setOpen(false);
-              onView();
+              // onView();
             }}
             className={`w-full text-left px-3 py-2 text-xs font-bold flex items-center gap-2 ${
               darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#374151] hover:bg-[#F6F7FB]"
@@ -177,7 +177,7 @@ function RowActionMenu({
           >
             <Eye size={13} />
             View
-          </button>
+          </button> */}
           <button
             onClick={() => {
               setOpen(false);

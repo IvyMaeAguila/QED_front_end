@@ -23,7 +23,7 @@ export default function DailyUpdateCard({
         className={`mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textMuted}`}
       >
         <ClipboardList size={14} className="text-maroon-dark" />
-        Daily Update
+        Daily Attendance
       </p>
 
       {isLoading ? (

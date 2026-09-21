@@ -46,18 +46,18 @@ async function handleJsonResponse(res: Response) {
   return data;
 }
 
-// ==========================================================
-// ACTIVITIES
-// ==========================================================
-
-// --------------------------------------------------------
-// Fetch all activities
-// --------------------------------------------------------
 export async function fetchCalendarActivities(): Promise<CalendarActivity[]> {
   const res = await fetch(`${BASE_URL}/activities`);
   const data = await handleJsonResponse(res);
   return (data.data as CalendarActivityRecordDTO[]).map(activityRecordToActivity);
 }
+
+export async function fetchAllCalendarActivities(): Promise<CalendarActivity[]> {
+  const res = await fetch(`${BASE_URL}/all-activities`);
+  const data = await handleJsonResponse(res);
+  return (data.data as CalendarActivityRecordDTO[]).map(activityRecordToActivity);
+}
+
 
 // --------------------------------------------------------
 // Create activities (bulk — supports the "+ Add Another" rows
@@ -127,6 +127,13 @@ export async function fetchCalendarHolidays(): Promise<CalendarHoliday[]> {
   const data = await handleJsonResponse(res);
   return (data.data as CalendarHolidayRecordDTO[]).map(holidayRecordToHoliday);
 }
+
+export async function fetchAllCalendarHolidays(): Promise<CalendarHoliday[]> {
+  const res = await fetch(`${BASE_URL}/all-holidays`);
+  const data = await handleJsonResponse(res);
+  return (data.data as CalendarHolidayRecordDTO[]).map(holidayRecordToHoliday);
+}
+
 
 // --------------------------------------------------------
 // Create holidays (bulk)
