@@ -117,7 +117,6 @@ async function getSchoolWideAcademicPerformance(): Promise<SchoolWideAcademicPer
     credentials: "include",
   });
 
-  // Handle 403 specifically to provide a better UX or redirect to a "Not Authorized" page
   if (res.status === 403) {
     throw new Error("Access Denied: You do not have permission to view academic performance data.");
   }

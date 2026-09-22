@@ -1,55 +1,69 @@
 import { useEffect, useState } from "react";
-import { fetchSchoolYear, fetchStudentsByGrade, fetchSubjects } from "../services/gradebooksService";
+import {
+  fetchPrincipalGradebook,
+  fetchSchoolYear,
+  type PrincipalGradebookParams,
+} from "../services/gradebooks.service";
 import type { Student } from "../data/types";
 
 interface UsePrincipalGradeSheetResult {
   students: Student[];
   subjects: string[];
   schoolYear: string;
+  sectionName: string | null;
   loading: boolean;
   error: string | null;
   notFound: boolean;
 }
 
-export function usePrincipalGradeSheet(grade: string): UsePrincipalGradeSheetResult {
+export function usePrincipalGradeSheet(
+  params: PrincipalGradebookParams,
+): UsePrincipalGradeSheetResult {
+  const { gradeLevelId, gradingPeriodId, sectionId } = params;
+
   const [students, setStudents] = useState<Student[]>([]);
   const [subjects, setSubjects] = useState<string[]>([]);
   const [schoolYear, setSchoolYear] = useState("");
+  const [sectionName, setSectionName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
     setLoading(true);
     setError(null);
     setNotFound(false);
 
-    Promise.all([fetchStudentsByGrade(grade), fetchSubjects(), fetchSchoolYear()])
-      .then(([result, subj, year]) => {
-        if (cancelled) return;
-        if (result === null) {
+    Promise.all([
+      fetchPrincipalGradebook({ gradeLevelId, gradingPeriodId, sectionId }, controller.signal),
+      fetchSchoolYear(controller.signal),
+    ])
+      .then(([gradebook, year]) => {
+        if (controller.signal.aborted) return;
+        if (gradebook === null) {
           setNotFound(true);
           setStudents([]);
+          setSubjects([]);
+          setSectionName(null);
           return;
         }
-        setStudents(result);
-        setSubjects(subj);
+        setStudents(gradebook.students);
+        setSubjects(gradebook.subjects);
+        setSectionName(gradebook.sectionName);
         setSchoolYear(year);
       })
       .catch((err) => {
-        if (cancelled) return;
+        if (controller.signal.aborted) return;
         setError(err instanceof Error ? err.message : "Failed to load grade sheet.");
       })
       .finally(() => {
-        if (cancelled) return;
+        if (controller.signal.aborted) return;
         setLoading(false);
       });
 
-    return () => {
-      cancelled = true;
-    };
-  }, [grade]);
+    return () => controller.abort();
+  }, [gradeLevelId, gradingPeriodId, sectionId]);
 
-  return { students, subjects, schoolYear, loading, error, notFound };
+  return { students, subjects, schoolYear, sectionName, loading, error, notFound };
 }

@@ -203,7 +203,7 @@ export function AppRouter() {
           />
           <Route path="gradebooks" element={<PrincipalGradebooksPage />} />
           <Route
-            path="gradebook/:grade"
+            path="gradebooks/:grade"
             element={<PrincipalGradeSheetPage />}
           />
 

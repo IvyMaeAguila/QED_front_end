@@ -1,43 +1,47 @@
 import { useEffect, useState } from "react";
-import { fetchGradeLevels, fetchSchoolYear } from "../services/gradebooksService";
 import type { GradeLevelSummary } from "../data/types";
+import {
+  fetchActiveGradingPeriodId,
+  fetchGradeLevelSummaries,
+  fetchSchoolYear,
+  getCachedGradeLevelSummaries,
+} from "../services/gradebooks.service";
 
 interface UsePrincipalGradebooksResult {
   gradeLevels: GradeLevelSummary[];
   schoolYear: string;
+  gradingPeriodId: number | null;
   loading: boolean;
   error: string | null;
 }
 
-export function usePrincipalGradebooks(): UsePrincipalGradebooksResult {
+export function usePrincipalGradebooks() {
   const [gradeLevels, setGradeLevels] = useState<GradeLevelSummary[]>([]);
   const [schoolYear, setSchoolYear] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
+    const controller = new AbortController();
 
-    Promise.all([fetchGradeLevels(), fetchSchoolYear()])
+    Promise.all([
+      fetchGradeLevelSummaries(),
+      fetchSchoolYear(controller.signal),
+    ])
       .then(([levels, year]) => {
-        if (cancelled) return;
+        if (controller.signal.aborted) return;
         setGradeLevels(levels);
         setSchoolYear(year);
       })
       .catch((err) => {
-        if (cancelled) return;
-        setError(err instanceof Error ? err.message : "Failed to load gradebooks.");
+        if (controller.signal.aborted) return;
+        setError(err instanceof Error ? err.message : "Something went wrong.");
       })
       .finally(() => {
-        if (cancelled) return;
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       });
 
-    return () => {
-      cancelled = true;
-    };
+    return () => controller.abort();
   }, []);
 
   return { gradeLevels, schoolYear, loading, error };

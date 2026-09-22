@@ -12,7 +12,12 @@ export interface Student {
 }
 
 export interface GradeLevelSummary {
+  gradeLevelId: number;
   grade: string;
+  sectionId?: number;
   section: string;
   totalStudents: number;
+  adviserName: string | null;
+  isSubmitted: boolean;
+  gradingPeriodId: number | null;
 }

@@ -77,6 +77,7 @@ export function Dropdown({
   panelBorder,
   textPrimary,
   textMuted,
+  icon: Icon,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -85,31 +86,36 @@ export function Dropdown({
   panelBorder: string;
   textPrimary: string;
   textMuted: string;
+  icon?: LucideIcon;
+  label?: string;
 }) {
   const normalized = options.map((o) => (typeof o === "string" ? { label: o, value: o } : o));
 
+
   return (
     <div className="relative shrink-0">
+      {Icon && (
+        <Icon className={`h-4 w-4 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none ${textMuted}`} />
+      )}
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`appearance-none text-sm font-bold rounded-2xl pl-3.5 pr-9 py-2.5 border ${panelBorder} ${panelBg} ${textPrimary} shadow-card focus:outline-none focus:ring-2 focus:ring-maroon/40 cursor-pointer`}
+        className={`appearance-none text-sm font-bold rounded-xl border ${panelBorder} ${panelBg} ${textPrimary} shadow-card focus:outline-none focus:ring-2 focus:ring-maroon/40 cursor-pointer ${
+          Icon ? "pl-9" : "pl-3.5"
+        } pr-9 py-2`}
       >
         {normalized.map((o) => (
           <option key={o.value} value={o.value}>
-            {o.label}
+            { `${o.label}`}
           </option>
         ))}
       </select>
+
       <ChevronDown className={`h-4 w-4 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none ${textMuted}`} />
     </div>
   );
 }
 
-// ---------------------------------------------------------------------------
-// BackButton — small rounded panel with a maroon hover, used on any page
-// with a "go back" affordance instead of a generic blue-hover icon button.
-// ---------------------------------------------------------------------------
 export function BackButton({
   onClick,
   panelBg,
@@ -484,6 +490,8 @@ export function HeroActionCard({
   subtitle,
   stat,
   statIcon: StatIcon,
+  stat2,
+  statIcon2: StatIcon2,
   gradeLabel,
   actionLabel,
   onAction,
@@ -494,6 +502,8 @@ export function HeroActionCard({
   subtitle: string;
   stat: string;
   statIcon?: LucideIcon;
+  stat2?: string;
+  statIcon2?: LucideIcon;
   /** Optional average-grade badge (e.g. "89%", "A") shown top-right of the hero. */
   gradeLabel?: string;
   actionLabel: string;
@@ -521,9 +531,15 @@ export function HeroActionCard({
           <h3 className="text-2xl font-black leading-tight tracking-tight">{title}</h3>
           <p className="text-sm font-bold mt-1 text-white/85">{subtitle}</p>
         </div>
-        <div className="flex items-center gap-1.5 text-sm text-white/85">
-          {StatIcon && <StatIcon className="h-4 w-4" strokeWidth={2.25} />}
-          {stat}
+        <div>
+          <div className="flex items-center gap-1.5 text-sm text-white/85">
+            {StatIcon && <StatIcon className="h-4 w-4" strokeWidth={2.25} />}
+            {stat}
+          </div>
+          <div className="flex items-center gap-1.5 text-sm text-white/85">
+            {StatIcon2 && <StatIcon2 className="h-4 w-4" strokeWidth={2.25} />}
+            {stat2}
+          </div>
         </div>
       </div>
 

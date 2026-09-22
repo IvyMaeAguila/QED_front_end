@@ -24,7 +24,7 @@ export function GradeSheetHeader({
       <BackButton onClick={onBack} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} />
       <div>
         <h1 className={`text-xl sm:text-2xl font-black leading-tight tracking-tight ${textPrimary}`}>
-          {gradeLabel} — Grade Sheet
+          {gradeLabel}
         </h1>
         <p className={`text-sm mt-1 ${textMuted}`}>School Year {schoolYear}</p>
       </div>

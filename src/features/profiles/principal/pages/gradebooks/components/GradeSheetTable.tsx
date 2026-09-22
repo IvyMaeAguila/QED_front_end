@@ -12,6 +12,7 @@ interface GradeSheetTableProps {
   textPrimary: string;
   textMuted: string;
   darkMode: boolean;
+  action?: React.ReactNode;
 }
 
 export function GradeSheetTable({
@@ -23,11 +24,13 @@ export function GradeSheetTable({
   textPrimary,
   textMuted,
   darkMode,
+  action,
 }: GradeSheetTableProps) {
   return (
     <SectionCard
       title="Grade Sheet"
       icon={ClipboardList}
+      action={action}
       panelBg={panelBg}
       panelBorder={panelBorder}
       textPrimary={textPrimary}
