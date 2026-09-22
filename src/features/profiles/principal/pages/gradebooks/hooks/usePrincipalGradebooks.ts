@@ -1,19 +1,9 @@
 import { useEffect, useState } from "react";
 import type { GradeLevelSummary } from "../data/types";
 import {
-  fetchActiveGradingPeriodId,
   fetchGradeLevelSummaries,
   fetchSchoolYear,
-  getCachedGradeLevelSummaries,
 } from "../services/gradebooks.service";
-
-interface UsePrincipalGradebooksResult {
-  gradeLevels: GradeLevelSummary[];
-  schoolYear: string;
-  gradingPeriodId: number | null;
-  loading: boolean;
-  error: string | null;
-}
 
 export function usePrincipalGradebooks() {
   const [gradeLevels, setGradeLevels] = useState<GradeLevelSummary[]>([]);

@@ -23,7 +23,6 @@ import {
 } from "react-router-dom";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
 import { HeroProfileBanner } from "@shared/components/StudentHeroProfileBanner";
-import { useClasses } from "../../../admin/pages/classes/context/ClassesContext";
 import { useStudents } from "../../../admin/pages/studentrecords/context/StudentsContext";
 import type { Student } from "../../../admin/pages/studentrecords/types/Students";
 import {

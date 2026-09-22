@@ -120,12 +120,6 @@ export function EditSubjectModal({
   }
 
   function addRow() {
-    const used = new Set(
-      weights.map((w) => w.assessmentType.trim().toLowerCase())
-    );
-    const nextType = assessmentTypes.find(
-      (t) => !used.has(t.assessmentName.trim().toLowerCase())
-    );
     setWeights((prev) => [
       ...prev,
       {
