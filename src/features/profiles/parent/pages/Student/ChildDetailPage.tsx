@@ -6,7 +6,6 @@ import TermAverageTrendChart from "./Overview/components/PerformanceAnalytics";
 import StudentNarrativeSnapshot from "./Overview/components/HolisticAverage";
 import AcademicTab from "./Academic/AcademicTab";
 import HolisticTab from "./Holistic/HoisticWeeklyReportTab";
-import { mockInterventionFlags } from "./Academic/data/MockData";
 import { TabNav, type StudentDetailTab } from "./PageComponents/TopNavigation";
 import StudentInfoTable from "./PageComponents/StudentInfoTable";
 import { useStudentDetail } from "./Overview/useStudentDetail";
@@ -197,7 +196,7 @@ export default function ChildDetailPage() {
               </div>
               <StudentInfoTable student={student} theme={theme} />
               <AttendanceOverview student={student} theme={theme} />
-              <div className="flex flex-col gap-4 sm:flex-row items-stretch h-[320px] sm:h-[280px]">
+              <div className="flex flex-col gap-4 sm:flex-row items-stretch h-80 sm:h-70">
                 <div className="sm:w-1/2 sm:flex-1 sm:basis-0 min-h-0">
                   <TermAverageTrendChart student={student} theme={theme} />
                 </div>
@@ -220,7 +219,6 @@ export default function ChildDetailPage() {
               </div>
               <StudentInfoTable student={student} theme={theme} />
               <AcademicTab
-                interventionFlags={mockInterventionFlags}
                 theme={theme}
                 student={student}
               />
