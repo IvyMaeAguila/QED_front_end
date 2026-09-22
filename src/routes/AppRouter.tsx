@@ -36,6 +36,8 @@ import { ParentSection } from "./ParentSection";
 import ParentDashboardHome from "../features/profiles/parent/pages/dashboard/ParentDashboardHome";
 import { EnrolledChildrenPage } from "../features/profiles/parent/pages/EnrollledStudent/EnrolledChildrenPage";
 import ChildDetailPage from "../features/profiles/parent/pages/Student/ChildDetailPage";
+import TopicSupportChoice from "../features/profiles/parent/pages/Student/Academic/TopicSupportChoice";
+import CoursewareView from "../features/profiles/parent/pages/Student/Academic/CoursewareView";
 import { CalendarPageView } from "../shared/calendar/CalendarPageView";
 import { SubjectDetailPage } from "../features/profiles/teacher/pages/subjects/detail/SubjectDetailPage";
 import { SubjectRecordsPage } from "../features/profiles/teacher/pages/subjects/detail/SubjectRecordsPage";
@@ -47,12 +49,7 @@ import { AcademicYearPage } from "../features/profiles/admin/pages/subjects/Acad
 
 import { PrincipalSection } from "./PrincipalSection";
 import { PrincipalDashboardHome } from "../features/profiles/principal/pages/dashboard/PrincipalDashboardHome";
-// import { PrincipalTeachersPage } from "../features/profiles/principal/pages/teachers/PrincipalTeachersPage";
-// import { PrincipalStudentsPage } from "../features/profiles/principal/pages/students/PrincipalStudentsPage";
-// import { PrincipalReportsPage } from "../features/profiles/principal/pages/reports/PrincipalReportsPage";
-// import { PrincipalApprovalsPage } from "../features/profiles/principal/pages/approvals/PrincipalApprovalsPage";
 
-// 🆕 Import ng ForceChangePasswordGate
 import { ForceChangePasswordGate } from "../shared/components/manage_password/ForceChangePasswordGate";
 import { PrincipalStudentsPage } from "../features/profiles/principal/pages/students/PrincipalStudentPage";
 import { ClassListPage } from "../features/profiles/principal/pages/students/ClassListPage";
@@ -64,6 +61,7 @@ import { PrincipalGradeSheetPage } from "../features/profiles/principal/pages/gr
 import { HolisticPerformanceAnalyticsPage } from "../features/profiles/principal/pages/reports/HolisticPerformanceAnalyticsPage";
 import { TeacherAttendancePage } from "../features/profiles/teacher/pages/attendance/TeacherAttendancePage";
 import { TeacherAttendanceRecordsPage } from "../features/profiles/teacher/pages/attendance/TeacherAttendanceRecordsPage";
+import PetQuizPage from "../features/profiles/parent/pages/Student/Academic/PetQuizPage";
 
 function DebugRoute() {
   const location = useLocation();
@@ -73,14 +71,12 @@ function DebugRoute() {
 
 type Role = "ADMIN" | "PRINCIPAL" | "TEACHER" | "PARENT";
 
-// ✅ In-update ang ProtectedRoute para isama ang gate
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
   if (isLoading) return <div>Loading...</div>;
   if (!user) return <Navigate to="/login" replace />;
   return (
     <>
-      {/* Lilitaw lang ang modal kung kinakailangan (nasa loob ng gate ang conditional) */}
       <ForceChangePasswordGate />
       {children}
     </>
@@ -206,11 +202,6 @@ export function AppRouter() {
             path="gradebook/:grade"
             element={<PrincipalGradeSheetPage />}
           />
-
-          {/* <Route path="teachers" element={<PrincipalTeachersPage />} /> */}
-          {/* <Route path="students" element={<PrincipalStudentsPage />} /> */}
-          {/* <Route path="reports" element={<PrincipalReportsPage />} /> */}
-          {/* <Route path="approvals" element={<PrincipalApprovalsPage />} /> */}
           <Route path="calendar" element={<CalendarPage />} />
           <Route path="help" element={<div>Help page</div>} />
         </Route>
@@ -272,6 +263,18 @@ export function AppRouter() {
           <Route index element={<ParentDashboardHome />} />
           <Route path="enrolled-children" element={<EnrolledChildrenPage />} />
           <Route path="students/:studentId" element={<ChildDetailPage />} />
+          <Route
+            path="students/:studentId/topics/:topicId/support"
+            element={<TopicSupportChoice />}
+          />
+          <Route
+            path="students/:studentId/topics/:topicId/courseware"
+            element={<CoursewareView />}
+          />
+          <Route
+            path="students/:studentId/topics/:topicId/quiz"
+            element={<PetQuizPage />}
+          />
           <Route path="calendar" element={<CalendarPageView />} />
         </Route>
       </Routes>

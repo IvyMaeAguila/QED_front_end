@@ -10,6 +10,7 @@ export interface MissedActivity {
 
 export interface InterventionFlag {
   id: string;
+  topicId: number;
   concern: string;
   severity: "low" | "medium" | "high";
 }
