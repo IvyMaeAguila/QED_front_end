@@ -6,7 +6,6 @@ import TermAverageTrendChart from "./Overview/components/PerformanceAnalytics";
 import StudentNarrativeSnapshot from "./Overview/components/HolisticAverage";
 import AcademicTab from "./Academic/AcademicTab";
 import HolisticTab from "./Holistic/HoisticWeeklyReportTab";
-import { mockInterventionFlags } from "./Academic/data/MockData";
 import { TabNav, type StudentDetailTab } from "./PageComponents/TopNavigation";
 import StudentInfoTable from "./PageComponents/StudentInfoTable";
 import { useStudentDetail } from "./Overview/useStudentDetail";
@@ -231,7 +230,6 @@ useEffect(() => {
               </div>
               <StudentInfoTable student={student} theme={theme} />
               <AcademicTab
-                interventionFlags={mockInterventionFlags}
                 theme={theme}
                 student={student}
               />

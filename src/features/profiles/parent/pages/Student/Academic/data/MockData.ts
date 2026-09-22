@@ -43,20 +43,6 @@ import type { InterventionFlag, ScheduleItem } from "../types/types";
 export const mockInterventionFlags: InterventionFlag[] = [];
 
 // May flagged concern(s) — para i-test yung red warning state
-export const mockInterventionFlagsWithData: InterventionFlag[] = [
-  {
-    id: "if-1",
-    concern:
-      "Frequently distracted during Reading & Literacy; recommend one-on-one reading support.",
-    severity: "medium",
-  },
-  {
-    id: "if-2",
-    concern:
-      "Missed 3 consecutive Mathematics activities; parent conference suggested.",
-    severity: "high",
-  },
-];
 
 export const mockSchedule: ScheduleItem[] = [
   {
