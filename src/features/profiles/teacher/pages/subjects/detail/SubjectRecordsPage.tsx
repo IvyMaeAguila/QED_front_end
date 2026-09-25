@@ -5,7 +5,15 @@ import {
   useOutletContext,
   useParams,
 } from "react-router-dom";
-import { ArrowLeft, Check, ClipboardList, Loader2, Pencil } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  Check,
+  ClipboardList,
+  Loader2,
+  Pencil,
+  X,
+} from "lucide-react";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
 import type { RosterStudent } from "./data";
 import type {
@@ -31,6 +39,12 @@ import {
 const ACCENT = "#6B0000";
 
 type GenderedStudent = RosterStudent & { gender?: "M" | "F" };
+
+interface MissingScoreEntry {
+  studentId: string;
+  studentName: string;
+  itemName: string;
+}
 
 interface RecordsLocationState {
   subjectName: string;
@@ -78,6 +92,16 @@ export function SubjectRecordsPage() {
   const [isLoadingRecords, setIsLoadingRecords] = useState(false);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+
+  // Empty-score confirmation, shown when the teacher tries to exit edit
+  // mode ("Done") while some students still have blank scores. Saving an
+  // empty score already works (handleScoreChange happily persists null) —
+  // this is purely a "are you sure?" checkpoint, since a blank score is
+  // what flags a missing activity to parents.
+  const [showEmptyScoreModal, setShowEmptyScoreModal] = useState(false);
+  const [pendingMissing, setPendingMissing] = useState<MissingScoreEntry[]>(
+    [],
+  );
 
   const tab = state?.tab;
   const isAssessment =
@@ -135,10 +159,6 @@ export function SubjectRecordsPage() {
     return state.terms.find((t) => t.id === term)?.termNumber;
   }, [state, term]);
 
-  const selectedTermStartDate = useMemo(() => {
-    if (!state) return undefined;
-    return state.terms.find((t) => t.id === term)?.startDate;
-  }, [state, term]);
 
   function handleScoreChange(
     studentId: string,
@@ -177,6 +197,58 @@ export function SubjectRecordsPage() {
           /* best-effort resync; keep optimistic value if this also fails */
         });
     });
+  }
+
+  // Finds every (student, item) pair in the current record that has no
+  // score yet. Used to warn the teacher before they leave edit mode.
+  function findMissingScores(): MissingScoreEntry[] {
+    if (!items || items.length === 0 || !state) return [];
+    const missing: MissingScoreEntry[] = [];
+    for (const student of state.roster) {
+      for (const item of items) {
+        const value = localScores[student.id]?.[item.id];
+        if (value === undefined || value === null) {
+          missing.push({
+            studentId: student.id,
+            studentName: student.name,
+            itemName:
+              (item as GradeItem & { activityName?: string }).activityName ??
+              item.topic ??
+              "Untitled item",
+          });
+        }
+      }
+    }
+    return missing;
+  }
+
+  function handleDoneClick() {
+    if (!isEditing) {
+      setIsEditing(true);
+      return;
+    }
+    const missing = findMissingScores();
+    if (missing.length > 0) {
+      setPendingMissing(missing);
+      setShowEmptyScoreModal(true);
+      return;
+    }
+    setIsEditing(false);
+  }
+
+  function confirmSaveWithEmptyScores() {
+    // Scores are already persisted as they were typed (handleScoreChange
+    // saves on every change, including clearing a field to null). This
+    // just confirms the teacher meant to leave those fields blank.
+    setShowEmptyScoreModal(false);
+    setPendingMissing([]);
+    setIsEditing(false);
+  }
+
+  function cancelEmptyScoreModal() {
+    setShowEmptyScoreModal(false);
+    setPendingMissing([]);
+    // Stay in edit mode so the teacher can fill in the missing scores.
   }
 
   const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
@@ -224,6 +296,13 @@ export function SubjectRecordsPage() {
       : isEditing
         ? "Edit mode — changes save immediately. Click Done when finished."
         : "A complete record for all enrolled students.";
+
+  // Cap the list shown in the modal so it never becomes an unwieldy wall
+  // of names when many scores are missing.
+  const MODAL_LIST_LIMIT = 6;
+  const uniqueMissingStudents = Array.from(
+    new Map(pendingMissing.map((m) => [m.studentId, m.studentName])).values(),
+  );
 
   return (
     <div className="w-full min-h-full pb-0">
@@ -279,7 +358,7 @@ export function SubjectRecordsPage() {
 
               {isAssessment && (
                 <button
-                  onClick={() => setIsEditing((v) => !v)}
+                  onClick={handleDoneClick}
                   className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-[11px] font-extrabold transition-colors ${
                     isEditing
                       ? "border-black/10 bg-[#800000] text-white hover:bg-[#650000]"
@@ -331,7 +410,6 @@ export function SubjectRecordsPage() {
             subjectSectionId={subjectId}
             roster={roster}
             termNumber={selectedTermNumber}
-            termStartDate={selectedTermStartDate}
             darkMode={darkMode}
             panelBg={panelBg}
             panelBorder={panelBorder}
@@ -340,6 +418,78 @@ export function SubjectRecordsPage() {
           />
         )}
       </div>
+
+      {showEmptyScoreModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="empty-score-modal-title"
+        >
+          <div
+            className={`w-full max-w-md rounded-2xl border shadow-2xl ${panelBg} ${panelBorder}`}
+          >
+            <div className="flex items-start gap-3 px-5 pt-5">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+                <AlertTriangle size={18} />
+              </span>
+              <div className="flex-1">
+                <h2
+                  id="empty-score-modal-title"
+                  className={`text-sm font-black ${textPrimary}`}
+                >
+                  Save with missing scores?
+                </h2>
+                <p className={`mt-1 text-xs font-medium ${textMuted}`}>
+                  {uniqueMissingStudents.length} student
+                  {uniqueMissingStudents.length === 1 ? "" : "s"} still
+                  {uniqueMissingStudents.length === 1 ? " has" : " have"}{" "}
+                  blank score{pendingMissing.length === 1 ? "" : "s"} in this
+                  record. Leaving them blank will flag the activity as
+                  missing to parents.
+                </p>
+              </div>
+              <button
+                onClick={cancelEmptyScoreModal}
+                aria-label="Close"
+                className={`shrink-0 ${textMuted} hover:${textPrimary}`}
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="px-5 pt-3">
+              <ul
+                className={`max-h-40 space-y-1 overflow-y-auto rounded-lg border px-3 py-2 text-xs font-semibold ${panelBorder} ${textPrimary}`}
+              >
+                {uniqueMissingStudents.slice(0, MODAL_LIST_LIMIT).map((name) => (
+                  <li key={name}>{name}</li>
+                ))}
+                {uniqueMissingStudents.length > MODAL_LIST_LIMIT && (
+                  <li className={textMuted}>
+                    +{uniqueMissingStudents.length - MODAL_LIST_LIMIT} more
+                  </li>
+                )}
+              </ul>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 px-5 py-4">
+              <button
+                onClick={cancelEmptyScoreModal}
+                className={`h-8 rounded-lg border px-3 text-[11px] font-extrabold ${panelBorder} ${textPrimary} hover:bg-black/5`}
+              >
+                Keep Editing
+              </button>
+              <button
+                onClick={confirmSaveWithEmptyScores}
+                className="h-8 rounded-lg border border-black/10 bg-[#800000] px-3 text-[11px] font-extrabold text-white hover:bg-[#650000]"
+              >
+                Save Anyway
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

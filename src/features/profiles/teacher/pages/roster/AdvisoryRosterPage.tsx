@@ -1,84 +1,61 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import ExcelJS from "exceljs";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
-import { fetchAdvisoryRoster, type AdvisoryStudent } from "./services/advisory.service";
+import { useSelectedAdvisorySection } from "../attendance/services/useSelectedAdvisorySection.service";
+import { AdvisorySectionTabs } from "../attendance/components/AdvisorySectionTabs.tsx";
+import type { RosterStudent } from "../subjects/detail/data";
 
 import { AdvisorySkeleton } from "./components/AdvisorySkeleton";
 import { AdvisoryHeader } from "./components/AdvisoryHeader";
-import { AdvisoryStats } from "./components/AdvisoryStats";
 import { AdvisoryTable } from "./components/AdvisoryTable";
 
-type GenderFilter = "All" | "Male" | "Female";
+type GenderFilter = "All" | "M" | "F";
 const ACCENT = "#6B0000";
 
-function middleInitial(middleName?: string | null) {
-  return middleName ? `${middleName.charAt(0)}.` : "";
-}
-
-function sortByName(a: AdvisoryStudent, b: AdvisoryStudent) {
-  return a.last_name.localeCompare(b.last_name) || a.first_name.localeCompare(b.first_name);
+function sortByName(a: RosterStudent, b: RosterStudent) {
+  return a.name.localeCompare(b.name);
 }
 
 export function AdvisoryRosterPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
 
-  const [students, setStudents] = useState<AdvisoryStudent[]>([]);
-  const [gradeLevel, setGradeLevel] = useState<string | null>(null);
-  const [sectionName, setSectionName] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+
+  const {
+    sections,
+    section,
+    error: sectionError,
+    selectSection,
+  } = useSelectedAdvisorySection();
+
   const [genderFilter, setGenderFilter] = useState<GenderFilter>("All");
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    setLoading(true);
-    fetchAdvisoryRoster()
-      .then((result) => {
-        setGradeLevel(result.gradeLevel);
-        setSectionName(result.sectionName);
-        setStudents(result.students);
-        setError(null);
-      })
-      .catch((err) => {
-        console.error("Failed to load advisory roster:", err);
-        setError("Failed to load your advisory class.");
-      })
-      .finally(() => setLoading(false));
-  }, []);
-
   const roster = useMemo(() => {
+    if (!section) return [];
     const query = search.trim().toLowerCase();
-    return students
+    return section.roster
       .filter((student) => genderFilter === "All" || student.gender === genderFilter)
-      .filter((student) => {
-        const name = `${student.first_name} ${student.middle_name ?? ""} ${student.last_name}`.toLowerCase();
-        return !query || name.includes(query) || student.student_number.toLowerCase().includes(query);
-      })
+      .filter((student) => !query || student.name.toLowerCase().includes(query))
       .sort(sortByName);
-  }, [students, genderFilter, search]);
+  }, [section, genderFilter, search]);
 
   const handleExport = async () => {
+    if (!section) return;
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("Advisory Roster");
     sheet.columns = [
       { header: "No.", key: "no", width: 6 },
-      { header: "Last Name", key: "lastName", width: 20 },
-      { header: "First Name", key: "firstName", width: 20 },
-      { header: "M.I.", key: "mi", width: 8 },
+      { header: "Name", key: "name", width: 28 },
       { header: "Gender", key: "gender", width: 10 },
-      { header: "Student ID", key: "id", width: 16 },
     ];
     sheet.getRow(1).font = { bold: true };
     roster.forEach((student, index) =>
       sheet.addRow({
         no: index + 1,
-        lastName: student.last_name,
-        firstName: student.first_name,
-        mi: middleInitial(student.middle_name),
-        gender: student.gender,
-        id: student.student_number,
+        name: student.name,
+        gender: student.gender === "F" ? "Female" : "Male",
       })
     );
     const buffer = await workbook.xlsx.writeBuffer();
@@ -87,32 +64,34 @@ export function AdvisoryRosterPage() {
     );
     const link = document.createElement("a");
     link.href = url;
-    link.download = "advisory-class-roster.xlsx";
+    link.download = `${section.sectionName || "advisory"}-roster.xlsx`;
     link.click();
     URL.revokeObjectURL(url);
   };
 
-  const maleCount = students.filter((s) => s.gender === "Male").length;
-  const femaleCount = students.filter((s) => s.gender === "Female").length;
+  const maleCount = section ? section.roster.filter((s) => s.gender === "M").length : 0;
+  const femaleCount = section ? section.roster.filter((s) => s.gender === "F").length : 0;
 
-  if (loading) {
+  // sections === undefined -> still loading which classes the teacher has
+  if (sections === undefined) {
     return <AdvisorySkeleton darkMode={darkMode} panelBg={panelBg} panelBorder={panelBorder} textMuted={textMuted} />;
   }
 
-  if (error) {
+  if (sectionError) {
     return (
       <div className="max-w-6xl mx-auto space-y-4 pb-12">
         <button onClick={() => navigate(-1)} className={`flex items-center gap-2 text-sm font-bold ${textMuted}`}>
           Back
         </button>
         <div className={`rounded-2xl border p-8 text-center ${panelBg} ${panelBorder}`}>
-          <p className="text-sm font-semibold text-red-500">{error}</p>
+          <p className="text-sm font-semibold text-red-500">{sectionError}</p>
         </div>
       </div>
     );
   }
 
-  if (!gradeLevel || !sectionName) {
+  // sections === null -> confirmed zero advisory classes
+  if (!section) {
     return (
       <div className="max-w-6xl mx-auto space-y-4 pb-12">
         <button onClick={() => navigate(-1)} className={`flex items-center gap-2 text-sm font-bold ${textMuted}`}>
@@ -126,26 +105,31 @@ export function AdvisoryRosterPage() {
   }
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="max-w-6xl mx-auto space-y-4 pb-12">
       <AdvisoryHeader
         darkMode={darkMode}
         textPrimary={textPrimary}
         textMuted={textMuted}
-        gradeLevel={gradeLevel}
-        sectionName={sectionName}
+        gradeLevel={section.gradeLevel}
+        sectionName={section.sectionName}
         accentColor={ACCENT}
-        onBack={() => navigate("/teacher")}
-        onExport={handleExport}
-      />
-
-      <AdvisoryStats
-        darkMode={darkMode}
-        textPrimary={textPrimary}
-        textMuted={textMuted}
-        totalStudents={students.length}
+        totalStudents={section.roster.length}
         maleCount={maleCount}
         femaleCount={femaleCount}
-        accentColor={ACCENT}
+        onBack={() => navigate("/teacher")}
+        onExport={handleExport}
+        tabs={
+          (sections?.length ?? 0) > 1 ? (
+            <AdvisorySectionTabs
+              sections={sections ?? []}
+              activeClassId={section.classId}
+              onSelect={selectSection}
+              darkMode={darkMode}
+              panelBorder={panelBorder}
+              textMuted={textMuted}
+            />
+          ) : undefined
+        }
       />
 
       <AdvisoryTable

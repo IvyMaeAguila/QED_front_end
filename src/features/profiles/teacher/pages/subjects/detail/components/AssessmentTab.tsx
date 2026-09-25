@@ -25,12 +25,10 @@ import { ConfirmDialog } from "./ConfirmDialog";
 
 const ACCENT = "#6B0000";
 
-// Mirrors the ATTENDANCE_META legend on the attendance page: the same colors
-// used by the score inputs, spelled out once so the tints are readable.
 const SCORE_LEGEND = [
   { label: "90% and up", color: "#157F3B" },
-  { label: "80–89%", color: "#1D70D6" },
-  { label: "75–79%", color: "#B45309" },
+  { label: "80-89%", color: "#1D70D6" },
+  { label: "75-79%", color: "#B45309" },
   { label: "Below 75%", color: "#C2255C" },
 ];
 
@@ -103,12 +101,24 @@ export function AssessmentTab({
     setDraftScores(scores);
   }, [scores]);
 
+  // An item stays on this working Score Sheet only until it has been
+  // saved at least once. It does NOT need to be scored for every student
+  // to leave — the teacher's flow is: add an item, score whoever you have
+  // scores for right now, hit Save, and the item hands off entirely to
+  // the Full Records page (which has its own edit mode) for anyone still
+  // blank. Gating this on "every student scored" instead used to trap the
+  // item here indefinitely whenever even one student was missing a score,
+  // which looked like "my save didn't work" even though it had.
+  //
+  // This reads off `scores` (the committed/persisted map), not
+  // `draftScores` (in-progress typing), so an item you haven't saved yet
+  // correctly stays visible even if you've typed values into every box.
   const tabItems = items.filter((i) => {
     if (i.tab !== tab) return false;
-    const isFullyScored = roster.every(
+    const hasAnySavedScore = roster.some(
       (s) => typeof scores[s.id]?.[i.id] === "number",
     );
-    return !isFullyScored;
+    return !hasAnySavedScore;
   });
 
   useEffect(() => {
@@ -294,7 +304,7 @@ export function AssessmentTab({
         className={`flex flex-col gap-2.5 rounded-xl border px-3 py-2 lg:flex-row lg:items-center lg:justify-between ${panelBg} ${panelBorder}`}
       >
         <div className="relative w-full lg:w-72">
-          <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5 text-gray-400">
+          <span className="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-2.5 text-gray-400">
             <Search size={13} />
           </span>
           <input
@@ -417,7 +427,7 @@ export function AssessmentTab({
               }
               title={
                 tabItems.length > 0
-                  ? "Finish and save scores for the current item before adding a new one"
+                  ? "Save scores for the current item before adding a new one"
                   : "Add item"
               }
               className={toolButton}

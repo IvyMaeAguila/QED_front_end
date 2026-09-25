@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
+import { useOutletContext } from "react-router-dom";
 import { AttendanceCalendarSection } from "./AttendanceCalendarSection";
 import { AttendanceMonthSummarySection } from "./AttendanceMonthSummarySection";
-import { fetchAdvisorySection, type AdvisorySection } from "./services/attendance.service.ts";
+import { useSelectedAdvisorySection } from "./services/useSelectedAdvisorySection.service";
+import { AdvisorySectionTabs } from "./components/AdvisorySectionTabs";
 
 const ACCENT = "#6B0000";
 
@@ -12,32 +14,10 @@ export function TeacherAttendanceRecordsPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
 
-  const [section, setSection] = useState<AdvisorySection | null | undefined>(undefined);
-  const [error, setError] = useState<string | null>(null);
+  const { sections, section, error, selectSection } = useSelectedAdvisorySection();
   const [viewMode, setViewMode] = useState<"month" | "summary">("month");
 
-  useEffect(() => {
-    let cancelled = false;
-    fetchAdvisorySection()
-      .then((sec) => {
-        if (!cancelled) setSection(sec);
-      })
-      .catch((err) => {
-        if (cancelled) return;
-        console.error("Failed to load advisory section:", err);
-        setError(
-          err instanceof Error
-            ? err.message
-            : "Couldn't load your advisory class. Please try again.",
-        );
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
   const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
-
   const displaySectionName = section
     ? section.sectionName?.trim() || section.gradeLevel
     : "Advisory Class";
@@ -60,23 +40,35 @@ export function TeacherAttendanceRecordsPage() {
           </div>
 
           {section && (
-            <div className={`flex items-center p-0.5 rounded-lg border ${panelBorder} bg-black/5 dark:bg-white/5 self-start sm:self-center`}>
-              <button
-                onClick={() => setViewMode("month")}
-                className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${
-                  viewMode === "month" ? "bg-[#800000] text-white dark:text-white shadow-sm" : `${textMuted} hover:${textPrimary}`
-                }`}
-              >
-                Month
-              </button>
-              <button
-                onClick={() => setViewMode("summary")}
-                className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${
-                  viewMode === "summary" ? "bg-[#800000] text-white dark:text-white shadow-sm" : `${textMuted} hover:${textPrimary}`
-                }`}
-              >
-                Summary
-              </button>
+            <div className="flex items-center gap-2">
+              {sections && (
+                <AdvisorySectionTabs
+                  sections={sections}
+                  activeClassId={section.classId}
+                  onSelect={selectSection}
+                  darkMode={darkMode}
+                  panelBorder={panelBorder}
+                  textMuted={textMuted}
+                />
+              )}
+              <div className={`flex items-center p-0.5 rounded-lg border ${panelBorder} bg-black/5 dark:bg-white/5`}>
+                <button
+                  onClick={() => setViewMode("month")}
+                  className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${
+                    viewMode === "month" ? "bg-[#800000] text-white shadow-sm" : `${textMuted} hover:${textPrimary}`
+                  }`}
+                >
+                  Month
+                </button>
+                <button
+                  onClick={() => setViewMode("summary")}
+                  className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${
+                    viewMode === "summary" ? "bg-[#800000] text-white shadow-sm" : `${textMuted} hover:${textPrimary}`
+                  }`}
+                >
+                  Summary
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -87,14 +79,14 @@ export function TeacherAttendanceRecordsPage() {
           </div>
         )}
 
-        {!error && section === undefined && (
+        {!error && sections === undefined && (
           <div className={`${cardClasses} flex items-center justify-center gap-2 px-5 py-14`}>
             <Loader2 size={15} className={`animate-spin ${textMuted}`} />
             <p className={`text-xs font-semibold ${textMuted}`}>Loading...</p>
           </div>
         )}
 
-        {!error && section === null && (
+        {!error && sections === null && (
           <div className={`${cardClasses} px-5 py-14 text-center`}>
             <p className={`text-sm font-bold ${textPrimary}`}>No advisory class assigned</p>
           </div>
@@ -104,6 +96,7 @@ export function TeacherAttendanceRecordsPage() {
           <>
             {viewMode === "month" ? (
               <AttendanceCalendarSection
+                key={section.classId}
                 sectionId={section.classId}
                 roster={section.roster}
                 terms={section.terms}
@@ -115,6 +108,7 @@ export function TeacherAttendanceRecordsPage() {
               />
             ) : (
               <AttendanceMonthSummarySection
+                key={section.classId}
                 sectionId={section.classId}
                 roster={section.roster}
                 terms={section.terms}

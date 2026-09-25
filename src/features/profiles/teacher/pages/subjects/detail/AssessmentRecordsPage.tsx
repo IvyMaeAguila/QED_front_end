@@ -13,19 +13,17 @@ import { submitGrades } from "../services/subjectGrading.service";
 const ACCENT = "#6B0000";
 const INCOMPLETE_COLOR = "#CA8A04"; // amber — signals "not finished yet", distinct from a real score
 
-// Small badge shown in place of a number whenever a component isn't fully
-// scored yet. Kept visually distinct (amber pill, "INC") so it reads as an
-// intentional status rather than a blank/error — and can never be mistaken
-// for an actual grade like a stray "100" would be.
-function IncompleteBadge() {
+// Single, simple flag shown once next to a student's name when they have
+// any missing score — not repeated in every Total/PS/WS/Initial Grade
+// cell. The tooltip names exactly which component(s) still need scores.
+function MissingScoreDot({ missingIn }: { missingIn: string[] }) {
   return (
     <span
-      title="Incomplete — not all items have been scored yet"
-      className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-black tracking-wide"
-      style={{ backgroundColor: "#FEF3C7", color: INCOMPLETE_COLOR }}
-    >
-      INC
-    </span>
+      title={`Missing score(s) in: ${missingIn.join(", ")}`}
+      aria-label={`Missing score(s) in: ${missingIn.join(", ")}`}
+      className="inline-block h-2 w-2 shrink-0 rounded-full"
+      style={{ backgroundColor: INCOMPLETE_COLOR }}
+    />
   );
 }
 
@@ -316,9 +314,10 @@ export function AssessmentRecordsSection({
   function renderStudentRow(student: GenderedStudent, index: number) {
     const weightedScores: number[] = [];
     let anyGroupIncomplete = false;
+    const missingIn: string[] = [];
 
     const groupCells = groups.map((group) => {
-      const { total, highestPossible, scoredCount, totalItems, isComplete } = studentTotals(
+      const { total, highestPossible, totalItems, isComplete } = studentTotals(
         group.items,
         student.id,
         scores,
@@ -328,15 +327,18 @@ export function AssessmentRecordsSection({
       // score — missing items contribute 0 to the numerator but still
       // count fully in the denominator (highestPossible), so an empty
       // item behaves exactly like a zero rather than being skipped or
-      // blocking the calculation. The INC badge is purely a visual flag
-      // that some items are still ungraded — it does not change the math.
+      // blocking the calculation. Incompleteness is flagged once, next to
+      // the student's name (see MissingScoreDot below) — these cells just
+      // show the numbers as computed, without repeating the flag.
       const ps = computePS(total, highestPossible);
       const ws = computeWS(ps, group.weight);
 
-      if (totalItems > 0 && !isComplete) anyGroupIncomplete = true;
-      if (ws !== null) weightedScores.push(ws);
-
       const hasAnyItems = totalItems > 0;
+      if (hasAnyItems && !isComplete) {
+        anyGroupIncomplete = true;
+        missingIn.push(group.label);
+      }
+      if (ws !== null) weightedScores.push(ws);
 
       return (
         <Fragment key={group.key}>
@@ -358,29 +360,14 @@ export function AssessmentRecordsSection({
               )}
             </td>
           ))}
-          <td
-            className="px-2 py-2.5 text-center text-xs font-black tabular-nums"
-            style={{ color: hasAnyItems && !isComplete ? INCOMPLETE_COLOR : ACCENT }}
-            title={hasAnyItems && !isComplete ? `${scoredCount}/${totalItems} items scored so far` : undefined}
-          >
+          <td className="px-2 py-2.5 text-center text-xs font-black tabular-nums" style={{ color: ACCENT }}>
             {!hasAnyItems ? "—" : total}
-            {hasAnyItems && !isComplete && (
-              <span className="ml-1 text-[10px] font-bold opacity-80">
-                ({scoredCount}/{totalItems})
-              </span>
-            )}
           </td>
           <td className="px-2 py-2.5 text-center text-xs font-bold tabular-nums">
-            <span className="inline-flex items-center gap-1">
-              {ps !== null ? ps.toFixed(2) : "—"}
-              {hasAnyItems && !isComplete && <IncompleteBadge />}
-            </span>
+            {ps !== null ? ps.toFixed(2) : "—"}
           </td>
           <td className="px-2 py-2.5 text-center text-xs font-bold tabular-nums">
-            <span className="inline-flex items-center gap-1">
-              {ws !== null ? ws.toFixed(2) : "—"}
-              {hasAnyItems && !isComplete && <IncompleteBadge />}
-            </span>
+            {ws !== null ? ws.toFixed(2) : "—"}
           </td>
         </Fragment>
       );
@@ -388,8 +375,8 @@ export function AssessmentRecordsSection({
 
     // If any component that actually has items is still incomplete, we
     // still compute the Initial Grade from the (0-filled) weighted scores
-    // so a running/preview grade is always visible — but we flag it with
-    // the INC badge so it's never mistaken for a final, settled grade.
+    // so a running/preview grade is always visible — the MissingScoreDot
+    // next to the student's name is the single signal that it's not final.
     const initialGrade = computeInitialGrade(
       weightedScores[0] ?? null,
       weightedScores[1] ?? null,
@@ -399,14 +386,14 @@ export function AssessmentRecordsSection({
     return (
       <tr key={student.id} className={`border-t ${panelBorder} ${index % 2 ? (darkMode ? "bg-white/1.5" : "bg-black/[0.012]") : ""}`}>
         <td className={`sticky left-0 z-10 px-4 py-2.5 text-sm font-bold ${darkMode ? "bg-[#111827]" : "bg-white"} ${textPrimary}`}>
-          {student.name}
+          <span className="inline-flex items-center gap-1.5">
+            {student.name}
+            {anyGroupIncomplete && <MissingScoreDot missingIn={missingIn} />}
+          </span>
         </td>
         {groupCells}
-        <td className="px-3 py-2.5 text-center text-sm font-black tabular-nums">
-          <span className="inline-flex items-center gap-1" style={{ color: ACCENT }}>
-            {initialGrade !== null ? initialGrade : "—"}
-            {anyGroupIncomplete && <IncompleteBadge />}
-          </span>
+        <td className="px-3 py-2.5 text-center text-sm font-black tabular-nums" style={{ color: ACCENT }}>
+          {initialGrade !== null ? initialGrade : "—"}
         </td>
       </tr>
     );
@@ -414,40 +401,6 @@ export function AssessmentRecordsSection({
 
   return (
     <section className={cardClasses} aria-label={title}>
-      {/* Header: title on its own line, then a single control row. Term
-          selection and edit mode live only in the parent page's header now
-          — this row just reflects context (student count) and, when this
-          subject isn't the teacher's own advisory class, offers the one
-          action that's actually this section's own: submitting the grades
-          computed from the table below to that class's adviser. */}
-      <div className={`border-b ${panelBorder} ${darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}`}>
-        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
-          <div className="flex flex-wrap items-center gap-3">
-            {justSubmitted && (
-              <span className="inline-flex items-center gap-1 text-xs font-bold" style={{ color: "#16A34A" }}>
-                <CheckCircle2 className="h-3.5 w-3.5" />
-                Grades submitted
-              </span>
-            )}
-          </div>
-
-          {/* Own-advisory subjects have no separate adviser to send to, so
-              the submit control simply isn't rendered here. */}
-          {!isOwnAdvisory && (
-            <button
-              type="button"
-              onClick={handleSubmitClick}
-              disabled={isSubmitting}
-              title={isSubmitting ? "Submitting…" : "Submit Grades"}
-              className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-maroon-gradient px-4 text-xs font-bold uppercase tracking-wide text-white shadow-primary transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <Send className="h-3.5 w-3.5" />
-              {isSubmitting ? "Submitting…" : "Submit Grades"}
-            </button>
-          )}
-        </div>
-      </div>
-
       <div className="overflow-x-auto">
         <table className="w-full min-w-max text-xs border-collapse">
           <thead>
@@ -555,6 +508,32 @@ export function AssessmentRecordsSection({
         <p className={`px-5 py-6 text-center text-sm font-semibold ${textMuted}`}>
           No Written Works, Performance Task, or Exam items recorded yet for this term.
         </p>
+      )}
+
+      {/* Footer: Submit Grades now lives at the bottom of the record,
+          after the teacher has scrolled through every student's row —
+          rather than at the top before any of the table is visible. */}
+      {!isOwnAdvisory && (
+        <div className={`flex flex-wrap items-center justify-between gap-3 border-t px-4 py-3 ${panelBorder} ${darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}`}>
+          <div className="flex flex-wrap items-center gap-3">
+            {justSubmitted && (
+              <span className="inline-flex items-center gap-1 text-xs font-bold" style={{ color: "#16A34A" }}>
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                Grades submitted
+              </span>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={handleSubmitClick}
+            disabled={isSubmitting}
+            title={isSubmitting ? "Submitting…" : "Submit Grades"}
+            className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-maroon-gradient px-4 text-xs font-bold uppercase tracking-wide text-white shadow-primary transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Send className="h-3.5 w-3.5" />
+            {isSubmitting ? "Submitting…" : "Submit Grades"}
+          </button>
+        </div>
       )}
 
       {/* Confirmation modal — last look before grades leave this page and

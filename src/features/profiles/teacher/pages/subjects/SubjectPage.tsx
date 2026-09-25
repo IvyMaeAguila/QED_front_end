@@ -28,9 +28,6 @@ import {
   assignedSubjectsService,
   type AssignedSubject,
 } from "./services/subjects.service";
-// NOTE: adjust this import path to match where your dashboard service
-// file actually lives relative to this page (it exports fetchTeacherStats).
-import { fetchTeacherStats } from "../dashboard/services/dashboard.service";
 
 interface DisplaySubject {
   id: number;
@@ -58,11 +55,9 @@ function gradeLevelToId(gradeLevel: string): number {
 }
 
 /**
- * Subject "family" — still drives the icon and the abstract orb motif,
- * so each card's visual identity is grounded in what the subject is.
- * Color, however, no longer varies by family: every card lives on the
- * same maroon → gold brand palette, with only subtle depth differences
- * (gradient angle / stop position) so the grid doesn't look flat.
+ * Subject "family" — drives the icon shown on each card. Every card
+ * uses the same simple maroon header so it renders cleanly on
+ * lower-quality screens.
  */
 type SubjectFamily =
   | "math"
@@ -115,151 +110,6 @@ function iconFor(family: SubjectFamily): LucideIcon {
 }
 
 /**
- * Brand palette. Every family shares these three colors — only the
- * gradient direction/stops and the orb's gold intensity shift slightly,
- * so cards feel differentiated without breaking the maroon/white/gold
- * identity.
- */
-const MAROON_DEEP = "#4A0000";
-const MAROON = "#6B0000";
-const MAROON_BRIGHT = "#8B0000";
-const GOLD_LIGHT = "#F0D68F";
-const CREAM = "#FFFDF5";
-
-const FAMILY_THEME: Record<SubjectFamily, { gradient: string; orbFrom: string; orbTo: string; orbCore: string }> = {
-  math: {
-    gradient: "from-[#4A0000] via-[#6B0000] to-[#B8860B]",
-    orbFrom: GOLD_LIGHT,
-    orbTo: MAROON_DEEP,
-    orbCore: CREAM,
-  },
-  science: {
-    gradient: "from-[#5C0000] via-[#7A0000] to-[#C9A227]",
-    orbFrom: GOLD_LIGHT,
-    orbTo: MAROON,
-    orbCore: CREAM,
-  },
-  language: {
-    gradient: "from-[#4A0000] via-[#800000] to-[#D4AF37]",
-    orbFrom: "#F5E1A4",
-    orbTo: MAROON_DEEP,
-    orbCore: CREAM,
-  },
-  social: {
-    gradient: "from-[#5C0000] via-[#8B0000] to-[#C9A227]",
-    orbFrom: GOLD_LIGHT,
-    orbTo: MAROON,
-    orbCore: CREAM,
-  },
-  arts: {
-    gradient: "from-[#6B0000] via-[#9C1C1C] to-[#D4AF37]",
-    orbFrom: "#F5E1A4",
-    orbTo: MAROON_BRIGHT,
-    orbCore: CREAM,
-  },
-  values: {
-    gradient: "from-[#4A0000] via-[#800000] to-[#B8860B]",
-    orbFrom: GOLD_LIGHT,
-    orbTo: MAROON_DEEP,
-    orbCore: CREAM,
-  },
-  practical: {
-    gradient: "from-[#3D0000] via-[#6B0000] to-[#A67C00]",
-    orbFrom: "#E9D19A",
-    orbTo: MAROON_DEEP,
-    orbCore: "#FDF8EF",
-  },
-  general: {
-    gradient: "from-[#5C0000] via-[#800000] to-[#C9A227]",
-    orbFrom: GOLD_LIGHT,
-    orbTo: MAROON,
-    orbCore: CREAM,
-  },
-};
-
-/** Abstract line motif drawn inside the orb, one per family — always
- *  rendered in gold so it reads clearly against the maroon orb base. */
-function OrbMotif({ family }: { family: SubjectFamily }) {
-  const stroke = GOLD_LIGHT;
-  switch (family) {
-    case "math":
-      // grid of coordinate ticks
-      return (
-        <g stroke={stroke} strokeWidth="1.4" strokeLinecap="round">
-          <line x1="16" y1="34" x2="34" y2="34" />
-          <line x1="22" y1="16" x2="22" y2="34" />
-          <circle cx="27" cy="22" r="1.6" fill={stroke} stroke="none" />
-          <circle cx="30" cy="27" r="1.6" fill={stroke} stroke="none" />
-        </g>
-      );
-    case "science":
-      // molecule
-      return (
-        <g stroke={stroke} strokeWidth="1.4">
-          <line x1="17" y1="30" x2="25" y2="18" />
-          <line x1="25" y1="18" x2="33" y2="26" />
-          <circle cx="17" cy="30" r="2.6" fill={stroke} stroke="none" />
-          <circle cx="25" cy="18" r="2.6" fill={stroke} stroke="none" />
-          <circle cx="33" cy="26" r="2.6" fill={stroke} stroke="none" />
-        </g>
-      );
-    case "language":
-      // speech wave
-      return (
-        <g stroke={stroke} strokeWidth="1.6" strokeLinecap="round" fill="none">
-          <path d="M15 26 Q20 16 25 26 T35 26" />
-        </g>
-      );
-    case "social":
-      // latitude lines on a globe
-      return (
-        <g stroke={stroke} strokeWidth="1.3" fill="none">
-          <circle cx="25" cy="25" r="10" />
-          <ellipse cx="25" cy="25" rx="4" ry="10" />
-          <line x1="15" y1="25" x2="35" y2="25" />
-        </g>
-      );
-    case "arts":
-      // sound ripple bars
-      return (
-        <g stroke={stroke} strokeWidth="2" strokeLinecap="round">
-          <line x1="17" y1="28" x2="17" y2="20" />
-          <line x1="22" y1="31" x2="22" y2="15" />
-          <line x1="27" y1="27" x2="27" y2="23" />
-          <line x1="32" y1="30" x2="32" y2="18" />
-        </g>
-      );
-    case "values":
-      // soft heart
-      return (
-        <path
-          d="M25 32c-6-4.5-10-8-10-12.5A5.5 5.5 0 0 1 25 17a5.5 5.5 0 0 1 10 2.5c0 4.5-4 8-10 12.5Z"
-          fill={stroke}
-        />
-      );
-    case "practical":
-      // gear hint
-      return (
-        <g stroke={stroke} strokeWidth="1.4" fill="none">
-          <circle cx="25" cy="25" r="6" />
-          <line x1="25" y1="14" x2="25" y2="17" />
-          <line x1="25" y1="33" x2="25" y2="36" />
-          <line x1="14" y1="25" x2="17" y2="25" />
-          <line x1="33" y1="25" x2="36" y2="25" />
-        </g>
-      );
-    default:
-      // loose sparkle
-      return (
-        <g fill={stroke}>
-          <circle cx="22" cy="22" r="2" />
-          <circle cx="30" cy="29" r="1.3" />
-        </g>
-      );
-  }
-}
-
-/**
  * School year label, e.g. "SY 2026–2027". Philippine school years run
  * roughly June–March, so before June we're still in the year that
  * started the previous calendar year.
@@ -270,19 +120,6 @@ function currentSchoolYearLabel(): string {
   const month = now.getMonth(); // 0 = January
   const startYear = month >= 5 ? year : year - 1;
   return `SY ${startYear}–${startYear + 1}`;
-}
-
-// TeacherProfile.gradeLevel is typed against a GradeLevel declared in a
-// different module (.../studentrecords/types/Students) than the GradeLevel
-// used on this page (.../subjects/types/types). Even if the two are
-// structurally the same string-literal union, TS may treat them as
-// distinct types and reject a direct assignment. Bridge through `string`
-// so this doesn't depend on the two type declarations being merged, then
-// re-narrow against this page's own GRADE_LEVELS list — if the value
-// doesn't match anything in that list (e.g. stale/mismatched data), we
-// fall back rather than silently accepting a bad value.
-function toPageGradeLevel(value: string | undefined): GradeLevel | undefined {
-  return GRADE_LEVELS.find((g) => g === value) as GradeLevel | undefined;
 }
 
 export function SubjectsPage() {
@@ -299,39 +136,13 @@ export function SubjectsPage() {
   const [search, setSearch] = useState("");
 
   // Grid filter — purely for browsing "what subjects do I teach". Defaults
-  // to All Grades so every assigned subject is visible immediately; this
-  // used to default to GRADE_LEVELS[0], which silently hid any subject
-  // taught in a different grade level unless you happened to switch the
-  // dropdown yourself.
+  // to All Grades so every assigned subject is visible immediately.
   const [gradeFilter, setGradeFilter] = useState<GradeFilter>(ALL_GRADES);
 
-  // Advisory class — a fixed fact about this teacher (their homeroom),
-  // NOT something the subject-grid filter should control. `user` is a
-  // UserProfile union and `gradeLevel`/`section` only exist on
-  // TeacherProfile, so we narrow by role before reading them. `gradeLevel`
-  // is bridged through `toPageGradeLevel` because TeacherProfile's
-  // GradeLevel comes from a different module than this page's GradeLevel;
-  // both fields are optional on TeacherProfile (a teacher might not have
-  // an advisory assigned yet), hence the fallbacks.
-  const advisoryGradeLevel: GradeLevel =
-    toPageGradeLevel(
-      user?.role === "TEACHER" ? (user.gradeLevel as string | undefined) : undefined,
-    ) ?? GRADE_LEVELS[0];
-
-  const advisorySection: string | undefined =
-    user?.role === "TEACHER" ? user.section : undefined;
-
-  // Advisory student COUNT — sourced from the same server-computed stat
-  // the main dashboard uses (TeacherStats.totalStudents from
-  // /api/teacherDashboard/stats), instead of recomputing it locally by
-  // filtering StudentsContext with gradeLevelToId's regex match. That
-  // local approach assumed a grade level's numeric id equals the digits
-  // in its label (e.g. "Grade 5" -> 5), which doesn't hold if
-  // grade_level.id in the DB doesn't match the literal grade number —
-  // and it silently disagreed with the dashboard's own total as a
-  // result. Sourcing both from the same endpoint keeps them in sync by
-  // construction.
-  const [advisoryStudentCount, setAdvisoryStudentCount] = useState(0);
+  // Whether subjects are clustered into "Grade · Section" groups.
+  // Grouped is the default view; the teacher can switch back to one
+  // flat list of cards at any time.
+  const [groupBySection, setGroupBySection] = useState(true);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -353,25 +164,6 @@ export function SubjectsPage() {
     fetchSubjects();
   }, [user?.id]);
 
-  useEffect(() => {
-    if (!user?.id) return;
-
-    const fetchStats = async () => {
-      try {
-        const stats = await fetchTeacherStats();
-        // Despite the name, advisoryClassCount is the headcount of
-        // students in this teacher's advisory class, not a count of
-        // classes. totalStudents is across everything the teacher
-        // teaches, not just advisory, so it's the wrong field here.
-        setAdvisoryStudentCount(stats.advisoryClassCount);
-      } catch (err) {
-        console.error("Failed to fetch teacher stats:", err);
-      }
-    };
-
-    fetchStats();
-  }, [user?.id]);
-
   const isAllGrades = gradeFilter === ALL_GRADES;
   const gradeLevelId = useMemo(
     () => (isAllGrades ? null : gradeLevelToId(gradeFilter)),
@@ -387,6 +179,23 @@ export function SubjectsPage() {
       ),
     [subjects, gradeLevelId, isAllGrades, search],
   );
+
+  // Group the filtered subjects by "Grade Level · Section" so subjects
+  // taught to different sections don't blur together in one flat grid.
+  const groupedSubjects = useMemo(() => {
+    const groups = new Map<string, DisplaySubject[]>();
+
+    for (const subject of filteredSubjects) {
+      const key = subject.section
+        ? `${subject.gradeLevel} · Section ${subject.section}`
+        : subject.gradeLevel;
+
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key)!.push(subject);
+    }
+
+    return Array.from(groups.entries()).sort(([a], [b]) => a.localeCompare(b));
+  }, [filteredSubjects]);
 
   const studentsForSubject = useMemo(
     () => (subject: DisplaySubject) => {
@@ -435,43 +244,12 @@ export function SubjectsPage() {
           </div>
         </div>
 
-        {/* Advisory banner — always your actual advisory class, independent
-            of the subject-grid filter below */}
-        <div className="rounded-2xl overflow-hidden shadow-primary bg-maroon-gradient">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 p-6 sm:p-7">
-            <div className="flex items-center gap-4 min-w-0">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-white">
-                <Users size={22} />
-              </span>
-              <div className="min-w-0">
-                <p className="text-[11px] font-bold uppercase tracking-widest text-white/60">
-                  Your Advisory Class
-                </p>
-                <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white mt-0.5 truncate">
-                  {advisoryGradeLevel}
-                  {advisorySection && ` · ${advisorySection}`}
-                </h2>
-                <p className="text-xs font-medium text-white/70 mt-1">
-                  {advisoryStudentCount} student
-                  {advisoryStudentCount === 1 ? "" : "s"}
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => navigate("/teacher/advisory")}
-              className="h-10 px-5 rounded-xl bg-white text-[#6B0000] text-[11px] font-extrabold uppercase tracking-wide transition-colors hover:bg-white/90 shrink-0"
-            >
-              View Advisory Class
-            </button>
-          </div>
-        </div>
-
         {/* Toolbar — search + subject count, same bar style as attendance page */}
         <div
           className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 rounded-xl border px-3 py-2 ${panelBg} ${panelBorder}`}
         >
           <div className="relative w-full sm:w-80">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-2.5 pointer-events-none text-gray-400">
+            <span className="absolute inset-y-0 left-0 z-10 flex items-center pl-2.5 pointer-events-none text-gray-400">
               <Search size={13} />
             </span>
             <input
@@ -483,10 +261,45 @@ export function SubjectsPage() {
             />
           </div>
 
-          <p className={`text-[11px] font-semibold px-1 ${textMuted}`}>
-            {filteredSubjects.length} subject
-            {filteredSubjects.length === 1 ? "" : "s"} shown
-          </p>
+          <div className="flex items-center gap-3 shrink-0">
+            <p className={`text-[11px] font-semibold whitespace-nowrap ${textMuted}`}>
+              {filteredSubjects.length} subject
+              {filteredSubjects.length === 1 ? "" : "s"} shown
+            </p>
+
+            <div
+              className={`flex items-center rounded-lg border p-0.5 ${
+                darkMode ? "border-white/10 bg-white/5" : "border-gray-200 bg-gray-50"
+              }`}
+              role="group"
+              aria-label="Subject view"
+            >
+              <button
+                type="button"
+                onClick={() => setGroupBySection(true)}
+                aria-pressed={groupBySection}
+                className={`px-2.5 h-6 rounded-md text-[10px] font-bold transition-colors ${
+                  groupBySection
+                    ? "bg-[#800000] text-white"
+                    : `${textMuted} hover:${darkMode ? "text-white" : "text-gray-700"}`
+                }`}
+              >
+                By Section
+              </button>
+              <button
+                type="button"
+                onClick={() => setGroupBySection(false)}
+                aria-pressed={!groupBySection}
+                className={`px-2.5 h-6 rounded-md text-[10px] font-bold transition-colors ${
+                  !groupBySection
+                    ? "bg-[#800000] text-white"
+                    : `${textMuted} hover:${darkMode ? "text-white" : "text-gray-700"}`
+                }`}
+              >
+                All
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Content */}
@@ -524,132 +337,163 @@ export function SubjectsPage() {
                     ? "No subjects assigned to you yet."
                     : `No subjects assigned to you for ${gradeFilter} yet.`}
                 </p>
+              ) : groupBySection ? (
+                <div className="p-4 space-y-7">
+                  {groupedSubjects.map(([sectionLabel, sectionSubjects]) => (
+                    <div key={sectionLabel}>
+                      {/* Section header */}
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="h-5 w-1 rounded-full bg-[#800000]" />
+                        <h4
+                          className={`text-xs font-extrabold uppercase tracking-wide ${textPrimary}`}
+                        >
+                          {sectionLabel}
+                        </h4>
+                        <span className={`text-[10px] font-semibold ${textMuted}`}>
+                          ({sectionSubjects.length} subject
+                          {sectionSubjects.length === 1 ? "" : "s"})
+                        </span>
+                        <span
+                          className={`h-px flex-1 ${
+                            darkMode ? "bg-white/10" : "bg-gray-200"
+                          }`}
+                        />
+                      </div>
+
+                      {/* Subject cards for this section */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                        {sectionSubjects.map((subject) => (
+                          <SubjectCard
+                            key={subject.id}
+                            subject={subject}
+                            schoolYear={schoolYear}
+                            darkMode={darkMode}
+                            panelBg={panelBg}
+                            panelBorder={panelBorder}
+                            textPrimary={textPrimary}
+                            textMuted={textMuted}
+                            studentCount={studentsForSubject(subject).length}
+                            onRecordGrades={() =>
+                              navigate(`/teacher/subjects/${subject.id}`)
+                            }
+                            onClassList={() =>
+                              navigate(`/teacher/subjects/${subject.id}/students`)
+                            }
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               ) : (
                 <div className="p-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-                  {filteredSubjects.map((subject) => {
-                    const family = familyFor(subject.name);
-                    const Icon = iconFor(family);
-                    const theme = FAMILY_THEME[family];
-                    const subjectStudentCount = studentsForSubject(subject).length;
-                    const gradientId = `subject-orb-${subject.id}`;
-
-                    return (
-                      <div
-                        key={subject.id}
-                        className={`group relative rounded-2xl border shadow-card overflow-hidden flex flex-col transition-all hover:-translate-y-0.5 hover:shadow-lg ${panelBg} ${panelBorder}`}
-                      >
-                        <div
-                          className={`relative h-28 bg-linear-to-br ${theme.gradient} rounded-tl-2xl rounded-tr-2xl rounded-bl-none rounded-br-[42px]`}
-                        >
-                          <div className="absolute -left-4 -top-6 h-20 w-20 rounded-full bg-white/10 blur-xl" />
-                          <div className="absolute right-6 bottom-2 h-14 w-14 rounded-full bg-[#D4AF37]/25 blur-lg" />
-                          <div className="absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-[#D4AF37]/70 to-transparent" />
-
-                          <span className="absolute top-3 left-3 text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full bg-white/15 text-[#FFFFFF] backdrop-blur-sm">
-                            {schoolYear}
-                          </span>
-
-                          <svg
-                            viewBox="0 0 50 50"
-                            className="absolute -right-3 top-4 h-16 w-16 drop-shadow-md"
-                          >
-                            <defs>
-                              <radialGradient
-                                id={gradientId}
-                                cx="35%"
-                                cy="30%"
-                                r="75%"
-                              >
-                                <stop offset="0%" stopColor={theme.orbCore} />
-                                <stop offset="45%" stopColor={theme.orbFrom} />
-                                <stop offset="100%" stopColor={theme.orbTo} />
-                              </radialGradient>
-                            </defs>
-                            <circle
-                              cx="25"
-                              cy="25"
-                              r="22"
-                              fill={`url(#${gradientId})`}
-                              opacity="0.94"
-                            />
-                            <circle
-                              cx="25"
-                              cy="25"
-                              r="22"
-                              fill="none"
-                              stroke="#D4AF37"
-                              strokeOpacity="0.45"
-                              strokeWidth="0.8"
-                            />
-                            <ellipse
-                              cx="18"
-                              cy="16"
-                              rx="8"
-                              ry="4.5"
-                              fill="white"
-                              opacity="0.35"
-                            />
-                            <OrbMotif family={family} />
-                          </svg>
-
-                          <span className="absolute bottom-3 left-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white text-[#880000] ring-1 ring-[#D4AF37]/60 backdrop-blur-sm">
-                            <Icon size={17} />
-                          </span>
-                        </div>
-
-                        <div className="flex flex-col gap-3 p-5 pt-4 flex-1">
-                          <div>
-                            <h3 className={`text-sm font-bold truncate ${textPrimary}`}>
-                              {subject.name}
-                            </h3>
-                            <div
-                              className={`flex items-center gap-1.5 mt-1 text-xs font-medium ${textMuted}`}
-                            >
-                              <GraduationCap size={13} />
-                              {subject.gradeLevel}
-                              {subject.section && ` · Section ${subject.section}`}
-                            </div>
-                            <div
-                              className={`flex items-center gap-1.5 mt-1 text-xs font-medium ${textMuted}`}
-                            >
-                              <Users size={13} />
-                              {subjectStudentCount} student
-                              {subjectStudentCount === 1 ? "" : "s"}
-                            </div>
-                          </div>
-
-                          <div className="flex gap-2 pt-1 mt-auto">
-                            <button
-                              onClick={() => navigate(`/teacher/subjects/${subject.id}`)}
-                              className="flex-1 h-8 rounded-lg bg-[#800000] text-white text-[11px] font-extrabold transition-colors hover:bg-[#650000]"
-                            >
-                              Record Grades
-                            </button>
-                            <button
-                              onClick={() =>
-                                navigate(`/teacher/subjects/${subject.id}/students`)
-                              }
-                              className={`flex-1 h-8 rounded-lg border text-[11px] font-extrabold transition-colors ${
-                                darkMode
-                                  ? "border-[#D4AF37]/30 bg-white/5 text-white hover:bg-white/10"
-                                  : "border-[#D4AF37]/40 bg-white text-[#111827] hover:bg-[#FFFDF5]"
-                              }`}
-                            >
-                              Class List
-                            </button>
-                          </div>
-                        </div>
-
-                        <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-transparent group-hover:ring-[#D4AF37]/40 transition-all" />
-                      </div>
-                    );
-                  })}
+                  {filteredSubjects.map((subject) => (
+                    <SubjectCard
+                      key={subject.id}
+                      subject={subject}
+                      schoolYear={schoolYear}
+                      darkMode={darkMode}
+                      panelBg={panelBg}
+                      panelBorder={panelBorder}
+                      textPrimary={textPrimary}
+                      textMuted={textMuted}
+                      studentCount={studentsForSubject(subject).length}
+                      onRecordGrades={() => navigate(`/teacher/subjects/${subject.id}`)}
+                      onClassList={() =>
+                        navigate(`/teacher/subjects/${subject.id}/students`)
+                      }
+                    />
+                  ))}
                 </div>
               )}
             </>
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+interface SubjectCardProps {
+  subject: DisplaySubject;
+  schoolYear: string;
+  darkMode: boolean;
+  panelBg: string;
+  panelBorder: string;
+  textPrimary: string;
+  textMuted: string;
+  studentCount: number;
+  onRecordGrades: () => void;
+  onClassList: () => void;
+}
+
+/** Single subject card — shared by both the grouped and flat views. */
+function SubjectCard({
+  subject,
+  schoolYear,
+  darkMode,
+  panelBg,
+  panelBorder,
+  textPrimary,
+  textMuted,
+  studentCount,
+  onRecordGrades,
+  onClassList,
+}: SubjectCardProps) {
+  const family = familyFor(subject.name);
+  const Icon = iconFor(family);
+
+  return (
+    <div
+      className={`group relative rounded-2xl border shadow-card overflow-hidden flex flex-col transition-all hover:-translate-y-0.5 hover:shadow-lg ${panelBg} ${panelBorder}`}
+    >
+      <div className="relative h-28 bg-linear-to-br from-[#5C0000] to-[#800000] rounded-tl-2xl rounded-tr-2xl rounded-bl-none rounded-br-[42px]">
+        <span className="absolute top-3 left-3 text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full bg-white/15 text-white">
+          {schoolYear}
+        </span>
+
+        <span className="absolute bottom-3 left-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white text-[#880000] ring-1 ring-[#D4AF37]/60">
+          <Icon size={17} />
+        </span>
+      </div>
+
+      <div className="flex flex-col gap-3 p-5 pt-4 flex-1">
+        <div>
+          <h3 className={`text-sm font-bold truncate ${textPrimary}`}>
+            {subject.name}
+          </h3>
+          <div className={`flex items-center gap-1.5 mt-1 text-xs font-medium ${textMuted}`}>
+            <GraduationCap size={13} />
+            {subject.gradeLevel}
+            {subject.section && ` · Section ${subject.section}`}
+          </div>
+          <div className={`flex items-center gap-1.5 mt-1 text-xs font-medium ${textMuted}`}>
+            <Users size={13} />
+            {studentCount} student{studentCount === 1 ? "" : "s"}
+          </div>
+        </div>
+
+        <div className="flex gap-2 pt-1 mt-auto">
+          <button
+            onClick={onRecordGrades}
+            className="flex-1 h-8 rounded-lg bg-[#800000] text-white text-[11px] font-extrabold transition-colors hover:bg-[#650000]"
+          >
+            Record Grades
+          </button>
+          <button
+            onClick={onClassList}
+            className={`flex-1 h-8 rounded-lg border text-[11px] font-extrabold transition-colors ${
+              darkMode
+                ? "border-[#D4AF37]/30 bg-white/5 text-white hover:bg-white/10"
+                : "border-[#D4AF37]/40 bg-white text-[#111827] hover:bg-[#FFFDF5]"
+            }`}
+          >
+            Class List
+          </button>
+        </div>
+      </div>
+
+      <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-transparent group-hover:ring-[#D4AF37]/40 transition-all" />
     </div>
   );
 }

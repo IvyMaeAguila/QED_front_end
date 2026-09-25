@@ -51,7 +51,7 @@ export function FilterDropdown({
 
       {open && (
         <div
-          className={`absolute right-0 mt-2 min-w-[180px] rounded-xl overflow-hidden border z-20 shadow-lg ${
+          className={`absolute right-0 mt-2 min-w-45 rounded-xl overflow-hidden border z-20 shadow-lg ${
             darkMode ? "bg-[#111827] border-[#1F2937]" : "bg-white border-[#E5E7EB]"
           }`}
         >

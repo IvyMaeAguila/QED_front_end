@@ -3,8 +3,8 @@ import type { EventItem } from '../components/UpcomingEvents';
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/teacherDashboard`;
 
-// Hiwalay na base URL ‘to dahil hiwalay ring naka-mount ang school-calendar
-// routes sa backend (/api/school-calendar), hindi siya nasa ilalim ng /api/teacherDashboard.
+// Separate base URL here because school-calendar routes are mounted
+// separately on the backend (/api/school-calendar), not under /api/teacherDashboard.
 
 export interface DashboardSummary {
   name: string;
@@ -24,12 +24,29 @@ export interface AttendanceSummary {
   late: number;
 }
 
+// Shape returned by the backend before we split the date into day/month
+interface RawUpcomingEvent {
+  id: string | number;
+  title: string;
+  type: "activity" | "holiday";
+  date: string; // e.g. "2026-09-24"
+  holidayType?: string;
+}
+
 async function handleJsonResponse(res: Response) {
   const data = await res.json();
   if (!res.ok || !data.success) {
     throw new Error(data.message || "Request failed.");
   }
   return data;
+}
+
+function toDayMonth(dateStr: string) {
+  const day = Number(dateStr.slice(8, 10));
+  const month = new Date(dateStr)
+    .toLocaleString("en-US", { month: "short" })
+    .toUpperCase();
+  return { day, month };
 }
 
 export async function fetchDashboardSummary(): Promise<DashboardSummary> {
@@ -65,5 +82,18 @@ export async function fetchUpcomingEvents(limit = 5): Promise<EventItem[]> {
   });
 
   const data = await handleJsonResponse(res);
-  return data.data;
+  const rawEvents: RawUpcomingEvent[] = data.data;
+
+  return rawEvents.map((event) => {
+    const { day, month } = toDayMonth(event.date);
+    return {
+      id: String(event.id),
+      title: event.title,
+      type: event.type,
+      day,
+      month,
+      holidayType: event.holidayType,
+    };
+  });
 }
+

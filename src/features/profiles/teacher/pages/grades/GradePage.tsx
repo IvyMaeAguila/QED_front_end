@@ -7,12 +7,14 @@ import { useOutletContext } from "react-router-dom";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
 import { useStudents } from "../../../admin/pages/studentrecords/context/StudentsContext";
 import { FilterDropdown } from "@shared/components/FilterDropdown";
-import { fetchGradingPeriods } from "../subjects/services/subjectGrading.service"; 
+import { fetchGradingPeriods } from "../subjects/services/subjectGrading.service";
 import {
   fetchAdvisoryGradebook,
+  fetchAdvisorySections,
   fetchClassSubmissionStatus,
   submitClassGrades,
   type AdvisoryGradebook,
+  type AdvisorySectionOption,
   type GradebookStudent,
 } from "./services/gradePage.service";
 import type { GradingPeriod } from "../subjects/detail/types/Grading";
@@ -29,15 +31,6 @@ const gradeTextColor = (grade: number | null | undefined) => {
 function studentDisplayName(s: { firstName: string; lastName: string; middleName: string | null }) {
   const mi = s.middleName ? ` ${s.middleName.charAt(0)}.` : "";
   return `${s.lastName}, ${s.firstName}${mi}`;
-}
-
-function overallAverage(student: GradebookStudent, subjects: AdvisoryGradebook["subjects"]): number | null {
-  const vals = subjects
-    .map((s) => student.grades[s.subjectSectionId]?.average)
-    .filter((v): v is number => v !== null && v !== undefined);
-  if (vals.length === 0) return null;
-  const sum = vals.reduce((a, b) => a + b, 0);
-  return Math.round((sum / vals.length) * 100) / 100;
 }
 
 function cellDisplayValue(cell: { status: string; average: number | null; isOwnAdvisory?: boolean } | undefined): string | number {
@@ -69,7 +62,7 @@ function toCSV(gradebook: AdvisoryGradebook) {
         studentDisplayName(student),
         student.studentId,
         ...gradebook.subjects.map((s) => cellDisplayValue(student.grades[s.subjectSectionId])),
-        overallAverage(student, gradebook.subjects) ?? "",
+        student.overallAverage ?? "",
       ]);
     });
   });
@@ -100,6 +93,10 @@ export function GradesPage() {
   const [search, setSearch] = useState("");
   const [studentFilter, setStudentFilter] = useState(FILTER_OPTIONS[0]);
 
+  // NEW: advisory section picker (only rendered when a teacher has more than one).
+  const [sections, setSections] = useState<AdvisorySectionOption[]>([]);
+  const [selectedClassId, setSelectedClassId] = useState<string>("");
+
   const [gradebook, setGradebook] = useState<AdvisoryGradebook | null>(null);
   const [gradebookLoading, setGradebookLoading] = useState(true);
   const [gradebookError, setGradebookError] = useState<string | null>(null);
@@ -107,6 +104,7 @@ export function GradesPage() {
   const [submitted, setSubmitted] = useState(false);
   const [submittedAt, setSubmittedAt] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [showForceConfirm, setShowForceConfirm] = useState(false);
 
   const [activeTab, setActiveTab] = useState<"gradebook" | "visibility">("gradebook");
@@ -122,13 +120,24 @@ export function GradesPage() {
       .catch((err) => console.error("Failed to load grading periods:", err));
   }, []);
 
-  // Load real gradebook once we know the term (section comes from the JWT server-side)
+  // Load the teacher's advisory sections once. If there's only one, the
+  // picker never renders and every downstream call just omits classId.
   useEffect(() => {
-    if (!selectedTermId) return;
+    fetchAdvisorySections()
+      .then((opts) => {
+        setSections(opts);
+        if (opts.length > 0) setSelectedClassId(opts[0].classId);
+      })
+      .catch((err) => console.error("Failed to load advisory sections:", err));
+  }, []);
+
+  // Load real gradebook once we know the term + selected advisory section
+  useEffect(() => {
+    if (!selectedTermId || !selectedClassId) return;
     let cancelled = false;
     setGradebookLoading(true);
     setGradebookError(null);
-    fetchAdvisoryGradebook(selectedTermId)
+    fetchAdvisoryGradebook(selectedTermId, selectedClassId)
       .then((data) => !cancelled && setGradebook(data))
       .catch((err) => {
         console.error("Failed to load advisory gradebook:", err);
@@ -138,13 +147,13 @@ export function GradesPage() {
     return () => {
       cancelled = true;
     };
-  }, [selectedTermId]);
+  }, [selectedTermId, selectedClassId]);
 
   // Load submission status
   useEffect(() => {
-    if (!selectedTermId) return;
+    if (!selectedTermId || !selectedClassId) return;
     let cancelled = false;
-    fetchClassSubmissionStatus(selectedTermId)
+    fetchClassSubmissionStatus(selectedTermId, selectedClassId)
       .then((status) => {
         if (cancelled) return;
         setSubmitted(status.submitted);
@@ -154,7 +163,7 @@ export function GradesPage() {
     return () => {
       cancelled = true;
     };
-  }, [selectedTermId]);
+  }, [selectedTermId, selectedClassId]);
 
   // "Complete" now means every subject has actually been SUBMITTED by its
   // subject teacher — not just that scores are fully entered. A subject
@@ -178,12 +187,14 @@ export function GradesPage() {
   async function handleSubmit() {
     if (!selectedTermId) return;
     setSubmitting(true);
+    setSubmitError(null);
     try {
-      await submitClassGrades(selectedTermId);
+      await submitClassGrades(selectedTermId, selectedClassId);
       setSubmitted(true);
       setSubmittedAt(new Date().toISOString());
     } catch (err) {
       console.error("Failed to submit class grades:", err);
+      setSubmitError(err instanceof Error ? err.message : "Failed to submit class grades. Please try again.");
     } finally {
       setSubmitting(false);
       setShowForceConfirm(false);
@@ -204,7 +215,7 @@ export function GradesPage() {
 
     if (studentFilter === "Highest Grades" || studentFilter === "Lowest Grades") {
       result = [...result].sort((a, b) => {
-        const diff = (overallAverage(b, gradebook.subjects) ?? 0) - (overallAverage(a, gradebook.subjects) ?? 0);
+        const diff = (b.overallAverage ?? 0) - (a.overallAverage ?? 0);
         return studentFilter === "Highest Grades" ? diff : -diff;
       });
     } else if (studentFilter === "Boys" || studentFilter === "Girls") {
@@ -332,6 +343,16 @@ export function GradesPage() {
               </div>
             </div>
 
+            {submitError && (
+              <div
+                className={`flex items-center gap-2 rounded-xl border border-[#C2255C]/25 bg-[#C2255C]/5 px-4 py-2.5 text-[11px] font-bold text-[#C2255C]`}
+                role="alert"
+              >
+                <AlertTriangle size={12} className="shrink-0" />
+                <span>{submitError}</span>
+              </div>
+            )}
+
             {showForceConfirm && (
               <div className={`rounded-xl border px-4 py-3 ${panelBg} ${panelBorder}`}>
                 <p className={`text-xs font-bold ${textPrimary}`}>Submit incomplete grades?</p>
@@ -360,12 +381,20 @@ export function GradesPage() {
               </div>
             )}
 
-            {/* Search + filter + term strip */}
+            {/*
+              Search + filter + term + section strip.
+              FIX: this row needs to sit in its OWN stacking context that is
+              higher than the table section below it, otherwise any dropdown
+              popup rendered by FilterDropdown gets painted UNDER the table
+              (the table's sticky header/cells use z-10, and this row was not
+              a positioned element at all, so its old "z-10" class on a
+              non-positioned div did nothing).
+            */}
             <div
-              className={`flex flex-col gap-2.5 rounded-xl border px-3 py-2 lg:flex-row lg:items-center lg:justify-between ${panelBg} ${panelBorder}`}
+              className={`relative z-20 flex flex-col gap-2.5 rounded-xl border px-3 py-2 lg:flex-row lg:items-center lg:justify-between ${panelBg} ${panelBorder}`}
             >
               <div className="relative w-full lg:w-64">
-                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5 text-gray-400">
+                <span className="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-2.5 text-gray-400">
                   <Search size={13} />
                 </span>
                 <input
@@ -376,7 +405,24 @@ export function GradesPage() {
                   className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-[11px] font-medium outline-none transition-colors placeholder:text-gray-400 focus:border-maroon ${panelBg} ${panelBorder} ${textPrimary}`}
                 />
               </div>
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="relative z-20 flex flex-wrap items-center gap-2">
+                {/* NEW: only shown when the teacher advises more than one class */}
+                {sections.length > 1 && (
+                  <FilterDropdown
+                    label="Section"
+                    value={
+                      sections.find((s) => s.classId === selectedClassId)?.sectionName ??
+                      sections.find((s) => s.classId === selectedClassId)?.gradeLevel ??
+                      ""
+                    }
+                    options={sections.map((s) => s.sectionName ?? s.gradeLevel)}
+                    onChange={(label) => {
+                      const match = sections.find((s) => (s.sectionName ?? s.gradeLevel) === label);
+                      if (match) setSelectedClassId(match.classId);
+                    }}
+                    darkMode={darkMode}
+                  />
+                )}
                 <FilterDropdown label="Filter" value={studentFilter} options={FILTER_OPTIONS} onChange={setStudentFilter} darkMode={darkMode} />
                 <FilterDropdown
                   label="Term"
@@ -391,7 +437,11 @@ export function GradesPage() {
               </div>
             </div>
 
-            <section className={cardClasses} aria-label="Advisory class grades">
+            {/* FIX: give the table section a lower explicit stacking context (z-0)
+                so it never competes with the filter row above it, regardless of
+                DOM order. relative + z-0 keeps it a normal stacking context that
+                sits below the filter strip's z-20. */}
+            <section className={`relative z-0 ${cardClasses}`} aria-label="Advisory class grades">
               <div className={`flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 ${panelBorder}`}>
                 <div className="flex min-w-0 items-center gap-2">
                   <p className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textPrimary}`}>
@@ -507,9 +557,9 @@ export function GradesPage() {
                               })}
                               <td className="px-3 py-2 text-center">
                                 <span
-                                  className={`text-[13px] font-black tabular-nums ${gradeTextColor(overallAverage(student, gradebook.subjects))}`}
+                                  className={`text-[13px] font-black tabular-nums ${gradeTextColor(student.overallAverage)}`}
                                 >
-                                  {overallAverage(student, gradebook.subjects) ?? "—"}
+                                  {student.overallAverage ?? "—"}
                                 </span>
                               </td>
                             </tr>
@@ -525,6 +575,7 @@ export function GradesPage() {
         ) : (
           <ParentVisibilitySection
             gradingPeriodId={selectedTermId}
+            classId={selectedClassId}
             termLabel={terms.find((t) => t.id === selectedTermId)?.label ?? "—"}
             darkMode={darkMode}
             panelBg={panelBg}

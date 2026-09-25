@@ -10,6 +10,7 @@ const ACCENT = "#6B0000";
 
 interface ParentVisibilitySectionProps {
   gradingPeriodId: string;
+  classId?: string; // NEW: which advisory section this panel operates on
   termLabel: string;
   darkMode: boolean;
   panelBg: string;
@@ -25,6 +26,7 @@ function studentDisplayName(s: { firstName: string; lastName: string; middleName
 
 export function ParentVisibilitySection({
   gradingPeriodId,
+  classId,
   termLabel,
   darkMode,
   panelBg,
@@ -43,7 +45,7 @@ export function ParentVisibilitySection({
     let cancelled = false;
     setLoading(true);
     setError(null);
-    fetchGradeVisibility(gradingPeriodId)
+    fetchGradeVisibility(gradingPeriodId, classId)
       .then((data) => {
         if (cancelled) return;
         setStudents(data);
@@ -57,7 +59,7 @@ export function ParentVisibilitySection({
     return () => {
       cancelled = true;
     };
-  }, [gradingPeriodId]);
+  }, [gradingPeriodId, classId]);
 
   const groupedStudents = useMemo(() => {
     const sorted = [...students].sort((a, b) => studentDisplayName(a).localeCompare(studentDisplayName(b)));
@@ -95,6 +97,7 @@ export function ParentVisibilitySection({
         visible,
         applyToAll,
         studentIds: applyToAll ? undefined : Array.from(selected),
+        classId,
       });
       setStudents((prev) =>
         prev.map((s) =>
