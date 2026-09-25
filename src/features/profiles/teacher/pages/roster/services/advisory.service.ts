@@ -32,8 +32,19 @@ async function handleJsonResponse(res: Response): Promise<AdvisoryRosterResponse
   }
   return data;
 }
-export async function fetchAdvisoryRoster(): Promise<AdvisoryRoster> {
-  const res = await fetch(`${BASE_URL}/roster`, {
+
+/**
+ * Fetches the roster for an advisory class.
+ *
+ * `classId` is optional so this keeps working for teachers with a single
+ * advisory class (the backend can just return that one class when no id is
+ * given). Pass the id of the currently-selected tab once a teacher advises
+ * two or more sections, e.g. `fetchAdvisoryRoster(section.classId)`.
+ */
+export async function fetchAdvisoryRoster(classId?: string | number): Promise<AdvisoryRoster> {
+  const url = classId != null ? `${BASE_URL}/roster?classId=${classId}` : `${BASE_URL}/roster`;
+
+  const res = await fetch(url, {
     credentials: "include",
   });
 

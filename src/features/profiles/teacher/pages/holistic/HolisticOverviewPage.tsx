@@ -18,8 +18,22 @@ import {
   type HolisticTrend,
   type GradingPeriod,
 } from "./services/holistic.service";
+// NOTE: adjust this path to wherever the attendance hook lives relative to
+// this page (it's "./services/..." on the Attendance page itself).
+import { useSelectedAdvisorySection } from "../attendance/services/useSelectedAdvisorySection.service";
+import { AdvisorySectionTabs } from "../attendance/components/AdvisorySectionTabs";
 
 const ACCENT = "#6B0000";
+
+// Gender comes from the advisory roster (same source as the Attendance
+// page), matched to holistic students by id — so the holistic API itself
+// doesn't need to return gender.
+function normalizeGender(value: unknown): "M" | "F" | null {
+  const g = String(value ?? "").trim().toUpperCase();
+  if (g === "F" || g === "FEMALE") return "F";
+  if (g === "M" || g === "MALE") return "M";
+  return null;
+}
 
 const evaluationFor = (average: number) => {
   if (average >= 4.5) return { remark: "Excellent", color: "#157F3B" };
@@ -78,6 +92,9 @@ export function HolisticOverviewPage() {
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
 
+  // Advisory class(es) — same hook the Attendance page uses.
+  const { sections, section, selectSection } = useSelectedAdvisorySection();
+
   const [terms, setTerms] = useState<GradingPeriod[]>([]);
   const [selectedTerm, setSelectedTerm] = useState<number | null>(null);
   const [students, setStudents] = useState<HolisticOverviewStudent[]>([]);
@@ -104,6 +121,25 @@ export function HolisticOverviewPage() {
       .finally(() => setLoading(false));
   }, [selectedTerm]);
 
+  // Roster of the SELECTED advisory section (same source and tab behavior
+  // as the Attendance page). Only students in that section are shown — not
+  // everyone you teach a subject to.
+  const { advisoryIds, genderById } = useMemo(() => {
+    const ids = new Set<string>();
+    const map = new Map<string, "M" | "F">();
+    for (const r of section?.roster ?? []) {
+      ids.add(String(r.id));
+      const g = normalizeGender(r.gender);
+      if (g) map.set(String(r.id), g);
+    }
+    return { advisoryIds: ids, genderById: map };
+  }, [section]);
+
+  const advisoryStudents = useMemo(
+    () => students.filter((s) => advisoryIds.has(String(s.studentId))),
+    [students, advisoryIds]
+  );
+
   const primaryTrendFor = useMemo(
     () => (student: HolisticOverviewStudent) => student.overall ?? blendMySubjects(student.subjects),
     []
@@ -111,16 +147,16 @@ export function HolisticOverviewPage() {
 
   const counts = useMemo(() => {
     const tally: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-    for (const student of students) {
+    for (const student of advisoryStudents) {
       const primary = primaryTrendFor(student);
       if (primary.currentWeekAverage === null) continue;
       const level = Math.min(5, Math.max(1, Math.round(primary.currentWeekAverage)));
       tally[level] += 1;
     }
     return tally;
-  }, [students, primaryTrendFor]);
+  }, [advisoryStudents, primaryTrendFor]);
 
-  const filtered = students.filter((student) => {
+  const filtered = advisoryStudents.filter((student) => {
     const matchesName = student.studentName.toLowerCase().includes(search.toLowerCase());
     if (!matchesName) return false;
     if (statusFilter === "all") return true;
@@ -129,7 +165,117 @@ export function HolisticOverviewPage() {
     return Math.round(primary.currentWeekAverage) === Number(statusFilter);
   });
 
+  // Male / Female grouping like the Attendance roster (non-female = male).
+  const { male, female } = useMemo(() => {
+    const male: HolisticOverviewStudent[] = [];
+    const female: HolisticOverviewStudent[] = [];
+    for (const s of filtered) {
+      if (genderById.get(String(s.studentId)) === "F") female.push(s);
+      else male.push(s);
+    }
+    return { male, female };
+  }, [filtered, genderById]);
+
   const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
+
+  function renderStudentRow(student: HolisticOverviewStudent) {
+    const primary = primaryTrendFor(student);
+    const evaluation =
+      primary.currentWeekAverage !== null ? evaluationFor(primary.currentWeekAverage) : null;
+    const trendMeta = TREND_META[primary.trend];
+
+    return (
+      <tr
+        key={student.studentId}
+        role="button"
+        tabIndex={0}
+        onClick={() => navigate(`${student.studentId}?term=${selectedTerm}`)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            navigate(`${student.studentId}?term=${selectedTerm}`);
+          }
+        }}
+        className={`cursor-pointer border-t transition-colors ${
+          darkMode ? "border-white/10 hover:bg-white/5" : "border-black/10 hover:bg-black/5"
+        }`}
+      >
+        <td className="px-4 py-2">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span
+              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
+                darkMode ? "bg-white/10" : "bg-black/5"
+              } ${textMuted}`}
+            >
+              <User size={13} />
+            </span>
+            <div className="min-w-0">
+              <p className={`truncate text-xs font-bold ${textPrimary}`}>{student.studentName}</p>
+              <p className={`truncate text-[11px] font-medium ${textMuted}`}>
+                {student.isAdvisory
+                  ? "Overall (your advisory)"
+                  : `${student.subjects.length} subject${student.subjects.length === 1 ? "" : "s"} you teach`}
+              </p>
+            </div>
+          </div>
+        </td>
+        <td className="whitespace-nowrap px-4 py-2">
+          {primary.currentWeekAverage !== null ? (
+            <span>
+              <span className="text-[13px] font-black tabular-nums text-[#800000]">
+                {primary.currentWeekAverage.toFixed(1)}
+              </span>
+              <span className={`ml-1 text-[11px] font-medium ${textMuted}`}>/ 5.0</span>
+            </span>
+          ) : (
+            <span className={`text-[11px] font-medium ${textMuted}`}>—</span>
+          )}
+        </td>
+        <td className="whitespace-nowrap px-4 py-2">
+          {evaluation ? (
+            <span
+              className="inline-flex items-center gap-1.5 text-[11px] font-bold"
+              style={{ color: evaluation.color }}
+            >
+              <i className="h-2 w-2 rounded-full" style={{ backgroundColor: evaluation.color }} />
+              {evaluation.remark}
+            </span>
+          ) : (
+            <span className={`text-[11px] font-medium ${textMuted}`}>—</span>
+          )}
+        </td>
+        <td className="whitespace-nowrap px-4 py-2">
+          <span
+            className="inline-flex items-center gap-1 text-[11px] font-bold"
+            style={{ color: trendMeta.color }}
+          >
+            {primary.trend === "Improving" && <TrendingUp size={12} />}
+            {primary.trend === "Declining" && <TrendingDown size={12} />}
+            {trendMeta.label}
+          </span>
+        </td>
+        <td className="whitespace-nowrap px-4 py-2 text-right">
+          <ChevronRight size={14} className={`inline-block ${textMuted}`} />
+        </td>
+      </tr>
+    );
+  }
+
+  // Full-width divider row, styled like the Male / Female bars on the
+  // Attendance page.
+  function renderGroupHeader(label: string) {
+    return (
+      <tr>
+        <th
+          colSpan={5}
+          className={`px-4 py-1.5 text-left text-[11px] font-black uppercase tracking-wider ${
+            darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
+          } ${textPrimary}`}
+        >
+          {label}
+        </th>
+      </tr>
+    );
+  }
 
   return (
     <div className="w-full min-h-full pb-12">
@@ -147,18 +293,30 @@ export function HolisticOverviewPage() {
             </div>
           </div>
 
-          <button
-            type="button"
-            disabled={selectedTerm === null}
-            onClick={() => navigate(`domain-trends?term=${selectedTerm}`)}
-            className={`flex h-8 shrink-0 items-center gap-1.5 self-start rounded-lg border bg-[#800000] px-3 text-[11px] font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-50 sm:self-center ${
-              darkMode ? "border-white/10" : "border-black/10"
-            }`}
-          >
-            <Activity size={12} />
-            Domain Trends
-            <ChevronRight size={12} />
-          </button>
+          <div className="flex items-center gap-2 self-start sm:self-center">
+            {section && (
+              <AdvisorySectionTabs
+                sections={sections ?? []}
+                activeClassId={section.classId}
+                onSelect={selectSection}
+                darkMode={darkMode}
+                panelBorder={panelBorder}
+                textMuted={textMuted}
+              />
+            )}
+            <button
+              type="button"
+              disabled={selectedTerm === null}
+              onClick={() => navigate(`domain-trends?term=${selectedTerm}`)}
+              className={`flex h-8 shrink-0 items-center gap-1.5 rounded-lg border bg-[#800000] px-3 text-[11px] font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-50 ${
+                darkMode ? "border-white/10" : "border-black/10"
+              }`}
+            >
+              <Activity size={12} />
+              Domain Trends
+              <ChevronRight size={12} />
+            </button>
+          </div>
         </div>
 
         {/* Search + level filter chips — term dropdown now lives in the Assessment Roster header */}
@@ -166,7 +324,7 @@ export function HolisticOverviewPage() {
           className={`flex flex-col gap-2.5 rounded-xl border px-3 py-2 sm:flex-row sm:items-center sm:justify-between ${panelBg} ${panelBorder}`}
         >
           <div className="relative w-full sm:w-80">
-            <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5 text-gray-400">
+            <span className="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-2.5 text-gray-400">
               <Search size={13} />
             </span>
             <input
@@ -239,8 +397,12 @@ export function HolisticOverviewPage() {
             </div>
           </div>
 
-          {loading ? (
+          {loading || sections === undefined ? (
             <p className={`px-4 py-16 text-center text-xs font-medium ${textMuted}`}>Loading...</p>
+          ) : advisoryIds.size === 0 ? (
+            <p className={`px-4 py-10 text-center text-xs font-medium ${textMuted}`}>
+              No advisory class assigned to you.
+            </p>
           ) : filtered.length === 0 ? (
             <p className={`px-4 py-10 text-center text-xs font-medium ${textMuted}`}>
               No students found matching your search or filter.
@@ -261,87 +423,18 @@ export function HolisticOverviewPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filtered.map((student) => {
-                    const primary = primaryTrendFor(student);
-                    const evaluation =
-                      primary.currentWeekAverage !== null ? evaluationFor(primary.currentWeekAverage) : null;
-                    const trendMeta = TREND_META[primary.trend];
-
-                    return (
-                      <tr
-                        key={student.studentId}
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => navigate(`${student.studentId}?term=${selectedTerm}`)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            navigate(`${student.studentId}?term=${selectedTerm}`);
-                          }
-                        }}
-                        className={`cursor-pointer border-t transition-colors ${
-                          darkMode ? "border-white/10 hover:bg-white/5" : "border-black/10 hover:bg-black/5"
-                        }`}
-                      >
-                        <td className="px-4 py-2">
-                          <div className="flex min-w-0 items-center gap-2.5">
-                            <span
-                              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-                                darkMode ? "bg-white/10" : "bg-black/5"
-                              } ${textMuted}`}
-                            >
-                              <User size={13} />
-                            </span>
-                            <div className="min-w-0">
-                              <p className={`truncate text-xs font-bold ${textPrimary}`}>{student.studentName}</p>
-                              <p className={`truncate text-[11px] font-medium ${textMuted}`}>
-                                {student.isAdvisory
-                                  ? "Overall (your advisory)"
-                                  : `${student.subjects.length} subject${student.subjects.length === 1 ? "" : "s"} you teach`}
-                              </p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-2">
-                          {primary.currentWeekAverage !== null ? (
-                            <span>
-                              <span className="text-[13px] font-black tabular-nums text-[#800000]">
-                                {primary.currentWeekAverage.toFixed(1)}
-                              </span>
-                              <span className={`ml-1 text-[11px] font-medium ${textMuted}`}>/ 5.0</span>
-                            </span>
-                          ) : (
-                            <span className={`text-[11px] font-medium ${textMuted}`}>—</span>
-                          )}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-2">
-                          {evaluation ? (
-                            <span
-                              className="inline-flex items-center gap-1.5 text-[11px] font-bold"
-                              style={{ color: evaluation.color }}
-                            >
-                              <i className="h-2 w-2 rounded-full" style={{ backgroundColor: evaluation.color }} />
-                              {evaluation.remark}
-                            </span>
-                          ) : (
-                            <span className={`text-[11px] font-medium ${textMuted}`}>—</span>
-                          )}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-2">
-                          <span
-                            className="inline-flex items-center gap-1 text-[11px] font-bold"
-                            style={{ color: trendMeta.color }}
-                          >
-                            {primary.trend === "Improving" && <TrendingUp size={12} />}
-                            {primary.trend === "Declining" && <TrendingDown size={12} />}
-                            {trendMeta.label}
-                          </span>
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-2 text-right">
-                          <ChevronRight size={14} className={`inline-block ${textMuted}`} />
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {male.length > 0 && (
+                    <>
+                      {renderGroupHeader("Male")}
+                      {male.map((student) => renderStudentRow(student))}
+                    </>
+                  )}
+                  {female.length > 0 && (
+                    <>
+                      {renderGroupHeader("Female")}
+                      {female.map((student) => renderStudentRow(student))}
+                    </>
+                  )}
                 </tbody>
               </table>
             </div>

@@ -1,8 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { ListChecks, ClipboardList, Loader2, User, Search, CheckCheck } from "lucide-react";
+import {
+  ListChecks,
+  ClipboardList,
+  Loader2,
+  User,
+  Search,
+  CheckCheck,
+} from "lucide-react";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
-import { SectionCard } from "../../../shared/components/DashboardUI";
 import {
   ATTENDANCE_CYCLE,
   ATTENDANCE_META,
@@ -10,11 +16,12 @@ import {
   type AttendanceMap,
 } from "../subjects/detail/types/Grading";
 import {
-  fetchAdvisorySection,
   fetchAdvisoryAttendance,
   saveAdvisoryAttendance,
   type AdvisorySection,
 } from "./services/attendance.service.ts";
+import { useSelectedAdvisorySection } from "./services/useSelectedAdvisorySection.service";
+import { AdvisorySectionTabs } from "./components/AdvisorySectionTabs.tsx";
 
 const ACCENT = "#6B0000";
 const PRESENT = "P" as keyof typeof ATTENDANCE_META;
@@ -26,43 +33,52 @@ export function TeacherAttendancePage() {
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
 
-  const [section, setSection] = useState<AdvisorySection | null | undefined>(
-    undefined,
-  );
+  const {
+    sections,
+    section,
+    error: sectionError,
+    selectSection,
+  } = useSelectedAdvisorySection();
+
   const [attendance, setAttendance] = useState<AttendanceMap>({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [attendanceLoading, setAttendanceLoading] = useState(true);
+  const [attendanceError, setAttendanceError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const iso = todayISO();
 
+  // Loads/reloads attendance whenever the selected class changes (including
+  // when the teacher switches tabs between two advisory sections).
   useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
+    if (!section) {
+      setAttendanceLoading(false);
+      return;
+    }
 
-    fetchAdvisorySection()
-      .then(async (sec) => {
-        if (cancelled) return;
-        setSection(sec);
-        if (!sec) return;
-        const att = await fetchAdvisoryAttendance(sec.classId);
+    let cancelled = false;
+    setAttendanceLoading(true);
+    setAttendanceError(null);
+
+    fetchAdvisoryAttendance(section.classId)
+      .then((att) => {
         if (cancelled) return;
         setAttendance(att.data);
       })
       .catch((err) => {
         if (cancelled) return;
         console.error("Failed to load advisory attendance:", err);
-        setError("Couldn't load your advisory class. Please try again.");
+        setAttendanceError(
+          "Couldn't load attendance for this class. Please try again.",
+        );
       })
       .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) setAttendanceLoading(false);
       });
 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [section?.classId]);
 
   function cycle(studentId: string) {
     if (!section) return;
@@ -126,7 +142,9 @@ export function TeacherAttendancePage() {
     filteredRoster.every((s) => attendance[s.id]?.[iso] === PRESENT);
 
   function isFemale(student: RosterEntry): boolean {
-    const g = String(student.gender ?? "").trim().toUpperCase();
+    const g = String(student.gender ?? "")
+      .trim()
+      .toUpperCase();
     return g === "F" || g === "FEMALE";
   }
 
@@ -143,54 +161,84 @@ export function TeacherAttendancePage() {
     day: "numeric",
   });
 
-
   const displaySectionName = section
     ? section.sectionName?.trim() || `Advisory (${section.gradeLevel})`
     : "";
 
-  function renderStudentRow(student: RosterEntry) {
+  // `index` is the 0-based position inside its Male / Female group, so the
+  // numbering restarts at 1 for each group.
+  function renderStudentRow(student: RosterEntry, index: number) {
     const status = attendance[student.id]?.[iso] ?? null;
     const meta = status ? ATTENDANCE_META[status] : null;
     return (
-      <li
+      <tr
         key={student.id}
-        className="flex items-center justify-between gap-3 px-4 py-2"
+        className={`border-t transition-colors ${
+          darkMode
+            ? "border-white/10 hover:bg-white/5"
+            : "border-black/10 hover:bg-black/5"
+        }`}
       >
-        <div className="flex items-center gap-2.5 min-w-0">
-          <span
-            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-              darkMode ? "bg-white/10" : "bg-black/5"
-            } ${textMuted}`}
-          >
-            <User size={13} />
-          </span>
-          <span className={`truncate text-xs font-bold ${textPrimary}`}>
-            {student.name}
-          </span>
-        </div>
-
-        <button
-          onClick={() => cycle(student.id)}
-          className="inline-flex h-7 min-w-13 shrink-0 items-center justify-center rounded-lg px-2.5 text-[11px] font-black tabular-nums transition-transform hover:scale-105"
-          style={
-            meta
-              ? {
-                  backgroundColor: darkMode ? `${meta.color}25` : meta.bg,
-                  color: meta.color,
-                }
-              : {
-                  backgroundColor: darkMode ? "#ffffff10" : "#F3F4F6",
-                  color: "#9CA3AF",
-                }
-          }
+        <td
+          className={`whitespace-nowrap px-4 py-2 text-[11px] font-bold tabular-nums ${textMuted}`}
         >
-          {status ?? "Mark"}
-        </button>
-      </li>
+          {index + 1}
+        </td>
+        <td className="px-4 py-2">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span
+              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
+                darkMode ? "bg-white/10" : "bg-black/5"
+              } ${textMuted}`}
+            >
+              <User size={13} />
+            </span>
+            <span className={`truncate text-xs font-bold ${textPrimary}`}>
+              {student.name}
+            </span>
+          </div>
+        </td>
+        <td className="whitespace-nowrap px-4 py-2 text-center">
+          <button
+            onClick={() => cycle(student.id)}
+            className="inline-flex h-7 min-w-13 items-center justify-center rounded-lg px-2.5 text-[11px] font-black tabular-nums transition-transform hover:scale-105"
+            style={
+              meta
+                ? {
+                    backgroundColor: darkMode ? `${meta.color}25` : meta.bg,
+                    color: meta.color,
+                  }
+                : {
+                    backgroundColor: darkMode ? "#ffffff10" : "#F3F4F6",
+                    color: "#9CA3AF",
+                  }
+            }
+          >
+            {status ?? "Mark"}
+          </button>
+        </td>
+      </tr>
     );
   }
 
-  if (loading) {
+  // Full-width divider row, same style as the Holistic Overview table.
+  function renderGroupHeader(label: string) {
+    return (
+      <tr>
+        <th
+          colSpan={3}
+          className={`px-4 py-1.5 text-left text-[11px] font-black uppercase tracking-wider ${
+            darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
+          } ${textPrimary}`}
+        >
+          {label}
+        </th>
+      </tr>
+    );
+  }
+
+  // sections === undefined -> still loading which classes the teacher has
+  if (sections === undefined) {
     return (
       <div className="w-full min-h-full pb-12">
         <div className="w-full px-6 lg:px-8 pt-6">
@@ -207,18 +255,19 @@ export function TeacherAttendancePage() {
     );
   }
 
-  if (error) {
+  if (sectionError) {
     return (
       <div className="w-full min-h-full pb-12">
         <div className="w-full px-6 lg:px-8 pt-6">
           <div className={`${cardClasses} px-5 py-14 text-center`}>
-            <p className="text-xs font-semibold text-red-500">{error}</p>
+            <p className="text-xs font-semibold text-red-500">{sectionError}</p>
           </div>
         </div>
       </div>
     );
   }
 
+  // sections === null -> confirmed zero advisory classes
   if (!section) {
     return (
       <div className="w-full min-h-full pb-12">
@@ -258,8 +307,20 @@ export function TeacherAttendancePage() {
           </div>
 
           <div className="flex items-center gap-2">
+            <AdvisorySectionTabs
+              sections={sections ?? []}
+              activeClassId={section.classId}
+              onSelect={selectSection}
+              darkMode={darkMode}
+              panelBorder={panelBorder}
+              textMuted={textMuted}
+            />
             <button
-              onClick={() => navigate("/teacher/attendance/records")}
+              onClick={() =>
+                navigate(
+                  `/teacher/attendance/records?classId=${section.classId}`,
+                )
+              }
               className={`flex h-8 items-center gap-1.5 rounded-lg border bg-[#800000] text-white px-3 text-[11px] font-extrabold transition-colors hover:bg-[#650000] ${
                 darkMode ? "border-white/10" : "border-black/10"
               }`}
@@ -274,7 +335,7 @@ export function TeacherAttendancePage() {
           className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 rounded-xl border px-3 py-2 ${panelBg} ${panelBorder}`}
         >
           <div className="relative w-full sm:w-80">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-2.5 pointer-events-none text-gray-400">
+            <span className="absolute inset-y-0 left-0 z-10 flex items-center pl-2.5 pointer-events-none text-gray-400">
               <Search size={13} />
             </span>
             <input
@@ -282,10 +343,9 @@ export function TeacherAttendancePage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search student..."
-              className={`w-full h-8 pl-8 pr-2.5 rounded-lg border text-[11px] font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
+              className={`relative w-full h-8 pl-8 pr-2.5 rounded-lg border text-[11px] font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
             />
           </div>
-
           <div className="flex flex-wrap gap-2.5">
             {(
               Object.keys(ATTENDANCE_META) as (keyof typeof ATTENDANCE_META)[]
@@ -308,18 +368,27 @@ export function TeacherAttendancePage() {
           </div>
         </div>
 
-        <SectionCard
-          title="Today's Roster"
-          icon={User}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          darkMode={darkMode}
-          action={
+        <section className={cardClasses} aria-label="Today's attendance roster">
+          <div
+            className={`flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 ${panelBorder}`}
+          >
+            <div className="flex min-w-0 items-center gap-2">
+              <p
+                className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textPrimary}`}
+              >
+                <User size={13} style={{ color: ACCENT }} />
+                Today's Roster
+              </p>
+              <p className={`truncate text-[11px] font-medium ${textMuted}`}>
+                · {filteredRoster.length} student
+                {filteredRoster.length === 1 ? "" : "s"}
+              </p>
+            </div>
+
             <button
               onClick={markAllPresent}
               disabled={allMarkedPresent}
-              className={`flex h-7 items-center gap-1 rounded-md border px-2.5 text-[11px] font-extrabold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+              className={`flex h-7 w-36 items-center justify-center gap-1 rounded-md border px-2.5 text-[11px] font-extrabold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                 darkMode
                   ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
                   : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
@@ -328,54 +397,66 @@ export function TeacherAttendancePage() {
               <CheckCheck size={12} style={{ color: ACCENT }} />
               Mark All Present
             </button>
-          }
-        >
-          {filteredRoster.length > 0 ? (
-            <>
-              {groupedRoster.male.length > 0 && (
-                <>
-                  <p
-                    className={`px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
-                      darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
-                    } ${textPrimary}`}
-                  >
-                    Male
-                  </p>
-                  <ul
-                    className={`divide-y ${
-                      darkMode ? "divide-white/10" : "divide-black/10"
-                    }`}
-                  >
-                    {groupedRoster.male.map((student) => renderStudentRow(student))}
-                  </ul>
-                </>
-              )}
+          </div>
 
-              {groupedRoster.female.length > 0 && (
-                <>
-                  <p
-                    className={`px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
-                      darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
-                    } ${textPrimary}`}
-                  >
-                    Female
-                  </p>
-                  <ul
-                    className={`divide-y ${
-                      darkMode ? "divide-white/10" : "divide-black/10"
-                    }`}
-                  >
-                    {groupedRoster.female.map((student) => renderStudentRow(student))}
-                  </ul>
-                </>
-              )}
-            </>
+          {attendanceLoading ? (
+            <div className="flex items-center justify-center gap-2 px-5 py-14">
+              <Loader2 size={15} className={`animate-spin ${textMuted}`} />
+              <p className={`text-xs font-semibold ${textMuted}`}>
+                Loading attendance...
+              </p>
+            </div>
+          ) : attendanceError ? (
+            <p className="px-4 py-5 text-center text-xs font-semibold text-red-500">
+              {attendanceError}
+            </p>
+          ) : filteredRoster.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
+                    {[
+                      { label: "No.", cls: "w-16 text-left" },
+                      { label: "Student", cls: "text-left" },
+                      { label: "Status", cls: "w-44 text-center" },
+                    ].map((h) => (
+                      <th
+                        key={h.label}
+                        className={`whitespace-nowrap px-4 py-2 text-[11px] font-black uppercase tracking-wider ${h.cls} ${textMuted}`}
+                      >
+                        {h.label}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {groupedRoster.male.length > 0 && (
+                    <>
+                      {renderGroupHeader("Male")}
+                      {groupedRoster.male.map((student, i) =>
+                        renderStudentRow(student, i),
+                      )}
+                    </>
+                  )}
+                  {groupedRoster.female.length > 0 && (
+                    <>
+                      {renderGroupHeader("Female")}
+                      {groupedRoster.female.map((student, i) =>
+                        renderStudentRow(student, i),
+                      )}
+                    </>
+                  )}
+                </tbody>
+              </table>
+            </div>
           ) : (
-            <p className={`px-4 py-5 text-center text-xs font-medium ${textMuted}`}>
+            <p
+              className={`px-4 py-5 text-center text-xs font-medium ${textMuted}`}
+            >
               No students found matching "{searchQuery}".
             </p>
           )}
-        </SectionCard>
+        </section>
       </div>
     </div>
   );

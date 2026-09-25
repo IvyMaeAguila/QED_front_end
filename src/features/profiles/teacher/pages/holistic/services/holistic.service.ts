@@ -1,4 +1,3 @@
-
 import { API_CONFIG } from '../../../../../../config/api.config';
 import type { HolisticAxisKey, HolisticMap } from "../../subjects/detail/types/Grading";
 

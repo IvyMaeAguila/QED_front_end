@@ -1,8 +1,12 @@
-import type { CSSProperties } from "react";
-import { Search, Users } from "lucide-react";
-import type { AdvisoryStudent } from "../services/advisory.service";
+import { Search, User, Users } from "lucide-react";
+import type { RosterStudent } from "../../subjects/detail/data";
 
-type GenderFilter = "All" | "Male" | "Female";
+type GenderFilter = "All" | "M" | "F";
+
+function isFemale(student: RosterStudent): boolean {
+  const g = String(student.gender ?? "").trim().toUpperCase();
+  return g === "F" || g === "FEMALE";
+}
 
 interface AdvisoryTableProps {
   darkMode: boolean;
@@ -10,22 +14,13 @@ interface AdvisoryTableProps {
   panelBorder: string;
   textPrimary: string;
   textMuted: string;
-  roster: AdvisoryStudent[];
+  roster: RosterStudent[];
   search: string;
   setSearch: (val: string) => void;
   genderFilter: GenderFilter;
   setGenderFilter: (val: GenderFilter) => void;
   accentColor: string;
-  onRowDoubleClick: (studentId: string | number) => void;
-}
-
-const genderAppearance = (gender: AdvisoryStudent["gender"]) =>
-  gender === "Male"
-    ? { color: "#1D70D6", background: "#EAF2FF" }
-    : { color: "#C2255C", background: "#FCE7F1" };
-
-function middleInitial(middleName?: string | null) {
-  return middleName ? `${middleName.charAt(0)}.` : "";
+  onRowDoubleClick: (studentId: string) => void;
 }
 
 export function AdvisoryTable({
@@ -42,116 +37,135 @@ export function AdvisoryTable({
   accentColor,
   onRowDoubleClick,
 }: AdvisoryTableProps) {
-  const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
+  const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
+
+  const maleRoster = roster.filter((s) => !isFemale(s));
+  const femaleRoster = roster.filter((s) => isFemale(s));
+
+  function renderRow(student: RosterStudent, index: number) {
+    return (
+      <tr
+        key={student.id}
+        onDoubleClick={() => onRowDoubleClick(student.id)}
+        title="Double-click to view student details"
+        className={`cursor-pointer border-t transition-colors ${panelBorder} ${
+          darkMode ? "hover:bg-white/5" : "hover:bg-black/1.5"
+        }`}
+      >
+        <td className={`px-4 py-2 text-[11px] font-bold tabular-nums ${textMuted}`}>{index + 1}</td>
+        <td className="px-4 py-2">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span
+              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
+                darkMode ? "bg-white/10" : "bg-black/5"
+              } ${textMuted}`}
+            >
+              <User size={13} />
+            </span>
+            <span className={`truncate text-xs font-bold ${textPrimary}`}>{student.name}</span>
+          </div>
+        </td>
+      </tr>
+    );
+  }
 
   return (
-    <section className={cardClasses} aria-label="Advisory class roster">
-      <div className={`flex flex-col gap-4 border-b px-5 py-5 lg:flex-row lg:items-center lg:justify-between ${panelBorder}`}>
-        <div className="flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl text-white" style={{ backgroundColor: accentColor }}>
-            <Users size={18} />
+    <>
+      <div
+        className={`flex flex-col gap-2.5 rounded-xl border px-3 py-2 sm:flex-row sm:items-center sm:justify-between ${panelBg} ${panelBorder}`}
+      >
+        <div className="relative w-full sm:w-80">
+          <span className="absolute inset-y-0 left-0 z-10 flex items-center pl-2.5 pointer-events-none text-gray-400">
+            <Search size={13} />
           </span>
-          <div>
-            <h2 className={`font-extrabold ${textPrimary}`}>Student directory</h2>
-            <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
-              {roster.length} student{roster.length === 1 ? "" : "s"} shown
-            </p>
-          </div>
+          <input
+            type="text"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search student..."
+            aria-label="Search student by name"
+            className={`w-full h-8 pl-8 pr-2.5 rounded-lg border text-[11px] font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
+          />
         </div>
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <div className="relative">
-            <Search size={14} className={`pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 ${textMuted}`} />
-            <input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search name or student ID"
-              className={`h-10 w-full rounded-xl border py-2 pl-9 pr-3 text-xs font-bold outline-none focus:ring-2 sm:w-56 ${panelBg} ${panelBorder} ${textPrimary}`}
-              style={{ "--tw-ring-color": `${accentColor}55` } as CSSProperties}
-            />
-          </div>
-          <select
-            value={genderFilter}
-            onChange={(event) => setGenderFilter(event.target.value as GenderFilter)}
-            aria-label="Filter by gender"
-            className={`h-10 rounded-xl border px-3 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
-          >
-            <option value="All">All genders</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
-        </div>
+        <select
+          value={genderFilter}
+          onChange={(event) => setGenderFilter(event.target.value as GenderFilter)}
+          aria-label="Filter by gender"
+          className={`h-8 rounded-lg border px-2.5 text-[11px] font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
+        >
+          <option value="All">All genders</option>
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+        </select>
       </div>
 
-      {roster.length === 0 ? (
-        <div className="px-5 py-16 text-center">
-          <p className={`font-bold ${textPrimary}`}>No students found</p>
-          <p className={`mt-1 text-sm ${textMuted}`}>Try a different name, ID, or gender filter.</p>
+      <section className={cardClasses} aria-label="Advisory class roster">
+        <div className={`flex items-center gap-1.5 border-b px-4 py-2.5 ${panelBorder}`}>
+          <Users size={13} style={{ color: accentColor }} />
+          <p className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>
+            Student directory
+          </p>
+          <span className={`ml-auto text-[11px] font-bold ${textMuted}`}>{roster.length} shown</span>
         </div>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-160 text-sm">
-            <thead>
-              <tr className={darkMode ? "bg-white/3" : "bg-[#F8FAFC]"}>
-                {["No.", "Student", "Student ID", "Gender"].map((heading) => (
-                  <th key={heading} className={`px-5 py-3.5 text-left text-[11px] font-extrabold uppercase tracking-wider ${textMuted}`}>
-                    {heading}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {roster.map((student, index) => {
-                const appearance = genderAppearance(student.gender);
-                return (
-                  <tr
-                    key={student.id}
-                    onDoubleClick={() => onRowDoubleClick(student.id)}
-                    title="Double-click to view student details"
-                    className={`cursor-pointer border-t transition-colors ${panelBorder} ${
-                      index % 2 === 1 ? (darkMode ? "bg-white/1.5" : "bg-black/[0.012]") : ""
-                    } ${darkMode ? "hover:bg-white/5" : "hover:bg-[#FFF8F8]"}`}
+
+        {roster.length === 0 ? (
+          <p className={`px-4 py-10 text-center text-xs font-medium ${textMuted}`}>
+            No students found{search ? ` matching "${search}"` : ""}.
+          </p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-max text-sm">
+              <thead>
+                <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
+                  <th
+                    className={`w-12 px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}
                   >
-                    <td className={`px-5 py-4 font-bold tabular-nums ${textMuted}`}>{index + 1}</td>
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-3">
-                        <span
-                          className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-black"
-                          style={{
-                            backgroundColor: darkMode ? `${appearance.color}25` : appearance.background,
-                            color: appearance.color,
-                          }}
-                        >
-                          {student.first_name.charAt(0)}
-                          {student.last_name.charAt(0)}
-                        </span>
-                        <div>
-                          <p className={`font-extrabold ${textPrimary}`}>
-                            {student.last_name}, {student.first_name} {middleInitial(student.middle_name)}
-                          </p>
-                          <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>Double-click to open profile</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className={`px-5 py-4 font-extrabold tabular-nums ${textPrimary}`}>{student.student_number}</td>
-                    <td className="px-5 py-4">
-                      <span
-                        className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-extrabold"
-                        style={{
-                          backgroundColor: darkMode ? `${appearance.color}25` : appearance.background,
-                          color: appearance.color,
-                        }}
+                    No.
+                  </th>
+                  <th
+                    className={`px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}
+                  >
+                    Name
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {maleRoster.length > 0 && (
+                  <>
+                    <tr>
+                      <td
+                        colSpan={2}
+                        className={`px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
+                          darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
+                        } ${textPrimary}`}
                       >
-                        <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: appearance.color }} />
-                        {student.gender}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </section>
+                        Male
+                      </td>
+                    </tr>
+                    {maleRoster.map((s, i) => renderRow(s, i))}
+                  </>
+                )}
+
+                {femaleRoster.length > 0 && (
+                  <>
+                    <tr>
+                      <td
+                        colSpan={2}
+                        className={`px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
+                          darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
+                        } ${textPrimary}`}
+                      >
+                        Female
+                      </td>
+                    </tr>
+                    {femaleRoster.map((s, i) => renderRow(s, i))}
+                  </>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+    </>
   );
 }

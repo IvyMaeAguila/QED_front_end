@@ -1,10 +1,12 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronLeft, ChevronRight, Pencil, Sparkles, User } from "lucide-react";
+import { Check, Pencil, Sparkles, User } from "lucide-react";
 import type { RosterStudent } from "./data";
 import { HOLISTIC_COLUMNS, HOLISTIC_LEVELS, type HolisticAxisKey } from "./types/Grading";
 import {
+  fetchGradingPeriodsGlobal,
   fetchHolisticWeekly,
   saveHolistic,
+  type GradingPeriod,
   type HolisticWeeklyMap,
   type StudentWeeklyHolisticRecord,
   type WeeklyAxisScores,
@@ -26,8 +28,14 @@ const EMPTY_TREND: StudentWeeklyHolisticRecord["trend"] = {
 interface HolisticRecordsSectionProps {
   subjectSectionId: string;
   roster: GenderedStudent[];
+  // Optional hints for which grading period is "active" for this view.
+  // Either can be omitted: the component fetches the full grading-period
+  // list itself (fetchGradingPeriodsGlobal) and resolves the matching
+  // period's startDate/endDate/schoolYearId from the DB. gradingPeriodId
+  // (an exact period id) takes priority over termNumber (a quarter number,
+  // which can be ambiguous across school years) if both are given.
+  gradingPeriodId?: string;
   termNumber?: number;
-  termStartDate?: string;
   darkMode: boolean;
   panelBg: string;
   panelBorder: string;
@@ -58,10 +66,39 @@ function formatWeekRange(weekStartISO: string): string {
   return `${startLabel}-${endLabel}`;
 }
 
-function shiftMonthKey(monthKey: string, delta: number): string {
-  const [year, month] = monthKey.split("-").map(Number);
-  const shifted = new Date(year, month - 1 + delta, 1);
-  return `${shifted.getFullYear()}-${String(shifted.getMonth() + 1).padStart(2, "0")}`;
+function currentMonthKey(): string {
+  const today = new Date();
+  return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function monthKeyOf(iso: string): string {
+  return iso.slice(0, 7);
+}
+
+// Clamp a candidate month (e.g. "today") into the term's [start, end] range.
+// If the term has no bounds, the candidate passes through unchanged.
+function clampMonthToTerm(candidate: string, termStartDate?: string, termEndDate?: string): string {
+  const start = termStartDate ? monthKeyOf(termStartDate) : null;
+  const end = termEndDate ? monthKeyOf(termEndDate) : null;
+  if (start && candidate < start) return start;
+  if (end && candidate > end) return end;
+  return candidate;
+}
+
+// Every month key that falls within [termStartDate, termEndDate], inclusive.
+function monthsInTerm(termStartDate?: string, termEndDate?: string): string[] {
+  if (!termStartDate || !termEndDate) return [];
+  const start = new Date(termStartDate + "T00:00:00");
+  const end = new Date(termEndDate + "T00:00:00");
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return [];
+  const months: string[] = [];
+  const cursor = new Date(start.getFullYear(), start.getMonth(), 1);
+  const last = new Date(end.getFullYear(), end.getMonth(), 1);
+  while (cursor <= last) {
+    months.push(`${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, "0")}`);
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
+  return months;
 }
 
 function mondaysInMonth(monthKey: string): string[] {
@@ -110,8 +147,8 @@ function upsertAxisValue(
 export function HolisticRecordsSection({
   subjectSectionId,
   roster,
+  gradingPeriodId,
   termNumber,
-  termStartDate,
   darkMode,
   panelBg,
   panelBorder,
@@ -126,13 +163,46 @@ export function HolisticRecordsSection({
   const hasInitializedMonth = useRef(false);
   const latestRequestId = useRef(0);
 
+  // Grading periods, fetched straight from the DB (same endpoint the term
+  // picker elsewhere uses). This is where the term's date range and school
+  // year actually come from now, rather than being passed down as props.
+  const [gradingPeriods, setGradingPeriods] = useState<GradingPeriod[]>([]);
+  const [periodsLoaded, setPeriodsLoaded] = useState(false);
+
+  useEffect(() => {
+    fetchGradingPeriodsGlobal()
+      .then(setGradingPeriods)
+      .catch((err) => console.error("Failed to load grading periods:", err))
+      .finally(() => setPeriodsLoaded(true));
+  }, []);
+
+  // Resolve which period is "active" for this view: an explicit
+  // gradingPeriodId wins, then a matching termNumber, then whichever period
+  // the backend marks isActive, then just the first one returned.
+  const activePeriod: GradingPeriod | null = useMemo(() => {
+    if (gradingPeriods.length === 0) return null;
+    if (gradingPeriodId) {
+      const found = gradingPeriods.find((p) => p.id === gradingPeriodId);
+      if (found) return found;
+    }
+    if (termNumber !== undefined) {
+      const found = gradingPeriods.find((p) => p.termNumber === termNumber);
+      if (found) return found;
+    }
+    return gradingPeriods.find((p) => p.isActive) ?? gradingPeriods[0] ?? null;
+  }, [gradingPeriods, gradingPeriodId, termNumber]);
+
+  // The termNumber actually sent to the API: explicit prop wins, otherwise
+  // whatever the resolved DB period says.
+  const resolvedTermNumber = termNumber ?? activePeriod?.termNumber;
+
   useEffect(() => {
     const requestId = ++latestRequestId.current;
     setLoading(true);
     setError(null);
     hasInitializedMonth.current = false;
     setSelectedMonthKey(null);
-    fetchHolisticWeekly(subjectSectionId, termNumber)
+    fetchHolisticWeekly(subjectSectionId, resolvedTermNumber)
       .then(({ data }) => {
         if (latestRequestId.current === requestId) setWeeklyData(data);
       })
@@ -143,7 +213,7 @@ export function HolisticRecordsSection({
       .finally(() => {
         if (latestRequestId.current === requestId) setLoading(false);
       });
-  }, [subjectSectionId, termNumber]);
+  }, [subjectSectionId, resolvedTermNumber]);
 
   function handleCellChange(studentId: string, axis: HolisticAxisKey, weekStartDate: string, raw: string) {
     const trimmed = raw.trim();
@@ -153,9 +223,11 @@ export function HolisticRecordsSection({
 
     setWeeklyData((prev) => upsertAxisValue(prev, studentId, weekStartDate, axis, value));
 
-    saveHolistic(subjectSectionId, studentId, axis, value, { weekStartDate, termNumber }).catch((err) => {
-      console.error("Failed to save holistic rating:", err);
-    });
+    saveHolistic(subjectSectionId, studentId, axis, value, { weekStartDate, termNumber: resolvedTermNumber }).catch(
+      (err) => {
+        console.error("Failed to save holistic rating:", err);
+      }
+    );
   }
 
   const monthGroups: MonthGroup[] = useMemo(() => {
@@ -176,18 +248,32 @@ export function HolisticRecordsSection({
       }));
   }, [weeklyData]);
 
-  useEffect(() => {
-    if (hasInitializedMonth.current || loading) return;
-    hasInitializedMonth.current = true;
-    if (monthGroups.length > 0) {
-      setSelectedMonthKey(monthGroups[monthGroups.length - 1].key);
-    } else if (termStartDate) {
-      setSelectedMonthKey(termStartDate.slice(0, 7));
+  // Every month the dropdown should offer: any recorded month, plus every
+  // month that falls inside the active period's date range (fetched from
+  // the DB above), so you can jump to a term month that has no entries yet.
+  // If the period's bounds aren't available for some reason, fall back to
+  // just offering the current calendar month like before.
+  const availableMonthKeys = useMemo(() => {
+    const keys = new Set(monthGroups.map((g) => g.key));
+    const termMonths = monthsInTerm(activePeriod?.startDate, activePeriod?.endDate);
+    if (termMonths.length > 0) {
+      termMonths.forEach((m) => keys.add(m));
     } else {
-      const today = new Date();
-      setSelectedMonthKey(`${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`);
+      keys.add(currentMonthKey());
     }
-  }, [loading, monthGroups, termStartDate]);
+    return Array.from(keys).sort();
+  }, [monthGroups, activePeriod]);
+
+  // Default month once both the weekly data and the grading periods have
+  // loaded: today's month, clamped inside the active period's range.
+  // Viewing a term that already ended lands on that term's last month;
+  // viewing one that hasn't started yet lands on its first month; viewing
+  // the currently-active term just shows today.
+  useEffect(() => {
+    if (hasInitializedMonth.current || loading || !periodsLoaded) return;
+    hasInitializedMonth.current = true;
+    setSelectedMonthKey(clampMonthToTerm(currentMonthKey(), activePeriod?.startDate, activePeriod?.endDate));
+  }, [loading, periodsLoaded, activePeriod]);
 
   const displayGroup: MonthGroup | null = useMemo(() => {
     if (!selectedMonthKey) return null;
@@ -211,7 +297,7 @@ export function HolisticRecordsSection({
     return { male, female };
   }, [roster]);
 
-  const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
+  const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
   const cellInputClasses = `h-7 w-10 rounded-lg border text-center text-[11px] font-black tabular-nums outline-none ${panelBorder} ${
     darkMode ? "bg-[#0B1120] text-white" : "bg-white text-[#111827]"
   }`;
@@ -279,51 +365,49 @@ export function HolisticRecordsSection({
   }
 
   return (
-    <section className={cardClasses}>
-      <div className={`flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 ${panelBorder}`}>
-        <div className="flex min-w-0 items-center gap-2">
-          <p className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textPrimary}`}>
-            <Sparkles size={13} style={{ color: ACCENT }} />
+    <section className={cardClasses} aria-label="Weekly holistic ratings">
+      <div
+        className={`flex flex-col gap-4 border-b px-5 py-5 sm:flex-row sm:items-center sm:justify-between ${panelBorder}`}
+      >
+        <div>
+          <h2 className={`flex items-center gap-1.5 font-extrabold ${textPrimary}`}>
+            <Sparkles size={15} style={{ color: ACCENT }} />
             Weekly Holistic Ratings
-          </p>
-          <p className={`truncate text-[11px] font-medium ${textMuted}`}>
-            {isEditing ? "· Changes save as you type" : `· ${roster.length} student${roster.length === 1 ? "" : "s"}`}
+          </h2>
+          <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+            {isEditing ? "Changes save as you type" : `${roster.length} student${roster.length === 1 ? "" : "s"}`}
+            {activePeriod && (
+              <>
+                {" "}
+                · {activePeriod.termLabel}
+                {/* schoolYearId is the raw DB id (e.g. a UUID), not a
+                    "2025-2026"-style label. Swap this for a real label field
+                    (e.g. activePeriod.schoolYearLabel) once one exists on
+                    the GradingPeriod type / API response. */}
+                {activePeriod.schoolYearId ? ` · SY ${activePeriod.schoolYearId}` : ""}
+              </>
+            )}
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           {displayGroup && (
-            <div
-              role="group"
+            <select
+              value={displayGroup.key}
+              onChange={(e) => setSelectedMonthKey(e.target.value)}
+              className={`h-10 rounded-xl border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
               aria-label="Month"
-              className={`inline-flex h-7 items-center overflow-hidden rounded-md border ${
-                darkMode ? "border-white/10 bg-white/5" : "border-black/10 bg-white"
-              }`}
             >
-              <button
-                onClick={() => setSelectedMonthKey((key) => (key ? shiftMonthKey(key, -1) : key))}
-                aria-label="Previous month"
-                className={`flex h-full items-center px-1.5 transition-colors ${
-                  darkMode ? "text-white/70 hover:bg-white/10" : "text-[#374151] hover:bg-black/5"
-                }`}
-              >
-                <ChevronLeft size={13} />
-              </button>
-              <span className={`px-1.5 text-[11px] font-extrabold ${textPrimary}`}>{displayGroup.label}</span>
-              <button
-                onClick={() => setSelectedMonthKey((key) => (key ? shiftMonthKey(key, 1) : key))}
-                aria-label="Next month"
-                className={`flex h-full items-center px-1.5 transition-colors ${
-                  darkMode ? "text-white/70 hover:bg-white/10" : "text-[#374151] hover:bg-black/5"
-                }`}
-              >
-                <ChevronRight size={13} />
-              </button>
-            </div>
+              {availableMonthKeys.map((key) => (
+                <option key={key} value={key}>
+                  {formatMonthLabel(key)}
+                </option>
+              ))}
+            </select>
           )}
           <button
             onClick={() => setIsEditing((v) => !v)}
-            className={`flex h-7 items-center gap-1 rounded-md border px-2.5 text-[11px] font-extrabold transition-colors ${
+            className={`flex h-10 items-center gap-1.5 rounded-xl border px-3 text-xs font-extrabold transition-colors ${
               isEditing
                 ? "border-transparent text-white"
                 : darkMode
@@ -332,20 +416,20 @@ export function HolisticRecordsSection({
             }`}
             style={isEditing ? { background: ACCENT } : undefined}
           >
-            {isEditing ? <Check size={12} /> : <Pencil size={12} style={{ color: ACCENT }} />}
+            {isEditing ? <Check size={13} /> : <Pencil size={13} style={{ color: ACCENT }} />}
             {isEditing ? "Done" : "Edit"}
           </button>
         </div>
       </div>
 
       {loading ? (
-        <p className={`px-4 py-12 text-center text-xs font-medium ${textMuted}`}>Loading records…</p>
+        <p className={`px-5 py-16 text-center text-sm font-semibold ${textMuted}`}>Loading records…</p>
       ) : error ? (
-        <p className="px-4 py-12 text-center text-xs font-bold text-[#DC2626]">{error}</p>
+        <p className="px-5 py-16 text-center text-sm font-bold text-[#DC2626]">{error}</p>
       ) : roster.length === 0 ? (
-        <p className={`px-4 py-12 text-center text-xs font-medium ${textMuted}`}>No students enrolled yet.</p>
+        <p className={`px-5 py-16 text-center text-sm font-semibold ${textMuted}`}>No students enrolled yet.</p>
       ) : !displayGroup ? (
-        <p className={`px-4 py-12 text-center text-xs font-medium ${textMuted}`}>Loading records…</p>
+        <p className={`px-5 py-16 text-center text-sm font-semibold ${textMuted}`}>Loading records…</p>
       ) : (
         (() => {
           const group = displayGroup;

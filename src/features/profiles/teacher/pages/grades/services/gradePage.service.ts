@@ -14,6 +14,18 @@ async function handleJsonResponse(res: Response) {
   return data;
 }
 
+// NEW: lets the UI show a section picker only when a teacher has more than one advisory class.
+export interface AdvisorySectionOption {
+  classId: string;
+  sectionName: string | null;
+  gradeLevel: string;
+}
+
+export async function fetchAdvisorySections(): Promise<AdvisorySectionOption[]> {
+  const res = await authedFetch(`${BASE_URL}/sections`);
+  const json = await handleJsonResponse(res);
+  return json.data;
+}
 
 export interface GradebookSubject {
   subjectSectionId: string;
@@ -57,6 +69,7 @@ export interface GradebookStudent {
   middleName: string | null;
   gender: "M" | "F";
   grades: Record<string, SubjectGradeCell>;
+  overallAverage: number | null;
 }
 
 export interface AdvisoryGradebook {
@@ -66,8 +79,16 @@ export interface AdvisoryGradebook {
   students: GradebookStudent[];
 }
 
-export async function fetchAdvisoryGradebook(gradingPeriodId: string): Promise<AdvisoryGradebook> {
-  const res = await authedFetch(`${BASE_URL}/gradebook?gradingPeriodId=${gradingPeriodId}`);
+// classId is optional everywhere: omit it and the backend defaults to the
+// teacher's first (or only) advisory section, so single-section teachers
+// need no frontend changes at all.
+export async function fetchAdvisoryGradebook(
+  gradingPeriodId: string,
+  classId?: string
+): Promise<AdvisoryGradebook> {
+  const params = new URLSearchParams({ gradingPeriodId });
+  if (classId) params.set("classId", classId);
+  const res = await authedFetch(`${BASE_URL}/gradebook?${params.toString()}`);
   const json = await handleJsonResponse(res);
   return json.data;
 }
@@ -77,16 +98,21 @@ export interface ClassSubmissionStatus {
   submittedAt: string | null;
 }
 
-export async function fetchClassSubmissionStatus(gradingPeriodId: string): Promise<ClassSubmissionStatus> {
-  const res = await authedFetch(`${BASE_URL}/submission?gradingPeriodId=${gradingPeriodId}`);
+export async function fetchClassSubmissionStatus(
+  gradingPeriodId: string,
+  classId?: string
+): Promise<ClassSubmissionStatus> {
+  const params = new URLSearchParams({ gradingPeriodId });
+  if (classId) params.set("classId", classId);
+  const res = await authedFetch(`${BASE_URL}/submission?${params.toString()}`);
   const json = await handleJsonResponse(res);
   return json.data;
 }
 
-export async function submitClassGrades(gradingPeriodId: string): Promise<void> {
+export async function submitClassGrades(gradingPeriodId: string, classId?: string): Promise<void> {
   const res = await authedFetch(`${BASE_URL}/submission`, {
     method: "POST",
-    body: JSON.stringify({ gradingPeriodId }),
+    body: JSON.stringify({ gradingPeriodId, classId }),
   });
   await handleJsonResponse(res);
 }
@@ -103,20 +129,26 @@ export interface VisibilityStudent {
   isVisible: boolean;
   updatedAt: string | null;
 }
- 
-export async function fetchGradeVisibility(gradingPeriodId: string): Promise<VisibilityStudent[]> {
-  const res = await authedFetch(`${BASE_URL}/visibility?gradingPeriodId=${gradingPeriodId}`);
+
+export async function fetchGradeVisibility(
+  gradingPeriodId: string,
+  classId?: string
+): Promise<VisibilityStudent[]> {
+  const params = new URLSearchParams({ gradingPeriodId });
+  if (classId) params.set("classId", classId);
+  const res = await authedFetch(`${BASE_URL}/visibility?${params.toString()}`);
   const json = await handleJsonResponse(res);
   return json.data.students;
 }
- 
+
 export interface SetGradeVisibilityParams {
   gradingPeriodId: string;
   visible: boolean;
   studentIds?: string[];
   applyToAll?: boolean;
+  classId?: string;
 }
- 
+
 export async function setGradeVisibility(params: SetGradeVisibilityParams): Promise<number> {
   const res = await authedFetch(`${BASE_URL}/visibility`, {
     method: "POST",

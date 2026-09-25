@@ -33,6 +33,8 @@ import {
   type DomainTrendsOverview,
   type DomainWeekPoint,
 } from "./services/holisticTrends.service";
+import { useSelectedAdvisorySection } from "../attendance/services/useSelectedAdvisorySection.service";
+import { AdvisorySectionTabs } from "../attendance/components/AdvisorySectionTabs";
 
 // Matches --color-maroon in global.css. Kept as a literal hex (not var())
 // so the `${ACCENT}xx` alpha-suffix trick used throughout this file still
@@ -201,6 +203,11 @@ export function HolisticDomainTrendsPage() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
+  // Advisory sections — same hook and tabs the Attendance and Holistic
+  // Overview pages use. `sections === undefined` means still loading;
+  // `section` is the currently selected one.
+  const { sections, section, selectSection } = useSelectedAdvisorySection();
+
   const [terms, setTerms] = useState<GradingPeriod[]>([]);
   const [selectedTerm, setSelectedTerm] = useState<number | null>(
     searchParams.get("term") ? Number(searchParams.get("term")) : null
@@ -223,13 +230,19 @@ export function HolisticDomainTrendsPage() {
       .catch((err) => console.error("Failed to load terms:", err));
   }, []);
 
+  // Reload whenever the term OR the selected advisory section changes.
   useEffect(() => {
-    if (selectedTerm === null) return;
+    if (selectedTerm === null || !section) return;
+    let cancelled = false;
+
     setSearchParams({ term: String(selectedTerm) }, { replace: true });
     setTrendsLoading(true);
-    fetchDomainTrendsOverview(selectedTerm)
+    fetchDomainTrendsOverview(selectedTerm, section.classId)
       .then((data) => {
+        if (cancelled) return;
         setTrendsData(data);
+        // Keep the current subject tab if this section also has it,
+        // otherwise fall back to "Overall".
         setActiveTab((prev) =>
           prev === "overall" || data.subjects.some((s) => s.subjectSectionId === prev)
             ? prev
@@ -237,8 +250,14 @@ export function HolisticDomainTrendsPage() {
         );
       })
       .catch((err) => console.error("Failed to load domain trends:", err))
-      .finally(() => setTrendsLoading(false));
-  }, [selectedTerm]);
+      .finally(() => {
+        if (!cancelled) setTrendsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedTerm, section?.classId]);
 
   const activeWeeks = useMemo(() => {
     if (!trendsData) return [];
@@ -310,35 +329,48 @@ export function HolisticDomainTrendsPage() {
             <div>
               <h1 className={`text-lg font-black tracking-tight ${textPrimary}`}>Domain Trends</h1>
               <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
-                Weekly ratings averaged across every student — pooled across subjects, or narrowed to one.
+                Weekly ratings averaged across the students in the selected section — pooled across every subject they take, or narrowed to one.
               </p>
             </div>
           </div>
 
-          <div className="relative w-full shrink-0 sm:w-48">
-            <select
-              value={selectedTerm ?? ""}
-              onChange={(e) => setSelectedTerm(Number(e.target.value))}
-              disabled={terms.length === 0}
-              aria-label="Select term"
-              className={`h-8 w-full appearance-none rounded-lg border pl-3 pr-7 text-[11px] font-bold outline-none transition-colors focus:border-maroon disabled:opacity-50 ${panelBg} ${panelBorder} ${textPrimary}`}
-            >
-              {terms.length === 0 && <option value="">No terms set up yet</option>}
-              {terms.map((t) => (
-                <option key={t.id} value={t.termNumber}>
-                  {t.termLabel}
-                  {t.isActive ? " · Current" : ""}
-                </option>
-              ))}
-            </select>
-            <ChevronDown
-              size={13}
-              className={`pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 ${textMuted}`}
-            />
+          <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0">
+            {section && (
+              <AdvisorySectionTabs
+                sections={sections ?? []}
+                activeClassId={section.classId}
+                onSelect={selectSection}
+                darkMode={darkMode}
+                panelBorder={panelBorder}
+                textMuted={textMuted}
+              />
+            )}
+
+            <div className="relative w-full sm:w-48">
+              <select
+                value={selectedTerm ?? ""}
+                onChange={(e) => setSelectedTerm(Number(e.target.value))}
+                disabled={terms.length === 0}
+                aria-label="Select term"
+                className={`h-8 w-full appearance-none rounded-lg border pl-3 pr-7 text-[11px] font-bold outline-none transition-colors focus:border-maroon disabled:opacity-50 ${panelBg} ${panelBorder} ${textPrimary}`}
+              >
+                {terms.length === 0 && <option value="">No terms set up yet</option>}
+                {terms.map((t) => (
+                  <option key={t.id} value={t.termNumber}>
+                    {t.termLabel}
+                    {t.isActive ? " · Current" : ""}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                size={13}
+                className={`pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 ${textMuted}`}
+              />
+            </div>
           </div>
         </div>
 
-        {/* ---------- Subject tabs ---------- */}
+        {/* ---------- Subject tabs (every subject this section takes) ---------- */}
         {trendsData && trendsData.subjects.length > 0 && (
           <div
             className={`flex flex-wrap items-center gap-1.5 rounded-xl border px-3 py-2 ${panelBg} ${panelBorder}`}
@@ -371,7 +403,13 @@ export function HolisticDomainTrendsPage() {
           </div>
         )}
 
-        {trendsLoading ? (
+        {sections !== undefined && !section ? (
+          <div className={cardClasses}>
+            <p className={`px-4 py-16 text-center text-xs font-medium ${textMuted}`}>
+              No advisory class assigned to you.
+            </p>
+          </div>
+        ) : trendsLoading || sections === undefined ? (
           <div className={cardClasses}>
             <p className={`px-4 py-16 text-center text-xs font-medium ${textMuted}`}>Loading...</p>
           </div>

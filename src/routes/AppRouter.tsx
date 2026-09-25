@@ -63,6 +63,10 @@ import { TeacherAttendancePage } from "../features/profiles/teacher/pages/attend
 import { TeacherAttendanceRecordsPage } from "../features/profiles/teacher/pages/attendance/TeacherAttendanceRecordsPage";
 import PetQuizPage from "../features/profiles/parent/pages/Student/Academic/PetQuizPage";
 
+import { QedSplash, QedLoader } from "../shared/components/QedLoader";
+
+
+
 function DebugRoute() {
   const location = useLocation();
   console.log("Current path being matched:", location.pathname);
@@ -73,7 +77,7 @@ type Role = "ADMIN" | "PRINCIPAL" | "TEACHER" | "PARENT";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <QedLoader fill />;
   if (!user) return <Navigate to="/login" replace />;
   return (
     <>
@@ -135,8 +139,12 @@ function AdminSection() {
 }
 
 export function AppRouter() {
+
+  const { isLoading } = useAuth();
+   
   return (
     <SettingsProvider>
+      <QedSplash loading={isLoading} />
       <DebugRoute />
       <Routes>
         <Route path="/" element={<LandingPage />} />

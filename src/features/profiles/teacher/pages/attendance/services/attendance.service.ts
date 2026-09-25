@@ -17,10 +17,11 @@ export interface AdvisorySection {
   terms: GradingPeriod[];
 }
 
-export async function fetchAdvisorySection(): Promise<AdvisorySection | null> {
-  const res = await authedFetch(`${BASE_URL}/advisory-section`);
-  if (res.status === 404) return null;
-  if (!res.ok) throw new Error(`Failed to fetch advisory section (${res.status})`);
+// NEW: returns every advisory class this teacher is assigned to.
+export async function fetchAdvisorySections(): Promise<AdvisorySection[]> {
+  const res = await authedFetch(`${BASE_URL}/advisory-sections`);
+  if (res.status === 404) return [];
+  if (!res.ok) throw new Error(`Failed to fetch advisory sections (${res.status})`);
   return res.json();
 }
 

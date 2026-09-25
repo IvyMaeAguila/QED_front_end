@@ -1,8 +1,6 @@
-import {
-  fetchHolisticOverview,
-  fetchHolisticWeekly,
-  type WeeklyAxisScores,
-} from "./holistic.service";
+import { API_CONFIG } from '../../../../../../config/api.config';
+
+const BASE_URL = `${API_CONFIG.baseURL}/api/teacherHolistic`;
 
 export interface DomainWeekPoint {
   weekStartDate: string;
@@ -25,91 +23,64 @@ export interface DomainTrendsOverview {
   overallWeeks: DomainWeekPoint[];
 }
 
-function averageDefined(values: (number | null)[]): number | null {
-  const defined = values.filter((v): v is number => v !== null);
-  return defined.length
-    ? Math.round((defined.reduce((a, b) => a + b, 0) / defined.length) * 10) / 10
-    : null;
+/** One advisory section's domain trends. */
+export interface DomainTrendsSection {
+  classId: string;
+  sectionId: string | null;
+  sectionName: string;
+  gradeLevel: string;
+  subjects: SubjectDomainTrend[];
+  overallWeeks: DomainWeekPoint[];
 }
 
-function averageWeeksAcrossRecords(recordsWeeks: WeeklyAxisScores[][]): DomainWeekPoint[] {
-  const byDate = new Map<string, WeeklyAxisScores[]>();
-  for (const weeks of recordsWeeks) {
-    for (const week of weeks) {
-      const list = byDate.get(week.weekStartDate) ?? [];
-      list.push(week);
-      byDate.set(week.weekStartDate, list);
-    }
+async function handleJsonResponse(res: Response) {
+  const data = await res.json();
+  if (!res.ok || !data.success) {
+    throw new Error(data.message || "Request failed.");
   }
-  return Array.from(byDate.entries())
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([weekStartDate, weeks]) => ({
-      weekStartDate,
-      cognitive: averageDefined(weeks.map((w) => w.cognitive)),
-      emotional: averageDefined(weeks.map((w) => w.emotional)),
-      behavioral: averageDefined(weeks.map((w) => w.behavioral)),
-      social: averageDefined(weeks.map((w) => w.social)),
-    }));
+  return data;
 }
 
-export async function fetchDomainTrendsOverview(termNumber: number): Promise<DomainTrendsOverview> {
-  const students = await fetchHolisticOverview(termNumber);
-
-  const subjectMap = new Map<string, string>();
-  for (const student of students) {
-    for (const subject of student.subjects) {
-      if (!subjectMap.has(subject.subjectSectionId)) {
-        subjectMap.set(subject.subjectSectionId, subject.subjectName);
-      }
-    }
-  }
-
-  const perSubjectRecords = await Promise.all(
-    Array.from(subjectMap.entries()).map(async ([subjectSectionId, subjectName]) => {
-      const { data } = await fetchHolisticWeekly(subjectSectionId, termNumber);
-      const allRecords = Object.values(data);
-      const recordsWeeks = allRecords.map((record) => record.weeks);
-      const studentCount = allRecords.filter((record) =>
-        record.weeks.some(
-          (week) =>
-            week.cognitive !== null ||
-            week.emotional !== null ||
-            week.behavioral !== null ||
-            week.social !== null
-        )
-      ).length;
-      return { subjectSectionId, subjectName, recordsWeeks, studentCount };
-    })
-  );
-
-  const subjects: SubjectDomainTrend[] = perSubjectRecords.map((s) => ({
-    subjectSectionId: s.subjectSectionId,
-    subjectName: s.subjectName,
-    studentCount: s.studentCount,
-    weeks: averageWeeksAcrossRecords(s.recordsWeeks),
-  }));
-
-  const overallWeeks = averageWeeksAcrossRecords(perSubjectRecords.flatMap((s) => s.recordsWeeks));
-
-  return { termNumber, subjects, overallWeeks };
+/**
+ * Domain trends for EVERY advisory section, from every subject those
+ * students take (including subjects other teachers handle).
+ */
+export async function fetchDomainTrendsSections(termNumber: number): Promise<DomainTrendsSection[]> {
+  const res = await fetch(`${BASE_URL}/domain-trends?termNumber=${termNumber}`, {
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+  });
+  const json = await handleJsonResponse(res);
+  return json.data.sections as DomainTrendsSection[];
 }
 
-//Explanation section hehe
+/**
+ * Domain trends for ONE advisory section — pass the selected tab's
+ * `classId` (from useSelectedAdvisorySection). Falls back to the first
+ * section if no classId is given, so existing callers keep working.
+ * Returns the same shape the Domain Trends page already renders.
+ */
+export async function fetchDomainTrendsOverview(
+  termNumber: number,
+  classId?: string
+): Promise<DomainTrendsOverview> {
+  const sections = await fetchDomainTrendsSections(termNumber);
+  const match = classId ? sections.find((s) => s.classId === classId) : sections[0];
+  return {
+    termNumber,
+    subjects: match?.subjects ?? [],
+    overallWeeks: match?.overallWeeks ?? [],
+  };
+}
 
+// Explanation
+//
 // Class-wide, per-domain weekly trend data — NOT per student. Backs the
 // "Holistic domain trends" page: one line chart per domain (cognitive,
-// emotional, behavioral, social), averaged across every student in a
-// subject, with an "Overall" tab that averages across every subject the
-// teacher teaches.
+// emotional, behavioral, social), averaged across the students of ONE
+// advisory section, with an "Overall" tab pooling every subject that
+// section takes.
 //
-// There is no backend endpoint for a pre-aggregated class-wide weekly
-// average, so this file computes one by:
-//   1. Deriving the distinct subjects taught from fetchHolisticOverview
-//      (every student's subjects[] entry already carries subjectSectionId
-//      + subjectName — there's no separate "my subjects" endpoint).
-//   2. Pulling each subject's per-student weekly records via
-//      fetchHolisticWeekly, then averaging per domain per week across
-//      students.
-//   3. "Overall" pools every subject's raw student-week records together
-//      (not an average-of-averages) so subjects with more students aren't
-//      under- or over-weighted relative to their actual data volume.
+// The numbers are computed by GET /api/teacherHolistic/domain-trends. It
+// covers every active subject in the section, not only the ones you teach,
+// and it's separated per advisory section so each tab shows its own class.

@@ -45,10 +45,15 @@ export function Sidebar({
 
   return (
     <aside
-      className={`absolute lg:relative inset-y-0 left-0 z-30 w-60 max-w-[85vw] h-full flex flex-col text-white rounded-r-[28px] lg:rounded-none shadow-[8px_0_30px_-12px_rgba(0,0,0,0.35)] transition-transform duration-500 ${APPLE_EASE} ${
+      className={`absolute lg:relative inset-y-0 left-0 z-30 w-60 max-w-[85vw] h-full flex flex-col text-white rounded-tr-none rounded-br-[28px] lg:rounded-none shadow-[8px_0_30px_-12px_rgba(0,0,0,0.35)] transition-transform duration-500 ${APPLE_EASE} ${
         darkMode ? "bg-[#0F172A]" : "bg-[#4A0000]"
       } ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
     >
+      {/* Thick Metallic Gold Right Border Accent with rounded-br-[28px] */}
+      <div className="absolute top-0 bottom-0 right-0 w-0.75 pointer-events-none rounded-br-[28px] overflow-hidden z-20">
+        <div className="absolute inset-0 bg-linear-to-b from-[#F6E073] via-[#F9E37A] to-[#B78C1A] shadow-[0_0_10px_rgba(249,227,122,0.4)] opacity-95" />
+      </div>
+
       <div className="p-6 flex items-center gap-3">
         <div
           className={`w-10 h-10 bg-white/10 rounded-2xl flex items-center justify-center shrink-0 transition-transform duration-300 ${APPLE_EASE} hover:scale-105`}
@@ -99,10 +104,10 @@ export function Sidebar({
               key={item.label}
               to={item.to!}
               onClick={onClose}
-              className={`group flex items-center justify-between px-3 py-2.5 rounded-2xl text-[13px] transition-all duration-300 ${APPLE_EASE} active:scale-[0.97] ${
+              className={`group flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-[13px] transition-all duration-300 ${APPLE_EASE} active:scale-[0.97] ${
                 isActive
-                  ? "bg-white/12 text-white shadow-lg shadow-black/15 translate-x-1"
-                  : "text-white/55 hover:bg-white/10 hover:text-white hover:translate-x-1"
+                  ? "bg-white/10 text-white shadow-[0_8px_20px_rgba(0,0,0,0.18),inset_0_1px_1px_rgba(255,255,255,0.35),inset_0_-1px_1px_rgba(0,0,0,0.25)] backdrop-blur-xl translate-x-1 border border-white/15"
+                  : "text-white/55 hover:bg-white/5 hover:text-white hover:translate-x-1 border border-transparent"
               }`}
             >
               <div className="flex items-center gap-3 min-w-0">
@@ -110,12 +115,8 @@ export function Sidebar({
                   size={16}
                   className={`shrink-0 transition-transform duration-300 ${APPLE_EASE} group-hover:scale-110`}
                 />
-                <span className="truncate">{item.label}</span>
+                <span className="truncate font-medium">{item.label}</span>
               </div>
-
-              {isActive && (
-                <div className="w-1.5 h-1.5 rounded-full bg-[#C98A2B] shrink-0 animate-[softPulse_2.2s_ease-in-out_infinite]" />
-              )}
             </Link>
           );
         })}
@@ -137,13 +138,6 @@ export function Sidebar({
           <LogOut size={16} className="shrink-0" /> Log Out
         </div>
       </div>
-
-      <style>{`
-        @keyframes softPulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.55; transform: scale(0.85); }
-        }
-      `}</style>
     </aside>
   );
 }

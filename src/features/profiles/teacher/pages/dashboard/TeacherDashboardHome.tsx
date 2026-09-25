@@ -15,7 +15,6 @@ import { QuickDateCard } from "./components/QuickDateCard";
 import { StatCards } from "./components/Statcards";
 import type { StatItem } from "./components/Statcards";
 import { TodayAttendance } from "./components/TodayAttendance";
-import { MiniCalendar } from "./components/MiniCalendar";
 import { TodayAgenda } from "./components/TodayAgenda";
 import { UpcomingEvents } from "./components/UpcomingEvents";
 import type { EventItem } from "./components/UpcomingEvents";
@@ -77,7 +76,6 @@ export function TeacherDashboardHome() {
     },
   ];
 
-
   const shimmer = `relative overflow-hidden rounded-lg ${darkMode ? "bg-white/[0.06]" : "bg-black/[0.06]"}`;
   const shimmerSweep = (
     <div
@@ -104,12 +102,14 @@ export function TeacherDashboardHome() {
         `}</style>
       )}
 
-      {/* Hero + Quick Date */}
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 items-stretch">
-        <div className="xl:col-span-3">
+      {/* Main two-column layout: left = main content, right = date/schedule sidebar */}
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 items-start">
+        {/* LEFT: Main content column */}
+        <div className="xl:col-span-3 flex flex-col gap-6">
+          {/* Welcome Banner */}
           {loading ? (
             <div
-              className={`rounded-2xl border p-8 sm:p-10 h-full min-h-55 ${panelBg} ${panelBorder}`}
+              className={`rounded-2xl border p-8 sm:p-10 min-h-55 ${panelBg} ${panelBorder}`}
             >
               <Bone className="h-5 w-28 rounded-full" />
               <Bone className="mt-5 h-8 w-64" />
@@ -123,45 +123,35 @@ export function TeacherDashboardHome() {
               pendingGrades={summary?.pendingGrades || 0}
             />
           )}
-        </div>
-        <QuickDateCard
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-        />
-      </div>
 
-      {/* Key Metrics Row */}
-      {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-          {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              className={`rounded-2xl border p-7 ${panelBg} ${panelBorder}`}
-            >
-              <Bone className="w-14 h-14 rounded-2xl mb-6" />
-              <Bone className="h-3 w-24 rounded-full mb-3" />
-              <Bone className="h-9 w-16" />
+          {/* Key Metrics Row */}
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className={`rounded-2xl border p-7 ${panelBg} ${panelBorder}`}
+                >
+                  <Bone className="w-14 h-14 rounded-2xl mb-6" />
+                  <Bone className="h-3 w-24 rounded-full mb-3" />
+                  <Bone className="h-9 w-16" />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      ) : (
-        <StatCards
-          stats={stats}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-        />
-      )}
+          ) : (
+            <StatCards
+              stats={stats}
+              panelBg={panelBg}
+              panelBorder={panelBorder}
+              textPrimary={textPrimary}
+              textMuted={textMuted}
+            />
+          )}
 
-      {/* Content Grid: Attendance + Mini Calendar */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-stretch">
-        <div className="xl:col-span-2">
+          {/* Today Attendance */}
           {loading ? (
             <div
-              className={`h-full rounded-2xl border overflow-hidden ${panelBg} ${panelBorder}`}
+              className={`rounded-2xl border overflow-hidden ${panelBg} ${panelBorder}`}
               style={{
                 boxShadow:
                   "0 4px 20px -2px rgba(0,0,0,0.05), 0 2px 10px -2px rgba(0,0,0,0.03)",
@@ -209,33 +199,33 @@ export function TeacherDashboardHome() {
           )}
         </div>
 
-        <MiniCalendar
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-          darkMode={darkMode}
-        />
-      </div>
+        {/* RIGHT: Date / schedule sidebar */}
+        <div className="xl:col-span-1 flex flex-col gap-6">
+          <QuickDateCard
+            panelBg={panelBg}
+            panelBorder={panelBorder}
+            textPrimary={textPrimary}
+            textMuted={textMuted}
+          />
 
-      {/* Agenda + Events Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-        <TodayAgenda
-          agenda={TEACHER_AGENDA}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-          darkMode={darkMode}
-        />
-        <UpcomingEvents
-          events={events}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-          darkMode={darkMode}
-        />
+          <TodayAgenda
+            agenda={TEACHER_AGENDA}
+            panelBg={panelBg}
+            panelBorder={panelBorder}
+            textPrimary={textPrimary}
+            textMuted={textMuted}
+            darkMode={darkMode}
+          />
+
+          <UpcomingEvents
+            events={events}
+            panelBg={panelBg}
+            panelBorder={panelBorder}
+            textPrimary={textPrimary}
+            textMuted={textMuted}
+            darkMode={darkMode}
+          />
+        </div>
       </div>
     </div>
   );
