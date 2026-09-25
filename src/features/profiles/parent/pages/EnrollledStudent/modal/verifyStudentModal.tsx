@@ -1,6 +1,6 @@
 import { GraduationCap, ShieldCheck, User } from "lucide-react";
 import type { MatchedStudentRecord } from "../../dashboard/types/student";
-import Modal from "../../ui/modal";
+import Modal from "../../../../../../shared/components/modal";
 
 interface VerifyStudentModalProps {
   open: boolean;

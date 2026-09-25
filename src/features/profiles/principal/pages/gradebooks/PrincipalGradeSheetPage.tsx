@@ -14,11 +14,28 @@ import { GradeSheetNotFound } from "./components/GradeSheetNotFound";
 import { GradeSheetHeader } from "./components/GradeSheetHeader";
 import { GradeSheetSummary } from "./components/GradeSheetSummary";
 import { GradeSheetTable } from "./components/GradeSheetTable";
+import { TermUnavailableModal } from "./components/TermUnavailableModal";
 import { sortByLastName } from "./utils/gradeSheetUtils";
 import {
   fetchGradingPeriods,
   type GradingPeriod,
 } from "./services/gradebooks.service";
+import { Skeleton } from "@shared/components/SkeletonLoading";
+
+function ProgressReportSkeleton() {
+  return (
+    <div className="flex flex-col gap-4 mt-1">
+      <Skeleton className="h-3 w-40 ml-8" />
+      <Skeleton className="h-3 w-40 ml-8 mb-6" />
+      <div className="flex flex-col gap-3">
+        <Skeleton className="mb-2 h-15 w-full rounded-lg" />
+        <div className="">
+          <Skeleton className="h-200 flex-1 rounded-lg" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function parseId(value: string | null): number | undefined {
   if (!value) return undefined;
@@ -26,9 +43,8 @@ function parseId(value: string | null): number | undefined {
   return Number.isNaN(n) ? undefined : n;
 }
 
-/* ---------- Outer: nagbabasa ng URL, nagfe-fetch ng terms, at nagva-validate ---------- */
 export function PrincipalGradeSheetPage() {
-  const { panelBg, panelBorder, textMuted } =
+  const { darkMode, panelBg, panelBorder, textMuted } =
     useOutletContext<AdminThemeContext>();
   const { grade } = useParams<{ grade: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,16 +55,24 @@ export function PrincipalGradeSheetPage() {
   const sectionId = parseId(searchParams.get("sectionId"));
 
   const [gradingPeriods, setGradingPeriods] = useState<GradingPeriod[]>([]);
+  // true habang naghihintay pa yung fetch ng grading periods
+  const [periodsLoading, setPeriodsLoading] = useState(
+    gradeLevelId !== undefined,
+  );
+  // Label ng term na hindi pa submitted (null = nakasara ang modal)
+  const [unavailableTerm, setUnavailableTerm] = useState<string | null>(null);
 
-  // Kunin ang listahan ng terms + yung pinaka-huling sinubmit na term
-  // (base sa grade_submissions/subject_grade_submissions), tapos i-default
-  // ang URL papunta doon kung wala pang gradingPeriodId.
   useEffect(() => {
-    if (gradeLevelId === undefined) return;
+    if (gradeLevelId === undefined) {
+      setPeriodsLoading(false);
+      return;
+    }
     const controller = new AbortController();
+    setPeriodsLoading(true);
 
     fetchGradingPeriods({ gradeLevelId, sectionId }, controller.signal)
       .then(({ periods, defaultGradingPeriodId }) => {
+        if (controller.signal.aborted) return;
         setGradingPeriods(periods);
         if (gradingPeriodId === undefined && defaultGradingPeriodId !== null) {
           const next = new URLSearchParams(searchParams);
@@ -56,20 +80,33 @@ export function PrincipalGradeSheetPage() {
           setSearchParams(next, { replace: true });
         }
       })
-      .catch((err) => console.error("Failed to fetch grading periods:", err));
+      .catch((err) => {
+        if (controller.signal.aborted) return;
+        console.error("Failed to fetch grading periods:", err);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setPeriodsLoading(false);
+      });
 
     return () => controller.abort();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gradeLevelId, sectionId]);
 
   const handleTermChange = (value: string) => {
+    const target = gradingPeriods.find((p) => String(p.id) === value);
+
+    // Hindi pa submitted: huwag lumipat, ipakita ang modal
+    if (target && !target.isSubmitted) {
+      setUnavailableTerm(target.termLabel);
+      return;
+    }
+
     const next = new URLSearchParams(searchParams);
     next.set("gradingPeriodId", value);
     setSearchParams(next);
   };
 
-  // Parehong required ng service, kaya i-check ang dalawa
-  if (gradeLevelId === undefined || gradingPeriodId === undefined) {
+  if (gradeLevelId === undefined) {
     return (
       <GradeSheetNotFound
         gradeLabel={gradeLabel}
@@ -80,23 +117,44 @@ export function PrincipalGradeSheetPage() {
     );
   }
 
+  if (gradingPeriodId === undefined) {
+    // Wala pang default period: skeleton habang naglo-load, NotFound lang pag talagang wala
+    return periodsLoading ? (
+      <ProgressReportSkeleton />
+    ) : (
+      <GradeSheetNotFound
+        gradeLabel={gradeLabel}
+        panelBg={panelBg}
+        panelBorder={panelBorder}
+        textMuted={textMuted}
+      />
+    );
+  }
+
   return (
-    <GradeSheetContent
-      gradeLabel={gradeLabel}
-      gradeLevelId={gradeLevelId}
-      gradingPeriodId={gradingPeriodId}
-      sectionId={sectionId}
-      gradingPeriods={gradingPeriods}
-      onTermChange={handleTermChange}
-    />
+    <>
+      <GradeSheetContent
+        gradeLabel={gradeLabel}
+        gradeLevelId={gradeLevelId}
+        gradingPeriodId={gradingPeriodId}
+        sectionId={sectionId}
+        gradingPeriods={gradingPeriods}
+        onTermChange={handleTermChange}
+      />
+      <TermUnavailableModal
+        open={unavailableTerm !== null}
+        termLabel={unavailableTerm ?? ""}
+        onClose={() => setUnavailableTerm(null)}
+        darkMode={darkMode}
+      />
+    </>
   );
 }
 
-/* ---------- Inner: nasa dito ang hook, sigurado nang may required ids ---------- */
 interface GradeSheetContentProps {
   gradeLabel: string;
   gradeLevelId: number;
-  gradingPeriodId: number; // required na
+  gradingPeriodId: number;
   sectionId?: number;
   gradingPeriods: GradingPeriod[];
   onTermChange: (value: string) => void;
@@ -124,6 +182,10 @@ function GradeSheetContent({
     notFound,
   } = usePrincipalGradeSheet({ gradeLevelId, gradingPeriodId, sectionId });
 
+  if (loading) {
+    return <ProgressReportSkeleton />;
+  }
+
   const males = students
     .filter((s) => s.gender === "Male")
     .sort(sortByLastName);
@@ -148,9 +210,9 @@ function GradeSheetContent({
         textMuted={textMuted}
       />
 
-      {loading || error ? (
+      {error ? (
         <DashboardStatus
-          loading={loading}
+          loading={false}
           error={error}
           panelBg={panelBg}
           panelBorder={panelBorder}

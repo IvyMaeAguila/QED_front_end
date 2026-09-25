@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Bell, CheckCircle2, ClipboardX, Info, XCircle } from "lucide-react";
-import { useNavigate } from "react-router-dom"; // "react-router" kung v7 ang gamit mo
+import { useNavigate } from "react-router-dom";
 import { useNotifications } from "./NotificationContext";
 import type { Notification, NotificationType } from "./Notification.service";
-// ayusin ang path depende kung nasaan ang file
 import { useSettings } from "../../features/profiles/admin/pages/settings/context/SettingsContext";
 
 type Tab = "today" | "week" | "earlier";
@@ -41,6 +40,9 @@ function getRoute(n: Notification): { path: string; tab: string } | null {
   if (title.includes("missed activity")) {
     return { path: studentRoute(n.studentId), tab: "academic" };
   }
+  if (title.includes("low score")) { 
+    return { path: studentRoute(n.studentId), tab: "academic" };
+  }
   if (title.includes("weekly evaluation")) {
     return { path: studentRoute(n.studentId), tab: "holistic" };
   }
@@ -63,7 +65,6 @@ function getDisplayMessage(n: Notification, tab: Tab) {
 const startOfDay = (d: Date) =>
   new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
 
-// Today = ngayong araw, This Week = nakaraang 6 na araw, Earlier = mas luma pa
 function getBucket(iso: string, now: Date): Tab {
   const t = new Date(iso).getTime();
   const today = startOfDay(now);
@@ -100,12 +101,11 @@ export function NotificationBell() {
 
     const route = getRoute(n);
     if (route) {
-      setOpen(false); // isara ang dropdown
+      setOpen(false);
       navigate(route.path, { state: { tab: route.tab } });
     }
   };
 
-  // Isara kapag nag-click sa labas o pumindot ng Escape
   useEffect(() => {
     if (!open) return;
     const onClick = (e: MouseEvent) => {
@@ -131,7 +131,6 @@ export function NotificationBell() {
   const visible = grouped[tab];
   const activeTab = TABS.find((t) => t.key === tab)!;
 
-  // --- kulay ---
   const panelBg = darkMode ? "bg-[#111827]" : "bg-white";
   const panelBorder = darkMode ? "border-[#374151]" : "border-[#E5E7EB]";
   const text = darkMode ? "text-white" : "text-[#111827]";

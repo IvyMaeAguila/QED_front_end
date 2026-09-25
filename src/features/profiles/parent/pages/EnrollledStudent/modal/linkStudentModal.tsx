@@ -1,7 +1,7 @@
 import { UserPlus } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import type { LinkStudentInput } from "../../dashboard/types/student";
-import Modal from "../../ui/modal";
+import Modal from "../../../../../../shared/components/modal";
 
 interface LinkStudentModalProps {
   open: boolean;

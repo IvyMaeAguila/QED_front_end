@@ -2,7 +2,7 @@
 // // hooks should never reach in here directly.
 // import type { GradeLevelSummary, Student } from "./types";
 
-export const SCHOOL_YEAR = "2025-2026"; // TODO: pull from active school year context
+// export const SCHOOL_YEAR = "2025-2026"; // TODO: pull from active school year context
 
 
 // export const SUBJECTS: string[] = [

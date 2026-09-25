@@ -1,7 +1,5 @@
-// Mock pa rin ang school year hanggang may endpoint. Palitan ang body ng
-// fetchSchoolYear kapag meron na — hindi na kailangang galawin ang callers.
-import { SCHOOL_YEAR } from "../data/mockData";
 import type { GradeLevelSummary, Student } from "../data/types";
+import { fetchActiveAcademicYear } from "../../../../admin/pages/subjects/services/academicyear.service"
 import { API_CONFIG } from "../../../../../../config/api.config";
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/gradesheets`;
@@ -29,6 +27,20 @@ interface RawGradeLevel {
   gradingPeriodId?: number | null;
   sections?: RawSection[] | null;
 }
+
+export interface GradingPeriod {
+  id: number;
+  termNumber: number;
+  termLabel: string;
+  isActive: boolean;
+  isSubmitted: boolean;
+}
+
+export interface GradingPeriodsResult {
+  periods: GradingPeriod[];
+  defaultGradingPeriodId: number | null;
+}
+
 
 function flattenGradeLevel(raw: RawGradeLevel): GradeLevelSummary[] {
   if (raw.sections && raw.sections.length > 0) {
@@ -149,6 +161,7 @@ interface RawGradingPeriod {
   term_number: number;
   term_label: string;
   is_active: number | boolean;
+  is_submitted: number | boolean;
 }
 
 export async function fetchGradingPeriods(
@@ -187,6 +200,7 @@ export async function fetchGradingPeriods(
       termNumber: p.term_number,
       termLabel: p.term_label,
       isActive: Boolean(p.is_active),
+      isSubmitted: Boolean(p.is_submitted)
     })),
     defaultGradingPeriodId: body.defaultGradingPeriodId ?? null,
   };
@@ -270,34 +284,18 @@ export async function fetchPrincipalGradebook(
   };
 }
 
-export interface GradingPeriod {
-  id: number;
-  termNumber: number;
-  termLabel: string;
-  isActive: boolean;
-}
-
-export interface GradingPeriodsResult {
-  periods: GradingPeriod[];
-  defaultGradingPeriodId: number | null;
-}
-
-
-// ---------------------------------------------------------------------------
-// School year (mock pa)
-// ---------------------------------------------------------------------------
 const MOCK_DELAY_MS = 300;
 
 function delay<T>(value: T): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), MOCK_DELAY_MS));
 }
 
-// TODO: GET /api/school-year/active
-// Tumatanggap ng optional signal para compatible sa hook; hindi pa ginagamit hangga't mock.
-export function fetchSchoolYear(_signal?: AbortSignal): Promise<string> {
-  return delay(SCHOOL_YEAR);
+export async function fetchSchoolYear(signal?: AbortSignal): Promise<string> {
+  void signal;
+  const academicYear = await fetchActiveAcademicYear();
+  return academicYear.label;
 }
 
 export function fetchActiveGradingPeriodId(_signal?: AbortSignal): Promise<number> {
-  return delay(1); // palitan ng tamang ID
+  return delay(1); 
 }

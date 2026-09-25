@@ -1,8 +1,6 @@
 import { io, Socket } from "socket.io-client";
 import { API_CONFIG } from "../../config/api.config";
 
-
-
 export type NotificationType = "info" | "success" | "warning" | "error";
 
 export interface Notification {

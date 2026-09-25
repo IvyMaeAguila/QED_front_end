@@ -45,7 +45,7 @@ export function GradeLevelCards({ gradeLevels, panelBg, onSelectGrade }: GradeLe
             {/* Maroon tint overlay para malinaw na naka-lock */}
             {isLocked && (
               <div
-                className="absolute inset-0 rounded-xl pointer-events-none"
+                className="absolute inset-0 rounded-3xl pointer-events-none"
                 style={{
                   backgroundColor: "rgba(127, 29, 29, 0.12)", // maroon, faded
                   border: "1px solid rgba(127, 29, 29, 0.25)",
