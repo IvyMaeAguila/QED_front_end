@@ -98,7 +98,7 @@ export function TeacherLayout({ onLogout }: TeacherLayoutProps) {
           <div className={`absolute inset-0 ${darkMode ? "bg-linear-to-tr from-[#0B1120]/60 via-transparent to-[#0B1120]/60" : "bg-linear-to-tr from-[#F3F4F6]/50 via-transparent to-[#F3F4F6]/50"}`} />
         </div>
 
-        <Header onMenuClick={() => setSidebarOpen(true)} onLogout={onLogout} />
+        <Header onMenuClick={() => setSidebarOpen(true)} onLogout={onLogout} showNotifications/>
 
         <main className="flex-1 overflow-y-auto p-6 relative z-10">
           <Outlet context={theme} />

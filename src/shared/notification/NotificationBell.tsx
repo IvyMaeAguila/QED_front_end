@@ -32,11 +32,17 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 
 // /parent/students/:studentId  (ang tab ay pinipili sa loob ng page)
 const studentRoute = (studentId: number) => `/parent/students/${studentId}`;
+const teacherRoute = () => `/teacher/grades`;
 
-function getRoute(n: Notification): { path: string; tab: string } | null {
+function getRoute(n: Notification): { path: string; tab?: string } | null {
+  const title = n.title.toLowerCase();
+
+  if (title.includes("grade submission")) {
+  return { path: teacherRoute() };
+}
+
   if (n.studentId == null) return null;
 
-  const title = n.title.toLowerCase();
   if (title.includes("missed activity")) {
     return { path: studentRoute(n.studentId), tab: "academic" };
   }
@@ -48,6 +54,9 @@ function getRoute(n: Notification): { path: string; tab: string } | null {
   }
   if (title.includes("grades released")) {
     return { path: studentRoute(n.studentId), tab: "progressReport" };
+  }
+  if (title.includes("grade submission")) {
+    return { path: studentRoute(n.studentId) };
   }
   return null; // ibang uri ng notification: walang lilipatan
 }

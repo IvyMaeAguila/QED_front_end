@@ -10,6 +10,7 @@ export interface Notification {
   type: NotificationType;
   studentId: number | null;
   studentName: string | null;
+  refKey: string | null;
   isRead: boolean;
   createdAt: string;
 }
@@ -19,6 +20,7 @@ interface RawNotification {
   user_id: number;
   student_id: number | null;
   student_name: string | null;
+  ref_key: string | null;
   title: string;
   message: string;
   type: NotificationType;
@@ -31,6 +33,7 @@ interface SocketNotification {
   userId: number;
   studentId?: number | null;
   studentName: string | null;
+  refKey: string | null;
   title: string;
   message: string;
   type: NotificationType;
@@ -45,6 +48,7 @@ const fromApi = (n: RawNotification): Notification => ({
   type: n.type,
   studentId: n.student_id,
   studentName: n.student_name,
+  refKey: n.ref_key,
   isRead: Boolean(n.is_read),
   createdAt: n.created_at,
 });
@@ -56,6 +60,7 @@ const fromSocket = (n: SocketNotification): Notification => ({
   type: n.type,
   studentId: n.studentId ?? null,
   studentName: n.studentName ?? null,
+  refKey: n.refKey ?? null,
   isRead: n.isRead,
   createdAt: n.createdAt,
 });
@@ -100,15 +105,19 @@ export const notificationService = {
   );
 },
 
-  subscribe(onNew: (n: Notification) => void): () => void {
-    const socket: Socket = io(`${API_CONFIG.baseURL}`, { withCredentials: true });
+  subscribe(userId: number | string, onNew: (n: Notification) => void): () => void {
+  const socket: Socket = io(`${API_CONFIG.baseURL}`, { withCredentials: true });
 
-    socket.on("notification:new", (n: SocketNotification) => {
-      onNew(fromSocket(n));
-    });
+  socket.on("connect", () => {
+    socket.emit("join", `user:${userId}`);
+  });
 
-    return () => {
-      socket.disconnect();
-    };
-  },
+  socket.on("notification:new", (n: SocketNotification) => {
+    onNew(fromSocket(n));
+  });
+
+  return () => {
+    socket.disconnect();
+  };
+},
 };
