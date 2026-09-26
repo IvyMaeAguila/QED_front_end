@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 import { useAuth } from "../../features/auth/context/authContext";
 import { notificationService, type Notification } from "./Notification.service";
 
@@ -9,7 +15,9 @@ interface NotificationContextType {
   markAllAsRead: () => void;
 }
 
-const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
+const NotificationContext = createContext<NotificationContextType | undefined>(
+  undefined,
+);
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
   const { user, isLoading } = useAuth();
@@ -23,7 +31,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
       .then(setNotifications)
       .catch(() => {});
 
-    const unsubscribe = notificationService.subscribe( (notif) => {
+    const unsubscribe = notificationService.subscribe(user.id, (notif) => {
       setNotifications((prev) => [notif, ...prev]);
     });
 
@@ -31,19 +39,23 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   }, [user, isLoading]);
 
   const markAsRead = (id: number) => {
-    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)),
+    );
     notificationService.markAsRead(id).catch(() => {});
   };
 
   const markAllAsRead = () => {
-  setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
-  if (user) notificationService.markAllAsRead(user.id).catch(() => {});
-};
+    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+    if (user) notificationService.markAllAsRead(user.id).catch(() => {});
+  };
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   return (
-    <NotificationContext.Provider value={{ notifications, unreadCount, markAsRead, markAllAsRead }}>
+    <NotificationContext.Provider
+      value={{ notifications, unreadCount, markAsRead, markAllAsRead }}
+    >
       {children}
     </NotificationContext.Provider>
   );
@@ -51,6 +63,9 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 
 export function useNotifications() {
   const ctx = useContext(NotificationContext);
-  if (!ctx) throw new Error("useNotifications must be used within NotificationProvider");
+  if (!ctx)
+    throw new Error(
+      "useNotifications must be used within NotificationProvider",
+    );
   return ctx;
 }
