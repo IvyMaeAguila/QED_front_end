@@ -10,6 +10,7 @@ import {
   User,
 } from "lucide-react";
 import type { RosterStudent } from "../data";
+import type { TemplateDomain } from "../../../../../shared/grading/gradeTemplate.types";
 
 type GenderedStudent = RosterStudent & { gender?: "M" | "F" };
 import {
@@ -56,6 +57,7 @@ interface AssessmentTabProps {
   panelBorder: string;
   textPrimary: string;
   textMuted: string;
+  templateDomains?: TemplateDomain[];
 }
 
 const scoreStyle = (percent: number | null) => {
@@ -84,6 +86,7 @@ export function AssessmentTab({
   panelBorder,
   textPrimary,
   textMuted,
+  templateDomains = [],
 }: AssessmentTabProps) {
   const isWrittenWorks = tab === "writtenWorks";
 
@@ -569,6 +572,7 @@ export function AssessmentTab({
             panelBg={panelBg}
             panelBorder={panelBorder}
             textMuted={textMuted}
+            templateDomains={templateDomains}
           />
         )}
 

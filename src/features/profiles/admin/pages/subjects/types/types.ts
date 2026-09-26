@@ -35,6 +35,9 @@ export interface WeightDistributionItem {
 
 export interface Subject {
   id: string;
+  // `id` is the subject-section assignment used by Manage Subjects;
+  // template APIs are keyed by elem_subjects.id instead.
+  subjectId?: string;
   name: string;
   gradeLevel: GradeLevel;
   isGraded : boolean;

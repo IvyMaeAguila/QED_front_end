@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 import { GRADE_LEVEL_IDS, GRADE_LEVEL_BY_ID, type Subject, type GradeLevel } from "../types/types";
 import { fetchSubjectSectionsByGrade, type SubjectSectionByGradeRow } from "../services/subject.service";
+import { canonicalAssessmentTypeName } from "../types/assessmentTypes";
 
 interface SubjectSectionsContextValue {
   subjects: Subject[];
@@ -16,6 +17,7 @@ const SubjectSectionsContext = createContext<SubjectSectionsContextValue | undef
 function mapRow(row: SubjectSectionByGradeRow): Subject {
   return {
     id: String(row.id),
+    subjectId: String(row.subject_id),
     name: row.subject_name,
     gradeLevel: GRADE_LEVEL_BY_ID[Number(row.grade_level_id)],
     section: row.section_name,
@@ -28,7 +30,10 @@ function mapRow(row: SubjectSectionByGradeRow): Subject {
       .sort((a, b) => a.order_index - b.order_index)
       .map((w) => ({
         id: String(w.id),
-        assessmentType: w.assessment_name,
+        // Keep the API alias in sync with the backend (`assessmentName`).
+        // Empty fallback also protects the edit form if an assessment type
+        // was removed and the LEFT JOIN therefore returned null.
+        assessmentType: canonicalAssessmentTypeName(w.assessmentName),
         weight: Number(w.weight_percent),
       })),
   };

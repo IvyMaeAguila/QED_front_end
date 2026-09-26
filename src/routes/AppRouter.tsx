@@ -64,8 +64,9 @@ import { TeacherAttendanceRecordsPage } from "../features/profiles/teacher/pages
 import PetQuizPage from "../features/profiles/parent/pages/Student/Academic/PetQuizPage";
 
 import { QedSplash, QedLoader } from "../shared/components/QedLoader";
-
-
+import { AddSubjectPage } from "../features/profiles/admin/pages/subjects/AddSubjectPage";
+import { SubjectsSection } from "../features/profiles/admin/pages/subjects/SubjectSection";
+import { AdminSubjectDetailPage } from "../features/profiles/admin/pages/subjects/AdminSubjectDetailPage";
 
 function DebugRoute() {
   const location = useLocation();
@@ -139,9 +140,8 @@ function AdminSection() {
 }
 
 export function AppRouter() {
-
   const { isLoading } = useAuth();
-   
+
   return (
     <SettingsProvider>
       <QedSplash loading={isLoading} />
@@ -177,7 +177,11 @@ export function AppRouter() {
           <Route path="classes/new" element={<ClassFormPage />} />
           <Route path="classes/:classId" element={<ClassViewPage />} />
           <Route path="classes/:classId/edit" element={<ClassFormPage />} />
-          <Route path="subjects" element={<ManageSubjectsPage />} />
+          <Route path="subjects" element={<SubjectsSection />}>
+            <Route index element={<ManageSubjectsPage />} />
+            <Route path="new" element={<AddSubjectPage />} />
+            <Route path=":subjectId" element={<AdminSubjectDetailPage />} />
+          </Route>
           <Route path="academic-year" element={<AcademicYearPage />} />
           <Route path="calendar" element={<CalendarPage />} />
           <Route path="help" element={<HelpSupportPage />} />

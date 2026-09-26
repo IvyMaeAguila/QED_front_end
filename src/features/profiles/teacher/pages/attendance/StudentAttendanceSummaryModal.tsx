@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import { User, X } from "lucide-react";
 import type { RosterStudent } from "../subjects/detail/data";
 import {
@@ -44,7 +45,6 @@ function datesInMonthWithinTerm(ym: string, term: GradingPeriod): string[] {
   }
   return out;
 }
-
 
 function monthsInTerm(term: GradingPeriod): string[] {
   const months: string[] = [];
@@ -121,9 +121,9 @@ export function StudentAttendanceSummaryModal({
       ? Math.round((overall.present / overall.classDays) * 1000) / 10
       : null;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
       onClick={onClose}
     >
       <div
@@ -342,6 +342,7 @@ export function StudentAttendanceSummaryModal({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

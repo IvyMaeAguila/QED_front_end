@@ -28,13 +28,15 @@ export interface SubjectSectionRow {
 export interface SubjectWeightDistributionItem {
   id: number;
   assessment_type_id: number;
-  assessment_name: string;
+  // subject-management returns this alias as `assessmentName`.
+  assessmentName: string | null;
   weight_percent: number;
   order_index: number;
 }
 
 export interface SubjectSectionByGradeRow {
   id: number;
+  subject_id: number;
   subject_name: string;
   grade_level_id: number;
   is_graded: boolean;
@@ -106,6 +108,11 @@ export async function updateSubjectAssignment(
   payload: {
     isGraded: boolean;
     weightDistribution?: WeightDistributionPayloadItem[];
+    subjectName?: string;
+    gradeLevelId?: number;
+    sectionName?: string | null;
+    teacherId?: string | null;
+    schoolYear?: string;
   }
 ): Promise<UpdateSubjectAssignmentResult> {
   const res = await fetch(`${BASE_URL}/updateSubjectSection/${id}`, {
@@ -165,13 +172,22 @@ export async function getAssessmentTypes(): Promise<ApiResponse<NewAssessmentTyp
   if (!response.ok) {
     throw new Error(`Failed to fetch assessment types: ${response.status}`);
   }
-  const json = await response.json();
+  const json: ApiResponse<Array<{
+    id: number;
+    assessmentName?: string | null;
+    assessment_name?: string | null;
+  }>> = await response.json();
+  const data = Array.isArray(json.data) ? json.data : [];
   return {
     ...json,
-    data: (json.data ?? []).map((row: { id: number; assessment_name: string }) => ({
-      id: row.id,
-      assessmentName: row.assessment_name,
-    })),
+    data: data
+      .map((row) => ({
+        id: row.id,
+        // The API's SELECT alias is camelCase, while older responses may
+        // still expose the database column name.
+        assessmentName: row.assessmentName ?? row.assessment_name ?? "",
+      }))
+      .filter((row) => row.assessmentName.trim() !== ""),
   };
 }
 
@@ -184,8 +200,16 @@ export async function updateAssessmentType(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
-  const json: ApiResponse<NewAssessmentType> = await res.json();
-  if (!res.ok) throw new Error(json.message || "Failed to update assessment type.");
+  const body = await res.text();
+  let json: ApiResponse<NewAssessmentType> | undefined;
+  try {
+    json = JSON.parse(body) as ApiResponse<NewAssessmentType>;
+  } catch {
+    // Keep a useful API error visible if an intermediary returns plain text.
+  }
+  if (!res.ok || !json?.success) {
+    throw new Error(json?.message || body || "Failed to update assessment type.");
+  }
   return json.data as NewAssessmentType;
 }
 

@@ -21,6 +21,7 @@ export interface GradeItem {
   activityName: string;
   topic: string;
   topicId?: string;
+  templateDomainId?: string;
   format: string;
   examType?: ExamType; 
   maxItems: number;

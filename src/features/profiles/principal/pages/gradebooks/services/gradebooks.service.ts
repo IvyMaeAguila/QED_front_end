@@ -101,6 +101,8 @@ type GradeCellStatus = "submitted" | "pending" | "not_submitted";
 
 interface ApiGradeCell {
   status: GradeCellStatus;
+  termGrade?: number | null;
+  /** Legacy API alias retained for compatibility. */
   average: number | null;
   submittedByName: string | null;
   submittedAt: string | null;
@@ -221,8 +223,9 @@ function toStudent(
   for (const [subjectSectionId, cell] of Object.entries(apiStudent.grades)) {
     const subjectName = subjectNameBySectionId.get(subjectSectionId);
     if (!subjectName) continue;
-    if (cell.status === "submitted" && cell.average !== null) {
-      grades[subjectName] = cell.average;
+    const termGrade = cell.termGrade ?? cell.average;
+    if (cell.status === "submitted" && termGrade !== null) {
+      grades[subjectName] = termGrade;
     }
   }
 

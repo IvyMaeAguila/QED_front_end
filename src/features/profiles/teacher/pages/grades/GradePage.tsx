@@ -33,15 +33,15 @@ function studentDisplayName(s: { firstName: string; lastName: string; middleName
   return `${s.lastName}, ${s.firstName}${mi}`;
 }
 
-function cellDisplayValue(cell: { status: string; average: number | null; isOwnAdvisory?: boolean } | undefined): string | number {
+function cellDisplayValue(cell: { status: string; termGrade?: number | null; average: number | null; isOwnAdvisory?: boolean } | undefined): string | number {
   if (!cell) return "Not Submitted";
-  if (cell.status === "submitted") return cell.average ?? "—";
+  if (cell.status === "submitted") return cell.termGrade ?? cell.average ?? "—";
   if (cell.status === "pending") return "Pending";
   return cell.isOwnAdvisory ? "No Grades Yet" : "Not Submitted";
 }
 
 function toCSV(gradebook: AdvisoryGradebook) {
-  const header = ["Student", "Student ID", ...gradebook.subjects.map((s) => s.subjectName), "Overall Average"];
+  const header = ["Student", "Student ID", ...gradebook.subjects.map((s) => `${s.subjectName} Term Grade`), "Overall Average"];
   const rows: (string | number)[][] = [header];
 
   const male = gradebook.students
@@ -482,7 +482,7 @@ export function GradesPage() {
                             key={subject.subjectSectionId}
                             className={`min-w-28 px-3 py-2 text-center text-[11px] font-black uppercase tracking-wider ${textMuted}`}
                           >
-                            {subject.subjectName}
+                            <span>{subject.subjectName}</span><span className="block text-[9px] font-medium">Term Grade</span>
                           </th>
                         ))}
                         <th className={`min-w-28 px-3 py-2 text-center text-[11px] font-black uppercase tracking-wider ${textMuted}`}>
@@ -525,10 +525,10 @@ export function GradesPage() {
                                   <td key={subject.subjectSectionId} className="px-3 py-2 text-center">
                                     {status === "submitted" ? (
                                       <span
-                                        className={`text-[13px] font-black tabular-nums ${gradeTextColor(cell?.average ?? null)}`}
+                                        className={`text-[13px] font-black tabular-nums ${gradeTextColor(cell?.termGrade ?? cell?.average ?? null)}`}
                                         title={cell?.submittedByName ? `Submitted by ${cell.submittedByName}` : undefined}
                                       >
-                                        {cell?.average ?? "—"}
+                                        {cell?.termGrade ?? cell?.average ?? "—"}
                                       </span>
                                     ) : status === "pending" ? (
                                       <span

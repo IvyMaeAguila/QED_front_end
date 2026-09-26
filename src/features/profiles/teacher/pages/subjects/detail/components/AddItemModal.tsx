@@ -10,6 +10,7 @@ import {
   type GradeItem,
 } from "../types/Grading";
 import { createTopic, fetchTopics, type Topic } from "../../services/subjectGrading.service";
+import type { TemplateDomain } from "../../../../../shared/grading/gradeTemplate.types";
 
 
 interface AddItemModalProps {
@@ -19,11 +20,12 @@ interface AddItemModalProps {
   term: string;
   initialItem?: GradeItem;
   onClose: () => void;
-  onConfirm: (item: Omit<GradeItem, "id" | "gradingPeriodId"> & { id?: string }) => void;
+  onConfirm: (item: Omit<GradeItem, "id" | "gradingPeriodId"> & { id?: string }) => void | Promise<void>;
   darkMode: boolean;
   panelBg: string;
   panelBorder: string;
   textMuted: string;
+  templateDomains?: TemplateDomain[];
 }
 
 export function AddItemModal({
@@ -37,6 +39,7 @@ export function AddItemModal({
   panelBg,
   panelBorder,
   textMuted,
+  templateDomains = [],
 }: AddItemModalProps) {
   const isExam = tab === "exams";
   const isWrittenWorks = tab === "writtenWorks";
@@ -44,6 +47,7 @@ export function AddItemModal({
   const textPrimary = darkMode ? "text-white" : "text-[#111827]";
 
   const [date, setDate] = useState(initialItem?.date ?? todayISO());
+  const [templateDomainId, setTemplateDomainId] = useState(initialItem?.templateDomainId ?? templateDomains[0]?.id ?? "");
 
   const [topics, setTopics] = useState<Topic[]>([]);
   const [topicsLoading, setTopicsLoading] = useState(true);
@@ -92,7 +96,7 @@ export function AddItemModal({
     }
   }
 
-  function handleConfirm() {
+  async function handleConfirm() {
     if (submitting) return;
 
     const selectedTopic = isExam
@@ -111,17 +115,25 @@ export function AddItemModal({
     if (!date) return setError("Date is required.");
 
     setSubmitting(true);
-    onConfirm({
-      id: initialItem?.id,
-      tab,
-      date,
-      activityName: finalActivityName,
-      format: isExam ? "Quiz" : isWrittenWorks ? "Written Work" : "Activity",
-      topic: isExam ? "Exam" : selectedTopic!.topicName,
-      topicId: isExam ? undefined : selectedTopic!.id,
-      examType: isExam ? examType : undefined,
-      maxItems: totalItems,
-    });
+    setError(null);
+    try {
+      await onConfirm({
+        id: initialItem?.id,
+        tab,
+        date,
+        activityName: finalActivityName,
+        format: isExam ? "Quiz" : isWrittenWorks ? "Written Work" : "Activity",
+        topic: isExam ? "Exam" : selectedTopic!.topicName,
+        topicId: isExam ? undefined : selectedTopic!.id,
+        templateDomainId: !isExam ? (templateDomainId || undefined) : undefined,
+        examType: isExam ? examType : undefined,
+        maxItems: totalItems,
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not save this assessment item. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const fieldRow = `flex h-8 w-full items-center gap-2 rounded-lg border px-2.5 text-[11px] font-bold outline-none transition-colors ${
@@ -185,6 +197,15 @@ export function AddItemModal({
                     {t} — {EXAM_TYPE_LABELS[t]}
                   </option>
                 ))}
+              </select>
+            </label>
+          )}
+
+          {!isExam && templateDomains.length > 1 && (
+            <label className={`${fieldRow} justify-between`}>
+              <span className={`text-[10px] uppercase tracking-wide ${textMuted}`}>Template domain</span>
+              <select value={templateDomainId} onChange={(e) => setTemplateDomainId(e.target.value)} className={`${inputBare} text-right`}>
+                {templateDomains.map((domain) => <option key={domain.id} value={domain.id}>{domain.label} ({domain.weightPercent}%)</option>)}
               </select>
             </label>
           )}

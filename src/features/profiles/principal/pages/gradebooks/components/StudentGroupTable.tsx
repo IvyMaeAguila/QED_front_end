@@ -33,10 +33,10 @@ export function StudentGroupTable({
               <th className={`py-2 pr-4 font-bold sticky left-0 ${panelBg} ${textMuted}`}>Student Name</th>
               {subjects.map((subj) => (
                 <th key={subj} className={`py-2 px-3 font-bold text-center whitespace-nowrap ${textMuted}`}>
-                  {subj}
+                  <span>{subj}</span><span className="block text-[10px] font-medium">Term Grade</span>
                 </th>
               ))}
-              <th className={`py-2 pl-3 font-bold text-center ${textMuted}`}>Average</th>
+              <th className={`py-2 pl-3 font-bold text-center ${textMuted}`}>Overall Average</th>
             </tr>
           </thead>
           <tbody>

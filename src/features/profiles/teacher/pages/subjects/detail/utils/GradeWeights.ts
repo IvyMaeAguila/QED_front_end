@@ -1,106 +1,77 @@
-export type SubjectCategory =
-  | "Language"
-  | "ReadingLiteracy"
-  | "Makabansa"
-  | "GMRC"
-  | "Mathematics"
-  | "English"
-  | "AralingPanlipunan"
-  | "Science"
-  | "MAPEH"
-  | "EPP"
-  | "Other";
+// Pure grade-computation math per DepEd Order No. 015, s. 2026. These
+// functions don't know or care where weights come from (uploaded
+// template, admin-entered subject_weight_distribution, or a last-resort
+// default) — that resolution now happens server-side via
+// getEffectiveWeightsSafe. This file only turns raw scores + weights into
+// PS / WS / Initial Grade numbers.
 
-export interface ComponentWeights {
-  ww: number;
-  pt: number;
-  exam: number;
+export interface ExamSubWeights {
+  st1: number;
+  st2: number;
+  te: number;
 }
 
-const GRADES_1_3: Partial<Record<SubjectCategory, ComponentWeights>> = {
-  Language: { ww: 30, pt: 50, exam: 20 },
-  ReadingLiteracy: { ww: 30, pt: 50, exam: 20 },
-  Makabansa: { ww: 30, pt: 50, exam: 20 },
-  GMRC: { ww: 30, pt: 50, exam: 20 },
-  Mathematics: { ww: 40, pt: 40, exam: 20 },
-};
-
-const GRADES_4_6: Partial<Record<SubjectCategory, ComponentWeights>> = {
-  English: { ww: 30, pt: 50, exam: 20 },
-  AralingPanlipunan: { ww: 30, pt: 50, exam: 20 },
-  GMRC: { ww: 30, pt: 50, exam: 20 },
-  Mathematics: { ww: 40, pt: 40, exam: 20 },
-  Science: { ww: 40, pt: 40, exam: 20 },
-  MAPEH: { ww: 20, pt: 60, exam: 20 },
-  EPP: { ww: 20, pt: 60, exam: 20 },
-};
-
-const DEFAULT_WEIGHTS: ComponentWeights = { ww: 30, pt: 50, exam: 20 };
-
-export function gradeBandOf(gradeLevel: string | number): "1-3" | "4-6" {
-  const n =
-    typeof gradeLevel === "number"
-      ? gradeLevel
-      : parseInt(String(gradeLevel).replace(/\D/g, ""), 10);
-  return Number.isFinite(n) && n <= 3 ? "1-3" : "4-6";
+// PS = (raw score / highest possible score) * 100
+export function computePS(total: number, highestPossible: number): number | null {
+  if (!highestPossible) return null;
+  return (total / highestPossible) * 100;
 }
 
-export function inferSubjectCategory(subjectName: string): SubjectCategory {
-  const s = subjectName.toLowerCase();
-  if (s.includes("math")) return "Mathematics";
-  if (s.includes("science")) return "Science";
-  if (s.includes("english")) return "English";
-  if (s.includes("filipino") || s.includes("wika")) return "Language";
-  if (s.includes("reading")) return "ReadingLiteracy";
-  if (s.includes("makabansa")) return "Makabansa";
-  if (s.includes("gmrc") || s.includes("good manners")) return "GMRC";
-  if (s.includes("araling panlipunan") || s === "ap" || s.includes(" ap ")) return "AralingPanlipunan";
-  if (s.includes("mapeh") || s.includes("music") || s.includes("arts") || s.includes("pe") || s.includes("health"))
-    return "MAPEH";
-  if (s.includes("epp") || s.includes("tle")) return "EPP";
-  return "Other";
-}
-
-export function getComponentWeights(
-  gradeLevel: string | number,
-  subjectCategory: SubjectCategory,
-): ComponentWeights {
-  const band = gradeBandOf(gradeLevel);
-  const table = band === "1-3" ? GRADES_1_3 : GRADES_4_6;
-  return table[subjectCategory] ?? DEFAULT_WEIGHTS;
-}
-
-export function computePS(totalScore: number, highestPossibleScore: number): number | null {
-  if (!highestPossibleScore) return null;
-  return (totalScore / highestPossibleScore) * 100;
-}
-
-export function computeWS(ps: number | null, weightPercent: number): number | null {
+// WS = PS * component weight%
+export function computeWS(ps: number | null, weight: number): number | null {
   if (ps === null) return null;
-  return (ps / 100) * weightPercent;
+  return (ps * weight) / 100;
 }
 
+// Initial Grade is the weighted score sum before applying the uploaded
+// template's transmutation table. The transmuted Term Grade is the official
+// reported grade wherever the approved template provides that table.
 export function computeInitialGrade(
-  wsWW: number | null,
-  wsPT: number | null,
-  wsExam: number | null,
+  ws1: number | null,
+  ws2: number | null,
+  ws3: number | null,
 ): number | null {
-  const parts = [wsWW, wsPT, wsExam].filter((v): v is number => v !== null);
-  if (parts.length === 0) return null;
-  return Math.round(parts.reduce((a, b) => a + b, 0));
+  const scores = [ws1, ws2, ws3].filter((s): s is number => s !== null);
+  if (scores.length === 0) return null;
+  return scores.reduce((sum, s) => sum + s, 0);
 }
 
-export function computeTermAverageBySubject(termGrades: number[]): number | null {
-  if (termGrades.length === 0) return null;
-  return termGrades.reduce((a, b) => a + b, 0) / termGrades.length;
+/**
+ * Combines ST1/ST2/TE percentage scores into one overall Exam PS, using
+ * each sub-type's own weight (e.g. 30/30/40) rather than pooling all exam
+ * items into one Total/highestPossible. Requires a PS for every sub-type —
+ * returns null if any sub-type has no items or isn't fully scorable yet,
+ * matching how computePS already returns null on a missing denominator.
+ */
+export function computeExamPS(
+  totalsByType: Partial<Record<"ST1" | "ST2" | "TE", { total: number; highestPossible: number }>>,
+  subWeights: ExamSubWeights,
+): number | null {
+  const types: ("ST1" | "ST2" | "TE")[] = ["ST1", "ST2", "TE"];
+  const subWeightMap = { ST1: subWeights.st1, ST2: subWeights.st2, TE: subWeights.te };
+
+  let combined = 0;
+  for (const t of types) {
+    const data = totalsByType[t];
+    if (!data || !data.highestPossible) return null;
+    const ps = computePS(data.total, data.highestPossible);
+    if (ps === null) return null;
+    combined += (ps * subWeightMap[t]) / 100;
+  }
+  return combined;
 }
 
-export function computeGeneralAverage(subjectFinalGrades: number[]): number | null {
-  if (subjectFinalGrades.length === 0) return null;
-  return subjectFinalGrades.reduce((a, b) => a + b, 0) / subjectFinalGrades.length;
+export interface TemplateTransmutationRow {
+  igMin: number;
+  igMax: number;
+  transmuted: number;
 }
 
-export function computeFinalAverage(termAverages: number[]): number | null {
-  if (termAverages.length === 0) return null;
-  return termAverages.reduce((a, b) => a + b, 0) / termAverages.length;
+export function computeTransmutedGrade(
+  initialGrade: number | null,
+  table: TemplateTransmutationRow[] | undefined,
+): number | null {
+  if (initialGrade === null || !table?.length) return null;
+  const row = table.find((entry) => initialGrade >= entry.igMin && initialGrade <= entry.igMax);
+  return row?.transmuted ?? null;
 }
