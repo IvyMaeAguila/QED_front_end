@@ -18,6 +18,7 @@ export const DashboardService = {
   async getUserCounts(): Promise<UserCountsResponse> {
     const response = await fetch(`${USER_BASE_URL}/totalUser`, {
       method: "GET",
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -31,6 +32,7 @@ export const DashboardService = {
   async getTotalStudents(): Promise<number> {
     const response = await fetch(`${STUDENT_BASE_URL}/totalStudents`, {
       method: "GET",
+      credentials: "include",
     });
 
     if (!response.ok) {

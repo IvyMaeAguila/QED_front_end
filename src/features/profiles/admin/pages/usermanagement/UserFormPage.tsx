@@ -231,6 +231,7 @@ export function UserFormPage() {
 
       const response = await fetch(endpoint, {
         method: isEditing && existing ? "PUT" : "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });

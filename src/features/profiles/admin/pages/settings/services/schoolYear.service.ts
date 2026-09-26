@@ -16,14 +16,14 @@ export interface SchoolYearRow {
 }
  
 export async function fetchAllSchoolYears(): Promise<SchoolYearRow[]> {
-  const res = await fetch(`${BASE_URL}/getAllSy`);
+  const res = await fetch(`${BASE_URL}/getAllSy`, {credentials: "include"});
   const json: ApiResponse<SchoolYearRow[]> = await res.json();
   if (!res.ok) throw new Error(json.message || "Failed to fetch school years.");
   return json.data ?? [];
 }
  
 export async function fetchActiveSchoolYear(): Promise<SchoolYearRow | null> {
-  const res = await fetch(`${BASE_URL}/getActiveSy`);
+  const res = await fetch(`${BASE_URL}/getActiveSy`, {credentials: "include"} );
   if (res.status === 404) return null;
   const json: ApiResponse<SchoolYearRow> = await res.json();
   if (!res.ok) throw new Error(json.message || "Failed to fetch active school year.");
@@ -31,7 +31,7 @@ export async function fetchActiveSchoolYear(): Promise<SchoolYearRow | null> {
 }
  
 export async function fetchSchoolYearById(id: string): Promise<SchoolYearRow> {
-  const res = await fetch(`${BASE_URL}/getSyById/${id}`);
+  const res = await fetch(`${BASE_URL}/getSyById/${id}` , {credentials: "include"});
   const json: ApiResponse<SchoolYearRow> = await res.json();
   if (!res.ok) throw new Error(json.message || "Failed to fetch school year.");
   return json.data as SchoolYearRow;
@@ -43,6 +43,7 @@ export async function createSchoolYear(payload: {
 }): Promise<SchoolYearRow> {
   const res = await fetch(`${BASE_URL}/createSy`, {
     method: "POST",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
@@ -57,6 +58,7 @@ export async function updateSchoolYear(
 ): Promise<SchoolYearRow> {
   const res = await fetch(`${BASE_URL}/updateSy/${id}`, {
     method: "PUT",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
@@ -69,6 +71,7 @@ export async function updateSchoolYear(
 export async function activateSchoolYear(id: string): Promise<void> {
   const res = await fetch(`${BASE_URL}/activateSy/${id}`, {
     method: "PATCH",
+    credentials: "include",
   });
   const json: ApiResponse<void> = await res.json();
   if (!res.ok) throw new Error(json.message || "Failed to activate school year.");
@@ -77,6 +80,7 @@ export async function activateSchoolYear(id: string): Promise<void> {
 export async function deleteSchoolYear(id: string): Promise<void> {
   const res = await fetch(`${BASE_URL}/deleteSy/${id}`, {
     method: "DELETE",
+    credentials: "include",
   });
   const json: ApiResponse<void> = await res.json();
   if (!res.ok) throw new Error(json.message || "Failed to deactivate school year.");

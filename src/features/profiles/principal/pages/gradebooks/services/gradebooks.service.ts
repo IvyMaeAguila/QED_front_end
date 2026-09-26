@@ -215,8 +215,6 @@ function toStudent(
   apiStudent: ApiStudent,
   subjectNameBySectionId: Map<string, string>,
 ): Student {
-  // subjectSectionId -> cell  ==>  subjectName -> number
-  // Submitted lang na may average ang isinasama; ang iba ay "—" sa table.
   const grades: Record<string, number> = {};
   for (const [subjectSectionId, cell] of Object.entries(apiStudent.grades)) {
     const subjectName = subjectNameBySectionId.get(subjectSectionId);

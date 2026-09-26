@@ -19,7 +19,7 @@ export interface ApiResponse<T> {
 }
 
 export async function fetchTeachers(): Promise<TeacherRow[]> {
-  const res = await fetch(`${BASE_URL}/getTeachers`);
+  const res = await fetch(`${BASE_URL}/getTeachers`, { credentials: "include" });
 
   const json: ApiResponse<TeacherRow[]> = await res.json();
 

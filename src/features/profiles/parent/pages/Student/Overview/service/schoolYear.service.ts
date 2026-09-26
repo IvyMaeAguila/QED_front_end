@@ -45,6 +45,7 @@ const SchoolYearService = {
     inFlightRequest = (async () => {
       const response = await fetch(`${API_BASE_URL}/api/sy_term`, {
         method: "GET",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
       });
 

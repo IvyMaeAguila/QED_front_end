@@ -85,7 +85,7 @@ async function handleJsonResponse(res: Response) {
 }
 
 export async function fetchGradeLevels(): Promise<GradeLevelOption[]> {
-  const res = await fetch(`${BASE_URL}/gradeLevels`);
+  const res = await fetch(`${BASE_URL}/gradeLevels`, {credentials: "include"});
   const data = await handleJsonResponse(res);
   return data.data;
 }
@@ -99,7 +99,7 @@ export async function fetchSectionsByGrade(
 ): Promise<SectionOption[]> {
   const params = new URLSearchParams({ gradeLevelId: String(gradeLevelId) });
   if (excludeClassId) params.set("excludeClassId", String(excludeClassId));
-  const res = await fetch(`${BASE_URL}/sections?${params.toString()}`);
+  const res = await fetch(`${BASE_URL}/sections?${params.toString()}`, {credentials: "include"});
   const data = await handleJsonResponse(res);
   return data.data;
 }
@@ -108,19 +108,19 @@ export async function fetchTeachers(excludeClassId?: string | number): Promise<T
   const params = new URLSearchParams();
   if (excludeClassId) params.set("excludeClassId", String(excludeClassId));
   const qs = params.toString();
-  const res = await fetch(`${BASE_URL}/teacher${qs ? `?${qs}` : ""}`);
+  const res = await fetch(`${BASE_URL}/teacher${qs ? `?${qs}` : ""}`, {credentials: "include"});
   const data = await handleJsonResponse(res);
   return data.data;
 }
 
 export async function fetchAllTeachers(): Promise<TeacherOption[]> {
-  const res = await fetch(`${BASE_URL}/teacher/all`);
+  const res = await fetch(`${BASE_URL}/teacher/all`, {credentials: "include"});
   const data = await handleJsonResponse(res);
   return data.data;
 }
 
 export async function fetchSubjectsByGrade(gradeLevelId: number): Promise<SubjectOption[]> {
-  const res = await fetch(`${BASE_URL}/getSubByGrade/${gradeLevelId}`);
+  const res = await fetch(`${BASE_URL}/getSubByGrade/${gradeLevelId}`, {credentials: "include"});
   const data = await handleJsonResponse(res);
   return data.data;
 }
@@ -147,6 +147,7 @@ export async function createClass(payload: CreateClassPayload) {
 
   const res = await fetch(`${BASE_URL}/addClass`, {
     method: "POST",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
@@ -167,6 +168,7 @@ export async function updateClassApi(id: string | number, payload: UpdateClassPa
 
   const res = await fetch(`${BASE_URL}/updateClass/${id}`, {
     method: "PUT",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
@@ -175,12 +177,12 @@ export async function updateClassApi(id: string | number, payload: UpdateClassPa
 }
 
 export async function fetchClasses(): Promise<ClassRecord[]> {
-  const res = await fetch(`${BASE_URL}/`);
+  const res = await fetch(`${BASE_URL}/`, { credentials: "include" });
   const data = await handleJsonResponse(res);
   return data.data;
 }
 
 export async function deleteClassApi(id: string | number) {
-  const res = await fetch(`${BASE_URL}/${id}`, { method: "DELETE" });
+  const res = await fetch(`${BASE_URL}/${id}`, { method: "DELETE", credentials: "include", });
   return handleJsonResponse(res);
 }

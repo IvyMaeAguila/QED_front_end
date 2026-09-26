@@ -9,7 +9,7 @@ export interface DBGradeLevelResponse {
 
 export const fetchGradeLevels = async (): Promise<DBGradeLevelResponse[]> => {
   try {
-    const response = await fetch(`${BASE_URL}/getGradeLevels`);
+    const response = await fetch(`${BASE_URL}/getGradeLevels`, {credentials: "include"});
     
     if (!response.ok) {
       throw new Error(`Failed to fetch grade levels: ${response.statusText}`);
@@ -32,7 +32,7 @@ export interface DBSectionResponse {
 export const fetchSectionByGrade = async (gradeLevelId: string | number): Promise<DBSectionResponse[]> => {
   try {
     // Ginawang gradeLevelId ang variable para tugma sa query parameter ng backend natin
-    const response = await fetch(`${BASE_URL}/getSectionByGrade?gradeLevelId=${encodeURIComponent(gradeLevelId)}`);
+    const response = await fetch(`${BASE_URL}/getSectionByGrade?gradeLevelId=${encodeURIComponent(gradeLevelId)}`, {credentials: "include"});
     
     if (!response.ok) {
       throw new Error(`Failed to fetch sections: ${response.statusText}`);

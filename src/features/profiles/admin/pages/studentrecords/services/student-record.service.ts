@@ -46,6 +46,7 @@ export const studentService = {
   async addNewStudent(payload: any) {
     const response = await fetch(`${BASE_URL}/addNewStudent`, {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
@@ -59,6 +60,7 @@ export const studentService = {
   async getAllStudents(): Promise<Student[]> {
     const response = await fetch(`${BASE_URL}/allStudents`, {
       method: "GET",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
     });
 
@@ -76,6 +78,7 @@ export const studentService = {
   async updateStudent(id: number, payload: any) {
     const response = await fetch(`${BASE_URL}/updateStudent/${id}`, {
       method: "PUT",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
@@ -91,6 +94,7 @@ export const studentService = {
   async softDeleteStudent(id: number) {
     const response = await fetch(`${BASE_URL}/deleteStudent/${id}`, {
       method: "PUT",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
     });
     if (!response.ok) {

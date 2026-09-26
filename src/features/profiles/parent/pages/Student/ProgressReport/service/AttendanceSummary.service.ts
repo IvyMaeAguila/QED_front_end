@@ -75,9 +75,6 @@ async function handleResponse<T>(res: Response): Promise<T> {
 // ---------- Service ----------
 
 const AttendanceService = {
-  /**
-   * Kunin ang listahan ng mga anak ng naka-login na parent.
-   */
   async getMyChildren(): Promise<ChildSummary[]> {
     const res = await fetch(`${API_BASE}/my-children`, {
       method: "GET",

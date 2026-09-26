@@ -20,7 +20,7 @@ export interface ApiResponse<T> {
 }
 
 export async function fetchSectionsByGrade(gradeLevel: string): Promise<SectionRow[]> {
-  const res = await fetch(`${BASE_URL}/getSections/${gradeLevel}`);
+  const res = await fetch(`${BASE_URL}/getSections/${gradeLevel}`, {credentials: "include"});
   const json: ApiResponse<SectionRow[]> = await res.json();
   if (!res.ok) throw new Error(json.message || "Failed to fetch sections.");
   return json.data ?? [];
@@ -29,6 +29,7 @@ export async function fetchSectionsByGrade(gradeLevel: string): Promise<SectionR
 export async function createSection(gradeLevel: string, sectionName: string): Promise<SectionRow> {
   const res = await fetch(`${BASE_URL}/addSection`, {
     method: "POST",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ gradeLevel, sectionName }),
   });
@@ -40,6 +41,7 @@ export async function createSection(gradeLevel: string, sectionName: string): Pr
 export async function updateSection(id: string, sectionName: string): Promise<SectionRow> {
   const res = await fetch(`${BASE_URL}/updateSection/${id}`, {
     method: "PUT",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ sectionName }),
   });
@@ -49,13 +51,13 @@ export async function updateSection(id: string, sectionName: string): Promise<Se
 }
 
 export async function deleteSection(id: string): Promise<void> {
-  const res = await fetch(`${BASE_URL}/deleteSection/${id}`, { method: "DELETE" });
+  const res = await fetch(`${BASE_URL}/deleteSection/${id}`, { method: "DELETE", credentials: "include" });
   const json: ApiResponse<null> = await res.json();
   if (!res.ok) throw new Error(json.message || "Failed to delete section.");
 }
 
 export async function fetchSectionIdsUsedByClasses(): Promise<number[]> {
-  const res = await fetch(`${BASE_URL}/sectionIdsUsedByClasses`);
+  const res = await fetch(`${BASE_URL}/sectionIdsUsedByClasses`, {credentials: "include"});
   const json: ApiResponse<number[]> = await res.json();
   if (!res.ok) throw new Error(json.message || "Failed to fetch used sections.");
   return json.data ?? [];

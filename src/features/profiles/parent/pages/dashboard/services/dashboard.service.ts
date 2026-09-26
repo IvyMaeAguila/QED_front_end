@@ -38,7 +38,7 @@ interface DailyUpdatesResponse {
 export async function getUserData(): Promise<UserData> {
   const response = await fetch(`${BASE_API}/profile/`, {
     method: "GET",
-    credentials: "include", // sends the auth cookie automatically
+    credentials: "include", 
     headers: {
       "Content-Type": "application/json",
     },

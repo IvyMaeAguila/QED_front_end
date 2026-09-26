@@ -173,7 +173,7 @@ export async function getOverview(): Promise<OverviewData> {
 }
 
 export async function fetchActiveAcademicYear(): Promise<AcademicYearRow> {
-  const res = await fetch(`${BASE_URL}/academic-year/getAcademicYear`);
+  const res = await fetch(`${BASE_URL}/academic-year/getAcademicYear`, {credentials: "include"});
   const json: ApiResponse<AcademicYearRow> = await res.json();
   if (!res.ok || !json.data) throw new Error(json.message || "Failed to fetch academic year.");
   return json.data;

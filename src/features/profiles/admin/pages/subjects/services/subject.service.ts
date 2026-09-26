@@ -59,14 +59,14 @@ export interface NewAssessmentType {
 export async function fetchSubjectSectionsByGrade(
   gradeLevel: string
 ): Promise<SubjectSectionByGradeRow[]> {
-  const res = await fetch(`${BASE_URL}/getSubjectSectionsByGrade/${gradeLevel}`);
+  const res = await fetch(`${BASE_URL}/getSubjectSectionsByGrade/${gradeLevel}`, {credentials: "include"});
   const json: ApiResponse<SubjectSectionByGradeRow[]> = await res.json();
   if (!res.ok) throw new Error(json.message || "Failed to fetch subjects.");
   return json.data ?? [];
 }
 
 export async function fetchSubjectsByGrade(gradeLevel: string): Promise<ElemSubjectRow[]> {
-  const res = await fetch(`${BASE_URL}/getSubjectsByGrade/${gradeLevel}`);
+  const res = await fetch(`${BASE_URL}/getSubjectsByGrade/${gradeLevel}`, {credentials: "include"});
   const json: ApiResponse<ElemSubjectRow[]> = await res.json();
   if (!res.ok) throw new Error(json.message || "Failed to fetch subjects.");
   return json.data ?? [];
@@ -81,6 +81,7 @@ export async function addSubject(payload: {
 }): Promise<ElemSubjectRow> {
   const res = await fetch(`${BASE_URL}/addSubject`, {
     method: "POST",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
@@ -110,6 +111,7 @@ export async function updateSubjectAssignment(
 ): Promise<UpdateSubjectAssignmentResult> {
   const res = await fetch(`${BASE_URL}/updateSubjectSection/${id}`, {
     method: "PUT",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
@@ -124,6 +126,7 @@ export async function assignTeacherToSubject(
 ): Promise<{ id: number; section_id: number; teacher_id: string | number | null }> {
   const res = await fetch(`${BASE_URL}/assignTeacher/${id}`, {
     method: "PUT",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
@@ -137,6 +140,7 @@ export async function toggleSubjectStatus(
 ): Promise<{ id: number; status: "Active" | "Inactive" }> {
   const res = await fetch(`${BASE_URL}/toggleStatus/${id}`, {
     method: "PUT",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
   });
   const json: ApiResponse<{ id: number; status: "Active" | "Inactive" }> = await res.json();
@@ -149,6 +153,7 @@ export async function createAssessmentType(payload: {
 }): Promise<NewAssessmentType> {
   const res = await fetch(`${BASE_URL}/`, {
     method: "POST",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
@@ -160,6 +165,7 @@ export async function createAssessmentType(payload: {
 export async function getAssessmentTypes(): Promise<ApiResponse<NewAssessmentType[]>> {
   const response = await fetch(`${BASE_URL}/`, {
     method: 'GET',
+    credentials: "include",
     headers: { 'Content-Type': 'application/json' }
   });
   if (!response.ok) {
@@ -181,6 +187,7 @@ export async function updateAssessmentType(
 ): Promise<NewAssessmentType> {
   const res = await fetch(`${BASE_URL}/${id}`, {
     method: "PUT",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
@@ -192,6 +199,7 @@ export async function updateAssessmentType(
 export async function deleteAssessmentType(id: number): Promise<void> {
   const res = await fetch(`${BASE_URL}/${id}`, {
     method: "DELETE",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
   });
   const json: ApiResponse<null> = await res.json();

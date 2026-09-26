@@ -4,7 +4,7 @@ const BASE_URL = `${API_CONFIG.baseURL}/api/user`;
 
 export const UserService = {
   async getAllUsers() {
-    const response = await fetch(`${BASE_URL}/usersList`);
+    const response = await fetch(`${BASE_URL}/usersList`, { credentials: "include" });
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || "Failed to fetch users");
@@ -14,7 +14,7 @@ export const UserService = {
   },
 
   async getUserById(role: string, id: string) {
-    const response = await fetch(`${BASE_URL}/getUser/${role.toLowerCase()}/${id}`);
+    const response = await fetch(`${BASE_URL}/getUser/${role.toLowerCase()}/${id}`, { credentials: "include" });
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || "Failed to fetch user");
@@ -27,6 +27,7 @@ export const UserService = {
   async addUser(payload: any) {
     const response = await fetch(`${BASE_URL}/addUser`, {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
@@ -40,6 +41,7 @@ export const UserService = {
   async updateUser(id: string, payload: any) {
     const response = await fetch(`${BASE_URL}/editUser/${id}`, {
       method: "PUT",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
@@ -53,6 +55,7 @@ export const UserService = {
   async deleteUser(id: string, role: string) {
     const response = await fetch(`${BASE_URL}/deleteUser/${id}`, {
       method: "PATCH",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ role }),
     });

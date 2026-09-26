@@ -64,7 +64,7 @@ export function StudentFormPage() {
           studentId: existing.studentId,
           lastName: existing.lastName,
           firstName: existing.firstName,
-          middleName: existing.middleName,
+          middleName: existing.middleName ?? "",
           lrn: existing.lrn,
           gender: existing.gender,
           gradeLevel: String(existing.gradeLevelId),
@@ -368,7 +368,7 @@ export function StudentFormPage() {
               <label className={labelClasses}>Middle Name</label>
               <input
                 className={inputClasses}
-                value={form.middleName}
+                value={form.middleName ?? ""}
                 onChange={(e) =>
                   setForm({ ...form, middleName: e.target.value })
                 }

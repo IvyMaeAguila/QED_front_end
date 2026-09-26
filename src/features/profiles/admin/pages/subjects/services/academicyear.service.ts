@@ -36,7 +36,7 @@ export interface ApiResponse<T> {
 }
 
 export async function fetchActiveAcademicYear(): Promise<AcademicYearRow> {
-  const res = await fetch(`${BASE_URL}/getAcademicYear`);
+  const res = await fetch(`${BASE_URL}/getAcademicYear`, {credentials: "include"});
   const json: ApiResponse<AcademicYearRow> = await res.json();
   if (!res.ok || !json.data) throw new Error(json.message || "Failed to fetch academic year.");
   return json.data;
@@ -48,6 +48,7 @@ export async function updateAcademicYear(
 ): Promise<AcademicYearRow> {
   const res = await fetch(`${BASE_URL}/updateAcademicYear/${id}`, {
     method: "PUT",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(updates),
   });
@@ -57,7 +58,7 @@ export async function updateAcademicYear(
 }
 
 export async function fetchTerms(schoolYearId: number): Promise<TermRow[]> {
-  const res = await fetch(`${BASE_URL}/getTerms/${schoolYearId}`);
+  const res = await fetch(`${BASE_URL}/getTerms/${schoolYearId}`, {credentials: "include"});
   const json: ApiResponse<TermRow[]> = await res.json();
   if (!res.ok) throw new Error(json.message || "Failed to fetch terms.");
   return json.data ?? [];
@@ -69,6 +70,7 @@ export async function saveTerms(
 ): Promise<TermRow[]> {
   const res = await fetch(`${BASE_URL}/saveTerms/${schoolYearId}`, {
     method: "PUT",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ terms }),
   });
