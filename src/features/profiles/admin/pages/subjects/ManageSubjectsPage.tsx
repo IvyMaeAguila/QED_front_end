@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { Plus, School } from "lucide-react";
 import type { AdminThemeContext } from "../AdminLayout";
 import {
@@ -7,56 +7,33 @@ import {
   GRADE_LEVEL_IDS,
   type GradeLevel,
   type Subject,
-  type NewSubjectInput,
 } from "./types/types";
 import { AdminTopTabs } from "./components/AdminTopTabs";
 import { SubjectFilters } from "./components/SubjectFilters";
 import { GradeLevelTabs } from "./components/GradeLevelTabs";
 import { SubjectCard } from "./components/SubjectCard";
 import { EditSubjectModal } from "./components/EditSubjectModal";
-import { AddSubjectModal } from "./components/AddSubjectModal";
 import { ManageSectionsModal } from "./components/ManageSectionsModal";
-import { SectionsProvider } from "./context/SectionsContext";
-import { useSettings } from "../settings/context/SettingsContext";
 import {
-  addSubject as addSubjectApi,
   toggleSubjectStatus as toggleSubjectStatusApi,
   updateSubjectAssignment,
   toWeightPayload,
 } from "./services/subject.service";
-import { GradeLevelsProvider } from "./context/gradeLevelsContext";
-import { SubjectsCatalogProvider } from "./context/SubjectsCatalogContext";
 import {
-  SubjectSectionsProvider,
   useSubjectSections,
 } from "./context/SubjectSectionsContext";
 import { useSubjectsCatalog } from "./context/SubjectsCatalogContext";
 import { useToast } from "../../../../../shared/context/ToastContext";
 
 export function ManageSubjectsPage() {
-  return (
-    <GradeLevelsProvider>
-      <SubjectsCatalogProvider>
-        <SectionsProvider>
-          <SubjectSectionsProvider>
-            <ManageSubjectsPageContent />
-          </SubjectSectionsProvider>
-        </SectionsProvider>
-      </SubjectsCatalogProvider>
-    </GradeLevelsProvider>
-  );
-}
-
-function ManageSubjectsPageContent() {
   const theme = useOutletContext<AdminThemeContext>();
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
+  const navigate = useNavigate();
 
-  const { schoolYear } = useSettings();
-  const { assessmentTypes } = useSubjectsCatalog()
+  const { assessmentTypes } = useSubjectsCatalog();
   const {
     getSubjectsForGrade,
     loadSubjectsForGrade,
-    addLocalSubject,
     updateLocalSubject,
   } = useSubjectSections();
 
@@ -66,24 +43,17 @@ function ManageSubjectsPageContent() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [teacherFilter, setTeacherFilter] = useState<string>("all");
-  const [statusFilter, setStatusFilter] = useState<
-    "all" | "Active" | "Inactive"
-  >("all");
-
+ const [statusFilter, setStatusFilter] = useState<"all" | "Active" | "Inactive">("all");
   const [editingSubject, setEditingSubject] = useState<Subject | null>(null);
   const [ , setAssigningSubject] = useState<Subject | null>(
     null,
   );
-  const [addingSubject, setAddingSubject] = useState(false);
   const [managingSections, setManagingSections] = useState(false);
-
-  const [savingSubject, setSavingSubject] = useState(false);
-  const [addSubjectError, setAddSubjectError] = useState<string | null>(null);
 
   const [savingEdit, setSavingEdit] = useState(false);
   const [editSubjectError, setEditSubjectError] = useState<string | null>(null);
 
-    const { showToast } = useToast();
+  const { showToast } = useToast();
 
   useEffect(() => {
     void loadSubjectsForGrade(activeGrade);
@@ -104,106 +74,73 @@ function ManageSubjectsPageContent() {
   });
 
   async function toggleStatus(subject: Subject) {
-  const newStatus = subject.status === "Active" ? "Inactive" : "Active";
+    const newStatus = subject.status === "Active" ? "Inactive" : "Active";
 
-  updateLocalSubject(subject.id, { status: newStatus });
+    updateLocalSubject(subject.id, { status: newStatus });
 
-  try {
-    await toggleSubjectStatusApi(subject.id);
-  } catch (err) {
-    console.error("Failed to toggle status:", err);
-    updateLocalSubject(subject.id, { status: subject.status });
+    try {
+      await toggleSubjectStatusApi(subject.id);
+    } catch (err) {
+      console.error("Failed to toggle status:", err);
+      updateLocalSubject(subject.id, { status: subject.status });
+    }
   }
-}
 
-  async function addSubject(newSubject: NewSubjectInput) {
-  setSavingSubject(true);
-  setAddSubjectError(null);
-  try {
-    // I-map: assessmentType (pangalan) -> assessment_type_id (galing sa catalog)
-    const mappedWeightDistribution = newSubject.weightDistribution.map(
-      (row, index) => {
-        const match = assessmentTypes.find(
-          (t) => t.assessmentName === row.assessmentType,
-        );
-        return {
-          assessment_type_id: match?.id ?? 0,
-          weight_percent: row.weight,
-          order_index: index,
-        };
-      },
-    );
+  async function saveEditedSubject(
+    subject: Subject,
+    updates: Partial<Subject>,
+  ) {
+    setSavingEdit(true);
+    setEditSubjectError(null);
+    try {
+      const isGraded = updates.isGraded ?? subject.isGraded;
+      const weightDistribution = isGraded
+        ? toWeightPayload(updates.weightDistribution ?? [], assessmentTypes)
+        : [];
 
-    const row = await addSubjectApi({
-      gradeLevelId: GRADE_LEVEL_IDS[newSubject.gradeLevel],
-      subjectName: newSubject.name,
-      isGraded: newSubject.isGraded,
-      schoolYear: newSubject.schoolYear,
-      weightDistribution: mappedWeightDistribution,
-    });
+      await updateSubjectAssignment(subject.id, {
+        isGraded,
+        weightDistribution,
+        subjectName: updates.name ?? subject.name,
+        gradeLevelId: GRADE_LEVEL_IDS[updates.gradeLevel ?? subject.gradeLevel],
+        sectionName: updates.section ?? subject.section,
+        teacherId: updates.teacherId ?? null,
+        schoolYear: updates.schoolYear ?? subject.schoolYear,
+      });
 
-    addLocalSubject({
-      ...newSubject,
-      section: "",
-      teacherId: null,
-      id: String(row.id),
-    });
-    setActiveGrade(newSubject.gradeLevel);
-    setAddingSubject(false);
-    showToast("Subject Added Successfully!", "success");
-  } catch (err) {
-    console.error("Failed to add subject:", err);
-    setAddSubjectError(
-      err instanceof Error ? err.message : "Failed to add subject.",
-    );
-    showToast(
-      err instanceof Error ? err.message : "Failed to add subject.",
-      "error",
-    );
-  } finally {
-    setSavingSubject(false);
+      updateLocalSubject(subject.id, {
+        name: updates.name ?? subject.name,
+        gradeLevel: updates.gradeLevel ?? subject.gradeLevel,
+        section: updates.section ?? subject.section,
+        teacherId: updates.teacherId ?? null,
+        schoolYear: updates.schoolYear ?? subject.schoolYear,
+        isGraded,
+        ...(isGraded
+          ? { weightDistribution: updates.weightDistribution ?? [] }
+          : {}),
+      });
+      if (updates.gradeLevel && updates.gradeLevel !== subject.gradeLevel) {
+        await Promise.all([
+          loadSubjectsForGrade(subject.gradeLevel),
+          loadSubjectsForGrade(updates.gradeLevel),
+        ]);
+      }
+
+      setEditingSubject(null);
+      showToast("Subject Updated Successfully!", "success");
+    } catch (err) {
+      console.error("Failed to update subject:", err);
+      setEditSubjectError(
+        err instanceof Error ? err.message : "Failed to update subject.",
+      );
+      showToast(
+        err instanceof Error ? err.message : "Failed to update subject.",
+        "error",
+      );
+    } finally {
+      setSavingEdit(false);
+    }
   }
-}
-
-    async function saveEditedSubject(
-  subject: Subject,
-  updates: Partial<Subject>,
-) {
-  setSavingEdit(true);
-  setEditSubjectError(null);
-  try {
-    const isGraded = updates.isGraded ?? subject.isGraded;
-    const weightDistribution = isGraded
-      ? toWeightPayload(updates.weightDistribution ?? [], assessmentTypes)
-      : [];
-
-    await updateSubjectAssignment(subject.id, {
-      isGraded,
-      weightDistribution,
-    });
-
-    updateLocalSubject(subject.id, {
-      isGraded,
-      ...(isGraded
-        ? { weightDistribution: updates.weightDistribution ?? [] }
-        : {}),
-    });
-
-    setEditingSubject(null);
-    showToast("Subject Updated Successfully!", "success");
-  } catch (err) {
-    console.error("Failed to update subject:", err);
-    setEditSubjectError(
-      err instanceof Error ? err.message : "Failed to update subject.",
-    );
-    showToast(
-      err instanceof Error ? err.message : "Failed to update subject.",
-      "error",
-    );
-  } finally {
-    setSavingEdit(false);
-  }
-}
 
   return (
     <div className="space-y-6 pb-12">
@@ -235,10 +172,7 @@ function ManageSubjectsPageContent() {
             Manage Sections
           </button>
           <button
-            onClick={() => {
-              setAddSubjectError(null);
-              setAddingSubject(true);
-            }}
+            onClick={() => navigate("new")}
             className="h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 transition-opacity hover:opacity-90"
             style={{ background: ACCENT }}
           >
@@ -305,22 +239,6 @@ function ManageSubjectsPageContent() {
           }}
           saving={savingEdit}
           error={editSubjectError}
-        />
-      )}
-      {addingSubject && (
-        <AddSubjectModal
-          subjects={gradeSubjects}
-          defaultGrade={activeGrade}
-          schoolYear={schoolYear}
-          {...theme}
-          onClose={() => setAddingSubject(false)}
-          onAdd={addSubject}
-          onManageSections={() => {
-            setAddingSubject(false);
-            setManagingSections(true);
-          }}
-          saving={savingSubject}
-          error={addSubjectError}
         />
       )}
 

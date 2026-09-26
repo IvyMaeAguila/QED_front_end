@@ -4,6 +4,7 @@ import { useTeachers } from "../../classes/context/TeachersContext";
 import { formatTeacherName } from "../../classes/types/Teacher";
 import {
   ACCENT,
+  GRADE_LEVELS,
   type Subject,
   type SubjectsTheme,
   type WeightDistributionItem,
@@ -11,6 +12,16 @@ import {
 import { useSections } from "../context/SectionsContext";
 import { useSubjectsCatalog } from "../context/SubjectsCatalogContext";
 import { ModalShell } from "./ModalShell";
+import { SubjectGradeTemplateSection } from "./SubjectGradeTemplateSection";
+import {
+  canonicalAssessmentTypeName,
+  DEFAULT_ASSESSMENT_TYPES,
+} from "../types/assessmentTypes";
+import {
+  getActiveGradeTemplate,
+  type ActiveGradeTemplate,
+} from "../services/subjectGradeTemplate.service";
+import { fetchAllSchoolYears, type SchoolYearRow } from "../../settings/services/schoolYear.service";
 
 interface EditSubjectModalProps extends SubjectsTheme {
   subject: Subject;
@@ -41,7 +52,9 @@ export function EditSubjectModal({
   const { assessmentTypes, loadAssessmentTypes, loading: loadingCatalog } =
     useSubjectsCatalog();
 
-  const [name] = useState(subject.name);
+  const [name, setName] = useState(subject.name);
+  const [gradeLevel, setGradeLevel] = useState(subject.gradeLevel);
+  const [schoolYear, setSchoolYear] = useState(subject.schoolYear);
   const [teacherId, setTeacherId] = useState(subject.teacherId ?? "");
   const [section, setSection] = useState(subject.section ?? "");
   const [isGraded, setIsGraded] = useState(subject.isGraded);
@@ -50,18 +63,73 @@ export function EditSubjectModal({
   );
   const { darkMode, textMuted } = theme;
 
+  // Official DepEd .xlsx grade template — separate from the manual weight
+  // rows above; once uploaded, becomes the source of truth for this subject.
+  const [activeTemplate, setActiveTemplate] = useState<ActiveGradeTemplate | null>(null);
+  const [loadingTemplate, setLoadingTemplate] = useState(false);
+  const [schoolYears, setSchoolYears] = useState<SchoolYearRow[]>([]);
+
   useEffect(() => {
-    void loadSectionsForGrade(subject.gradeLevel);
-  }, [subject.gradeLevel, loadSectionsForGrade]);
+    void loadSectionsForGrade(gradeLevel);
+  }, [gradeLevel, loadSectionsForGrade]);
+
+  useEffect(() => {
+    let active = true;
+    void fetchAllSchoolYears()
+      .then((rows) => { if (active) setSchoolYears(rows); })
+      .catch((err) => console.error("Failed to load school years:", err));
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     void loadAssessmentTypes();
   }, [loadAssessmentTypes]);
 
-  const gradeSections = getSectionsForGrade(subject.gradeLevel);
+  useEffect(() => {
+    const numericSubjectId = Number(subject.subjectId ?? subject.id);
+    if (!numericSubjectId || isNaN(numericSubjectId)) return;
+
+    setLoadingTemplate(true);
+    getActiveGradeTemplate(numericSubjectId)
+      .then(setActiveTemplate)
+      .catch((err) => {
+        console.error("Failed to load active grade template:", err);
+        setActiveTemplate(null);
+      })
+      .finally(() => setLoadingTemplate(false));
+  }, [subject.subjectId, subject.id]);
+
+  // A saved template is authoritative for a graded subject. Keep the legacy
+  // manual weight rows in sync so the normal Save Changes validation and API
+  // payload remain valid, while preserving the assessment type IDs.
+  useEffect(() => {
+    if (!activeTemplate || assessmentTypes.length === 0) return;
+    const templateWeights = [
+      activeTemplate.wwWeightPercent,
+      activeTemplate.ptWeightPercent,
+      activeTemplate.examWeightPercent,
+    ];
+    const rows = DEFAULT_ASSESSMENT_TYPES.map((defaultType, index) => {
+      const category = assessmentTypes.find(
+        (type) => canonicalAssessmentTypeName(type.assessmentName) === defaultType.name,
+      );
+      return category
+        ? {
+            id: String(category.id),
+            assessmentType: category.assessmentName,
+            weight: templateWeights[index],
+          }
+        : null;
+    });
+    if (rows.every((row) => row !== null)) {
+      setWeights(rows as WeightDistributionItem[]);
+    }
+  }, [activeTemplate, assessmentTypes]);
+
+  const gradeSections = getSectionsForGrade(gradeLevel);
   const sectionOptions =
-    subject.section && !gradeSections.some((s) => s.name === subject.section)
-      ? [{ id: "current", name: subject.section }, ...gradeSections]
+    section && !gradeSections.some((s) => s.name === section)
+      ? [{ id: "current", name: section }, ...gradeSections]
       : gradeSections;
 
   const totalWeight = useMemo(
@@ -140,10 +208,11 @@ export function EditSubjectModal({
   }
 
   function handleSave() {
-    if (saving || !weightsValid) return;
+    if (saving || !weightsValid || !name.trim() || !section.trim() || !schoolYear) return;
     void onSave({
-      name: name.trim() || subject.name,
-      schoolYear: subject.schoolYear,
+      name: name.trim(),
+      gradeLevel,
+      schoolYear,
       teacherId: teacherId || null,
       section,
       status: subject.status,
@@ -180,27 +249,29 @@ export function EditSubjectModal({
 
       <div>
         <label className={labelClasses}>Subject Name</label>
-        <input value={subject.name} disabled className={disabledInputClasses} />
+        <input value={name} onChange={(e) => setName(e.target.value)} disabled={saving} className={saving ? disabledInputClasses : inputClasses} />
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className={labelClasses}>Grade Level</label>
-          <input
-            value={subject.gradeLevel}
-            disabled
-            className={disabledInputClasses}
-          />
+          <select value={gradeLevel} onChange={(e) => {
+            const nextGrade = e.target.value as Subject["gradeLevel"];
+            setGradeLevel(nextGrade);
+            if (nextGrade !== gradeLevel) setSection("");
+          }} disabled={saving} className={saving ? disabledInputClasses : inputClasses}>
+            {GRADE_LEVELS.map((grade) => <option key={grade} value={grade}>{grade}</option>)}
+          </select>
         </div>
         <div>
           <label className={labelClasses}>Section</label>
           <select
             value={section}
             onChange={(e) => setSection(e.target.value)}
-            disabled
-            className={disabledInputClasses}
+            disabled={saving}
+            className={saving ? disabledInputClasses : inputClasses}
           >
-            <option value="">Not Assigned</option>
+            <option value="">Select section…</option>
             {sectionOptions.map((s) => (
               <option key={s.id} value={s.name}>
                 {s.name}
@@ -216,8 +287,8 @@ export function EditSubjectModal({
           <select
             value={teacherId}
             onChange={(e) => setTeacherId(e.target.value)}
-            disabled
-            className={disabledInputClasses}
+            disabled={saving}
+            className={saving ? disabledInputClasses : inputClasses}
           >
             <option value="">Not Assigned</option>
             {teachers.map((t) => (
@@ -229,11 +300,11 @@ export function EditSubjectModal({
         </div>
         <div>
           <label className={labelClasses}>School Year</label>
-          <input
-            value={subject.schoolYear}
-            disabled
-            className={disabledInputClasses}
-          />
+          <select value={schoolYear} onChange={(e) => setSchoolYear(e.target.value)} disabled={saving} className={saving ? disabledInputClasses : inputClasses}>
+            {[...new Set([subject.schoolYear, ...schoolYears.map((year) => year.school_year)])].filter(Boolean).map((year) => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
         </div>
       </div>
 
@@ -269,6 +340,12 @@ export function EditSubjectModal({
             </span>
           </div>
 
+          {activeTemplate && (
+            <p className={`text-[11px] font-semibold ${textMuted}`}>
+              The active Excel template controls these weights. Upload a replacement template to change them.
+            </p>
+          )}
+
           {weights.map((row) => {
             const usedByOthers = new Set(
               weights
@@ -290,7 +367,7 @@ export function EditSubjectModal({
                   onChange={(e) =>
                     updateRow(row.id, { assessmentType: e.target.value })
                   }
-                  disabled={saving || loadingCatalog}
+                  disabled={saving || loadingCatalog || Boolean(activeTemplate)}
                   className={`${
                     saving ? disabledInputClasses : inputClasses
                   } flex-1`}
@@ -332,7 +409,7 @@ export function EditSubjectModal({
                         ),
                       })
                     }
-                    disabled={saving}
+                    disabled={saving || Boolean(activeTemplate)}
                     placeholder="0"
                     className={`${
                       saving ? disabledInputClasses : inputClasses
@@ -348,7 +425,7 @@ export function EditSubjectModal({
                 <button
                   type="button"
                   onClick={() => removeRow(row.id)}
-                  disabled={saving}
+                  disabled={saving || Boolean(activeTemplate)}
                   title="Remove"
                   className={`h-10 w-10 shrink-0 rounded-xl border inline-flex items-center justify-center transition-colors disabled:opacity-50 ${
                     darkMode
@@ -365,7 +442,7 @@ export function EditSubjectModal({
           <button
             type="button"
             onClick={addRow}
-            disabled={saving || allTypesUsed || assessmentTypes.length === 0}
+            disabled={saving || Boolean(activeTemplate) || allTypesUsed || assessmentTypes.length === 0}
             className={`w-full h-9 rounded-xl border border-dashed text-[11px] font-bold inline-flex items-center justify-center gap-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
               darkMode
                 ? "border-[#374151] text-[#D1D5DB] hover:bg-white/5"
@@ -375,23 +452,23 @@ export function EditSubjectModal({
             <Plus size={13} />
             Add Assessment Type
           </button>
-
-          {/* {!weightsValid && (
-            <p className="text-[11px] font-semibold text-[#B91C1C]">
-              {weights.length === 0
-                ? "Kailangan ng at least isang assessment type."
-                : hasUnsetType
-                ? "Kumpletuhin ang type at weight sa bawat row."
-                : hasDuplicateType
-                ? "May duplicate na assessment type."
-                : hasUnknownType
-                ? "May assessment type na wala na sa catalog. Palitan muna."
-                : `Dapat 100% ang total. Kulang/sobra ng ${Math.abs(
-                    100 - totalWeight
-                  )}%.`}
-            </p>
-          )} */}
         </div>
+      )}
+
+      {isGraded && (
+        loadingTemplate ? (
+          <div className={`flex items-center gap-2 text-xs font-semibold ${textMuted}`}>
+            <Loader2 size={14} className="animate-spin" />
+            Checking for an official grade template…
+          </div>
+        ) : (
+          <SubjectGradeTemplateSection
+            subjectId={Number(subject.subjectId ?? subject.id)}
+            darkMode={darkMode}
+            activeTemplate={activeTemplate}
+            onTemplateUpdated={setActiveTemplate}
+          />
+        )
       )}
 
       <div className="flex gap-3 pt-2">
@@ -408,9 +485,9 @@ export function EditSubjectModal({
         </button>
         <button
           onClick={handleSave}
-          disabled={saving || !weightsValid}
+          disabled={saving || !weightsValid || !name.trim() || !section.trim() || !schoolYear}
           className={`flex-1 h-10 rounded-xl text-xs font-bold text-white inline-flex items-center justify-center gap-2 transition-opacity ${
-            saving || !weightsValid
+            saving || !weightsValid || !name.trim() || !section.trim() || !schoolYear
               ? "opacity-50 cursor-not-allowed"
               : "hover:opacity-90"
           }`}

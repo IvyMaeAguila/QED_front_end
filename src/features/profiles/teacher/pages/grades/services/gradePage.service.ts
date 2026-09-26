@@ -56,6 +56,9 @@ export type GradeSubmissionState = "not_submitted" | "pending" | "submitted";
 
 export interface SubjectGradeCell {
   status: GradeSubmissionState;
+  /** Official transmuted Term Grade. */
+  termGrade?: number | null;
+  /** Legacy API alias retained for compatibility. */
   average: number | null;
   submittedByName: string | null;
   submittedAt: string | null;

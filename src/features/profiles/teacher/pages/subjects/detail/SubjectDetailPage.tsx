@@ -3,6 +3,7 @@ import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { ArrowLeft, BookOpen } from "lucide-react";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
 import type { RosterStudent } from "./data";
+import type { GradeTemplateStructure } from "../../../../shared/grading/gradeTemplate.types";
 import type {
   GradeItem,
   GradingPeriod,
@@ -30,8 +31,7 @@ import {
   setCachedSubjectDetail,
   patchCachedSubjectDetail,
 } from "../services/subjectDetailCache.service";
-import { inferSubjectCategory } from "./utils/GradeWeights";
-
+import { getEffectiveWeightsSafe } from "../services/subjectGradeTemplate.service";
 
 export function SubjectDetailPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
@@ -44,7 +44,6 @@ export function SubjectDetailPage() {
   const [subjectName, setSubjectName] = useState<string>("");
   const [subjectCode, setSubjectCode] = useState<string>("");
 
-  const [subjectCategory, setSubjectCategory] = useState<string | null>(null);
   const [gradeLevel, setGradeLevel] = useState<string>("");
   const [roster, setRoster] = useState<RosterStudent[]>([]);
 
@@ -66,6 +65,16 @@ export function SubjectDetailPage() {
   const [selectedTerm, setSelectedTerm] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [templateStructure, setTemplateStructure] = useState<GradeTemplateStructure | undefined>();
+
+  useEffect(() => {
+    if (!subjectId) return;
+    let cancelled = false;
+    getEffectiveWeightsSafe(Number(subjectId)).then((weights) => {
+      if (!cancelled) setTemplateStructure(weights?.templateStructure);
+    });
+    return () => { cancelled = true; };
+  }, [subjectId]);
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
@@ -104,7 +113,6 @@ export function SubjectDetailPage() {
     if (cached) {
       setSubjectName(cached.subjectName);
       setSubjectCode(cached.subjectCode);
-      setSubjectCategory(cached.subjectCategory);
       setGradeLevel(cached.gradeLevel);
       setRoster(cached.roster);
       setItems(cached.items);
@@ -152,7 +160,6 @@ export function SubjectDetailPage() {
       const info = infoResult.value;
       const nextSubjectName = info.subjectName.toUpperCase();
       const nextSubjectCode = `${info.subjectName.replace(/\s+/g, "").toUpperCase().slice(0, 4)}101`;
-      const nextSubjectCategory = inferSubjectCategory(info.subjectName);
       const nextGradeLevel = info.gradeLevel;
       const nextRoster = info.roster;
       const nextIsOwnAdvisory = info.isOwnAdvisory;
@@ -160,7 +167,6 @@ export function SubjectDetailPage() {
 
       setSubjectName(nextSubjectName);
       setSubjectCode(nextSubjectCode);
-      setSubjectCategory(nextSubjectCategory);
       setGradeLevel(nextGradeLevel);
       setRoster(nextRoster);
       setIsOwnAdvisory(nextIsOwnAdvisory);
@@ -213,7 +219,7 @@ export function SubjectDetailPage() {
       setCachedSubjectDetail(subjectId, {
         subjectName: nextSubjectName,
         subjectCode: nextSubjectCode,
-        subjectCategory: nextSubjectCategory,
+        subjectCategory: null,
         gradeLevel: nextGradeLevel,
         roster: nextRoster,
         items: nextItems,
@@ -248,6 +254,7 @@ export function SubjectDetailPage() {
         examType: item.examType,
         maxItems: item.maxItems,
         term: selectedTerm,
+        templateDomainId: item.templateDomainId,
       });
       setItems((prev) => {
         const next = [...prev, { ...item, id, gradingPeriodId: selectedTerm }];
@@ -256,6 +263,7 @@ export function SubjectDetailPage() {
       });
     } catch (err) {
       console.error("Failed to add item:", err);
+      throw err instanceof Error ? err : new Error("Could not save the assessment item. Please try again.");
     }
   }
 
@@ -334,7 +342,6 @@ export function SubjectDetailPage() {
       navigate(`/teacher/subjects/${subjectId}/records`, {
         state: {
           subjectName,
-          subjectCategory,
           gradeLevel,
           tab: activeTab,
           roster,
@@ -379,7 +386,10 @@ export function SubjectDetailPage() {
 
         <div className="w-full px-6 lg:px-8 pt-6 space-y-6">
           <div className="flex items-start gap-2.5">
-            <ArrowLeft size={22} className={`mt-1 shrink-0 opacity-30 ${textMuted}`} />
+            <ArrowLeft
+              size={22}
+              className={`mt-1 shrink-0 opacity-30 ${textMuted}`}
+            />
             <Bone className="h-9 w-9 rounded-xl shrink-0" />
             <div className="min-w-0 flex-1">
               <Bone className="h-4 w-40" />
@@ -549,6 +559,11 @@ export function SubjectDetailPage() {
             panelBorder={panelBorder}
             textPrimary={textPrimary}
             textMuted={textMuted}
+            templateDomains={activeTab === "writtenWorks"
+              ? templateStructure?.ww.domains
+              : activeTab === "performanceTask"
+                ? templateStructure?.pt.domains
+                : []}
           />
         )}
 

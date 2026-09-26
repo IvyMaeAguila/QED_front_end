@@ -2,6 +2,10 @@ import { createContext, useContext, useState, useCallback, type ReactNode } from
 import { GRADE_LEVEL_IDS } from "../types/types";
 import type { GradeLevel } from "../types/types";
 import {
+  canonicalAssessmentTypeName,
+  DEFAULT_ASSESSMENT_TYPES,
+} from "../types/assessmentTypes";
+import {
   fetchSubjectsByGrade,
   getAssessmentTypes,
   createAssessmentType,
@@ -46,8 +50,44 @@ export function SubjectsCatalogProvider({ children }: { children: ReactNode }) {
   const loadAssessmentTypes = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await getAssessmentTypes();
-      setAssessmentTypes(res.data ?? []);
+      let types = (await getAssessmentTypes()).data ?? [];
+
+      // Ensure every subject can start with the standard DepEd categories.
+      // Rename recognized legacy labels in place so existing subject links
+      // keep their assessment_type_id.
+      for (const defaultType of DEFAULT_ASSESSMENT_TYPES) {
+        const existing =
+          types.find((type) => type.assessmentName === defaultType.name) ??
+          types.find(
+            (type) => canonicalAssessmentTypeName(type.assessmentName) === defaultType.name,
+          );
+        if (!existing) {
+          const created = await createAssessmentType({ assessmentName: defaultType.name });
+          types = [...types, created];
+        } else if (existing.assessmentName !== defaultType.name) {
+          const renamed = await updateAssessmentType(existing.id, {
+            assessmentName: defaultType.name,
+          });
+          types = types.map((type) => type.id === existing.id ? renamed : type);
+        }
+      }
+
+      // Re-read to account for the server's persisted names and preserve the
+      // preferred WW, PT, EX order ahead of any custom catalog entries.
+      types = (await getAssessmentTypes()).data ?? types;
+      const defaultOrder = new Map<string, number>(
+        DEFAULT_ASSESSMENT_TYPES.map((type, index) => [type.name, index]),
+      );
+      setAssessmentTypes(
+        types.sort((a, b) => {
+          const aOrder = defaultOrder.get(canonicalAssessmentTypeName(a.assessmentName));
+          const bOrder = defaultOrder.get(canonicalAssessmentTypeName(b.assessmentName));
+          if (aOrder !== undefined || bOrder !== undefined) {
+            return (aOrder ?? Number.MAX_SAFE_INTEGER) - (bOrder ?? Number.MAX_SAFE_INTEGER);
+          }
+          return a.assessmentName.localeCompare(b.assessmentName);
+        }),
+      );
     } catch (err) {
       console.error("Failed to load assessment types:", err);
       setAssessmentTypes([]);

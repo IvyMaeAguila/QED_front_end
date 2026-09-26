@@ -31,10 +31,9 @@ import {
   saveScore,
 } from "../services/subjectGrading.service";
 import {
-  getComponentWeights,
-  inferSubjectCategory,
-  type SubjectCategory,
-} from "./utils/GradeWeights";
+  getEffectiveWeightsSafe,
+  type EffectiveWeights,
+} from "../services/subjectGradeTemplate.service";
 
 const ACCENT = "#6B0000";
 
@@ -93,6 +92,16 @@ export function SubjectRecordsPage() {
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
+  // Resolved server-side by getEffectiveWeights: an active uploaded
+  // template takes precedence, falling back to the admin's manually
+  // entered subject_weight_distribution rows, falling back to undefined
+  // (nothing configured at all) if neither exists. AssessmentRecordsSection
+  // only gets examSubWeights when an active template supplied them — a
+  // manual-only or fully-default subject falls back to pooled exam
+  // grading, same as before.
+  const [effectiveWeights, setEffectiveWeights] = useState<EffectiveWeights | undefined>(undefined);
+  const [weightsError, setWeightsError] = useState<string | null>(null);
+
   // Empty-score confirmation, shown when the teacher tries to exit edit
   // mode ("Done") while some students still have blank scores. Saving an
   // empty score already works (handleScoreChange happily persists null) —
@@ -123,11 +132,18 @@ export function SubjectRecordsPage() {
     Promise.all([
       fetchItems(subjectId, { term: term || undefined }),
       fetchScores(subjectId),
+      // subjectId here is a subject-section id (confirmed against the
+      // schema: `subject-section`.id, distinct from elem_subjects.id).
+      // getEffectiveWeightsSafe resolves the subject_id join server-side,
+      // so passing the section id directly here is correct.
+      getEffectiveWeightsSafe(Number(subjectId)),
     ])
-      .then(([freshItems, freshScores]) => {
+      .then(([freshItems, freshScores, weights]) => {
         if (cancelled) return;
         setItems(freshItems);
         setLocalScores(freshScores);
+        setEffectiveWeights(weights);
+        setWeightsError(weights ? null : "No grading rules are configured for this subject. Ask an admin to upload the approved grade template before recording grades.");
         setHasLoadedOnce(true);
       })
       .catch((err) => {
@@ -136,6 +152,7 @@ export function SubjectRecordsPage() {
         setLoadError(
           "Could not load the latest records. Showing last known data.",
         );
+        setWeightsError("Could not load this subject's grading rules. Grade calculations are unavailable until the rules load successfully.");
       })
       .finally(() => {
         if (!cancelled) setIsLoadingRecords(false);
@@ -147,12 +164,25 @@ export function SubjectRecordsPage() {
   }, [subjectId, isAssessment, tab, term]);
 
   const weights = useMemo(() => {
-    if (!state) return { ww: 30, pt: 50, exam: 20 };
-    const category: SubjectCategory =
-      (state.subjectCategory as SubjectCategory) ||
-      inferSubjectCategory(state.subjectName);
-    return getComponentWeights(state.gradeLevel, category);
-  }, [state]);
+    if (effectiveWeights) {
+      return {
+        ww: effectiveWeights.ww,
+        pt: effectiveWeights.pt,
+        exam: effectiveWeights.exam,
+        examSubWeights: effectiveWeights.examSubWeights,
+        templateStructure: effectiveWeights.templateStructure,
+      };
+    }
+    // Nothing configured for this subject at all (no template, no
+    // subject_weight_distribution rows) — last-resort default matching
+    // DepEd Order No. 015, s. 2026's general split for most learning
+    // areas. MAPEH/EPP use 20/60/20 under that order instead; this
+    // fallback can't distinguish subject category, so it's only correct
+    // for subjects that haven't been configured yet. The real fix is
+    // seeding subject_weight_distribution for every subject so this
+    // branch stops being reached in practice.
+    return null;
+  }, [effectiveWeights]);
 
   const selectedTermNumber = useMemo(() => {
     if (!state) return undefined;
@@ -384,7 +414,13 @@ export function SubjectRecordsPage() {
           </div>
         )}
 
-        {isAssessment && hasLoadedOnce && subjectId && (
+        {isAssessment && weightsError && hasLoadedOnce && (
+          <div className={`${cardClasses} border-amber-500/40 px-5 py-4 text-sm font-semibold text-amber-700`} role="alert">
+            {weightsError}
+          </div>
+        )}
+
+        {isAssessment && hasLoadedOnce && subjectId && weights && (
           <AssessmentRecordsSection
             subjectSectionId={subjectId}
             title={title}

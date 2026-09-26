@@ -103,6 +103,7 @@ export async function addItem(
     activityName: string;
     topic: string;
     topicId?: string;
+    templateDomainId?: string;
     format: string;
     examType?: string;
     maxItems: number;

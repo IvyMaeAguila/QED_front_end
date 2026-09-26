@@ -23,16 +23,16 @@ export function ModalShell({
 }: ModalShellProps) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-3 sm:p-4 bg-black/40"
       onClick={closeDisabled ? undefined : onClose}
     >
       <div
-        className={`w-full max-w-md rounded-2xl border shadow-xl ${panelBg} ${panelBorder}`}
+        className={`my-auto flex max-h-[calc(100dvh-1.5rem)] w-full max-w-md flex-col overflow-hidden rounded-2xl border shadow-xl ${panelBg} ${panelBorder}`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div
-          className="px-5 py-4 flex items-center justify-between rounded-t-2xl overflow-hidden"
+          className="flex shrink-0 items-center justify-between overflow-hidden rounded-t-2xl px-5 py-4"
           style={{ background: ACCENT }}
         >
           <h3 className="text-white font-bold text-sm flex items-center gap-2">
@@ -54,7 +54,7 @@ export function ModalShell({
         </div>
 
         {/* Content */}
-        <div className="p-5 space-y-4">
+        <div className="min-h-0 overflow-y-auto overscroll-contain p-5 space-y-4">
           {children}
         </div>
       </div>
