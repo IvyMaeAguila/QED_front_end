@@ -28,7 +28,6 @@ function isFemale(student: Student): boolean {
 export function StudentsTable({
   students,
   darkMode,
-  panelBorder,
   textPrimary,
   textMuted,
   // onView,
