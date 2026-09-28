@@ -1,10 +1,8 @@
 import { useMemo, useState, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import {
-  ListChecks,
   ClipboardList,
   Loader2,
-  User,
   Search,
   CheckCheck,
 } from "lucide-react";

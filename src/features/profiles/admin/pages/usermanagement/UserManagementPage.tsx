@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { Users, UserPlus } from "lucide-react";
+import { UserPlus } from "lucide-react";
 import { useUsers } from "./context/UsersContext";
 import { Dropdown } from "./components/UsersFilterBar";
 import { UserSearchInput } from "./components/UserSearchInput";

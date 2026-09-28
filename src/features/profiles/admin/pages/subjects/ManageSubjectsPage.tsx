@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { BookOpen } from "lucide-react";
 import type { AdminThemeContext } from "../AdminLayout";
 import {
   GRADE_LEVELS,

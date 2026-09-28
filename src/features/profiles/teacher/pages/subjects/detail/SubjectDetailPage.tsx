@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
-import { ArrowLeft, BookOpen } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
 import type { RosterStudent } from "./data";
 import type { GradeTemplateStructure } from "../../../../shared/grading/gradeTemplate.types";

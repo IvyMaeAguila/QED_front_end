@@ -1,6 +1,5 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
-import {
-  BookOpen, Search, CheckCircle2, AlertTriangle,
+import { Search, CheckCircle2, AlertTriangle,
   Download, Send, Loader2, Clock,
 } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
@@ -21,7 +20,6 @@ import type { GradingPeriod } from "../subjects/detail/types/Grading";
 import { ParentVisibilitySection } from "./ParentVisibilitySection";
 import { StudentAvatar } from "@shared/components/StudentAvatar";
 
-const ACCENT = "#6B0000";
 const FILTER_OPTIONS = ["All Students", "Highest Grades", "Lowest Grades", "Boys", "Girls"];
 
 const gradeTextColor = (grade: number | null | undefined) => {

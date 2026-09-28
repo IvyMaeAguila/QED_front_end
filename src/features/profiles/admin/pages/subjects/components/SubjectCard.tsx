@@ -20,7 +20,6 @@ export function SubjectCard({
   onToggleStatus,
   darkMode,
   panelBg,
-  panelBorder,
   textPrimary,
   textMuted,
 }: SubjectCardProps) {

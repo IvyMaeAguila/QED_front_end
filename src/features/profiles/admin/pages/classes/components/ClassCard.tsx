@@ -172,7 +172,7 @@ export function ClassCard({
           onDoubleClick={(e) => e.stopPropagation()}
           aria-label="View details"
           title="View details"
-          className="group h-14 shrink-0 flex items-center justify-center text-white transition-colors hover:bg-black/30 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white"
+          className="group h-14 shrink-0 flex items-center justify-center text-white transition-colors hover:bg-black/30 focus-visible:outline focus-visible:-outline-offset-2 focus-visible:outline-white"
           style={{ background: "rgba(0,0,0,0.22)" }}
         >
           <ArrowRight size={20} className="transition-transform group-hover:translate-x-0.5" />

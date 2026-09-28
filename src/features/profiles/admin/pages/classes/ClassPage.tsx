@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { Plus, School, Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { useClasses } from "./context/ClassesContext";
 import { ClassCard } from "./components/ClassCard";
 import { Dropdown } from "../studentrecords/components/Studentsfilterbar";

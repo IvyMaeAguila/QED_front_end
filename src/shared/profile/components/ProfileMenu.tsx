@@ -106,7 +106,7 @@ export function ProfileMenu() {
       <div
         onClick={closeDrawer}
         aria-hidden={!open}
-        className={`fixed inset-0 z-[90] modal-backdrop transition-opacity duration-300 ${
+        className={`fixed inset-0 z-90 modal-backdrop transition-opacity duration-300 ${
           open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
       />
@@ -116,7 +116,7 @@ export function ProfileMenu() {
         ref={drawerRef}
         role="dialog"
         aria-modal="true"
-        className={`fixed inset-y-0 right-0 z-[100] w-[26rem] max-w-[90vw] h-full flex flex-col shadow-[-8px_0_30px_-12px_rgba(0,0,0,0.35)] transition-transform duration-500 ${APPLE_EASE} ${
+        className={`fixed inset-y-0 right-0 z-100 w-104 max-w-[90vw] h-full flex flex-col shadow-[-8px_0_30px_-12px_rgba(0,0,0,0.35)] transition-transform duration-500 ${APPLE_EASE} ${
           darkMode ? "bg-[#0F172A]" : "bg-white"
         } ${open ? "translate-x-0" : "translate-x-full"}`}
       >

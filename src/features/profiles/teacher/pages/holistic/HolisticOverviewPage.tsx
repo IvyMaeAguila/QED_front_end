@@ -5,7 +5,6 @@ import {
   ChevronRight,
   ChevronDown,
   Activity,
-  Sparkles,
   Search,
 } from "lucide-react";
 import { useOutletContext, useNavigate } from "react-router-dom";
@@ -23,7 +22,6 @@ import { useSelectedAdvisorySection } from "../attendance/services/useSelectedAd
 import { AdvisorySectionTabs } from "../attendance/components/AdvisorySectionTabs";
 import { StudentAvatar } from "@shared/components/StudentAvatar";
 
-const ACCENT = "#6B0000";
 
 // Gender comes from the advisory roster (same source as the Attendance
 // page), matched to holistic students by id — so the holistic API itself
