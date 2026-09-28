@@ -17,11 +17,8 @@ interface EditTermDatesModalProps {
   error?: string | null;
 }
 
-const DEFAULT_TERM_NAMES = ["Term 1", "Term 2", "Term 3"];
-
 interface TermDraft {
   termNumber: number;
-  name: string;
   startDate: string;
   endDate: string;
 }
@@ -33,15 +30,13 @@ function buildInitialDrafts(terms: Term[]): TermDraft[] {
       .sort((a, b) => a.termNumber - b.termNumber)
       .map((t) => ({
         termNumber: t.termNumber,
-        name: t.name,
-        startDate: t.startDate,
-        endDate: t.endDate,
+        startDate: t.startDate ?? "",
+        endDate: t.endDate ?? "",
       }));
   }
-  // No term data yet — seed three blank rows so the admin can fill them in.
-  return DEFAULT_TERM_NAMES.map((name, i) => ({
-    termNumber: i + 1,
-    name,
+  // No term rows at all yet — seed three blank rows so the admin can fill them in.
+  return [1, 2, 3].map((termNumber) => ({
+    termNumber,
     startDate: "",
     endDate: "",
   }));
@@ -118,17 +113,9 @@ export function EditTermDatesModal({
               key={draft.termNumber}
               className={`rounded-xl border p-4 ${panelBorder}`}
             >
-              <div className="mb-3">
-                <label className={labelClasses}>Term Name</label>
-                <input
-                  className={inputClasses}
-                  value={draft.name}
-                  onChange={(e) =>
-                    updateDraft(draft.termNumber, { name: e.target.value })
-                  }
-                  placeholder={`Term ${draft.termNumber}`}
-                />
-              </div>
+              <p className={`text-xs font-black uppercase tracking-wide mb-3 ${textPrimary}`}>
+                Term {draft.termNumber}
+              </p>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className={labelClasses}>Start Date</label>

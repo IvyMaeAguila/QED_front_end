@@ -1,10 +1,5 @@
 import { ClipboardList, Clock } from "lucide-react";
-
-export interface AgendaItem {
-  id: string;
-  time: string;
-  subject: string;
-}
+import type { AgendaItem } from "../services/dashboard.service";
 
 interface TodayAgendaProps {
   agenda: AgendaItem[];
@@ -42,13 +37,19 @@ export function TodayAgenda({
               key={item.id}
               className="border-l-2 border-maroon pl-2.5 sm:pl-3 text-[11.5px] sm:text-xs leading-relaxed"
             >
-              {item.time && (
+              {item.timeLabel && (
                 <span className={`flex items-center gap-1 font-semibold ${textMuted}`}>
                   <Clock size={10} className="shrink-0" />
-                  {item.time}
+                  {item.timeLabel}
                 </span>
               )}
-              <span className={`font-semibold ${textPrimary}`}>{item.subject}</span>
+              <span className={`font-semibold ${textPrimary}`}>
+                {item.subjectName}
+              </span>
+              <span className={`block text-[10.5px] ${textMuted}`}>
+                {item.className}
+                {item.room ? ` • ${item.room}` : ""}
+              </span>
             </li>
           ))}
         </ul>

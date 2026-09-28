@@ -6,9 +6,11 @@ import {
   fetchTeacherStats,
   fetchAttendanceSummary,
   fetchUpcomingEvents,
+  fetchTodaysAgenda,
   type DashboardSummary,
   type TeacherStats,
   type AttendanceSummary,
+  type AgendaItem
 } from "./services/dashboard.service";
 import { WelcomeBanner } from "./components/WelcomeBanner";
 import { QuickDateCard } from "./components/QuickDateCard";
@@ -18,9 +20,6 @@ import { TodayAttendance } from "./components/TodayAttendance";
 import { TodayAgenda } from "./components/TodayAgenda";
 import { UpcomingEvents } from "./components/UpcomingEvents";
 import type { EventItem } from "./components/UpcomingEvents";
-import {
-  TEACHER_AGENDA,
-} from "./data/TeacherDashboardData";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
 
 export function TeacherDashboardHome() {
@@ -32,6 +31,7 @@ export function TeacherDashboardHome() {
   const [statsData, setStatsData] = useState<TeacherStats | null>(null);
   const [attendance, setAttendance] = useState<AttendanceSummary | null>(null);
   const [events, setEvents] = useState<EventItem[]>([]);
+  const [agenda, setAgenda] = useState<AgendaItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -40,12 +40,14 @@ export function TeacherDashboardHome() {
       fetchTeacherStats(),
       fetchAttendanceSummary(),
       fetchUpcomingEvents(),
+      fetchTodaysAgenda(),
     ])
-      .then(([summaryData, stats, attendanceData, eventsData]) => {
+      .then(([summaryData, stats, attendanceData, eventsData, agendaData]) => {
         setSummary(summaryData);
         setStatsData(stats);
         setAttendance(attendanceData);
         setEvents(eventsData);
+        setAgenda(agendaData);
         setLoading(false);
       })
       .catch((err) => {
@@ -209,7 +211,7 @@ export function TeacherDashboardHome() {
           />
 
           <TodayAgenda
-            agenda={TEACHER_AGENDA}
+            agenda={agenda}
             panelBg={panelBg}
             panelBorder={panelBorder}
             textPrimary={textPrimary}

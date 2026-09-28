@@ -13,6 +13,10 @@ interface TermsTableProps {
   onEdit: () => void;
 }
 
+function formatCell(value: string | null): string {
+  return value && value.trim() !== "" ? value : "";
+}
+
 export function TermsTable({
   terms,
   darkMode,
@@ -24,6 +28,13 @@ export function TermsTable({
 }: TermsTableProps) {
   const headerCell = `text-left text-xs font-bold uppercase tracking-wide px-4 py-3 ${textMuted}`;
   const rowBorder = darkMode ? "border-[#1F2937]" : "border-[#E5E7EB]";
+
+  // Terms exist as rows even before they're configured (seeded with null
+  // dates), so "no rows at all" only happens if fetchTerms genuinely
+  // returned nothing.
+  const hasUnconfiguredTerms = terms.some(
+    (t) => !t.name || !t.startDate || !t.endDate,
+  );
 
   return (
     <div className={`rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`}>
@@ -41,6 +52,13 @@ export function TermsTable({
           Edit Term Dates
         </button>
       </div>
+
+      {hasUnconfiguredTerms && terms.length > 0 && (
+        <p className={`px-6 mt-2 text-xs font-medium ${textMuted}`}>
+          Some terms don't have dates yet. Use "Edit Term Dates" to configure
+          them.
+        </p>
+      )}
 
       <div className="overflow-x-auto mt-4">
         <table className="w-full border-collapse">
@@ -68,13 +86,13 @@ export function TermsTable({
               terms.map((term) => (
                 <tr key={term.id} className={`border-b last:border-b-0 ${rowBorder}`}>
                   <td className={`px-4 py-3 text-sm font-bold ${textPrimary}`}>
-                    {term.name}
+                    {formatCell(term.name)}
                   </td>
                   <td className={`px-4 py-3 text-sm font-semibold ${textMuted}`}>
-                    {term.startDate}
+                    {formatCell(term.startDate)}
                   </td>
                   <td className={`px-4 py-3 text-sm font-semibold ${textMuted}`}>
-                    {term.endDate}
+                    {formatCell(term.endDate)}
                   </td>
                   <td className="px-4 py-3">
                     <StatusBadge status={term.status} darkMode={darkMode} />

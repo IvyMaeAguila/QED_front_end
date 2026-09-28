@@ -9,7 +9,7 @@ import { EditTermDatesModal } from "./components/EditTermDatesModal";
 import type { AcademicYear, SchoolYearStatus, Term } from "./types/academicyear";
 import {
   fetchActiveAcademicYear,
-  updateAcademicYear as updateAcademicYearRequest,
+  addAcademicYear,
   fetchTerms,
   saveTerms as saveTermsRequest,
   type TermInput,
@@ -55,23 +55,22 @@ export function AcademicYearPage() {
     void loadAcademicYear();
   }, [loadAcademicYear]);
 
-  async function saveAcademicYear(updates: {
+  async function saveAcademicYear(newYear: {
     label: string;
     status: SchoolYearStatus;
   }) {
-    if (!academicYear) return;
     setSavingYear(true);
     setYearError(null);
     try {
-      const updated = await updateAcademicYearRequest(academicYear.id, updates);
-      setAcademicYear(updated);
-      setEditingYear(false);
+      await addAcademicYear(newYear);
+      // Full page reload so the new year, its freshly-seeded terms,
+      // and every dependent badge/status all reflect the fresh DB state.
+      window.location.reload();
     } catch (err) {
-      console.error("Failed to update academic year:", err);
+      console.error("Failed to add academic year:", err);
       setYearError(
-        err instanceof Error ? err.message : "Failed to update academic year.",
+        err instanceof Error ? err.message : "Failed to add academic year.",
       );
-    } finally {
       setSavingYear(false);
     }
   }

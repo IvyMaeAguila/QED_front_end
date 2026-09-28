@@ -54,7 +54,7 @@ export function AcademicYearCard({
           }`}
         >
           <Pencil size={14} style={{ color: ACCENT }} />
-          Edit Academic Year
+          Change Academic Year
         </button>
       </div>
     </div>
