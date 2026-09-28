@@ -24,6 +24,16 @@ export interface AttendanceSummary {
   late: number;
 }
 
+export interface AgendaItem {
+  id: number;
+  subjectName: string;
+  className: string; 
+  room: string | null;
+  startTime: string; 
+  endTime: string;
+  timeLabel: string; 
+}
+
 // Shape returned by the backend before we split the date into day/month
 interface RawUpcomingEvent {
   id: string | number;
@@ -97,3 +107,11 @@ export async function fetchUpcomingEvents(limit = 5): Promise<EventItem[]> {
   });
 }
 
+export async function fetchTodaysAgenda(): Promise<AgendaItem[]> {
+  const res = await fetch(`${BASE_URL}/agenda`, {
+    credentials: "include",
+  });
+
+  const data = await handleJsonResponse(res);
+  return data.data;
+}

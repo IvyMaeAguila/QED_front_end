@@ -12,8 +12,8 @@ export interface AcademicYear {
 export interface Term {
   id: number;
   termNumber: number;
-  name: string; // e.g. "Term 1"
-  startDate: string;
-  endDate: string;
-  status: TermStatus; // derived server-side from today vs start/end
+  name: string | null; 
+  startDate: string | null;
+  endDate: string | null;
+  status: TermStatus; 
 }

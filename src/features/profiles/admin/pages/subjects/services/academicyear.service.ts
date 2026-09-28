@@ -24,7 +24,6 @@ export interface TermRow {
 
 export interface TermInput {
   termNumber: number;
-  name: string;
   startDate: string;
   endDate: string;
 }
@@ -42,18 +41,17 @@ export async function fetchActiveAcademicYear(): Promise<AcademicYearRow> {
   return json.data;
 }
 
-export async function updateAcademicYear(
-  id: number,
-  updates: { label: string; status: SchoolYearStatus },
+export async function addAcademicYear(
+  newYear: { label: string; status: SchoolYearStatus },
 ): Promise<AcademicYearRow> {
-  const res = await fetch(`${BASE_URL}/updateAcademicYear/${id}`, {
-    method: "PUT",
+  const res = await fetch(`${BASE_URL}/addAcademicYear`, {
+    method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updates),
+    body: JSON.stringify(newYear),
   });
   const json: ApiResponse<AcademicYearRow> = await res.json();
-  if (!res.ok || !json.data) throw new Error(json.message || "Failed to update academic year.");
+  if (!res.ok || !json.data) throw new Error(json.message || "Failed to create academic year.");
   return json.data;
 }
 

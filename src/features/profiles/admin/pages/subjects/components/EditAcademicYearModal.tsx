@@ -59,7 +59,7 @@ export function EditAcademicYearModal({
       >
         <div className={`flex items-center justify-between px-6 py-4 border-b ${panelBorder}`}>
           <h3 className={`text-sm font-black ${textPrimary}`}>
-            Edit Academic Year
+            Change Academic Year
           </h3>
           <button
             onClick={onClose}
