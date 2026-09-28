@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate, useParams, useOutletContext } from "react-router-dom";
-import { ArrowLeft, Save, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Save, Plus, Trash2, BookOpen } from "lucide-react";
 import { useClasses } from "./context/ClassesContext";
 import {
   DAYS_OF_WEEK,
@@ -26,6 +26,8 @@ import {
 import type { AdminThemeContext } from ".././AdminLayout";
 import { useToast } from "@shared/context/ToastContext";
 
+const ACCENT = "#8B0D0D";
+
 interface FormState {
   gradeLevelId: number | "";
   section: string;
@@ -47,7 +49,7 @@ function emptyPeriod(): SchedulePeriod {
 }
 
 export function ClassFormPage() {
-  const { darkMode, panelBg, panelBorder, textMuted } =
+  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const { classId } = useParams<{ classId: string }>();
@@ -185,23 +187,30 @@ export function ClassFormPage() {
     setSubjectsResolved(true);
   }, [subjects, isEditing, subjectsResolved]);
 
+  // ── Shared design tokens (same as StudentFormPage) ──
+  const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
+  const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
+  const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
+
   if (isEditing && !existing) {
     return (
-      <section
-        className={`rounded-xl border shadow-sm p-8 text-center ${panelBg} ${panelBorder}`}
-      >
-        <p className={`text-sm font-semibold ${textMuted}`}>
-          No class found with ID <span className="font-bold">{classId}</span>.
-        </p>
-        <button
-          onClick={() => navigate("/admin/classes")}
-          className="mt-4 h-9 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2"
-          style={{ background: "#8B0D0D" }}
+      <div className="max-w-7xl mx-auto mt-6 px-4 sm:px-6 pb-12">
+        <section
+          className={`rounded-xl border shadow-xs p-8 text-center ${panelBg} ${panelBorder}`}
         >
-          <ArrowLeft size={14} />
-          Back to Classes
-        </button>
-      </section>
+          <p className={`text-sm font-semibold ${textMuted}`}>
+            No class found with ID <span className="font-bold">{classId}</span>.
+          </p>
+          <button
+            onClick={() => navigate("/admin/classes")}
+            className="mt-4 h-9 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2"
+            style={{ background: ACCENT }}
+          >
+            <ArrowLeft size={14} />
+            Back to Classes
+          </button>
+        </section>
+      </div>
     );
   }
 
@@ -294,308 +303,326 @@ export function ClassFormPage() {
         err instanceof Error ? err.message : "Something went wrong.",
       );
       showToast(
-        err instanceof Error
-          ? err.message
-          : "Failed to add class.",
+        err instanceof Error ? err.message : "Failed to add class.",
         "error",
       );
     } finally {
       setSubmitting(false);
     }
   }
+
   return (
-    <section
-      className={`rounded-xl border shadow-sm overflow-hidden ${panelBg} ${panelBorder}`}
-    >
-      <div className="bg-[#8B0D0D] px-4 sm:px-5 py-4 flex items-center gap-3">
-        <button
-          onClick={() => navigate("/admin/classes")}
-          className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors shrink-0"
-        >
-          <ArrowLeft size={16} className="text-white" />
-        </button>
-        <div className="min-w-0">
-          <h3 className="text-white font-bold truncate">
-            {isEditing ? "Edit Class" : "Add New Class"}
-          </h3>
-          <p className="text-xs text-white/70 mt-0.5 truncate">
+    <div className="max-w-7xl mx-auto mt-6 space-y-6 pb-12 px-4 sm:px-6">
+      <section className={cardClasses}>
+        {/* Card header — back button + icon/title on the left, helper text on the right */}
+        <div className={cardHeaderClasses}>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => navigate("/admin/classes")}
+              aria-label="Go back"
+              className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-colors ${
+                darkMode
+                  ? "border-[#374151] hover:bg-white/10 text-white"
+                  : "border-[#E5E7EB] hover:bg-[#F6F7FB] text-[#374151]"
+              }`}
+            >
+              <ArrowLeft size={14} />
+            </button>
+            <h2 className={sectionTitleClasses}>
+              <BookOpen size={15} style={{ color: ACCENT }} />
+              {isEditing ? "Edit Class" : "Add New Class"}
+            </h2>
+          </div>
+          <span className={`text-xs font-semibold ${textMuted}`}>
             {isEditing
               ? `Updating ${existing?.gradeLevel} - ${existing?.section}`
               : "Students matching the grade and section below sync automatically"}
-          </p>
-        </div>
-      </div>
-
-      <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-6 max-w-2xl">
-        {submitError && (
-          <div className="rounded-xl border border-[#FCA5A5] bg-[#FEE2E2] px-3 py-2 text-xs font-semibold text-[#B91C1C]">
-            {submitError}
-          </div>
-        )}
-
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label className={labelClasses}>Grade Level</label>
-            <select
-              className={inputClasses}
-              value={form.gradeLevelId}
-              disabled={loadingGradeLevels}
-              onChange={(e) =>
-                setForm((f) => ({
-                  ...f,
-                  gradeLevelId: e.target.value ? Number(e.target.value) : "",
-                  section: "", // reset section kapag nagpalit ng grade level
-                  // reset subject ng bawat period dahil grade-specific na yung subject list
-                  schedule: f.schedule.map((p) => ({ ...p, subject: "" })),
-                }))
-              }
-            >
-              <option value="">
-                {loadingGradeLevels ? "Loading…" : "Select grade level…"}
-              </option>
-              {gradeLevels.map((g) => (
-                <option key={g.id} value={g.id}>
-                  {g.grade_level}
-                </option>
-              ))}
-            </select>
-            {errors.gradeLevelId && (
-              <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
-                {errors.gradeLevelId}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label className={labelClasses}>Section (Optional)</label>
-            <select
-              className={inputClasses}
-              value={form.section}
-              disabled={form.gradeLevelId === "" || loadingSections}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, section: e.target.value }))
-              }
-            >
-              <option value="">
-                {form.gradeLevelId === ""
-                  ? "Select a grade level first"
-                  : loadingSections
-                    ? "Loading…"
-                    : sections.length === 0
-                      ? "No available section"
-                      : "Select section…"}
-              </option>
-              {sections.map((s) => (
-                <option key={s.id} value={s.section_name}>
-                  {s.section_name}
-                </option>
-              ))}
-            </select>
-            {errors.section && (
-              <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
-                {errors.section}
-              </p>
-            )}
-          </div>
+          </span>
         </div>
 
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label className={labelClasses}>Class Adviser</label>
-            <select
-              className={inputClasses}
-              value={form.adviserId}
-              disabled={loadingAllTeachers}
-              onChange={(e) => setForm({ ...form, adviserId: e.target.value })}
-            >
-              <option value="">
-                {loadingAllTeachers ? "Loading…" : "Select a teacher…"}
-              </option>
-              {allTeachers.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.last_name}, {t.first_name}
+        <form onSubmit={handleSubmit} className="p-6 space-y-5 max-w-xl">
+          {submitError && (
+            <div className="rounded-xl border border-[#FCA5A5] bg-[#FEE2E2] px-3 py-2 text-xs font-semibold text-[#B91C1C]">
+              {submitError}
+            </div>
+          )}
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label className={labelClasses}>Grade Level</label>
+              <select
+                className={inputClasses}
+                value={form.gradeLevelId}
+                disabled={loadingGradeLevels}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    gradeLevelId: e.target.value ? Number(e.target.value) : "",
+                    section: "", // reset section kapag nagpalit ng grade level
+                    // reset subject ng bawat period dahil grade-specific na yung subject list
+                    schedule: f.schedule.map((p) => ({ ...p, subject: "" })),
+                  }))
+                }
+              >
+                <option value="">
+                  {loadingGradeLevels ? "Loading…" : "Select grade level…"}
                 </option>
-              ))}
-            </select>
-            {errors.adviserId && (
-              <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
-                {errors.adviserId}
+                {gradeLevels.map((g) => (
+                  <option key={g.id} value={g.id}>
+                    {g.grade_level}
+                  </option>
+                ))}
+              </select>
+              {errors.gradeLevelId && (
+                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                  {errors.gradeLevelId}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className={labelClasses}>Section (Optional)</label>
+              <select
+                className={`${inputClasses} disabled:opacity-60 disabled:cursor-not-allowed`}
+                value={form.section}
+                disabled={form.gradeLevelId === "" || loadingSections}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, section: e.target.value }))
+                }
+              >
+                <option value="">
+                  {form.gradeLevelId === ""
+                    ? "Select a grade level first"
+                    : loadingSections
+                      ? "Loading…"
+                      : sections.length === 0
+                        ? "No available section"
+                        : "Select section…"}
+                </option>
+                {sections.map((s) => (
+                  <option key={s.id} value={s.section_name}>
+                    {s.section_name}
+                  </option>
+                ))}
+              </select>
+              {errors.section && (
+                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                  {errors.section}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label className={labelClasses}>Class Adviser</label>
+              <select
+                className={inputClasses}
+                value={form.adviserId}
+                disabled={loadingAllTeachers}
+                onChange={(e) =>
+                  setForm({ ...form, adviserId: e.target.value })
+                }
+              >
+                <option value="">
+                  {loadingAllTeachers ? "Loading…" : "Select a teacher…"}
+                </option>
+                {allTeachers.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.last_name}, {t.first_name}
+                  </option>
+                ))}
+              </select>
+              {errors.adviserId && (
+                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                  {errors.adviserId}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className={labelClasses}>Room Number</label>
+              <input
+                className={inputClasses}
+                value={form.room}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, room: e.target.value }))
+                }
+                placeholder="NEL 101"
+              />
+            </div>
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-3 gap-2">
+              <label className={`${labelClasses} mb-0`}>Class Schedule</label>
+              <button
+                type="button"
+                onClick={() =>
+                  setForm((f) => ({
+                    ...f,
+                    schedule: [...f.schedule, emptyPeriod()],
+                  }))
+                }
+                className={`h-8 px-3 rounded-lg text-xs font-bold border inline-flex items-center gap-1.5 shrink-0 transition-colors ${
+                  darkMode
+                    ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
+                    : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+                }`}
+              >
+                <Plus size={13} />
+                Add Period
+              </button>
+            </div>
+
+            {form.schedule.length === 0 && (
+              <p className={`text-xs font-semibold ${textMuted}`}>
+                No periods added yet.
               </p>
             )}
+
+            <div className="space-y-3">
+              {form.schedule.map((period) => (
+                <div
+                  key={period.id}
+                  className={`rounded-xl border p-3 sm:p-4 space-y-3 ${panelBorder}`}
+                >
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <select
+                      className={inputClasses}
+                      value={period.subject}
+                      disabled={form.gradeLevelId === "" || loadingSubjects}
+                      onChange={(e) =>
+                        updatePeriod(period.id, { subject: e.target.value })
+                      }
+                    >
+                      <option value="">
+                        {form.gradeLevelId === ""
+                          ? "Select a grade level first"
+                          : loadingSubjects
+                            ? "Loading…"
+                            : subjects.length === 0
+                              ? "No subjects found"
+                              : "Select subject…"}
+                      </option>
+                      {subjects.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.subject_name}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      className={inputClasses}
+                      value={period.teacherId}
+                      disabled={loadingAllTeachers}
+                      onChange={(e) =>
+                        updatePeriod(period.id, { teacherId: e.target.value })
+                      }
+                    >
+                      <option value="">
+                        {loadingAllTeachers ? "Loading…" : "Subject teacher…"}
+                      </option>
+                      {allTeachers.map((t) => (
+                        <option key={t.id} value={t.id}>
+                          {t.last_name}, {t.first_name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1">
+                    {DAYS_OF_WEEK.map((day) => (
+                      <button
+                        key={day}
+                        type="button"
+                        onClick={() => toggleDay(period.id, day)}
+                        className={`w-9 h-9 rounded-lg text-[11px] font-bold transition-colors shrink-0 ${
+                          period.days.includes(day)
+                            ? "text-white"
+                            : darkMode
+                              ? "bg-[#0B1120] text-[#D1D5DB] border border-[#374151]"
+                              : "bg-[#F8FAFC] text-[#64748B] border border-[#E5E7EB]"
+                        }`}
+                        style={
+                          period.days.includes(day)
+                            ? { background: "#1D70D6" }
+                            : undefined
+                        }
+                      >
+                        {day}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                    <input
+                      type="time"
+                      className={`${fieldBase} w-33`}
+                      value={period.startTime}
+                      onChange={(e) =>
+                        updatePeriod(period.id, { startTime: e.target.value })
+                      }
+                    />
+                    <span className={`text-xs font-bold ${textMuted}`}>to</span>
+                    <input
+                      type="time"
+                      className={`${fieldBase} w-33`}
+                      value={period.endTime}
+                      onChange={(e) =>
+                        updatePeriod(period.id, { endTime: e.target.value })
+                      }
+                    />
+
+                    <button
+                      type="button"
+                      aria-label="Remove period"
+                      onClick={() =>
+                        setForm((f) => ({
+                          ...f,
+                          schedule: f.schedule.filter(
+                            (p) => p.id !== period.id,
+                          ),
+                        }))
+                      }
+                      className="ml-auto w-9 h-9 rounded-lg flex items-center justify-center text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors shrink-0"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div>
-            <label className={labelClasses}>Room Number</label>
-            <input
-              className={inputClasses}
-              value={form.room}
-              onChange={(e) => setForm((f) => ({ ...f, room: e.target.value }))}
-              placeholder="NEL 101"
-            />
-          </div>
-        </div>
-
-        <div>
-          <div className="flex items-center justify-between mb-3 gap-2">
-            <label className={`${labelClasses} mb-0`}>Class Schedule</label>
+          <div className="flex gap-3 pt-2">
             <button
               type="button"
-              onClick={() =>
-                setForm((f) => ({
-                  ...f,
-                  schedule: [...f.schedule, emptyPeriod()],
-                }))
-              }
-              className={`h-8 px-3 rounded-lg text-xs font-bold border inline-flex items-center gap-1.5 shrink-0 transition-colors ${
+              onClick={() => navigate("/admin/classes")}
+              className={`h-10 px-4 rounded-xl text-xs font-bold border transition-colors ${
                 darkMode
                   ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
                   : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
               }`}
             >
-              <Plus size={13} />
-              Add Period
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 transition-colors hover:bg-[#6B0000] disabled:opacity-60 disabled:cursor-not-allowed"
+              style={{ background: ACCENT }}
+            >
+              <Save size={14} />
+              {submitting
+                ? "Saving…"
+                : isEditing
+                  ? "Save Changes"
+                  : "Add Class"}
             </button>
           </div>
-
-          {form.schedule.length === 0 && (
-            <p className={`text-xs font-semibold ${textMuted}`}>
-              No periods added yet.
-            </p>
-          )}
-
-          <div className="space-y-3">
-            {form.schedule.map((period) => (
-              <div
-                key={period.id}
-                className={`rounded-xl border p-3 sm:p-4 space-y-3 ${panelBorder}`}
-              >
-                <div className="grid sm:grid-cols-2 gap-3">
-                  <select
-                    className={inputClasses}
-                    value={period.subject}
-                    disabled={form.gradeLevelId === "" || loadingSubjects}
-                    onChange={(e) =>
-                      updatePeriod(period.id, { subject: e.target.value })
-                    }
-                  >
-                    <option value="">
-                      {form.gradeLevelId === ""
-                        ? "Select a grade level first"
-                        : loadingSubjects
-                          ? "Loading…"
-                          : subjects.length === 0
-                            ? "No subjects found"
-                            : "Select subject…"}
-                    </option>
-                    {subjects.map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.subject_name}
-                      </option>
-                    ))}
-                  </select>
-                  <select
-                    className={inputClasses}
-                    value={period.teacherId}
-                    disabled={loadingAllTeachers}
-                    onChange={(e) =>
-                      updatePeriod(period.id, { teacherId: e.target.value })
-                    }
-                  >
-                    <option value="">
-                      {loadingAllTeachers ? "Loading…" : "Subject teacher…"}
-                    </option>
-                    {allTeachers.map((t) => (
-                      <option key={t.id} value={t.id}>
-                        {t.last_name}, {t.first_name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="flex flex-wrap gap-1">
-                  {DAYS_OF_WEEK.map((day) => (
-                    <button
-                      key={day}
-                      type="button"
-                      onClick={() => toggleDay(period.id, day)}
-                      className={`w-9 h-9 rounded-lg text-[11px] font-bold transition-colors shrink-0 ${
-                        period.days.includes(day)
-                          ? "text-white"
-                          : darkMode
-                            ? "bg-[#0B1120] text-[#D1D5DB] border border-[#374151]"
-                            : "bg-[#F8FAFC] text-[#64748B] border border-[#E5E7EB]"
-                      }`}
-                      style={
-                        period.days.includes(day)
-                          ? { background: "#1D70D6" }
-                          : undefined
-                      }
-                    >
-                      {day}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                  <input
-                    type="time"
-                    className={`${fieldBase} w-33`}
-                    value={period.startTime}
-                    onChange={(e) =>
-                      updatePeriod(period.id, { startTime: e.target.value })
-                    }
-                  />
-                  <span className={`text-xs font-bold ${textMuted}`}>to</span>
-                  <input
-                    type="time"
-                    className={`${fieldBase} w-33`}
-                    value={period.endTime}
-                    onChange={(e) =>
-                      updatePeriod(period.id, { endTime: e.target.value })
-                    }
-                  />
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setForm((f) => ({
-                        ...f,
-                        schedule: f.schedule.filter((p) => p.id !== period.id),
-                      }))
-                    }
-                    className="ml-auto w-9 h-9 rounded-lg flex items-center justify-center text-[#B91C1C] hover:bg-[#FEE2E2] transition-colors shrink-0"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
-          <button
-            type="button"
-            onClick={() => navigate("/admin/classes")}
-            className={`h-10 px-4 rounded-xl text-xs font-bold border transition-colors ${
-              darkMode
-                ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-                : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
-            }`}
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={submitting}
-            className="h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center justify-center gap-2 transition-colors hover:bg-[#6B0000] disabled:opacity-60"
-            style={{ background: "#8B0D0D" }}
-          >
-            <Save size={14} />
-            {submitting ? "Saving…" : isEditing ? "Save Changes" : "Add Class"}
-          </button>
-        </div>
-      </form>
-    </section>
+        </form>
+      </section>
+    </div>
   );
 }

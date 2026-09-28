@@ -1,12 +1,32 @@
 // src/components/ProfileMenu.tsx
 import { useState, useRef, useEffect } from "react";
-import { User, ChevronDown, Pencil, Check } from "lucide-react";
+import { createPortal } from "react-dom";
+import { ChevronDown, Pencil, Check, X, UserRound } from "lucide-react";
 import { useSettings } from "../../../features/profiles/admin/pages/settings/context/SettingsContext";
 import { useAuth } from "../../../features/auth/context/authContext";
 import { PROFILE_FIELD_CONFIG } from "../../profile/config/ProfileFieldConfig";
 import type { UserProfile } from "../../profile/types/types";
 
+// These are in the SAME folder as ProfileMenu.tsx (src/shared/profile/components/avatars/)
+import teacherWomanImg from "./avatars/teacher_women.jpg";
+import teacherManImg from "./avatars/teacher_man.jpg";
+import adminHatImg from "./avatars/admin_hat.png";
+
 const ACCENT = "#6B0000";
+const APPLE_EASE = "ease-[cubic-bezier(0.32,0.72,0,1)]";
+
+const DEFAULT_AVATARS = {
+  female: teacherWomanImg,
+  male: teacherManImg,
+} as const;
+
+function getAvatarSrc(user: UserProfile & { avatarUrl?: string }): string | undefined {
+  if (user.avatarUrl) return user.avatarUrl;
+  if (user.role === "ADMIN") return adminHatImg;
+  if (user.gender === "male") return DEFAULT_AVATARS.male;
+  if (user.gender === "female") return DEFAULT_AVATARS.female;
+  return undefined;
+}
 
 export function ProfileMenu() {
   const { darkMode } = useSettings();
@@ -15,12 +35,16 @@ export function ProfileMenu() {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<UserProfile | null>(user);
   const ref = useRef<HTMLDivElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => setDraft(user), [user]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      const clickedTrigger = ref.current?.contains(target);
+      const clickedDrawer = drawerRef.current?.contains(target);
+      if (!clickedTrigger && !clickedDrawer) {
         setOpen(false);
         setEditing(false);
       }
@@ -29,16 +53,32 @@ export function ProfileMenu() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (open) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [open]);
+
+  function closeDrawer() {
+    setOpen(false);
+    setEditing(false);
+  }
+
   if (!user || !draft) return null;
 
   const fields = PROFILE_FIELD_CONFIG[user.role];
   const mutedText = darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]";
-  const inputClasses = `w-full h-9 px-2.5 rounded-lg border text-xs font-semibold outline-none transition-colors ${
+  const borderColor = darkMode ? "border-[#1F2937]" : "border-[#EEF0F3]";
+  const labelClasses = `text-[10.5px] font-semibold uppercase tracking-wider ${mutedText}`;
+  const inputClasses = `w-full h-10 px-3 rounded-lg border text-[13px] font-medium outline-none transition-colors ${
     darkMode
-      ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#6B0000]"
-      : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#6B0000]"
+      ? "bg-[#0B1120] border-[#2A3441] text-white focus:border-[#8A1F1F]"
+      : "bg-[#FAFBFC] border-[#E3E6EA] text-[#111827] focus:border-[#6B0000]"
   }`;
-  const dropdownLabel = `text-[10px] font-bold uppercase tracking-wide mb-1.5 ${mutedText}`;
 
   function startEdit() {
     setDraft(user);
@@ -58,8 +98,178 @@ export function ProfileMenu() {
     setEditing(false);
   }
 
+  const avatarSrc = getAvatarSrc(user as any);
+
+  const drawer = (
+    <>
+      {/* Backdrop */}
+      <div
+        onClick={closeDrawer}
+        aria-hidden={!open}
+        className={`fixed inset-0 z-[90] modal-backdrop transition-opacity duration-300 ${
+          open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+      />
+
+      {/* Drawer panel */}
+      <div
+        ref={drawerRef}
+        role="dialog"
+        aria-modal="true"
+        className={`fixed inset-y-0 right-0 z-[100] w-[26rem] max-w-[90vw] h-full flex flex-col shadow-[-8px_0_30px_-12px_rgba(0,0,0,0.35)] transition-transform duration-500 ${APPLE_EASE} ${
+          darkMode ? "bg-[#0F172A]" : "bg-white"
+        } ${open ? "translate-x-0" : "translate-x-full"}`}
+      >
+        {/* Header */}
+        <div
+          className={`px-6 pt-8 pb-6 flex flex-col items-center text-center shrink-0 border-b ${borderColor}`}
+        >
+          <button
+            onClick={closeDrawer}
+            aria-label="Close"
+            className={`self-end -mt-2 -mr-1 mb-2 w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+              darkMode
+                ? "text-[#9CA3AF] hover:bg-white/10 hover:text-white"
+                : "text-[#9CA3AF] hover:bg-black/5 hover:text-[#374151]"
+            }`}
+          >
+            <X size={16} />
+          </button>
+
+          <div
+            className={`w-20 h-20 rounded-full overflow-hidden flex items-center justify-center shrink-0 ring-1 ${
+              darkMode ? "ring-white/10" : "ring-black/5"
+            }`}
+          >
+            {avatarSrc ? <img src={avatarSrc} alt={`${user.name}'s profile`} className="w-full h-full object-cover" /> : <UserRound className="h-9 w-9 text-gray-400" aria-label="Profile image unavailable" />}
+          </div>
+
+          <p
+            className={`mt-3.5 text-[16px] font-semibold truncate max-w-full ${
+              darkMode ? "text-white" : "text-[#111827]"
+            }`}
+          >
+            {user.name}
+          </p>
+
+          <span
+            className={`inline-block mt-1.5 text-[10.5px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
+              darkMode
+                ? "bg-white/10 text-white/70"
+                : "bg-[#F3E9E9] text-[#6B0000]"
+            }`}
+          >
+            {user.role}
+          </span>
+        </div>
+
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto px-6 py-5">
+          {editing ? (
+            <>
+              <p className={`${labelClasses} mb-4`}>Edit details</p>
+              <div className="space-y-4">
+                {fields
+                  .filter((f) => f.editable)
+                  .map((f) => (
+                    <div key={f.key}>
+                      <label className={`${labelClasses} block mb-1.5`}>
+                        {f.label}
+                      </label>
+                      <input
+                        value={(draft as any)[f.key] ?? ""}
+                        onChange={(e) =>
+                          setDraft({
+                            ...draft,
+                            [f.key]: e.target.value,
+                          } as UserProfile)
+                        }
+                        className={inputClasses}
+                      />
+                    </div>
+                  ))}
+              </div>
+            </>
+          ) : (
+            <>
+              <p className={`${labelClasses} mb-1`}>Account details</p>
+              <div className={`divide-y ${borderColor}`}>
+                {fields
+                  .filter((f) => f.showInSummary)
+                  .map((f) => {
+                    const Icon = f.icon;
+                    return (
+                      <div
+                        key={f.key}
+                        className="flex items-center gap-3 py-3.5"
+                      >
+                        <div
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                            darkMode ? "bg-white/5" : "bg-[#F6F7F9]"
+                          }`}
+                        >
+                          <Icon size={14} className={mutedText} />
+                        </div>
+                        <div className="min-w-0">
+                          <p className={`${labelClasses} leading-none mb-1`}>
+                            {f.label}
+                          </p>
+                          <p
+                            className={`text-[13.5px] font-medium truncate ${
+                              darkMode ? "text-[#E5E7EB]" : "text-[#1F2937]"
+                            }`}
+                          >
+                            {(user as any)[f.key]}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Footer actions */}
+        <div className={`px-6 py-5 border-t shrink-0 ${borderColor}`}>
+          {editing ? (
+            <div className="flex gap-2.5">
+              <button
+                onClick={cancel}
+                className={`flex-1 h-10 rounded-lg text-[13px] font-semibold border transition-colors ${
+                  darkMode
+                    ? "border-[#2A3441] text-[#D1D5DB] hover:bg-white/5"
+                    : "border-[#E3E6EA] text-[#374151] hover:bg-[#F6F7F9]"
+                }`}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={save}
+                className="flex-1 h-10 rounded-lg text-[13px] font-semibold text-white inline-flex items-center justify-center gap-1.5 shadow-sm transition-opacity hover:opacity-90"
+                style={{ background: ACCENT }}
+              >
+                <Check size={14} />
+                Save Changes
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={startEdit}
+              className="w-full h-10 rounded-lg text-[13px] font-semibold text-white inline-flex items-center justify-center gap-1.5 shadow-sm transition-opacity hover:opacity-90"
+              style={{ background: ACCENT }}
+            >
+              <Pencil size={13} />
+              Edit Profile
+            </button>
+          )}
+        </div>
+      </div>
+    </>
+  );
+
   return (
-    <div className="relative" ref={ref}>
+    <div ref={ref}>
       <button
         onClick={() => setOpen((v) => !v)}
         className={`group flex items-center gap-2.5 shrink-0 rounded-xl pl-1.5 pr-2.5 py-1.5 border transition-all duration-200 ${
@@ -73,13 +283,13 @@ export function ProfileMenu() {
         }`}
       >
         <div
-          className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ring-2 ring-transparent transition-all duration-200 ${
+          className={`w-9 h-9 rounded-full overflow-hidden flex items-center justify-center shrink-0 ring-2 ring-transparent transition-all duration-200 ${
             darkMode
               ? "bg-[#374151] group-hover:ring-[#6B0000]/40"
               : "bg-[#E5E5E5] group-hover:ring-[#6B0000]/25"
           }`}
         >
-          <User size={17} className="text-[#6B0000]" />
+          {avatarSrc ? <img src={avatarSrc} alt={`${user.name}'s profile`} className="w-full h-full object-cover" /> : <UserRound className="h-5 w-5 text-gray-400" aria-label="Teacher profile image unavailable" />}
         </div>
 
         <div className="hidden lg:block leading-tight text-left">
@@ -101,105 +311,7 @@ export function ProfileMenu() {
         />
       </button>
 
-      {open && (
-        <div
-          className={`absolute right-0 top-14 z-30 w-72 rounded-2xl border shadow-lg overflow-hidden ${
-            darkMode
-              ? "bg-[#111827] border-[#374151]"
-              : "bg-white border-[#E5E7EB]"
-          }`}
-        >
-          <div
-            className="px-4 py-4 flex items-center gap-3"
-            style={{ background: ACCENT }}
-          >
-            <div className="w-11 h-11 rounded-full bg-white/15 flex items-center justify-center shrink-0">
-              <User size={20} className="text-white" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-white font-bold text-sm truncate">
-                {user.name}
-              </p>
-              <p className="text-white/70 text-xs truncate">{user.role}</p>
-            </div>
-          </div>
-
-          <div className="p-4 space-y-3">
-            {editing ? (
-              <>
-                {fields
-                  .filter((f) => f.editable)
-                  .map((f) => (
-                    <div key={f.key}>
-                      <label className={dropdownLabel}>{f.label}</label>
-                      <input
-                        value={(draft as any)[f.key] ?? ""}
-                        onChange={(e) =>
-                          setDraft({
-                            ...draft,
-                            [f.key]: e.target.value,
-                          } as UserProfile)
-                        }
-                        className={inputClasses}
-                      />
-                    </div>
-                  ))}
-                <div className="flex gap-2 pt-1">
-                  <button
-                    onClick={cancel}
-                    className={`flex-1 h-9 rounded-lg text-xs font-bold border transition-colors ${
-                      darkMode
-                        ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-                        : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
-                    }`}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={save}
-                    className="flex-1 h-9 rounded-lg text-xs font-bold text-white inline-flex items-center justify-center gap-1.5 transition-opacity hover:opacity-90"
-                    style={{ background: ACCENT }}
-                  >
-                    <Check size={13} />
-                    Save
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                {fields
-                  .filter((f) => f.showInSummary)
-                  .map((f) => {
-                    const Icon = f.icon;
-                    return (
-                      <div
-                        key={f.key}
-                        className="flex items-center gap-2 text-xs"
-                      >
-                        <Icon size={13} className={mutedText} />
-                        <span
-                          className={
-                            darkMode ? "text-[#D1D5DB]" : "text-[#374151]"
-                          }
-                        >
-                          {(user as any)[f.key]}
-                        </span>
-                      </div>
-                    );
-                  })}
-                <button
-                  onClick={startEdit}
-                  className="w-full h-9 rounded-lg text-xs font-bold text-white inline-flex items-center justify-center gap-1.5 mt-2 transition-opacity hover:opacity-90"
-                  style={{ background: ACCENT }}
-                >
-                  <Pencil size={13} />
-                  Edit Profile
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      )}
+      {createPortal(drawer, document.body)}
     </div>
   );
 }

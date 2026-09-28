@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import {
   TrendingDown,
   TrendingUp,
-  User,
   ChevronRight,
   ChevronDown,
   Activity,
@@ -22,6 +21,7 @@ import {
 // this page (it's "./services/..." on the Attendance page itself).
 import { useSelectedAdvisorySection } from "../attendance/services/useSelectedAdvisorySection.service";
 import { AdvisorySectionTabs } from "../attendance/components/AdvisorySectionTabs";
+import { StudentAvatar } from "@shared/components/StudentAvatar";
 
 const ACCENT = "#6B0000";
 
@@ -201,13 +201,7 @@ export function HolisticOverviewPage() {
       >
         <td className="px-4 py-2">
           <div className="flex min-w-0 items-center gap-2.5">
-            <span
-              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-                darkMode ? "bg-white/10" : "bg-black/5"
-              } ${textMuted}`}
-            >
-              <User size={13} />
-            </span>
+            <StudentAvatar gender={genderById.get(String(student.studentId))} name={student.studentName} />
             <div className="min-w-0">
               <p className={`truncate text-xs font-bold ${textPrimary}`}>{student.studentName}</p>
               <p className={`truncate text-[11px] font-medium ${textMuted}`}>
@@ -282,11 +276,8 @@ export function HolisticOverviewPage() {
       <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2.5">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-maroon">
-              <Sparkles size={28} />
-            </span>
             <div>
-              <h1 className={`text-lg font-black tracking-tight ${textPrimary}`}>Holistic Overview</h1>
+              <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>Holistic Overview</h1>
               <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
                 Current state, growth over the term, and a per-domain breakdown per student.
               </p>
@@ -365,7 +356,6 @@ export function HolisticOverviewPage() {
           >
             <div className="flex min-w-0 items-center gap-2">
               <p className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textPrimary}`}>
-                <Sparkles size={13} style={{ color: ACCENT }} />
                 Assessment Roster
               </p>
               <p className={`truncate text-[11px] font-medium ${textMuted}`}>

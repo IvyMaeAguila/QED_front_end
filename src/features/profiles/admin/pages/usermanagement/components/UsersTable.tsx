@@ -14,20 +14,7 @@ interface UsersTableProps {
   onDelete: (user: UserAccount) => void;
 }
 
-const roleBadge = (role: UserAccount["role"]) => {
-  switch (role) {
-    case "ADMIN":
-      return { color: "#8B0D0D", bg: "#FDECEC" };
-    case "PRINCIPAL":
-      return { color: "#C98A2B", bg: "#FFF4DF" };
-    case "TEACHER":
-      return { color: "#1D70D6", bg: "#EAF2FF" };
-    case "PARENT":
-      return { color: "#7C3AED", bg: "#F3E8FF" };
-    default:
-      return { color: "#6B7280", bg: "#F1F5F9" };
-  }
-};
+const ROLE_COLOR = "#8B0D0D";
 
 const statusBadge = (status: UserAccount["status"]) =>
   status === "Active"
@@ -37,7 +24,6 @@ const statusBadge = (status: UserAccount["status"]) =>
 export function UsersTable({
   users,
   darkMode,
-  panelBorder,
   textPrimary,
   textMuted,
   onView,
@@ -52,86 +38,88 @@ export function UsersTable({
     );
   }
 
+  function renderRow(user: UserAccount, index: number) {
+    const sBadge = statusBadge(user.status);
+    return (
+      <tr
+        key={`${user.role}-${user.id}`}
+        className={`border-t transition-colors ${
+          darkMode
+            ? "border-white/10 hover:bg-white/5"
+            : "border-black/10 hover:bg-black/5"
+        }`}
+      >
+        <td className={`whitespace-nowrap px-4 py-2 text-[11px] font-bold tabular-nums ${textMuted}`}>
+          {index + 1}
+        </td>
+        <td className={`px-4 py-2 text-xs font-bold whitespace-nowrap ${textPrimary}`}>
+          {formatFullName(user)}
+        </td>
+        <td className="px-4 py-2">
+          <span
+            className="inline-flex items-center gap-1 text-[11px] font-bold whitespace-nowrap"
+            style={{ color: ROLE_COLOR }}
+          >
+            {user.role === "PRINCIPAL" && <Crown size={11} />}
+            {ROLE_LABELS[user.role]}
+          </span>
+        </td>
+        <td className={`px-4 py-2 text-[11px] font-medium ${textMuted}`}>{user.email}</td>
+        <td className={`px-4 py-2 text-[11px] font-medium whitespace-nowrap ${textMuted}`}>
+          {user.contactNumber}
+        </td>
+        <td className="px-4 py-2">
+          <div className="flex items-center justify-between gap-2">
+            <span
+              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold whitespace-nowrap"
+              style={{ background: darkMode ? `${sBadge.color}25` : sBadge.bg, color: sBadge.color }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: sBadge.dot }} />
+              {user.status}
+            </span>
+            <RowActionsMenu
+              darkMode={darkMode}
+              onView={() => onView(user)}
+              onEdit={() => onEdit(user)}
+              onDelete={() => onDelete(user)}
+            />
+          </div>
+        </td>
+      </tr>
+    );
+  }
+
   return (
     <>
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className={darkMode ? "bg-[#0B1120]" : "bg-[#F8FAFC]"}>
+            <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
               {[
-                // "Employee/Parent ID",
-                "Full Name",
-                "Role",
-                "Email Address",
-                "Contact Number",
-                "Status",
-                "",
+                { label: "No.", cls: "w-14 text-left" },
+                { label: "Full Name", cls: "text-left" },
+                { label: "Role", cls: "text-left" },
+                { label: "Email Address", cls: "text-left" },
+                { label: "Contact Number", cls: "text-left" },
+                { label: "Status", cls: "text-left" },
               ].map((h) => (
                 <th
-                  key={h}
-                  className={`text-left font-bold text-[11px] uppercase tracking-wider px-5 py-3 whitespace-nowrap ${textMuted}`}
+                  key={h.label}
+                  className={`whitespace-nowrap px-4 py-2 text-[11px] font-black uppercase tracking-wider ${h.cls} ${textMuted}`}
                 >
-                  {h}
+                  {h.label}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody>
-            {users.map((user) => {
-              const rBadge = roleBadge(user.role);
-              const sBadge = statusBadge(user.status);
-              return (
-                // <tr key={user.id} className={`border-t ${panelBorder} hover:bg-black/2 transition-colors`}>
-                <tr key={`${user.role}-${user.id}`} className={`border-t ${panelBorder} hover:bg-black/2 transition-colors`}>
-                  {/* <td className={`px-5 py-4 font-extrabold tabular-nums whitespace-nowrap ${textPrimary}`}>
-                    {user.id}
-                  </td> */}
-                  <td className={`px-5 py-4 font-semibold whitespace-nowrap ${textPrimary}`}>
-                    {formatFullName(user)}
-                  </td>
-                  <td className="px-5 py-4">
-                    <span
-                      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold whitespace-nowrap"
-                      style={{ background: darkMode ? `${rBadge.color}25` : rBadge.bg, color: rBadge.color }}
-                    >
-                      {user.role === "PRINCIPAL" && <Crown size={11} />}
-                      {ROLE_LABELS[user.role]}
-                    </span>
-                  </td>
-                  <td className={`px-5 py-4 font-medium ${textMuted}`}>{user.email}</td>
-                  <td className={`px-5 py-4 font-medium whitespace-nowrap ${textMuted}`}>{user.contactNumber}</td>
-                  <td className="px-5 py-4">
-                    <span
-                      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold whitespace-nowrap"
-                      style={{ background: darkMode ? `${sBadge.color}25` : sBadge.bg, color: sBadge.color }}
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full" style={{ background: sBadge.dot }} />
-                      {user.status}
-                    </span>
-                  </td>
-                  <td className="px-5 py-4">
-                    <div className="flex justify-end">
-                      <RowActionsMenu
-                        darkMode={darkMode}
-                        onView={() => onView(user)}
-                        onEdit={() => onEdit(user)}
-                        onDelete={() => onDelete(user)}
-                      />
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
+          <tbody>{users.map((user, i) => renderRow(user, i))}</tbody>
         </table>
       </div>
 
       <div className="md:hidden divide-y divide-[#E5E7EB]">
         {users.map((user) => {
-          const rBadge = roleBadge(user.role);
           const sBadge = statusBadge(user.status);
           return (
-            // <div key={user.id} className="p-4 space-y-3">
             <div key={`${user.role}-${user.id}`} className="p-4 space-y-3">
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -140,8 +128,8 @@ export function UsersTable({
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <span
-                    className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold"
-                    style={{ background: darkMode ? `${rBadge.color}25` : rBadge.bg, color: rBadge.color }}
+                    className="inline-flex items-center gap-1 text-[11px] font-bold"
+                    style={{ color: ROLE_COLOR }}
                   >
                     {user.role === "PRINCIPAL" && <Crown size={11} />}
                     {ROLE_LABELS[user.role]}

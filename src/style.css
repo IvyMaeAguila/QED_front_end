@@ -1,6 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
+@utility modal-backdrop {
+  background-color: rgb(15 23 42 / 0.38);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* Keep modal surfaces consistent across light and dark app themes. The
+   backdrop stays theme-neutral while every dialog surface follows the
+   clean white treatment used by the attendance summary. */
+.modal-backdrop > :not(.modal-backdrop),
+.modal-backdrop ~ [role="dialog"],
+[data-modal-panel="true"] {
+  background-color: #fff !important;
+  color: #111827;
+  border-color: #e5e7eb !important;
+  border-top: 4px solid #6b0000 !important;
+  border-radius: 1rem;
+  box-shadow: 0 24px 64px rgb(15 23 42 / 0.18);
+}
+
+.modal-backdrop > :not(.modal-backdrop) .text-white:not(button):not([class*="bg-"]):not(a),
+.modal-backdrop ~ [role="dialog"] .text-white:not(button):not([class*="bg-"]):not(a),
+[data-modal-panel="true"] .text-white:not(button):not([class*="bg-"]):not(a) {
+  color: #111827 !important;
+}
+
 @keyframes toast-in {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }

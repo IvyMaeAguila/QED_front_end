@@ -12,7 +12,7 @@ interface LegendsModalProps {
 
 export function LegendsModal({ onClose, darkMode, panelBorder, textPrimary }: LegendsModalProps) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
       <div
         className={`w-full max-w-sm rounded-2xl overflow-hidden shadow-xl ${darkMode ? "bg-[#111827]" : "bg-white"}`}
         onClick={(e) => e.stopPropagation()}

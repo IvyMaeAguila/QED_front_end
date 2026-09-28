@@ -27,8 +27,14 @@ export function TeacherAttendanceRecordsPage() {
       <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-start gap-2.5">
-            <button onClick={() => navigate("/teacher/attendance")} aria-label="Go back" className={`mt-1 shrink-0 ${textMuted} hover:${textPrimary}`}>
-              <ChevronLeft size={22} />
+            <button
+              onClick={() => navigate("/teacher/attendance")}
+              aria-label="Go back"
+              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted} ${
+                darkMode ? "hover:bg-white/10 hover:text-white" : "hover:bg-black/5 hover:text-black"
+              }`}
+            >
+              <ChevronLeft size={18} />
             </button>
             <div>
               <p className="text-[10px] font-extrabold uppercase tracking-[0.18em]" style={{ color: ACCENT }}>

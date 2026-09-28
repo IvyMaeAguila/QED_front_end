@@ -3,6 +3,8 @@ import { ChevronLeft, Download } from "lucide-react";
 
 interface AdvisoryHeaderProps {
   darkMode: boolean;
+  panelBg: string;
+  panelBorder: string;
   textPrimary: string;
   textMuted: string;
   gradeLevel: string;
@@ -18,6 +20,8 @@ interface AdvisoryHeaderProps {
 
 export function AdvisoryHeader({
   darkMode,
+  panelBg,
+  panelBorder,
   textPrimary,
   textMuted,
   gradeLevel,
@@ -37,9 +41,11 @@ export function AdvisoryHeader({
           type="button"
           onClick={onBack}
           aria-label="Go back"
-          className={`mt-1 shrink-0 ${textMuted}`}
+          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted} ${
+            darkMode ? "hover:bg-white/10 hover:text-white" : "hover:bg-black/5 hover:text-black"
+          }`}
         >
-          <ChevronLeft size={22} />
+          <ChevronLeft size={18} />
         </button>
         <div>
           <p

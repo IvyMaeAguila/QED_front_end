@@ -40,6 +40,7 @@ interface FormState {
   email: string;
   contactNumber: string;
   status: UserStatus;
+  gender: "Male" | "Female" | "";
 }
 
 // Payload sent to /addUser and /editUser. userName/generatedPassword are only
@@ -54,6 +55,7 @@ interface AddUserPayload {
   email: string;
   contactNumber: string;
   status: UserStatus;
+  gender?: "Male" | "Female" | "";
   userName?: string;
   generatedPassword?: string;
 }
@@ -66,6 +68,7 @@ const emptyForm: FormState = {
   email: "",
   contactNumber: "",
   status: "Active",
+  gender: "",
 };
 
 // Backend/DB values aren't guaranteed to come back as strings (e.g. contactNumber
@@ -98,6 +101,7 @@ export function UserFormPage() {
           email: toStr(existing.email),
           contactNumber: toStr(existing.contactNumber),
           status: existing.status,
+          gender: existing.gender ?? "",
         }
       : { ...emptyForm, role: presetRole ?? emptyForm.role },
   );
@@ -127,6 +131,7 @@ export function UserFormPage() {
     action?.();
   }
 
+  // ── Shared design tokens (same as StudentFormPage) ──
   const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
   const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
   const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
@@ -177,6 +182,8 @@ export function UserFormPage() {
       next.email = "Enter a valid email address.";
     if (!contactNumber.trim())
       next.contactNumber = "Contact number is required.";
+    if (form.role !== "ADMIN" && !form.gender)
+      next.gender = "Select this user's gender.";
     setErrors(next);
     return Object.keys(next).length === 0;
   }
@@ -217,6 +224,7 @@ export function UserFormPage() {
         email: toStr(form.email).trim(),
         contactNumber: toStr(form.contactNumber).trim(),
         status: form.status,
+        ...(form.role !== "ADMIN" ? { gender: form.gender } : {}),
         // only present on create — backend uses these to send the
         // credentials email, and should never persist the plain password
         ...(generatedPassword && userName
@@ -290,12 +298,14 @@ export function UserFormPage() {
 
   return (
     <div className="max-w-7xl mx-auto mt-6 space-y-6 pb-12 px-4 sm:px-6">
-      <section className={cardClasses}>
+      <section className={cardClasses} aria-label="User account form">
+        {/* Card header — back button + icon/title on the left, helper text on the right */}
         <div className={cardHeaderClasses}>
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => navigate("/admin/users")}
+              aria-label="Go back"
               className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-colors ${
                 darkMode
                   ? "border-[#374151] hover:bg-white/10 text-white"
@@ -394,7 +404,7 @@ export function UserFormPage() {
             <div>
               <label className={labelClasses}>Role</label>
               <select
-                className={`${inputClasses} font-bold disabled:opacity-50 disabled:cursor-not-allowed`}
+                className={`${inputClasses} disabled:opacity-50 disabled:cursor-not-allowed`}
                 value={form.role}
                 disabled={isEditing}
                 onChange={(e) =>
@@ -409,6 +419,39 @@ export function UserFormPage() {
               </select>
             </div>
           </div>
+
+          {form.role !== "ADMIN" && (
+            <div>
+              <label className={labelClasses} htmlFor="user-gender">
+                Gender
+              </label>
+              <select
+                id="user-gender"
+                className={inputClasses}
+                value={form.gender}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    gender: e.target.value as FormState["gender"],
+                  })
+                }
+              >
+                <option value="">Select gender…</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+              {errors.gender && (
+                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                  {errors.gender}
+                </p>
+              )}
+              {isEditing && !existing?.gender && (
+                <p className={`mt-1 text-[11px] ${textMuted}`}>
+                  Choose the correct value for this existing account.
+                </p>
+              )}
+            </div>
+          )}
 
           <div>
             <label className={labelClasses}>Email Address</label>
@@ -433,6 +476,7 @@ export function UserFormPage() {
                 className={inputClasses}
                 value={form.contactNumber}
                 maxLength={11}
+                inputMode="numeric"
                 onChange={(e) =>
                   setForm({ ...form, contactNumber: e.target.value })
                 }

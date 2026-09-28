@@ -1,4 +1,5 @@
 import { useEffect, useState, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import { Plus, Tag, X } from "lucide-react";
 import { createTopic, fetchTopics, type Topic } from "../../services/subjectGrading.service";
 
@@ -64,10 +65,9 @@ export function TopicManagerModal({
     }
   }
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-100 flex items-center justify-center p-4"
-      style={{ backgroundColor: "rgba(10,10,15,0.56)", backdropFilter: "blur(6px)" }}
+      className="fixed inset-0 z-[1000] flex items-center justify-center p-4 modal-backdrop"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -150,6 +150,7 @@ export function TopicManagerModal({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

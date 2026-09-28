@@ -79,7 +79,7 @@ export function DangerConfirmModal({
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40"
+      className="fixed inset-0 z-[60] flex items-center justify-center p-4 modal-backdrop"
       onClick={submitting ? undefined : onClose}
     >
       <div

@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useOutletContext } from "react-router-dom";
 import ExcelJS from "exceljs";
-import { ChevronLeft, Download, Loader2, Search, User, Users } from "lucide-react";
+import { ChevronLeft, Download, Loader2, Search, Users } from "lucide-react";
+import { StudentAvatar } from "@shared/components/StudentAvatar";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
 import {
   subjectClassListService,
@@ -122,13 +123,7 @@ export function SubjectClassListPage() {
         <td className={`px-4 py-2 text-[11px] font-bold tabular-nums ${textMuted}`}>{index + 1}</td>
         <td className="px-4 py-2">
           <div className="flex min-w-0 items-center gap-2.5">
-            <span
-              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-                darkMode ? "bg-white/10" : "bg-black/5"
-              } ${textMuted}`}
-            >
-              <User size={13} />
-            </span>
+            <StudentAvatar gender={student.gender} name={`${student.lastName}, ${student.firstName}`} />
             <span className={`truncate text-xs font-bold ${textPrimary}`}>
               {student.lastName}, {student.firstName} {middleInitial(student.middleName)}
             </span>

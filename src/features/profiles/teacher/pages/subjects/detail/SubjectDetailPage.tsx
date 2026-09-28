@@ -386,10 +386,11 @@ export function SubjectDetailPage() {
 
         <div className="w-full px-6 lg:px-8 pt-6 space-y-6">
           <div className="flex items-start gap-2.5">
-            <ArrowLeft
-              size={22}
-              className={`mt-1 shrink-0 opacity-30 ${textMuted}`}
-            />
+            <div
+              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border opacity-30 ${panelBg} ${panelBorder}`}
+            >
+              <ArrowLeft size={18} className={textMuted} />
+            </div>
             <Bone className="h-9 w-9 rounded-xl shrink-0" />
             <div className="min-w-0 flex-1">
               <Bone className="h-4 w-40" />
@@ -478,9 +479,11 @@ export function SubjectDetailPage() {
           <button
             onClick={() => navigate(-1)}
             aria-label="Go back"
-            className={`shrink-0 transition-colors ${textMuted} hover:${textPrimary}`}
+            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted} ${
+              darkMode ? "hover:bg-white/10 hover:text-white" : "hover:bg-black/5 hover:text-black"
+            }`}
           >
-            <ArrowLeft size={22} />
+            <ArrowLeft size={18} />
           </button>
           <div
             className={`rounded-2xl border p-8 text-center shadow-card ${panelBg} ${panelBorder}`}
@@ -509,13 +512,12 @@ export function SubjectDetailPage() {
           <button
             onClick={handleBack}
             aria-label="Go back"
-            className={`mt-1 shrink-0 transition-colors ${textMuted} hover:${textPrimary}`}
+            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted} ${
+              darkMode ? "hover:bg-white/10 hover:text-white" : "hover:bg-black/5 hover:text-black"
+            }`}
           >
-            <ArrowLeft size={22} />
+            <ArrowLeft size={18} />
           </button>
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-maroon">
-            <BookOpen size={28} />
-          </span>
           <div className="min-w-0">
             <h1
               className={`text-lg font-black tracking-tight truncate ${textPrimary}`}

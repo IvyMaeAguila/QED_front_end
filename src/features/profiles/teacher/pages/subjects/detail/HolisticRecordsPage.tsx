@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { Check, Pencil, Sparkles, User } from "lucide-react";
+import { Check, Pencil, Sparkles } from "lucide-react";
+import { StudentAvatar } from "@shared/components/StudentAvatar";
 import type { RosterStudent } from "./data";
 import { HOLISTIC_COLUMNS, HOLISTIC_LEVELS, type HolisticAxisKey } from "./types/Grading";
 import {
@@ -315,13 +316,7 @@ export function HolisticRecordsSection({
       <tr key={student.id} className={`border-t ${darkMode ? "border-white/10" : "border-black/10"}`}>
         <td className={`sticky left-0 z-10 px-4 py-2 ${stickyCell}`}>
           <div className="flex min-w-0 items-center gap-2.5">
-            <span
-              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-                darkMode ? "bg-white/10" : "bg-black/5"
-              } ${textMuted}`}
-            >
-              <User size={13} />
-            </span>
+            <StudentAvatar gender={student.gender} name={student.name} />
             <span className={`truncate text-xs font-bold ${textPrimary}`}>{student.name}</span>
           </div>
         </td>

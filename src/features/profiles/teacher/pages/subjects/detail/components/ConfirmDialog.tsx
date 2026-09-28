@@ -27,7 +27,7 @@ export function ConfirmDialog({
 
   return (
     <div
-      className="fixed inset-0 z-100 flex items-center justify-center p-4"
+      className="fixed inset-0 z-100 flex items-center justify-center p-4 modal-backdrop"
       style={{ backgroundColor: "rgba(10,10,15,0.56)", backdropFilter: "blur(6px)" }}
       onClick={onCancel}
     >

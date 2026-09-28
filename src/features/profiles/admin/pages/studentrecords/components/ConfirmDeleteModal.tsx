@@ -11,7 +11,7 @@ interface ConfirmDeleteModalProps {
 
 export function ConfirmDeleteModal({ student, darkMode, onCancel, onConfirm }: ConfirmDeleteModalProps) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 modal-backdrop">
       <div
         className={`w-full max-w-sm rounded-2xl border shadow-xl p-6 ${
           darkMode ? "bg-[#111827] border-[#1F2937]" : "bg-white border-[#E5E7EB]"

@@ -53,7 +53,7 @@ export function HelpSupportModal({ open, onClose, darkMode }: HelpSupportModalPr
 
   return (
     <div
-      className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/40"
+      className="fixed inset-0 z-60 flex items-center justify-center p-4 modal-backdrop"
       onClick={onClose}
     >
       <div

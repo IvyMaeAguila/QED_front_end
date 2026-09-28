@@ -11,7 +11,7 @@ interface ExpandedListModalProps extends CalendarTheme {
 
 export function ExpandedListModal({ title, icon, onClose, panelBg, panelBorder, children }: ExpandedListModalProps) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
       <div
         className={`w-full max-w-lg rounded-2xl border shadow-xl overflow-hidden max-h-[85vh] flex flex-col ${panelBg} ${panelBorder}`}
         onClick={(e) => e.stopPropagation()}

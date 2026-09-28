@@ -49,7 +49,7 @@ export function OtpVerificationModal({
 
   return (
     <div
-      className="fixed inset-0 z-200 flex items-center justify-center px-4"
+      className="fixed inset-0 z-200 flex items-center justify-center px-4 modal-backdrop"
       style={{
         backgroundColor: "rgba(10,10,15,0.6)",
         backdropFilter: "blur(8px)",

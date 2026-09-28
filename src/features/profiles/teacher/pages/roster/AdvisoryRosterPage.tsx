@@ -108,6 +108,8 @@ export function AdvisoryRosterPage() {
     <div className="max-w-6xl mx-auto space-y-4 pb-12">
       <AdvisoryHeader
         darkMode={darkMode}
+        panelBg={panelBg}
+        panelBorder={panelBorder}
         textPrimary={textPrimary}
         textMuted={textMuted}
         gradeLevel={section.gradeLevel}

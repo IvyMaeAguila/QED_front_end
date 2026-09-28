@@ -105,7 +105,7 @@ export function AdminLayout({ onLogout }: AdminLayoutProps) {
 
         <Header onMenuClick={() => setSidebarOpen(true)} onLogout={onLogout} />
 
-        <main className="flex-1 overflow-y-auto p-6 relative z-10">
+        <main className="flex-1 overflow-y-auto p-6 relative">
           <Outlet context={theme} />
         </main>
       </div>

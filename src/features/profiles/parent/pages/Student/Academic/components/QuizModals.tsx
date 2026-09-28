@@ -71,7 +71,7 @@ export function EndInterventionConfirm({
   isEnding?: boolean;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-[2px]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
       <div
         role="dialog"
         aria-modal="true"
@@ -123,7 +123,7 @@ const CHECK_COLOR: Record<Difficulty, string> = {
 
 export function AccomplishmentModal({ onContinue }: { onContinue: () => void }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-[2px]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
       <div
         role="dialog"
         aria-modal="true"

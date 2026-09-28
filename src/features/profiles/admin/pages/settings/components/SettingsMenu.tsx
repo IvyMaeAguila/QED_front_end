@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Settings, X, Moon, Sun, Bell, GraduationCap, Info, Pencil, Check, Landmark, Loader2 } from "lucide-react";
 import { useSettings } from "../context/SettingsContext";
 import { ToggleRow } from "./ToggleRow";
 
-const ACCENT = "#6B0000";
+const APPLE_EASE = "ease-[cubic-bezier(0.32,0.72,0,1)]";
 
 export function SettingsMenu() {
   const {
@@ -40,19 +41,37 @@ export function SettingsMenu() {
   const nameInputRef = useRef<HTMLInputElement>(null);
 
   const ref = useRef<HTMLDivElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
+
+  function closeAll() {
+    setOpen(false);
+    setEditingYear(false);
+    setEditingAcronym(false);
+    setEditingName(false);
+  }
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-        setEditingYear(false);
-        setEditingAcronym(false);
-        setEditingName(false);
+      const target = e.target as Node;
+      const clickedTrigger = ref.current?.contains(target);
+      const clickedDrawer = drawerRef.current?.contains(target);
+      if (!clickedTrigger && !clickedDrawer) {
+        closeAll();
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (open) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [open]);
 
   useEffect(() => {
     if (editingYear) {
@@ -79,8 +98,6 @@ export function SettingsMenu() {
     }
   }, [editingName, schoolName]);
 
-  // Now properly awaits + catches the backend call. Stays in edit mode and shows
-  // the error message on failure instead of silently reverting with no feedback.
   async function commitYear() {
     const trimmed = yearDraft.trim();
 
@@ -100,7 +117,6 @@ export function SettingsMenu() {
       setEditingYear(false);
     } catch (err) {
       setYearSaveError(err instanceof Error ? err.message : "Failed to save school year.");
-      // stay in editing mode so the person can see the error and retry
     } finally {
       setYearSaving(false);
     }
@@ -154,15 +170,269 @@ export function SettingsMenu() {
   }
 
   const mutedText = darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]";
-  const dropdownLabel = `text-[10px] font-bold uppercase tracking-wide mb-1.5 ${mutedText}`;
-  const sectionBorder = `pt-3 border-t space-y-2 ${darkMode ? "border-[#374151]" : "border-[#E5E7EB]"}`;
+  const borderColor = darkMode ? "border-[#1F2937]" : "border-[#EEF0F3]";
+  const labelClasses = `text-[10.5px] font-semibold uppercase tracking-wider ${mutedText}`;
+  const sectionBorder = `pt-4 border-t space-y-2.5 ${borderColor}`;
 
-  const rowBase = `w-full h-9 px-2.5 rounded-lg border flex items-center justify-between ${
-    darkMode ? "bg-[#0B1120] border-[#374151]" : "bg-[#F8FAFC] border-[#E5E7EB]"
+  const rowBase = `w-full h-10 px-3 rounded-lg border flex items-center justify-between transition-colors ${
+    darkMode ? "bg-[#0B1120] border-[#2A3441]" : "bg-[#FAFBFC] border-[#E3E6EA]"
   }`;
 
+  const drawer = (
+    <>
+      {/* Backdrop */}
+      <div
+        onClick={closeAll}
+        aria-hidden={!open}
+        className={`fixed inset-0 z-[90] modal-backdrop transition-opacity duration-300 ${
+          open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+      />
+
+      {/* Drawer panel */}
+      <div
+        ref={drawerRef}
+        role="dialog"
+        aria-modal="true"
+        className={`fixed inset-y-0 right-0 z-[100] w-[26rem] max-w-[90vw] h-full flex flex-col shadow-[-8px_0_30px_-12px_rgba(0,0,0,0.35)] transition-transform duration-500 ${APPLE_EASE} ${
+          darkMode ? "bg-[#0F172A]" : "bg-white"
+        } ${open ? "translate-x-0" : "translate-x-full"}`}
+      >
+        {/* Header */}
+        <div
+          className={`px-6 py-5 flex items-center justify-between shrink-0 border-b ${borderColor}`}
+        >
+          <div className="flex items-center gap-2.5">
+            <div
+              className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
+                darkMode ? "bg-white/10" : "bg-[#F3E9E9]"
+              }`}
+            >
+              <Settings size={16} className={darkMode ? "text-white" : "text-[#6B0000]"} />
+            </div>
+            <p
+              className={`text-[15px] font-semibold ${darkMode ? "text-white" : "text-[#111827]"}`}
+            >
+              Settings
+            </p>
+          </div>
+
+          <button
+            onClick={closeAll}
+            aria-label="Close"
+            className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+              darkMode
+                ? "text-[#9CA3AF] hover:bg-white/10 hover:text-white"
+                : "text-[#9CA3AF] hover:bg-black/5 hover:text-[#374151]"
+            }`}
+          >
+            <X size={16} />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
+          <div className="space-y-2.5">
+            <p className={labelClasses}>Appearance</p>
+            <ToggleRow
+              icon={darkMode ? Moon : Sun}
+              label="Dark Mode"
+              checked={darkMode}
+              onChange={toggleDarkMode}
+              darkMode={darkMode}
+            />
+          </div>
+
+          <div className={sectionBorder}>
+            <p className={`${labelClasses} flex items-center gap-1.5`}>
+              <Landmark size={11} />
+              School Acronym
+            </p>
+
+            {editingAcronym ? (
+              <div className={rowBase}>
+                <input
+                  ref={acronymInputRef}
+                  value={acronymDraft}
+                  onChange={(e) => setAcronymDraft(e.target.value)}
+                  onKeyDown={handleAcronymKeyDown}
+                  onBlur={commitAcronym}
+                  placeholder="QED"
+                  className={`flex-1 bg-transparent outline-none text-[13px] font-medium ${
+                    darkMode ? "text-white" : "text-[#111827]"
+                  }`}
+                />
+                <button
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={commitAcronym}
+                  className="w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] hover:bg-[#6B0000]/10 transition-colors"
+                  title="Save"
+                >
+                  <Check size={14} />
+                </button>
+              </div>
+            ) : (
+              <div className={rowBase}>
+                <span className={`text-[13px] font-medium ${darkMode ? "text-white" : "text-[#111827]"}`}>
+                  {schoolAcronym}
+                </span>
+                <button
+                  onClick={() => setEditingAcronym(true)}
+                  className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] transition-colors ${
+                    darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
+                  }`}
+                  title="Edit school acronym"
+                >
+                  <Pencil size={13} />
+                </button>
+              </div>
+            )}
+
+            <p className={`${labelClasses} pt-1`}>School Full Name</p>
+
+            {editingName ? (
+              <div className={rowBase}>
+                <input
+                  ref={nameInputRef}
+                  value={nameDraft}
+                  onChange={(e) => setNameDraft(e.target.value)}
+                  onKeyDown={handleNameKeyDown}
+                  onBlur={commitName}
+                  placeholder="Quality Education"
+                  className={`flex-1 bg-transparent outline-none text-[13px] font-medium ${
+                    darkMode ? "text-white" : "text-[#111827]"
+                  }`}
+                />
+                <button
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={commitName}
+                  className="w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] hover:bg-[#6B0000]/10 transition-colors"
+                  title="Save"
+                >
+                  <Check size={14} />
+                </button>
+              </div>
+            ) : (
+              <div className={rowBase}>
+                <span className={`text-[13px] font-medium truncate ${darkMode ? "text-white" : "text-[#111827]"}`}>
+                  {schoolName}
+                </span>
+                <button
+                  onClick={() => setEditingName(true)}
+                  className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] transition-colors ${
+                    darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
+                  }`}
+                  title="Edit school name"
+                >
+                  <Pencil size={13} />
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className={sectionBorder}>
+            <p className={`${labelClasses} flex items-center gap-1.5`}>
+              <GraduationCap size={11} />
+              Current School Year
+            </p>
+
+            {editingYear ? (
+              <>
+                <div className={rowBase}>
+                  <input
+                    ref={yearInputRef}
+                    value={yearDraft}
+                    onChange={(e) => setYearDraft(e.target.value)}
+                    onKeyDown={handleYearKeyDown}
+                    placeholder="2026-2027"
+                    disabled={yearSaving}
+                    className={`flex-1 bg-transparent outline-none text-[13px] font-medium disabled:opacity-60 ${
+                      darkMode ? "text-white" : "text-[#111827]"
+                    }`}
+                  />
+                  <button
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={commitYear}
+                    disabled={yearSaving}
+                    className="w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] hover:bg-[#6B0000]/10 transition-colors disabled:opacity-50"
+                    title="Save"
+                  >
+                    {yearSaving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
+                  </button>
+                </div>
+                {yearSaveError && (
+                  <p className="text-[11px] font-semibold text-[#B91C1C]">{yearSaveError}</p>
+                )}
+              </>
+            ) : (
+              <div className={rowBase}>
+                <span className={`text-[13px] font-medium ${darkMode ? "text-white" : "text-[#111827]"}`}>
+                  {schoolYearLoading ? "Loading…" : schoolYear}
+                </span>
+                <button
+                  onClick={() => setEditingYear(true)}
+                  disabled={schoolYearLoading}
+                  className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] transition-colors disabled:opacity-50 ${
+                    darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
+                  }`}
+                  title="Edit school year"
+                >
+                  <Pencil size={13} />
+                </button>
+              </div>
+            )}
+            {!editingYear && schoolYearError && (
+              <p className="text-[11px] font-semibold text-[#B91C1C]">{schoolYearError}</p>
+            )}
+          </div>
+
+          <div className={sectionBorder}>
+            <p className={labelClasses}>Notifications</p>
+            <ToggleRow
+              icon={Bell}
+              label="Email Notifications"
+              checked={emailNotifications}
+              onChange={() => setEmailNotifications(!emailNotifications)}
+              darkMode={darkMode}
+            />
+            <ToggleRow
+              icon={Bell}
+              label="Push Notifications"
+              checked={pushNotifications}
+              onChange={() => setPushNotifications(!pushNotifications)}
+              darkMode={darkMode}
+            />
+          </div>
+
+          <div className={sectionBorder}>
+            <p className={`${labelClasses} flex items-center gap-1.5`}>
+              <Info size={12} />
+              System Information
+            </p>
+            <dl className="space-y-2 text-[13px]">
+              <div className="flex justify-between">
+                <dt className={mutedText}>System</dt>
+                <dd className={`font-semibold ${darkMode ? "text-white" : "text-[#111827]"}`}>
+                  QED &mdash; Quality Education
+                </dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className={mutedText}>Version</dt>
+                <dd className={`font-semibold ${darkMode ? "text-white" : "text-[#111827]"}`}>v1.0.0</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className={mutedText}>Curriculum</dt>
+                <dd className={`font-semibold ${darkMode ? "text-white" : "text-[#111827]"}`}>MATATAG</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+
   return (
-    <div className="relative" ref={ref}>
+    <div ref={ref}>
       <button
         onClick={() => setOpen((v) => !v)}
         className={`hidden sm:flex w-9 h-9 items-center justify-center rounded-full transition-colors shrink-0 text-[#6B0000] ${
@@ -173,220 +443,7 @@ export function SettingsMenu() {
         <Settings size={22} />
       </button>
 
-      {open && (
-        <div
-          className={`absolute right-0 top-12 z-30 w-80 rounded-2xl border shadow-lg overflow-hidden max-h-[80vh] overflow-y-auto ${
-            darkMode ? "bg-[#111827] border-[#374151]" : "bg-white border-[#E5E7EB]"
-          }`}
-        >
-          <div className="px-4 py-3 flex items-center justify-between sticky top-0" style={{ background: ACCENT }}>
-            <span className="text-white font-bold text-sm">Settings</span>
-            <button
-              onClick={() => setOpen(false)}
-              className="w-6 h-6 rounded-md flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors"
-            >
-              <X size={13} className="text-white" />
-            </button>
-          </div>
-
-          <div className="p-4 space-y-4">
-            <div className="space-y-2">
-              <p className={dropdownLabel}>Appearance</p>
-              <ToggleRow
-                icon={darkMode ? Moon : Sun}
-                label="Dark Mode"
-                checked={darkMode}
-                onChange={toggleDarkMode}
-                darkMode={darkMode}
-              />
-            </div>
-
-            <div className={sectionBorder}>
-              <p className={`${dropdownLabel} flex items-center gap-1.5`}>
-                <Landmark size={11} />
-                School Acronym
-              </p>
-
-              {editingAcronym ? (
-                <div className={rowBase}>
-                  <input
-                    ref={acronymInputRef}
-                    value={acronymDraft}
-                    onChange={(e) => setAcronymDraft(e.target.value)}
-                    onKeyDown={handleAcronymKeyDown}
-                    onBlur={commitAcronym}
-                    placeholder="QED"
-                    className={`flex-1 bg-transparent outline-none text-xs font-bold ${
-                      darkMode ? "text-white" : "text-[#111827]"
-                    }`}
-                  />
-                  <button
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={commitAcronym}
-                    className="w-6 h-6 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] hover:bg-[#6B0000]/10 transition-colors"
-                    title="Save"
-                  >
-                    <Check size={14} />
-                  </button>
-                </div>
-              ) : (
-                <div className={rowBase}>
-                  <span className={`text-xs font-bold ${darkMode ? "text-white" : "text-[#111827]"}`}>
-                    {schoolAcronym}
-                  </span>
-                  <button
-                    onClick={() => setEditingAcronym(true)}
-                    className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] transition-colors ${
-                      darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
-                    }`}
-                    title="Edit school acronym"
-                  >
-                    <Pencil size={13} />
-                  </button>
-                </div>
-              )}
-
-              <p className={`${dropdownLabel} pt-1`}>School Full Name</p>
-
-              {editingName ? (
-                <div className={rowBase}>
-                  <input
-                    ref={nameInputRef}
-                    value={nameDraft}
-                    onChange={(e) => setNameDraft(e.target.value)}
-                    onKeyDown={handleNameKeyDown}
-                    onBlur={commitName}
-                    placeholder="Quality Education"
-                    className={`flex-1 bg-transparent outline-none text-xs font-bold ${
-                      darkMode ? "text-white" : "text-[#111827]"
-                    }`}
-                  />
-                  <button
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={commitName}
-                    className="w-6 h-6 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] hover:bg-[#6B0000]/10 transition-colors"
-                    title="Save"
-                  >
-                    <Check size={14} />
-                  </button>
-                </div>
-              ) : (
-                <div className={rowBase}>
-                  <span className={`text-xs font-bold truncate ${darkMode ? "text-white" : "text-[#111827]"}`}>
-                    {schoolName}
-                  </span>
-                  <button
-                    onClick={() => setEditingName(true)}
-                    className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] transition-colors ${
-                      darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
-                    }`}
-                    title="Edit school name"
-                  >
-                    <Pencil size={13} />
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <div className={sectionBorder}>
-              <p className={`${dropdownLabel} flex items-center gap-1.5`}>
-                <GraduationCap size={11} />
-                Current School Year
-              </p>
-
-              {editingYear ? (
-                <>
-                  <div className={rowBase}>
-                    <input
-                      ref={yearInputRef}
-                      value={yearDraft}
-                      onChange={(e) => setYearDraft(e.target.value)}
-                      onKeyDown={handleYearKeyDown}
-                      placeholder="2026-2027"
-                      disabled={yearSaving}
-                      className={`flex-1 bg-transparent outline-none text-xs font-bold disabled:opacity-60 ${
-                        darkMode ? "text-white" : "text-[#111827]"
-                      }`}
-                    />
-                    <button
-                      onMouseDown={(e) => e.preventDefault()}
-                      onClick={commitYear}
-                      disabled={yearSaving}
-                      className="w-6 h-6 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] hover:bg-[#6B0000]/10 transition-colors disabled:opacity-50"
-                      title="Save"
-                    >
-                      {yearSaving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
-                    </button>
-                  </div>
-                  {yearSaveError && (
-                    <p className="text-[11px] font-bold text-[#B91C1C]">{yearSaveError}</p>
-                  )}
-                </>
-              ) : (
-                <div className={rowBase}>
-                  <span className={`text-xs font-bold ${darkMode ? "text-white" : "text-[#111827]"}`}>
-                    {schoolYearLoading ? "Loading…" : schoolYear}
-                  </span>
-                  <button
-                    onClick={() => setEditingYear(true)}
-                    disabled={schoolYearLoading}
-                    className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] transition-colors disabled:opacity-50 ${
-                      darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
-                    }`}
-                    title="Edit school year"
-                  >
-                    <Pencil size={13} />
-                  </button>
-                </div>
-              )}
-              {!editingYear && schoolYearError && (
-                <p className="text-[11px] font-bold text-[#B91C1C]">{schoolYearError}</p>
-              )}
-            </div>
-
-            <div className={sectionBorder}>
-              <p className={dropdownLabel}>Notifications</p>
-              <ToggleRow
-                icon={Bell}
-                label="Email Notifications"
-                checked={emailNotifications}
-                onChange={() => setEmailNotifications(!emailNotifications)}
-                darkMode={darkMode}
-              />
-              <ToggleRow
-                icon={Bell}
-                label="Push Notifications"
-                checked={pushNotifications}
-                onChange={() => setPushNotifications(!pushNotifications)}
-                darkMode={darkMode}
-              />
-            </div>
-
-            <div className={sectionBorder.replace(" space-y-2", "")}>
-              <p className={`${dropdownLabel} flex items-center gap-1.5`}>
-                <Info size={12} />
-                System Information
-              </p>
-              <dl className="space-y-1.5 text-xs">
-                <div className="flex justify-between">
-                  <dt className={mutedText}>System</dt>
-                  <dd className={`font-semibold ${darkMode ? "text-white" : "text-[#111827]"}`}>
-                    QED &mdash; Quality Education
-                  </dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className={mutedText}>Version</dt>
-                  <dd className={`font-semibold ${darkMode ? "text-white" : "text-[#111827]"}`}>v1.0.0</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className={mutedText}>Curriculum</dt>
-                  <dd className={`font-semibold ${darkMode ? "text-white" : "text-[#111827]"}`}>MATATAG</dd>
-                </div>
-              </dl>
-            </div>
-          </div>
-        </div>
-      )}
+      {createPortal(drawer, document.body)}
     </div>
   );
 }

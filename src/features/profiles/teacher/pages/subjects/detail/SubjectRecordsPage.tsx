@@ -286,9 +286,11 @@ export function SubjectRecordsPage() {
     <button
       onClick={() => navigate(-1)}
       aria-label="Go back"
-      className={`mt-1 shrink-0 ${textMuted} hover:${textPrimary}`}
+      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted} ${
+        darkMode ? "hover:bg-white/10 hover:text-white" : "hover:bg-black/5 hover:text-black"
+      }`}
     >
-      <ArrowLeft size={22} />
+      <ArrowLeft size={18} />
     </button>
   );
 
@@ -457,7 +459,7 @@ export function SubjectRecordsPage() {
 
       {showEmptyScoreModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+          className="fixed inset-0 z-50 flex items-center justify-center px-4 modal-backdrop"
           role="dialog"
           aria-modal="true"
           aria-labelledby="empty-score-modal-title"

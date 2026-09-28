@@ -10,6 +10,7 @@ export interface TeacherRow {
   middle_name: string | null;
   email_address: string;
   contact_number: string;
+  gender?: string | null;
 }
 
 export interface ApiResponse<T> {

@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
-import { Eye, EyeOff, User, Loader2, CheckSquare, Square } from "lucide-react";
+import { Eye, EyeOff, Loader2, CheckSquare, Square } from "lucide-react";
+import { StudentAvatar } from "@shared/components/StudentAvatar";
 import {
   fetchGradeVisibility,
   setGradeVisibility,
@@ -224,13 +225,7 @@ export function ParentVisibilitySection({
                       </td>
                       <td className="px-3 py-2">
                         <div className="flex min-w-0 items-center gap-2.5">
-                          <span
-                            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-                              darkMode ? "bg-white/10" : "bg-black/5"
-                            } ${textMuted}`}
-                          >
-                            <User size={13} />
-                          </span>
+                          <StudentAvatar gender={student.gender} name={studentDisplayName(student)} />
                           <span className={`truncate text-xs font-bold ${textPrimary}`}>
                             {studentDisplayName(student)}
                           </span>

@@ -1,6 +1,6 @@
 // components/ProfileHeaderCard.tsx
 import { CheckCircle2 } from "lucide-react";
-import { StudentAvatar } from "./StudentAvatar";
+import { StudentAvatar } from "@shared/components/StudentAvatar";
 import { Badge } from "./Badge";
 import type { StudentProfileData } from "../types/types";
 
@@ -9,8 +9,6 @@ interface ProfileHeaderCardProps {
   darkMode: boolean;
   panelBorder: string;
 }
-
-const AVATAR_SIZE = 56;
 
 export function ProfileHeaderCard({ student, darkMode, panelBorder }: ProfileHeaderCardProps) {
   const fullDisplayName = `${student.lastName}, ${student.firstName}${
@@ -38,7 +36,11 @@ export function ProfileHeaderCard({ student, darkMode, panelBorder }: ProfileHea
       {/* Avatar overlaps the banner/white boundary — positioned independently
           so only the avatar (not the name text) sits over the maroon area */}
       <div className="absolute left-6 top-[52px]">
-        <StudentAvatar firstName={student.firstName} lastName={student.lastName} size={AVATAR_SIZE} />
+        <StudentAvatar
+          gender={student.gender}
+          name={fullDisplayName}
+          className="h-14 w-14 shadow-md"
+        />
       </div>
 
       {/* Info row — fully inside the white area, name never touches the banner */}

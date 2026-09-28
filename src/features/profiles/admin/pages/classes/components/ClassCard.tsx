@@ -1,14 +1,12 @@
 import { useState } from "react";
-import { GraduationCap, Users, Clock, MoreVertical, Pencil, Trash2, User } from "lucide-react";
+import { GraduationCap, MoreVertical, Pencil, Trash2, ArrowRight } from "lucide-react";
 import type { SchoolClass } from "../types/Class";
 import { formatClassName, formatTimeRange } from "../types/Class";
 
 const PALETTE = {
-  gradientFrom: "#550000", 
-  gradientTo: "#9D0000",   
+  gradientFrom: "#550000",
+  gradientTo: "#9D0000",
   white: "#F2F4F7",
-  goldMuted: "#9C8248",
-  gray: "#9CA3AF"
 };
 
 interface ClassCardProps {
@@ -47,28 +45,52 @@ export function ClassCard({
     ? `${schoolClass.schedule.length} period${schoolClass.schedule.length === 1 ? "" : "s"} • ${formatTimeRange(firstPeriod.startTime, lastPeriod.endTime)}`
     : "No schedule set";
 
+  const className = formatClassName(schoolClass);
+  // gradeLevel may be a label like "Grade 1", so keep only the number; fall back to the class name.
+  const rawGrade = (schoolClass as unknown as Record<string, unknown>).gradeLevel;
+  const gradeSource = rawGrade != null ? String(rawGrade) : className;
+  const gradeLevel = gradeSource.match(/\d+/)?.[0] ?? className.match(/\d+/)?.[0] ?? gradeSource.charAt(0).toUpperCase();
+
+  const dividerColor = darkMode ? "rgba(255,255,255,0.12)" : "rgba(85,0,0,0.15)";
+
+  const Row = ({ label, value }: { label: string; value: string }) => (
+    <div className="flex items-baseline justify-between gap-4 text-xs">
+      <span className={`shrink-0 ${textMuted}`}>{label}</span>
+      <span className={`font-medium text-right truncate ${textPrimary}`} title={value}>
+        {value}
+      </span>
+    </div>
+  );
+
   return (
-    <div className={`rounded-2xl border shadow-sm overflow-hidden transition-shadow hover:shadow-md ${panelBorder}`}>
-      <div
-        className="px-4 sm:px-5 pt-5 pb-6 relative"
-        style={{ background: `linear-gradient(160deg, ${PALETTE.gradientFrom} 0%, ${PALETTE.gradientTo} 100%)` }}
-      >
+    <div
+      onDoubleClick={onView}
+      className={`relative flex min-h-68 rounded-2xl border transition-shadow select-none ${panelBorder} ${panelBg}`}
+      style={{
+        boxShadow: darkMode
+          ? "0 10px 24px -8px rgba(0,0,0,0.55), 0 2px 4px rgba(0,0,0,0.3)"
+          : "0 12px 26px -10px rgba(85,0,0,0.28), 0 2px 6px rgba(0,0,0,0.06)",
+      }}
+    >
+      {/* Left: content */}
+      <div className="flex-1 min-w-0 mr-14 px-4 sm:px-5 pt-5 pb-4 flex flex-col">
         <div className="flex items-start justify-between gap-2">
           <span
-            className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+            className="w-11 h-11 rounded-full flex items-center justify-center shrink-0"
             style={{
-              background: "rgba(255,255,255,0.08)",
-              border: `1.5px solid ${PALETTE.white}66`,
-              color: PALETTE.white,
+              border: `1.5px solid ${darkMode ? PALETTE.white + "88" : PALETTE.gradientFrom}`,
+              color: darkMode ? PALETTE.white : PALETTE.gradientFrom,
             }}
           >
-            <GraduationCap size={22} />
+            <GraduationCap size={20} />
           </span>
 
-          <div className="relative shrink-0">
+          <div className="relative shrink-0" onDoubleClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setMenuOpen((v) => !v)}
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-white/70 hover:bg-white/10 transition-colors"
+              className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
+                darkMode ? "text-white/70 hover:bg-white/10" : "text-[#550000]/70 hover:bg-[#550000]/10"
+              }`}
               aria-label="More options"
             >
               <MoreVertical size={16} />
@@ -107,56 +129,53 @@ export function ClassCard({
           </div>
         </div>
 
-        <h3 className="mt-4 text-xl sm:text-2xl font-semibold text-white leading-tight truncate" title={formatClassName(schoolClass)}>
-          {formatClassName(schoolClass)}
+        {/* Title + divider (subject card lettering) */}
+        <h3 className={`mt-4 text-base font-semibold leading-snug truncate ${textPrimary}`} title={className}>
+          {className}
         </h3>
+        <div className="mt-2 h-px w-full" style={{ background: dividerColor }} />
+        <p className={`mt-2 text-xs ${textMuted}`}>{studentCount} students</p>
 
-        <div className="mt-5 flex items-center gap-1.5 text-white/85 min-w-0">
-          <Users size={14} className="shrink-0" />
-          <span className="text-sm truncate">{studentCount} students</span>
+        {/* Details */}
+        <div className="mt-auto pt-4 space-y-2.5">
+          <Row label="Adviser" value={adviserName} />
+          <Row label="Schedule" value={scheduleLabel} />
+          <Row label="Room" value={room} />
         </div>
       </div>
 
-      <div className={`px-4 sm:px-5 py-4 space-y-3 ${panelBg}`}>
-        <div className="flex items-center justify-between gap-3 text-sm">
-          <span className={`inline-flex items-center gap-1.5 shrink-0 ${textMuted}`}>
-            <User size={13} />
-            Adviser
-          </span>
-          <span className={`font-semibold text-right truncate ${textPrimary}`} title={adviserName}>
-            {adviserName}
-          </span>
+      {/* Right: maroon tab */}
+      <div
+        className="absolute -top-px -right-px -bottom-px w-14 flex flex-col rounded-r-2xl overflow-hidden"
+        style={{
+          background: `linear-gradient(180deg, ${PALETTE.gradientFrom} 0%, ${PALETTE.gradientTo} 100%)`,
+          boxShadow: "inset 2px 0 4px rgba(0,0,0,0.18)",
+        }}
+      >
+        <div
+          className="h-14 shrink-0 flex items-center justify-center text-2xl font-bold leading-none"
+          style={{ background: "rgba(0,0,0,0.22)", color: PALETTE.white }}
+        >
+          {gradeLevel}
         </div>
-        <div className="flex items-center justify-between gap-3 text-sm">
-          <span className={`inline-flex items-center gap-1.5 shrink-0 ${textMuted}`}>
-            <Clock size={13} />
-            Schedule
-          </span>
-          <span className={`font-semibold text-right truncate ${textPrimary}`} title={scheduleLabel}>
-            {scheduleLabel}
-          </span>
+        <div
+          className="flex-1 flex flex-col items-center justify-center gap-1.5 py-4 text-lg font-extrabold leading-none tracking-normal"
+          style={{ color: PALETTE.white }}
+          aria-hidden="true"
+        >
+          {"GRADE".split("").map((letter, i) => (
+            <span key={i}>{letter}</span>
+          ))}
         </div>
-        <div className="flex items-center justify-between gap-3 text-sm">
-          <span className={`inline-flex items-center gap-1.5 shrink-0 ${textMuted}`}>
-            <User size={13} />
-            Room
-          </span>
-          <span className={`font-semibold text-right truncate ${textPrimary}`} title={room}>
-            {room}
-          </span>
-        </div>
-        
-
         <button
           onClick={onView}
-          className="w-full mt-2 h-11 rounded-xl text-sm font-normal border inline-flex items-center justify-center gap-2 transition-colors"
-          style={{
-            borderColor: darkMode ? PALETTE.gray : "#9CA3AF",
-            color: darkMode ? "#F2F4F7" : "#650000",
-            background: darkMode ? "#650000" : "#F8FAFC",
-          }}
+          onDoubleClick={(e) => e.stopPropagation()}
+          aria-label="View details"
+          title="View details"
+          className="group h-14 shrink-0 flex items-center justify-center text-white transition-colors hover:bg-black/30 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white"
+          style={{ background: "rgba(0,0,0,0.22)" }}
         >
-          View Details
+          <ArrowRight size={20} className="transition-transform group-hover:translate-x-0.5" />
         </button>
       </div>
     </div>

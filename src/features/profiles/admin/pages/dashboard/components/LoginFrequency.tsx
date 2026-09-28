@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ChevronDown, Check } from "lucide-react";
+import { ChevronDown, Check, RefreshCw } from "lucide-react";
 import {
   getLoginFrequency,
   LoginFrequencyServiceError,
@@ -19,7 +19,7 @@ interface LoginFrequencyProps {
 
 const PERIOD_OPTIONS: { label: string; value: LoginFrequencyPeriod }[] = [
   { label: "Weekly", value: "weekly" },
-  { label: "Montly", value: "monthly" },
+  { label: "Monthly", value: "monthly" },
   { label: "Yearly", value: "yearly" },
 ];
 
@@ -44,9 +44,15 @@ export function LoginFrequency({
   const [data, setData] = useState<LoginFrequencyResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [refreshTick, setRefreshTick] = useState(0);
 
   const selectedLabel =
     PERIOD_OPTIONS.find((p) => p.value === selectedPeriod)?.label ?? "This Week";
+
+  useEffect(() => {
+    const interval = window.setInterval(() => setRefreshTick((tick) => tick + 1), 30_000);
+    return () => window.clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -72,7 +78,7 @@ export function LoginFrequency({
 
     load();
     return () => controller.abort();
-  }, [selectedPeriod]);
+  }, [selectedPeriod, refreshTick]);
 
   const chart = data?.chart ?? [];
   const summary = data?.summary ?? null;
@@ -86,9 +92,19 @@ export function LoginFrequency({
         <div>
           <h3 className={`font-bold ${textPrimary}`}>Login Frequency</h3>
           <p className={`text-xs mt-1 ${textMuted}`}>
-            User activity overview for the selected period
+            Successful sign-ins summarized for the selected period · refreshes every 30 seconds
           </p>
         </div>
+        <div className="flex shrink-0 items-center gap-2">
+        <button
+          type="button"
+          onClick={() => setRefreshTick((tick) => tick + 1)}
+          aria-label="Refresh login frequency"
+          title="Refresh login activity"
+          className={`h-9 w-9 rounded-xl border flex items-center justify-center transition-colors ${darkMode ? "bg-[#0B1120] border-[#374151] text-white hover:bg-[#111827]" : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] hover:bg-[#F1F5F9]"}`}
+        >
+          <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
+        </button>
         <div className="relative shrink-0">
           <button
             onClick={() => setPeriodOpen(!periodOpen)}
@@ -130,6 +146,7 @@ export function LoginFrequency({
               ))}
             </div>
           )}
+        </div>
         </div>
       </div>
 

@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
+import { StudentAvatar } from "@shared/components/StudentAvatar";
 import { AlertTriangle, CheckCircle2, Download, Send, X } from "lucide-react";
 import ExcelJS from "exceljs";
 import type { RosterStudent } from "./data";
@@ -823,6 +824,7 @@ export function AssessmentRecordsSection({
       <tr key={student.id} className={`border-t ${panelBorder} ${index % 2 ? (darkMode ? "bg-white/1.5" : "bg-black/[0.012]") : ""}`}>
         <td className={`sticky left-0 z-10 px-4 py-2.5 text-sm font-bold ${darkMode ? "bg-[#111827]" : "bg-white"} ${textPrimary}`}>
           <span className="inline-flex items-center gap-1.5">
+            <StudentAvatar gender={student.gender} name={student.name} />
             {student.name}
             {anyGroupIncomplete && <MissingScoreDot missingIn={missingIn} />}
           </span>
@@ -1040,7 +1042,7 @@ export function AssessmentRecordsSection({
       )}
 
       {showConfirmModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 modal-backdrop">
           <div
             className={`flex max-h-[85vh] w-full max-w-2xl flex-col rounded-2xl border shadow-xl ${panelBorder} ${
               darkMode ? "bg-[#111827]" : "bg-white"

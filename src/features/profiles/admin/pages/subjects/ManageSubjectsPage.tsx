@@ -1,16 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { Plus, School } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import type { AdminThemeContext } from "../AdminLayout";
 import {
-  ACCENT,
+  GRADE_LEVELS,
   GRADE_LEVEL_IDS,
   type GradeLevel,
   type Subject,
 } from "./types/types";
-import { AdminTopTabs } from "./components/AdminTopTabs";
 import { SubjectFilters } from "./components/SubjectFilters";
-import { GradeLevelTabs } from "./components/GradeLevelTabs";
+import { SubjectActions } from "./components/SubjectActions";
 import { SubjectCard } from "./components/SubjectCard";
 import { EditSubjectModal } from "./components/EditSubjectModal";
 import { ManageSectionsModal } from "./components/ManageSectionsModal";
@@ -19,9 +18,7 @@ import {
   updateSubjectAssignment,
   toWeightPayload,
 } from "./services/subject.service";
-import {
-  useSubjectSections,
-} from "./context/SubjectSectionsContext";
+import { useSubjectSections } from "./context/SubjectSectionsContext";
 import { useSubjectsCatalog } from "./context/SubjectsCatalogContext";
 import { useToast } from "../../../../../shared/context/ToastContext";
 
@@ -31,24 +28,26 @@ export function ManageSubjectsPage() {
   const navigate = useNavigate();
 
   const { assessmentTypes } = useSubjectsCatalog();
-  const {
-    getSubjectsForGrade,
-    loadSubjectsForGrade,
-    updateLocalSubject,
-  } = useSubjectSections();
+  const { getSubjectsForGrade, loadSubjectsForGrade, updateLocalSubject } =
+    useSubjectSections();
 
-  const [activeGrade, setActiveGrade] = useState<GradeLevel>("Grade 1");
+  // "all" = All Grades (walang grade filter)
+  const [activeGrade, setActiveGrade] = useState<GradeLevel | "all">("all");
   // Pangalan ng section (Subject.section), hindi ang section id — para direktang
   // ma-compare sa subject.section pag-filter. null = "All Sections"/walang section filter.
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [teacherFilter, setTeacherFilter] = useState<string>("all");
- const [statusFilter, setStatusFilter] = useState<"all" | "Active" | "Inactive">("all");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "Active" | "Inactive"
+  >("all");
   const [editingSubject, setEditingSubject] = useState<Subject | null>(null);
-  const [ , setAssigningSubject] = useState<Subject | null>(
-    null,
-  );
+  const [, setAssigningSubject] = useState<Subject | null>(null);
   const [managingSections, setManagingSections] = useState(false);
+
+  // Whether subjects are clustered into "Grade · Section" groups.
+  // Grouped is the default view; the admin can switch to one flat list.
+  const [groupBySection, setGroupBySection] = useState(true);
 
   const [savingEdit, setSavingEdit] = useState(false);
   const [editSubjectError, setEditSubjectError] = useState<string | null>(null);
@@ -56,10 +55,24 @@ export function ManageSubjectsPage() {
   const { showToast } = useToast();
 
   useEffect(() => {
-    void loadSubjectsForGrade(activeGrade);
+    if (activeGrade === "all") {
+      GRADE_LEVELS.forEach((g) => void loadSubjectsForGrade(g));
+    } else {
+      void loadSubjectsForGrade(activeGrade);
+    }
   }, [activeGrade, loadSubjectsForGrade]);
 
-  const gradeSubjects = getSubjectsForGrade(activeGrade);
+  const gradeSubjects =
+    activeGrade === "all"
+      ? GRADE_LEVELS.flatMap((g) => getSubjectsForGrade(g))
+      : getSubjectsForGrade(activeGrade);
+
+  // ManageSectionsModal needs a specific grade, so fall back to the first one
+  // when "All Grades" is selected.
+  const modalGrade: GradeLevel =
+    activeGrade === "all" ? GRADE_LEVELS[0] : activeGrade;
+  const modalSubjects =
+    activeGrade === "all" ? getSubjectsForGrade(modalGrade) : gradeSubjects;
 
   const filtered = gradeSubjects.filter((s) => {
     if (
@@ -72,6 +85,35 @@ export function ManageSubjectsPage() {
     if (activeSection && s.section !== activeSection) return false;
     return true;
   });
+
+  // Cluster by "Grade Level · Section X". Sorted by grade id (not by label),
+  // so Grade 2 comes before Grade 10.
+  const groupedSubjects = useMemo(() => {
+    const groups = new Map<
+      string,
+      { label: string; gradeId: number; section: string; items: Subject[] }
+    >();
+
+    for (const subject of filtered) {
+      const key = `${subject.gradeLevel}||${subject.section ?? ""}`;
+      if (!groups.has(key)) {
+        groups.set(key, {
+          label: subject.section
+            ? `${subject.gradeLevel} · Section ${subject.section}`
+            : subject.gradeLevel,
+          gradeId: GRADE_LEVEL_IDS[subject.gradeLevel] ?? 0,
+          section: subject.section ?? "",
+          items: [],
+        });
+      }
+      groups.get(key)!.items.push(subject);
+    }
+
+    return Array.from(groups.values()).sort(
+      (a, b) => a.gradeId - b.gradeId || a.section.localeCompare(b.section),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filtered]);
 
   async function toggleStatus(subject: Subject) {
     const newStatus = subject.status === "Active" ? "Inactive" : "Active";
@@ -142,44 +184,40 @@ export function ManageSubjectsPage() {
     }
   }
 
-  return (
-    <div className="space-y-6 pb-12">
-      <AdminTopTabs
-        panelBorder={panelBorder}
-        textPrimary={textPrimary}
-        textMuted={textMuted}
-      />
+  // Single card renderer shared by the grouped and flat views.
+  const renderCard = (subject: Subject) => (
+    <SubjectCard
+      key={subject.id}
+      subject={subject}
+      {...theme}
+      onEdit={() => setEditingSubject(subject)}
+      onAssign={() => setAssigningSubject(subject)}
+      onToggleStatus={() => toggleStatus(subject)}
+    />
+  );
 
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>
-            Manage Subjects
-          </h1>
-          <p className={`text-sm font-semibold mt-1 ${textMuted}`}>
-            Manage default curriculum subjects and teacher assignments.
-          </p>
+  return (
+    <div className="w-full min-h-full space-y-4 px-6 pb-12 pt-6 lg:px-8">
+      {/* Page header */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-2.5">
+          <div>
+            <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>
+              Manage Subjects
+            </h1>
+            <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+              {filtered.length} of {gradeSubjects.length} subject
+              {gradeSubjects.length === 1 ? "" : "s"} shown
+            </p>
+          </div>
         </div>
-        <div className="flex gap-2 shrink-0">
-          <button
-            onClick={() => setManagingSections(true)}
-            className={`h-10 px-4 rounded-xl text-xs font-bold inline-flex items-center gap-2 border transition-colors ${
-              darkMode
-                ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-                : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
-            }`}
-          >
-            <School size={14} />
-            Manage Sections
-          </button>
-          <button
-            onClick={() => navigate("new")}
-            className="h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 transition-opacity hover:opacity-90"
-            style={{ background: ACCENT }}
-          >
-            <Plus size={14} />
-            Add Subject
-          </button>
-        </div>
+
+        <SubjectActions
+          darkMode={darkMode}
+          onAcademicYear={() => navigate("/admin/academic-year")}
+          onManageSections={() => setManagingSections(true)}
+          onAddSubject={() => navigate("new")}
+        />
       </div>
 
       <SubjectFilters
@@ -190,15 +228,12 @@ export function ManageSubjectsPage() {
         onTeacherFilterChange={setTeacherFilter}
         statusFilter={statusFilter}
         onStatusFilterChange={setStatusFilter}
-      />
-      <GradeLevelTabs
         activeGrade={activeGrade}
-        onChange={setActiveGrade}
+        onGradeChange={setActiveGrade}
         activeSection={activeSection}
         onSectionChange={setActiveSection}
-        panelBorder={panelBorder}
-        textPrimary={textPrimary}
-        textMuted={textMuted}
+        groupBySection={groupBySection}
+        onGroupBySectionChange={setGroupBySection}
       />
 
       {filtered.length === 0 ? (
@@ -210,17 +245,46 @@ export function ManageSubjectsPage() {
           </p>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filtered.map((subject) => (
-            <SubjectCard
-              key={subject.id}
-              subject={subject}
-              {...theme}
-              onEdit={() => setEditingSubject(subject)}
-              onAssign={() => setAssigningSubject(subject)}
-              onToggleStatus={() => toggleStatus(subject)}
-            />
-          ))}
+        <div
+          className={`rounded-2xl border shadow-sm p-5 ${panelBorder} ${
+            darkMode ? panelBg : "bg-white"
+          }`}
+        >
+          {groupBySection ? (
+            <div className="space-y-7">
+              {groupedSubjects.map((group) => (
+                <div key={group.label}>
+                  {/* Section header */}
+                  <div className="mb-3 flex items-center gap-2">
+                    <span className="h-5 w-1 rounded-full bg-[#800000]" />
+                    <h4
+                      className={`text-xs font-extrabold uppercase tracking-wide ${textPrimary}`}
+                    >
+                      {group.label}
+                    </h4>
+                    <span className={`text-[10px] font-semibold ${textMuted}`}>
+                      ({group.items.length} subject
+                      {group.items.length === 1 ? "" : "s"})
+                    </span>
+                    <span
+                      className={`h-px flex-1 ${
+                        darkMode ? "bg-white/10" : "bg-gray-200"
+                      }`}
+                    />
+                  </div>
+
+                  {/* Subject cards for this section */}
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {group.items.map(renderCard)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {filtered.map(renderCard)}
+            </div>
+          )}
         </div>
       )}
 
@@ -244,8 +308,8 @@ export function ManageSubjectsPage() {
 
       {managingSections && (
         <ManageSectionsModal
-          defaultGrade={activeGrade}
-          subjects={gradeSubjects}
+          defaultGrade={modalGrade}
+          subjects={modalSubjects}
           {...theme}
           onClose={() => setManagingSections(false)}
         />

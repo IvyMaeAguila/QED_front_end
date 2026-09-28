@@ -1,5 +1,6 @@
 export type Role = "ADMIN" | "PRINCIPAL" | "TEACHER" | "PARENT";
 export type UserStatus = "Active" | "Inactive";
+export type TeacherGender = "Male" | "Female";
 
 export interface UserAccount {
   id: string; 
@@ -11,6 +12,7 @@ export interface UserAccount {
   contactNumber: string;
   status: UserStatus;
   lastLogin: string | null; 
+  gender?: TeacherGender | null;
 }
 
 

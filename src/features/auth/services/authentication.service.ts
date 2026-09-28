@@ -55,6 +55,11 @@ function mapToUserProfile(raw: any): UserProfile {
     subject: raw.subject,
     gradeLevel: raw.grade_level,
     section: raw.section,
+    gender: raw.gender === "Male" || raw.gender === "male"
+      ? "male"
+      : raw.gender === "Female" || raw.gender === "female"
+        ? "female"
+        : undefined,
   } as UserProfile;
 }
 

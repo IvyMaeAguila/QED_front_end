@@ -56,7 +56,7 @@ export function EditEntryModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
       <div
         className={`w-full max-w-sm rounded-2xl border shadow-xl overflow-hidden flex flex-col ${panelBg} ${panelBorder}`}
         onClick={(e) => e.stopPropagation()}

@@ -114,7 +114,7 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-100 flex items-center justify-center px-4"
+      className="fixed inset-0 z-100 flex items-center justify-center px-4 modal-backdrop"
       style={{
         backgroundColor: "rgba(10,10,15,0.6)",
         backdropFilter: "blur(8px)",

@@ -1,7 +1,8 @@
+// src/features/profiles/types.ts
 import type { GradeLevel } from "../../../features/profiles/admin/pages/studentrecords/types/Students";
 
-// src/features/profiles/types.ts
 export type Role = "ADMIN" | "PRINCIPAL" | "TEACHER" | "PARENT";
+export type Gender = "male" | "female";
 
 export interface BaseProfile {
   id: string;
@@ -18,20 +19,23 @@ export interface AdminProfile extends BaseProfile {
 export interface PrincipalProfile extends BaseProfile {
   role: "PRINCIPAL";
   phone?: string;
+  gender?: Gender;
 }
 
 export interface TeacherProfile extends BaseProfile {
   role: "TEACHER";
   phone?: string;
   subject?: string;
-  gradeLevel?: GradeLevel; // idagdag
-  section?: string;        // idagdag
+  gradeLevel?: GradeLevel;
+  section?: string;
+  gender?: Gender; // added — drives default avatar selection
 }
 
 export interface ParentProfile extends BaseProfile {
   role: "PARENT";
   phone: string;
   address: string;
+  gender?: Gender;
 }
 
 export type UserProfile = AdminProfile | PrincipalProfile | TeacherProfile | ParentProfile;

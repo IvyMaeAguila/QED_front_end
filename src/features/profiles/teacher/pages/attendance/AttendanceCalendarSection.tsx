@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight,  Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import type { RosterStudent } from "../subjects/detail/data";
 import {
   ATTENDANCE_CYCLE,
@@ -10,7 +10,6 @@ import {
 } from "../subjects/detail/types/Grading";
 import { fetchAdvisoryAttendance, saveAdvisoryAttendance } from "./services/attendance.service.ts";
 import { StudentAttendanceSummaryModal } from "./StudentAttendanceSummaryModal";
-
 
 const ACCENT = "#6B0000";
 const WEEKDAY_LETTERS = ["S", "M", "T", "W", "T", "F", "S"];

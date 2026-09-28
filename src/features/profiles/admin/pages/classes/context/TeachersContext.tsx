@@ -29,6 +29,7 @@ useEffect(() => {
           middleName: row.middle_name,
           email: row.email_address,
           contactNumber: row.contact_number,
+          gender: row.gender ?? undefined,
         }))
       );
     } catch (error) {

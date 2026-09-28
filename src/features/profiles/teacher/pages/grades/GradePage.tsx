@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import {
-  BookOpen, Search, User, CheckCircle2, AlertTriangle,
+  BookOpen, Search, CheckCircle2, AlertTriangle,
   Download, Send, Loader2, Clock,
 } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
@@ -19,6 +19,7 @@ import {
 } from "./services/gradePage.service";
 import type { GradingPeriod } from "../subjects/detail/types/Grading";
 import { ParentVisibilitySection } from "./ParentVisibilitySection";
+import { StudentAvatar } from "@shared/components/StudentAvatar";
 
 const ACCENT = "#6B0000";
 const FILTER_OPTIONS = ["All Students", "Highest Grades", "Lowest Grades", "Boys", "Girls"];
@@ -254,11 +255,8 @@ export function GradesPage() {
       <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2.5">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-maroon">
-              <BookOpen size={28} />
-            </span>
             <div>
-              <h1 className={`text-lg font-black tracking-tight ${textPrimary}`}>Gradebook</h1>
+              <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>Gradebook</h1>
               <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
                 {gradeLevel || "Advisory class"} · {curriculum}
               </p>
@@ -445,7 +443,6 @@ export function GradesPage() {
               <div className={`flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 ${panelBorder}`}>
                 <div className="flex min-w-0 items-center gap-2">
                   <p className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textPrimary}`}>
-                    <BookOpen size={13} style={{ color: ACCENT }} />
                     {gradebook?.sectionName || "Advisory Class"}
                   </p>
                   <p className={`truncate text-[11px] font-medium ${textMuted}`}>
@@ -505,13 +502,7 @@ export function GradesPage() {
                             >
                               <td className={`sticky left-0 z-10 px-4 py-2 ${darkMode ? "bg-[#111827]" : "bg-white"}`}>
                                 <div className="flex min-w-0 items-center gap-2.5">
-                                  <span
-                                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-                                      darkMode ? "bg-white/10" : "bg-black/5"
-                                    } ${textMuted}`}
-                                  >
-                                    <User size={13} />
-                                  </span>
+                                  <StudentAvatar gender={student.gender} name={studentDisplayName(student)} />
                                   <span className={`truncate text-xs font-bold ${textPrimary}`}>
                                     {studentDisplayName(student)}
                                   </span>

@@ -49,12 +49,13 @@ export function FullRankingModal({
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/20 backdrop-blur-xs"
+        className="absolute inset-0 modal-backdrop"
         onClick={onClose}
       />
 
       {/* Modal panel */}
       <div
+        data-modal-panel="true"
         className={`relative w-full max-w-2xl max-h-[85vh] flex flex-col rounded-3xl shadow-2xl border ${panelBg} ${panelBorder}`}
       >
         {/* Header */}

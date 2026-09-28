@@ -8,7 +8,7 @@ export default function LeaveQuizConfirm({
   onCancel: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
       <div className="w-full max-w-xs rounded-3xl bg-white p-5 text-center shadow-xl">
         <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100">
           <AlertTriangle size={24} className="text-amber-500" />

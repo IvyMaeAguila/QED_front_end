@@ -9,6 +9,7 @@ import {
   CheckCheck,
 } from "lucide-react";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
+import { StudentAvatar } from "@shared/components/StudentAvatar";
 import {
   ATTENDANCE_CYCLE,
   ATTENDANCE_META,
@@ -186,13 +187,7 @@ export function TeacherAttendancePage() {
         </td>
         <td className="px-4 py-2">
           <div className="flex min-w-0 items-center gap-2.5">
-            <span
-              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-                darkMode ? "bg-white/10" : "bg-black/5"
-              } ${textMuted}`}
-            >
-              <User size={13} />
-            </span>
+            <StudentAvatar gender={student.gender} name={student.name} />
             <span className={`truncate text-xs font-bold ${textPrimary}`}>
               {student.name}
             </span>
@@ -291,12 +286,9 @@ export function TeacherAttendancePage() {
       <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2.5">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-maroon">
-              <ListChecks size={28} />
-            </span>
             <div>
               <h1
-                className={`text-lg font-black tracking-tight ${textPrimary}`}
+                className={`text-2xl font-black tracking-tight ${textPrimary}`}
               >
                 Attendance — {displaySectionName}
               </h1>
@@ -376,7 +368,6 @@ export function TeacherAttendancePage() {
               <p
                 className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textPrimary}`}
               >
-                <User size={13} style={{ color: ACCENT }} />
                 Today's Roster
               </p>
               <p className={`truncate text-[11px] font-medium ${textMuted}`}>

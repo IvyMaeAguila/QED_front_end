@@ -1,5 +1,6 @@
 import { createPortal } from "react-dom";
-import { User, X } from "lucide-react";
+import { X } from "lucide-react";
+import { StudentAvatar } from "@shared/components/StudentAvatar";
 import type { RosterStudent } from "../subjects/detail/data";
 import {
   type AttendanceMap,
@@ -123,7 +124,7 @@ export function StudentAttendanceSummaryModal({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop"
       onClick={onClose}
     >
       <div
@@ -137,9 +138,7 @@ export function StudentAttendanceSummaryModal({
             className={`flex items-center justify-between gap-4 border-b px-8 py-6 ${panelBorder}`}
           >
             <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gray-200 text-gray-700 shadow-sm">
-                <User size={28} />
-              </div>
+              <StudentAvatar gender={student.gender} name={student.name} className="h-14 w-14 shadow-sm" />
               <div>
                 <p
                   className={`text-[11px] font-extrabold uppercase tracking-widest ${textMuted}`}

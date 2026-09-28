@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { Plus, Filter } from "lucide-react";
+import { Plus, School, Search } from "lucide-react";
 import { useClasses } from "./context/ClassesContext";
 import { ClassCard } from "./components/ClassCard";
+import { Dropdown } from "../studentrecords/components/Studentsfilterbar";
 import {
   GRADE_LEVELS,
   type GradeLevel,
@@ -19,19 +20,26 @@ export function ClassesPage() {
   const [gradeFilter, setGradeFilter] = useState<GradeLevel | "All Grades">(
     "All Grades",
   );
+  const [search, setSearch] = useState("");
 
   const [classToDelete, setClassToDelete] = useState<{
     id: string;
     label: string;
   } | null>(null);
 
-  const filtered = useMemo(
-    () =>
-      classes.filter(
-        (c) => gradeFilter === "All Grades" || c.gradeLevel === gradeFilter,
-      ),
-    [classes, gradeFilter],
-  );
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return classes.filter((c) => {
+      if (gradeFilter !== "All Grades" && c.gradeLevel !== gradeFilter)
+        return false;
+      if (q) {
+        const haystack =
+          `${c.gradeLevel} ${c.section ?? ""} ${c.adviserName ?? ""} ${c.room ?? ""}`.toLowerCase();
+        if (!haystack.includes(q)) return false;
+      }
+      return true;
+    });
+  }, [classes, gradeFilter, search]);
 
   // Tinatanggap ang class id na kasalukuyang naka-set sa classToDelete.
   // I-null out lang ang state kapag tagumpay — kung mag-throw ito,
@@ -41,61 +49,67 @@ export function ClassesPage() {
     await deleteClass(classToDelete.id);
     setClassToDelete(null);
   }
+
   return (
-    <div className="space-y-6">
-      <header className="flex justify-between items-center p-2">
-        <div>
-          <h3
-            className={`text-base sm:text-4xl font-bold  ${
-              darkMode ? "text-white" : "text-black"
-            }`}
-          >
-            Classes Management
-          </h3>
-          <p className="text-sm text-[#9CA3AF] mt-1 font-medium">
-            Showing {filtered.length} of {classes.length} total classes
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="group relative inline-flex items-center">
-            <select
-              value={gradeFilter}
-              onChange={(e) =>
-                setGradeFilter(e.target.value as GradeLevel | "All Grades")
-              }
-              className="h-10 pl-4 pr-10 rounded-xl text-xs font-bold bg-white text-[#650000] border border-[#650000] outline-none cursor-pointer appearance-none 
-              hover:bg-linear-to-r hover:from-[#550000] hover:to-maroon-light hover:text-white transition-all duration-300"
-            >
-              <option value="All Grades">All Grades</option>
-              {GRADE_LEVELS.map((g) => (
-                <option key={g} value={g}>
-                  {g}
-                </option>
-              ))}
-            </select>
-
-            <div className="pointer-events-none absolute right-3 z-20 flex items-center text-[#650000] group-hover:text-white transition-colors duration-300">
-              <Filter size={16} strokeWidth={2} />
-            </div>
+    <div className="w-full min-h-full space-y-4 px-6 pb-12 pt-6 lg:px-8">
+      {/* Page header */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-2.5">
+          <div>
+            <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>
+              Classes Management
+            </h1>
+            <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+              {filtered.length} of {classes.length} class
+              {classes.length === 1 ? "" : "es"} shown
+            </p>
           </div>
+        </div>
+      </div>
 
+      {/* Search bar with grade filter + add button beside it */}
+      <div
+        className={`relative z-20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 rounded-xl border px-3 py-2 ${panelBg} ${panelBorder}`}
+      >
+        <div className="relative w-full sm:w-80 sm:shrink-0">
+          <span className="absolute inset-y-0 left-0 z-10 flex items-center pl-2.5 pointer-events-none text-gray-400">
+            <Search size={13} />
+          </span>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search classes..."
+            className={`relative w-full h-8 pl-8 pr-2.5 rounded-lg border text-[11px] font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${
+              darkMode ? "text-white" : "text-[#111827]"
+            } placeholder:text-gray-400 focus:border-maroon`}
+          />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2.5">
+          <Dropdown
+            label="Grade level filter"
+            value={gradeFilter}
+            options={["All Grades", ...GRADE_LEVELS]}
+            onChange={setGradeFilter}
+            darkMode={darkMode}
+          />
           <button
             onClick={() => navigate("new")}
-            className="h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 hover:opacity-90 transition-opacity"
-            style={{
-              background: "linear-gradient(160deg, #F99D3A 0%, #935D23 100%)",
-            }}
+            className="h-8 px-3 rounded-lg text-[11px] font-extrabold text-white flex items-center gap-1.5 shrink-0 transition-colors hover:bg-[#6B0000]"
+            style={{ background: "#8B0D0D" }}
           >
-            <Plus size={14} /> Add Class
+            <Plus size={13} />
+            Add Class
           </button>
         </div>
-      </header>
+      </div>
 
       <main>
         {filtered.length === 0 ? (
           <div className="py-20 text-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">
             <p className={`text-sm font-semibold ${textMuted}`}>
-              No classes found for this filter.
+              No classes match the current filters.
             </p>
           </div>
         ) : (

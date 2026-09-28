@@ -1,4 +1,3 @@
-
 import { useRef, useState } from "react";
 import {
   Upload,
@@ -10,18 +9,18 @@ import {
   Loader2,
 } from "lucide-react";
 import type { Student } from "../types/Students";
-import { studentService } from "./../services/student-record.service"; // 👈 i-adjust path kung kinakailangan
+import { studentService } from "./../services/student-record.service";
 import {
   fetchGradeLevels,
   fetchSectionByGrade,
-} from "./../services/grade-section.service"; // 👈 i-adjust path kung kinakailangan
+} from "./../services/grade-section.service";
 import {
   parseStudentsExcelFile,
   exportStudentsToExcel,
   downloadStudentImportTemplate,
   type ImportParseResult,
 } from "../utils/studentExcel";
-import { ToastContainer, type ToastItem } from "@shared/components/ToastNotification"; // 👈 i-adjust path kung kinakailangan
+import { ToastContainer, type ToastItem } from "@shared/components/ToastNotification";
 
 interface StudentImportExportToolbarProps {
   filteredStudents: Student[];
@@ -55,7 +54,6 @@ export function StudentImportExportToolbar({
   const pushToast = (message: string, type: ToastItem["type"] = "success") => {
     const id = Date.now();
     setToasts((prev) => [...prev, { id, message, type }]);
-    // auto-dismiss after 4s
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 4000);
@@ -242,50 +240,47 @@ export function StudentImportExportToolbar({
     }
   };
 
+  // Compact, h-8/text-[11px] scale to match the search bar's dropdowns and Add button
   const buttonBase = darkMode
     ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
     : "border-[#E5E7EB] text-[#475569] hover:bg-[#F6F7FB]";
 
   return (
     <>
-      <div
-        className={`flex  flex-wrap items-center gap-2 px-5 py-3 border-t ${panelBorder}`}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".xlsx,.xls,.csv"
+        className="hidden"
+        onChange={handleFileChosen}
+      />
+      <button
+        onClick={() => fileInputRef.current?.click()}
+        disabled={isParsing}
+        className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-[11px] font-bold transition-colors disabled:opacity-50 shrink-0 ${buttonBase}`}
       >
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".xlsx,.xls,.csv"
-          className="hidden"
-          onChange={handleFileChosen}
-        />
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          disabled={isParsing}
-          className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-bold transition-colors disabled:opacity-50 ${buttonBase}`}
-        >
-          <Upload size={14} />
-          {isParsing ? "Reading file..." : "Import Excel"}
-        </button>
-        <button
-          onClick={() => exportStudentsToExcel(filteredStudents)}
-          disabled={filteredStudents.length === 0}
-          className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-bold transition-colors disabled:opacity-50 ${buttonBase}`}
-        >
-          <Download size={14} />
-          Export Excel
-        </button>
-        <button
-          onClick={() => downloadStudentImportTemplate()}
-          className={`inline-flex items-center gap-1.5 rounded-lg px-2 py-2 text-[11px] font-semibold underline ${textMuted}`}
-        >
-          <FileSpreadsheet size={13} />
-          Template
-        </button>
+        <Upload size={13} />
+        {isParsing ? "Reading..." : "Import"}
+      </button>
+      <button
+        onClick={() => exportStudentsToExcel(filteredStudents)}
+        disabled={filteredStudents.length === 0}
+        className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-[11px] font-bold transition-colors disabled:opacity-50 shrink-0 ${buttonBase}`}
+      >
+        <Download size={13} />
+        Export
+      </button>
+      <button
+        onClick={() => downloadStudentImportTemplate()}
+        className={`inline-flex h-8 items-center gap-1 rounded-lg px-1.5 text-[11px] font-semibold underline shrink-0 ${textMuted}`}
+      >
+        <FileSpreadsheet size={12} />
+        Template
+      </button>
 
-        {error && (
-          <p className="w-full text-xs font-semibold text-[#DC2626]">{error}</p>
-        )}
-      </div>
+      {error && (
+        <p className="w-full text-xs font-semibold text-[#DC2626]">{error}</p>
+      )}
 
       {result && (
         <ImportPreviewModal
@@ -331,7 +326,7 @@ function ImportPreviewModal({
   const hasErrors = result.invalid.length > 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
       <div
         className={`w-full max-w-lg rounded-2xl border ${panelBorder} p-6 ${
           darkMode ? "bg-[#0B1120]" : "bg-white"

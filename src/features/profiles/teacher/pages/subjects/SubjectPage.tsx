@@ -231,11 +231,8 @@ export function SubjectsPage() {
       <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
         {/* Header — same pattern as TeacherAttendancePage */}
         <div className="flex items-start gap-2.5">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-maroon">
-            <BookOpen size={28} />
-          </span>
           <div>
-            <h1 className={`text-lg font-black tracking-tight ${textPrimary}`}>
+            <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>
               Subjects
             </h1>
             <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>

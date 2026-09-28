@@ -78,7 +78,7 @@ export function EditTermDatesModal({
   }
 
   return (
-    <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/40">
+    <div className="fixed inset-0 z-60 flex items-center justify-center p-4 modal-backdrop">
       <div
         className={`w-full max-w-lg rounded-2xl border shadow-xl ${panelBg} ${panelBorder}`}
       >

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { X, Calendar, Tag, Plus, ListChecks } from "lucide-react";
 import {
   ASSESSMENT_TAB_LABELS,
@@ -143,10 +144,9 @@ export function AddItemModal({
     darkMode ? "text-white placeholder:text-[#6B7280]" : "text-[#111827] placeholder:text-[#9CA3AF]"
   }`;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-100 flex items-center justify-center p-4"
-      style={{ backgroundColor: "rgba(10,10,15,0.56)", backdropFilter: "blur(6px)" }}
+      className="fixed inset-0 z-[1000] flex items-center justify-center p-4 modal-backdrop"
       onClick={onClose}
     >
       <div
@@ -295,6 +295,7 @@ export function AddItemModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

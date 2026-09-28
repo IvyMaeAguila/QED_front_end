@@ -1,4 +1,4 @@
-import { Pencil } from "lucide-react";
+import { CalendarDays, Pencil } from "lucide-react";
 import { ACCENT } from "../types/types";
 import type { AcademicYear } from "../types/academicyear";
 import { StatusBadge } from "./StatusBadge";
@@ -13,6 +13,18 @@ interface AcademicYearCardProps {
   onEdit: () => void;
 }
 
+// "2026-08-01" -> "Aug 1, 2026" (parsed manually to avoid timezone shifts)
+function formatDate(value?: string | null): string {
+  if (!value) return "Not set";
+  const [y, m, d] = value.slice(0, 10).split("-").map(Number);
+  if (!y || !m || !d) return value;
+  return new Date(y, m - 1, d).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
 export function AcademicYearCard({
   academicYear,
   darkMode,
@@ -22,32 +34,23 @@ export function AcademicYearCard({
   textMuted,
   onEdit,
 }: AcademicYearCardProps) {
-  const dateRange =
-    academicYear.startDate && academicYear.endDate
-      ? `${academicYear.startDate} — ${academicYear.endDate}`
-      : "No term dates set yet";
+  // ── Shared design tokens (same as StudentFormPage) ──
+  const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
+  const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
+  const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
+  const labelClasses = `text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 
   return (
-    <div className={`rounded-2xl border shadow-sm p-6 ${panelBg} ${panelBorder}`}>
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <p className={`text-xs font-bold uppercase tracking-wide ${textMuted}`}>
-            Academic Year
-          </p>
-          <h2 className={`text-2xl font-black mt-1 ${textPrimary}`}>
-            {academicYear.label}
-          </h2>
-          <p className={`text-sm font-semibold mt-1 ${textMuted}`}>
-            {dateRange}
-          </p>
-          <div className="mt-3">
-            <StatusBadge status={academicYear.status} darkMode={darkMode} />
-          </div>
-        </div>
-
+    <section className={cardClasses}>
+      <div className={cardHeaderClasses}>
+        <h2 className={sectionTitleClasses}>
+          <CalendarDays size={15} style={{ color: ACCENT }} />
+          School Year Details
+        </h2>
         <button
+          type="button"
           onClick={onEdit}
-          className={`h-10 px-4 rounded-xl text-xs font-bold inline-flex items-center gap-2 border transition-colors ${
+          className={`h-9 px-4 rounded-xl text-xs font-bold inline-flex items-center gap-2 border transition-colors ${
             darkMode
               ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
               : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
@@ -57,6 +60,33 @@ export function AcademicYearCard({
           Change Academic Year
         </button>
       </div>
-    </div>
+
+      <dl className="p-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <dt className={labelClasses}>School Year</dt>
+          <dd className={`text-lg font-black tracking-tight ${textPrimary}`}>
+            {academicYear.label}
+          </dd>
+        </div>
+        <div>
+          <dt className={labelClasses}>Start Date</dt>
+          <dd className={`text-sm font-semibold leading-7 ${textPrimary}`}>
+            {formatDate(academicYear.startDate)}
+          </dd>
+        </div>
+        <div>
+          <dt className={labelClasses}>End Date</dt>
+          <dd className={`text-sm font-semibold leading-7 ${textPrimary}`}>
+            {formatDate(academicYear.endDate)}
+          </dd>
+        </div>
+        <div>
+          <dt className={labelClasses}>Status</dt>
+          <dd className="leading-7">
+            <StatusBadge status={academicYear.status} darkMode={darkMode} />
+          </dd>
+        </div>
+      </dl>
+    </section>
   );
 }

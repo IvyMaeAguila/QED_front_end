@@ -38,11 +38,12 @@ export default function ProgressReportUnavailableModal({
         type="button"
         aria-label="Close"
         onClick={onClose}
-        className="absolute inset-0 bg-black/50"
+        className="absolute inset-0 modal-backdrop"
       />
 
       {/* Card */}
       <div
+        data-modal-panel="true"
         className={`relative w-full max-w-sm rounded-xl border p-6 shadow-xl ${
           darkMode
             ? "bg-[#111827] border-white/10"
