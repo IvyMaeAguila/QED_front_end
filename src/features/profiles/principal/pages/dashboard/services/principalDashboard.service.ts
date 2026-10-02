@@ -18,7 +18,6 @@ import type {
 } from "../data/types";
 import { ATTENTION_ITEMS } from "../data/mockData";
 import { HOLISTIC_RUBRIC } from "../utils/HolisticRubrics";
-import { getGradeLevels } from "../../students/services/students.service";
 import { getTeachers } from "../../teachers/services/teachers.service";
 import type { AcademicYearRow } from "../../../../admin/pages/subjects/services/academicyear.service";
 import type { ApiResponse } from "../../../../admin/pages/subjects/services/academicyear.service";
@@ -46,6 +45,18 @@ async function getOverviewAttendance(): Promise<{ attendance: number }> {
     throw new Error(`Failed to fetch overview attendance (${res.status})`);
   }
   return res.json();
+}
+
+// Total ng lahat ng enrolled na estudyante (hindi kasama ang deleted at graduated)
+async function getTotalStudents(): Promise<number> {
+  const res = await fetch(`${BASE_URL}/student/total-student`, {
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch total students (${res.status})`);
+  }
+  const json: { total: number } = await res.json();
+  return Number(json.total) || 0;
 }
 
 function mapToTerm(name: string): Term {
@@ -151,14 +162,13 @@ function computeAcademicPerf(data: SchoolWideAcademicPerformanceResponse): numbe
 }
 
 export async function getOverview(): Promise<OverviewData> {
-  const [gradeLevels, teachers, attendanceRate, schoolWidePerf] = await Promise.all([
-    getGradeLevels(),
+  const [totalStudents, teachers, attendanceRate, schoolWidePerf] = await Promise.all([
+    getTotalStudents(),
     getTeachers(),
     getOverviewAttendance(),
     getSchoolWideAcademicPerformance(),
   ]);
 
-  const totalStudents = gradeLevels.reduce((sum, g) => sum + g.totalStudents, 0);
   const totalTeachers = teachers.length;
   const attendance = attendanceRate.attendance;
   const academicPerf = computeAcademicPerf(schoolWidePerf);

@@ -5,6 +5,12 @@ const BASE_URL = `${API_CONFIG.baseURL}/api/academic-year`;
 export type SchoolYearStatus = "Active" | "Inactive";
 export type TermStatus = "Active" | "Upcoming" | "Completed";
 
+export interface SchoolYearRow {
+  id: number;
+  school_year: string;
+  is_active: number;
+}
+
 export interface AcademicYearRow {
   id: number;
   label: string;
@@ -34,8 +40,15 @@ export interface ApiResponse<T> {
   data?: T;
 }
 
+export async function fetchAllSchoolYears(): Promise<SchoolYearRow[]> {
+  const res = await fetch(`${BASE_URL}/getAllSy`, { credentials: "include" });
+  const json: ApiResponse<SchoolYearRow[]> = await res.json();
+  if (!res.ok) throw new Error(json.message || "Failed to fetch school years.");
+  return json.data ?? [];
+}
+
 export async function fetchActiveAcademicYear(): Promise<AcademicYearRow> {
-  const res = await fetch(`${BASE_URL}/getAcademicYear`, {credentials: "include"});
+  const res = await fetch(`${BASE_URL}/getAcademicYear`, { credentials: "include" });
   const json: ApiResponse<AcademicYearRow> = await res.json();
   if (!res.ok || !json.data) throw new Error(json.message || "Failed to fetch academic year.");
   return json.data;
@@ -56,7 +69,7 @@ export async function addAcademicYear(
 }
 
 export async function fetchTerms(schoolYearId: number): Promise<TermRow[]> {
-  const res = await fetch(`${BASE_URL}/getTerms/${schoolYearId}`, {credentials: "include"});
+  const res = await fetch(`${BASE_URL}/getTerms/${schoolYearId}`, { credentials: "include" });
   const json: ApiResponse<TermRow[]> = await res.json();
   if (!res.ok) throw new Error(json.message || "Failed to fetch terms.");
   return json.data ?? [];

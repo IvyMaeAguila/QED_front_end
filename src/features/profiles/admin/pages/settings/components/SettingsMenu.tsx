@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { Settings, X, Moon, Sun, Bell, GraduationCap, Info, Pencil, Check, Landmark, Loader2 } from "lucide-react";
+import { Settings, X, Moon, Sun, Bell, Info, Pencil, Check, Landmark } from "lucide-react";
 import { useSettings } from "../context/SettingsContext";
 import { ToggleRow } from "./ToggleRow";
 
@@ -10,10 +10,6 @@ export function SettingsMenu() {
   const {
     darkMode,
     toggleDarkMode,
-    schoolYear,
-    setSchoolYear,
-    schoolYearLoading,
-    schoolYearError,
     schoolAcronym,
     setSchoolAcronym,
     schoolName,
@@ -25,12 +21,6 @@ export function SettingsMenu() {
   } = useSettings();
 
   const [open, setOpen] = useState(false);
-
-  const [editingYear, setEditingYear] = useState(false);
-  const [yearDraft, setYearDraft] = useState(schoolYear);
-  const [yearSaving, setYearSaving] = useState(false);
-  const [yearSaveError, setYearSaveError] = useState<string | null>(null);
-  const yearInputRef = useRef<HTMLInputElement>(null);
 
   const [editingAcronym, setEditingAcronym] = useState(false);
   const [acronymDraft, setAcronymDraft] = useState(schoolAcronym);
@@ -45,7 +35,6 @@ export function SettingsMenu() {
 
   function closeAll() {
     setOpen(false);
-    setEditingYear(false);
     setEditingAcronym(false);
     setEditingName(false);
   }
@@ -74,15 +63,6 @@ export function SettingsMenu() {
   }, [open]);
 
   useEffect(() => {
-    if (editingYear) {
-      setYearDraft(schoolYear);
-      setYearSaveError(null);
-      yearInputRef.current?.focus();
-      yearInputRef.current?.select();
-    }
-  }, [editingYear, schoolYear]);
-
-  useEffect(() => {
     if (editingAcronym) {
       setAcronymDraft(schoolAcronym);
       acronymInputRef.current?.focus();
@@ -97,41 +77,6 @@ export function SettingsMenu() {
       nameInputRef.current?.select();
     }
   }, [editingName, schoolName]);
-
-  async function commitYear() {
-    const trimmed = yearDraft.trim();
-
-    if (!trimmed) {
-      setEditingYear(false);
-      return;
-    }
-    if (trimmed === schoolYear) {
-      setEditingYear(false);
-      return;
-    }
-
-    setYearSaving(true);
-    setYearSaveError(null);
-    try {
-      await setSchoolYear(trimmed);
-      setEditingYear(false);
-    } catch (err) {
-      setYearSaveError(err instanceof Error ? err.message : "Failed to save school year.");
-    } finally {
-      setYearSaving(false);
-    }
-  }
-
-  function handleYearKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      commitYear();
-    } else if (e.key === "Escape") {
-      setYearDraft(schoolYear);
-      setYearSaveError(null);
-      setEditingYear(false);
-    }
-  }
 
   function commitAcronym() {
     const trimmed = acronymDraft.trim();
@@ -327,62 +272,6 @@ export function SettingsMenu() {
                   <Pencil size={13} />
                 </button>
               </div>
-            )}
-          </div>
-
-          <div className={sectionBorder}>
-            <p className={`${labelClasses} flex items-center gap-1.5`}>
-              <GraduationCap size={11} />
-              Current School Year
-            </p>
-
-            {editingYear ? (
-              <>
-                <div className={rowBase}>
-                  <input
-                    ref={yearInputRef}
-                    value={yearDraft}
-                    onChange={(e) => setYearDraft(e.target.value)}
-                    onKeyDown={handleYearKeyDown}
-                    placeholder="2026-2027"
-                    disabled={yearSaving}
-                    className={`flex-1 bg-transparent outline-none text-[13px] font-medium disabled:opacity-60 ${
-                      darkMode ? "text-white" : "text-[#111827]"
-                    }`}
-                  />
-                  <button
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={commitYear}
-                    disabled={yearSaving}
-                    className="w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] hover:bg-[#6B0000]/10 transition-colors disabled:opacity-50"
-                    title="Save"
-                  >
-                    {yearSaving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
-                  </button>
-                </div>
-                {yearSaveError && (
-                  <p className="text-[11px] font-semibold text-[#B91C1C]">{yearSaveError}</p>
-                )}
-              </>
-            ) : (
-              <div className={rowBase}>
-                <span className={`text-[13px] font-medium ${darkMode ? "text-white" : "text-[#111827]"}`}>
-                  {schoolYearLoading ? "Loading…" : schoolYear}
-                </span>
-                <button
-                  onClick={() => setEditingYear(true)}
-                  disabled={schoolYearLoading}
-                  className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] transition-colors disabled:opacity-50 ${
-                    darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
-                  }`}
-                  title="Edit school year"
-                >
-                  <Pencil size={13} />
-                </button>
-              </div>
-            )}
-            {!editingYear && schoolYearError && (
-              <p className="text-[11px] font-semibold text-[#B91C1C]">{schoolYearError}</p>
             )}
           </div>
 

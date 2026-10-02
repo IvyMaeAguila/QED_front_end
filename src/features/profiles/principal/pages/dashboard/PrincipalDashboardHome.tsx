@@ -49,8 +49,9 @@ export function PrincipalDashboardHome() {
 
   // Early returns muna bago i-access ang anumang property ng `data` —
   // dito pa lang alam ni TypeScript na hindi na null ang `data` sa ibaba.
-  if (loading || !data) return <DashboardSkeleton textMuted={textMuted} />;
+  if (loading) return <DashboardSkeleton textMuted={textMuted} />;
   if (error) return <DashboardError error={error} textMuted={textMuted} />;
+  if (!data) return <DashboardError error={new Error("No dashboard data available.")} textMuted={textMuted} />;
 
   const fullRanking = data.subjectRankingByTerm[rankingTerm] ?? [];
   const top5Ranking = fullRanking.slice(0, 5);

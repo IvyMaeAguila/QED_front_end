@@ -21,7 +21,7 @@ import {
   getActiveGradeTemplate,
   type ActiveGradeTemplate,
 } from "../services/subjectGradeTemplate.service";
-import { fetchAllSchoolYears, type SchoolYearRow } from "../../settings/services/schoolYear.service";
+import { fetchAllSchoolYears, type SchoolYearRow } from "../services/academicyear.service";
 
 interface EditSubjectModalProps extends SubjectsTheme {
   subject: Subject;
