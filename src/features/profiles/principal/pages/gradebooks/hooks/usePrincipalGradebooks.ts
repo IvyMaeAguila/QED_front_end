@@ -15,7 +15,7 @@ export function usePrincipalGradebooks() {
     const controller = new AbortController();
 
     Promise.all([
-      fetchGradeLevelSummaries(),
+      fetchGradeLevelSummaries(controller.signal),
       fetchSchoolYear(controller.signal),
     ])
       .then(([levels, year]) => {

@@ -1,4 +1,4 @@
-import { API_CONFIG } from '../../../../../config/api.config';
+import { API_CONFIG } from "../../../../../config/api.config";
 import { useState, useRef, type FormEvent } from "react";
 import {
   useNavigate,
@@ -6,7 +6,13 @@ import {
   useLocation,
   useOutletContext,
 } from "react-router-dom";
-import { ArrowLeft, Save, AlertTriangle, CheckCircle, UserPlus } from "lucide-react";
+import {
+  ArrowLeft,
+  Save,
+  AlertTriangle,
+  CheckCircle,
+  UserPlus,
+} from "lucide-react";
 import { useUsers } from "./context/UsersContext";
 import { principalConflict } from "./context/UsersContext";
 import {
@@ -105,7 +111,9 @@ export function UserFormPage() {
         }
       : { ...emptyForm, role: presetRole ?? emptyForm.role },
   );
-  const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof FormState, string>>
+  >({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Ref, not state — state updates are batched/async and won't block a
   // second handleSubmit call that fires in the same tick (e.g. Enter key
@@ -342,7 +350,7 @@ export function UserFormPage() {
               <p
                 className={`text-xs font-semibold leading-relaxed ${darkMode ? "text-[#FCD34D]" : "text-[#92400E]"}`}
               >
-                {formatFullName(conflict)} ({conflict.id}) is already the active
+                {formatFullName(conflict)} is already the active
                 Principal. Only one active Principal is allowed — deactivate
                 their account first, or edit their record directly instead of
                 creating a new one.
@@ -477,9 +485,10 @@ export function UserFormPage() {
                 value={form.contactNumber}
                 maxLength={11}
                 inputMode="numeric"
-                onChange={(e) =>
-                  setForm({ ...form, contactNumber: e.target.value })
-                }
+                onChange={(e) => {
+                  const numericValue = e.target.value.replace(/\D/g, "");
+                  setForm({ ...form, contactNumber: numericValue });
+                }}
                 placeholder="0917-123-4567"
               />
               {errors.contactNumber && (

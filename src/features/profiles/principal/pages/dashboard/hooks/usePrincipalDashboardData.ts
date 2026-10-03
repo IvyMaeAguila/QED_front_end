@@ -3,7 +3,7 @@
 // Also owns rankingTerm — the one piece of page-level interactive state
 // (the subject-ranking term dropdown) — since it lives above the section
 // component that renders the dropdown.
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import type { PrincipalDashboardData, Term } from "../data/types";
 import { getPrincipalDashboardData } from "../services/principalDashboard.service";
 
@@ -26,12 +26,18 @@ export function usePrincipalDashboardData(): UsePrincipalDashboardDataResult {
   const [rankingTerm, setRankingTerm] = useState<Term>("Term 1");
   const [refetchIndex, setRefetchIndex] = useState(0);
 
+  const requestRef = useRef<{ index: number; promise: Promise<PrincipalDashboardData> } | null>(null);
+
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
     setError(null);
 
-    getPrincipalDashboardData()
+    // Reuse the request when StrictMode replays this effect.
+    if (!requestRef.current || requestRef.current.index !== refetchIndex) {
+      requestRef.current = { index: refetchIndex, promise: getPrincipalDashboardData() };
+    }
+    requestRef.current.promise
       .then((result) => {
         if (cancelled) return;
         setData(result);

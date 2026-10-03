@@ -93,7 +93,7 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
         password,
       });
 
-      login(user, user.token, user.mustChangePassword);
+      await login(user, user.token, user.mustChangePassword);
 
       const redirectTo = getSafeRedirect(location.search);
       navigate(redirectTo || getRoleHome(user.role));
