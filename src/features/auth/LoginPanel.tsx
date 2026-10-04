@@ -93,7 +93,7 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
         password,
       });
 
-      login(user, user.token, user.mustChangePassword);
+      await login(user, user.token, user.mustChangePassword);
 
       const redirectTo = getSafeRedirect(location.search);
       navigate(redirectTo || getRoleHome(user.role));
@@ -189,10 +189,10 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
 
           {/* Fields */}
           <div className="flex flex-col gap-4">
-            {/* User ID */}
+            {/* Username */}
             <div className="flex flex-col gap-1.5">
               <label className="text-[11px] font-semibold text-[#5d5d5d] tracking-wide uppercase">
-                User ID
+                Username
               </label>
               <div className="relative">
                 <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#bbb]">
@@ -203,8 +203,8 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
                   value={userName}
                   onChange={(e) => setuserName(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="e.g. A05-1234"
-                  className="w-full rounded-lg border border-transparent bg-[#f7f7f8] py-3 pl-12 pr-4 text-[13px] text-black outline-none transition-all placeholder:text-[#ccc]"
+                  placeholder="e.g. TC_maria.delacruz"
+                  className="w-full pl-12 pr-4 py-3 rounded-xl text-[13px] text-black bg-[#f7f7f8] border border-transparent outline-none transition-all placeholder:text-[#ccc]"
                   style={{ boxShadow: "none" }}
                   onFocus={(e) => {
                     e.currentTarget.style.background = "#fff";
@@ -254,7 +254,7 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
                   onClick={() => setShowPassword((prev) => !prev)}
                   tabIndex={-1}
                   className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#bbb] hover:text-[#7d7d7d] transition-colors"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-label={showPassword ? "Show password" : "Hide password"}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>

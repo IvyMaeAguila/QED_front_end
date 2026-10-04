@@ -1,4 +1,4 @@
-import { API_CONFIG } from '../../../../../config/api.config';
+import { API_CONFIG } from "../../../../../config/api.config";
 import { useState, useRef, type FormEvent } from "react";
 import {
   useNavigate,
@@ -365,7 +365,7 @@ export function UserFormPage() {
               <p
                 className={`text-xs font-semibold leading-relaxed ${darkMode ? "text-[#FCD34D]" : "text-[#92400E]"}`}
               >
-                {formatFullName(conflict)} ({conflict.id}) is already the active
+                {formatFullName(conflict)} is already the active
                 Principal. Only one active Principal is allowed — deactivate
                 their account first, or edit their record directly instead of
                 creating a new one.
@@ -504,9 +504,10 @@ export function UserFormPage() {
                 value={form.contactNumber}
                 maxLength={11}
                 inputMode="numeric"
-                onChange={(e) =>
-                  setForm({ ...form, contactNumber: e.target.value })
-                }
+                onChange={(e) => {
+                  const numericValue = e.target.value.replace(/\D/g, "");
+                  setForm({ ...form, contactNumber: numericValue });
+                }}
                 placeholder="0917-123-4567"
               />
               {errors.contactNumber && (

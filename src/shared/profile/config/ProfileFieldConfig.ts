@@ -1,5 +1,5 @@
 // src/features/profiles/profileFieldConfig.ts
-import { Mail, Shield, Phone, MapPin, BookOpen, UserRound } from "lucide-react";
+import { Mail, Shield, Phone, MapPin, UserRound } from "lucide-react";
 import type { Role } from "../types/types";
 
 export interface ProfileField {
@@ -25,15 +25,13 @@ export const PROFILE_FIELD_CONFIG: Record<Role, ProfileField[]> = {
   TEACHER: [
     { key: "email", label: "Email", icon: Mail, editable: true, showInSummary: true },
     { key: "phone", label: "Phone", icon: Phone, editable: true, showInSummary: true },
-    // Subject assignments are derived from class schedules and are managed by the school.
-    { key: "subject", label: "Subject", icon: BookOpen, editable: false, showInSummary: false },
     { key: "role", label: "Role", icon: Shield, editable: false, showInSummary: true },
   ],
   PARENT: [
     { key: "email", label: "Email", icon: Mail, editable: true, showInSummary: true },
     { key: "phone", label: "Phone", icon: Phone, editable: true, showInSummary: true },
     { key: "gender", label: "Gender", icon: UserRound, editable: false, showInSummary: true },
-    { key: "address", label: "Address", icon: MapPin, editable: true, showInSummary: false },
+    { key: "address", label: "Address", icon: MapPin, editable: false, showInSummary: false },
     { key: "role", label: "Role", icon: Shield, editable: false, showInSummary: true },
   ],
 };

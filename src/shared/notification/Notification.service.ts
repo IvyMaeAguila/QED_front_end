@@ -4,6 +4,7 @@ import { API_CONFIG } from "../../config/api.config";
 export type NotificationType = "info" | "success" | "warning" | "error";
 
 export interface Notification {
+  targetPath?: string | null;
   id: number;
   title: string;
   message: string;
@@ -16,6 +17,7 @@ export interface Notification {
 }
 
 interface RawNotification {
+  target_path?: string | null;
   id: number;
   user_id: number;
   student_id: number | null;
@@ -29,6 +31,7 @@ interface RawNotification {
 }
 
 interface SocketNotification {
+  targetPath?: string | null;
   id: number;
   userId: number;
   studentId?: number | null;
@@ -49,6 +52,7 @@ const fromApi = (n: RawNotification): Notification => ({
   studentId: n.student_id,
   studentName: n.student_name,
   refKey: n.ref_key,
+  targetPath: n.target_path ?? null,
   isRead: Boolean(n.is_read),
   createdAt: n.created_at,
 });
@@ -61,6 +65,7 @@ const fromSocket = (n: SocketNotification): Notification => ({
   studentId: n.studentId ?? null,
   studentName: n.studentName ?? null,
   refKey: n.refKey ?? null,
+  targetPath: n.targetPath ?? null,
   isRead: n.isRead,
   createdAt: n.createdAt,
 });
@@ -105,11 +110,12 @@ export const notificationService = {
   );
 },
 
-  subscribe(userId: number | string, onNew: (n: Notification) => void): () => void {
+  subscribe(userId: number | string, onNew: (n: Notification) => void, onConnect?: () => void): () => void {
   const socket: Socket = io(`${API_CONFIG.baseURL}`, { withCredentials: true });
 
   socket.on("connect", () => {
     socket.emit("join", `user:${userId}`);
+    onConnect?.();
   });
 
   socket.on("notification:new", (n: SocketNotification) => {

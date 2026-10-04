@@ -77,8 +77,9 @@ export function clearGradeLevelSummariesCache(): void {
   cachedGradeLevelSummaries = null;
 }
 
-export async function fetchGradeLevelSummaries(): Promise<GradeLevelSummary[]> {
+export async function fetchGradeLevelSummaries(signal?: AbortSignal): Promise<GradeLevelSummary[]> {
   const response = await fetch(`${BASE_URL}/section-grade`, {
+    signal,
     credentials: "include",
   });
 

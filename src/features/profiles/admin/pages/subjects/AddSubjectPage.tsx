@@ -22,7 +22,7 @@ import { useGradeLevels } from "./context/gradeLevelsContext";
 import { useSubjectsCatalog } from "./context/SubjectsCatalogContext";
 import { useSubjectSections } from "./context/SubjectSectionsContext";
 import { DEFAULT_ASSESSMENT_TYPES } from "./types/assessmentTypes";
-import { useSettings } from "./../settings/context/SettingsContext";
+import { fetchActiveAcademicYear } from "./services/academicyear.service";
 import { addSubject as addSubjectApi } from "./services/subject.service";
 import { uploadGradeTemplate } from "./services/subjectGradeTemplate.service";
 import {
@@ -56,7 +56,8 @@ export function AddSubjectPage() {
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
 
-  const { schoolYear } = useSettings();
+  const [schoolYear, setSchoolYear] = useState("");
+  const [schoolYearError, setSchoolYearError] = useState<string | null>(null);
   const { gradeLevels, loading: loadingGradeLevels } = useGradeLevels();
   const { getSubjectsForGrade, addLocalSubject } = useSubjectSections();
   const { assessmentTypes, loadAssessmentTypes } = useSubjectsCatalog();
@@ -91,6 +92,19 @@ export function AddSubjectPage() {
     onCloseAction?: () => void;
   }>({ open: false, variant: "success", title: "", message: "" });
 
+  useEffect(() => {
+    let cancelled = false;
+    fetchActiveAcademicYear()
+      .then((year) => {
+        if (!cancelled) setSchoolYear(year.label);
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setSchoolYearError(err instanceof Error ? err.message : "Failed to load active school year.");
+        }
+      });
+    return () => { cancelled = true; };
+  }, []);
   function closeFeedbackModal() {
     const action = feedbackModal.onCloseAction;
     setFeedbackModal((prev) => ({ ...prev, open: false }));
@@ -195,6 +209,7 @@ export function AddSubjectPage() {
   const templateSatisfied = !templateActive || (templateFile !== null && templatePreview !== null);
 
   const canSubmit =
+    schoolYear !== "" &&
     !isSubmitting &&
     !templateParsing &&
     !noGradeSelected &&
@@ -310,7 +325,12 @@ export function AddSubjectPage() {
   }
 
   return (
-    <div className="w-full space-y-4 pb-8 sm:space-y-6 sm:pb-12">
+    <div className="w-full mt-6 space-y-6 pb-12 px-4 sm:px-6">
+      {schoolYearError ? (
+        <p role="alert" className="text-sm text-red-500">{schoolYearError}</p>
+      ) : !schoolYear ? (
+        <p role="status" className={`text-sm ${textMuted}`}>Loading active school year...</p>
+      ) : null}
       <section className={cardClasses}>
         <div className={cardHeaderClasses}>
           <div className="flex min-w-0 items-center gap-3">

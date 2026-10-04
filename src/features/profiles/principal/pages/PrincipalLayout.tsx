@@ -58,7 +58,7 @@ export function PrincipalLayout({ onLogout }: PrincipalLayoutProps) {
 
       {/* Main column */}
       <div className="relative z-10 flex-1 flex flex-col h-full overflow-hidden">
-        <Header onMenuClick={() => setSidebarOpen(true)} onLogout={onLogout} />
+        <Header onMenuClick={() => setSidebarOpen(true)} onLogout={onLogout} showNotifications/>
 
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">
           <Outlet context={theme} />
