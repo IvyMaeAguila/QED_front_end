@@ -3,7 +3,6 @@ import { ChevronLeft, ChevronRight, HelpCircle, LogOut, X, type LucideIcon } fro
 import { useState } from "react";
 import type { ReactNode } from "react";
 import { LogoComponent } from "./Logo";
-import { LogoutConfirmModal } from "./LogoutConfirmModal";
 
 export interface NavItem {
   label: string;
@@ -45,7 +44,6 @@ export function Sidebar({
   homeTo,
 }: SidebarProps) {
   const location = useLocation();
-  const [confirmLogout, setConfirmLogout] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
   return (
@@ -155,7 +153,7 @@ export function Sidebar({
 
         <button
           type="button"
-          onClick={() => setConfirmLogout(true)}
+          onClick={onLogout}
           title={collapsed ? "Log Out" : undefined}
           aria-label={collapsed ? "Log Out" : undefined}
           className={`sidebar-nav-item flex w-full items-center ${collapsed ? "lg:justify-center lg:px-0" : "gap-3 px-3"} text-[13px] text-white/55 hover:text-white hover:bg-white/10 py-2.5 rounded-2xl cursor-pointer transition-all duration-300 ${APPLE_EASE} hover:translate-x-1 active:scale-[0.97]`}
@@ -163,13 +161,6 @@ export function Sidebar({
           <LogOut size={16} className="shrink-0" /> <span className={collapsed ? "lg:hidden" : ""}>Log Out</span>
         </button>
       </div>
-      {confirmLogout && (
-        <LogoutConfirmModal
-          darkMode={darkMode}
-          onCancel={() => setConfirmLogout(false)}
-          onConfirm={onLogout}
-        />
-      )}
     </aside>
   );
 }
