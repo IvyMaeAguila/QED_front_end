@@ -24,18 +24,38 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
-    if (isLoading || !user) return;
+    if (isLoading) return;
+    if (!user) {
+      setNotifications([]);
+      return;
+    }
 
-    notificationService
-      .getAll(user.id)
-      .then(setNotifications)
-      .catch(() => {});
-
+    let cancelled = false;
+    setNotifications([]);
+    const refresh = () => {
+      notificationService.getAll(user.id).then((items) => {
+        if (cancelled) return;
+        setNotifications((previous) => {
+          const fetchedIds = new Set(items.map((n) => n.id));
+          return [...previous.filter((n) => !fetchedIds.has(n.id)), ...items]
+            .sort((a, b) => b.id - a.id);
+        });
+      }).catch(() => {});
+    };
+    refresh();
     const unsubscribe = notificationService.subscribe(user.id, (notif) => {
-      setNotifications((prev) => [notif, ...prev]);
-    });
+      if (cancelled) return;
+      setNotifications((prev) => [notif, ...prev.filter((n) => n.id !== notif.id)]);
+    }, refresh);
+    const interval = window.setInterval(refresh, 30000);
+    window.addEventListener("focus", refresh);
 
-    return unsubscribe;
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+      window.removeEventListener("focus", refresh);
+      unsubscribe();
+    };
   }, [user, isLoading]);
 
   const markAsRead = (id: number) => {

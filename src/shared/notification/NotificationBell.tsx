@@ -37,6 +37,10 @@ const teacherRoute = () => `/teacher/grades`;
 function getRoute(n: Notification): { path: string; tab?: string } | null {
   const title = n.title.toLowerCase();
 
+  if (title === "grades submitted" && n.targetPath?.startsWith("/principal/gradebooks/")) {
+    return { path: n.targetPath };
+  }
+
   if (title.includes("grade submission")) {
   return { path: teacherRoute() };
 }
@@ -67,6 +71,13 @@ function getDisplayMessage(n: Notification, tab: Tab) {
   if (tab === "today" && n.title === "Absent" && n.studentName) {
     const firstName = n.studentName.split(" ")[0];
     return `${firstName} was marked absent today.`;
+  }
+  if (n.title === "Attendance Completed" && tab === "today") {
+    return n.message.replace(/ on [^.]+\.$/, " today.");
+  }
+  if (n.title === "Grades Submitted") {
+    const when = tab === "today" ? "today" : "on " + formatStamp(n.createdAt).split(" | ")[0];
+    return n.message.replace(/\.$/, "") + " " + when + ".";
   }
   return n.message;
 }
