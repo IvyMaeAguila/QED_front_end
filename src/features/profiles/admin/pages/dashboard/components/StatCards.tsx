@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import type { LucideIcon } from "lucide-react";
 import { ArrowUpRight } from "lucide-react";
 import { statsConfig } from "../data/Dashboarddata";
 import { DashboardService } from "../services/totalCounts.service";
@@ -9,7 +8,6 @@ interface StatItem {
   label: string;
   value: string | number;
   unit?: string;
-  Icon: LucideIcon;
   variant?: "primary" | "default";
   onClick?: () => void;
 }
@@ -20,8 +18,6 @@ interface StatCardsProps {
   textPrimary: string;
   textMuted: string;
 }
-
-const ICON_TINTS = ["#8B0D0D", "#A31515", "#6B0000"];
 
 export function StatCards({ panelBg, panelBorder, textPrimary, textMuted }: StatCardsProps) {
   const [counts, setCounts] = useState<DashboardCounts | null>(null);
@@ -41,26 +37,24 @@ export function StatCards({ panelBg, panelBorder, textPrimary, textMuted }: Stat
     return counts?.[key] ?? 0;
   };
 
-  const stats: StatItem[] = statsConfig.map(({ key, label, Icon }, i) => ({
+  const stats: StatItem[] = statsConfig.map(({ key, label }, i) => ({
     label,
     value: valueFor(key),
-    Icon,
     variant: i === 0 ? "primary" : "default",
   }));
 
   return (
-    <div className="grid grid-cols-4 gap-5">
-      {stats.map(({ label, value, unit, Icon, variant = "default", onClick }, i) => {
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+      {stats.map(({ label, value, unit, variant = "default", onClick }) => {
         const isPrimary = variant === "primary";
         const clickable = Boolean(onClick);
         const Tag = clickable ? "button" : "div";
-        const tint = ICON_TINTS[i % ICON_TINTS.length];
 
         return (
           <Tag
             key={label}
             onClick={onClick}
-            className={`group text-left rounded-2xl p-7 transition-all ${
+            className={`group rounded-table p-4 text-left transition-all sm:p-5 ${
               clickable ? "cursor-pointer active:scale-[0.98]" : ""
             } ${isPrimary ? "text-white" : `border ${panelBg} ${panelBorder} hover:-translate-y-0.5`}`}
             style={{
@@ -70,16 +64,7 @@ export function StatCards({ panelBg, panelBorder, textPrimary, textMuted }: Stat
               background: isPrimary ? "linear-gradient(180deg, #550000 0%, #BB0000 100%)" : undefined,
             }}
           >
-            <div className="flex justify-between items-center mb-6">
-              <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 transition-colors"
-                style={{
-                  background: isPrimary ? "rgba(255,255,255,0.18)" : `${tint}1A`,
-                  color: isPrimary ? "#fff" : tint,
-                }}
-              >
-                <Icon size={26} />
-              </div>
+            <div className="mb-4 flex justify-end sm:mb-5">
               {clickable && (
                 <ArrowUpRight
                   size={18}
@@ -99,7 +84,7 @@ export function StatCards({ panelBg, panelBorder, textPrimary, textMuted }: Stat
               </p>
               <div className="flex items-baseline gap-2">
                 <p
-                  className={`text-[38px] font-black leading-none tracking-tight tabular-nums ${
+                  className={`text-3xl font-black leading-none tracking-tight tabular-nums sm:text-[36px] ${
                     isPrimary ? "text-white" : textPrimary
                   }`}
                 >

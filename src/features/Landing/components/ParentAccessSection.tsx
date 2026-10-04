@@ -9,7 +9,7 @@ export const ParentAcessSection = () => (
           </div>
         </div>
         <div>
-          <p className="text-2xl md:text-3xl font-semibold bg-linear-to-r from-[#550000] to-[#bb0000] bg-clip-text text-transparent leading-snug">
+          <p className="text-2xl md:text-3xl font-semibold text-[#550000] leading-snug">
             Parent access viewing for better child support
           </p>
           <p className="text-[#5d5d5d] text-base mt-3 leading-relaxed">

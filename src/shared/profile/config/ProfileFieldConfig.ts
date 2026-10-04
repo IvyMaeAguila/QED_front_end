@@ -1,11 +1,12 @@
 // src/features/profiles/profileFieldConfig.ts
 import { Mail, Shield, Phone, MapPin, UserRound } from "lucide-react";
+import type { ComponentType } from "react";
 import type { Role } from "../types/types";
 
 export interface ProfileField {
   key: string;          // property on the profile object
   label: string;        // used as dropdown label when editing
-  icon: React.ComponentType<{ size?: number; className?: string }>;
+  icon: ComponentType<{ size?: number; className?: string }>;
   editable: boolean;
   showInSummary: boolean; // shown in the collapsed (non-editing) view
 }

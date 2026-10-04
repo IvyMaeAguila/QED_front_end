@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { ArrowLeft, CalendarDays } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import type { AdminThemeContext } from "../AdminLayout";
 import { AcademicYearCard } from "./components/AcademicYearCard";
 import { TermsTable } from "./components/TermsTable";
@@ -97,18 +97,23 @@ export function AcademicYearPage() {
   }
 
   // ── Shared design tokens (same as StudentFormPage) ──
-  const stateCardClasses = `rounded-xl border shadow-xs p-12 text-center transition-all ${panelBg} ${panelBorder}`;
+  const stateCardClasses = `rounded-[12px] border shadow-xs p-12 text-center transition-all ${panelBg} ${panelBorder}`;
 
   return (
-    <div className="w-full min-h-full space-y-4 px-6 pb-12 pt-6 lg:px-8">
+    <div className="w-full min-h-full space-y-6 pb-12">
       {/* Page header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-start gap-2.5">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-maroon">
-            <CalendarDays size={28} />
-          </span>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => navigate("/admin/subjects")}
+            aria-label="Go back to academics"
+            className="system-back-button"
+          >
+            <ArrowLeft />
+          </button>
           <div>
-            <h1 className={`text-lg font-black tracking-tight ${textPrimary}`}>
+            <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>
               Academic Year
             </h1>
             <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
@@ -117,18 +122,6 @@ export function AcademicYearPage() {
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={() => navigate("/admin/subjects")}
-          className={`h-8 px-3 rounded-lg border text-[11px] font-extrabold flex items-center gap-1.5 shrink-0 transition-colors ${
-            darkMode
-              ? "bg-[#0B1120] border-[#374151] text-white hover:bg-[#111827]"
-              : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] hover:bg-[#F1F5F9]"
-          }`}
-        >
-          <ArrowLeft size={13} />
-          Back
-        </button>
       </div>
 
       {loading ? (

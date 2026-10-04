@@ -11,6 +11,7 @@ import { SubjectFilters } from "./components/SubjectFilters";
 import { SubjectActions } from "./components/SubjectActions";
 import { SubjectCard } from "./components/SubjectCard";
 import { EditSubjectModal } from "./components/EditSubjectModal";
+import { AssignTeacherModal } from "./components/AssignTeacherModal";
 import { ManageSectionsModal } from "./components/ManageSectionsModal";
 import {
   toggleSubjectStatus as toggleSubjectStatusApi,
@@ -41,7 +42,7 @@ export function ManageSubjectsPage() {
     "all" | "Active" | "Inactive"
   >("all");
   const [editingSubject, setEditingSubject] = useState<Subject | null>(null);
-  const [, setAssigningSubject] = useState<Subject | null>(null);
+  const [assigningSubject, setAssigningSubject] = useState<Subject | null>(null);
   const [managingSections, setManagingSections] = useState(false);
 
   // Whether subjects are clustered into "Grade · Section" groups.
@@ -50,6 +51,8 @@ export function ManageSubjectsPage() {
 
   const [savingEdit, setSavingEdit] = useState(false);
   const [editSubjectError, setEditSubjectError] = useState<string | null>(null);
+  const [savingAssignment, setSavingAssignment] = useState(false);
+  const [assignmentError, setAssignmentError] = useState<string | null>(null);
 
   const { showToast } = useToast();
 
@@ -183,6 +186,37 @@ export function ManageSubjectsPage() {
     }
   }
 
+  async function saveTeacherAssignment(subject: Subject, updates: Partial<Subject>) {
+    setSavingAssignment(true);
+    setAssignmentError(null);
+    try {
+      const isGraded = subject.isGraded;
+      const weightDistribution = isGraded
+        ? toWeightPayload(subject.weightDistribution ?? [], assessmentTypes)
+        : [];
+
+      await updateSubjectAssignment(subject.id, {
+        isGraded,
+        weightDistribution,
+        subjectName: subject.name,
+        gradeLevelId: GRADE_LEVEL_IDS[subject.gradeLevel],
+        sectionName: subject.section,
+        teacherId: updates.teacherId ?? null,
+        schoolYear: subject.schoolYear,
+      });
+      updateLocalSubject(subject.id, { teacherId: updates.teacherId ?? null });
+      setAssigningSubject(null);
+      showToast("Teacher Assigned Successfully!", "success");
+    } catch (err) {
+      console.error("Failed to assign teacher:", err);
+      const message = err instanceof Error ? err.message : "Failed to assign teacher.";
+      setAssignmentError(message);
+      showToast(message, "error");
+    } finally {
+      setSavingAssignment(false);
+    }
+  }
+
   // Single card renderer shared by the grouped and flat views.
   const renderCard = (subject: Subject) => (
     <SubjectCard
@@ -190,13 +224,16 @@ export function ManageSubjectsPage() {
       subject={subject}
       {...theme}
       onEdit={() => setEditingSubject(subject)}
-      onAssign={() => setAssigningSubject(subject)}
+      onAssign={() => {
+        setAssignmentError(null);
+        setAssigningSubject(subject);
+      }}
       onToggleStatus={() => toggleStatus(subject)}
     />
   );
 
   return (
-    <div className="w-full min-h-full space-y-4 px-6 pb-12 pt-6 lg:px-8">
+    <div className="w-full min-h-full space-y-6 pb-12">
       {/* Page header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-2.5">
@@ -273,14 +310,14 @@ export function ManageSubjectsPage() {
                   </div>
 
                   {/* Subject cards for this section */}
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                     {group.items.map(renderCard)}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {filtered.map(renderCard)}
             </div>
           )}
@@ -302,6 +339,20 @@ export function ManageSubjectsPage() {
           }}
           saving={savingEdit}
           error={editSubjectError}
+        />
+      )}
+
+      {assigningSubject && (
+        <AssignTeacherModal
+          subject={assigningSubject}
+          {...theme}
+          onClose={() => {
+            setAssigningSubject(null);
+            setAssignmentError(null);
+          }}
+          onAssign={(updates) => saveTeacherAssignment(assigningSubject, updates)}
+          saving={savingAssignment}
+          error={assignmentError}
         />
       )}
 

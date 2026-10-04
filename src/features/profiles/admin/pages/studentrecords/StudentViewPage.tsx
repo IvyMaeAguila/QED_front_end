@@ -46,7 +46,7 @@ export function StudentViewPage() {
       <div className="bg-[#8B0D0D] px-5 py-4 flex items-center gap-3">
         <button
           onClick={() => navigate("/admin/students")}
-          className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors shrink-0"
+          className="system-back-button system-back-button--inverse w-8 h-8 rounded-lg flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors shrink-0"
         >
           <ArrowLeft size={16} className="text-white" />
         </button>

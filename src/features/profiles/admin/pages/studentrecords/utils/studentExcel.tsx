@@ -1,4 +1,4 @@
-import ExcelJS from "exceljs";
+import type ExcelJS from "exceljs";
 import type { Student } from "../types/Students";
 
 
@@ -40,8 +40,9 @@ export async function parseStudentsExcelFile(
   existingStudentIds: string[] = [],
   existingLrns: string[] = []
 ): Promise<ImportParseResult> {
+  const { default: ExcelJSRuntime } = await import("exceljs");
   const buffer = await file.arrayBuffer();
-  const workbook = new ExcelJS.Workbook();
+  const workbook = new ExcelJSRuntime.Workbook();
   await workbook.xlsx.load(buffer);
   const worksheet = workbook.worksheets[0];
 
@@ -143,8 +144,9 @@ export async function parseStudentsExcelFile(
 export async function downloadStudentImportTemplate(
   filename = "student-import-template.xlsx"
 ) {
+  const { default: ExcelJSRuntime } = await import("exceljs");
   const headers = Object.keys(STUDENT_COLUMN_MAP);
-  const workbook = new ExcelJS.Workbook();
+  const workbook = new ExcelJSRuntime.Workbook();
   const worksheet = workbook.addWorksheet("Template");
   worksheet.columns = headers.map((h) => ({
     header: h,
@@ -175,8 +177,9 @@ export async function exportStudentsToExcel(
   students: Student[],
   filename = "students-export.xlsx"
 ) {
+  const { default: ExcelJSRuntime } = await import("exceljs");
   const headers = Object.keys(STUDENT_COLUMN_MAP);
-  const workbook = new ExcelJS.Workbook();
+  const workbook = new ExcelJSRuntime.Workbook();
   const worksheet = workbook.addWorksheet("Students");
 
   worksheet.columns = headers.map((h) => ({

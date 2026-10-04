@@ -80,7 +80,9 @@ export function CalendarPageView({}: CalendarPageProps) {
   }, [activities, holidays]);
 
   function shiftMonth(delta: number) {
-    setViewDate((d) => new Date(d.getFullYear(), d.getMonth() + delta, 1));
+    const nextMonth = new Date(viewDate.getFullYear(), viewDate.getMonth() + delta, 1);
+    setViewDate(nextMonth);
+    setSelectedDate(nextMonth);
   }
 
   return (
@@ -96,7 +98,7 @@ export function CalendarPageView({}: CalendarPageProps) {
 
       {error && <p className="text-sm font-semibold text-[#B91C1C]">{error}</p>}
 
-      <div className="grid lg:grid-cols-[1fr_1fr] gap-6 items-start">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.75fr)_minmax(16rem,0.75fr)]">
         <MonthGrid
           viewDate={viewDate}
           selectedDate={selectedDate}
@@ -115,6 +117,7 @@ export function CalendarPageView({}: CalendarPageProps) {
           <ActivitiesCard
             activities={activities}
             viewDate={viewDate}
+            selectedDate={selectedDate}
             onExpand={() => setExpandTarget("activity")}
             darkMode={darkMode}
             panelBg={panelBg}
@@ -126,6 +129,7 @@ export function CalendarPageView({}: CalendarPageProps) {
           <HolidaysCard
             holidays={holidays}
             viewDate={viewDate}
+            selectedDate={selectedDate}
             onExpand={() => setExpandTarget("holiday")}
             darkMode={darkMode}
             panelBg={panelBg}

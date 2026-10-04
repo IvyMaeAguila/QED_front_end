@@ -15,13 +15,13 @@ export function QuickDateCard({ panelBg, panelBorder, textPrimary, textMuted }: 
 
   return (
     <div
-      className={`rounded-2xl p-8 border flex flex-col items-center justify-center text-center h-full min-h-55 ${panelBg} ${panelBorder}`}
+      className={`flex min-h-48 flex-col items-center justify-center rounded-[12px] border p-5 text-center sm:min-h-52 sm:p-6 ${panelBg} ${panelBorder}`}
       style={{ boxShadow: "0 4px 20px -2px rgba(0,0,0,0.05), 0 2px 10px -2px rgba(0,0,0,0.03)" }}
     >
       <p className={`text-xs font-bold uppercase tracking-[0.2em] mb-2 ${textMuted}`}>
         Today&apos;s Date
       </p>
-      <h2 className="text-[44px] font-black leading-none tracking-tight" style={{ color: "#8B0D0D" }}>
+      <h2 className="text-[40px] font-black leading-none tracking-tight sm:text-[44px]" style={{ color: "#8B0D0D" }}>
         {today.getDate()}
       </h2>
       <p className={`text-sm font-bold mt-1 ${textPrimary}`}>

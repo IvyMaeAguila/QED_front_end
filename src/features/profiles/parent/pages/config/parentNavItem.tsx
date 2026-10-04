@@ -1,25 +1,14 @@
 import {
   LayoutDashboard,
-  UserCheck,
+  UserPlus,
   CalendarDays,
   ClipboardList,
 } from "lucide-react";
 import type { NavItem } from "@shared/components/Sidebar"; 
-import EnrolledChildrenNavItem from "../dashboard/components/EnrolledChildrenNavItem";
 
 export const PARENT_NAV_ITEMS: NavItem[] = [
   { label: "Dashboard", Icon: LayoutDashboard, to: "/parent" },
-  {
-    label: "Enrolled Children",
-    Icon: UserCheck,
-    activeMatch: "/parent/enrolled-children",
-    render: ({ isActive, onCloseSidebar }) => (
-      <EnrolledChildrenNavItem
-        isActive={isActive}
-        onCloseSidebar={onCloseSidebar}
-      />
-    ),
-  },
+  { label: "Enrolled Children", Icon: UserPlus, to: "/parent/enrolled-children" },
   { label: "Calendar", Icon: CalendarDays, to: "/parent/calendar" },
 ];
 

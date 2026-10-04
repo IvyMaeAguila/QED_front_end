@@ -63,6 +63,7 @@ function toMatchedStudentRecord(student: Student): MatchedStudentRecord {
     gradeLevel: student.gradeLevel,
     section: student.section,
     adviser: student.adviser,
+    gender: student.gender,
   };
 }
 
@@ -78,6 +79,7 @@ function toStudentFallback(match: MatchedStudentRecord): Student {
     firstName: firstName ?? match.fullName,
     lastName: rest.length ? rest.join(" ") : "",
     fullName: match.fullName,
+    gender: match.gender,
     gradeLevel: match.gradeLevel,
     section: match.section,
     adviser: match.adviser,

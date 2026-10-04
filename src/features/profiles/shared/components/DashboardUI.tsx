@@ -29,6 +29,7 @@ export function SectionCard({
   panelBorder,
   textPrimary,
   darkMode,
+  compact = false,
 }: {
   title: string;
   icon?: LucideIcon;
@@ -38,10 +39,11 @@ export function SectionCard({
   panelBorder: string;
   textPrimary: string;
   darkMode: boolean;
+  compact?: boolean;
 }) {
   return (
-    <div className={`rounded-2xl border ${panelBg} ${panelBorder} p-5 sm:p-6 shadow-card`}>
-      <div className="flex items-center justify-between mb-5">
+    <div className={`rounded-2xl border ${panelBg} ${panelBorder} ${compact ? "p-4 sm:p-5" : "p-5 sm:p-6"} shadow-card`}>
+      <div className={`flex items-center justify-between ${compact ? "mb-3" : "mb-5"}`}>
         <h2 className={`flex items-center h-4 gap-1.5 text-xs font-bold uppercase tracking-wide leading-none ${textPrimary}`}>
           {Icon && (
             <span className="inline-flex items-center justify-center h-4 w-4 shrink-0">
@@ -53,7 +55,7 @@ export function SectionCard({
         {action}
       </div>
       <div
-        className="h-px -mx-5 sm:-mx-6 mb-6"
+        className={`h-px ${compact ? "-mx-4 sm:-mx-5 mb-4" : "-mx-5 sm:-mx-6 mb-6"}`}
         style={{ backgroundColor: darkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.07)" }}
       />
       {children}
@@ -78,6 +80,8 @@ export function Dropdown({
   textPrimary,
   textMuted,
   icon: Icon,
+  compact = false,
+  label,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -88,21 +92,25 @@ export function Dropdown({
   textMuted: string;
   icon?: LucideIcon;
   label?: string;
+  compact?: boolean;
 }) {
   const normalized = options.map((o) => (typeof o === "string" ? { label: o, value: o } : o));
+  const selectId = useId();
 
 
   return (
-    <div className="relative shrink-0">
+    <div className="relative flex shrink-0 flex-col gap-1">
+      {label && <label htmlFor={selectId} className={`text-[11px] font-semibold ${textMuted}`}>{label}</label>}
       {Icon && (
         <Icon className={`h-4 w-4 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none ${textMuted}`} />
       )}
       <select
+        id={selectId}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`appearance-none text-sm font-bold rounded-xl border ${panelBorder} ${panelBg} ${textPrimary} shadow-card focus:outline-none focus:ring-2 focus:ring-maroon/40 cursor-pointer ${
-          Icon ? "pl-9" : "pl-3.5"
-        } pr-9 py-2`}
+        className={`appearance-none ${compact ? "h-8 text-[11px] font-bold rounded-lg shadow-none" : "text-sm font-bold rounded-lg shadow-card"} border ${panelBorder} ${panelBg} ${textPrimary} focus:outline-none focus:ring-2 focus:ring-maroon/30 cursor-pointer transition-colors ${
+          Icon ? "pl-9" : compact ? "pl-2.5" : "pl-3.5"
+        } ${compact ? "pr-7" : "pr-9"} ${compact ? "py-1.5" : "py-2"}`}
       >
         {normalized.map((o) => (
           <option key={o.value} value={o.value}>
@@ -111,7 +119,7 @@ export function Dropdown({
         ))}
       </select>
 
-      <ChevronDown className={`h-4 w-4 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none ${textMuted}`} />
+      <ChevronDown className={`${compact ? "h-3 w-3 right-2" : "h-4 w-4 right-3"} absolute top-1/2 -translate-y-1/2 pointer-events-none ${textMuted}`} />
     </div>
   );
 }
@@ -120,19 +128,20 @@ export function BackButton({
   onClick,
   panelBg,
   panelBorder,
-  textPrimary,
 }: {
   onClick: () => void;
   panelBg: string;
   panelBorder: string;
-  textPrimary: string;
+  textPrimary?: string;
 }) {
   return (
     <button
+      type="button"
       onClick={onClick}
-      className={`h-9 w-9 rounded-2xl border ${panelBg} ${panelBorder} flex items-center justify-center shadow-card hover:bg-maroon/5 transition-colors`}
+      aria-label="Go back"
+      className={`system-back-button ${panelBg} ${panelBorder}`}
     >
-      <ArrowLeft className={`h-4 w-4 ${textPrimary}`} />
+      <ArrowLeft className="h-[18px] w-[18px] text-slate-500 dark:text-slate-400" />
     </button>
   );
 }
@@ -195,6 +204,7 @@ export function OverviewCard({
   value,
   sub,
   icon: Icon,
+  showIcon = true,
   trend,
   variant,
   panelBg,
@@ -214,16 +224,19 @@ export function OverviewCard({
   textPrimary: string;
   textMuted: string;
   darkMode: boolean;
+  showIcon?: boolean;
 }) {
+  const cardFrame = showIcon ? "rounded-2xl p-7 gap-5" : "rounded-table p-4 gap-4 sm:p-5";
+
   if (variant === "spotlight") {
     return (
-      <div className="rounded-2xl p-7 flex flex-col gap-5 text-white bg-maroon-gradient-vertical shadow-primary">
-        <div className="flex items-center justify-between">
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-white/18">
-            <Icon className="h-6 w-6 text-white" strokeWidth={2.25} />
+      <div className={`flex flex-col ${cardFrame} text-white bg-maroon-gradient-vertical shadow-primary`}>
+        {(showIcon || trend) && (
+          <div className={`flex items-center ${showIcon ? "justify-between" : "justify-end"}`}>
+            {showIcon && <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/18"><Icon className="h-6 w-6 text-white" strokeWidth={2.25} /></div>}
+            {trend && <TrendChip trend={trend} darkMode={darkMode} />}
           </div>
-          {trend && <TrendChip trend={trend} darkMode={false} />}
-        </div>
+        )}
         <div>
           <p className="text-xs font-bold uppercase tracking-widest text-white/75">{label}</p>
           <p className="text-[38px] font-black leading-none tracking-tight tabular-nums mt-1.5">{value}</p>
@@ -235,16 +248,17 @@ export function OverviewCard({
 
   const s = ICON_VARIANT_STYLE[variant](darkMode);
   return (
-    <div className={`rounded-2xl border p-7 flex flex-col gap-5 transition-all hover:-translate-y-0.5 shadow-card ${panelBg} ${panelBorder}`}>
-      <div className="flex items-center justify-between">
-        <div
-          className={`w-14 h-14 flex items-center justify-center ${s.shape === "circle" ? "rounded-full" : "rounded-2xl"}`}
-          style={{ backgroundColor: s.bg }}
-        >
-          <Icon className="h-6 w-6" style={{ color: s.icon }} strokeWidth={2.25} />
+    <div className={`flex flex-col border ${cardFrame} transition-all hover:-translate-y-0.5 shadow-card ${panelBg} ${panelBorder}`}>
+      {(showIcon || trend) && (
+        <div className={`flex items-center ${showIcon ? "justify-between" : "justify-end"}`}>
+          {showIcon && (
+            <div className={`flex h-14 w-14 items-center justify-center ${s.shape === "circle" ? "rounded-full" : "rounded-2xl"}`} style={{ backgroundColor: s.bg }}>
+              <Icon className="h-6 w-6" style={{ color: s.icon }} strokeWidth={2.25} />
+            </div>
+          )}
+          {trend && <TrendChip trend={trend} darkMode={darkMode} />}
         </div>
-        {trend && <TrendChip trend={trend} darkMode={darkMode} />}
-      </div>
+      )}
       <div>
         <p className={`text-xs font-bold uppercase tracking-widest ${textMuted}`}>{label}</p>
         <p className={`text-[38px] font-black leading-none tracking-tight tabular-nums mt-1.5 ${textPrimary}`}>{value}</p>

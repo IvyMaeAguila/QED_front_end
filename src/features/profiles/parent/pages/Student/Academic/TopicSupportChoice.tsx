@@ -1,7 +1,8 @@
 import { useNavigate, useParams, useOutletContext } from "react-router-dom";
-import { BookOpen, Gamepad2, ChevronLeft, Sparkles, Star, Flame } from "lucide-react";
+import { BookOpen, Gamepad2, ArrowLeft, Sparkles, Star, Flame } from "lucide-react";
 import type { ReactNode } from "react";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
+import QuestWorldBackground from "./components/QuestWorldBackground";
 
 export default function TopicSupportChoice() {
   const { studentId, topicId } = useParams<{ studentId: string; topicId: string }>();
@@ -26,21 +27,23 @@ export default function TopicSupportChoice() {
   }
 
   return (
-    <div>
+    <div className="relative isolate -m-4 min-h-[calc(100dvh-5.8125rem)] sm:-m-6">
+      <QuestWorldBackground darkMode={darkMode} />
 
+      <div className="relative mx-auto w-full max-w-6xl px-4 py-4 sm:px-6 sm:py-6">
       <div className="mb-6 flex items-center gap-1">
         <button
           type="button"
           onClick={goBackToAcademicTab}
           aria-label="Back to academic support"
-          className={`-ml-1 flex h-9 w-9 items-center justify-center rounded-full transition-transform active:scale-90 ${backBtn}`}
+          className={`system-back-button -ml-1 flex h-9 w-9 items-center justify-center rounded-full transition-transform active:scale-90 ${backBtn}`}
         >
-          <ChevronLeft size={22} />
+          <ArrowLeft size={18} />
         </button>
         <span className={`text-[15px] font-black ${textPrimary}`}>Quest Board</span>
       </div>
 
-      <div className="mx-auto flex max-w-lg flex-col items-center gap-6 sm:max-w-2xl sm:gap-8 lg:max-w-4xl">
+      <div className="flex w-full flex-col items-stretch gap-6 sm:gap-7">
 
         <div
           className={`relative w-full overflow-hidden rounded-3xl px-5 py-6 text-center sm:py-8 ${
@@ -107,6 +110,7 @@ export default function TopicSupportChoice() {
             decoration={<Flame size={16} className="text-amber-500" />}
           />
         </div>
+      </div>
       </div>
 
       <style>{`

@@ -92,7 +92,7 @@ export function UsersTable({
   return (
     <>
       <div className="hidden md:block overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="teacher-user-table w-full text-sm">
           <thead>
             <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
               {[

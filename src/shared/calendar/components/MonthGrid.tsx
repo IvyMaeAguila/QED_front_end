@@ -40,13 +40,13 @@ export function MonthGrid({
   const monthLabel = viewDate.toLocaleDateString(undefined, { month: "long", year: "numeric" });
 
   return (
-    <section className={`rounded-2xl border shadow-sm p-6 ${panelBg} ${panelBorder}`}>
+    <section className={`rounded-[12px] border shadow-sm p-6 ${panelBg} ${panelBorder}`}>
       <div className="flex items-center justify-between mb-6">
-        <h2 className={`text-3xl font-black tracking-tight ${textPrimary}`}>{monthLabel}</h2>
+        <h2 className={`text-3xl font-bold tracking-tight ${textPrimary}`}>{monthLabel}</h2>
         <div className="flex items-center gap-2">
           <button
             onClick={onPrevMonth}
-            className={`w-9 h-9 rounded-full border flex items-center justify-center transition-colors ${
+            className={`w-9 h-9 rounded-lg border flex items-center justify-center transition-colors ${
               darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
             }`}
           >
@@ -54,7 +54,7 @@ export function MonthGrid({
           </button>
           <button
             onClick={onNextMonth}
-            className={`w-9 h-9 rounded-full border flex items-center justify-center transition-colors ${
+            className={`w-9 h-9 rounded-lg border flex items-center justify-center transition-colors ${
               darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
             }`}
           >
@@ -82,7 +82,7 @@ export function MonthGrid({
             <button
               key={iso}
               onClick={() => onSelectDate(date)}
-              className={`aspect-square rounded-xl border text-sm font-semibold flex flex-col items-start p-2 transition-colors ${
+              className={`aspect-square rounded-lg border text-sm font-semibold flex flex-col items-start p-2 transition-colors ${
                 isSelected
                   ? "text-white"
                   : darkMode

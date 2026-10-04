@@ -427,7 +427,7 @@ export function StudentDetailPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="teacher-user-table w-full text-left border-collapse">
               <thead>
                 <tr
                   className={`border-b text-[11px] font-bold uppercase tracking-wider ${panelBorder} ${darkMode ? "bg-slate-900/60" : "bg-slate-50"}`}

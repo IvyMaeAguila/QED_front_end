@@ -1,15 +1,8 @@
-import {
-  Users,
-  GraduationCap,
-  UserRound,
-  UserRoundCheck,
-} from "lucide-react";
-
 export const statsConfig = [
-  { key: "totalUsers", label: "Total Users", Icon: UserRound },
-  { key: "totalStudents", label: "Total Students", Icon: GraduationCap },
-  { key: "totalTeachers", label: "Total Teachers", Icon: UserRoundCheck },
-  { key: "totalParents", label: "Total Parents", Icon: Users },
+  { key: "totalUsers", label: "Total Users" },
+  { key: "totalStudents", label: "Total Students" },
+  { key: "totalTeachers", label: "Total Teachers" },
+  { key: "totalParents", label: "Total Parents" },
 ] as const;
 
 export const loginBars = [

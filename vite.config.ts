@@ -9,6 +9,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({
+  // ExcelJS is a large, optional export/import feature and is loaded on demand.
+  // Set the warning threshold just above its minified package chunk (about 930 kB).
+  build: {
+    chunkSizeWarningLimit: 1000,
+  },
   plugins: [
     tailwindcss(),
     react(),

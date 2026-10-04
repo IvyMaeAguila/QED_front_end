@@ -441,7 +441,7 @@ export function AssessmentTab({
           </p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-max text-sm">
+            <table className="teacher-user-table w-full min-w-max text-sm">
               <thead>
                 <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
                   <th

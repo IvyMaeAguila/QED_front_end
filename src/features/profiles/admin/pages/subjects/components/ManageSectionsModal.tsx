@@ -41,7 +41,7 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
 
   const gradeSections = getSectionsForGrade(gradeLevel);
 
-  const inputClasses = `w-full h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors ${
+  const inputClasses = `w-full h-10 px-3 rounded-lg border text-sm font-semibold outline-none transition-colors ${
     darkMode
       ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]"
       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
@@ -142,7 +142,7 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
           />
           <button
             onClick={() => void handleAdd()}
-            className="h-10 w-10 shrink-0 rounded-xl text-white inline-flex items-center justify-center transition-opacity hover:opacity-90"
+            className="h-10 w-10 shrink-0 rounded-lg text-white inline-flex items-center justify-center transition-opacity hover:opacity-90"
             style={{ background: ACCENT }}
             aria-label="Add section"
           >
@@ -154,7 +154,7 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
 
       <div>
         <p className={labelClasses}>{gradeLevel} Sections</p>
-        <div className={`rounded-xl border divide-y ${darkMode ? "border-[#374151] divide-[#374151]" : "border-[#E5E7EB] divide-[#E5E7EB]"}`}>
+        <div className={`rounded-[12px] border divide-y ${darkMode ? "border-[#374151] divide-[#374151]" : "border-[#E5E7EB] divide-[#E5E7EB]"}`}>
           {gradeSections.length === 0 ? (
             <p className={`text-xs font-semibold px-3 py-3 ${textMuted}`}>No sections yet for this grade.</p>
           ) : (
@@ -251,7 +251,7 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
       <div className="pt-2">
         <button
           onClick={onClose}
-          className={`w-full h-10 rounded-xl text-xs font-bold border transition-colors ${
+          className={`w-full h-10 rounded-lg text-xs font-bold border transition-colors ${
             darkMode
               ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
               : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"

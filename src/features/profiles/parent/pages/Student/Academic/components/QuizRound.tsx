@@ -55,7 +55,7 @@ export default function QuizRound({
           const key = `choice_${choice.toLowerCase()}` as keyof QuizQuestion;
           const label = CHOICE_LABELS[slot];
           const colors = CHOICE_COLORS[label];
-          let className = `border-2 rounded-2xl ${colors.idle}`;
+          let className = `border-2 rounded-2xl bg-white shadow-sm ${colors.idle}`;
 
           if (feedback) {
             if (choice === feedback.correctAnswer) {
@@ -63,7 +63,7 @@ export default function QuizRound({
             } else if (choice === feedback.selected && !feedback.isCorrect) {
               className = "border-2 border-red-500 bg-red-50 ring-2 ring-red-300";
             } else {
-              className = "border-2 border-gray-100 opacity-40";
+              className = "border-2 border-gray-200 bg-white text-gray-500";
             }
           }
 

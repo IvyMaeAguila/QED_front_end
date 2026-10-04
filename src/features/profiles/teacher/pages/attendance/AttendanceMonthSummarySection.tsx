@@ -106,7 +106,7 @@ export function AttendanceMonthSummarySection({
       .finally(() => setLoading(false));
   }, [sectionId]);
 
-  const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
+  const cardClasses = `overflow-hidden rounded-[12px] border shadow-sm ${panelBg} ${panelBorder}`;
 
   const monthDates = useMemo(
     () => allDatesInMonth(selectedMonth),
@@ -171,7 +171,8 @@ export function AttendanceMonthSummarySection({
         <select
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value)}
-          className={`h-10 rounded-xl border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
+          style={{ borderRadius: "8px" }}
+          className={`h-10 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
           aria-label="Month"
         >
           {months.map((key) => (
@@ -192,7 +193,7 @@ export function AttendanceMonthSummarySection({
       ) : (
         <div className="p-5 space-y-6">
           <div
-            className={`flex items-center gap-4 rounded-xl border p-4 ${panelBorder}`}
+            className={`flex items-center gap-4 rounded-[12px] border p-4 ${panelBorder}`}
             style={{ background: darkMode ? "transparent" : "#F8FAFC" }}
           >
             <CalendarCheck
@@ -216,7 +217,7 @@ export function AttendanceMonthSummarySection({
           </div>
 
           {/* Absence list, one row per date, with a running total */}
-          <div className={`rounded-xl border ${panelBorder} overflow-hidden`}>
+          <div className={`rounded-[12px] border ${panelBorder} overflow-hidden`}>
             <div
               className={`flex items-center gap-2 border-b px-4 py-2.5 ${panelBorder} ${darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}`}
             >

@@ -1,5 +1,438 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
+
+/* App-wide type system. Heading weight is tied to semantic level so the
+   public landing page and every signed-in role share the same hierarchy. */
+:root {
+  --type-weight-page-title: 800;
+  --type-weight-section-title: 700;
+  --type-weight-card-title: 600;
+}
+
+html,
+body,
+#root {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-style: normal;
+  font-synthesis: none;
+}
+
+h1 {
+  font-weight: var(--type-weight-page-title);
+}
+
+h2 {
+  font-weight: var(--type-weight-section-title);
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-weight: var(--type-weight-card-title);
+}
+
+/* Table cards use the softer 12px frame from the grade-sheet reference,
+   independently of larger card radii used elsewhere in the app. */
+:is(div, section)[class*="rounded-"]:has(table) {
+  border-radius: 12px !important;
+}
+
+/* Search and filter strips follow the same frame radius as table panels. */
+:is(div, section)[class*="rounded-"][class*="border"][class*="px-3"][class*="py-2"]:has(input, select) {
+  border-radius: 12px !important;
+}
+
+/* Filter controls and dropdown menus use the compact 8px control radius. */
+button[aria-haspopup="listbox"],
+[role="listbox"],
+select[aria-label*="filter" i],
+select[aria-label*="gender" i],
+select[aria-label*="term" i],
+select[aria-label*="month" i],
+select[aria-label*="grade" i],
+select[aria-label*="subject" i] {
+  border-radius: 8px !important;
+}
+
+/* Close controls use the same compact 8px radius across dialog surfaces. */
+button[aria-label^="Close" i] {
+  border-radius: 8px !important;
+}
+
+/* Every shared sidebar row uses the same 16px shape across profiles. */
+.sidebar-nav-item {
+  border-radius: 16px !important;
+}
+
+/* Filled text actions share a compact 8px shape and a 40px baseline. Small
+   toolbar actions stay at 36px; card-like buttons retain their own radius. */
+button:is([class*="bg-maroon"], [class*="bg-[#800000]"], [class*="bg-[#8B0D0D]"]):not([aria-label]):not(:has(> svg:only-child)) {
+  min-height: 2.5rem;
+  border-radius: 8px !important;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+}
+
+button:is([class*="bg-maroon"], [class*="bg-[#800000]"], [class*="bg-[#8B0D0D]"]):is([class~="text-xs"], [class*="text-[11px]"]):not([aria-label]):not(:has(> svg:only-child)) {
+  min-height: 2.25rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+/* Parent panels follow the 12px system frame, even where older components use
+   larger Tailwind radius utilities. Compact controls remain at 8px; full pills
+   and circles retain their intentional shape. */
+.parent-system :is(
+  [class*="rounded-xl2"],
+  [class*="rounded-2xl"],
+  [class*="rounded-3xl"]
+) {
+  border-radius: 12px !important;
+}
+
+/* Buttons and fields use the compact control radius throughout the parent
+   flow, including selectable summary rows and controls inside dialogs. */
+.parent-system button:not([class*="rounded-full"]):not([class*="rounded-none"]) {
+  border-radius: 8px !important;
+}
+
+/* Keep the custom parent nav button at the shared sidebar radius despite the
+   parent's compact radius rule for ordinary form/action buttons. */
+.parent-system button.sidebar-nav-item:not([class*="rounded-full"]):not([class*="rounded-none"]) {
+  border-radius: 16px !important;
+}
+
+/* The parent's general card radius also targets rounded links, so explicitly
+   preserve the shared 16px radius on its sidebar anchors (same as Teacher). */
+.parent-system a.sidebar-nav-item {
+  border-radius: 16px !important;
+}
+
+.parent-system :is(input, select, textarea) {
+  border-radius: 8px !important;
+}
+
+.parent-system :is(div, li, section, article)[class~="rounded-xl"][class*="border"] {
+  border-radius: 8px !important;
+}
+
+.parent-system [class*="rounded-[2.5rem]"] {
+  border-radius: 12px !important;
+}
+
+.parent-system {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-style: normal;
+  font-synthesis: none;
+}
+
+.parent-system [class~="font-black"] {
+  font-weight: 800 !important;
+}
+
+.parent-system [class~="italic"] {
+  font-style: normal !important;
+}
+
+/* Give native filter selects a predictable outline across browsers; retain a
+   small custom caret after removing platform styling. */
+select[aria-label*="filter" i],
+select[aria-label*="month" i] {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  padding-right: 2rem !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364758b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.65rem center !important;
+  background-size: 0.85rem !important;
+}
+
+@layer base {
+  html,
+  body {
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+  }
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.landing-polygon-surface {
+  background-image: url("./assets/images/landing-polygons.svg");
+  background-position: center;
+  background-size: cover;
+}
+
+html.dark {
+  color-scheme: dark;
+  background: #1a1110;
+}
+
+html.dark body {
+  background-color: #1a1110;
+  color: #f1e8e5;
+}
+
+/* Shared back control and title alignment for detail-page headers across roles. */
+button.system-back-button {
+  display: inline-flex !important;
+  width: 2.75rem !important;
+  height: 2.75rem !important;
+  flex: 0 0 2.75rem !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  background-color: transparent !important;
+  color: #64748b !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.75rem !important;
+  margin-top: 0 !important;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+/* Every direct back-button/title row centers the control against the complete
+   title and subtitle block, with the same breathing room as the profile page. */
+:where(div.flex:has(> button.system-back-button)) {
+  align-items: center !important;
+  column-gap: 0.75rem !important;
+}
+
+button.system-back-button > svg {
+  width: 1.125rem !important;
+  height: 1.125rem !important;
+  color: inherit !important;
+}
+
+button.system-back-button:hover {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+html.dark button.system-back-button {
+  background-color: transparent !important;
+  color: #d1d5db !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+html.dark button.system-back-button:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Inverse back control for the maroon student identity banner. */
+button.system-back-button--inverse {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+}
+
+button.system-back-button--inverse:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Shared compact data-table treatment based on the teacher roster table. */
+@layer components {
+  .teacher-user-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+
+  .teacher-user-table thead tr {
+    background-color: #f8fafc !important;
+  }
+
+  .teacher-user-table th {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.6875rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+  }
+
+  .teacher-user-table td {
+    padding: 0.5rem 1rem !important;
+  }
+
+  .teacher-user-table tbody tr {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    transition: background-color 150ms ease;
+  }
+
+  .teacher-user-table tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+
+  html.dark .teacher-user-table thead tr {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  html.dark .teacher-user-table tbody tr {
+    border-top-color: rgba(255, 255, 255, 0.1);
+  }
+
+  html.dark .teacher-user-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Darken common fixed light surfaces used throughout older pages and forms.
+   Theme-aware components already choose their own dark palette; these rules
+   catch static light utility classes so no page is left glaringly white. */
+html.dark :is(
+  [class~="bg-white"],
+  [class~="bg-white/80"],
+  [class~="bg-white/85"],
+  [class~="bg-white/90"],
+  [class~="bg-white/95"],
+  [class~="bg-[#F3F4F6]"],
+  [class~="bg-[#F8FAFC]"],
+  [class~="bg-[#F9FAFB]"],
+  [class~="bg-[#FAFBFC]"],
+  [class~="bg-[#F6F7F9]"],
+  [class~="bg-[#F0F0F0]"],
+  [class~="bg-[#F1F2F4]"],
+  [class~="bg-[#F1F5F9]"],
+  [class~="bg-[#EEF1F6]"]
+) {
+  background-color: #2a1a18 !important;
+}
+
+html.dark :is(
+  [class~="bg-[#E5E7EB]"],
+  [class~="bg-[#E5E5E5]"],
+  [class~="bg-[#E9E9E9]"],
+  [class~="bg-[#F6F7FB]"]
+) {
+  background-color: #38221f !important;
+}
+
+html.dark :is(
+  [class~="text-black"],
+  [class~="text-[#111827]"],
+  [class~="text-[#1A1A1A]"],
+  [class~="text-[#1F2937]"],
+  [class~="text-[#374151]"],
+  [class~="text-gray-900"],
+  [class~="text-gray-800"],
+  [class~="text-gray-700"],
+  [class~="text-slate-900"],
+  [class~="text-slate-800"]
+) {
+  color: #e5e7eb !important;
+}
+
+html.dark :is(
+  [class~="text-[#6B7280]"],
+  [class~="text-[#64748B]"],
+  [class~="text-[#555]"],
+  [class~="text-gray-600"],
+  [class~="text-gray-500"],
+  [class~="text-slate-600"],
+  [class~="text-slate-500"]
+) {
+  color: #9ca3af !important;
+}
+
+html.dark :is(
+  [class~="border-[#E5E7EB]"],
+  [class~="border-[#EEF0F3]"],
+  [class~="border-[#E3E6EA]"],
+  [class~="border-gray-200"],
+  [class~="border-slate-200"],
+  [class~="border-slate-300"]
+) {
+  border-color: #543632 !important;
+}
+
+/* Warm dark palette: espresso surfaces with maroon-adjacent brown tones. */
+html.dark :is(
+  [class*="bg-[#0B1120]"],
+  [class*="bg-[#0B0F17]"],
+  [class*="bg-[#0F172A]"]
+) {
+  background-color: #1a1110 !important;
+}
+
+html.dark :is(
+  [class*="bg-[#111827]"],
+  [class*="bg-[#1a1a1a]"]
+) {
+  background-color: #2a1a18 !important;
+}
+
+html.dark :is(
+  [class*="bg-[#1F2937]"],
+  [class*="bg-[#1E293B]"],
+  [class*="bg-[#1f1d1d]"]
+) {
+  background-color: #38221f !important;
+}
+
+html.dark :is(
+  [class~="bg-slate-900"], [class*="bg-slate-900/"],
+  [class~="bg-zinc-900"], [class*="bg-zinc-900/"],
+  [class~="bg-gray-900"], [class*="bg-gray-900/"]
+) {
+  background-color: #2a1a18 !important;
+}
+
+html.dark :is(
+  [class~="bg-slate-800"], [class*="bg-slate-800/"],
+  [class~="bg-zinc-800"], [class*="bg-zinc-800/"],
+  [class~="bg-gray-800"], [class*="bg-gray-800/"]
+) {
+  background-color: #38221f !important;
+}
+
+html.dark :is(
+  [class~="bg-slate-50"], [class~="bg-slate-100"], [class~="bg-slate-200"],
+  [class~="bg-gray-50"], [class~="bg-gray-100"], [class~="bg-gray-200"],
+  [class~="bg-zinc-50"], [class~="bg-zinc-100"], [class~="bg-zinc-200"]
+) {
+  background-color: #34211e !important;
+}
+
+html.dark :is(
+  [class*="border-[#1F2937]"],
+  [class*="border-[#2A3441]"],
+  [class*="border-[#334155]"],
+  [class*="border-[#374151]"]
+) {
+  border-color: #543632 !important;
+}
+
+html.dark :is(
+  [class~="border-slate-700"], [class~="border-slate-800"],
+  [class~="border-gray-700"], [class~="border-gray-800"],
+  [class~="border-zinc-700"], [class~="border-zinc-800"]
+) {
+  border-color: #543632 !important;
+}
+
+html.dark :is(
+  .modal-backdrop > :not(.modal-backdrop),
+  .modal-backdrop ~ [role="dialog"]:not([data-drawer-panel="true"]):not([data-notification-panel="true"]),
+  [data-modal-panel="true"]
+) {
+  background-color: #2a1a18 !important;
+  color: #f1e8e5 !important;
+  border-color: #543632 !important;
+}
+
+html.dark :is(
+  .modal-backdrop > :not(.modal-backdrop) .text-white:not(button):not([class*="bg-"]):not(a),
+  .modal-backdrop ~ [role="dialog"]:not([data-drawer-panel="true"]):not([data-notification-panel="true"]) .text-white:not(button):not([class*="bg-"]):not(a),
+  [data-modal-panel="true"] .text-white:not(button):not([class*="bg-"]):not(a)
+) {
+  color: #f1e8e5 !important;
+}
 
 @utility modal-backdrop {
   background-color: rgb(15 23 42 / 0.38);
@@ -11,7 +444,7 @@
    backdrop stays theme-neutral while every dialog surface follows the
    clean white treatment used by the attendance summary. */
 .modal-backdrop > :not(.modal-backdrop),
-.modal-backdrop ~ [role="dialog"],
+.modal-backdrop ~ [role="dialog"]:not([data-drawer-panel="true"]):not([data-notification-panel="true"]),
 [data-modal-panel="true"] {
   background-color: #fff !important;
   color: #111827;
@@ -22,7 +455,7 @@
 }
 
 .modal-backdrop > :not(.modal-backdrop) .text-white:not(button):not([class*="bg-"]):not(a),
-.modal-backdrop ~ [role="dialog"] .text-white:not(button):not([class*="bg-"]):not(a),
+.modal-backdrop ~ [role="dialog"]:not([data-drawer-panel="true"]):not([data-notification-panel="true"]) .text-white:not(button):not([class*="bg-"]):not(a),
 [data-modal-panel="true"] .text-white:not(button):not([class*="bg-"]):not(a) {
   color: #111827 !important;
 }
@@ -47,9 +480,16 @@
      with a faint warm tint, so panels separate from the page instead of
      disappearing into pure black — reads calmer and more professional. --- */
   --color-surface: #f3f2f2;
-  --color-surface-dark: #1f1d1d;
+  --color-surface-dark: #2a1a18;
 
+  /* Standard medium and large surfaces use the 16px radius shown on the
+     landing page cards. Compact controls and full pills keep their own shape. */
+  --radius-xl: 1rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1rem;
+  --radius-4xl: 1rem;
   --radius-xl2: 1rem;
+  --radius-table: 0.75rem;
 
   /* --- shadows: kept soft/neutral for cards; panel/primary shadows eased
      down in opacity so the maroon glow reads as elevation, not a stain. --- */

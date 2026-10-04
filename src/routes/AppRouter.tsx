@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import {
   Navigate,
   Routes,
@@ -6,73 +7,80 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useAuth } from "../features/auth/context/authContext";
+
 import { AdminLayout } from "../features/profiles/admin/pages/AdminLayout";
-import { AdminDashboardHome } from "../features/profiles/admin/pages/dashboard/AdminDashboardHome";
+
 import { StudentsProvider } from "../features/profiles/admin/pages/studentrecords/context/StudentsContext";
-import { StudentRecordsPage } from "../features/profiles/admin/pages/studentrecords/StudentRecordsPage";
-import { StudentFormPage } from "../features/profiles/admin/pages/studentrecords/StudentFormPage";
+
 import { UsersProvider } from "../features/profiles/admin/pages/usermanagement/context/UsersContext";
-import { UserManagementPage } from "../features/profiles/admin/pages/usermanagement/UserManagementPage";
-import { UserFormPage } from "../features/profiles/admin/pages/usermanagement/UserFormPage";
-import { UserViewPage } from "../features/profiles/admin/pages/usermanagement/UserViewPage";
+
 import { TeachersProvider } from "../features/profiles/admin/pages/classes/context/TeachersContext";
 import { ClassesProvider } from "../features/profiles/admin/pages/classes/context/ClassesContext";
-import { ClassesPage } from "../features/profiles/admin/pages/classes/ClassPage";
-import { ClassFormPage } from "../features/profiles/admin/pages/classes/ClassFormPage";
-import { ClassViewPage } from "../features/profiles/admin/pages/classes/ClassViewPage";
-import LandingPage from "../features/Landing/LandingPage";
-import { LoginPanel } from "../features/auth/LoginPanel";
-import { StudentDetailPage } from "../shared/components/StudentDetailPage";
-import { ManageSubjectsPage } from "../features/profiles/admin/pages/subjects/ManageSubjectsPage";
-import { CalendarPage } from "../shared/calendar/CalendarPage";
-import { HelpSupportPage } from "../features/profiles/admin/pages/help/HelpSupportPage";
 import { SettingsProvider } from "../features/profiles/admin/pages/settings/context/SettingsContext";
+
 import { TeacherSection } from "./TeacherSection";
-import { TeacherDashboardHome } from "../features/profiles/teacher/pages/dashboard/TeacherDashboardHome";
-import { AdvisoryRosterPage } from "../features/profiles/teacher/pages/roster/AdvisoryRosterPage";
-import { GradesPage } from "../features/profiles/teacher/pages/grades/GradePage";
-import { SubjectsPage } from "../features/profiles/teacher/pages/subjects/SubjectPage";
+
 import { ParentSection } from "./ParentSection";
-import ParentDashboardHome from "../features/profiles/parent/pages/dashboard/ParentDashboardHome";
-import { EnrolledChildrenPage } from "../features/profiles/parent/pages/EnrollledStudent/EnrolledChildrenPage";
-import ChildDetailPage from "../features/profiles/parent/pages/Student/ChildDetailPage";
-import TopicSupportChoice from "../features/profiles/parent/pages/Student/Academic/TopicSupportChoice";
-import CoursewareView from "../features/profiles/parent/pages/Student/Academic/CoursewareView";
-import { CalendarPageView } from "../shared/calendar/CalendarPageView";
-import { SubjectDetailPage } from "../features/profiles/teacher/pages/subjects/detail/SubjectDetailPage";
-import { SubjectRecordsPage } from "../features/profiles/teacher/pages/subjects/detail/SubjectRecordsPage";
-import { HolisticOverviewPage } from "../features/profiles/teacher/pages/holistic/HolisticOverviewPage";
-import { StudentHolisticProfilePage } from "../features/profiles/teacher/pages/holistic/StudentHolisticProfilePage";
-import { HolisticDomainTrendsPage } from "../features/profiles/teacher/pages/holistic/HolisticDomainTrendsPage";
-import { SubjectClassListPage } from "../features/profiles/teacher/pages/subjects/SubjectClassListPage";
-import { AcademicYearPage } from "../features/profiles/admin/pages/subjects/AcademicYearPage";
 
 import { PrincipalSection } from "./PrincipalSection";
-import { PrincipalDashboardHome } from "../features/profiles/principal/pages/dashboard/PrincipalDashboardHome";
 
 import { ForceChangePasswordGate } from "../shared/components/manage_password/ForceChangePasswordGate";
-import { PrincipalStudentsPage } from "../features/profiles/principal/pages/students/PrincipalStudentPage";
-import { ClassListPage } from "../features/profiles/principal/pages/students/ClassListPage";
-import { PrincipalTeachersPage } from "../features/profiles/principal/pages/teachers/PrincipalTeachersPage";
-import { TeacherSchedulePage } from "../features/profiles/principal/pages/teachers/TeacherSchedulePage";
-import { AnalyticsPage } from "../features/profiles/principal/pages/reports/AnalyticsPage";
-import { PrincipalGradebooksPage } from "../features/profiles/principal/pages/gradebooks/PrincipalGradebooksPage";
-import { PrincipalGradeSheetPage } from "../features/profiles/principal/pages/gradebooks/PrincipalGradeSheetPage";
-import { HolisticPerformanceAnalyticsPage } from "../features/profiles/principal/pages/reports/HolisticPerformanceAnalyticsPage";
-import { TeacherAttendancePage } from "../features/profiles/teacher/pages/attendance/TeacherAttendancePage";
-import { TeacherAttendanceRecordsPage } from "../features/profiles/teacher/pages/attendance/TeacherAttendanceRecordsPage";
-import PetQuizPage from "../features/profiles/parent/pages/Student/Academic/PetQuizPage";
 
 import { QedSplash, QedLoader } from "../shared/components/QedLoader";
-import { AddSubjectPage } from "../features/profiles/admin/pages/subjects/AddSubjectPage";
-import { SubjectsSection } from "../features/profiles/admin/pages/subjects/SubjectSection";
-import { AdminSubjectDetailPage } from "../features/profiles/admin/pages/subjects/AdminSubjectDetailPage";
 
 function DebugRoute() {
   const location = useLocation();
   console.log("Current path being matched:", location.pathname);
   return null;
 }
+
+const AdminDashboardHome = lazy(() => import("../features/profiles/admin/pages/dashboard/AdminDashboardHome").then((module) => ({ default: module.AdminDashboardHome })));
+const StudentRecordsPage = lazy(() => import("../features/profiles/admin/pages/studentrecords/StudentRecordsPage").then((module) => ({ default: module.StudentRecordsPage })));
+const StudentFormPage = lazy(() => import("../features/profiles/admin/pages/studentrecords/StudentFormPage").then((module) => ({ default: module.StudentFormPage })));
+const UserManagementPage = lazy(() => import("../features/profiles/admin/pages/usermanagement/UserManagementPage").then((module) => ({ default: module.UserManagementPage })));
+const UserFormPage = lazy(() => import("../features/profiles/admin/pages/usermanagement/UserFormPage").then((module) => ({ default: module.UserFormPage })));
+const UserViewPage = lazy(() => import("../features/profiles/admin/pages/usermanagement/UserViewPage").then((module) => ({ default: module.UserViewPage })));
+const ClassesPage = lazy(() => import("../features/profiles/admin/pages/classes/ClassPage").then((module) => ({ default: module.ClassesPage })));
+const ClassFormPage = lazy(() => import("../features/profiles/admin/pages/classes/ClassFormPage").then((module) => ({ default: module.ClassFormPage })));
+const ClassViewPage = lazy(() => import("../features/profiles/admin/pages/classes/ClassViewPage").then((module) => ({ default: module.ClassViewPage })));
+const LandingPage = lazy(() => import("../features/Landing/LandingPage"));
+const LoginPanel = lazy(() => import("../features/auth/LoginPanel").then((module) => ({ default: module.LoginPanel })));
+const StudentDetailPage = lazy(() => import("../shared/components/StudentDetailPage").then((module) => ({ default: module.StudentDetailPage })));
+const ManageSubjectsPage = lazy(() => import("../features/profiles/admin/pages/subjects/ManageSubjectsPage").then((module) => ({ default: module.ManageSubjectsPage })));
+const CalendarPage = lazy(() => import("../shared/calendar/CalendarPage").then((module) => ({ default: module.CalendarPage })));
+const HelpSupportPage = lazy(() => import("../features/profiles/admin/pages/help/HelpSupportPage").then((module) => ({ default: module.HelpSupportPage })));
+const TeacherDashboardHome = lazy(() => import("../features/profiles/teacher/pages/dashboard/TeacherDashboardHome").then((module) => ({ default: module.TeacherDashboardHome })));
+const AdvisoryRosterPage = lazy(() => import("../features/profiles/teacher/pages/roster/AdvisoryRosterPage").then((module) => ({ default: module.AdvisoryRosterPage })));
+const GradesPage = lazy(() => import("../features/profiles/teacher/pages/grades/GradePage").then((module) => ({ default: module.GradesPage })));
+const SubjectsPage = lazy(() => import("../features/profiles/teacher/pages/subjects/SubjectPage").then((module) => ({ default: module.SubjectsPage })));
+const ParentDashboardHome = lazy(() => import("../features/profiles/parent/pages/dashboard/ParentDashboardHome"));
+const EnrolledChildrenPage = lazy(() => import("../features/profiles/parent/pages/EnrollledStudent/EnrolledChildrenPage").then((module) => ({ default: module.EnrolledChildrenPage })));
+const ChildDetailPage = lazy(() => import("../features/profiles/parent/pages/Student/ChildDetailPage"));
+const TopicSupportChoice = lazy(() => import("../features/profiles/parent/pages/Student/Academic/TopicSupportChoice"));
+const CoursewareView = lazy(() => import("../features/profiles/parent/pages/Student/Academic/CoursewareView"));
+const CalendarPageView = lazy(() => import("../shared/calendar/CalendarPageView").then((module) => ({ default: module.CalendarPageView })));
+const SubjectDetailPage = lazy(() => import("../features/profiles/teacher/pages/subjects/detail/SubjectDetailPage").then((module) => ({ default: module.SubjectDetailPage })));
+const SubjectRecordsPage = lazy(() => import("../features/profiles/teacher/pages/subjects/detail/SubjectRecordsPage").then((module) => ({ default: module.SubjectRecordsPage })));
+const HolisticOverviewPage = lazy(() => import("../features/profiles/teacher/pages/holistic/HolisticOverviewPage").then((module) => ({ default: module.HolisticOverviewPage })));
+const StudentHolisticProfilePage = lazy(() => import("../features/profiles/teacher/pages/holistic/StudentHolisticProfilePage").then((module) => ({ default: module.StudentHolisticProfilePage })));
+const HolisticDomainTrendsPage = lazy(() => import("../features/profiles/teacher/pages/holistic/HolisticDomainTrendsPage").then((module) => ({ default: module.HolisticDomainTrendsPage })));
+const SubjectClassListPage = lazy(() => import("../features/profiles/teacher/pages/subjects/SubjectClassListPage").then((module) => ({ default: module.SubjectClassListPage })));
+const AcademicYearPage = lazy(() => import("../features/profiles/admin/pages/subjects/AcademicYearPage").then((module) => ({ default: module.AcademicYearPage })));
+const PrincipalDashboardHome = lazy(() => import("../features/profiles/principal/pages/dashboard/PrincipalDashboardHome").then((module) => ({ default: module.PrincipalDashboardHome })));
+const PrincipalStudentsPage = lazy(() => import("../features/profiles/principal/pages/students/PrincipalStudentsPage").then((module) => ({ default: module.PrincipalStudentsPage })));
+const ClassListPage = lazy(() => import("../features/profiles/principal/pages/students/ClassListPage").then((module) => ({ default: module.ClassListPage })));
+const PrincipalTeachersPage = lazy(() => import("../features/profiles/principal/pages/teachers/PrincipalTeachersPage").then((module) => ({ default: module.PrincipalTeachersPage })));
+const TeacherSchedulePage = lazy(() => import("../features/profiles/principal/pages/teachers/TeacherSchedulePage").then((module) => ({ default: module.TeacherSchedulePage })));
+const AnalyticsPage = lazy(() => import("../features/profiles/principal/pages/reports/AnalyticsPage").then((module) => ({ default: module.AnalyticsPage })));
+const PrincipalGradebooksPage = lazy(() => import("../features/profiles/principal/pages/gradebooks/PrincipalGradebooksPage").then((module) => ({ default: module.PrincipalGradebooksPage })));
+const PrincipalGradeSheetPage = lazy(() => import("../features/profiles/principal/pages/gradebooks/PrincipalGradeSheetPage").then((module) => ({ default: module.PrincipalGradeSheetPage })));
+const HolisticPerformanceAnalyticsPage = lazy(() => import("../features/profiles/principal/pages/reports/HolisticPerformanceAnalyticsPage").then((module) => ({ default: module.HolisticPerformanceAnalyticsPage })));
+const TeacherAttendancePage = lazy(() => import("../features/profiles/teacher/pages/attendance/TeacherAttendancePage").then((module) => ({ default: module.TeacherAttendancePage })));
+const TeacherAttendanceRecordsPage = lazy(() => import("../features/profiles/teacher/pages/attendance/TeacherAttendanceRecordsPage").then((module) => ({ default: module.TeacherAttendanceRecordsPage })));
+const PetQuizPage = lazy(() => import("../features/profiles/parent/pages/Student/Academic/PetQuizPage"));
+const AddSubjectPage = lazy(() => import("../features/profiles/admin/pages/subjects/AddSubjectPage").then((module) => ({ default: module.AddSubjectPage })));
+const SubjectsSection = lazy(() => import("../features/profiles/admin/pages/subjects/SubjectSection").then((module) => ({ default: module.SubjectsSection })));
+const AdminSubjectDetailPage = lazy(() => import("../features/profiles/admin/pages/subjects/AdminSubjectDetailPage").then((module) => ({ default: module.AdminSubjectDetailPage })));
 
 type Role = "ADMIN" | "PRINCIPAL" | "TEACHER" | "PARENT";
 
@@ -81,10 +89,10 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   if (isLoading) return <QedLoader fill />;
   if (!user) return <Navigate to="/login" replace />;
   return (
-    <>
+    <SettingsProvider>
       <ForceChangePasswordGate />
       {children}
-    </>
+    </SettingsProvider>
   );
 }
 
@@ -143,9 +151,10 @@ export function AppRouter() {
   const { isLoading } = useAuth();
 
   return (
-    <SettingsProvider>
+    <>
       <QedSplash loading={isLoading} />
       <DebugRoute />
+      <Suspense fallback={<QedLoader fill />}>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -184,7 +193,7 @@ export function AppRouter() {
           </Route>
           <Route path="academic-year" element={<AcademicYearPage />} />
           <Route path="calendar" element={<CalendarPage />} />
-          <Route path="help" element={<HelpSupportPage />} />
+          <Route path="help" element={<HelpSupportPage audience="ADMIN" />} />
         </Route>
 
         {/* PRINCIPAL */}
@@ -214,8 +223,8 @@ export function AppRouter() {
             path="gradebooks/:grade"
             element={<PrincipalGradeSheetPage />}
           />
-          <Route path="calendar" element={<CalendarPage />} />
-          <Route path="help" element={<div>Help page</div>} />
+          <Route path="calendar" element={<CalendarPage viewerRole="PRINCIPAL" />} />
+          <Route path="help" element={<HelpSupportPage audience="PRINCIPAL" />} />
         </Route>
 
         {/* TEACHER */}
@@ -258,7 +267,7 @@ export function AppRouter() {
           <Route path="students/:studentId" element={<StudentDetailPage />} />
           <Route path="advisory" element={<AdvisoryRosterPage />} />
           <Route path="calendar" element={<CalendarPageView />} />
-          <Route path="help" element={<div>Help page</div>} />
+          <Route path="help" element={<HelpSupportPage audience="TEACHER" />} />
         </Route>
 
         {/* PARENT */}
@@ -288,8 +297,10 @@ export function AppRouter() {
             element={<PetQuizPage />}
           />
           <Route path="calendar" element={<CalendarPageView />} />
+          <Route path="help" element={<HelpSupportPage audience="PARENT" />} />
         </Route>
       </Routes>
-    </SettingsProvider>
+      </Suspense>
+    </>
   );
 }

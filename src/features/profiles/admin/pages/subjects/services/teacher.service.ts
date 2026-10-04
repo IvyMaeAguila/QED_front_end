@@ -11,6 +11,7 @@ export interface TeacherRow {
   email_address: string;
   contact_number: string;
   gender?: string | null;
+  avatar_key?: string | null;
 }
 
 export interface ApiResponse<T> {

@@ -67,7 +67,7 @@ export function SubjectGradeTemplateSection({
     if (file) void handleFile(file);
   }
 
-  const cardClasses = `rounded-xl border p-4 space-y-3 ${
+  const cardClasses = `rounded-[12px] border p-4 space-y-3 ${
     darkMode ? "border-[#374151] bg-[#0B1120]/60" : "border-[#E5E7EB] bg-[#F8FAFC]"
   }`;
 
@@ -101,7 +101,7 @@ export function SubjectGradeTemplateSection({
         onDragOver={(e) => { e.preventDefault(); if (!uploading) setIsDragOver(true); }}
         onDragLeave={(e) => { e.preventDefault(); setIsDragOver(false); }}
         onDrop={handleDrop}
-        className={`rounded-xl border-2 border-dashed py-6 px-4 flex flex-col items-center gap-2 text-center cursor-pointer transition-colors ${
+        className={`rounded-[12px] border-2 border-dashed py-6 px-4 flex flex-col items-center gap-2 text-center cursor-pointer transition-colors ${
           isDragOver ? "border-[#2F6FED] bg-[#2F6FED]/5" : darkMode ? "border-[#374151]" : "border-[#D1D5DB]"
         } ${uploading ? "opacity-70 cursor-not-allowed" : ""}`}
       >

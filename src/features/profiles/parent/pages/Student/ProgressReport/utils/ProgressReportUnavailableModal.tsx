@@ -45,9 +45,7 @@ export default function ProgressReportUnavailableModal({
       <div
         data-modal-panel="true"
         className={`relative w-full max-w-sm rounded-xl border p-6 shadow-xl ${
-          darkMode
-            ? "bg-[#111827] border-white/10"
-            : "bg-white border-black/5"
+          darkMode ? "bg-[#111827] border-white/10" : "bg-white border-black/5"
         }`}
       >
         <button
@@ -74,9 +72,7 @@ export default function ProgressReportUnavailableModal({
           Progress report not available yet
         </h2>
 
-        <p className={`mt-1.5 text-sm leading-relaxed ${textMuted}`}>
-          {reason}
-        </p>
+        <p className={`mt-1.5 text-sm leading-relaxed ${textMuted}`}>{reason}</p>
 
         {!termEnded && !isVisible && (
           <p className={`mt-2 text-xs leading-relaxed ${textMuted}`}>

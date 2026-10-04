@@ -6,13 +6,7 @@ import {
   useLocation,
   useOutletContext,
 } from "react-router-dom";
-import {
-  ArrowLeft,
-  Save,
-  AlertTriangle,
-  CheckCircle,
-  UserPlus,
-} from "lucide-react";
+import { ArrowLeft, Save, AlertTriangle, CheckCircle } from "lucide-react";
 import { useUsers } from "./context/UsersContext";
 import { principalConflict } from "./context/UsersContext";
 import {
@@ -35,8 +29,14 @@ import { AuthService } from "./../../../../auth/services/authentication.service"
 import AdminFeedbackModal from "../../modal/adminFeedbackModal";
 
 import type { AdminThemeContext } from "./../AdminLayout";
+import { WorkflowStepper } from "../../../shared/components/WorkflowStepper";
 
 const ACCENT = "#8B0D0D";
+const USER_FORM_STEPS = [
+  { name: "Profile", desc: "Enter the user's name and role" },
+  { name: "Contact", desc: "Add email and account status" },
+  { name: "Review", desc: "Confirm the account details" },
+] as const;
 
 interface FormState {
   lastName: string;
@@ -111,9 +111,8 @@ export function UserFormPage() {
         }
       : { ...emptyForm, role: presetRole ?? emptyForm.role },
   );
-  const [errors, setErrors] = useState<
-    Partial<Record<keyof FormState, string>>
-  >({});
+  const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
+  const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Ref, not state — state updates are batched/async and won't block a
   // second handleSubmit call that fires in the same tick (e.g. Enter key
@@ -140,22 +139,22 @@ export function UserFormPage() {
   }
 
   // ── Shared design tokens (same as StudentFormPage) ──
-  const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
+  const cardClasses = `rounded-[12px] border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
   const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
-  const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
+  const sectionTitleClasses = `text-xl font-black tracking-tight ${textPrimary}`;
 
   if (isEditing && !existing) {
     return (
-      <div className="max-w-7xl mx-auto mt-6 px-4 sm:px-6 pb-12">
+      <div className="w-full pb-12">
         <section
-          className={`rounded-xl border shadow-xs p-8 text-center ${panelBg} ${panelBorder}`}
+          className={`rounded-[12px] border shadow-xs p-8 text-center ${panelBg} ${panelBorder}`}
         >
           <p className={`text-sm font-semibold ${textMuted}`}>
             No user found with ID <span className="font-bold">{userId}</span>.
           </p>
           <button
             onClick={() => navigate("/admin/users")}
-            className="mt-4 h-9 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2"
+            className="mt-4 h-9 px-4 rounded-lg text-xs font-bold text-white inline-flex items-center gap-2"
             style={{ background: ACCENT }}
           >
             <ArrowLeft size={14} />
@@ -169,35 +168,43 @@ export function UserFormPage() {
   const activePrincipal = getActivePrincipal(existing?.id);
   const conflict = principalConflict(form.role, form.status, activePrincipal);
 
-  const inputClasses = `w-full h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors ${
+  const inputClasses = `w-full h-10 px-3 rounded-lg border text-sm font-semibold outline-none transition-colors ${
     darkMode
       ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]"
       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
   }`;
   const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 
-  function validate(): boolean {
+  function validate(step?: number): boolean {
     const next: Partial<Record<keyof FormState, string>> = {};
     const lastName = toStr(form.lastName);
     const firstName = toStr(form.firstName);
     const email = toStr(form.email);
     const contactNumber = toStr(form.contactNumber);
 
-    if (!lastName.trim()) next.lastName = "Last name is required.";
-    if (!firstName.trim()) next.firstName = "First name is required.";
-    if (!email.trim()) next.email = "Email is required.";
-    else if (!/^\S+@\S+\.\S+$/.test(email.trim()))
-      next.email = "Enter a valid email address.";
-    if (!contactNumber.trim())
-      next.contactNumber = "Contact number is required.";
-    if (form.role !== "ADMIN" && !form.gender)
-      next.gender = "Select this user's gender.";
+    if (step === undefined || step === 0) {
+      if (!lastName.trim()) next.lastName = "Last name is required.";
+      if (!firstName.trim()) next.firstName = "First name is required.";
+      if (form.role !== "ADMIN" && !form.gender)
+        next.gender = "Select this user's gender.";
+    }
+    if (step === undefined || step === 1) {
+      if (!email.trim()) next.email = "Email is required.";
+      else if (!/^\S+@\S+\.\S+$/.test(email.trim()))
+        next.email = "Enter a valid email address.";
+      if (!contactNumber.trim())
+        next.contactNumber = "Contact number is required.";
+    }
     setErrors(next);
     return Object.keys(next).length === 0;
   }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    if (!isEditing && currentStep < USER_FORM_STEPS.length - 1) {
+      if (validate(currentStep)) setCurrentStep((step) => step + 1);
+      return;
+    }
     if (!validate()) return;
     if (conflict) return;
     if (isSubmittingRef.current) return; // synchronous guard — blocks same-tick duplicate fires
@@ -305,39 +312,47 @@ export function UserFormPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto mt-6 space-y-6 pb-12 px-4 sm:px-6">
+    <div className="w-full space-y-6 pb-12">
       <section className={cardClasses} aria-label="User account form">
         {/* Card header — back button + icon/title on the left, helper text on the right */}
         <div className={cardHeaderClasses}>
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <button
               type="button"
               onClick={() => navigate("/admin/users")}
               aria-label="Go back"
-              className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-colors ${
+              className={`system-back-button shrink-0 ${
                 darkMode
                   ? "border-[#374151] hover:bg-white/10 text-white"
                   : "border-[#E5E7EB] hover:bg-[#F6F7FB] text-[#374151]"
               }`}
             >
-              <ArrowLeft size={14} />
+              <ArrowLeft />
             </button>
-            <h2 className={sectionTitleClasses}>
-              <UserPlus size={15} style={{ color: ACCENT }} />
-              {isEditing ? "Edit User Record" : "Add New User Account"}
-            </h2>
+            <div className="min-w-0">
+              <h1 className={sectionTitleClasses}>
+                {isEditing ? "Edit User Record" : "Add New User Account"}
+              </h1>
+              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+                {isEditing
+                  ? `Updating record ${existing?.id}`
+                  : "This user will be assigned the next available ID"}
+              </p>
+            </div>
           </div>
-          <span className={`text-xs font-semibold ${textMuted}`}>
-            {isEditing
-              ? `Updating record ${existing?.id}`
-              : "This user will be assigned the next available ID"}
-          </span>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-5 max-w-xl">
+        <form onSubmit={handleSubmit} className="grid w-full gap-4 p-4 sm:p-6 md:grid-cols-[16rem_minmax(0,1fr)]">
+          {!isEditing && (
+            <aside className={`rounded-[12px] p-4 sm:p-5 ${darkMode ? "bg-[#0B1120]/60" : "bg-[#F8FAFC]"}`}>
+              <h3 className={`mb-4 text-sm font-semibold md:mb-6 ${textPrimary}`}>Add User</h3>
+              <WorkflowStepper darkMode={darkMode} current={currentStep} steps={USER_FORM_STEPS} />
+            </aside>
+          )}
+          <div className={`min-w-0 space-y-5 rounded-[12px] border p-4 sm:p-6 ${panelBorder} ${!isEditing ? "md:col-start-2" : "md:col-span-2"}`}>
           {conflict && (
             <div
-              className={`flex items-start gap-3 rounded-xl border p-3.5 ${
+              className={`flex items-start gap-3 rounded-lg border p-3.5 ${
                 darkMode
                   ? "bg-[#7F1D1D]/15 border-[#7F1D1D]"
                   : "bg-[#FEF3C7] border-[#FCD34D]"
@@ -358,7 +373,8 @@ export function UserFormPage() {
             </div>
           )}
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          {(isEditing || currentStep === 0) && <div className="max-w-4xl space-y-5">
+          <div className="grid max-w-3xl gap-4 sm:grid-cols-2">
             <div>
               <label className={labelClasses}>Last Name</label>
               <input
@@ -391,7 +407,7 @@ export function UserFormPage() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-[120px_1fr] gap-4">
+          <div className="grid max-w-2xl gap-4 sm:grid-cols-[8rem_minmax(0,24rem)]">
             <div>
               <label className={labelClasses}>M.I.</label>
               <input
@@ -429,7 +445,7 @@ export function UserFormPage() {
           </div>
 
           {form.role !== "ADMIN" && (
-            <div>
+            <div className="max-w-xs">
               <label className={labelClasses} htmlFor="user-gender">
                 Gender
               </label>
@@ -461,7 +477,10 @@ export function UserFormPage() {
             </div>
           )}
 
-          <div>
+          </div>}
+
+          {(isEditing || currentStep === 1) && <div className="max-w-4xl space-y-5">
+          <div className="max-w-lg">
             <label className={labelClasses}>Email Address</label>
             <input
               type="email"
@@ -477,7 +496,7 @@ export function UserFormPage() {
             )}
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid max-w-2xl gap-4 sm:grid-cols-2">
             <div>
               <label className={labelClasses}>Contact Number</label>
               <input
@@ -514,12 +533,35 @@ export function UserFormPage() {
               </select>
             </div>
           </div>
+          </div>}
 
-          <div className="flex gap-3 pt-2">
+          {!isEditing && currentStep === 2 && (
+            <section className={`rounded-[12px] border p-4 sm:p-5 ${panelBorder} ${darkMode ? "bg-white/[0.03]" : "bg-[#F8FAFC]"}`} aria-labelledby="user-review-title">
+              <h3 id="user-review-title" className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>Review user account</h3>
+              <dl className="mt-4 grid gap-x-6 gap-y-4 sm:grid-cols-2">
+                {[
+                  ["Name", [form.lastName, form.firstName, form.middleName].filter(Boolean).join(", ") || "—"],
+                  ["Role", ROLE_LABELS[form.role]],
+                  ["Gender", form.gender || "—"],
+                  ["Email", form.email || "—"],
+                  ["Contact number", form.contactNumber || "—"],
+                  ["Status", form.status],
+                ].map(([label, value]) => (
+                  <div key={label} className="min-w-0">
+                    <dt className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>{label}</dt>
+                    <dd className={`mt-1 break-words text-sm font-semibold ${textPrimary}`}>{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          )}
+
+          <div className="flex flex-col-reverse gap-2 pt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:pt-5">
+            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:gap-3">
             <button
               type="button"
               onClick={() => navigate("/admin/users")}
-              className={`h-10 px-4 rounded-xl text-xs font-bold border transition-colors ${
+              className={`h-10 px-4 rounded-lg text-xs font-bold border transition-colors ${
                 darkMode
                   ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
                   : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
@@ -527,23 +569,36 @@ export function UserFormPage() {
             >
               Cancel
             </button>
+            {!isEditing && currentStep > 0 && (
+              <button
+                type="button"
+                onClick={() => setCurrentStep((step) => step - 1)}
+                className={`h-10 rounded-lg border px-4 text-xs font-bold transition-colors ${darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"}`}
+              >
+                Back
+              </button>
+            )}
+            </div>
             <button
               type="submit"
               disabled={Boolean(conflict) || isSubmitting}
-              className={`h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 transition-colors ${
+              className={`inline-flex h-10 items-center justify-center rounded-lg px-5 text-xs font-bold text-white transition-colors ${
                 conflict || isSubmitting
                   ? "opacity-50 cursor-not-allowed"
                   : "hover:bg-[#6B0000]"
               }`}
               style={{ background: ACCENT }}
             >
-              <Save size={14} />
-              {isSubmitting
+              {(isEditing || currentStep === USER_FORM_STEPS.length - 1) && <Save size={14} />}
+              {!isEditing && currentStep < USER_FORM_STEPS.length - 1
+                ? "Continue"
+                : isSubmitting
                 ? "Saving..."
                 : isEditing
                   ? "Save Changes"
                   : "Add User"}
             </button>
+          </div>
           </div>
         </form>
       </section>
@@ -566,7 +621,7 @@ export function UserFormPage() {
           <button
             type="button"
             onClick={closeFeedbackModal}
-            className="h-9 px-4 rounded-xl text-xs font-bold text-white transition-colors hover:bg-[#6B0000]"
+            className="h-9 px-4 rounded-lg text-xs font-bold text-white transition-colors hover:bg-[#6B0000]"
             style={{ background: ACCENT }}
           >
             OK

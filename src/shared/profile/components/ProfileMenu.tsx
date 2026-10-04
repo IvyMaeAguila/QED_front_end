@@ -6,6 +6,8 @@ import { useSettings } from "../../../features/profiles/admin/pages/settings/con
 import { useAuth } from "../../../features/auth/context/authContext";
 import { PROFILE_FIELD_CONFIG } from "../../profile/config/ProfileFieldConfig";
 import type { UserProfile } from "../../profile/types/types";
+import { getDefaultTeacherAvatarKey, getTeacherAvatar, getTeacherAvatarBorderColor, TEACHER_AVATARS } from "../../profile/utils/teacherAvatar";
+import { AuthService } from "../../../features/auth/services/authentication.service";
 
 // These are in the SAME folder as ProfileMenu.tsx (src/shared/profile/components/avatars/)
 import teacherWomanImg from "./avatars/teacher_women.jpg";
@@ -20,11 +22,14 @@ const DEFAULT_AVATARS = {
   male: teacherManImg,
 } as const;
 
-function getAvatarSrc(user: UserProfile & { avatarUrl?: string }): string | undefined {
+function getAvatarSrc(user: UserProfile & { avatarUrl?: string; gender?: string }): string | undefined {
   if (user.avatarUrl) return user.avatarUrl;
-  if (user.role === "ADMIN") return adminHatImg;
-  if (user.gender === "male") return DEFAULT_AVATARS.male;
-  if (user.gender === "female") return DEFAULT_AVATARS.female;
+  const role = String(user.role ?? "").trim().toLocaleUpperCase();
+  const gender = String(user.gender ?? "").trim().toLocaleLowerCase();
+  if (role === "ADMIN") return adminHatImg;
+  if (role === "TEACHER") return getTeacherAvatar(user);
+  if (gender === "male") return DEFAULT_AVATARS.male;
+  if (gender === "female") return DEFAULT_AVATARS.female;
   return undefined;
 }
 
@@ -33,6 +38,8 @@ export function ProfileMenu() {
   const { user, setUser } = useAuth();
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const [draft, setDraft] = useState<UserProfile | null>(user);
   const ref = useRef<HTMLDivElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -70,10 +77,13 @@ export function ProfileMenu() {
 
   if (!user || !draft) return null;
 
+  const currentUser = user;
   const fields = PROFILE_FIELD_CONFIG[user.role];
   const mutedText = darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]";
+  const textPrimary = darkMode ? "text-white" : "text-[#111827]";
   const borderColor = darkMode ? "border-[#1F2937]" : "border-[#EEF0F3]";
   const labelClasses = `text-[10.5px] font-semibold uppercase tracking-wider ${mutedText}`;
+  const avatarBorderColor = user.role === "TEACHER" ? getTeacherAvatarBorderColor(user.gender) : "#D1D5DB";
   const inputClasses = `w-full h-10 px-3 rounded-lg border text-[13px] font-medium outline-none transition-colors ${
     darkMode
       ? "bg-[#0B1120] border-[#2A3441] text-white focus:border-[#8A1F1F]"
@@ -81,24 +91,43 @@ export function ProfileMenu() {
   }`;
 
   function startEdit() {
-    setDraft(user);
+    setDraft(currentUser.role === "TEACHER"
+      ? { ...currentUser, avatarKey: currentUser.avatarKey ?? getDefaultTeacherAvatarKey(currentUser.gender) }
+      : currentUser);
+    setSaveError("");
     setEditing(true);
   }
 
   async function save() {
     if (!draft) return;
-    // TODO: palitan ng tamang endpoint kapag ready na sa backend
-    // await AuthService.updateProfile(draft);
-    setUser(draft);
-    setEditing(false);
+    setSaving(true);
+    setSaveError("");
+    try {
+      const teacherDraft = currentUser.role === "TEACHER"
+        ? draft as Extract<UserProfile, { role: "TEACHER" }>
+        : null;
+      if (teacherDraft && !teacherDraft.avatarKey) throw new Error("Choose a profile illustration before saving.");
+      const updated = await AuthService.updateProfile({
+        email: draft.email,
+        phone: "phone" in draft ? draft.phone : undefined,
+        address: "address" in draft ? draft.address : undefined,
+        avatarKey: teacherDraft?.avatarKey,
+      });
+      setUser({ ...draft, ...updated } as UserProfile);
+      setEditing(false);
+    } catch (error) {
+      setSaveError(error instanceof Error ? error.message : "Failed to update profile.");
+    } finally {
+      setSaving(false);
+    }
   }
 
   function cancel() {
-    setDraft(user);
+    setDraft(currentUser);
     setEditing(false);
   }
 
-  const avatarSrc = getAvatarSrc(user as any);
+  const avatarSrc = getAvatarSrc((editing ? draft : user) as any);
 
   const drawer = (
     <>
@@ -116,30 +145,26 @@ export function ProfileMenu() {
         ref={drawerRef}
         role="dialog"
         aria-modal="true"
+        data-drawer-panel="true"
         className={`fixed inset-y-0 right-0 z-100 w-104 max-w-[90vw] h-full flex flex-col shadow-[-8px_0_30px_-12px_rgba(0,0,0,0.35)] transition-transform duration-500 ${APPLE_EASE} ${
           darkMode ? "bg-[#0F172A]" : "bg-white"
         } ${open ? "translate-x-0" : "translate-x-full"}`}
       >
         {/* Header */}
-        <div
-          className={`px-6 pt-8 pb-6 flex flex-col items-center text-center shrink-0 border-b ${borderColor}`}
-        >
+        <div className={`relative shrink-0 border-b ${borderColor}`}>
+          <div className="h-28 bg-maroon-gradient-vertical" />
           <button
             onClick={closeDrawer}
             aria-label="Close"
-            className={`self-end -mt-2 -mr-1 mb-2 w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
-              darkMode
-                ? "text-[#9CA3AF] hover:bg-white/10 hover:text-white"
-                : "text-[#9CA3AF] hover:bg-black/5 hover:text-[#374151]"
-            }`}
+            className="absolute right-5 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/15 hover:text-white"
           >
             <X size={16} />
           </button>
 
+          <div className="-mt-10 flex flex-col items-center px-6 pb-5 text-center">
           <div
-            className={`w-20 h-20 rounded-full overflow-hidden flex items-center justify-center shrink-0 ring-1 ${
-              darkMode ? "ring-white/10" : "ring-black/5"
-            }`}
+            className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 bg-white shadow-lg"
+            style={{ borderColor: avatarBorderColor }}
           >
             {avatarSrc ? <img src={avatarSrc} alt={`${user.name}'s profile`} className="w-full h-full object-cover" /> : <UserRound className="h-9 w-9 text-gray-400" aria-label="Profile image unavailable" />}
           </div>
@@ -161,12 +186,41 @@ export function ProfileMenu() {
           >
             {user.role}
           </span>
+          </div>
         </div>
 
         {/* Body */}
         <div className="flex-1 overflow-y-auto px-6 py-5">
           {editing ? (
             <>
+              {user.role === "TEACHER" && (
+                <div className="mb-6">
+                  <p className={`${labelClasses} mb-1`}>Profile illustration</p>
+                  <p className={`mb-3 text-xs ${mutedText}`}>Choose an avatar. Male and female defaults use light blue and red accents.</p>
+                  <div className="grid grid-cols-3 gap-2.5">
+                    {TEACHER_AVATARS.map((avatar) => {
+                      const selectedKey = (draft as Extract<UserProfile, { role: "TEACHER" }>).avatarKey;
+                      const selected = selectedKey === avatar.key;
+                      const genderAccent = avatar.gender === "male" ? "#B8DDF0" : "#D9343E";
+                      return (
+                        <button
+                          key={avatar.key}
+                          type="button"
+                          onClick={() => setDraft({ ...draft, avatarKey: avatar.key } as UserProfile)}
+                          aria-label={`Choose ${avatar.label} avatar`}
+                          aria-pressed={selected}
+                          className={`group flex flex-col items-center gap-1.5 rounded-xl border p-2 transition-colors ${selected ? "border-maroon bg-maroon/5" : `${borderColor} hover:border-maroon/50`}`}
+                        >
+                          <span className="h-14 w-14 overflow-hidden rounded-full border-2 bg-white" style={{ borderColor: genderAccent }}>
+                            <img src={avatar.src} alt="" className="h-full w-full object-cover" />
+                          </span>
+                          <span className={`w-full truncate text-center text-[10px] font-medium ${textPrimary}`}>{avatar.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
               <p className={`${labelClasses} mb-4`}>Edit details</p>
               <div className="space-y-4">
                 {fields
@@ -193,33 +247,37 @@ export function ProfileMenu() {
           ) : (
             <>
               <p className={`${labelClasses} mb-1`}>Account details</p>
-              <div className={`divide-y ${borderColor}`}>
+              <div className={`mt-3 overflow-hidden rounded-xl border ${borderColor}`}>
                 {fields
                   .filter((f) => f.showInSummary)
-                  .map((f) => {
+                  .map((f, index, summaryFields) => {
                     const Icon = f.icon;
+                    const rawValue = (user as any)[f.key];
+                    const value = f.key === "gender" && rawValue
+                      ? String(rawValue).charAt(0).toUpperCase() + String(rawValue).slice(1).toLowerCase()
+                      : rawValue;
                     return (
                       <div
                         key={f.key}
-                        className="flex items-center gap-3 py-3.5"
+                        className={`flex min-h-[64px] items-center gap-3 px-3.5 py-2.5 ${index < summaryFields.length - 1 ? `border-b ${borderColor}` : ""}`}
                       >
                         <div
-                          className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                          className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
                             darkMode ? "bg-white/5" : "bg-[#F6F7F9]"
                           }`}
                         >
                           <Icon size={14} className={mutedText} />
                         </div>
-                        <div className="min-w-0">
-                          <p className={`${labelClasses} leading-none mb-1`}>
+                        <div className="min-w-0 flex-1 flex items-center justify-between gap-4">
+                          <p className={`${labelClasses} leading-none shrink-0`}>
                             {f.label}
                           </p>
                           <p
-                            className={`text-[13.5px] font-medium truncate ${
-                              darkMode ? "text-[#E5E7EB]" : "text-[#1F2937]"
+                            className={`text-[13px] font-medium text-right break-words ${
+                              value ? (darkMode ? "text-[#E5E7EB]" : "text-[#1F2937]") : mutedText
                             }`}
                           >
-                            {(user as any)[f.key]}
+                            {value || "Not provided"}
                           </p>
                         </div>
                       </div>
@@ -233,9 +291,12 @@ export function ProfileMenu() {
         {/* Footer actions */}
         <div className={`px-6 py-5 border-t shrink-0 ${borderColor}`}>
           {editing ? (
+            <>
+            {saveError && <p role="alert" className="mb-3 text-xs font-medium text-red-700">{saveError}</p>}
             <div className="flex gap-2.5">
               <button
                 onClick={cancel}
+                disabled={saving}
                 className={`flex-1 h-10 rounded-lg text-[13px] font-semibold border transition-colors ${
                   darkMode
                     ? "border-[#2A3441] text-[#D1D5DB] hover:bg-white/5"
@@ -246,13 +307,15 @@ export function ProfileMenu() {
               </button>
               <button
                 onClick={save}
+                disabled={saving}
                 className="flex-1 h-10 rounded-lg text-[13px] font-semibold text-white inline-flex items-center justify-center gap-1.5 shadow-sm transition-opacity hover:opacity-90"
                 style={{ background: ACCENT }}
               >
                 <Check size={14} />
-                Save Changes
+                {saving ? "Saving…" : "Save Changes"}
               </button>
             </div>
+            </>
           ) : (
             <button
               onClick={startEdit}
@@ -283,11 +346,12 @@ export function ProfileMenu() {
         }`}
       >
         <div
-          className={`w-9 h-9 rounded-full overflow-hidden flex items-center justify-center shrink-0 ring-2 ring-transparent transition-all duration-200 ${
+          className={`w-9 h-9 rounded-full overflow-hidden flex items-center justify-center shrink-0 border-2 transition-all duration-200 ${
             darkMode
               ? "bg-[#374151] group-hover:ring-[#6B0000]/40"
               : "bg-[#E5E5E5] group-hover:ring-[#6B0000]/25"
           }`}
+          style={{ borderColor: avatarBorderColor }}
         >
           {avatarSrc ? <img src={avatarSrc} alt={`${user.name}'s profile`} className="w-full h-full object-cover" /> : <UserRound className="h-5 w-5 text-gray-400" aria-label="Teacher profile image unavailable" />}
         </div>

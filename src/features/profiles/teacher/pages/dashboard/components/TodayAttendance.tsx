@@ -67,18 +67,18 @@ export function TodayAttendance({
 
   return (
     <div
-      className={`h-full flex flex-col rounded-2xl border overflow-hidden ${panelBg} ${panelBorder}`}
+      className={`h-full flex flex-col rounded-[12px] border overflow-hidden ${panelBg} ${panelBorder}`}
       style={{ boxShadow: "0 4px 20px -2px rgba(0,0,0,0.05), 0 2px 10px -2px rgba(0,0,0,0.03)" }}
     >
-      <div className={`px-8 py-6 border-b flex items-center justify-between ${panelBorder}`}>
-        <div className="flex items-center gap-3">
-          <ClipboardCheck size={18} style={{ color: "#8B0D0D" }} />
+      <div className={`flex items-center justify-between gap-3 border-b px-4 py-4 sm:px-6 ${panelBorder}`}>
+        <div className="flex min-w-0 items-center gap-2.5">
+          <ClipboardCheck size={16} className="shrink-0" style={{ color: "#8B0D0D" }} />
           <h2 className={`text-[15px] font-bold ${textPrimary}`}>Today&apos;s Attendance</h2>
         </div>
         {onViewFull && (
           <button
             onClick={onViewFull}
-            className="text-xs font-bold uppercase tracking-wider hover:underline"
+            className="shrink-0 text-[10px] font-bold uppercase tracking-wider hover:underline sm:text-xs"
             style={{ color: "#8B0D0D" }}
           >
             Full Report
@@ -86,9 +86,9 @@ export function TodayAttendance({
         )}
       </div>
 
-      <div className="flex-1 p-8 flex flex-col md:flex-row items-center gap-8">
+      <div className="flex flex-1 flex-col items-center gap-5 p-4 sm:gap-6 sm:p-6 md:flex-row">
         {/* Attendance ring */}
-        <div className="relative shrink-0 w-42 h-42">
+        <div className="relative h-32 w-32 shrink-0 sm:h-36 sm:w-36">
           <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
             <circle
               cx="50"
@@ -135,14 +135,14 @@ export function TodayAttendance({
             return (
               <div
                 key={g.key}
-                className={`flex items-center gap-4 rounded-xl border p-3.5 transition-colors ${panelBorder}`}
+                className={`flex items-center gap-3 rounded-[12px] border p-3 transition-colors sm:gap-3.5 sm:p-3.5 ${panelBorder}`}
                 style={{ background: darkMode ? "rgba(255,255,255,0.02)" : "#FBFCFD" }}
               >
                 <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
                   style={{ background: g.soft }}
                 >
-                  <g.Icon size={17} style={{ color: g.solid }} />
+                  <g.Icon size={15} style={{ color: g.solid }} />
                 </div>
 
                 <div className="flex-1 min-w-0">

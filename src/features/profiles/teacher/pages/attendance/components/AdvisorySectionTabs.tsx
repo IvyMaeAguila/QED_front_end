@@ -21,7 +21,7 @@ export function AdvisorySectionTabs({
   if (sections.length < 2) return null;
 
   return (
-    <div className={`flex items-center gap-1 rounded-xl border p-1 ${panelBorder}`}>
+    <div className={`flex items-center gap-1 rounded-[12px] border p-1 ${panelBorder}`}>
       {sections.map((s) => {
         const label = s.sectionName?.trim() || s.gradeLevel;
         const active = s.classId === activeClassId;

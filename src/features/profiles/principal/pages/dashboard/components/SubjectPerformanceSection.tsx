@@ -56,7 +56,7 @@ export function SubjectPerformanceSection({
               <select
                 value={rankingTerm}
                 onChange={(e) => onRankingTermChange(e.target.value as Term)}
-                className={`appearance-none text-sm font-bold uppercase tracking-wide pl-5 pr-10 py-2.5 rounded-2xl shadow-card ${panelBg} ${panelBorder} border ${textPrimary} focus:outline-none focus:ring-2 focus:ring-maroon/40 cursor-pointer`}
+                className={`appearance-none text-sm font-bold uppercase tracking-wide pl-5 pr-10 py-2.5 rounded-lg shadow-card ${panelBg} ${panelBorder} border ${textPrimary} focus:outline-none focus:ring-2 focus:ring-maroon/40 cursor-pointer`}
               >
                 <option value="Term 1">Term 1</option>
                 <option value="Term 2">Term 2</option>

@@ -1,8 +1,6 @@
-import { Users } from "lucide-react";
-import { SectionCard } from "../../../../shared/components/DashboardUI";
-import { RosterTable } from "./RosterTable";
-import { splitByGender } from "../utils/roster";
 import type { Student } from "../data/types";
+import { fullName } from "../utils/roster";
+import { StudentDirectory } from "@shared/components/StudentDirectory";
 
 interface ClassRosterProps {
   roster: Student[];
@@ -13,29 +11,16 @@ interface ClassRosterProps {
   darkMode: boolean;
 }
 
-export function ClassRoster({ roster, panelBg, panelBorder, textPrimary, textMuted, darkMode }: ClassRosterProps) {
-  const { males, females } = splitByGender(roster);
-
+export function ClassRoster({ roster, ...theme }: ClassRosterProps) {
   return (
-    <SectionCard title="Class Roster" icon={Users} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} darkMode={darkMode}>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <RosterTable
-          label="Male"
-          students={males}
-          emptyLabel="No male students."
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-        />
-        <RosterTable
-          label="Female"
-          students={females}
-          emptyLabel="No female students."
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-        />
-      </div>
-    </SectionCard>
+    <StudentDirectory
+      students={roster.map((student) => ({
+        id: student.studentId,
+        studentId: student.studentId,
+        name: fullName(student),
+        gender: student.gender,
+      }))}
+      {...theme}
+    />
   );
 }

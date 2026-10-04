@@ -128,7 +128,7 @@ export function StudentAttendanceSummaryModal({
       onClick={onClose}
     >
       <div
-        className={`flex max-h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border shadow-2xl ${panelBg} ${panelBorder}`}
+        className={`flex max-h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-[12px] border shadow-2xl ${panelBg} ${panelBorder}`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header — accent bar + large student identity */}
@@ -155,7 +155,7 @@ export function StudentAttendanceSummaryModal({
             <button
               onClick={onClose}
               aria-label="Close"
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBorder} ${
+              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border transition-colors ${panelBorder} ${
                 darkMode ? "hover:bg-white/10" : "hover:bg-[#F6F7FB]"
               } ${textMuted}`}
             >
@@ -170,7 +170,7 @@ export function StudentAttendanceSummaryModal({
             className={`grid grid-cols-2 gap-3 border-b px-8 py-6 sm:grid-cols-4 ${panelBorder}`}
           >
             <div
-              className={`rounded-xl border px-4 py-3 ${panelBorder} ${subtleBg}`}
+              className={`rounded-[12px] border px-4 py-3 ${panelBorder} ${subtleBg}`}
             >
               <p
                 className={`text-[10px] font-extrabold uppercase tracking-wider ${textMuted}`}
@@ -184,7 +184,7 @@ export function StudentAttendanceSummaryModal({
               </p>
             </div>
             <div
-              className={`rounded-xl border px-4 py-3 ${panelBorder} ${subtleBg}`}
+              className={`rounded-[12px] border px-4 py-3 ${panelBorder} ${subtleBg}`}
             >
               <p
                 className={`text-[10px] font-extrabold uppercase tracking-wider ${textMuted}`}
@@ -199,7 +199,7 @@ export function StudentAttendanceSummaryModal({
               </p>
             </div>
             <div
-              className={`rounded-xl border px-4 py-3 ${panelBorder} ${subtleBg}`}
+              className={`rounded-[12px] border px-4 py-3 ${panelBorder} ${subtleBg}`}
             >
               <p
                 className={`text-[10px] font-extrabold uppercase tracking-wider ${textMuted}`}
@@ -214,7 +214,7 @@ export function StudentAttendanceSummaryModal({
               </p>
             </div>
             <div
-              className={`rounded-xl border px-4 py-3 ${panelBorder} ${subtleBg}`}
+              className={`rounded-[12px] border px-4 py-3 ${panelBorder} ${subtleBg}`}
             >
               <p
                 className={`text-[10px] font-extrabold uppercase tracking-wider ${textMuted}`}
@@ -250,9 +250,9 @@ export function StudentAttendanceSummaryModal({
                     </p>
                   </div>
                   <div
-                    className={`overflow-hidden rounded-xl border ${panelBorder}`}
+                    className={`overflow-hidden rounded-[12px] border ${panelBorder}`}
                   >
-                    <table className="w-full text-sm">
+                    <table className="teacher-user-table w-full text-sm">
                       <thead>
                         <tr className={subtleBg}>
                           <th className={`${headBase} min-w-40 text-left`}>

@@ -118,7 +118,7 @@ export function ComponentKitchenSink() {
                 />
                 <div>
                   <p className={`text-[11px] font-bold ${textPrimary}`}>{t.label}</p>
-                  <p className={`text-[10px] font-mono ${textMuted}`}>{t.varName}</p>
+                  <p className={`text-[10px] font-sans ${textMuted}`}>{t.varName}</p>
                 </div>
               </div>
             ))}
@@ -143,7 +143,7 @@ export function ComponentKitchenSink() {
             {(["shadow-card", "shadow-panel", "shadow-primary"] as const).map((s) => (
               <div key={s} className="flex flex-col items-center gap-3 py-4">
                 <div className={`h-16 w-16 rounded-2xl ${panelBg} ${s}`} />
-                <p className={`text-[11px] font-mono ${textMuted}`}>{s}</p>
+                <p className={`text-[11px] font-sans ${textMuted}`}>{s}</p>
               </div>
             ))}
           </div>
@@ -275,7 +275,7 @@ export function ComponentKitchenSink() {
               darkMode={darkMode}
             />
           </div>
-          <p className={`text-[11px] font-mono ${textMuted}`}>
+          <p className={`text-[11px] font-sans ${textMuted}`}>
             variant: {(["spotlight", "primary", "gold", "alert"] as CardVariant[]).join(" | ")}
           </p>
         </KitchenSinkSection>
@@ -322,7 +322,7 @@ export function ComponentKitchenSink() {
             {TREND_OPTIONS.map((t) => (
               <div key={t} className="flex flex-col items-center gap-2">
                 <TrendChip trend={t} darkMode={darkMode} />
-                <p className={`text-[11px] font-mono ${textMuted}`}>{t}</p>
+                <p className={`text-[11px] font-sans ${textMuted}`}>{t}</p>
               </div>
             ))}
           </div>

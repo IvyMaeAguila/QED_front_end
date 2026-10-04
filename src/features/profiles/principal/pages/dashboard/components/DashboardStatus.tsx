@@ -1,4 +1,4 @@
-import { AlertTriangle } from "lucide-react";
+
 
 export function DashboardSkeleton({ textMuted }: { textMuted: string }) {
   return (
@@ -17,7 +17,6 @@ export function DashboardSkeleton({ textMuted }: { textMuted: string }) {
 export function DashboardError({ error, textMuted }: { error: Error; textMuted: string }) {
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
-      <AlertTriangle className="h-8 w-8" style={{ color: "var(--color-red)" }} />
       <p className="text-sm font-bold">Couldn't load the dashboard</p>
       <p className={`text-xs ${textMuted}`}>{error.message}</p>
     </div>

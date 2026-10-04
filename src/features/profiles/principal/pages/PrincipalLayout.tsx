@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "@shared/components/Sidebar";
 import { Header } from "@shared/components/Header";
+import { PolygonBackdrop } from "../../shared/components/PolygonLayout";
 import { useSettings } from "../../admin/pages/settings/context/SettingsContext";
 import { PRINCIPAL_NAV_ITEMS, PRINCIPAL_HELP_ITEM } from "./config/principalNav";
 import type { AdminThemeContext } from "../../admin/pages/AdminLayout";
@@ -24,11 +25,17 @@ export function PrincipalLayout({ onLogout }: PrincipalLayoutProps) {
 
   return (
     <div
-      className={`flex h-screen w-full overflow-hidden transition-colors ${darkMode ? "bg-[#0B1120]" : "bg-[#F6F7FB]"}`}
+      className="relative flex h-screen w-full overflow-hidden"
       style={{ fontFamily: "'Inter', sans-serif" }}
     >
+      {/* Low-poly backdrop (paints its own background color) */}
+      <PolygonBackdrop darkMode={darkMode} />
+
+      {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 lg:relative lg:translate-x-0 transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 left-0 z-50 lg:relative lg:translate-x-0 transition-transform duration-300 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         <Sidebar
           open={sidebarOpen}
@@ -41,6 +48,7 @@ export function PrincipalLayout({ onLogout }: PrincipalLayoutProps) {
         />
       </div>
 
+      {/* Mobile overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/20 z-40 lg:hidden"
@@ -48,10 +56,11 @@ export function PrincipalLayout({ onLogout }: PrincipalLayoutProps) {
         />
       )}
 
-      <div className="flex-1 flex flex-col h-full overflow-hidden">
+      {/* Main column */}
+      <div className="relative z-10 flex-1 flex flex-col h-full overflow-hidden">
         <Header onMenuClick={() => setSidebarOpen(true)} onLogout={onLogout} showNotifications/>
 
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
           <Outlet context={theme} />
         </main>
       </div>

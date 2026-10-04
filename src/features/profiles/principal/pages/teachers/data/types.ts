@@ -2,10 +2,13 @@
 export interface TeacherSummary {
   teacherId: string;
   fullName: string;
+  gender: "Male" | "Female" | null;
+  avatarKey?: string | null;
   advisorySection: string | null;
   gradeLevel: string | null;
   room: string | null;
   advisories: {
+    classId?: number;
     gradeLevel: string | null;
     section: string | null;
     room: string | null;
@@ -13,6 +16,7 @@ export interface TeacherSummary {
 }
 
 export interface ScheduleEntry {
+  classId: number;
   day: string;
   time: string;
   subject: string;

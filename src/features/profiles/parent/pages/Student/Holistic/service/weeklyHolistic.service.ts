@@ -1,9 +1,10 @@
 import { API_CONFIG } from '../../../../../../../config/api.config';
-import type { WholeChildSnapshotData, HistoryEntry } from "../types/types";
+import type { WholeChildSnapshotData, HistoryEntry, SubjectHolisticSnapshot } from "../types/types";
 
 export interface StudentWeeklyEvaluationResponse {
   current: WholeChildSnapshotData;
   history: HistoryEntry[];
+  subjects: SubjectHolisticSnapshot[];
 }
 
 const API_BASE = `${API_CONFIG.baseURL}/api/weeklyHolisticEvaluation`;

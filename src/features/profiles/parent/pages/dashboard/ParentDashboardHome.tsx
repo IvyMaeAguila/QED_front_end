@@ -9,8 +9,6 @@ import { useParentDashboard } from "./context/ParentDashboardContext";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
 import { useAuth } from "../../../../auth/context/authContext"; // adjust path kung iba sa project mo
 
-const TODAY = { day: 8, month: "August", year: 2026 };
-
 interface ParentOutletContext extends AdminThemeContext {
   openLinkModal: () => void;
 }
@@ -30,21 +28,33 @@ export default function ParentDashboardHome() {
 
   const { user, isLoading: isProfileLoading } = useAuth();
 
-  return (
-    <div className="grid grid-cols-1 gap-5 xl:grid-cols-[1fr_320px]">
-      <div className="flex flex-col gap-5">
-        <WelcomeBanner
-          parentName={isProfileLoading ? "..." : (user?.name ?? "Parent")}
-          childrenCount={students.length}
-          noticesCount={dailyUpdates.length}
-          onLinkStudent={openLinkModal}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-          darkMode={darkMode}
-        />
+  const now = new Date();
+  const TODAY = {
+    day: now.getDate(),
+    month: now.toLocaleString("en-US", { month: "long" }),
+    year: now.getFullYear(),
+  };
 
+  return (
+    <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_320px]">
+      {/* Row 1: banner + date card share the same height */}
+      <WelcomeBanner
+        parentName={isProfileLoading ? "..." : (user?.name ?? "Parent")}
+        childrenCount={students.length}
+        noticesCount={dailyUpdates.length}
+        onLinkStudent={openLinkModal}
+        panelBorder={panelBorder}
+        textPrimary={textPrimary}
+        textMuted={textMuted}
+        darkMode={darkMode}
+      />
+
+      <div className="flex h-full flex-col [&>*]:flex-1">
+        <TodayDateCard {...TODAY} panelBg={panelBg} textMuted={textMuted} />
+      </div>
+
+      {/* Row 2: left column */}
+      <div className="flex flex-col gap-6">
         <OnboardingCarousel darkMode={darkMode} />
 
         <StudentsSection
@@ -59,8 +69,8 @@ export default function ParentDashboardHome() {
         />
       </div>
 
-      <div className="flex flex-col gap-5">
-        <TodayDateCard {...TODAY} panelBg={panelBg} textMuted={textMuted} />
+      {/* Row 2: right column */}
+      <div className="flex flex-col gap-6 xl:self-start">
         <DailyUpdateCard
           updates={dailyUpdates}
           isLoading={isLoadingDailyUpdates}

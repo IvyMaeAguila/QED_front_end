@@ -1,6 +1,5 @@
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Users, GraduationCap, BookOpen } from "lucide-react";
 import {
   fetchDashboardSummary,
   fetchTeacherStats,
@@ -60,20 +59,17 @@ export function TeacherDashboardHome() {
     {
       label: "Advisory Class",
       value: statsData?.advisoryClassCount ?? 0,
-      Icon: Users,
       variant: "primary",
       onClick: () => navigate("/teacher/advisory"),
     },
     {
       label: "Total Student",
       value: statsData?.totalStudents ?? 0,
-      Icon: GraduationCap,
       variant: "default",
     },
     {
       label: "Total Classes",
       value: statsData?.totalClasses ?? 0,
-      Icon: BookOpen,
       variant: "default",
     },
   ];
@@ -95,7 +91,7 @@ export function TeacherDashboardHome() {
   );
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-5 xl:gap-6">
       {loading && (
         <style>{`
           @keyframes shimmer {
@@ -105,13 +101,13 @@ export function TeacherDashboardHome() {
       )}
 
       {/* Main two-column layout: left = main content, right = date/schedule sidebar */}
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 items-start">
+      <div className="grid grid-cols-1 items-start gap-4 sm:gap-5 xl:grid-cols-[minmax(0,3fr)_minmax(280px,1fr)] xl:gap-6">
         {/* LEFT: Main content column */}
-        <div className="xl:col-span-3 flex flex-col gap-6">
+        <div className="flex min-w-0 flex-col gap-4 sm:gap-5 xl:gap-6">
           {/* Welcome Banner */}
           {loading ? (
             <div
-              className={`rounded-2xl border p-8 sm:p-10 min-h-55 ${panelBg} ${panelBorder}`}
+              className={`min-h-44 rounded-[12px] border p-5 sm:min-h-52 sm:p-6 xl:p-8 ${panelBg} ${panelBorder}`}
             >
               <Bone className="h-5 w-28 rounded-full" />
               <Bone className="mt-5 h-8 w-64" />
@@ -128,15 +124,15 @@ export function TeacherDashboardHome() {
 
           {/* Key Metrics Row */}
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4 xl:gap-5">
               {[0, 1, 2].map((i) => (
                 <div
                   key={i}
-                  className={`rounded-2xl border p-7 ${panelBg} ${panelBorder}`}
+                  className={`rounded-[12px] border p-4 sm:p-5 ${panelBg} ${panelBorder}`}
                 >
-                  <Bone className="w-14 h-14 rounded-2xl mb-6" />
-                  <Bone className="h-3 w-24 rounded-full mb-3" />
-                  <Bone className="h-9 w-16" />
+                  <Bone className="mb-4 h-11 w-11 rounded-xl" />
+                  <Bone className="mb-3 h-3 w-24 rounded-full" />
+                  <Bone className="h-8 w-16" />
                 </div>
               ))}
             </div>
@@ -153,27 +149,27 @@ export function TeacherDashboardHome() {
           {/* Today Attendance */}
           {loading ? (
             <div
-              className={`rounded-2xl border overflow-hidden ${panelBg} ${panelBorder}`}
+              className={`overflow-hidden rounded-[12px] border ${panelBg} ${panelBorder}`}
               style={{
                 boxShadow:
                   "0 4px 20px -2px rgba(0,0,0,0.05), 0 2px 10px -2px rgba(0,0,0,0.03)",
               }}
             >
               <div
-                className={`px-8 py-6 border-b flex items-center justify-between ${panelBorder}`}
+                className={`flex items-center justify-between gap-3 border-b px-4 py-4 sm:px-6 ${panelBorder}`}
               >
-                <div className="flex items-center gap-3">
-                  <Bone className="h-4.5 w-4.5 rounded-md" />
+                <div className="flex items-center gap-2.5">
+                  <Bone className="h-4 w-4 rounded-md" />
                   <Bone className="h-4 w-40" />
                 </div>
                 <Bone className="h-3 w-20" />
               </div>
 
-              <div className="p-8 grid grid-cols-1 sm:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-3 sm:gap-4 sm:p-6">
                 {[0, 1, 2].map((i) => (
                   <div
                     key={i}
-                    className={`rounded-2xl p-6 border text-center ${panelBorder}`}
+                    className={`rounded-[12px] border p-4 text-center sm:p-5 ${panelBorder}`}
                     style={{
                       background: darkMode
                         ? "rgba(255,255,255,0.02)"
@@ -202,7 +198,7 @@ export function TeacherDashboardHome() {
         </div>
 
         {/* RIGHT: Date / schedule sidebar */}
-        <div className="xl:col-span-1 flex flex-col gap-6">
+        <div className="flex min-w-0 flex-col gap-4 sm:gap-5 xl:gap-6">
           <QuickDateCard
             panelBg={panelBg}
             panelBorder={panelBorder}

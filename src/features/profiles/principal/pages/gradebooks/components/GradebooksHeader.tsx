@@ -7,7 +7,7 @@ interface GradebooksHeaderProps {
 export function GradebooksHeader({ schoolYear, textPrimary, textMuted }: GradebooksHeaderProps) {
   return (
     <div>
-      <h1 className={`text-2xl sm:text-[32px] font-black leading-tight tracking-tight ${textPrimary}`}>
+      <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>
         Gradebook
       </h1>
       <p className={`text-sm mt-2 ${textMuted}`}>

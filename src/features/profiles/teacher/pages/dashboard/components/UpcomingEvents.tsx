@@ -65,7 +65,7 @@ export function UpcomingEvents({
   const holidays = events.filter((e) => e.type === "holiday");
 
   return (
-    <div className={`rounded-xl2 p-4 sm:p-5 shadow-card ${panelBg}`}>
+    <div className={`rounded-[12px] p-4 sm:p-5 shadow-card ${panelBg}`}>
       <p
         className={`mb-2.5 sm:mb-3 flex items-center gap-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wide ${textMuted}`}
       >

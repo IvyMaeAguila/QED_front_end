@@ -49,6 +49,8 @@ function Dropdown({
         type="button"
         onClick={() => setOpen(!open)}
         onBlur={() => setTimeout(() => setOpen(false), 120)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
         className={`h-8 min-w-32 px-3 rounded-lg border text-[11px] font-bold flex items-center justify-between gap-2 transition-colors ${
           darkMode
             ? "bg-[#0B1120] border-[#374151] text-white hover:bg-[#111827]"
@@ -64,6 +66,7 @@ function Dropdown({
 
       {open && (
         <div
+          role="listbox"
           className={`absolute right-0 top-9 z-30 w-52 max-h-64 overflow-y-auto rounded-xl border p-1 shadow-lg ${
             darkMode
               ? "bg-[#111827] border-[#374151]"

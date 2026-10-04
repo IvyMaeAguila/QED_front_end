@@ -46,7 +46,7 @@ export function PerformanceByGrade({
       </div>
 
       <div className="hidden md:block overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="teacher-user-table w-full text-sm">
           <thead>
             <tr className={darkMode ? "bg-[#0B1120]" : "bg-[#F8FAFC]"}>
               {["Grade", "Academic", "Holistic", "Students", "Trend", "Status", ""].map((h) => (

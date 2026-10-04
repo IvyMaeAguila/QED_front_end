@@ -7,6 +7,7 @@ import { WholeElementaryRanking } from "./components/WholeElementaryRanking";
 import { PerGradeRanking } from "./components/PerGradeRanking";
 import { PriorityFocus } from "./components/PriorityFocus";
 import type { Term } from "./data/types";
+import { ReportMetricCards } from "./components/ReportMetricCards";
 
 export function AnalyticsPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
@@ -21,19 +22,25 @@ export function AnalyticsPage() {
     filteredRanking,
     lowestPerforming,
     loading,
+    error,
   } = useSubjectAnalytics();
 
-  return (
-    <div className="flex flex-col gap-6 font-sans">
-      <PrincipalAnalyticsTabs panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} />
+  const averageScore = wholeElementaryRanking.length
+    ? Math.round(wholeElementaryRanking.reduce((sum, item) => sum + item.score, 0) / wholeElementaryRanking.length)
+    : null;
+  const strongestSubject = wholeElementaryRanking[0];
+  const prioritySubject = lowestPerforming[0];
+  const reportMetrics = [
+    { label: "Subjects included", value: String(wholeElementaryRanking.length), detail: term },
+    { label: "School average", value: averageScore === null ? "—" : `${averageScore}%`, detail: "Mean of subject averages" },
+    { label: "Highest average", value: strongestSubject?.subject ?? "—", detail: strongestSubject ? `${strongestSubject.score}%` : "No scores recorded" },
+    { label: "Lowest average", value: prioritySubject?.subject ?? "—", detail: prioritySubject ? `${prioritySubject.score}% · review recommended` : "No scores recorded" },
+  ];
 
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={`text-2xl sm:text-[32px] font-black leading-tight tracking-tight ${textPrimary}`}>Subject Performance Analytics</h1>
-          <p className={`text-sm mt-2 ${textMuted}`}>
-            Identify which subjects need attention and which are performing well, school-wide and per grade level.
-          </p>
-        </div>
+  return (
+    <div className="flex flex-col gap-5 font-sans">
+      <div className={`flex flex-col gap-2.5 rounded-xl border px-3 py-2 sm:flex-row sm:items-center sm:justify-between ${panelBg} ${panelBorder}`}>
+        <PrincipalAnalyticsTabs textMuted={textMuted} />
         <Dropdown
           value={term}
           onChange={(v) => setTerm(v as Term)}
@@ -42,13 +49,28 @@ export function AnalyticsPage() {
           panelBorder={panelBorder}
           textPrimary={textPrimary}
           textMuted={textMuted}
+          compact
         />
       </div>
 
-      {loading ? (
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>Subject Performance Analytics</h1>
+          <p className={`mt-1 text-sm ${textMuted}`}>
+            Subject results across the school and by grade level.
+          </p>
+        </div>
+      </div>
+
+      {error ? (
+        <div role="alert" className={`rounded-xl border px-4 py-3 text-sm ${panelBorder} ${textMuted}`}>
+          Unable to load subject performance right now. Please try again later.
+        </div>
+      ) : loading ? (
         <p className={`text-sm ${textMuted}`}>Loading analytics…</p>
       ) : (
         <>
+          <ReportMetricCards items={reportMetrics} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} />
           <WholeElementaryRanking
             term={term}
             ranking={wholeElementaryRanking}
@@ -72,7 +94,7 @@ export function AnalyticsPage() {
             darkMode={darkMode}
           />
 
-          <PriorityFocus term={term} items={lowestPerforming} panelBg={panelBg} textPrimary={textPrimary} textMuted={textMuted} darkMode={darkMode} />
+          <PriorityFocus term={term} items={lowestPerforming} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} darkMode={darkMode} />
         </>
       )}
     </div>

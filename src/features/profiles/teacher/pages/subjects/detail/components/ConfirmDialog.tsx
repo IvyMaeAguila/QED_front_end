@@ -34,12 +34,13 @@ export function ConfirmDialog({
       <div
         role="dialog"
         aria-modal="true"
-        className={`w-full max-w-sm overflow-hidden rounded-2xl border shadow-card ${panelBorder} ${
+        className={`w-full max-w-md overflow-hidden rounded-2xl border border-t-4 border-t-[#800000] shadow-card ${panelBorder} ${
           darkMode ? "bg-[#111827]" : "bg-white"
         }`}
+        style={{ borderTopColor: "#800000" }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className={`flex items-start gap-3 border-b px-4 py-3 ${panelBorder}`}>
+        <div className={`flex items-start gap-3 border-b px-5 py-4 ${panelBorder}`}>
           <span
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
             style={{ backgroundColor: danger ? "#FEE2E2" : "#F8EDEE", color: danger ? "#DC2626" : ACCENT }}
@@ -47,8 +48,8 @@ export function ConfirmDialog({
             <AlertTriangle size={15} />
           </span>
           <div className="min-w-0 flex-1">
-            <p className={`text-xs font-bold ${textPrimary}`}>{title}</p>
-            <p className={`mt-0.5 text-[11px] font-medium ${textMuted}`}>{message}</p>
+            <p className={`text-sm font-bold ${textPrimary}`}>{title}</p>
+            <p className={`mt-1 text-xs font-medium ${textMuted}`}>{message}</p>
           </div>
           <button
             onClick={onCancel}
@@ -61,7 +62,7 @@ export function ConfirmDialog({
           </button>
         </div>
 
-        <div className="flex justify-end gap-2 px-4 py-3">
+        <div className="flex justify-end gap-2 px-5 py-4">
           <button
             onClick={onCancel}
             className={`flex h-8 items-center rounded-lg border px-3 text-[11px] font-bold transition-colors ${

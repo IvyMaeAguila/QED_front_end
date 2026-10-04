@@ -51,7 +51,7 @@ export function ClassesPage() {
   }
 
   return (
-    <div className="w-full min-h-full space-y-4 px-6 pb-12 pt-6 lg:px-8">
+    <div className="w-full min-h-full space-y-6 pb-12">
       {/* Page header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-2.5">

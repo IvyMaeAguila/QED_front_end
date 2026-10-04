@@ -24,7 +24,7 @@ export function PeriodicRatingCard({ rows, termAverages, theme, student }: Perio
       />
 
       <div className="mt-4 overflow-x-auto">
-        <table className="w-full min-w-[420px] border-collapse text-sm">
+        <table className="teacher-user-table w-full min-w-[420px] border-collapse text-sm">
           <thead>
             <tr className={darkMode ? "bg-white/5" : "bg-[#F6F7FB]"}>
               <th className={`px-3 py-2 text-left text-[11px] font-semibold uppercase ${textMuted}`}>

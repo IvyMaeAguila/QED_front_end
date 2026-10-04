@@ -1,4 +1,4 @@
-import { CalendarDays, Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { ACCENT } from "../types/types";
 import type { AcademicYear } from "../types/academicyear";
 import { StatusBadge } from "./StatusBadge";
@@ -35,22 +35,19 @@ export function AcademicYearCard({
   onEdit,
 }: AcademicYearCardProps) {
   // ── Shared design tokens (same as StudentFormPage) ──
-  const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
-  const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
+  const cardClasses = `rounded-[12px] border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
+  const cardHeaderClasses = `px-5 py-3 flex items-center justify-between border-b sm:px-6 ${panelBorder}`;
   const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
-  const labelClasses = `text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
+  const labelClasses = `text-[11px] font-bold uppercase tracking-wide mb-1 ${textMuted}`;
 
   return (
     <section className={cardClasses}>
       <div className={cardHeaderClasses}>
-        <h2 className={sectionTitleClasses}>
-          <CalendarDays size={15} style={{ color: ACCENT }} />
-          School Year Details
-        </h2>
+        <h2 className={sectionTitleClasses}>School Year Details</h2>
         <button
           type="button"
           onClick={onEdit}
-          className={`h-9 px-4 rounded-xl text-xs font-bold inline-flex items-center gap-2 border transition-colors ${
+          className={`h-9 px-4 rounded-lg text-xs font-bold inline-flex items-center gap-2 border transition-colors ${
             darkMode
               ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
               : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
@@ -61,7 +58,7 @@ export function AcademicYearCard({
         </button>
       </div>
 
-      <dl className="p-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <dl className="grid gap-4 px-5 py-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
         <div>
           <dt className={labelClasses}>School Year</dt>
           <dd className={`text-lg font-black tracking-tight ${textPrimary}`}>

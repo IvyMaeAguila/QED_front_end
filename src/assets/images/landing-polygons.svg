@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" preserveAspectRatio="none">
+  <g fill="#F8F5F5" fill-opacity=".38" stroke="#8B6C6C" stroke-opacity=".11" stroke-width="1">
+    <path d="M0 0h200l-100 150z" fill="#fff"/>
+    <path d="M200 0h200L250 120 100 150z"/>
+    <path d="m400 0 200 0-100 160-250-40z" fill="#fff"/>
+    <path d="M600 0h200L700 130 500 160z"/>
+    <path d="m800 0h200L900 170 700 130z" fill="#fff"/>
+    <path d="M1000 0h200v150l-300 20z"/>
+    <path d="m0 0 100 150L0 300z"/>
+    <path d="m100 150 150-30 50 160L0 300z" fill="#fff"/>
+    <path d="m250 120 250 40-100 160-100-40z"/>
+    <path d="m500 160 200-30-50 160-250 30z" fill="#fff"/>
+    <path d="m700 130 200 40-50 140-200-20z"/>
+    <path d="m900 170 300-20v200l-350-40z" fill="#fff"/>
+    <path d="m0 300 300-20-150 220L0 550z" fill="#fff"/>
+    <path d="m300 280 100 40 50 160-300 20z"/>
+    <path d="m400 320 250-30-50 230-150-40z" fill="#fff"/>
+    <path d="m650 290 200 20-50 180-200 30z"/>
+    <path d="m850 310 350 40v200l-400-60z" fill="#fff"/>
+    <path d="m0 550 150-50 150 180L0 800z"/>
+    <path d="m150 500 300-20 50 220-200-20z" fill="#fff"/>
+    <path d="m450 480 150 40 100 140-200 40z"/>
+    <path d="m600 520 200-30 100 190-200-20z" fill="#fff"/>
+    <path d="m800 490 400 60v250l-300-120z"/>
+  </g>
+</svg>

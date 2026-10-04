@@ -39,7 +39,7 @@ export function AttendanceRecordCard({ record, theme, student }: AttendanceRecor
 
       <div className="mt-4 flex flex-col gap-4 lg:flex-row">
         <div className="flex-[2] overflow-x-auto">
-          <table className="w-full min-w-[420px] border-collapse text-sm">
+          <table className="teacher-user-table w-full min-w-[420px] border-collapse text-sm">
             <thead>
               <tr className={darkMode ? "bg-white/5" : "bg-[#F6F7FB]"}>
                 <th className={`px-3 py-2 text-left text-[11px] font-semibold uppercase ${textMuted}`}>Month</th>

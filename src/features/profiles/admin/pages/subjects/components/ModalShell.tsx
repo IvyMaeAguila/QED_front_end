@@ -10,6 +10,7 @@ interface ModalShellProps extends SubjectsTheme {
   onClose: () => void;
   children: React.ReactNode;
   closeDisabled?: boolean;
+  widthClass?: string;
 }
 
 export function ModalShell({
@@ -19,7 +20,11 @@ export function ModalShell({
   children,
   panelBg,
   panelBorder,
+  textPrimary,
+  textMuted,
+  darkMode,
   closeDisabled = false,
+  widthClass = "max-w-md",
 }: ModalShellProps) {
   return (
     <div
@@ -27,34 +32,35 @@ export function ModalShell({
       onClick={closeDisabled ? undefined : onClose}
     >
       <div
-        className={`my-auto flex max-h-[calc(100dvh-1.5rem)] w-full max-w-md flex-col overflow-hidden rounded-2xl border shadow-xl ${panelBg} ${panelBorder}`}
+        role="dialog"
+        aria-modal="true"
+        className={`my-auto flex max-h-[88dvh] w-full ${widthClass} flex-col overflow-hidden rounded-[12px] border shadow-xl ${panelBg} ${panelBorder}`}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+        <div className="h-1.5 w-full shrink-0" style={{ backgroundColor: ACCENT }} />
         <div
-          className="flex shrink-0 items-center justify-between overflow-hidden rounded-t-2xl px-5 py-4"
-          style={{ background: ACCENT }}
+          className={`flex shrink-0 items-center justify-between gap-4 border-b px-5 py-4 sm:px-8 sm:py-5 ${panelBorder}`}
         >
-          <h3 className="text-white font-bold text-sm flex items-center gap-2">
-            <Icon size={15} />
+          <h3 className={`flex min-w-0 items-center gap-2 text-base font-bold ${textPrimary}`}>
+            <Icon size={16} className="shrink-0 text-maroon" />
             {title}
           </h3>
 
           <button
             onClick={closeDisabled ? undefined : onClose}
             disabled={closeDisabled}
-            className={`w-7 h-7 rounded-lg flex items-center justify-center bg-white/10 transition-colors ${
+            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border transition-colors ${panelBorder} ${textMuted} ${
               closeDisabled
-                ? "opacity-40 cursor-not-allowed"
-                : "hover:bg-white/20"
+                ? "cursor-not-allowed opacity-40"
+                : darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
             }`}
           >
-            <X size={14} className="text-white" />
+            <X size={16} className="text-current" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="min-h-0 overflow-y-auto overscroll-contain p-5 space-y-4">
+        <div className="min-h-0 overflow-y-auto overscroll-contain p-4 sm:p-6 space-y-4">
           {children}
         </div>
       </div>

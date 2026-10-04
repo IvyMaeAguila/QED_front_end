@@ -8,7 +8,6 @@ import {
 } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import {
-  BookOpen,
   Loader2,
   ArrowLeft,
   CheckCircle,
@@ -17,6 +16,7 @@ import {
   FileSpreadsheet,
 } from "lucide-react";
 import type { AdminThemeContext } from "./../AdminLayout";
+import { WorkflowStepper } from "../../../shared/components/WorkflowStepper";
 import { ACCENT, GRADE_LEVEL_IDS, type GradeLevel } from "./types/types";
 import { useGradeLevels } from "./context/gradeLevelsContext";
 import { useSubjectsCatalog } from "./context/SubjectsCatalogContext";
@@ -39,6 +39,11 @@ import AdminFeedbackModal from "../../modal/adminFeedbackModal";
 // existing addSubjectApi contract.
 const [WW_CATEGORY_NAME, PT_CATEGORY_NAME, EX_CATEGORY_NAME] =
   DEFAULT_ASSESSMENT_TYPES.map((type) => type.name);
+const SUBJECT_FORM_STEPS = [
+  { name: "Details", desc: "Choose grade and subject name" },
+  { name: "Grading", desc: "Select grading and template" },
+  { name: "Review", desc: "Confirm the subject details" },
+] as const;
 
 function formatGroup(group: ParsedGradeTemplate["ww"]): string {
   if (group.domains.length === 1) return `${group.weightPercent}%`;
@@ -60,6 +65,7 @@ export function AddSubjectPage() {
   const [gradeLevel, setGradeLevel] = useState<GradeLevel | "">("");
   const [name, setName] = useState("");
   const [isGraded, setIsGraded] = useState<boolean | null>(null);
+  const [currentStep, setCurrentStep] = useState(0);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -172,13 +178,13 @@ export function AddSubjectPage() {
     setIsDragOver(false);
   }
 
-  const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
-  const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
-  const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
-  const subCardClasses = `rounded-xl border p-4 space-y-3 ${darkMode ? "border-[#374151] bg-[#0B1120]/60" : "border-[#E5E7EB] bg-[#F8FAFC]"}`;
+  const cardClasses = `rounded-[12px] border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
+  const cardHeaderClasses = `flex flex-col gap-2 border-b px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 ${panelBorder}`;
+  const sectionTitleClasses = `text-xl font-black tracking-tight ${textPrimary}`;
+  const subCardClasses = `rounded-[12px] border p-4 space-y-3 ${darkMode ? "border-[#374151] bg-[#0B1120]/60" : "border-[#E5E7EB] bg-[#F8FAFC]"}`;
   const subCardLabelClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2 ${textPrimary}`;
 
-  const inputClasses = `w-full h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors ${darkMode ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]" : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"}`;
+  const inputClasses = `w-full h-10 px-3 rounded-lg border text-sm font-semibold outline-none transition-colors ${darkMode ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]" : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"}`;
   const disabledInputClasses = `${inputClasses} opacity-60 cursor-not-allowed placeholder:text-current`;
   const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
   const noGradeSelected = gradeLevel === "";
@@ -212,8 +218,18 @@ export function AddSubjectPage() {
     !noGradingTypeSelected &&
     templateSatisfied;
 
+  const canAdvance = currentStep === 0
+    ? !noGradeSelected && trimmedName !== "" && !isDuplicate
+    : currentStep === 1
+      ? !noGradingTypeSelected && templateSatisfied && !templateParsing
+      : canSubmit;
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    if (currentStep < SUBJECT_FORM_STEPS.length - 1) {
+      if (canAdvance) setCurrentStep((step) => step + 1);
+      return;
+    }
     if (gradeLevel === "" || !canSubmit) return;
 
     setIsSubmitting(true);
@@ -317,33 +333,39 @@ export function AddSubjectPage() {
       ) : null}
       <section className={cardClasses}>
         <div className={cardHeaderClasses}>
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <button
               type="button"
               onClick={() => navigate("/admin/subjects")}
               disabled={isSubmitting}
-              className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+              className={`system-back-button shrink-0 disabled:cursor-not-allowed disabled:opacity-50 ${
                 darkMode
                   ? "border-[#374151] hover:bg-white/10 text-white"
                   : "border-[#E5E7EB] hover:bg-[#F6F7FB] text-[#374151]"
               }`}
             >
-              <ArrowLeft size={14} />
+              <ArrowLeft />
             </button>
-            <h2 className={sectionTitleClasses}>
-              <BookOpen size={15} style={{ color: ACCENT }} />
-              Add New Subject
-            </h2>
+            <div className="min-w-0">
+              <h1 className={sectionTitleClasses}>Add New Subject</h1>
+              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+                This subject will be assigned the next available ID
+              </p>
+            </div>
           </div>
-          <span className={`text-xs font-semibold ${textMuted}`}>
-            This subject will be assigned the next available ID
-          </span>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8 items-start">
-        <div className="space-y-5 min-w-0">
+        <form onSubmit={handleSubmit} className="grid w-full gap-4 p-4 sm:p-6 md:grid-cols-[16rem_minmax(0,1fr)]">
+          <aside className={`rounded-[12px] p-4 sm:p-5 ${darkMode ? "bg-[#0B1120]/60" : "bg-[#F8FAFC]"}`}>
+            <h3 className={`mb-4 text-sm font-semibold md:mb-6 ${textPrimary}`}>Add Subject</h3>
+            <WorkflowStepper darkMode={darkMode} current={currentStep} steps={SUBJECT_FORM_STEPS} />
+          </aside>
+
+          <div className={`min-w-0 space-y-5 rounded-[12px] border p-4 sm:p-6 ${panelBorder} md:col-start-2`}>
+        <div className={currentStep === 1 ? "grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.4fr)] xl:gap-8" : "w-full"}>
+        <div className="min-w-0 space-y-5">
           <div className="space-y-5">
+            {currentStep === 0 && <div className="grid max-w-3xl gap-4 sm:grid-cols-2">
             <div>
               <label className={labelClasses}>Grade Level</label>
               <select
@@ -387,15 +409,17 @@ export function AddSubjectPage() {
                 </p>
               )}
             </div>
+            </div>}
 
+            {currentStep === 1 && <>
             <div>
               <label className={labelClasses}>Grading Type</label>
-              <div className="flex gap-2">
+              <div className="flex flex-col gap-2 sm:flex-row">
                 <button
                   type="button"
                   onClick={() => handleGradingTypeChange(true)}
                   disabled={isSubmitting || noGradeSelected}
-                  className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${isGraded === true ? "text-white border-transparent" : darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"}`}
+                  className={`flex-1 h-10 rounded-lg text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${isGraded === true ? "text-white border-transparent" : darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"}`}
                   style={isGraded === true ? { background: ACCENT } : undefined}
                 >
                   Graded
@@ -405,18 +429,19 @@ export function AddSubjectPage() {
                   type="button"
                   onClick={() => handleGradingTypeChange(false)}
                   disabled={isSubmitting || noGradeSelected}
-                  className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${isGraded === false ? "text-white border-transparent" : darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"}`}
+                  className={`flex-1 h-10 rounded-lg text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${isGraded === false ? "text-white border-transparent" : darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"}`}
                   style={isGraded === false ? { background: ACCENT } : undefined}
                 >
                   Non-graded
                 </button>
               </div>
             </div>
+            </>}
           </div>
         </div>
 
-        <div className={`${subCardClasses} lg:sticky lg:top-6`}>
-          <div className="flex items-center justify-between">
+        {currentStep === 1 && <div className={`${subCardClasses} lg:sticky lg:top-6`}>
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <span className={subCardLabelClasses}>
               <FileSpreadsheet size={14} style={{ color: ACCENT }} />
               Official DepEd Grade Template
@@ -453,7 +478,7 @@ export function AddSubjectPage() {
               onDragOver={(e) => templateActive && handleTemplateDragOver(e)}
               onDragLeave={handleTemplateDragLeave}
               onDrop={(e) => templateActive && handleTemplateDrop(e)}
-              className={`rounded-xl border-2 border-dashed py-8 px-4 flex flex-col items-center justify-center gap-2.5 text-center transition-colors ${
+              className={`flex min-h-36 flex-col items-center justify-center gap-2.5 rounded-[12px] border-2 border-dashed px-4 py-6 text-center transition-colors sm:min-h-40 sm:py-8 ${
                 !templateActive || templateParsing
                   ? "opacity-70 cursor-not-allowed"
                   : "cursor-pointer"
@@ -488,7 +513,7 @@ export function AddSubjectPage() {
                       e.stopPropagation();
                       fileInputRef.current?.click();
                     }}
-                    className="h-9 px-6 rounded-full text-xs font-bold text-white bg-[#2F6FED] hover:bg-[#2557C7] transition-colors"
+                    className="h-9 px-6 rounded-lg text-xs font-bold text-white bg-[#2F6FED] hover:bg-[#2557C7] transition-colors"
                   >
                     Browse
                   </button>
@@ -542,14 +567,35 @@ export function AddSubjectPage() {
             )}
           </div>
         </div>
+        }
         </div>
 
-          <div className="flex gap-3 pt-6">
+          {currentStep === 2 && (
+            <section className={`rounded-[12px] border p-4 sm:p-5 ${panelBorder} ${darkMode ? "bg-white/[0.03]" : "bg-[#F8FAFC]"}`} aria-labelledby="subject-review-title">
+              <h3 id="subject-review-title" className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>Review subject</h3>
+              <dl className="mt-4 grid gap-x-6 gap-y-4 sm:grid-cols-2">
+                {[
+                  ["Grade level", gradeLevel || "—"],
+                  ["Subject name", trimmedName || "—"],
+                  ["Grading type", isGraded ? "Graded" : isGraded === false ? "Non-graded" : "—"],
+                  ["Grade template", isGraded ? templateFileName || "Not selected" : "Not required"],
+                ].map(([label, value]) => (
+                  <div key={label} className="min-w-0">
+                    <dt className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>{label}</dt>
+                    <dd className={`mt-1 break-words text-sm font-semibold ${textPrimary}`}>{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          )}
+
+          <div className="flex flex-col-reverse gap-2 pt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:pt-5">
+            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:gap-3">
             <button
               type="button"
               onClick={() => navigate("/admin/subjects")}
               disabled={isSubmitting}
-              className={`h-10 px-4 rounded-xl text-xs font-bold border transition-colors ${
+              className={`h-10 w-full rounded-lg border px-4 text-xs font-bold transition-colors sm:w-auto ${
                 darkMode
                   ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
                   : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
@@ -557,17 +603,29 @@ export function AddSubjectPage() {
             >
               Cancel
             </button>
+            {currentStep > 0 && (
+              <button
+                type="button"
+                onClick={() => setCurrentStep((step) => step - 1)}
+                disabled={isSubmitting}
+                className={`h-10 w-full rounded-lg border px-4 text-xs font-bold transition-colors disabled:opacity-50 sm:w-auto ${darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"}`}
+              >
+                Back
+              </button>
+            )}
+            </div>
             <button
               type="submit"
-              disabled={!canSubmit}
-              className={`h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 transition-colors ${
-                !canSubmit ? "opacity-50 cursor-not-allowed" : "hover:bg-[#6B0000]"
+              disabled={!canAdvance || isSubmitting}
+              className={`inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg px-4 text-xs font-bold text-white transition-colors sm:w-auto ${
+                !canAdvance || isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-[#6B0000]"
               }`}
               style={{ background: ACCENT }}
             >
               {isSubmitting && <Loader2 size={14} className="animate-spin" />}
-              {isSubmitting ? "Saving..." : "Add Subject"}
+              {currentStep < SUBJECT_FORM_STEPS.length - 1 ? "Continue" : isSubmitting ? "Saving..." : "Add Subject"}
             </button>
+          </div>
           </div>
         </form>
       </section>
@@ -590,7 +648,7 @@ export function AddSubjectPage() {
           <button
             type="button"
             onClick={closeFeedbackModal}
-            className="h-9 px-4 rounded-xl text-xs font-bold text-white transition-colors hover:bg-[#6B0000]"
+            className="h-9 px-4 rounded-lg text-xs font-bold text-white transition-colors hover:bg-[#6B0000]"
             style={{ background: ACCENT }}
           >
             OK

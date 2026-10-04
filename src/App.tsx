@@ -4,18 +4,21 @@ import { AuthProvider } from "./features/auth/context/authContext";
 import { ToastProvider } from "./shared/context/ToastContext";
 import { NotificationProvider } from "@shared/notification/NotificationContext";
 import { ForceChangePasswordGate } from "@shared/components/manage_password/ForceChangePasswordGate";
+import { SettingsProvider } from "./features/profiles/admin/pages/settings/context/SettingsContext";
 
 export default function App() {
   return (
     <BrowserRouter>
-      <ToastProvider>
-        <AuthProvider>
-          <NotificationProvider>
-            <AppRouter />
-            <ForceChangePasswordGate />
-          </NotificationProvider>
-        </AuthProvider>
-      </ToastProvider>
+      <AuthProvider>
+        <SettingsProvider>
+          <ToastProvider>
+            <NotificationProvider>
+              <AppRouter />
+              <ForceChangePasswordGate />
+            </NotificationProvider>
+          </ToastProvider>
+        </SettingsProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
