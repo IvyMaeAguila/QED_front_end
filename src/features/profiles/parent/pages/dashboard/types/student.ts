@@ -14,22 +14,23 @@ export interface Student {
   middleInitial?: string;
   lastName: string;
   fullName?: string;
-  gradeLevel: string; 
-  section: string; 
+  gender?: string;
+  gradeLevel: string;
+  section: string;
   adviser: string;
   avatarUrl?: string;
-  attendanceRate?: number | null; 
+  attendanceRate?: number | null;
   attendanceStatus?: AttendanceStatus;
-  overallScore?: number | null; 
+  overallScore?: number | null;
   performanceStatus?: PerformanceStatus;
-  linked?: boolean; 
+  linked?: boolean;
 }
 
 export interface DailyUpdate {
   id: string;
   studentId: string;
   studentName: string;
-  time: string; 
+  time: string;
   message: string;
 }
 
@@ -49,11 +50,12 @@ export interface LinkStudentInput {
 }
 
 export interface MatchedStudentRecord {
-  id: number;          
+  id: number;
   idNumber: string;
-  lastName: string; 
-  firstName: string;     
+  lastName: string;
+  firstName: string;
   fullName: string;
+  gender?: string;
   gradeLevel: string;
   section: string;
   adviser: string;

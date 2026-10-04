@@ -286,7 +286,7 @@ export function SubjectRecordsPage() {
     <button
       onClick={() => navigate(-1)}
       aria-label="Go back"
-      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted} ${
+      className={`system-back-button flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted} ${
         darkMode ? "hover:bg-white/10 hover:text-white" : "hover:bg-black/5 hover:text-black"
       }`}
     >
@@ -297,7 +297,7 @@ export function SubjectRecordsPage() {
   if (!state) {
     return (
       <div className="w-full min-h-full pb-12">
-        <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
+        <div className="w-full space-y-6">
           <div className="flex items-start gap-2.5">
             {backButton}
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-maroon">
@@ -338,7 +338,7 @@ export function SubjectRecordsPage() {
 
   return (
     <div className="w-full min-h-full pb-0">
-      <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
+      <div className="w-full space-y-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2.5">
             {backButton}

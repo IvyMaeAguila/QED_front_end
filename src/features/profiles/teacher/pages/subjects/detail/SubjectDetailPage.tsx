@@ -33,6 +33,13 @@ import {
 } from "../services/subjectDetailCache.service";
 import { getEffectiveWeightsSafe } from "../services/subjectGradeTemplate.service";
 
+function currentSchoolYearLabel(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const startYear = now.getMonth() >= 5 ? year : year - 1;
+  return `School Year ${startYear}-${startYear + 1}`;
+}
+
 export function SubjectDetailPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
@@ -42,7 +49,6 @@ export function SubjectDetailPage() {
   const [activeTab, setActiveTab] = useState<SubjectDetailTab>("writtenWorks");
 
   const [subjectName, setSubjectName] = useState<string>("");
-  const [subjectCode, setSubjectCode] = useState<string>("");
 
   const [gradeLevel, setGradeLevel] = useState<string>("");
   const [roster, setRoster] = useState<RosterStudent[]>([]);
@@ -112,7 +118,6 @@ export function SubjectDetailPage() {
     const cached = getCachedSubjectDetail(subjectId);
     if (cached) {
       setSubjectName(cached.subjectName);
-      setSubjectCode(cached.subjectCode);
       setGradeLevel(cached.gradeLevel);
       setRoster(cached.roster);
       setItems(cached.items);
@@ -166,7 +171,6 @@ export function SubjectDetailPage() {
       const nextAdviserName = info.adviserName;
 
       setSubjectName(nextSubjectName);
-      setSubjectCode(nextSubjectCode);
       setGradeLevel(nextGradeLevel);
       setRoster(nextRoster);
       setIsOwnAdvisory(nextIsOwnAdvisory);
@@ -384,7 +388,7 @@ export function SubjectDetailPage() {
           }
         `}</style>
 
-        <div className="w-full px-6 lg:px-8 pt-6 space-y-6">
+        <div className="w-full space-y-6">
           <div className="flex items-start gap-2.5">
             <div
               className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border opacity-30 ${panelBg} ${panelBorder}`}
@@ -432,7 +436,7 @@ export function SubjectDetailPage() {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full min-w-max text-sm">
+              <table className="teacher-user-table w-full min-w-max text-sm">
                 <thead>
                   <tr className={darkMode ? "bg-white/3" : "bg-[#F8FAFC]"}>
                     <th
@@ -475,11 +479,11 @@ export function SubjectDetailPage() {
   if (error) {
     return (
       <div className="w-full min-h-full pb-12">
-        <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
+        <div className="w-full space-y-6">
           <button
             onClick={() => navigate(-1)}
             aria-label="Go back"
-            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted} ${
+            className={`system-back-button flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted} ${
               darkMode ? "hover:bg-white/10 hover:text-white" : "hover:bg-black/5 hover:text-black"
             }`}
           >
@@ -497,7 +501,7 @@ export function SubjectDetailPage() {
 
   if (!subjectId) {
     return (
-      <div className={`w-full min-h-full px-6 lg:px-8 pt-6 ${textPrimary}`}>
+      <div className={`w-full min-h-full ${textPrimary}`}>
         No subject selected.
       </div>
     );
@@ -507,12 +511,12 @@ export function SubjectDetailPage() {
 
   return (
     <div className="w-full min-h-full pb-0">
-      <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
+      <div className="w-full space-y-6">
         <div className="flex items-start gap-2.5">
           <button
             onClick={handleBack}
             aria-label="Go back"
-            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted} ${
+            className={`system-back-button flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted} ${
               darkMode ? "hover:bg-white/10 hover:text-white" : "hover:bg-black/5 hover:text-black"
             }`}
           >
@@ -525,7 +529,7 @@ export function SubjectDetailPage() {
               {subjectName}
             </h1>
             <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
-              {subjectCode}
+              {currentSchoolYearLabel()}
             </p>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Bell, CheckCircle2, ClipboardX, Info, XCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useNotifications } from "./NotificationContext";
@@ -102,8 +103,48 @@ export function NotificationBell() {
   const { darkMode } = useSettings();
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<Tab>("today");
+  const [panelPosition, setPanelPosition] = useState<{
+    top: number;
+    left: number;
+    width: number;
+    arrowLeft: number;
+  } | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!open) return;
+
+    const positionPanel = () => {
+      const trigger = ref.current?.querySelector("button");
+      if (!trigger) return;
+
+      const anchor = trigger.getBoundingClientRect();
+      const viewportPadding = 12;
+      const width = Math.min(416, window.innerWidth - viewportPadding * 2);
+      const left = Math.max(viewportPadding, window.innerWidth - width - viewportPadding);
+      const panelMaxHeight = Math.min(512, window.innerHeight - viewportPadding * 2);
+      const top = Math.max(
+        viewportPadding,
+        Math.min(anchor.bottom + 8, window.innerHeight - panelMaxHeight - viewportPadding),
+      );
+      const arrowLeft = Math.max(
+        16,
+        Math.min(width - 16, anchor.left + anchor.width / 2 - left),
+      );
+
+      setPanelPosition({ top, left, width, arrowLeft });
+    };
+
+    positionPanel();
+    window.addEventListener("resize", positionPanel);
+    window.addEventListener("scroll", positionPanel, true);
+    return () => {
+      window.removeEventListener("resize", positionPanel);
+      window.removeEventListener("scroll", positionPanel, true);
+    };
+  }, [open]);
 
   const handleClick = (n: Notification) => {
     if (!n.isRead) markAsRead(n.id);
@@ -118,7 +159,11 @@ export function NotificationBell() {
   useEffect(() => {
     if (!open) return;
     const onClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node))
+      const target = e.target as Node;
+      if (
+        !ref.current?.contains(target) &&
+        !panelRef.current?.contains(target)
+      )
         setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
@@ -181,16 +226,26 @@ export function NotificationBell() {
         )}
       </button>
 
-      {open && (
-        <div className="fixed left-3 right-5 top-16 z-50 sm:left-auto sm:right-11 sm:w-104">
+      {open && panelPosition && createPortal(
+        <div
+          ref={panelRef}
+          className="fixed z-[1000]"
+          style={{
+            top: panelPosition.top,
+            left: panelPosition.left,
+            width: panelPosition.width,
+          }}
+        >
           <span
             aria-hidden
-            className={`hidden sm:block absolute -top-1.5 right-4 h-3 w-3 rotate-45 border-l border-t ${panelBg} ${panelBorder}`}
+            className={`hidden sm:block absolute -top-1.5 h-3 w-3 -translate-x-1/2 rotate-45 border-l border-t ${panelBg} ${panelBorder}`}
+            style={{ left: panelPosition.arrowLeft }}
           />
 
           <div
             role="dialog"
             aria-label="Notifications"
+            data-notification-panel="true"
             className={`relative flex max-h-128 flex-col overflow-hidden rounded-2xl border shadow-xl ${panelBg} ${panelBorder} ${text}`}
           >
             <div className="px-5 pt-5">
@@ -290,7 +345,8 @@ export function NotificationBell() {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );

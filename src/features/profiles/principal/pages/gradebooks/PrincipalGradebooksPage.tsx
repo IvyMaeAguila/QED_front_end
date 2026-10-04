@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
 import { usePrincipalGradebooks } from "./hooks/usePrincipalGradebooks";
@@ -5,6 +6,10 @@ import { DashboardStatus } from "./components/DashboardStatus";
 import { GradebooksHeader } from "./components/GradebooksHeader";
 import { GradeLevelCards } from "./components/GradeLevelCards";
 import { Skeleton } from "@shared/components/SkeletonLoading";
+import { GradeLevelSearchInput } from "../students/components/GradeLevelSearchInput";
+import { GradeLevelFilterDropdown } from "../students/components/GradeLevelFilterDropdown";
+
+type GroupMode = "grade" | "all";
 
 function GradebooksSkeleton() {
   return (
@@ -26,12 +31,47 @@ function GradebooksSkeleton() {
 }
 
 export function PrincipalGradebooksPage() {
-  const { panelBg, panelBorder, textPrimary, textMuted } =
-    useOutletContext<AdminThemeContext>();
+  const theme = useOutletContext<AdminThemeContext>();
+  const { panelBg, panelBorder, textPrimary, textMuted } = theme;
   const navigate = useNavigate();
 
   const { gradeLevels, schoolYear, loading, error } =
     usePrincipalGradebooks();
+  const [search, setSearch] = useState("");
+  const [gradeFilter, setGradeFilter] = useState("All Grades");
+  const [sectionFilter, setSectionFilter] = useState("All Sections");
+  const [groupMode, setGroupMode] = useState<GroupMode>("grade");
+
+  const gradeOptions = useMemo(() => [
+    "All Grades",
+    ...Array.from(new Set(gradeLevels.map((item) => item.grade).filter(Boolean))),
+  ], [gradeLevels]);
+  const sectionOptions = useMemo(() => [
+    "All Sections",
+    ...Array.from(new Set(gradeLevels.map((item) => item.section).filter(Boolean))),
+  ], [gradeLevels]);
+  const filtered = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return gradeLevels.filter((item) => {
+      if (gradeFilter !== "All Grades" && item.grade !== gradeFilter) return false;
+      if (sectionFilter !== "All Sections" && item.section !== sectionFilter) return false;
+      return !query || `${item.grade} ${item.section}`.toLowerCase().includes(query);
+    });
+  }, [gradeLevels, gradeFilter, sectionFilter, search]);
+  const groups = useMemo(() => {
+    const byGroup = new Map<string, typeof filtered>();
+    for (const item of filtered) {
+      const key = item.grade;
+      if (!byGroup.has(key)) byGroup.set(key, []);
+      byGroup.get(key)!.push(item);
+    }
+    return Array.from(byGroup.entries()).sort(([left], [right]) =>
+      left.localeCompare(right, undefined, { numeric: true }),
+    );
+  }, [filtered]);
+
+  const toggleClass = (active: boolean) =>
+    `h-6 rounded-md px-2.5 text-[10px] font-bold transition-colors ${active ? "bg-[#800000] text-white" : `${textMuted} ${theme.darkMode ? "hover:text-white" : "hover:text-gray-700"}`}`;
 
   if (loading) {
     return <GradebooksSkeleton />;
@@ -54,26 +94,96 @@ export function PrincipalGradebooksPage() {
           textMuted={textMuted}
         />
       ) : (
-        <GradeLevelCards
-          gradeLevels={gradeLevels}
-          panelBg={panelBg}
-          onSelectGrade={(summary) => {
-            if (!summary.isSubmitted || summary.gradingPeriodId === null)
-              return;
+        <>
+          <GradeLevelSearchInput
+            darkMode={theme.darkMode}
+            panelBg={panelBg}
+            panelBorder={panelBorder}
+            value={search}
+            onChange={setSearch}
+          >
+            <GradeLevelFilterDropdown
+              label="Grade level filter"
+              value={gradeFilter}
+              options={gradeOptions}
+              onChange={setGradeFilter}
+              darkMode={theme.darkMode}
+            />
+            <GradeLevelFilterDropdown
+              label="Section filter"
+              value={sectionFilter}
+              options={sectionOptions}
+              onChange={setSectionFilter}
+              darkMode={theme.darkMode}
+            />
+            <div
+              className={`flex items-center rounded-lg border p-0.5 ${theme.darkMode ? "border-white/10 bg-white/5" : "border-gray-200 bg-gray-50"}`}
+              role="group"
+              aria-label="Gradebook view"
+            >
+              <button type="button" onClick={() => setGroupMode("grade")} aria-pressed={groupMode === "grade"} className={toggleClass(groupMode === "grade")}>By Grade Level</button>
+              <button type="button" onClick={() => setGroupMode("all")} aria-pressed={groupMode === "all"} className={toggleClass(groupMode === "all")}>All</button>
+            </div>
+          </GradeLevelSearchInput>
 
-            const params = new URLSearchParams({
-              gradeLevelId: String(summary.gradeLevelId),
-              gradingPeriodId: String(summary.gradingPeriodId),
-            });
-            if (summary.sectionId)
-              params.set("sectionId", String(summary.sectionId));
-
-            navigate(
-              `/principal/gradebooks/${encodeURIComponent(summary.grade)}?${params}`,
-            );
-          }}
-        />
+          <div className={`rounded-2xl border shadow-card ${panelBg} ${panelBorder}`}>
+            {filtered.length === 0 ? (
+              <p className={`px-4 py-10 text-center text-xs font-medium ${textMuted}`}>
+                No gradebooks match your search or filters.
+              </p>
+            ) : groupMode === "all" ? (
+              <div className="p-4">
+                <GradeLevelCards
+                  gradeLevels={filtered}
+                  schoolYear={schoolYear}
+                  darkMode={theme.darkMode}
+                  panelBg={panelBg}
+                  panelBorder={panelBorder}
+                  textPrimary={textPrimary}
+                  textMuted={textMuted}
+                  onSelectGrade={selectGrade}
+                />
+              </div>
+            ) : (
+              <div className="space-y-7 p-4">
+                {groups.map(([label, items]) => (
+                  <section key={label}>
+                    <div className="mb-3 flex items-center gap-2">
+                      <span className="h-5 w-1 rounded-full bg-[#800000]" />
+                      <h2 className={`text-xs font-extrabold uppercase tracking-wide ${textPrimary}`}>
+                        {label}
+                      </h2>
+                      <span className={`h-px flex-1 ${theme.darkMode ? "bg-white/10" : "bg-gray-200"}`} />
+                    </div>
+                    <GradeLevelCards
+                      gradeLevels={items}
+                      schoolYear={schoolYear}
+                      darkMode={theme.darkMode}
+                      panelBg={panelBg}
+                      panelBorder={panelBorder}
+                      textPrimary={textPrimary}
+                      textMuted={textMuted}
+                      onSelectGrade={selectGrade}
+                    />
+                  </section>
+                ))}
+              </div>
+            )}
+          </div>
+        </>
       )}
     </div>
   );
+
+  function selectGrade(summary: (typeof gradeLevels)[number]) {
+    if (!summary.isSubmitted || summary.gradingPeriodId === null) return;
+
+    const params = new URLSearchParams({
+      gradeLevelId: String(summary.gradeLevelId),
+      gradingPeriodId: String(summary.gradingPeriodId),
+    });
+    if (summary.sectionId) params.set("sectionId", String(summary.sectionId));
+
+    navigate(`/principal/gradebooks/${encodeURIComponent(summary.grade)}?${params}`);
+  }
 }

@@ -1,6 +1,7 @@
-import { Users, DoorOpen, ChevronRight, GraduationCap } from "lucide-react";
-import { SectionCard } from "../../../../shared/components/DashboardUI";
+import { useMemo, useState } from "react";
+import { DoorOpen, ChevronRight,Search, UserRound } from "lucide-react";
 import type { TeacherSummary } from "../data/types";
+import { getTeacherAvatar, getTeacherAvatarBorderColor } from "@shared/profile/utils/teacherAvatar";
 
 interface TeacherDirectoryTableProps {
   teachers: TeacherSummary[];
@@ -50,56 +51,108 @@ export function TeacherDirectoryTable({
   textMuted,
   darkMode,
 }: TeacherDirectoryTableProps) {
+  const [search, setSearch] = useState("");
+  const [advisoryFilter, setAdvisoryFilter] = useState<"all" | "assigned" | "unassigned">("all");
+  const [genderFilter, setGenderFilter] = useState<"all" | "Male" | "Female">("all");
+  const visibleTeachers = useMemo(() => {
+    const query = search.trim().toLocaleLowerCase();
+    return teachers.filter((teacher) => {
+      const hasAdvisory = Boolean(formatAdvisories(teacher));
+      const matchesAdvisory = advisoryFilter === "all" || (advisoryFilter === "assigned" ? hasAdvisory : !hasAdvisory);
+      const matchesGender = genderFilter === "all" || teacher.gender?.toLocaleLowerCase() === genderFilter.toLocaleLowerCase();
+      const haystack = `${teacher.fullName} ${formatAdvisories(teacher)} ${formatRooms(teacher).join(" ")}`.toLocaleLowerCase();
+      return matchesAdvisory && matchesGender && (!query || haystack.includes(query));
+    });
+  }, [teachers, search, advisoryFilter, genderFilter]);
+
   return (
-    <SectionCard
-      title="Teacher Directory"
-      icon={GraduationCap}
-      action={
-        <span
-          className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full"
-          style={{
-            backgroundColor: darkMode ? "var(--color-gold-soft-dark)" : "var(--color-gold-soft)",
-            color: "var(--color-gold-dark)",
-          }}
-        >
-          <Users className="h-3.5 w-3.5" /> {teachers.length} Total Teachers
-        </span>
-      }
-      panelBg={panelBg}
-      panelBorder={panelBorder}
-      textPrimary={textPrimary}
-      darkMode={darkMode}
-    >
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+    <div className="flex flex-col gap-4">
+      <div className={`flex flex-col gap-2.5 rounded-[12px] border px-3 py-2 sm:flex-row sm:items-center sm:justify-between ${panelBg} ${panelBorder}`}>
+        <div className="relative w-full sm:w-80">
+          <span className="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-2.5 text-gray-400">
+            <Search size={13} />
+          </span>
+          <input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search name, grade, section, or room..."
+            aria-label="Search teachers by name, advisory, or room"
+            className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-[11px] font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
+          />
+        </div>
+        <div className="flex w-full gap-2 sm:w-auto">
+          <select
+            value={genderFilter}
+            onChange={(event) => setGenderFilter(event.target.value as typeof genderFilter)}
+            aria-label="Filter teachers by gender"
+            style={{ borderRadius: "8px" }}
+            className={`h-8 min-w-0 flex-1 rounded-lg border px-2.5 text-[11px] font-bold outline-none sm:flex-none ${panelBg} ${panelBorder} ${textPrimary}`}
+          >
+            <option value="all">All genders</option>
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+          </select>
+          <select
+            value={advisoryFilter}
+            onChange={(event) => setAdvisoryFilter(event.target.value as typeof advisoryFilter)}
+            aria-label="Filter teachers by advisory assignment"
+            className={`h-8 min-w-0 flex-1 rounded-[12px] border px-2.5 text-[11px] font-bold outline-none sm:flex-none ${panelBg} ${panelBorder} ${textPrimary}`}
+          >
+            <option value="all">All teachers</option>
+            <option value="assigned">With advisory</option>
+            <option value="unassigned">No advisory</option>
+          </select>
+        </div>
+      </div>
+      <section className={`overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`} aria-label="Teacher directory">
+        <div className={`flex items-center gap-1.5 border-b px-4 py-3 ${panelBorder}`}>
+          <p className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>Teacher directory</p>
+          <span className={`ml-1 text-[11px] ${textMuted}`}>· {visibleTeachers.length} of {teachers.length} teachers</span>
+        </div>
+        <div className="overflow-x-auto">
+        <table className="teacher-user-table w-full min-w-208 text-sm">
           <thead>
-            <tr>
-              <th className={`pb-3 pr-4 text-left text-xs font-bold uppercase tracking-widest ${textMuted}`}>Full Name</th>
-              <th className={`pb-3 pr-4 text-left text-xs font-bold uppercase tracking-widest ${textMuted}`}>Advisory &amp; Grade Level</th>
-              <th className={`pb-3 pr-4 text-left text-xs font-bold uppercase tracking-widest ${textMuted}`}>Room</th>
-              <th className="pb-3 pr-4"></th>
+            <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
+              <th className={`w-12 px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>No.</th>
+              <th className={`px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>Teacher</th>
+              <th className={`px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>Advisory &amp; Grade Level</th>
+              <th className={`px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>Room</th>
+              <th className={`px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>Schedule</th>
             </tr>
           </thead>
           <tbody>
-            {teachers.map((t) => {
+            {visibleTeachers.map((t, index) => {
               const advisoryText = formatAdvisories(t);
               const rooms = formatRooms(t);
+              const avatar = getTeacherAvatar({ gender: t.gender, avatarKey: t.avatarKey });
+              const avatarBorderColor = getTeacherAvatarBorderColor(t.gender);
 
               return (
                 <tr
                   key={t.teacherId}
                   onClick={() => onSelectTeacher(t.teacherId)}
-                  className="cursor-pointer transition-colors hover:bg-maroon/5"
-                  style={{ borderTop: `1px solid ${darkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)"}` }}
+                  className={`cursor-pointer border-t transition-colors ${panelBorder} ${darkMode ? "hover:bg-white/5" : "hover:bg-black/1.5"}`}
                 >
-                  <td className={`py-4 pr-4 font-bold ${textPrimary}`}>{t.fullName}</td>
-                  <td className={`py-4 pr-4 ${textPrimary}`}>{advisoryText}</td>
-                  <td className="py-4 pr-4">
+                  <td className={`px-4 py-2.5 text-[11px] font-bold tabular-nums ${textMuted}`}>{index + 1}</td>
+                  <td className={`px-4 py-2.5 text-xs font-bold ${textPrimary}`}>
+                    <div className="flex min-w-0 items-center gap-2.5">
+                      <span className={`flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 ${darkMode ? "bg-white/10" : "bg-[#EEF0F3]"}`} style={{ borderColor: avatarBorderColor }}>
+                        {avatar ? (
+                          <img src={avatar} alt={`${t.fullName} profile`} className="h-full w-full object-cover" loading="lazy" />
+                        ) : (
+                          <UserRound className={`h-4 w-4 ${textMuted}`} aria-hidden="true" />
+                        )}
+                      </span>
+                      <span className="truncate">{t.fullName}</span>
+                    </div>
+                  </td>
+                  <td className={`px-4 py-2.5 text-xs font-medium ${textPrimary}`}>{advisoryText || <span className={textMuted}>No advisory assigned</span>}</td>
+                  <td className="px-4 py-2.5">
                     <div className="flex flex-wrap gap-1.5">
                       {rooms.map((room, idx) => (
                         <span
                           key={`${t.teacherId}-room-${idx}`}
-                          className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full"
+                          className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-bold"
                           style={{
                             backgroundColor: darkMode ? "var(--color-maroon-soft-dark)" : "var(--color-maroon-soft)",
                             color: "var(--color-maroon)",
@@ -110,17 +163,25 @@ export function TeacherDirectoryTable({
                       ))}
                     </div>
                   </td>
-                  <td className="py-4 pr-4">
-                    <span className="text-xs font-bold uppercase tracking-wide flex items-center gap-1 text-maroon">
-                      View Schedule <ChevronRight className="h-3 w-3" />
+                  <td className="px-4 py-2.5">
+                    <span className="flex items-center gap-1 whitespace-nowrap text-[11px] font-bold text-maroon">
+                      View <ChevronRight className="h-3 w-3" />
                     </span>
                   </td>
                 </tr>
               );
             })}
+            {visibleTeachers.length === 0 && (
+              <tr>
+                <td colSpan={5} className={`px-4 py-10 text-center text-sm font-medium ${textMuted}`}>
+                  No teachers match your search or filter.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
-      </div>
-    </SectionCard>
+        </div>
+      </section>
+    </div>
   );
 }

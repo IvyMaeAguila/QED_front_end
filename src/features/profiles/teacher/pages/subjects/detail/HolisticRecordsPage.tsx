@@ -390,7 +390,7 @@ export function HolisticRecordsSection({
             <select
               value={displayGroup.key}
               onChange={(e) => setSelectedMonthKey(e.target.value)}
-              className={`h-10 rounded-xl border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
+              className={`h-10 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
               aria-label="Month"
             >
               {availableMonthKeys.map((key) => (
@@ -431,7 +431,7 @@ export function HolisticRecordsSection({
           const columnCount = 1 + group.weekStartDates.length * domainCount;
           return (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-max border-collapse text-xs">
+              <table className="teacher-user-table w-full min-w-max border-collapse text-xs">
                 <thead>
                   {/* Row 1: Week N, spanning that week's domain columns */}
                   <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>

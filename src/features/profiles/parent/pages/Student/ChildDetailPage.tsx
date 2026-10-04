@@ -1,23 +1,23 @@
-import { useState, useEffect } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { useNavigate, useOutletContext, useLocation, useSearchParams  } from "react-router-dom";
 import { ArrowLeft, Download } from "lucide-react";
-import AttendanceOverview from "./Overview/components/AttendanceOverview";
-import TermAverageTrendChart from "./Overview/components/PerformanceAnalytics";
-import StudentNarrativeSnapshot from "./Overview/components/HolisticAverage";
-import AcademicTab from "./Academic/AcademicTab";
-import HolisticTab from "./Holistic/HoisticWeeklyReportTab";
+const AttendanceOverview = lazy(() => import("./Overview/components/AttendanceOverview"));
+const TermAverageTrendChart = lazy(() => import("./Overview/components/PerformanceAnalytics"));
+const StudentNarrativeSnapshot = lazy(() => import("./Overview/components/HolisticAverage"));
+const AcademicTab = lazy(() => import("./Academic/AcademicTab"));
+const HolisticTab = lazy(() => import("./Holistic/HoisticWeeklyReportTab"));
 import { TabNav, type StudentDetailTab } from "./PageComponents/TopNavigation";
 import StudentInfoTable from "./PageComponents/StudentInfoTable";
 import { useStudentDetail } from "./Overview/useStudentDetail";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
-import ProgressReportTab from "./ProgressReport/ProgessReportTab";
+const ProgressReportTab = lazy(() => import("./ProgressReport/ProgessReportTab"));
 import {
   ProgressReportProvider,
   useProgressReport,
 } from "./ProgressReport/context/ProgressReportContext";
 import { useFormalReportDownload } from "./ProgressReport/hooks/useFormalreportDownload";
 import type { DetailStudent } from "./GlobalTypes/types";
-import { StudentProfileTab } from "./StudentProfile/StudentProfileTab";
+const StudentProfileTab = lazy(() => import("./StudentProfile/StudentProfileTab").then((module) => ({ default: module.StudentProfileTab })));
 import { Skeleton } from "@shared/components/SkeletonLoading";
 import ProgressReportUnavailableModal from "./ProgressReport/utils/ProgressReportUnavailableModal";
 
@@ -181,8 +181,8 @@ useEffect(() => {
   }
 
   return (
-    <div className="min-h-screen w-full">
-      <div className="w-full py-4">
+    <div className="w-full">
+      <div className="w-full">
         <div className="mb-4">
           <TabNav
             active={activeTab}
@@ -193,6 +193,7 @@ useEffect(() => {
           />
         </div>
 
+        <Suspense fallback={<ProgressReportSkeleton />}>
         <div className="flex flex-col gap-4">
           {activeTab === "overview" && (
             <ProgressReportProvider studentId={studentId}>
@@ -206,15 +207,15 @@ useEffect(() => {
                 </p>
               </div>
               <StudentInfoTable student={student} theme={theme} />
-              <AttendanceOverview student={student} theme={theme} />
-              <div className="flex flex-col gap-4 sm:flex-row items-stretch h-80 sm:h-70">
-                <div className="sm:w-1/2 sm:flex-1 sm:basis-0 min-h-0">
+              <div className="grid grid-cols-1 items-stretch gap-4 lg:grid-cols-2">
+                <div className="min-w-0">
+                  <AttendanceOverview student={student} theme={theme} />
+                </div>
+                <div className="min-w-0">
                   <TermAverageTrendChart student={student} theme={theme} />
                 </div>
-                <div className="sm:w-1/2 sm:flex-1 sm:basis-0 min-h-0">
-                  <StudentNarrativeSnapshot student={student} theme={theme} />
-                </div>
               </div>
+              <StudentNarrativeSnapshot student={student} theme={theme} />
             </ProgressReportProvider>
           )}
           {activeTab === "academic" && (
@@ -273,6 +274,7 @@ useEffect(() => {
             </>
           )}
         </div>
+        </Suspense>
       </div>
     </div>
   );

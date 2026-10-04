@@ -3,6 +3,13 @@ import type { GradeLevel } from "../../../features/profiles/admin/pages/studentr
 
 export type Role = "ADMIN" | "PRINCIPAL" | "TEACHER" | "PARENT";
 export type Gender = "male" | "female";
+export type TeacherAvatarKey =
+  | "female-braid"
+  | "male-tie"
+  | "male-white-shirt"
+  | "female-pink-hair"
+  | "male-beard"
+  | "female-brown-hair";
 
 export interface BaseProfile {
   id: string;
@@ -29,6 +36,7 @@ export interface TeacherProfile extends BaseProfile {
   gradeLevel?: GradeLevel;
   section?: string;
   gender?: Gender; // added — drives default avatar selection
+  avatarKey?: TeacherAvatarKey;
 }
 
 export interface ParentProfile extends BaseProfile {

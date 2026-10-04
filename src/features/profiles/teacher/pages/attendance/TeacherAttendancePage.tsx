@@ -153,7 +153,7 @@ export function TeacherAttendancePage() {
     return { male, female };
   }, [filteredRoster]);
 
-  const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
+  const cardClasses = `overflow-hidden rounded-[12px] border shadow-card ${panelBg} ${panelBorder}`;
   const todayLabel = new Date().toLocaleDateString("en-US", {
     weekday: "long",
     month: "long",
@@ -234,7 +234,7 @@ export function TeacherAttendancePage() {
   if (sections === undefined) {
     return (
       <div className="w-full min-h-full pb-12">
-        <div className="w-full px-6 lg:px-8 pt-6">
+        <div className="w-full">
           <div
             className={`${cardClasses} flex items-center justify-center gap-2 px-5 py-14`}
           >
@@ -251,7 +251,7 @@ export function TeacherAttendancePage() {
   if (sectionError) {
     return (
       <div className="w-full min-h-full pb-12">
-        <div className="w-full px-6 lg:px-8 pt-6">
+        <div className="w-full">
           <div className={`${cardClasses} px-5 py-14 text-center`}>
             <p className="text-xs font-semibold text-red-500">{sectionError}</p>
           </div>
@@ -264,7 +264,7 @@ export function TeacherAttendancePage() {
   if (!section) {
     return (
       <div className="w-full min-h-full pb-12">
-        <div className="w-full px-6 lg:px-8 pt-6">
+        <div className="w-full">
           <div className={`${cardClasses} px-5 py-14 text-center`}>
             <p className={`text-sm font-bold ${textPrimary}`}>
               No advisory class assigned
@@ -281,7 +281,7 @@ export function TeacherAttendancePage() {
 
   return (
     <div className="w-full min-h-full pb-0">
-      <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
+      <div className="w-full space-y-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2.5">
             <div>
@@ -322,7 +322,7 @@ export function TeacherAttendancePage() {
         </div>
 
         <div
-          className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 rounded-xl border px-3 py-2 ${panelBg} ${panelBorder}`}
+          className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 rounded-[12px] border px-3 py-2 ${panelBg} ${panelBorder}`}
         >
           <div className="relative w-full sm:w-80">
             <span className="absolute inset-y-0 left-0 z-10 flex items-center pl-2.5 pointer-events-none text-gray-400">
@@ -401,7 +401,7 @@ export function TeacherAttendancePage() {
             </p>
           ) : filteredRoster.length > 0 ? (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="teacher-user-table w-full text-sm">
                 <thead>
                   <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
                     {[

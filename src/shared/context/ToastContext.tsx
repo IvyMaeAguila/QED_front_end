@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
 import { ToastContainer, type ToastItem, type ToastType } from "../components/ToastNotification";
+import { useSettings } from "../../features/profiles/admin/pages/settings/context/SettingsContext";
 
 interface ToastContextValue {
   showToast: (message: string, type?: ToastType) => void;
@@ -10,6 +11,7 @@ const ToastContext = createContext<ToastContextValue | undefined>(undefined);
 let idCounter = 0;
 
 export function ToastProvider({ children }: { children: ReactNode }) {
+  const { darkMode } = useSettings();
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
   const removeToast = useCallback((id: number) => {
@@ -28,7 +30,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      <ToastContainer toasts={toasts} onClose={removeToast} darkMode={false} />
+      <ToastContainer toasts={toasts} onClose={removeToast} darkMode={darkMode} />
     </ToastContext.Provider>
   );
 }

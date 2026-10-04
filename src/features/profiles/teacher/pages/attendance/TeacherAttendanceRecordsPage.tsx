@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
 import { useOutletContext } from "react-router-dom";
 import { AttendanceCalendarSection } from "./AttendanceCalendarSection";
 import { AttendanceMonthSummarySection } from "./AttendanceMonthSummarySection";
 import { useSelectedAdvisorySection } from "./services/useSelectedAdvisorySection.service";
 import { AdvisorySectionTabs } from "./components/AdvisorySectionTabs";
-
-const ACCENT = "#6B0000";
 
 export function TeacherAttendanceRecordsPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
@@ -17,31 +15,30 @@ export function TeacherAttendanceRecordsPage() {
   const { sections, section, error, selectSection } = useSelectedAdvisorySection();
   const [viewMode, setViewMode] = useState<"month" | "summary">("month");
 
-  const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
+  const cardClasses = `overflow-hidden rounded-[12px] border shadow-sm ${panelBg} ${panelBorder}`;
   const displaySectionName = section
     ? section.sectionName?.trim() || section.gradeLevel
     : "Advisory Class";
 
   return (
     <div className="w-full min-h-full pb-10">
-      <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
+      <div className="w-full space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-start gap-2.5">
             <button
               onClick={() => navigate("/teacher/attendance")}
               aria-label="Go back"
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted} ${
+              className={`system-back-button flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted} ${
                 darkMode ? "hover:bg-white/10 hover:text-white" : "hover:bg-black/5 hover:text-black"
               }`}
             >
-              <ChevronLeft size={18} />
+              <ArrowLeft size={18} />
             </button>
             <div>
-              <p className="text-[10px] font-extrabold uppercase tracking-[0.18em]" style={{ color: ACCENT }}>
-                {displaySectionName}
+              <h1 className={`text-lg font-black tracking-tight ${textPrimary}`}>Attendance Records</h1>
+              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+                {displaySectionName} · Click a cell to edit — changes save immediately.
               </p>
-              <h1 className={`mt-1 text-xl font-black tracking-tight ${textPrimary}`}>Attendance Records</h1>
-              <p className={`mt-1 text-xs font-medium ${textMuted}`}>Click a cell to edit — changes save immediately.</p>
             </div>
           </div>
 

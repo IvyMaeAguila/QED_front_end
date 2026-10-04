@@ -46,6 +46,13 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [emailNotifications, setEmailNotifications] = useState(persisted.emailNotifications ?? true);
   const [pushNotifications, setPushNotifications] = useState(persisted.pushNotifications ?? true);
 
+  // Keep the document theme in sync so native controls and Tailwind dark:
+  // variants follow the same setting as the role-specific layouts.
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+    document.documentElement.style.colorScheme = darkMode ? "dark" : "light";
+  }, [darkMode]);
+
   // Load the active school year from the backend on mount
   useEffect(() => {
     let cancelled = false;

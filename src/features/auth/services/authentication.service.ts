@@ -49,21 +49,34 @@ function mapToUserProfile(raw: any): UserProfile {
     userName: raw.user_name,
     role: normalizeRole(raw.role),
     name: raw.name,
-    email: raw.email_address,
-    contact: raw.contact_number,
+    email: raw.email ?? raw.email_address ?? "",
+    phone: raw.phone ?? raw.contact_number ?? raw.contact ?? "",
     address: raw.address,
     subject: raw.subject,
     gradeLevel: raw.grade_level,
     section: raw.section,
-    gender: raw.gender === "Male" || raw.gender === "male"
+    gender: String(raw.gender ?? "").toLowerCase() === "male"
       ? "male"
-      : raw.gender === "Female" || raw.gender === "female"
+      : String(raw.gender ?? "").toLowerCase() === "female"
         ? "female"
         : undefined,
+    avatarKey: raw.avatar_key ?? undefined,
   } as UserProfile;
 }
 
 export const AuthService = {
+  async updateProfile(payload: { email?: string; phone?: string; address?: string; avatarKey?: string }): Promise<{ email?: string; phone?: string; address?: string; avatarKey?: string }> {
+    const response = await fetch(`${BASE_URL}/profile`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(payload),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data?.message || "Failed to update profile.");
+    return data.profile;
+  },
+
   async registerUser(payload: RegisterPayload) {
     const response = await fetch(`${BASE_URL}/register`, {
       method: "POST",

@@ -1,4 +1,4 @@
-import type { GradeLevelSummary, Student } from "../data/types";
+import type { GradeLevelSummary, GradeSubmissionStatus, Student } from "../data/types";
 import { fetchActiveAcademicYear } from "../../../../admin/pages/subjects/services/academicyear.service"
 import { API_CONFIG } from "../../../../../../config/api.config";
 
@@ -106,6 +106,7 @@ interface ApiGradeCell {
   average: number | null;
   submittedByName: string | null;
   submittedAt: string | null;
+  isOwnAdvisory?: boolean;
 }
 
 interface ApiSubject {
@@ -218,9 +219,13 @@ function toStudent(
   subjectNameBySectionId: Map<string, string>,
 ): Student {
   const grades: Record<string, number> = {};
+  const gradeStatuses: Record<string, GradeSubmissionStatus> = {};
+  const ownAdvisorySubjects: Record<string, boolean> = {};
   for (const [subjectSectionId, cell] of Object.entries(apiStudent.grades)) {
     const subjectName = subjectNameBySectionId.get(subjectSectionId);
     if (!subjectName) continue;
+    gradeStatuses[subjectName] = cell.status;
+    ownAdvisorySubjects[subjectName] = cell.isOwnAdvisory ?? false;
     const termGrade = cell.termGrade ?? cell.average;
     if (cell.status === "submitted" && termGrade !== null) {
       grades[subjectName] = termGrade;
@@ -234,6 +239,9 @@ function toStudent(
     middleInitial: toMiddleInitial(apiStudent.middleName),
     gender: apiStudent.gender === "F" ? "Female" : "Male",
     grades,
+    gradeStatuses,
+    ownAdvisorySubjects,
+    overallAverage: apiStudent.overallAverage,
   };
 }
 

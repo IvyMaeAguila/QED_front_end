@@ -25,7 +25,8 @@ export const PROFILE_FIELD_CONFIG: Record<Role, ProfileField[]> = {
   TEACHER: [
     { key: "email", label: "Email", icon: Mail, editable: true, showInSummary: true },
     { key: "phone", label: "Phone", icon: Phone, editable: true, showInSummary: true },
-    { key: "subject", label: "Subject", icon: BookOpen, editable: true, showInSummary: false },
+    // Subject assignments are derived from class schedules and are managed by the school.
+    { key: "subject", label: "Subject", icon: BookOpen, editable: false, showInSummary: false },
     { key: "role", label: "Role", icon: Shield, editable: false, showInSummary: true },
   ],
   PARENT: [

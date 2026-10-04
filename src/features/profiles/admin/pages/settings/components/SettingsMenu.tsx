@@ -194,6 +194,7 @@ export function SettingsMenu() {
         ref={drawerRef}
         role="dialog"
         aria-modal="true"
+        data-drawer-panel="true"
         className={`fixed inset-y-0 right-0 z-[100] w-[26rem] max-w-[90vw] h-full flex flex-col shadow-[-8px_0_30px_-12px_rgba(0,0,0,0.35)] transition-transform duration-500 ${APPLE_EASE} ${
           darkMode ? "bg-[#0F172A]" : "bg-white"
         } ${open ? "translate-x-0" : "translate-x-full"}`}

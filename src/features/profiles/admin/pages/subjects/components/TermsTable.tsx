@@ -26,7 +26,7 @@ export function TermsTable({
   textMuted,
   onEdit,
 }: TermsTableProps) {
-  const headerCell = `text-left text-xs font-bold uppercase tracking-wide px-4 py-3 ${textMuted}`;
+  const headerCell = `text-left text-xs font-bold uppercase tracking-wide px-4 py-2.5 ${textMuted}`;
   const rowBorder = darkMode ? "border-[#1F2937]" : "border-[#E5E7EB]";
 
   // Terms exist as rows even before they're configured (seeded with null
@@ -37,12 +37,12 @@ export function TermsTable({
   );
 
   return (
-    <div className={`rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`}>
-      <div className="flex items-center justify-between gap-4 flex-wrap px-6 pt-5">
+    <div className={`rounded-[12px] border shadow-sm ${panelBg} ${panelBorder}`}>
+      <div className="flex items-center justify-between gap-4 flex-wrap px-5 pt-3 sm:px-6">
         <h3 className={`text-sm font-black ${textPrimary}`}>Terms</h3>
         <button
           onClick={onEdit}
-          className={`h-9 px-4 rounded-xl text-xs font-bold inline-flex items-center gap-2 border transition-colors ${
+          className={`h-9 px-4 rounded-lg text-xs font-bold inline-flex items-center gap-2 border transition-colors ${
             darkMode
               ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
               : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
@@ -60,8 +60,8 @@ export function TermsTable({
         </p>
       )}
 
-      <div className="overflow-x-auto mt-4">
-        <table className="w-full border-collapse">
+      <div className="mt-3 overflow-x-auto">
+        <table className="teacher-user-table w-full border-collapse">
           <thead>
             <tr className={`border-b ${rowBorder}`}>
               <th className={headerCell}>Term</th>
@@ -85,16 +85,16 @@ export function TermsTable({
             ) : (
               terms.map((term) => (
                 <tr key={term.id} className={`border-b last:border-b-0 ${rowBorder}`}>
-                  <td className={`px-4 py-3 text-sm font-bold ${textPrimary}`}>
+                  <td className={`px-4 py-2.5 text-sm font-bold ${textPrimary}`}>
                     {formatCell(term.name)}
                   </td>
-                  <td className={`px-4 py-3 text-sm font-semibold ${textMuted}`}>
+                  <td className={`px-4 py-2.5 text-sm font-semibold ${textMuted}`}>
                     {formatCell(term.startDate)}
                   </td>
-                  <td className={`px-4 py-3 text-sm font-semibold ${textMuted}`}>
+                  <td className={`px-4 py-2.5 text-sm font-semibold ${textMuted}`}>
                     {formatCell(term.endDate)}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-2.5">
                     <StatusBadge status={term.status} darkMode={darkMode} />
                   </td>
                 </tr>
@@ -103,7 +103,6 @@ export function TermsTable({
           </tbody>
         </table>
       </div>
-      <div className="h-5" />
     </div>
   );
 }

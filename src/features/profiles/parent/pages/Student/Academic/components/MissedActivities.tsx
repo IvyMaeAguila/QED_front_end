@@ -111,7 +111,7 @@ function MissedActivitiesContent({ theme, student }: MissedActivitiesProps) {
                 </span>
               </div>
 
-              <div className={`flex-1 overflow-hidden rounded-xl border ${cardBorder} ${cardBg}`}>
+              <div className={`flex-1 overflow-hidden rounded-lg border ${cardBorder} ${cardBg}`}>
                 <div className={`divide-y ${rowBorder}`}>
                   {items.map((a) => (
                     <div

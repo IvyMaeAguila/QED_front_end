@@ -26,13 +26,10 @@ export interface HolisticDomainAverages {
 export interface HolisticTermAverage {
   termNumber: number;
   termLabel: string;
+  isActive: boolean;
   /**
-   * False until that term's grading_periods.end_date has actually passed —
-   * gated per term, independent of which term is currently "active". While
-   * false, domainAverages/evaluationCount/riskLevel are zeroed out
-   * server-side even if ratings already exist in the DB — never trust
-   * these fields as real until `released` is true. (Server-side `preview`
-   * bypasses this — see `fetchStudentHolisticTermAverages`'s options.)
+   * True for the active term's live evaluation and for terms whose end date
+   * has passed. Future terms remain unavailable.
    */
   released: boolean;
   domainAverages: HolisticDomainAverages;
@@ -44,18 +41,11 @@ interface FetchHolisticTermAveragesOptions {
   force?: boolean;
   /** Only fetch this one term instead of every term in the active school year. */
   termNumber?: number;
-  /**
-   * QA/sanity-check only: bypasses the release gate server-side so a term's
-   * real numbers show up before its end_date has passed. Do not wire this
-   * up to anything parent-facing — see the warning on the controller.
-   */
-  preview?: boolean;
 }
 
 function buildCacheKey(studentId: string, options?: FetchHolisticTermAveragesOptions): string {
   const termPart = options?.termNumber !== undefined ? `:term=${options.termNumber}` : "";
-  const previewPart = options?.preview ? ":preview" : "";
-  return `${studentId}${termPart}${previewPart}`;
+  return `${studentId}${termPart}`;
 }
 
 const cache = new Map<string, HolisticTermAverage[]>();
@@ -66,11 +56,12 @@ const inFlightRequests = new Map<string, Promise<HolisticTermAverage[]>>();
  * behavioral) for a single student (parent view), pooled across every
  * subject. Backed by GET /api/holisticTermAverages/students/:studentId
  *
- * Every term in the active school year is returned, including terms not
- * yet released — check `released` per entry before reading its numbers.
+ * Every term in the active school year is returned, including future terms;
+ * check `released` before reading a term's numbers. The active term returns
+ * live evaluation averages.
  * Pass `{ termNumber }` to narrow to a single term instead.
  *
- * Results are cached per (studentId, termNumber, preview) combination.
+ * Results are cached per student and term.
  * Pass { force: true } to bypass the cache and re-fetch (e.g. on manual
  * refetch/pull-to-refresh).
  */
@@ -95,12 +86,14 @@ export async function fetchStudentHolisticTermAverages(
   const request = (async () => {
     const params = new URLSearchParams();
     if (options?.termNumber !== undefined) params.set("termNumber", String(options.termNumber));
-    if (options?.preview) params.set("preview", "true");
     const query = params.toString();
 
     const res = await authedFetch(`${BASE_URL}/${studentId}${query ? `?${query}` : ""}`);
     const json = await handleJsonResponse(res);
-    const data: HolisticTermAverage[] = json.data;
+    const data: HolisticTermAverage[] = json.data.map((term: HolisticTermAverage) => ({
+      ...term,
+      isActive: Boolean(term.isActive),
+    }));
     cache.set(cacheKey, data);
     return data;
   })();
@@ -116,8 +109,7 @@ export async function fetchStudentHolisticTermAverages(
 
 /**
  * Clears cached entries for a student. With no `termNumber`, clears every
- * cached variant for that student (all terms, preview or not) since we
- * don't track exact key combinations here.
+ * cached variant for that student since exact key combinations are not tracked.
  */
 export function clearStudentHolisticTermAveragesCache(studentId?: string) {
   if (studentId === undefined) {

@@ -9,6 +9,8 @@ interface HolidaysCardProps extends CalendarTheme {
   onExpand: () => void;
   /** Ang buwan na kasalukuyang tinitingnan sa MonthGrid (viewDate) */
   viewDate?: Date;
+  /** Piniling araw sa MonthGrid para maipakita lang ang mga holiday nito. */
+  selectedDate?: Date;
 }
 
 interface HolidayGroupListProps {
@@ -17,6 +19,7 @@ interface HolidayGroupListProps {
   textMuted: string;
   onEdit?: (holiday: CalendarHoliday) => void;
   onDelete?: (holiday: CalendarHoliday) => void;
+  emptyMessage?: string;
 }
 
 // --------------------------------------------------------
@@ -32,6 +35,14 @@ function filterHolidaysForMonth(
   const referenceYearMonth = toISODate(referenceDate).slice(0, 7); // "YYYY-MM"
 
   return holidays.filter((h) => h.date.slice(0, 7) === referenceYearMonth);
+}
+
+function filterHolidaysForDate(
+  holidays: CalendarHoliday[],
+  selectedDate: Date,
+): CalendarHoliday[] {
+  const selectedISO = toISODate(selectedDate);
+  return holidays.filter((holiday) => holiday.date.slice(0, 10) === selectedISO);
 }
 
 function isToday(dateStr: string): boolean {
@@ -124,11 +135,12 @@ export function HolidayGroupList({
   textMuted,
   onEdit,
   onDelete,
+  emptyMessage = "No holidays yet.",
 }: HolidayGroupListProps) {
   const grouped = groupHolidaysByMonth(holidays);
 
   if (grouped.length === 0) {
-    return <p className={`py-2 text-xs ${textMuted}`}>No holidays yet.</p>;
+    return <p className={`py-2 text-xs ${textMuted}`}>{emptyMessage}</p>;
   }
 
   return (
@@ -159,28 +171,27 @@ export function HolidaysCard({
   holidays,
   onExpand,
   viewDate,
+  selectedDate,
   darkMode,
   panelBg,
   textMuted,
 }: HolidaysCardProps) {
-  // Ipapakita lang dito sa card ang mga holiday ng buwang
-  // kasalukuyang tinitingnan sa MonthGrid (viewDate), hindi
-  // laging "this month" base sa totoong petsa ngayon.
-  // Fallback sa "today" kung sakaling hindi naipasa ang viewDate.
-  const currentMonthHolidays = filterHolidaysForMonth(
-    holidays,
-    viewDate ?? new Date()
-  );
+  // Use the selected date when available; otherwise preserve the month view
+  // for calendar card consumers that do not provide selectedDate.
+  const visibleHolidays = selectedDate
+    ? filterHolidaysForDate(holidays, selectedDate)
+    : filterHolidaysForMonth(holidays, viewDate ?? new Date());
 
   return (
-    <div className={`rounded-xl2 p-5 shadow-card ${panelBg}`}>
+    <div className={`rounded-[12px] p-5 shadow-card ${panelBg}`}>
       <div className="mb-3 flex items-center justify-between">
-        <p
-          className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textMuted}`}
-        >
-          <CalendarHeart size={14} className="text-maroon-dark" />
-          Holidays
-        </p>
+        <div>
+          <p className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textMuted}`}>
+            <CalendarHeart size={14} className="text-maroon-dark" />
+            Holidays
+          </p>
+          {selectedDate && <p className={`mt-1 pl-5 text-[11px] ${textMuted}`}>{selectedDate.toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}</p>}
+        </div>
         <button
           onClick={onExpand}
           aria-label="Expand holidays"
@@ -197,9 +208,10 @@ export function HolidaysCard({
       <div className="max-h-96 overflow-y-auto pr-1">
         {/* No onEdit/onDelete here — actions only appear in the expanded modal */}
         <HolidayGroupList
-          holidays={currentMonthHolidays}
+          holidays={visibleHolidays}
           darkMode={darkMode}
           textMuted={textMuted}
+          emptyMessage={selectedDate ? "No holidays on this date." : undefined}
         />
       </div>
     </div>

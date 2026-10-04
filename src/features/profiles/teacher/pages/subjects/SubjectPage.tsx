@@ -1,19 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import {
-  BookOpen,
-  Calculator,
-  FlaskConical,
-  GraduationCap,
-  Globe2,
-  HeartHandshake,
-  Languages,
-  Music,
-  Search,
-  Users,
-  Wrench,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { ChevronRight, Search } from "lucide-react";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
 import {
   GRADE_LEVELS,
@@ -28,6 +15,7 @@ import {
   assignedSubjectsService,
   type AssignedSubject,
 } from "./services/subjects.service";
+import { SubjectAssignmentCard } from "../../../shared/components/SubjectAssignmentCard";
 
 interface DisplaySubject {
   id: number;
@@ -52,61 +40,6 @@ function mapToDisplaySubject(row: AssignedSubject): DisplaySubject {
 function gradeLevelToId(gradeLevel: string): number {
   const match = gradeLevel.match(/\d+/);
   return match ? Number(match[0]) : 0;
-}
-
-/**
- * Subject "family" — drives the icon shown on each card. Every card
- * uses the same simple maroon header so it renders cleanly on
- * lower-quality screens.
- */
-type SubjectFamily =
-  | "math"
-  | "science"
-  | "language"
-  | "social"
-  | "arts"
-  | "values"
-  | "practical"
-  | "general";
-
-function familyFor(name: string): SubjectFamily {
-  const n = name.toLowerCase();
-  if (n.includes("math")) return "math";
-  if (n.includes("science")) return "science";
-  if (
-    n.includes("filipino") ||
-    n.includes("english") ||
-    n.includes("language") ||
-    n.includes("reading")
-  )
-    return "language";
-  if (n.includes("araling") || n.includes("panlipunan")) return "social";
-  if (n.includes("music") || n.includes("art") || n.includes("mapeh"))
-    return "arts";
-  if (n.includes("gmrc") || n.includes("values")) return "values";
-  if (n.includes("epp") || n.includes("tle")) return "practical";
-  return "general";
-}
-
-function iconFor(family: SubjectFamily): LucideIcon {
-  switch (family) {
-    case "math":
-      return Calculator;
-    case "science":
-      return FlaskConical;
-    case "language":
-      return Languages;
-    case "social":
-      return Globe2;
-    case "arts":
-      return Music;
-    case "values":
-      return HeartHandshake;
-    case "practical":
-      return Wrench;
-    default:
-      return BookOpen;
-  }
 }
 
 /**
@@ -213,7 +146,7 @@ export function SubjectsPage() {
   if (loading) {
     return (
       <div className="w-full min-h-full pb-12">
-        <div className="w-full px-6 lg:px-8 pt-6">
+        <div className="w-full">
           <div
             className={`${cardClasses} flex items-center justify-center gap-2 px-5 py-14`}
           >
@@ -228,7 +161,7 @@ export function SubjectsPage() {
 
   return (
     <div className="w-full min-h-full pb-0">
-      <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
+      <div className="w-full space-y-6">
         {/* Header — same pattern as TeacherAttendancePage */}
         <div className="flex items-start gap-2.5">
           <div>
@@ -437,60 +370,35 @@ function SubjectCard({
   onRecordGrades,
   onClassList,
 }: SubjectCardProps) {
-  const family = familyFor(subject.name);
-  const Icon = iconFor(family);
-
   return (
-    <div
-      className={`group relative rounded-2xl border shadow-card overflow-hidden flex flex-col transition-all hover:-translate-y-0.5 hover:shadow-lg ${panelBg} ${panelBorder}`}
-    >
-      <div className="relative h-28 bg-linear-to-br from-[#5C0000] to-[#800000] rounded-tl-2xl rounded-tr-2xl rounded-bl-none rounded-br-[42px]">
-        <span className="absolute top-3 left-3 text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full bg-white/15 text-white">
-          {schoolYear}
-        </span>
-
-        <span className="absolute bottom-3 left-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white text-[#880000] ring-1 ring-[#D4AF37]/60">
-          <Icon size={17} />
-        </span>
-      </div>
-
-      <div className="flex flex-col gap-3 p-5 pt-4 flex-1">
-        <div>
-          <h3 className={`text-sm font-bold truncate ${textPrimary}`}>
-            {subject.name}
-          </h3>
-          <div className={`flex items-center gap-1.5 mt-1 text-xs font-medium ${textMuted}`}>
-            <GraduationCap size={13} />
-            {subject.gradeLevel}
-            {subject.section && ` · Section ${subject.section}`}
-          </div>
-          <div className={`flex items-center gap-1.5 mt-1 text-xs font-medium ${textMuted}`}>
-            <Users size={13} />
-            {studentCount} student{studentCount === 1 ? "" : "s"}
-          </div>
-        </div>
-
-        <div className="flex gap-2 pt-1 mt-auto">
+    <SubjectAssignmentCard
+      schoolYear={schoolYear}
+      status="Active"
+      title={subject.name}
+      subtitle={`${subject.gradeLevel}${subject.section ? ` · ${subject.section}` : ""}`}
+      studentCount={studentCount}
+      showStudentCount={false}
+      darkMode={darkMode}
+      panelBg={panelBg}
+      panelBorder={panelBorder}
+      textPrimary={textPrimary}
+      textMuted={textMuted}
+      actions={
+        <>
           <button
             onClick={onRecordGrades}
-            className="flex-1 h-8 rounded-lg bg-[#800000] text-white text-[11px] font-extrabold transition-colors hover:bg-[#650000]"
+            className="h-7 whitespace-nowrap rounded-lg bg-[#800000] px-2 text-[10px] font-extrabold text-white transition-colors hover:bg-[#650000] sm:px-2.5 sm:text-[11px]"
           >
             Record Grades
           </button>
           <button
             onClick={onClassList}
-            className={`flex-1 h-8 rounded-lg border text-[11px] font-extrabold transition-colors ${
-              darkMode
-                ? "border-[#D4AF37]/30 bg-white/5 text-white hover:bg-white/10"
-                : "border-[#D4AF37]/40 bg-white text-[#111827] hover:bg-[#FFFDF5]"
-            }`}
+            className={`inline-flex items-center gap-1 whitespace-nowrap text-[11px] font-bold uppercase tracking-wide transition-colors hover:underline ${darkMode ? "text-white hover:text-white/80" : "text-[#800020] hover:text-[#5A0017]"}`}
           >
-            Class List
+            View Class List <ChevronRight className="h-3 w-3" aria-hidden="true" />
           </button>
-        </div>
-      </div>
-
-      <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-transparent group-hover:ring-[#D4AF37]/40 transition-all" />
-    </div>
+        </>
+      }
+    />
   );
 }

@@ -36,7 +36,9 @@ export function FilterDropdown({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className={`h-9 px-4 rounded-xl flex items-center gap-2 border transition-colors ${
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className={`h-9 px-4 rounded-lg flex items-center gap-2 border transition-colors ${
           darkMode
             ? "bg-[#111827] border-[#1F2937] text-white hover:border-[#374151]"
             : "bg-white border-[#E5E7EB] text-[#111827] hover:border-[#8B0D0D]"
@@ -51,7 +53,8 @@ export function FilterDropdown({
 
       {open && (
         <div
-          className={`absolute right-0 mt-2 min-w-45 rounded-xl overflow-hidden border z-20 shadow-lg ${
+          role="listbox"
+          className={`absolute right-0 mt-2 min-w-45 rounded-lg overflow-hidden border z-20 shadow-lg ${
             darkMode ? "bg-[#111827] border-[#1F2937]" : "bg-white border-[#E5E7EB]"
           }`}
         >

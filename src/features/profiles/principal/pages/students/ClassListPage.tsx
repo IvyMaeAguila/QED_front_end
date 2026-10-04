@@ -2,7 +2,6 @@ import { useOutletContext, useNavigate, useParams } from "react-router-dom";
 import { BackButton } from "../../../shared/components/DashboardUI";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
 import { useClassList, type ClassListTarget } from "./hooks/useClassList";
-import { ClassSummaryStats } from "./components/ClassSummaryStats";
 import { ClassRoster } from "./components/ClassRoster";
 import { ClassNotFound } from "./components/ClassNotFound";
 
@@ -44,25 +43,20 @@ export function ClassListPage() {
 
   return (
     <div className="flex flex-col gap-6 font-sans">
-      <div className="flex items-center gap-3">
+      <div className="flex items-start gap-2.5">
         <BackButton onClick={() => navigate("/principal/students")} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} />
-        <div>
-          <h1 className={`text-xl sm:text-2xl font-black leading-tight tracking-tight ${textPrimary}`}>
-            {classList.grade} — Class List
+        <div className="min-w-0">
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-maroon">
+            {classList.grade} · {classList.sectionInfo.section}
+          </p>
+          <h1 className={`mt-1 text-xl font-black tracking-tight ${textPrimary}`}>
+            Class List
           </h1>
-          <p className={`text-sm mt-1 ${textMuted}`}>School Year {schoolYear}</p>
+          <p className={`mt-1 text-xs font-medium ${textMuted}`}>
+            School Year {schoolYear} · Adviser {classList.sectionInfo.adviser} · Room {classList.sectionInfo.room}
+          </p>
         </div>
       </div>
-
-      <ClassSummaryStats
-        sectionInfo={classList.sectionInfo}
-        totalStudents={classList.roster.length}
-        panelBg={panelBg}
-        panelBorder={panelBorder}
-        textPrimary={textPrimary}
-        textMuted={textMuted}
-        darkMode={darkMode}
-      />
 
       <ClassRoster
         roster={classList.roster}

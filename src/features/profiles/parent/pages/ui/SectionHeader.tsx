@@ -6,8 +6,9 @@ import { COLORS } from "../Student/Overview/utils/constants";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout"; // adjust path as needed
 
 interface SectionHeaderProps {
-  icon: LucideIcon;
+  icon?: LucideIcon;
   title: string;
+  subtitle?: string;
   about?: string;
   action?: ReactNode;
   theme: AdminThemeContext;
@@ -16,6 +17,7 @@ interface SectionHeaderProps {
 export default function SectionHeader({
   icon: Icon,
   title,
+  subtitle,
   about,
   action,
   theme,
@@ -29,13 +31,20 @@ export default function SectionHeader({
     <div
       className={`relative flex items-center justify-between gap-2 border-b px-5 py-4 ${panelBorder}`}
     >
-      <div className="flex items-center gap-2">
-        <Icon size={16} color={darkMode ? "#F87171" : COLORS.maroonDark} />
-        <h3
-          className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}
-        >
-          {title}
-        </h3>
+      <div className="flex min-w-0 items-center gap-2">
+        {Icon && (
+          <Icon size={16} color={darkMode ? "#F87171" : COLORS.maroonDark} />
+        )}
+        <div className="min-w-0">
+          <h3
+            className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}
+          >
+            {title}
+          </h3>
+          {subtitle && (
+            <p className={`mt-0.5 truncate text-xs ${textMuted}`}>{subtitle}</p>
+          )}
+        </div>
       </div>
 
       <div className="flex shrink-0 items-center gap-2">

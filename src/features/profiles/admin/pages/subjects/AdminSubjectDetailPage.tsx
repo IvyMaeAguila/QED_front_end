@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, useOutletContext } from "react-router-dom";
-import { ArrowLeft, BookOpen, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import type { AdminThemeContext } from "./../AdminLayout";
-import { ACCENT } from "./types/types";
 import { SubjectGradeTemplateSection } from "./components/SubjectGradeTemplateSection";
 import {
   getActiveGradeTemplate,
@@ -34,7 +33,7 @@ export function AdminSubjectDetailPage() {
 
   if (!numericSubjectId) {
     return (
-      <div className="w-full mt-6 px-4 sm:px-6">
+      <div className="w-full">
         <p className={textMuted}>Invalid subject.</p>
       </div>
     );
@@ -42,28 +41,31 @@ export function AdminSubjectDetailPage() {
 
   const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
   const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
-  const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
+  const sectionTitleClasses = `text-xl font-black tracking-tight ${textPrimary}`;
 
   return (
-    <div className="w-full mt-6 space-y-6 pb-12 px-4 sm:px-6">
+    <div className="w-full space-y-6 pb-12">
       <section className={cardClasses}>
         <div className={cardHeaderClasses}>
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <button
               type="button"
               onClick={() => navigate("/admin/subjects")}
-              className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-colors ${
+              aria-label="Go back to academics"
+              className={`system-back-button shrink-0 ${
                 darkMode
                   ? "border-[#374151] hover:bg-white/10 text-white"
                   : "border-[#E5E7EB] hover:bg-[#F6F7FB] text-[#374151]"
               }`}
             >
-              <ArrowLeft size={14} />
+              <ArrowLeft />
             </button>
-            <h2 className={sectionTitleClasses}>
-              <BookOpen size={15} style={{ color: ACCENT }} />
-              Subject Details
-            </h2>
+            <div className="min-w-0">
+              <h1 className={sectionTitleClasses}>Subject Details</h1>
+              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+                Review the active grade template for this subject.
+              </p>
+            </div>
           </div>
         </div>
 

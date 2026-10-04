@@ -173,7 +173,7 @@ export function EditSubjectModal({
       !hasUnsetType &&
       !hasUnknownType);
 
-  const inputClasses = `w-full h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors ${
+  const inputClasses = `w-full h-10 px-3 rounded-lg border text-sm font-semibold outline-none transition-colors ${
     darkMode
       ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]"
       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
@@ -227,16 +227,17 @@ export function EditSubjectModal({
       icon={Pencil}
       onClose={onClose}
       closeDisabled={saving}
+      widthClass="max-w-5xl"
       {...theme}
     >
-      <p className={`text-[11px] font-semibold -mt-1 ${textMuted}`}>
+      <p className={`text-xs font-medium leading-relaxed lg:col-span-2 ${textMuted}`}>
         Editing renames the existing curriculum entry — this does not create a
         new subject.
       </p>
 
       {error && (
         <div
-          className={`flex items-start gap-2 rounded-xl border px-3 py-2.5 text-xs font-semibold ${
+          className={`flex items-start gap-2 rounded-lg border px-3 py-2.5 text-xs font-semibold lg:col-span-2 ${
             darkMode
               ? "border-[#7F1D1D] bg-[#7F1D1D]/20 text-[#F87171]"
               : "border-[#FEE2E2] bg-[#FEF2F2] text-[#B91C1C]"
@@ -247,6 +248,8 @@ export function EditSubjectModal({
         </div>
       )}
 
+      <div className={`grid grid-cols-1 gap-5 ${isGraded ? "lg:grid-cols-2 lg:gap-6" : ""}`}>
+      <div className={`space-y-4 ${isGraded ? "lg:col-span-2" : ""}`}>
       <div>
         <label className={labelClasses}>Subject Name</label>
         <input value={name} onChange={(e) => setName(e.target.value)} disabled={saving} className={saving ? disabledInputClasses : inputClasses} />
@@ -320,10 +323,10 @@ export function EditSubjectModal({
           <option value="non-graded">Non-Graded</option>
         </select>
       </div>
-
-      {isGraded && (
-        <div
-          className={`rounded-xl border p-3 space-y-2.5 ${
+      </div>
+{isGraded && (
+      <div
+          className={`rounded-[12px] border p-3 space-y-2.5 ${
             darkMode
               ? "border-[#374151] bg-[#0B1120]/60"
               : "border-[#E5E7EB] bg-[#F8FAFC]"
@@ -427,7 +430,7 @@ export function EditSubjectModal({
                   onClick={() => removeRow(row.id)}
                   disabled={saving || Boolean(activeTemplate)}
                   title="Remove"
-                  className={`h-10 w-10 shrink-0 rounded-xl border inline-flex items-center justify-center transition-colors disabled:opacity-50 ${
+                  className={`h-10 w-10 shrink-0 rounded-lg border inline-flex items-center justify-center transition-colors disabled:opacity-50 ${
                     darkMode
                       ? "border-[#374151] text-[#F87171] hover:bg-white/10"
                       : "border-[#E5E7EB] text-[#B91C1C] hover:bg-[#FEF2F2]"
@@ -443,7 +446,7 @@ export function EditSubjectModal({
             type="button"
             onClick={addRow}
             disabled={saving || Boolean(activeTemplate) || allTypesUsed || assessmentTypes.length === 0}
-            className={`w-full h-9 rounded-xl border border-dashed text-[11px] font-bold inline-flex items-center justify-center gap-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+            className={`w-full h-9 rounded-lg border border-dashed text-[11px] font-bold inline-flex items-center justify-center gap-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
               darkMode
                 ? "border-[#374151] text-[#D1D5DB] hover:bg-white/5"
                 : "border-[#CBD5E1] text-[#374151] hover:bg-white"
@@ -452,11 +455,12 @@ export function EditSubjectModal({
             <Plus size={13} />
             Add Assessment Type
           </button>
-        </div>
+      </div>
       )}
 
       {isGraded && (
-        loadingTemplate ? (
+      <div className="space-y-4">
+        {loadingTemplate ? (
           <div className={`flex items-center gap-2 text-xs font-semibold ${textMuted}`}>
             <Loader2 size={14} className="animate-spin" />
             Checking for an official grade template…
@@ -468,14 +472,15 @@ export function EditSubjectModal({
             activeTemplate={activeTemplate}
             onTemplateUpdated={setActiveTemplate}
           />
-        )
+        )}
+      </div>
       )}
 
-      <div className="flex gap-3 pt-2">
+      <div className="flex flex-col-reverse gap-2 pt-1 sm:flex-row sm:justify-end sm:gap-3 sm:pt-2 lg:col-span-2">
         <button
           onClick={handleClose}
           disabled={saving}
-          className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+          className={`h-10 w-full rounded-lg border px-5 text-xs font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto ${
             darkMode
               ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
               : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
@@ -486,7 +491,7 @@ export function EditSubjectModal({
         <button
           onClick={handleSave}
           disabled={saving || !weightsValid || !name.trim() || !section.trim() || !schoolYear}
-          className={`flex-1 h-10 rounded-xl text-xs font-bold text-white inline-flex items-center justify-center gap-2 transition-opacity ${
+          className={`inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg px-5 text-xs font-bold text-white transition-opacity sm:w-auto ${
             saving || !weightsValid || !name.trim() || !section.trim() || !schoolYear
               ? "opacity-50 cursor-not-allowed"
               : "hover:opacity-90"
@@ -496,6 +501,7 @@ export function EditSubjectModal({
           {saving && <Loader2 size={14} className="animate-spin" />}
           {saving ? "Saving..." : "Save Changes"}
         </button>
+      </div>
       </div>
     </ModalShell>
   );

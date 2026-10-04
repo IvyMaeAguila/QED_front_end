@@ -1,10 +1,9 @@
 import { useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import ExcelJS from "exceljs";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
 import { useSelectedAdvisorySection } from "../attendance/services/useSelectedAdvisorySection.service";
 import { AdvisorySectionTabs } from "../attendance/components/AdvisorySectionTabs.tsx";
-import type { RosterStudent } from "../subjects/detail/data";
+import { normalizeRosterGender, type RosterStudent } from "../subjects/detail/data";
 
 import { AdvisorySkeleton } from "./components/AdvisorySkeleton";
 import { AdvisoryHeader } from "./components/AdvisoryHeader";
@@ -36,14 +35,15 @@ export function AdvisoryRosterPage() {
     if (!section) return [];
     const query = search.trim().toLowerCase();
     return section.roster
-      .filter((student) => genderFilter === "All" || student.gender === genderFilter)
+      .filter((student) => genderFilter === "All" || normalizeRosterGender(student.gender) === genderFilter)
       .filter((student) => !query || student.name.toLowerCase().includes(query))
       .sort(sortByName);
   }, [section, genderFilter, search]);
 
   const handleExport = async () => {
     if (!section) return;
-    const workbook = new ExcelJS.Workbook();
+    const { default: ExcelJSRuntime } = await import("exceljs");
+    const workbook = new ExcelJSRuntime.Workbook();
     const sheet = workbook.addWorksheet("Advisory Roster");
     sheet.columns = [
       { header: "No.", key: "no", width: 6 },
@@ -55,7 +55,12 @@ export function AdvisoryRosterPage() {
       sheet.addRow({
         no: index + 1,
         name: student.name,
-        gender: student.gender === "F" ? "Female" : "Male",
+        gender:
+          normalizeRosterGender(student.gender) === "F"
+            ? "Female"
+            : normalizeRosterGender(student.gender) === "M"
+              ? "Male"
+              : "Not specified",
       })
     );
     const buffer = await workbook.xlsx.writeBuffer();
@@ -69,8 +74,12 @@ export function AdvisoryRosterPage() {
     URL.revokeObjectURL(url);
   };
 
-  const maleCount = section ? section.roster.filter((s) => s.gender === "M").length : 0;
-  const femaleCount = section ? section.roster.filter((s) => s.gender === "F").length : 0;
+  const maleCount = section
+    ? section.roster.filter((student) => normalizeRosterGender(student.gender) === "M").length
+    : 0;
+  const femaleCount = section
+    ? section.roster.filter((student) => normalizeRosterGender(student.gender) === "F").length
+    : 0;
 
   // sections === undefined -> still loading which classes the teacher has
   if (sections === undefined) {
@@ -79,7 +88,7 @@ export function AdvisoryRosterPage() {
 
   if (sectionError) {
     return (
-      <div className="max-w-6xl mx-auto space-y-4 pb-12">
+      <div className="w-full space-y-6 pb-12">
         <button onClick={() => navigate(-1)} className={`flex items-center gap-2 text-sm font-bold ${textMuted}`}>
           Back
         </button>
@@ -93,7 +102,7 @@ export function AdvisoryRosterPage() {
   // sections === null -> confirmed zero advisory classes
   if (!section) {
     return (
-      <div className="max-w-6xl mx-auto space-y-4 pb-12">
+      <div className="w-full space-y-6 pb-12">
         <button onClick={() => navigate(-1)} className={`flex items-center gap-2 text-sm font-bold ${textMuted}`}>
           Back
         </button>
@@ -105,7 +114,7 @@ export function AdvisoryRosterPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-4 pb-12">
+    <div className="w-full space-y-6 pb-12">
       <AdvisoryHeader
         darkMode={darkMode}
         panelBg={panelBg}

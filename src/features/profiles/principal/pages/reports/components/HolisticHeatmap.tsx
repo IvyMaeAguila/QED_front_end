@@ -18,15 +18,20 @@ export const DOMAIN_META: Record<DomainKey, { label: string; short: string; icon
 };
 
 const BANDS = [
-  { from: 4.5, to: 5.01, label: "Excellent", color: "#22C55E" },
-  { from: 3.5, to: 4.5, label: "Good", color: "#34D399" },
-  { from: 2.5, to: 3.5, label: "Average", color: "#F59E0B" },
-  { from: 1.5, to: 2.5, label: "Needs Improvement", color: "#FB923C" },
-  { from: 1.0, to: 1.5, label: "Critical", color: "#EF4444" },
+  { from: 4.5, to: 5.01, label: "Excellent", range: "4.5–5.0", color: "#22C55E" },
+  { from: 3.5, to: 4.5, label: "Good", range: "3.5–4.4", color: "#34D399" },
+  { from: 2.5, to: 3.5, label: "Average", range: "2.5–3.4", color: "#F59E0B" },
+  { from: 1.5, to: 2.5, label: "Needs Improvement", range: "1.5–2.4", color: "#FB923C" },
+  { from: 1.0, to: 1.5, label: "Critical", range: "1.0–1.4", color: "#EF4444" },
 ];
 
 function bandFor(value: number) {
   return BANDS.find((b) => value >= b.from && value < b.to) ?? BANDS[2];
+}
+
+function opacityFor(value: number) {
+  const distance = Math.abs(value - 3) / 2;
+  return 0.18 + distance * 0.62;
 }
 
 const DOMAIN_INTERPRETATIONS: Record<DomainKey, Record<1 | 2 | 3 | 4 | 5, string>> = {
@@ -66,14 +71,6 @@ function interpretScore(domain: DomainKey, value: number | null): string | null 
   return DOMAIN_INTERPRETATIONS[domain][rounded];
 }
 
-// Opacity ramps with distance from the middle of the scale (3.0) so
-// strong scores in either direction read as more saturated than
-// borderline ones.
-function opacityFor(value: number) {
-  const distance = Math.abs(value - 3) / 2; 
-  return 0.18 + distance * 0.62;
-}
-
 interface HolisticHeatmapProps {
   rows: HeatmapRow[];
   rowHeader: string; 
@@ -87,7 +84,7 @@ export function HolisticHeatmap({ rows, rowHeader, panelBorder, textPrimary, tex
   const [hovered, setHovered] = useState<{ row: string; domain: DomainKey } | null>(null);
   const domainKeys = Object.keys(DOMAIN_META) as DomainKey[];
 
-  const cellBg = darkMode ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)";
+  const cellBg = darkMode ? "rgba(255,255,255,0.035)" : "#FAFAFB";
   const hairline = darkMode ? "border-white/[0.08]" : "border-black/[0.06]";
 
   const hoveredRow = hovered ? rows.find((r) => r.label === hovered.row) : null;
@@ -101,9 +98,9 @@ export function HolisticHeatmap({ rows, rowHeader, panelBorder, textPrimary, tex
       <div className={`overflow-hidden rounded-2xl border ${panelBorder}`}>
         <div className="grid" style={{ gridTemplateColumns: `140px repeat(${domainKeys.length}, 1fr)` }}>
           {/* header row */}
-          <div className={`flex items-center px-4 py-3 text-[11px] font-bold uppercase tracking-wide border-b border-r ${hairline} ${textMuted}`}>{rowHeader}</div>
+          <div className={`flex items-center px-4 py-3 text-[10px] font-bold uppercase tracking-wider border-b border-r ${hairline} ${darkMode ? "bg-white/[0.04]" : "bg-[#F4F5F7]"} ${textMuted}`}>{rowHeader}</div>
           {domainKeys.map((key) => (
-            <div key={key} className={`flex items-center justify-center px-2 py-3 text-[11px] font-bold uppercase tracking-wide border-b ${hairline} ${textMuted}`}>
+            <div key={key} className={`flex items-center justify-center px-2 py-3 text-[10px] font-bold uppercase tracking-wider border-b ${hairline} ${darkMode ? "bg-white/[0.04]" : "bg-[#F4F5F7]"} ${textMuted}`}>
               {DOMAIN_META[key].label}
             </div>
           ))}
@@ -126,19 +123,17 @@ export function HolisticHeatmap({ rows, rowHeader, panelBorder, textPrimary, tex
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap items-center gap-4">
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
         {BANDS.map((band) => (
           <div key={band.label} className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-sm" style={{ backgroundColor: band.color }} />
-            <span className={`text-[11px] font-semibold ${textMuted}`}>{band.label}</span>
+            <span className="h-3 w-3 rounded-sm border border-black/10" style={{ backgroundColor: band.color }} />
+            <span className={`text-[10px] font-semibold ${textMuted}`}>{band.label}</span>
+            <span className={`text-[10px] tabular-nums ${textMuted}`}>{band.range}</span>
           </div>
         ))}
       </div>
 
-      {/* Hover readout — idle and hovered states share the same
-          icon-badge layout, so the panel always looks intentional rather
-          than switching to plain text when nothing is hovered. */}
-      <div className={`flex min-h-17 items-center gap-3.5 rounded-xl border ${panelBorder} px-5 py-3.5`}>
+      <div className={`flex min-h-14 items-center gap-3 rounded-xl border ${panelBorder} px-4 py-3`}>
         {hovered ? (
           <div className="min-w-0">
             <p className={`text-sm font-bold ${textPrimary}`}>
@@ -155,9 +150,9 @@ export function HolisticHeatmap({ rows, rowHeader, panelBorder, textPrimary, tex
             </p>
           </div>
         ) : (
-          <p className="flex items-center gap-1.5 text-sm font-medium" style={{ color: "#6B7280" }}>
-            <MousePointerClick className="h-4 w-4 shrink-0" strokeWidth={2.25} />
-            Hover a cell to see what the score means.
+          <p className={`flex items-center gap-1.5 text-xs font-medium ${textMuted}`}>
+            <MousePointerClick className="h-3.5 w-3.5 shrink-0" strokeWidth={2.25} />
+            Hover over or focus a score to see its meaning.
           </p>
         )}
       </div>
@@ -186,7 +181,7 @@ function RowCells({
 }) {
   return (
     <>
-      <div className={`flex items-center px-4 py-3 text-xs font-bold border-r ${hairline} ${textPrimary}`} style={{ backgroundColor: cellBg }}>
+      <div className={`flex items-center px-4 py-3 text-xs font-semibold border-r border-b ${hairline} ${textPrimary}`} style={{ backgroundColor: cellBg }}>
         {row.label}
       </div>
       {domainKeys.map((key) => {
@@ -198,19 +193,16 @@ function RowCells({
             type="button"
             onMouseEnter={() => setHovered({ row: row.label, domain: key })}
             onMouseLeave={() => setHovered(null)}
-            className="relative flex items-center justify-center py-3 text-xs font-black tabular-nums transition-transform"
+            onFocus={() => setHovered({ row: row.label, domain: key })}
+            onBlur={() => setHovered(null)}
+            aria-label={`${row.label}, ${DOMAIN_META[key].label}: ${value === null ? "no score" : value.toFixed(1)}`}
+            className={`relative flex items-center justify-center border-r border-b py-3 text-xs font-bold tabular-nums transition-[box-shadow] focus-visible:z-10 focus-visible:outline-none ${hairline}`}
             style={{
-              backgroundColor:
-                value === null
-                  ? cellBg
-                  : `${bandFor(value).color}${Math.round(opacityFor(value) * 255)
-                      .toString(16)
-                      .padStart(2, "0")}`,
+              backgroundColor: value === null
+                ? cellBg
+                : `${bandFor(value).color}${Math.round(opacityFor(value) * 255).toString(16).padStart(2, "0")}`,
               color: "#1A1A1A",
-              transform: isHovered ? "scale(1.1)" : "scale(1)",
-              zIndex: isHovered ? 1 : 0,
-              outline: isHovered ? "2.5px solid rgba(107,0,0,0.55)" : "none",
-              outlineOffset: "-2.5px",
+              boxShadow: isHovered ? "inset 0 0 0 2px #6B0000" : undefined,
             }}
           >
             {value === null ? <span className={`text-[10px] font-medium ${textMuted}`}>&mdash;</span> : value.toFixed(1)}

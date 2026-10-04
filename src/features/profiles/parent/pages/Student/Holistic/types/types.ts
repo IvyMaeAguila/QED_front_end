@@ -20,6 +20,12 @@ export interface WholeChildSnapshotData {
   riskLevel: RiskLevel;
 }
 
+export interface SubjectHolisticSnapshot {
+  subjectSectionId: string;
+  subjectName: string;
+  current: WholeChildSnapshotData;
+}
+
 /** A single past evaluation period, for the "previous results" comparison view. */
 export interface HistoryEntry {
   /** Short label for this period, e.g. "Week of Aug 17" or "Q1". */
@@ -35,7 +41,7 @@ export interface DomainSummary {
   /** Latest weekly average, 1.0–5.0, or null if no data yet. */
   latest: number | null;
 }
- 
+
 /** Minimal theme shape this section needs — pass your existing AdminThemeContext values. */
 export interface DataMeaningTheme {
   darkMode: boolean;
@@ -44,4 +50,3 @@ export interface DataMeaningTheme {
   textPrimary: string;
   textMuted: string;
 }
- 

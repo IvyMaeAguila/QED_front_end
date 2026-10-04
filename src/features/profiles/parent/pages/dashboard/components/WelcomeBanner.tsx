@@ -5,7 +5,6 @@ interface WelcomeBannerProps {
   childrenCount: number;
   noticesCount: number;
   onLinkStudent: () => void;
-  panelBg?: string;
   panelBorder?: string;
   textPrimary?: string;
   textMuted?: string;
@@ -18,36 +17,55 @@ const guideSteps = [
   { number: 3, title: "Track progress", description: "View attendance and progress anytime." },
 ];
 
+// Helper function to get the greeting based on the hour
+function getGreeting(): string {
+  const hour = new Date().getHours();
+
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
+}
+
 export default function WelcomeBanner({
   parentName,
   childrenCount,
   noticesCount,
   onLinkStudent,
-  panelBg = "bg-white",
   panelBorder = "border-[#E5E7EB]",
   textPrimary = "text-gray-900",
   textMuted = "text-gray-500",
   darkMode = false,
 }: WelcomeBannerProps) {
+  const greeting = getGreeting();
   const hasChildren = childrenCount > 0;
 
   return (
-    <div className="overflow-hidden rounded-xl2 bg-gradient-to-br from-maroon-dark to-maroon shadow-panel">
-      <div className="px-6 py-6 sm:px-8 sm:py-7">
-        <p className="text-xs font-semibold uppercase tracking-wider text-white/70">Welcome back!</p>
-        <h1 className="mt-1 text-2xl font-extrabold text-white sm:text-3xl">{parentName}</h1>
-        <p className="mt-1 max-w-md text-sm text-white/80">
+    <div
+      className="relative overflow-hidden rounded-2xl text-white"
+      style={{
+        background: "linear-gradient(135deg, #550000 0%, #BB0000 100%)",
+        boxShadow: "0 12px 32px rgba(85,0,0,0.25)",
+      }}
+    >
+      <div className="relative flex min-h-48 flex-col justify-center p-6 sm:p-8">
+        <span className="mb-4 inline-flex w-fit items-center rounded-full border border-white/10 bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-white/80">
+          Welcome back
+        </span>
+        <h1 className="text-2xl font-black leading-tight tracking-tight sm:text-[32px]">
+          {greeting}, {parentName}!
+        </h1>
+        <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/80 sm:text-[15px]">
           Track your children's academic progress and stay connected with MSEUF-CI.
         </p>
 
         <div className="mt-4 flex flex-wrap gap-2.5">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 text-xs font-medium text-white">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-xs font-medium text-white">
             <CircleUserRound size={14} />
             {childrenCount} {childrenCount === 1 ? "Child" : "Children"} Enrolled
           </span>
           <span
             className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${
-              darkMode ? "bg-[#111827] text-white" : "bg-white text-maroon-dark"
+              darkMode ? "bg-[#111827] text-white" : "bg-white text-[#550000]"
             }`}
           >
             <Bell size={14} />
@@ -57,10 +75,10 @@ export default function WelcomeBanner({
       </div>
 
       {!hasChildren && (
-        <div className={`border-t border-white/10 px-6 py-6 sm:px-8 ${panelBg}`}>
+        <div className={`border-t border-white/10 px-6 py-6 sm:px-8 ${darkMode ? "bg-[#2A1A18]" : "bg-white"}`}>
           <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center">
-            <div className="hidden h-24 w-32 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-rose-100 to-amber-100 sm:flex">
-              <CircleUserRound size={44} className="text-maroon/40" />
+            <div className={`hidden h-24 w-32 shrink-0 items-center justify-center rounded-lg sm:flex ${darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}`}>
+              <CircleUserRound size={44} className="text-[#6B0000]/60" />
             </div>
             <div className="flex-1">
               <h2 className={`text-base font-bold ${textPrimary}`}>
@@ -71,7 +89,7 @@ export default function WelcomeBanner({
               </p>
               <button
                 onClick={onLinkStudent}
-                className="mt-3 inline-flex items-center gap-2 rounded-lg bg-maroon-dark px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-maroon"
+                className="mt-3 inline-flex items-center gap-2 rounded-lg bg-[#550000] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#BB0000]"
               >
                 <UserPlus size={16} />
                 Link Student
@@ -87,7 +105,7 @@ export default function WelcomeBanner({
             <div className="grid gap-3 sm:grid-cols-3">
               {guideSteps.map((step) => (
                 <div key={step.number} className={`flex items-start gap-2.5 rounded-lg border p-3 ${panelBorder}`}>
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-maroon-dark text-[11px] font-bold text-white">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#550000] text-[11px] font-bold text-white">
                     {step.number}
                   </span>
                   <div>

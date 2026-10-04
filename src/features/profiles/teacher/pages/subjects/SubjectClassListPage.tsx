@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useOutletContext } from "react-router-dom";
-import ExcelJS from "exceljs";
-import { ChevronLeft, Download, Loader2, Search, Users } from "lucide-react";
+import { ArrowLeft, Download, Loader2, Search, Users } from "lucide-react";
 import { StudentAvatar } from "@shared/components/StudentAvatar";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
 import {
@@ -79,7 +78,8 @@ export function SubjectClassListPage() {
   const displaySectionName = sectionName ? `${gradeLevel} · Section ${sectionName}` : gradeLevel;
 
   const handleExport = async () => {
-    const workbook = new ExcelJS.Workbook();
+    const { default: ExcelJSRuntime } = await import("exceljs");
+    const workbook = new ExcelJSRuntime.Workbook();
     const sheet = workbook.addWorksheet("Class List");
     sheet.columns = [
       { header: "No.", key: "no", width: 6 },
@@ -138,15 +138,15 @@ export function SubjectClassListPage() {
 
   return (
     <div className="w-full min-h-full pb-12">
-      <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
+      <div className="w-full space-y-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2.5">
             <button
               onClick={() => navigate(-1)}
               aria-label="Go back"
-              className={`mt-1 shrink-0 ${textMuted}`}
+              className={`system-back-button mt-1 shrink-0 border ${panelBg} ${panelBorder} ${textMuted}`}
             >
-              <ChevronLeft size={22} />
+              <ArrowLeft size={18} />
             </button>
             <div>
               <p
@@ -224,7 +224,7 @@ export function SubjectClassListPage() {
                 </p>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-max text-sm">
+                  <table className="teacher-user-table w-full min-w-max text-sm">
                     <thead>
                       <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
                         <th

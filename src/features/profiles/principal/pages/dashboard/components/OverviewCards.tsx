@@ -28,6 +28,7 @@ export function OverviewCards({
         value={overview.totalStudents.toLocaleString()}
         sub="Currently enrolled"
         icon={GraduationCap}
+        showIcon={false}
         variant="spotlight"
         panelBg={panelBg}
         panelBorder={panelBorder}
@@ -40,6 +41,7 @@ export function OverviewCards({
         value={overview.totalTeachers.toString()}
         sub="Active teachers"
         icon={Users}
+        showIcon={false}
         variant="gold"
         panelBg={panelBg}
         panelBorder={panelBorder}
@@ -52,6 +54,7 @@ export function OverviewCards({
         value={`${overview.attendance}%`}
         sub={`${currentTermLabel} average`}
         icon={TrendingUp}
+        showIcon={false}
         trend={overview.attendance >= 93 ? "up" : "down"}
         variant="primary"
         panelBg={panelBg}
@@ -65,6 +68,7 @@ export function OverviewCards({
         value={`${overview.academicPerf}%`}
         sub={`${currentTermLabel} overall`}
         icon={TrendingUp}
+        showIcon={false}
         trend={overview.academicPerf >= 82 ? "up" : "down"}
         variant="primary"
         panelBg={panelBg}
@@ -78,6 +82,7 @@ export function OverviewCards({
         value={overview.needsIntervention.toString()}
         sub="Students flagged"
         icon={AlertTriangle}
+        showIcon={false}
         trend={overview.needsIntervention <= 35 ? "up" : "down"}
         variant="alert"
         panelBg={panelBg}

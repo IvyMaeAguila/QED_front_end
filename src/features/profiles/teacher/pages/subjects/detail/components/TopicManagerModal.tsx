@@ -75,14 +75,15 @@ export function TopicManagerModal({
       <div
         role="dialog"
         aria-modal="true"
-        className={`w-full max-w-md overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`}
+        className={`w-full max-w-lg overflow-hidden rounded-2xl border border-t-4 border-t-[#800000] shadow-card ${panelBg} ${panelBorder}`}
+        style={{ borderTopColor: "#800000" }}
       >
-        <div className={`flex items-center justify-between gap-3 border-b px-4 py-2.5 ${panelBorder}`}>
-          <div className="flex min-w-0 items-center gap-2">
-            <Tag size={13} style={{ color: ACCENT }} />
+        <div className={`flex items-center justify-between gap-3 border-b px-5 py-4 ${panelBorder}`}>
+          <div className="flex min-w-0 items-center gap-2.5">
+            <Tag size={16} style={{ color: ACCENT }} />
             <div className="min-w-0">
-              <p className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>Manage Topics</p>
-              <p className={`truncate text-[11px] font-medium ${textMuted}`}>
+              <p className={`text-sm font-bold uppercase tracking-wide ${textPrimary}`}>Manage Topics</p>
+              <p className={`truncate text-xs font-medium ${textMuted}`}>
                 Group assessments by what they cover
               </p>
             </div>
@@ -90,15 +91,15 @@ export function TopicManagerModal({
           <button
             onClick={onClose}
             aria-label="Close"
-            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition-colors ${
+            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
               darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#64748B] hover:bg-black/5"
             }`}
           >
-            <X size={14} />
+            <X size={16} />
           </button>
         </div>
 
-        <div className="p-4">
+        <div className="p-5">
           {/* Add topic row */}
           <div className="flex gap-2">
             <input
@@ -108,13 +109,13 @@ export function TopicManagerModal({
                 if (e.key === "Enter") handleAdd();
               }}
               placeholder="e.g. Fractions, Photosynthesis"
-              className={`h-8 flex-1 rounded-lg border px-3 text-[11px] font-bold outline-none transition focus:ring-2 ${panelBg} ${panelBorder} ${textPrimary}`}
+              className={`h-10 flex-1 rounded-lg border px-3 text-xs font-bold outline-none transition focus:ring-2 ${panelBg} ${panelBorder} ${textPrimary}`}
               style={{ "--tw-ring-color": `${ACCENT}55` } as CSSProperties}
             />
             <button
               onClick={handleAdd}
               disabled={saving || !newTopicName.trim()}
-              className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg bg-[#800000] px-3 text-[11px] font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-40"
+              className="flex h-10 shrink-0 items-center gap-1.5 rounded-lg bg-[#800000] px-4 text-xs font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-40"
             >
               <Plus size={12} />
               Add

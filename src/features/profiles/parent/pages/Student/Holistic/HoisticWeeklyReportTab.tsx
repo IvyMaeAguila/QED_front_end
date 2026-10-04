@@ -64,6 +64,7 @@ export default function HolisticTab({ termKey, student, theme }: HolisticTabProp
           <WholeChildSnapshot
             {...data!.current}
             history={data!.history}
+            subjects={data!.subjects}
             termKey={termKey}
             student={student}
           />

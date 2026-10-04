@@ -42,7 +42,7 @@ export function UserManagementPage() {
 
   return (
     <div className="w-full min-h-full pb-0">
-      <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
+      <div className="w-full space-y-6">
         {/* Page header */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2.5">

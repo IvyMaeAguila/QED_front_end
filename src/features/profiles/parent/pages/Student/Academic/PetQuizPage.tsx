@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Flame, ChevronLeft } from "lucide-react";
 import QedPet, { type PetState } from "./components/QedPet";
+import QuestWorldBackground from "./components/QuestWorldBackground";
 import EDJourneyIntro from "./components/EDJourneyIntro";
 import LevelSelect, { type BonusGame } from "./components/LevelSelect";
 import MatchGame from "./components/MatchGame";
@@ -637,7 +638,8 @@ export default function PetQuizPage() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 p-4">
+    <div className="relative isolate -m-4 flex min-h-[calc(100dvh-5.8125rem)] flex-col items-center gap-4 overflow-x-clip p-4 sm:-m-6 sm:p-6">
+      <QuestWorldBackground />
       {view !== "quiz" && (
         <button
           type="button"

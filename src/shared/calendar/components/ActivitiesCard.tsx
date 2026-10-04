@@ -9,6 +9,8 @@ interface ActivitiesCardProps extends CalendarTheme {
   onExpand: () => void;
   /** Ang buwan na kasalukuyang tinitingnan sa MonthGrid (viewDate) */
   viewDate?: Date;
+  /** Piniling araw sa MonthGrid para maipakita lang ang mga activity nito. */
+  selectedDate?: Date;
 }
 
 interface ActivityGroupListProps {
@@ -17,6 +19,7 @@ interface ActivityGroupListProps {
   textMuted: string;
   onEdit?: (activity: CalendarActivity) => void;
   onDelete?: (activity: CalendarActivity) => void;
+  emptyMessage?: string;
 }
 
 // --------------------------------------------------------
@@ -32,6 +35,14 @@ function filterActivitiesForMonth(
   const referenceYearMonth = toISODate(referenceDate).slice(0, 7); // "YYYY-MM"
 
   return activities.filter((a) => a.date.slice(0, 7) === referenceYearMonth);
+}
+
+function filterActivitiesForDate(
+  activities: CalendarActivity[],
+  selectedDate: Date,
+): CalendarActivity[] {
+  const selectedISO = toISODate(selectedDate);
+  return activities.filter((activity) => activity.date.slice(0, 10) === selectedISO);
 }
 
 function isToday(dateStr: string): boolean {
@@ -111,11 +122,12 @@ export function ActivityGroupList({
   textMuted,
   onEdit,
   onDelete,
+  emptyMessage = "No activities yet.",
 }: ActivityGroupListProps) {
   const grouped = groupActivitiesByMonth(activities);
 
   if (grouped.length === 0) {
-    return <p className={`py-2 text-xs ${textMuted}`}>No activities yet.</p>;
+    return <p className={`py-2 text-xs ${textMuted}`}>{emptyMessage}</p>;
   }
 
   return (
@@ -146,28 +158,27 @@ export function ActivitiesCard({
   activities,
   onExpand,
   viewDate,
+  selectedDate,
   darkMode,
   panelBg,
   textMuted,
 }: ActivitiesCardProps) {
-  // Ipapakita lang dito sa card ang mga activity ng buwang
-  // kasalukuyang tinitingnan sa MonthGrid (viewDate), hindi
-  // laging "this month" base sa totoong petsa ngayon.
-  // Fallback sa "today" kung sakaling hindi naipasa ang viewDate.
-  const currentMonthActivities = filterActivitiesForMonth(
-    activities,
-    viewDate ?? new Date()
-  );
+  // Use the selected date when available; otherwise preserve the month view
+  // for calendar card consumers that do not provide selectedDate.
+  const visibleActivities = selectedDate
+    ? filterActivitiesForDate(activities, selectedDate)
+    : filterActivitiesForMonth(activities, viewDate ?? new Date());
 
   return (
-    <div className={`rounded-xl2 p-5 shadow-card ${panelBg}`}>
+    <div className={`rounded-[12px] p-5 shadow-card ${panelBg}`}>
       <div className="mb-3 flex items-center justify-between">
-        <p
-          className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textMuted}`}
-        >
-          <CalendarRange size={14} className="text-maroon-dark" />
-          Activities
-        </p>
+        <div>
+          <p className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textMuted}`}>
+            <CalendarRange size={14} className="text-maroon-dark" />
+            Activities
+          </p>
+          {selectedDate && <p className={`mt-1 pl-5 text-[11px] ${textMuted}`}>{selectedDate.toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}</p>}
+        </div>
         <button
           onClick={onExpand}
           aria-label="Expand activities"
@@ -184,9 +195,10 @@ export function ActivitiesCard({
       <div className="max-h-96 overflow-y-auto pr-1">
         {/* No onEdit/onDelete here — actions only appear in the expanded modal */}
         <ActivityGroupList
-          activities={currentMonthActivities}
+          activities={visibleActivities}
           darkMode={darkMode}
           textMuted={textMuted}
+          emptyMessage={selectedDate ? "No activities on this date." : undefined}
         />
       </div>
     </div>

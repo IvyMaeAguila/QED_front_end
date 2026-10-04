@@ -137,7 +137,7 @@ export function AddItemModal({
     }
   }
 
-  const fieldRow = `flex h-8 w-full items-center gap-2 rounded-lg border px-2.5 text-[11px] font-bold outline-none transition-colors ${
+  const fieldRow = `flex h-10 w-full items-center gap-2.5 rounded-lg border px-3 text-xs font-bold outline-none transition-colors ${
     darkMode ? "border-white/10 bg-white/5" : "border-black/10 bg-[#F8FAFC]"
   }`;
   const inputBare = `flex-1 bg-transparent outline-none ${
@@ -152,28 +152,29 @@ export function AddItemModal({
       <div
         role="dialog"
         aria-modal="true"
-        className={`w-full max-w-md overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`}
+        className={`w-full max-w-lg overflow-hidden rounded-2xl border border-t-4 border-t-[#800000] shadow-card ${panelBg} ${panelBorder}`}
+        style={{ borderTopColor: "#800000" }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className={`flex items-center justify-between gap-3 border-b px-4 py-2.5 ${panelBorder}`}>
+        <div className={`flex items-center justify-between gap-3 border-b px-5 py-4 ${panelBorder}`}>
           <div className="min-w-0">
-            <p className={`truncate text-xs font-bold uppercase tracking-wide ${textPrimary}`}>{subjectName}</p>
-            <p className={`text-[11px] font-medium ${textMuted}`}>
+            <p className={`truncate text-sm font-bold uppercase tracking-wide ${textPrimary}`}>{subjectName}</p>
+            <p className={`text-xs font-medium ${textMuted}`}>
               {isEdit ? "Edit" : "Add"} {ASSESSMENT_TAB_LABELS[tab]}
             </p>
           </div>
           <button
             onClick={onClose}
             aria-label="Close"
-            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition-colors ${
+            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
               darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#64748B] hover:bg-black/5"
             }`}
           >
-            <X size={14} />
+            <X size={16} />
           </button>
         </div>
 
-        <div className="space-y-2 p-4">
+        <div className="space-y-3 p-5">
           <label className={fieldRow}>
             <Calendar size={13} className={textMuted} />
             <input
@@ -289,7 +290,7 @@ export function AddItemModal({
           <button
             onClick={handleConfirm}
             disabled={submitting}
-            className="mt-1 flex h-9 w-full items-center justify-center rounded-lg bg-[#800000] text-xs font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-60"
+            className="mt-1 flex h-10 w-full items-center justify-center rounded-lg bg-[#800000] text-sm font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-60"
           >
             {submitting ? "Saving..." : isEdit ? "Save Changes" : "Confirm"}
           </button>

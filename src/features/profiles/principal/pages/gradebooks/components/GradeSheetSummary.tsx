@@ -1,4 +1,3 @@
-import { ClipboardList, Users } from "lucide-react";
 import { MiniStat, MiniStatRow } from "../../../../shared/components/DashboardUI";
 
 interface GradeSheetSummaryProps {
@@ -27,7 +26,6 @@ export function GradeSheetSummary({
       <MiniStat
         label="Total Students"
         value={totalStudents.toString()}
-        icon={ClipboardList}
         textPrimary={textPrimary}
         textMuted={textMuted}
         darkMode={darkMode}
@@ -36,7 +34,6 @@ export function GradeSheetSummary({
       <MiniStat
         label="Male"
         value={maleCount.toString()}
-        icon={Users}
         textPrimary={textPrimary}
         textMuted={textMuted}
         darkMode={darkMode}
@@ -44,7 +41,6 @@ export function GradeSheetSummary({
       <MiniStat
         label="Female"
         value={femaleCount.toString()}
-        icon={Users}
         textPrimary={textPrimary}
         textMuted={textMuted}
         darkMode={darkMode}

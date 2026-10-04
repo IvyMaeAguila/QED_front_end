@@ -8,13 +8,13 @@ export function HeroCard() {
   return (
     <div className="relative w-full max-w-135 mx-auto">
       {/* glow ring behind card */}
-      <div className="absolute -inset-4 bg-linear-to-br from-[#bb0000]/20 to-[#C89B3C]/20 rounded-3xl blur-2xl" />
+      <div className="absolute -inset-4 bg-[#800000]/10 rounded-3xl blur-xl" />
 
       <div className="relative bg-linear-to-b from-[#550000] to-[#bb0000] rounded-2xl p-4 shadow-2xl">
         <div className="bg-white rounded-2xl p-6 flex flex-col items-center gap-5">
           <LogoComponent size="lg" />
           <div className="text-center">
-            <p className="text-xl font-bold text-black font-['Sora',sans-serif]">
+            <p className="text-xl font-bold text-black font-sans">
               Welcome to QED
             </p>
             <p className="text-[#5d5d5d] text-xs mt-1">
@@ -22,9 +22,9 @@ export function HeroCard() {
             </p>
           </div>
           <div className="flex flex-col gap-2 w-full">
-            <FeatureTag label="Academic Monitoring" bgColor="bg-[#d6f8d6]" dotColor="bg-[#33db0d]" />
-            <FeatureTag label="Holistic Evaluation" bgColor="bg-[#b5cffa]" dotColor="bg-[#0d66db]" />
-            <FeatureTag label="Real-Time Analytics" bgColor="bg-[#e5c7ff]" dotColor="bg-[#db0dc3]" />
+            <FeatureTag label="Academic Monitoring" bgColor="bg-[#F1EFEC]" dotColor="bg-[#800000]" />
+            <FeatureTag label="Holistic Evaluation" bgColor="bg-[#F1EFEC]" dotColor="bg-[#800000]" />
+            <FeatureTag label="Real-Time Analytics" bgColor="bg-[#F1EFEC]" dotColor="bg-[#800000]" />
           </div>
         </div>
       </div>
@@ -51,7 +51,7 @@ export function FeatureCard({
         {icon}
       </div>
       <div>
-        <p className="text-lg font-semibold text-black font-['Sora',sans-serif]">{title}</p>
+        <p className="text-lg font-semibold text-black font-sans">{title}</p>
         <p className="text-[#5d5d5d] text-sm mt-1 leading-relaxed">{description}</p>
       </div>
     </div>
@@ -77,7 +77,7 @@ export function CompactFeatureCard({
         {icon}
       </div>
       <div>
-        <p className="text-sm font-semibold text-black font-['Sora',sans-serif] leading-snug">{title}</p>
+        <p className="text-sm font-semibold text-black font-sans leading-snug">{title}</p>
         <p className="text-[#5d5d5d] text-xs mt-1 leading-relaxed">{description}</p>
       </div>
     </div>
@@ -98,7 +98,7 @@ export function PillarCard({
       <div className="w-14 h-14 rounded-full bg-[#550000]/8 flex items-center justify-center [&_svg]:w-6 [&_svg]:h-6 [&_svg]:text-[#550000]">
         {icon}
       </div>
-      <p className="text-base font-semibold text-black font-['Sora',sans-serif]">{title}</p>
+      <p className="text-base font-semibold text-black font-sans">{title}</p>
       <p className="text-[#5d5d5d] text-sm leading-relaxed max-w-56">{description}</p>
     </div>
   );
@@ -114,11 +114,11 @@ export function RoleCard({
   description: string;
 }) {
   return (
-    <div className="bg-white border border-[rgba(102,102,102,0.12)] rounded-2xl p-6 flex flex-col gap-3 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+    <div className="h-full min-h-[235px] bg-white border border-[rgba(102,102,102,0.12)] rounded-xl p-6 flex flex-col gap-3">
       <div className="w-12 h-12 rounded-xl bg-linear-to-br from-[#550000] to-[#bb0000] flex items-center justify-center [&_svg]:w-5 [&_svg]:h-5 [&_svg]:text-white">
         {icon}
       </div>
-      <p className="text-base font-bold text-black font-['Sora',sans-serif]">{role}</p>
+      <p className="text-base font-bold text-black font-sans">{role}</p>
       <p className="text-[#5d5d5d] text-sm leading-relaxed">{description}</p>
     </div>
   );

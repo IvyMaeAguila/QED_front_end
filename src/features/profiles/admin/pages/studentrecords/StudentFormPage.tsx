@@ -1,6 +1,6 @@
 import { useState, type FormEvent, useEffect } from "react";
 import { useNavigate, useParams, useOutletContext } from "react-router-dom";
-import { ArrowLeft, Save, IdCard } from "lucide-react";
+import { ArrowLeft, Save } from "lucide-react";
 import { useStudents } from "./context/StudentsContext";
 import { GENDERS, type Gender } from "./types/Students";
 import type { AdminThemeContext } from "../AdminLayout";
@@ -12,8 +12,14 @@ import {
 } from "./services/grade-section.service";
 import { studentService } from "./services/student-record.service";
 import { useToast } from "../../../../../shared/context/ToastContext";
+import { WorkflowStepper } from "../../../shared/components/WorkflowStepper";
 
 const ACCENT = "#8B0D0D";
+const STUDENT_FORM_STEPS = [
+  { name: "Details", desc: "Basic student information" },
+  { name: "Placement", desc: "Grade level and section" },
+  { name: "Review", desc: "Confirm the record" },
+] as const;
 
 interface FormState {
   studentId: string; // 👈 iisa na lang — ito ang "Student ID" display field (student_number)
@@ -76,6 +82,7 @@ export function StudentFormPage() {
   const [errors, setErrors] = useState<
     Partial<Record<keyof FormState, string>>
   >({});
+  const [currentStep, setCurrentStep] = useState(0);
 
   // 👇 kahit isa lang ang section, dapat pa rin pwedeng piliin ng user (hindi disabled).
   // Disabled/hindi selectable lang talaga kapag walang available na section.
@@ -160,15 +167,15 @@ export function StudentFormPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.gradeLevel]);
 
-  const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
-  const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
-  const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
+  const cardClasses = `rounded-[12px] border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
+  const cardHeaderClasses = `flex flex-col gap-2 border-b px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 ${panelBorder}`;
+  const sectionTitleClasses = `text-xl font-black tracking-tight ${textPrimary}`;
 
   if (isEditing && !existing) {
     return (
-      <div className="max-w-7xl mx-auto mt-6 px-4 sm:px-6 pb-12">
+      <div className="w-full pb-8 sm:pb-12">
         <section
-          className={`rounded-xl border shadow-xs p-8 text-center ${panelBg} ${panelBorder}`}
+          className={`rounded-[12px] border shadow-xs p-8 text-center ${panelBg} ${panelBorder}`}
         >
           <p className={`text-sm font-semibold ${textMuted}`}>
             No student found with ID{" "}
@@ -176,7 +183,7 @@ export function StudentFormPage() {
           </p>
           <button
             onClick={() => navigate("/admin/students")}
-            className="mt-4 h-9 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2"
+            className="mt-4 h-9 px-4 rounded-lg text-xs font-bold text-white inline-flex items-center gap-2"
             style={{ background: ACCENT }}
           >
             <ArrowLeft size={14} />
@@ -187,40 +194,44 @@ export function StudentFormPage() {
     );
   }
 
-  const inputClasses = `w-full h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors ${
+  const inputClasses = `w-full h-10 px-3 rounded-lg border text-sm font-semibold outline-none transition-colors ${
     darkMode
       ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]"
       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
   }`;
   const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 
-  function validate(): boolean {
+  function validate(step?: number): boolean {
     const next: Partial<Record<keyof FormState, string>> = {};
 
-    if (!form.studentId.trim()) {
-      next.studentId = "Student ID is required.";
-    } else if (!ID_PATTERN.test(form.studentId.trim())) {
-      next.studentId = "Student ID must be in the format A##-####.";
-    } else if (
-      !isEditing &&
-      students.some(
-        (s) => s.id.toLowerCase() === form.studentId.trim().toLowerCase(),
-      )
-    ) {
-      next.studentId = "This Student ID is already taken.";
-    }
+    if (step === undefined || step === 0) {
+      if (!form.studentId.trim()) {
+        next.studentId = "Student ID is required.";
+      } else if (!ID_PATTERN.test(form.studentId.trim())) {
+        next.studentId = "Student ID must be in the format A##-####.";
+      } else if (
+        !isEditing &&
+        students.some(
+          (s) => s.id.toLowerCase() === form.studentId.trim().toLowerCase(),
+        )
+      ) {
+        next.studentId = "This Student ID is already taken.";
+      }
 
-    if (!form.lastName.trim()) next.lastName = "Last name is required.";
-    if (!form.firstName.trim()) next.firstName = "First name is required.";
-    if (!form.lrn.trim()) {
-      next.lrn = "LRN is required.";
-    } else if (!LRN_PATTERN.test(form.lrn.trim())) {
-      next.lrn = "LRN must be exactly 12 digits.";
+      if (!form.lastName.trim()) next.lastName = "Last name is required.";
+      if (!form.firstName.trim()) next.firstName = "First name is required.";
+      if (!form.lrn.trim()) {
+        next.lrn = "LRN is required.";
+      } else if (!LRN_PATTERN.test(form.lrn.trim())) {
+        next.lrn = "LRN must be exactly 12 digits.";
+      }
     }
-    // 👇 section required lang kapag dalawa pataas talaga ang section sa napiling grade level
-    if (sectionIsSelectable && !form.section.trim())
-      next.section = "Section is required.";
-    if (!form.gradeLevel.trim()) next.gradeLevel = "Grade level is required.";
+    if (step === undefined || step === 1) {
+      // A section is required whenever at least one section is available.
+      if (sectionIsSelectable && !form.section.trim())
+        next.section = "Section is required.";
+      if (!form.gradeLevel.trim()) next.gradeLevel = "Grade level is required.";
+    }
 
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -263,36 +274,51 @@ export function StudentFormPage() {
     }
   }
 
+  function handleContinue() {
+    if (currentStep === 1 && loadingSections) return;
+    if (validate(currentStep)) setCurrentStep((step) => step + 1);
+  }
+
   return (
-    <div className="max-w-7xl mx-auto mt-6 space-y-6 pb-12 px-4 sm:px-6">
+    <div className="w-full space-y-4 pb-8 sm:space-y-6 sm:pb-12">
       <section className={cardClasses}>
         <div className={cardHeaderClasses}>
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <button
               type="button"
               onClick={() => navigate("/admin/students")}
-              className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-colors ${
+              aria-label="Go back to student records"
+              className={`system-back-button shrink-0 ${
                 darkMode
                   ? "border-[#374151] hover:bg-white/10 text-white"
                   : "border-[#E5E7EB] hover:bg-[#F6F7FB] text-[#374151]"
               }`}
             >
-              <ArrowLeft size={14} />
+              <ArrowLeft />
             </button>
-            <h2 className={sectionTitleClasses}>
-              <IdCard size={15} style={{ color: ACCENT }} />
-              {isEditing ? "Edit Student Record" : "Add New Student Record"}
-            </h2>
+            <div className="min-w-0">
+              <h1 className={sectionTitleClasses}>
+                {isEditing ? "Edit Student Record" : "Add New Student Record"}
+              </h1>
+              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+                {isEditing
+                  ? `Updating ${existing?.studentId}'s record`
+                  : "Enter a unique student ID for this record"}
+              </p>
+            </div>
           </div>
-          <span className={`text-xs font-semibold ${textMuted}`}>
-            {isEditing
-              ? `Updating ${existing?.studentId}'s record`
-              : "Enter a unique student ID for this record"}
-          </span>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-5 max-w-xl">
-          <div className="grid sm:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="grid w-full gap-4 p-4 sm:p-6 lg:grid-cols-[16rem_minmax(0,1fr)]">
+          <aside className={`rounded-[12px] p-4 sm:p-5 ${darkMode ? "bg-[#0B1120]/60" : "bg-[#F8FAFC]"}`}>
+            <h3 className={`mb-4 text-sm font-semibold lg:mb-6 ${textPrimary}`}>Add Student</h3>
+            <WorkflowStepper darkMode={darkMode} current={currentStep} steps={STUDENT_FORM_STEPS} />
+          </aside>
+
+          <div className={`min-w-0 space-y-5 rounded-[12px] border p-4 sm:p-6 ${panelBorder}`}>
+
+          {currentStep === 0 && <div className="max-w-4xl space-y-5">
+          <div className="grid max-w-3xl gap-4 sm:grid-cols-2">
             <div>
               <label className={labelClasses}>Student ID</label>
               <input
@@ -330,7 +356,7 @@ export function StudentFormPage() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid max-w-3xl gap-4 sm:grid-cols-2">
             <div>
               <label className={labelClasses}>Last Name</label>
               <input
@@ -363,7 +389,7 @@ export function StudentFormPage() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid max-w-3xl gap-4 sm:grid-cols-2">
             <div>
               <label className={labelClasses}>Middle Name</label>
               <input
@@ -392,8 +418,10 @@ export function StudentFormPage() {
               </select>
             </div>
           </div>
+          </div>}
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          {currentStep === 1 && (
+          <div className="grid max-w-3xl gap-4 sm:grid-cols-2">
             <div>
               <label className={labelClasses}>Grade Level</label>
               <select
@@ -461,12 +489,35 @@ export function StudentFormPage() {
               )}
             </div>
           </div>
+          )}
 
-          <div className="flex gap-3 pt-2">
+          {currentStep === 2 && (
+            <section className={`rounded-[12px] border p-4 sm:p-5 ${panelBorder} ${darkMode ? "bg-white/[0.03]" : "bg-[#F8FAFC]"}`} aria-labelledby="student-review-title">
+              <h3 id="student-review-title" className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>Review student record</h3>
+              <dl className="mt-4 grid gap-x-6 gap-y-4 sm:grid-cols-2">
+                {[
+                  ["Student ID", form.studentId || "—"],
+                  ["LRN", form.lrn || "—"],
+                  ["Student name", [form.lastName, form.firstName, form.middleName].filter(Boolean).join(", ") || "—"],
+                  ["Gender", form.gender],
+                  ["Grade level", gradeLevels.find((grade) => String(grade.id) === form.gradeLevel)?.grade_level ?? "—"],
+                  ["Section", sections.find((section) => String(section.id) === form.section)?.section_name ?? "Unassigned"],
+                ].map(([label, value]) => (
+                  <div key={label} className="min-w-0">
+                    <dt className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>{label}</dt>
+                    <dd className={`mt-1 break-words text-sm font-semibold ${textPrimary}`}>{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          )}
+
+          <div className="flex flex-col-reverse gap-2 pt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:pt-5">
+            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:gap-3">
             <button
               type="button"
               onClick={() => navigate("/admin/students")}
-              className={`h-10 px-4 rounded-xl text-xs font-bold border transition-colors ${
+              className={`h-10 w-full rounded-lg border px-4 text-xs font-bold transition-colors sm:w-auto ${
                 darkMode
                   ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
                   : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
@@ -474,14 +525,37 @@ export function StudentFormPage() {
             >
               Cancel
             </button>
+            {currentStep > 0 && (
+              <button
+                type="button"
+                onClick={() => setCurrentStep((step) => step - 1)}
+                className={`h-10 w-full rounded-lg border px-4 text-xs font-bold transition-colors sm:w-auto ${darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"}`}
+              >
+                Back
+              </button>
+            )}
+            </div>
+            {currentStep < 2 ? (
+              <button
+                type="button"
+                onClick={handleContinue}
+                disabled={currentStep === 1 && loadingSections}
+                className="h-10 w-full rounded-lg px-5 text-xs font-bold text-white transition-colors hover:bg-[#6B0000] disabled:cursor-wait disabled:opacity-60 sm:w-auto"
+                style={{ background: ACCENT }}
+              >
+                Continue
+              </button>
+            ) : (
             <button
               type="submit"
-              className="h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 transition-colors hover:bg-[#6B0000]"
+              className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg px-4 text-xs font-bold text-white transition-colors hover:bg-[#6B0000] sm:w-auto"
               style={{ background: ACCENT }}
             >
               <Save size={14} />
               {isEditing ? "Save Changes" : "Add Student"}
             </button>
+            )}
+          </div>
           </div>
         </form>
       </section>

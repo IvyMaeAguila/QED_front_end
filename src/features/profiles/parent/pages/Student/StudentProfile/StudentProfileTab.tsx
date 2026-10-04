@@ -1,8 +1,7 @@
 // StudentProfileTab.tsx
-// Location: Student/StudentProfile/StudentProfileTab.tsx (sibling of Overview/, Academic/, PageComponents/, ProgressReport/, GlobalTypes/)
+// Location: Student/StudentProfile/StudentProfileTab.tsx
 
 import { ProfileHeaderCard } from "./components/ProfileHeaderCard";
-import { PersonalInformationCard } from "./components/PersonalInformationCard";
 import { mapDetailStudentToProfile } from "./utils/MapDetailStudentToProfile";
 import { StudentProfileProvider, useStudentProfile } from "./context/StudentProfileContext";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
@@ -13,20 +12,14 @@ interface StudentProfileTabProps {
   theme: AdminThemeContext;
 }
 
-// Usage inside StudentDetailPage.tsx, where `activeTab` comes from TabNav:
-//
-//   {activeTab === "studentProfile" && (
-//     <StudentProfileTab student={student} theme={theme} />
-//   )}
-//
-// `student` (DetailStudent) is only used to seed the initial render via
+// `student` (DetailStudent) only seeds the initial render via
 // mapDetailStudentToProfile — StudentProfileProvider then fetches the live
 // StudentProfileData from the backend (GET /api/students/:id) and owns all
 // profile state (loading/saving/error) for everything under this tab.
 //
-// NOTE: Extracurricular Activities has been removed from this tab (both the
-// display card and the edit flow) — DetailStudent has no real data source
-// for it yet. Re-add ExtracurricularActivitiesCard once that's wired up.
+// The standalone PersonalInformationCard was removed: personal information
+// (including editing date of birth / residential address) now lives in
+// ProfileHeaderCard.
 
 export function StudentProfileTab({ student, theme }: StudentProfileTabProps) {
   const initialProfile = mapDetailStudentToProfile(student);
@@ -55,8 +48,6 @@ function StudentProfileTabContent({ theme }: { theme: AdminThemeContext }) {
 
   return (
     <div className="flex flex-col gap-5">
-      <ProfileHeaderCard student={profile} darkMode={darkMode} panelBorder={panelBorder} />
-
       {error && (
         <div
           className={`rounded-xl border px-4 py-3 text-sm font-medium ${
@@ -67,9 +58,11 @@ function StudentProfileTabContent({ theme }: { theme: AdminThemeContext }) {
         </div>
       )}
 
-      <PersonalInformationCard
-        info={profile.personalInformation}
-        theme={theme}
+      <ProfileHeaderCard
+        student={profile}
+        personalInformation={profile.personalInformation}
+        darkMode={darkMode}
+        panelBorder={panelBorder}
         onSave={(updates) => saveProfile(updates)}
       />
     </div>

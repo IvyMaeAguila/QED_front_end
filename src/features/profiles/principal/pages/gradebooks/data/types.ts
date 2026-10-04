@@ -1,6 +1,7 @@
 // src/features/profiles/principal/pages/gradebooks/data/types.ts
 
 export type Gender = "Male" | "Female";
+export type GradeSubmissionStatus = "submitted" | "pending" | "not_submitted";
 
 export interface Student {
   studentId: string;
@@ -9,6 +10,9 @@ export interface Student {
   middleInitial: string;
   gender: Gender;
   grades: Record<string, number>; // subject -> grade
+  gradeStatuses: Record<string, GradeSubmissionStatus>;
+  ownAdvisorySubjects: Record<string, boolean>;
+  overallAverage: number | null;
 }
 
 export interface GradeLevelSummary {

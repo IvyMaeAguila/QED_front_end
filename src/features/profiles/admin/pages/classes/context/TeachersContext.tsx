@@ -30,6 +30,7 @@ useEffect(() => {
           email: row.email_address,
           contactNumber: row.contact_number,
           gender: row.gender ?? undefined,
+          avatarKey: row.avatar_key ?? undefined,
         }))
       );
     } catch (error) {

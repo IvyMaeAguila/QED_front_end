@@ -178,7 +178,7 @@ export function AttendanceCalendarSection({
     setViewDate((d) => new Date(d.getFullYear(), d.getMonth() + 1, 1));
   }
 
-  const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
+  const cardClasses = `overflow-hidden rounded-[12px] border shadow-sm ${panelBg} ${panelBorder}`;
   const stickyRightBg = darkMode ? "bg-[#111827]" : "bg-white";
   // Student name + one column per day + Present/School Days + Summary link.
   const columnCount = 3 + days.length;
@@ -263,7 +263,7 @@ export function AttendanceCalendarSection({
           <select
             value={selectedTermId}
             onChange={(e) => setSelectedTermId(e.target.value)}
-            className={`h-10 rounded-xl border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
+            className={`h-10 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
             aria-label="Term"
           >
             {terms.map((t) => (
@@ -273,7 +273,7 @@ export function AttendanceCalendarSection({
             ))}
           </select>
 
-          <div className={`flex items-center gap-1 rounded-xl border px-1.5 py-1 ${panelBorder}`}>
+          <div className={`flex items-center gap-1 rounded-[12px] border px-1.5 py-1 ${panelBorder}`}>
             <button
               onClick={goToPrevMonth}
               disabled={!canGoPrev}

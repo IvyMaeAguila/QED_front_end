@@ -1,71 +1,69 @@
-import { BookOpen, Users, Lock, User } from "lucide-react";
-import { HeroActionCard } from "../../../../shared/components/DashboardUI";
+import { LockKeyhole } from "lucide-react";
+import { SubjectAssignmentCard } from "../../../../shared/components/SubjectAssignmentCard";
 import type { GradeLevelSummary } from "../data/types";
 
 interface GradeLevelCardsProps {
   gradeLevels: GradeLevelSummary[];
+  schoolYear: string;
+  darkMode: boolean;
   panelBg: string;
+  panelBorder: string;
+  textPrimary: string;
+  textMuted: string;
   onSelectGrade: (summary: GradeLevelSummary) => void;
 }
 
-export function GradeLevelCards({ gradeLevels, panelBg, onSelectGrade }: GradeLevelCardsProps) {
+export function GradeLevelCards({
+  gradeLevels,
+  schoolYear,
+  darkMode,
+  panelBg,
+  panelBorder,
+  textPrimary,
+  textMuted,
+  onSelectGrade,
+}: GradeLevelCardsProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
       {gradeLevels.map((g, index) => {
         const hasSection = g.section.trim().length > 0;
-        // Naka-lock ang card hangga't hindi pa na-su-submit ng adviser ang grades sa principal
-        const isLocked = !g.isSubmitted;
+        const isSubmitted = g.isSubmitted && g.gradingPeriodId !== null;
 
         return (
           <div
             key={`${g.grade}-${g.section || index}`}
             className="relative"
           >
-            <div
-              className={
-                isLocked
-                  ? "opacity-50 grayscale-[0.4] pointer-events-none transition-opacity"
-                  : "transition-opacity"
+            <SubjectAssignmentCard
+              schoolYear={`School Year ${schoolYear}`}
+              status={isSubmitted ? "Submitted" : "Pending"}
+              title={hasSection ? `${g.grade} · ${g.section}` : g.grade}
+              studentCount={g.totalStudents}
+              showStudentCount={false}
+              faded={!isSubmitted}
+              darkMode={darkMode}
+              panelBg={panelBg}
+              panelBorder={panelBorder}
+              textPrimary={textPrimary}
+              textMuted={textMuted}
+              actions={
+                <button
+                  type="button"
+                  disabled={!isSubmitted}
+                  onClick={() => onSelectGrade(g)}
+                  className={`whitespace-nowrap text-[10px] font-bold uppercase transition-colors ${isSubmitted ? "text-[#800020] hover:text-[#5A0017]" : "cursor-not-allowed text-gray-400"}`}
+                >
+                  {isSubmitted ? (
+                    "View gradebook ›"
+                  ) : (
+                    <span className="inline-flex items-center gap-1">
+                      <LockKeyhole className="h-3 w-3" aria-hidden="true" />
+                      Not yet submitted
+                    </span>
+                  )}
+                </button>
               }
-            >
-              <HeroActionCard
-                icon={BookOpen}
-                title={hasSection ? g.section : g.grade}
-                subtitle={hasSection ? g.grade : ""}
-                stat={`${g.totalStudents} students`}
-                statIcon={Users}
-                stat2={g.adviserName ?? undefined}
-                statIcon2={User}
-                actionLabel={isLocked ? "Not yet submitted" : "View GradeSheet"}
-                onAction={isLocked ? () => {} : () => onSelectGrade(g)}
-                panelBg={panelBg}
-              />
-            </div>
-
-            {/* Maroon tint overlay para malinaw na naka-lock */}
-            {isLocked && (
-              <div
-                className="absolute inset-0 rounded-3xl pointer-events-none"
-                style={{
-                  backgroundColor: "rgba(127, 29, 29, 0.12)", // maroon, faded
-                  border: "1px solid rgba(127, 29, 29, 0.25)",
-                }}
-              />
-            )}
-
-            {/* Small lock badge */}
-            {isLocked && (
-              <div
-                className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-medium"
-                style={{
-                  backgroundColor: "rgba(127, 29, 29, 0.85)",
-                  color: "#fff",
-                }}
-              >
-                <Lock size={11} />
-                Pending
-              </div>
-            )}
+            />
           </div>
         );
       })}

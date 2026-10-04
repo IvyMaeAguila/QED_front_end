@@ -83,46 +83,11 @@ export default function QedPet({ state, onSettled, className = "" }: QedPetProps
 
   return (
     <div
-      className={`relative w-75 h-75 flex items-end justify-center overflow-hidden rounded-[2.5rem] ${
+      className={`relative w-75 h-75 flex items-end justify-center ${
         state === "idle" ? "cursor-pointer" : ""
       } ${className}`}
       onClick={handleClick}
-      style={{
-        background: "linear-gradient(to bottom, #bfe3ff 0%, #d9f0ff 45%, #eaf9e8 55%, #eaf9e8 100%)",
-      }}
     >
-      <div
-        className="absolute top-4 right-6 w-14 h-14 rounded-full pointer-events-none"
-        style={{ background: "radial-gradient(circle, #fff3b0 0%, rgba(255,243,176,0) 70%)" }}
-      />
-      <div
-        className="absolute top-8 left-8 w-16 h-8 rounded-full bg-white/70 blur-[2px] pointer-events-none"
-      />
-      <div
-        className="absolute top-16 left-16 w-10 h-5 rounded-full bg-white/60 blur-[1px] pointer-events-none"
-      />
-      <div
-        className="absolute top-10 right-16 w-12 h-6 rounded-full bg-white/60 blur-[1px] pointer-events-none"
-      />
-      <div
-        className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
-        style={{
-          background: "linear-gradient(to bottom, #d7f2c9 0%, #b9e8a4 100%)",
-          borderTopLeftRadius: "60% 100%",
-          borderTopRightRadius: "60% 100%",
-        }}
-      />
-      <div
-        className="absolute bottom-2 left-10 w-3 h-3 rounded-full bg-emerald-600/40 pointer-events-none"
-      />
-      <div
-        className="absolute bottom-3 right-14 w-2.5 h-2.5 rounded-full bg-emerald-600/40 pointer-events-none"
-      />
-      <div
-        className="absolute bottom-1 right-24 w-2 h-2 rounded-full bg-emerald-600/30 pointer-events-none"
-      />
-      {/* --- end backdrop --- */}
-
       <div
         className="absolute bottom-3 w-45 h-5.5 rounded-full pointer-events-none"
         style={{

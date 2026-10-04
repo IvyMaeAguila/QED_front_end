@@ -81,7 +81,7 @@ function ClassScheduleContent({ theme, student }: ClassScheduleProps) {
             filteredItems.map((item) => (
               <li
                 key={item.id}
-                className={`flex items-center justify-between gap-3 rounded-xl border py-2.5 px-3.5 transition-colors ${cardBg}`}
+                className={`flex items-center justify-between gap-3 rounded-lg border py-2.5 px-3.5 transition-colors ${cardBg}`}
               >
                 <div className="min-w-0">
                   <p className={`truncate text-sm font-semibold ${textPrimary}`}>

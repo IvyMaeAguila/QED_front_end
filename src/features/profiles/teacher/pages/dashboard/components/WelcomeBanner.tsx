@@ -22,20 +22,20 @@ export function WelcomeBanner({ name }: WelcomeBannerProps) {
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl p-8 sm:p-10 text-white h-full flex flex-col justify-center min-h-55"
+      className="relative flex min-h-44 flex-col justify-center overflow-hidden rounded-[12px] p-5 text-white sm:min-h-52 sm:p-6 xl:p-8"
       style={{
         background: "linear-gradient(135deg, #550000 0%, #BB0000 100%)",
         boxShadow: "0 12px 32px rgba(85,0,0,0.25)",
       }}
     >
       <div className="relative">
-        <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/10 text-white/80 text-[11px] font-bold tracking-widest uppercase mb-4 border border-white/10">
+        <span className="mb-3 inline-flex items-center rounded-full border border-white/10 bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white/80 sm:mb-4 sm:text-[11px]">
           Welcome back
         </span>
-        <h1 className="text-2xl sm:text-[32px] font-black leading-tight tracking-tight">
+        <h1 className="break-words text-xl leading-tight tracking-tight sm:text-2xl xl:text-[30px]">
           {greeting}, {name}!
         </h1>
-        <p className="text-sm sm:text-[15px] text-white/80 mt-3 max-w-xl leading-relaxed">
+        <p className="mt-2 max-w-xl text-[13px] leading-relaxed text-white/80 sm:mt-3 sm:text-[15px]">
           Ready for another day of excellence?
         </p>
       </div>

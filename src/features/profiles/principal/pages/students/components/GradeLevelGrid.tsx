@@ -21,7 +21,7 @@ export function GradeLevelGrid({
   darkMode,
 }: GradeLevelGridProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-3">
       {gradeLevels.map((g) => (
         <GradeLevelCard
           key={g.classId ?? `grade-${g.gradeId}`}

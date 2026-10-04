@@ -86,7 +86,7 @@ export function AuditLogs({ darkMode, panelBg, panelBorder, textPrimary, textMut
 
       {error && <div role="alert" className="mx-4 mb-3 rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-xs font-semibold text-red-800">{error}</div>}
       <div className="overflow-x-auto">
-        <table className="w-full min-w-190 text-left text-xs">
+        <table className="teacher-user-table w-full min-w-190 text-left text-xs">
           <thead className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
             <tr className={textMuted}>
               <th className="px-4 py-3 font-bold uppercase">When</th><th className="px-4 py-3 font-bold uppercase">Who</th><th className="px-4 py-3 font-bold uppercase">Action</th><th className="px-4 py-3 font-bold uppercase">Record / endpoint</th><th className="px-4 py-3 text-center font-bold uppercase">Result</th>

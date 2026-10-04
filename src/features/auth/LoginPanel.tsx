@@ -125,20 +125,20 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
     >
       <div
         ref={panelRef}
-        className="relative w-full max-w-105 bg-white rounded-2xl overflow-hidden"
+        className="relative w-full max-w-105 overflow-hidden rounded-[12px] bg-white"
         style={{
           boxShadow: "0 24px 64px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.1)",
           animation: "modalIn 0.2s cubic-bezier(0.16,1,0.3,1)",
         }}
       >
         {/* Top accent bar */}
-        <div className="h-1 w-full bg-linear-to-r from-[#550000] to-[#bb0000]" />
+        <div className="h-1 w-full bg-[#550000]" />
 
         {/* Close button */}
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full text-[#9d9d9d] hover:bg-[#f4f4f4] hover:text-black transition-all"
+          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg text-[#9d9d9d] transition-all hover:bg-[#f4f4f4] hover:text-black"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path
@@ -153,7 +153,7 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
         <div className="px-10 pt-10 pb-10 flex flex-col">
           {/* Logo + branding */}
           <div className="flex flex-col items-center gap-3 mb-8">
-            <div className="w-16 h-16 rounded-2xl bg-[#d9d9d9] shadow-md flex items-center justify-center overflow-hidden">
+            <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-[12px] bg-[#d9d9d9] shadow-md">
               <img
                 src={Logo}
                 alt="QED Logo"
@@ -161,16 +161,7 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
               />
             </div>
             <div className="text-center">
-              <p
-                className="text-2xl font-black tracking-tight leading-none"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #550000 0%, #bb0000 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
-              >
+              <p className="text-2xl font-black tracking-tight leading-none text-[#550000]">
                 QED
               </p>
               <p className="text-[10px] font-medium text-[#aaa] tracking-[0.18em] uppercase mt-0.5">
@@ -213,7 +204,7 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
                   onChange={(e) => setuserName(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="e.g. A05-1234"
-                  className="w-full pl-12 pr-4 py-3 rounded-xl text-[13px] text-black bg-[#f7f7f8] border border-transparent outline-none transition-all placeholder:text-[#ccc]"
+                  className="w-full rounded-lg border border-transparent bg-[#f7f7f8] py-3 pl-12 pr-4 text-[13px] text-black outline-none transition-all placeholder:text-[#ccc]"
                   style={{ boxShadow: "none" }}
                   onFocus={(e) => {
                     e.currentTarget.style.background = "#fff";
@@ -245,7 +236,7 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="••••••••"
-                  className="w-full pl-12 pr-11 py-3 rounded-xl text-[13px] text-black bg-[#f7f7f8] border border-transparent outline-none transition-all placeholder:text-[#ccc]"
+                  className="w-full rounded-lg border border-transparent bg-[#f7f7f8] py-3 pl-12 pr-11 text-[13px] text-black outline-none transition-all placeholder:text-[#ccc]"
                   onFocus={(e) => {
                     e.currentTarget.style.background = "#fff";
                     e.currentTarget.style.borderColor = "rgba(85,0,0,0.35)";
@@ -294,10 +285,10 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
           {/* Login button */}
           <button
             disabled={loading}
-            className="mt-7 w-full py-3.5 rounded-xl font-semibold text-[15px] text-white transition-opacity hover:opacity-90 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+            className="mt-7 w-full rounded-lg py-3.5 text-[15px] font-semibold text-white transition-opacity hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
             style={{
-              background: "linear-gradient(135deg, #550000 0%, #bb0000 100%)",
-              boxShadow: "0 4px 16px rgba(85,0,0,0.3)",
+              background: "#800000",
+              boxShadow: "0 4px 16px rgba(85,0,0,0.16)",
               transition: "opacity 0.15s, transform 0.1s",
             }}
             onClick={handleLogin}

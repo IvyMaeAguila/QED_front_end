@@ -1,9 +1,10 @@
-import { ClipboardList } from "lucide-react";
-import { SectionCard } from "../../../../shared/components/DashboardUI";
 import type { Student } from "../data/types";
 import { StudentGroupTable } from "./StudentGroupTable";
 
 interface GradeSheetTableProps {
+  sectionName: string;
+  termLabel: string;
+  totalStudents: number;
   subjects: string[];
   males: Student[];
   females: Student[];
@@ -12,10 +13,12 @@ interface GradeSheetTableProps {
   textPrimary: string;
   textMuted: string;
   darkMode: boolean;
-  action?: React.ReactNode;
 }
 
 export function GradeSheetTable({
+  sectionName,
+  termLabel,
+  totalStudents,
   subjects,
   males,
   females,
@@ -24,38 +27,24 @@ export function GradeSheetTable({
   textPrimary,
   textMuted,
   darkMode,
-  action,
 }: GradeSheetTableProps) {
   return (
-    <SectionCard
-      title="Grade Sheet"
-      icon={ClipboardList}
-      action={action}
-      panelBg={panelBg}
-      panelBorder={panelBorder}
-      textPrimary={textPrimary}
-      darkMode={darkMode}
-    >
-      <div className="flex flex-col gap-8">
-        <StudentGroupTable
-          label="Male"
-          students={males}
-          subjects={subjects}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-        />
-        <StudentGroupTable
-          label="Female"
-          students={females}
-          subjects={subjects}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-        />
+    <section className={`overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`}>
+      <div className={`border-b px-4 py-3 text-[11px] font-bold uppercase tracking-wide ${panelBorder} ${textPrimary}`}>
+        {sectionName} <span className={textMuted}>· {termLabel} · {totalStudents} students</span>
       </div>
-    </SectionCard>
+      <StudentGroupTable
+        groups={[
+          ...(males.length > 0 ? [{ label: "Male" as const, students: males }] : []),
+          ...(females.length > 0 ? [{ label: "Female" as const, students: females }] : []),
+        ]}
+        subjects={subjects}
+        panelBg={panelBg}
+        panelBorder={panelBorder}
+        textPrimary={textPrimary}
+        textMuted={textMuted}
+        darkMode={darkMode}
+      />
+    </section>
   );
 }

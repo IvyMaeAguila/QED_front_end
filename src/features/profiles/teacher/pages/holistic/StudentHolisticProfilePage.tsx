@@ -22,7 +22,6 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
-import { HeroProfileBanner } from "@shared/components/StudentHeroProfileBanner";
 import { useStudents } from "../../../admin/pages/studentrecords/context/StudentsContext";
 import type { Student } from "../../../admin/pages/studentrecords/types/Students";
 import {
@@ -290,7 +289,7 @@ export function StudentHolisticProfilePage() {
         <button
           onClick={() => navigate(-1)}
           aria-label="Go back"
-          className={`mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border ${panelBorder} ${textMuted} ${subtleHover} transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2`}
+          className={`system-back-button mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border ${panelBorder} ${textMuted} ${subtleHover} transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2`}
           style={{ ["--tw-ring-color" as string]: ACCENT }}
         >
           <ArrowLeft size={16} />
@@ -328,24 +327,38 @@ export function StudentHolisticProfilePage() {
         </div>
       ) : !profile || !student ? null : (
         <>
-          <div
-            className={`max-w-full flex-wrap gap-1 rounded-2xl border p-1 ${panelBorder} ${subtleFill}`}
-          >
-            <HeroProfileBanner
-              darkMode={darkMode}
-              initials={initials}
-              title={profile?.studentName ?? "Student"}
-              subtitle={`LRN: ${student.lrn} • ID: ${student.studentId}`}
-              pills={[
-                { label: `${student.gradeLevel} • Section ${student.section}` },
-                { label: student.gender },
-              ]}
-              statusLabel="Active"
-              panelBg={panelBg}
-              panelBorder={panelBorder}
-              textPrimary={textPrimary}
-              textMuted={textMuted}
-            />
+          <section className={`overflow-hidden rounded-2xl border border-l-4 shadow-card ${panelBg} ${panelBorder}`} style={{ borderLeftColor: ACCENT }}>
+            <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+              <div className="flex min-w-0 items-center gap-4">
+                <div
+                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl text-lg font-extrabold shadow-sm"
+                  style={{ backgroundColor: `${ACCENT}12`, color: ACCENT }}
+                  aria-hidden="true"
+                >
+                  {initials || "?"}
+                </div>
+                <div className="min-w-0">
+                  <p className={`mb-1 text-[10px] font-bold uppercase tracking-[0.12em] ${textMuted}`}>Student profile</p>
+                  <h2 className={`truncate text-lg font-bold tracking-tight sm:text-xl ${textPrimary}`}>
+                    {profile.studentName || "Student"}
+                  </h2>
+                  <p className={`mt-1 text-xs font-medium sm:text-sm ${textMuted}`}>
+                    LRN: {student.lrn} <span className="px-1.5 opacity-50">•</span> ID: {student.studentId}
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+                <span className={`rounded-xl border px-3 py-1.5 text-xs font-semibold ${panelBorder} ${textMuted}`}>
+                  {student.gradeLevel} <span className="opacity-50">·</span> Section {student.section}
+                </span>
+                <span className={`rounded-xl border px-3 py-1.5 text-xs font-semibold ${panelBorder} ${textMuted}`}>
+                  {student.gender}
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-300">
+                  <span className="h-1.5 w-1.5 rounded-full bg-current" /> Active
+                </span>
+              </div>
+            </div>
 
             {/* <button
               onClick={() => setActiveTab("all")}
@@ -380,7 +393,7 @@ export function StudentHolisticProfilePage() {
                 {subj.subjectName}
               </button>
             ))} */}
-          </div>
+          </section>
 
           {activeDomainAverages && (
             <section className={cardClasses}>
@@ -388,7 +401,7 @@ export function StudentHolisticProfilePage() {
                 className={`flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4 ${panelBorder}`}
               >
                 <div>
-                  <h2 className={`font-extrabold ${textPrimary}`}>
+                  <h2 className={`text-base font-bold tracking-tight ${textPrimary}`}>
                     {activeTab === "all"
                       ? "Whole-Child Snapshot"
                       : profile.subjects.find(
@@ -428,7 +441,8 @@ export function StudentHolisticProfilePage() {
                 <select
                   value={activeTab}
                   onChange={(e) => setActiveTab(e.target.value)}
-                  className={`rounded-xl px-4 py-2 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 border ${textMuted} bg-white`}
+                  aria-label="Filter holistic profile by subject"
+                  className={`rounded-xl border px-3.5 py-2 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${panelBorder} ${textPrimary} ${panelBg}`}
                   style={{
                     ["--tw-ring-color" as string]: ACCENT,
                   }}

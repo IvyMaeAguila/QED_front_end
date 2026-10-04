@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ChevronLeft, Download } from "lucide-react";
+import { ArrowLeft, Download } from "lucide-react";
 
 interface AdvisoryHeaderProps {
   darkMode: boolean;
@@ -41,11 +41,11 @@ export function AdvisoryHeader({
           type="button"
           onClick={onBack}
           aria-label="Go back"
-          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted} ${
+          className={`system-back-button flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted} ${
             darkMode ? "hover:bg-white/10 hover:text-white" : "hover:bg-black/5 hover:text-black"
           }`}
         >
-          <ChevronLeft size={18} />
+          <ArrowLeft size={18} />
         </button>
         <div>
           <p

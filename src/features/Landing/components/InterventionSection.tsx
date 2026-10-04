@@ -1,141 +1,178 @@
-import { useRef } from "react";
+import { useEffect, useState } from "react";
+import { ArrowLeft, ArrowRight, CirclePlay } from "lucide-react";
+import petHungry from "../../profiles/parent/pages/Student/Academic/components/assets/pet-hungry.png";
+import petHappy from "../../profiles/parent/pages/Student/Academic/components/assets/pet-happy.png";
 import { Reveal } from "./Reveal";
-import { AlertIcon, KnowledgeIcon, DataChartsIcon } from "./LandingIcons";
 
-const FeatureCard = ({ icon, label, desc, accent}: any) => {
-  const svgRef = useRef<SVGRectElement>(null);
+const SLIDES = [
+  {
+    eyebrow: "01 · The signal",
+    title: "A low topic score starts support.",
+    description: "When a student needs help with a specific topic, QED focuses the intervention on that learning gap.",
+    visual: "signal",
+  },
+  {
+    eyebrow: "02 · Relearn",
+    title: "Start with a video about that topic.",
+    description: "The student can revisit the lesson with a related video before moving on to guided practice.",
+    visual: "video",
+  },
+  {
+    eyebrow: "03 · Quiz roadmap",
+    title: "Build confidence one level at a time.",
+    description: "The quiz progresses from Easy to Medium to Hard, followed by Matching and Memory rounds.",
+    visual: "roadmap",
+  },
+  {
+    eyebrow: "04 · Five-day practice",
+    title: "Return to the skill across five days.",
+    description: "Short practice sessions help the student revisit the same topic and strengthen understanding over time.",
+    visual: "days",
+  },
+  {
+    eyebrow: "05 · Meet ED",
+    title: "A little learning companion with a journey of his own.",
+    description: "ED was travelling across the universe when his spaceship lost power and he became stranded on Earth. Correct quiz answers recharge his ship and help him find his way home.",
+    visual: "story",
+  },
+] as const;
 
-  const handleEnter = () => {
-    const rect = svgRef.current;
-    if (!rect) return;
-    rect.style.animation = "none";
-    void rect.getBoundingClientRect(); 
-    rect.style.animation = "";
-  };
+function SlideVisual({ visual }: { visual: (typeof SLIDES)[number]["visual"] }) {
+  if (visual === "signal") {
+    return (
+      <div className="flex min-h-[280px] flex-col items-center justify-center rounded-2xl bg-[#F4F2F0] p-6 text-center">
+        <span className="rounded-full bg-white px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#800000]">Topic needs review</span>
+        <img src={petHungry} alt="ED waiting for help" className="mt-2 h-36 w-36 object-contain sm:h-40 sm:w-40" />
+        <p className="text-sm font-semibold text-[#241B1C]">Fractions on a number line</p>
+        <p className="mt-1 text-xs text-[#817777]">A focused intervention begins</p>
+      </div>
+    );
+  }
+
+  if (visual === "video") {
+    return (
+      <div className="flex min-h-[280px] flex-col justify-center rounded-2xl bg-[#F4F2F0] p-5 sm:p-7">
+        <div className="flex aspect-video flex-col items-center justify-center gap-3 rounded-xl border border-[#E2DDD8] bg-white text-[#800000]">
+          <CirclePlay size={42} strokeWidth={1.5} />
+          <span className="text-xs font-semibold">Related topic video</span>
+        </div>
+        <div className="mt-4 flex items-center justify-between gap-3 text-xs">
+          <span className="font-semibold text-[#241B1C]">Fractions on a number line</span>
+          <span className="text-[#817777]">Relearn at your pace</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (visual === "roadmap") {
+    return (
+      <div className="flex min-h-[280px] flex-col justify-center rounded-2xl bg-[#F4F2F0] p-5 sm:p-7">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#800000]">Quiz progression</p>
+        <div className="mt-5 grid grid-cols-3 gap-2 sm:gap-3">
+          {(["Easy", "Medium", "Hard"] as const).map((level, index) => (
+            <div key={level} className="relative rounded-xl border border-[#E2DDD8] bg-white px-2 py-4 text-center">
+              <span className="mx-auto flex h-7 w-7 items-center justify-center rounded-full bg-[#F2EEEE] text-xs font-semibold text-[#800000]">{index + 1}</span>
+              <p className="mt-2 text-sm font-semibold text-[#241B1C]">{level}</p>
+              {index < 2 && <span aria-hidden="true" className="absolute -right-2.5 top-1/2 z-10 hidden h-px w-3 bg-[#C9B7B7] sm:block" />}
+            </div>
+          ))}
+        </div>
+        <div className="mt-4 rounded-xl border border-dashed border-[#D8CECA] bg-white/70 px-4 py-3">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#817777]">Then complete the bonus rounds</p>
+          <div className="mt-2 flex flex-wrap gap-2"><span className="rounded-full bg-[#F2EEEE] px-3 py-1.5 text-xs font-medium text-[#650000]">Matching</span><span className="rounded-full bg-[#F2EEEE] px-3 py-1.5 text-xs font-medium text-[#650000]">Memory</span></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (visual === "days") {
+    return (
+      <div className="flex min-h-[280px] flex-col justify-center rounded-2xl bg-[#F4F2F0] p-5 sm:p-7">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#800000]">One topic · five practice days</p>
+        <div className="mt-5 grid grid-cols-5 gap-2">
+          {Array.from({ length: 5 }, (_, index) => (
+            <div key={index} className="rounded-xl border border-[#E2DDD8] bg-white px-1 py-4 text-center">
+              <span className="block text-[10px] font-medium uppercase tracking-wide text-[#817777]">Day</span>
+              <span className="mt-1 block text-xl font-semibold tabular-nums text-[#650000]">{index + 1}</span>
+              <span className="mt-1 block text-[10px] text-[#62595A]">Practice</span>
+            </div>
+          ))}
+        </div>
+        <p className="mt-4 text-sm leading-6 text-[#62595A]">Small, focused steps bring the learner back to the same skill each day.</p>
+      </div>
+    );
+  }
 
   return (
-    <div
-      onMouseEnter={handleEnter}
-      className="group relative bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col items-center gap-3 backdrop-blur-md transition-all duration-500 ease-out hover:-translate-y-1.5 hover:bg-white/8"
-    >
-      <svg
-        className="pointer-events-none absolute inset-0 w-full h-full"
-        aria-hidden="true"
-      >
-        <rect
-          ref={svgRef}
-          x="1"
-          y="1"
-          width="calc(100% - 2px)"
-          height="calc(100% - 2px)"
-          rx="16"
-          ry="16"
-          fill="none"
-          stroke="url(#goldTrace)"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          pathLength="100"
-          strokeDasharray="18 82"
-          strokeDashoffset="100"
-          className="trace-rect"
-        />
-        <defs>
-          <linearGradient id="goldTrace" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#b8860b" stopOpacity="0" />
-            <stop offset="50%" stopColor="#f2d377" stopOpacity="1" />
-            <stop offset="100%" stopColor="#b8860b" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-      </svg>
-
-      <div
-        className="w-12 h-12 rounded-xl bg-white/5 border flex items-center justify-center transition-transform duration-500 group-hover:scale-110"
-        style={{ borderColor: `${accent}33` }}
-      >
-        {icon}
-      </div>
-      <p className="text-white font-semibold text-sm font-['Sora',sans-serif] tracking-wide">
-        {label}
-      </p>
-      <p className="text-white/55 text-xs leading-relaxed">{desc}</p>
+    <div className="flex min-h-[280px] flex-col items-center justify-center rounded-2xl bg-[#F4F2F0] p-5 text-center sm:p-7">
+      <span className="rounded-full bg-white px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#800000]">ED’s story</span>
+      <img src={petHappy} alt="ED recharged and ready to continue his journey" className="h-40 w-40 object-contain" />
+      <blockquote className="max-w-md text-sm leading-6 text-[#62595A]">“I got lost when my spaceship ran out of energy. Every correct answer helps me recharge and find my way home.”</blockquote>
     </div>
   );
-};
+}
 
 export const InterventionSection = () => {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const slide = SLIDES[activeSlide];
+  const goToSlide = (index: number) => setActiveSlide((index + SLIDES.length) % SLIDES.length);
+
+  useEffect(() => {
+    if (isPaused) return;
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % SLIDES.length);
+    }, 6500);
+    return () => window.clearInterval(timer);
+  }, [isPaused]);
+
   return (
-    <section className="relative py-24 px-4 sm:px-6 lg:px-8 bg-linear-to-b from-black via-[#3a0000] to-black overflow-hidden">
-      <style>{`
-        /* fully hidden by default — no static dash visible before hover */
-        .trace-rect {
-          opacity: 0;
-        }
-
-        @keyframes traceRun {
-          0%   { stroke-dashoffset: 100; opacity: 0; }
-          8%   { opacity: 1; }
-          92%  { opacity: 1; }
-          100% { stroke-dashoffset: 0; opacity: 0; }
-        }
-
-        .group:hover .trace-rect {
-          animation: traceRun 1.3s cubic-bezier(0.4, 0, 0.2, 1) 1;
-        }
-      `}</style>
-
-      {/* ambient glow */}
-      <div className="pointer-events-none absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 rounded-full bg-[#bb0000]/20 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 right-10 w-96 h-96 rounded-full bg-[#e0a726]/10 blur-3xl" />
-      <div className="pointer-events-none absolute top-10 left-10 w-72 h-72 rounded-full bg-[#0f4c4c]/15 blur-3xl" />
-      <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/40 via-transparent to-black/50" />
-
-      <div className="pointer-events-none absolute -top-20 -left-20 w-125 h-125 bg-white/3 rotate-12 [clip-path:polygon(0_0,60%_0,40%_100%,0%_100%)]" />
-      <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#e0a726]/70 to-transparent" />
-
-      <div className="max-w-5xl mx-auto relative z-10 flex flex-col items-center text-center gap-6">
-        <Reveal>
-          <span className="text-xs font-semibold tracking-widest text-[#f2d377] ">
-           .: THE QED DIFFERENCE :.
-          </span>
+    <section id="intervention" className="bg-[#F5F4F1] px-4 py-14 sm:px-8 sm:py-16 lg:px-12">
+      <div className="mx-auto max-w-[1200px]">
+        <Reveal className="mb-7 flex flex-col gap-3 sm:mb-9 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#800000]">QED intervention · A guided journey</p>
+            <h2 className="mt-2 max-w-2xl text-3xl font-semibold leading-tight text-[#211819] sm:text-4xl">From a learning gap to a fresh start.</h2>
+          </div>
+          <p className="max-w-md text-sm leading-6 text-[#62595A]">See how a topic video, a staged quiz, five days of practice, and ED’s story fit together.</p>
         </Reveal>
 
-        <Reveal delay={100}>
-          <p className="text-4xl lg:text-5xl font-extrabold text-white font-['Sora',sans-serif] leading-tight">
-            <span className="text-[#ff4d4d]">Identify.</span> Understand.{" "}
-            <span className="bg-linear-to-r from-[#f2d377] via-[#e0a726] to-[#b8860b] bg-clip-text text-transparent">
-              Improve.
-            </span>
-          </p>
-        </Reveal>
-
-        <Reveal delay={200}>
-          <p className="text-xl font-semibold text-white font-['Sora',sans-serif]">
-            Topic-Based Learning{" "}
-            <span className="text-[#f2d377]">&amp; Intervention</span>
-          </p>
-        </Reveal>
-
-        <Reveal delay={300}>
-          <p className="text-white/75 text-base leading-relaxed max-w-2xl">
-            QED helps teachers identify specific learning topics where
-            students experience difficulties. Instead of relying solely on
-            overall grades, teachers can use topic-level assessment results
-            to determine which competencies require reinforcement and
-            provide targeted learning interventions — aligned with the
-            MATATAG Curriculum's focus on monitoring learning competencies,
-            not just periodic exam scores.
-          </p>
-        </Reveal>
-
-        <Reveal delay={400} className="w-full mt-6">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-3xl mx-auto">
-            {[
-              { icon: <AlertIcon color="#ff6b6b" />, label: "Spot the gap", desc: "Pinpoint the exact topic a learner is struggling with", accent: "#ff6b6b" },
-              { icon: <KnowledgeIcon color="#f2d377" />, label: "Understand why", desc: "See topic-level results, not just a final grade", accent: "#f2d377" },
-              { icon: <DataChartsIcon color="#4fd1c5" />, label: "Act on it", desc: "Give teachers a clear path to targeted intervention", accent: "#4fd1c5" },
-            ].map((item) => (
-              <FeatureCard key={item.label} {...item} />
-            ))}
+        <Reveal delay={80}>
+          <div
+            className="landing-polygon-surface overflow-hidden rounded-3xl border border-[#E0E4E9] bg-white shadow-[0_10px_30px_rgba(31,41,55,0.07)]"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onFocusCapture={() => setIsPaused(true)}
+            onBlurCapture={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setIsPaused(false);
+            }}
+            aria-roledescription="carousel"
+            aria-label="QED intervention process"
+          >
+            <div className="grid lg:grid-cols-[0.9fr_1.1fr]">
+              <div className="flex flex-col justify-between p-6 sm:p-8 lg:p-10">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#800000]">{slide.eyebrow}</p>
+                  <h3 className="mt-4 max-w-lg text-2xl font-semibold leading-tight text-[#211819] sm:text-3xl">{slide.title}</h3>
+                  <p className="mt-4 max-w-lg text-sm leading-7 text-[#62595A] sm:text-base">{slide.description}</p>
+                </div>
+                <div className="mt-8 flex items-center justify-between gap-5">
+                  <div className="flex items-center gap-2" role="group" aria-label="Choose intervention slide">
+                    {SLIDES.map((item, index) => (
+                      <button key={item.eyebrow} type="button" onClick={() => goToSlide(index)} aria-label={`Go to slide ${index + 1}: ${item.eyebrow}`} aria-current={activeSlide === index ? "step" : undefined} className={`h-2.5 rounded-full transition-all ${activeSlide === index ? "w-8 bg-[#800000]" : "w-2.5 bg-[#D8DCE2] hover:bg-[#B78A8A]"}`} />
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="mr-1 text-xs tabular-nums text-[#817777]">{String(activeSlide + 1).padStart(2, "0")} / {String(SLIDES.length).padStart(2, "0")}</span>
+                    <button type="button" onClick={() => goToSlide(activeSlide - 1)} aria-label="Previous slide" className="flex h-10 w-10 items-center justify-center rounded-full border border-[#DDE1E6] text-[#650000] transition-colors hover:bg-[#F5F4F1]"><ArrowLeft size={17} /></button>
+                    <button type="button" onClick={() => goToSlide(activeSlide + 1)} aria-label="Next slide" className="flex h-10 w-10 items-center justify-center rounded-full bg-[#800000] text-white transition-colors hover:bg-[#650000]"><ArrowRight size={17} /></button>
+                  </div>
+                </div>
+              </div>
+              <div className="border-t border-[#E8E4DE] p-4 sm:p-6 lg:border-l lg:border-t-0 lg:p-8">
+                <SlideVisual visual={slide.visual} />
+              </div>
+            </div>
           </div>
         </Reveal>
       </div>

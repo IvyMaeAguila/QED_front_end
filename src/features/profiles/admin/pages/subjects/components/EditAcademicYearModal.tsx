@@ -55,7 +55,7 @@ export function EditAcademicYearModal({
   return (
     <div className="fixed inset-0 z-60 flex items-center justify-center p-4 modal-backdrop">
       <div
-        className={`w-full max-w-md rounded-2xl border shadow-xl ${panelBg} ${panelBorder}`}
+        className={`w-full max-w-md rounded-[12px] border shadow-xl ${panelBg} ${panelBorder}`}
       >
         <div className={`flex items-center justify-between px-6 py-4 border-b ${panelBorder}`}>
           <h3 className={`text-sm font-black ${textPrimary}`}>
@@ -126,7 +126,7 @@ export function EditAcademicYearModal({
         <div className={`flex justify-end gap-2 px-6 py-4 border-t ${panelBorder}`}>
           <button
             onClick={onClose}
-            className={`h-10 px-4 rounded-xl text-xs font-bold border transition-colors ${
+            className={`h-10 px-4 rounded-lg text-xs font-bold border transition-colors ${
               darkMode
                 ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
                 : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
@@ -137,7 +137,7 @@ export function EditAcademicYearModal({
           <button
             onClick={handleSave}
             disabled={saving}
-            className="h-10 px-4 rounded-xl text-xs font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+            className="h-10 px-4 rounded-lg text-xs font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
             style={{ background: ACCENT }}
           >
             {saving ? "Saving..." : "Save Changes"}

@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { Sparkles } from "lucide-react";
 import {
   CartesianGrid,
   Line,
@@ -119,11 +118,10 @@ export default function TermAverageTrendChart({
 
   return (
     <div
-       className={`flex h-85 flex-col rounded-2xl border ${panelBorder} ${panelBg} shadow-[0_1px_2px_rgba(0,0,0,0.04)]`}
+       className={`flex h-full min-h-[420px] flex-col rounded-2xl border ${panelBorder} ${panelBg} shadow-[0_1px_2px_rgba(0,0,0,0.04)]`}
     >
 
       <SectionHeader
-        icon={Sparkles}
         title="Term Average"
         about={`Hover a point to see ${studentName ? `${studentName}'s` : ""} grades per subject that term`}
         theme={theme}

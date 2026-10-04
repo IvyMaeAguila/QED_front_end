@@ -165,6 +165,7 @@ function AttendanceOverviewContent({ theme }: AttendanceOverviewContentProps) {
               value={monthKey}
               onChange={(e) => handleMonthChange(e.target.value)}
               disabled={monthsLoading || monthOptions.length === 0}
+              aria-label="Select attendance month"
               className={`appearance-none rounded-lg border py-1.5 pl-3 pr-8 text-xs font-bold focus:outline-none disabled:opacity-60 ${panelBorder} ${panelBg} ${textPrimary}`}
             >
               {monthsLoading && <option>Loading...</option>}

@@ -7,6 +7,7 @@ export interface Teacher {
   contactNumber: string;
   gender?: "male" | "female" | string;
   avatarUrl?: string;
+  avatarKey?: string;
 }
 
 export function formatTeacherName(t: Pick<Teacher, "firstName" | "lastName">) {

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Filter } from "lucide-react";
 import {
   useNavigate,
   useOutletContext,
@@ -7,7 +6,6 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
-import { Dropdown } from "../../../shared/components/DashboardUI";
 import { usePrincipalGradeSheet } from "./hooks/usePrincipalGradeSheet";
 import { DashboardStatus } from "./components/DashboardStatus";
 import { GradeSheetNotFound } from "./components/GradeSheetNotFound";
@@ -15,7 +13,7 @@ import { GradeSheetHeader } from "./components/GradeSheetHeader";
 import { GradeSheetSummary } from "./components/GradeSheetSummary";
 import { GradeSheetTable } from "./components/GradeSheetTable";
 import { TermUnavailableModal } from "./components/TermUnavailableModal";
-import { sortByLastName } from "./utils/gradeSheetUtils";
+import { fullName, sortByLastName } from "./utils/gradeSheetUtils";
 import {
   fetchGradingPeriods,
   type GradingPeriod,
@@ -171,6 +169,8 @@ function GradeSheetContent({
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
+  const [studentSearch, setStudentSearch] = useState("");
+  const [genderFilter, setGenderFilter] = useState<"all" | "Male" | "Female">("all");
 
   const {
     students,
@@ -186,22 +186,26 @@ function GradeSheetContent({
     return <ProgressReportSkeleton />;
   }
 
-  const males = students
+  const query = studentSearch.trim().toLocaleLowerCase();
+  const filteredStudents = students.filter((student) => {
+    const matchesGender = genderFilter === "all" || student.gender === genderFilter;
+    const matchesSearch = !query || `${fullName(student)} ${student.studentId}`.toLocaleLowerCase().includes(query);
+    return matchesGender && matchesSearch;
+  });
+  const males = filteredStudents
     .filter((s) => s.gender === "Male")
     .sort(sortByLastName);
-  const females = students
+  const females = filteredStudents
     .filter((s) => s.gender === "Female")
     .sort(sortByLastName);
 
-  const termOptions = gradingPeriods.map((p) => ({
-    label: p.termLabel,
-    value: String(p.id),
-  }));
+  const activeTermLabel = gradingPeriods.find((period) => period.id === gradingPeriodId)?.termLabel ?? "Term";
 
   return (
     <div className="flex flex-col gap-6 font-sans">
       <GradeSheetHeader
-        gradeLabel={sectionName ? `${gradeLabel} - ${sectionName}` : gradeLabel}
+        gradeLabel={gradeLabel}
+        sectionName={sectionName}
         schoolYear={schoolYear}
         onBack={() => navigate("/principal/gradebooks")}
         panelBg={panelBg}
@@ -237,7 +241,50 @@ function GradeSheetContent({
             textMuted={textMuted}
             darkMode={darkMode}
           />
+          <div className={`flex flex-col gap-2.5 rounded-[12px] border px-3 py-2 sm:flex-row sm:items-center sm:justify-between ${panelBg} ${panelBorder}`}>
+            <div className="w-full sm:w-80">
+              <input
+                value={studentSearch}
+                onChange={(event) => setStudentSearch(event.target.value)}
+                placeholder="Search student name or ID..."
+                aria-label="Search students by name or ID"
+                className={`h-8 w-full rounded-lg border px-2.5 text-[11px] font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
+              />
+            </div>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <span className={`whitespace-nowrap text-[11px] font-semibold ${textMuted}`}>
+                Showing {filteredStudents.length} of {students.length} students
+              </span>
+              <select
+                value={genderFilter}
+                onChange={(event) => setGenderFilter(event.target.value as typeof genderFilter)}
+                aria-label="Filter students by gender"
+                style={{ borderRadius: "8px" }}
+                className={`h-8 rounded-lg border px-3 text-[11px] font-semibold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
+              >
+                <option value="all">All genders</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+              <label className={`flex h-8 items-center gap-2 rounded-lg border px-3 text-[11px] font-semibold ${panelBg} ${panelBorder} ${textMuted}`}>
+                <span>Term:</span>
+                <select
+                  value={String(gradingPeriodId)}
+                  onChange={(event) => onTermChange(event.target.value)}
+                  aria-label="Select grading term"
+                  className={`h-full bg-transparent font-bold outline-none ${textPrimary}`}
+                >
+                  {gradingPeriods.map((period) => (
+                    <option key={period.id} value={String(period.id)}>{period.termLabel}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </div>
           <GradeSheetTable
+            sectionName={sectionName ?? gradeLabel}
+            termLabel={activeTermLabel}
+            totalStudents={students.length}
             subjects={subjects}
             males={males}
             females={females}
@@ -246,21 +293,6 @@ function GradeSheetContent({
             textPrimary={textPrimary}
             textMuted={textMuted}
             darkMode={darkMode}
-            action={
-              termOptions.length > 0 ? (
-                <Dropdown
-                  value={String(gradingPeriodId)}
-                  onChange={onTermChange}
-                  options={termOptions}
-                  icon={Filter}
-                  label="Term"
-                  panelBg={panelBg}
-                  panelBorder={panelBorder}
-                  textPrimary={textPrimary}
-                  textMuted={textMuted}
-                />
-              ) : undefined
-            }
           />
         </>
       )}

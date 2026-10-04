@@ -1,6 +1,6 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { useNavigate, useParams, useOutletContext } from "react-router-dom";
-import { ArrowLeft, Save, Plus, Trash2, BookOpen } from "lucide-react";
+import { ArrowLeft, ChevronDown, Save, Plus, Trash2 } from "lucide-react";
 import { useClasses } from "./context/ClassesContext";
 import {
   DAYS_OF_WEEK,
@@ -25,8 +25,14 @@ import {
 } from "./services/classes.service";
 import type { AdminThemeContext } from ".././AdminLayout";
 import { useToast } from "@shared/context/ToastContext";
+import { WorkflowStepper } from "../../../shared/components/WorkflowStepper";
 
 const ACCENT = "#8B0D0D";
+const CLASS_FORM_STEPS = [
+  { name: "Details", desc: "Set grade, section, and adviser" },
+  { name: "Schedule", desc: "Add class periods" },
+  { name: "Review", desc: "Confirm the class setup" },
+] as const;
 
 interface FormState {
   gradeLevelId: number | "";
@@ -48,6 +54,133 @@ function emptyPeriod(): SchedulePeriod {
   };
 }
 
+interface TeacherDropdownProps {
+  label: string;
+  value: string;
+  options: TeacherOption[];
+  disabled: boolean;
+  loading: boolean;
+  darkMode: boolean;
+  className: string;
+  onChange: (teacherId: string) => void;
+}
+
+function TeacherDropdown({
+  label,
+  value,
+  options,
+  disabled,
+  loading,
+  darkMode,
+  className,
+  onChange,
+}: TeacherDropdownProps) {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const selected = options.find((teacher) => String(teacher.id) === value);
+  const selectedLabel = selected
+    ? `${selected.last_name}, ${selected.first_name}`
+    : loading
+      ? "Loading…"
+      : "Select a teacher…";
+
+  useEffect(() => {
+    if (!open) return;
+    const closeOnOutsidePointer = (event: PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const closeOnEscape = (event: globalThis.KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("pointerdown", closeOnOutsidePointer);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsidePointer);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [open]);
+
+  function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      if (!open) {
+        setActiveIndex(Math.max(0, options.findIndex((teacher) => String(teacher.id) === value)));
+        setOpen(true);
+        return;
+      }
+      const direction = event.key === "ArrowDown" ? 1 : -1;
+      if (options.length > 0) {
+        setActiveIndex((index) => (index + direction + options.length) % options.length);
+      }
+    } else if (event.key === "Enter" && open && options[activeIndex]) {
+      event.preventDefault();
+      onChange(String(options[activeIndex].id));
+      setOpen(false);
+    }
+  }
+
+  return (
+    <div className="relative w-full" ref={rootRef}>
+      <button
+        type="button"
+        role="combobox"
+        aria-label={label}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        disabled={disabled}
+        onKeyDown={handleKeyDown}
+        onClick={() => {
+          setActiveIndex(Math.max(0, options.findIndex((teacher) => String(teacher.id) === value)));
+          setOpen((isOpen) => !isOpen);
+        }}
+        className={`${className} flex items-center justify-between gap-3 text-left disabled:cursor-not-allowed disabled:opacity-60`}
+      >
+        <span className={selected ? "truncate" : "truncate text-[#8B929E]"}>{selectedLabel}</span>
+        <ChevronDown size={16} className={`shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div
+          role="listbox"
+          aria-label={`${label} options`}
+          className={`absolute left-0 top-full z-[100] mt-1 max-h-64 w-full overflow-y-auto rounded-lg border py-1 shadow-xl ${darkMode ? "border-[#374151] bg-[#111827]" : "border-[#E5E7EB] bg-white"}`}
+        >
+          {options.map((teacher, index) => {
+            const teacherId = String(teacher.id);
+            const isSelected = teacherId === value;
+            const isActive = index === activeIndex;
+            return (
+              <button
+                key={teacher.id}
+                type="button"
+                role="option"
+                aria-selected={isSelected}
+                onMouseEnter={() => setActiveIndex(index)}
+                onClick={() => {
+                  onChange(teacherId);
+                  setOpen(false);
+                }}
+                className={`block w-full px-3 py-2 text-left text-sm transition-colors ${
+                  isActive
+                    ? darkMode ? "bg-white/10" : "bg-[#F1F5F9]"
+                    : darkMode ? "hover:bg-white/5" : "hover:bg-[#F8FAFC]"
+                } ${darkMode ? "text-white" : "text-[#111827]"}`}
+              >
+                {teacher.last_name}, {teacher.first_name}
+              </button>
+            );
+          })}
+          {options.length === 0 && (
+            <p className={`px-3 py-2 text-sm ${darkMode ? "text-[#9CA3AF]" : "text-[#64748B]"}`}>
+              No teachers available
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function ClassFormPage() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
@@ -58,6 +191,7 @@ export function ClassFormPage() {
 
   const isEditing = Boolean(classId);
   const existing = classId ? getClass(classId) : undefined;
+  const [currentStep, setCurrentStep] = useState(0);
 
   const [allTeachers, setAllTeachers] = useState<TeacherOption[]>([]); // for Subject Teacher
   const [loadingAllTeachers, setLoadingAllTeachers] = useState(true);
@@ -188,22 +322,22 @@ export function ClassFormPage() {
   }, [subjects, isEditing, subjectsResolved]);
 
   // ── Shared design tokens (same as StudentFormPage) ──
-  const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
-  const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
-  const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
+  const cardClasses = `rounded-[12px] border shadow-xs overflow-visible transition-all ${panelBg} ${panelBorder}`;
+  const cardHeaderClasses = `flex flex-col gap-2 border-b px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 ${panelBorder}`;
+  const sectionTitleClasses = `text-xl font-black tracking-tight ${textPrimary}`;
 
   if (isEditing && !existing) {
     return (
-      <div className="max-w-7xl mx-auto mt-6 px-4 sm:px-6 pb-12">
+      <div className="max-w-7xl mx-auto pb-12">
         <section
-          className={`rounded-xl border shadow-xs p-8 text-center ${panelBg} ${panelBorder}`}
+          className={`rounded-[12px] border shadow-xs p-8 text-center ${panelBg} ${panelBorder}`}
         >
           <p className={`text-sm font-semibold ${textMuted}`}>
             No class found with ID <span className="font-bold">{classId}</span>.
           </p>
           <button
             onClick={() => navigate("/admin/classes")}
-            className="mt-4 h-9 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2"
+            className="mt-4 h-9 px-4 rounded-lg text-xs font-bold text-white inline-flex items-center gap-2"
             style={{ background: ACCENT }}
           >
             <ArrowLeft size={14} />
@@ -214,7 +348,7 @@ export function ClassFormPage() {
     );
   }
 
-  const fieldBase = `h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors ${
+  const fieldBase = `h-10 px-3 rounded-lg border text-sm font-semibold outline-none transition-colors ${
     darkMode
       ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]"
       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
@@ -259,6 +393,11 @@ export function ClassFormPage() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setSubmitError(null);
+    if (!isEditing && currentStep < CLASS_FORM_STEPS.length - 1) {
+      if (currentStep === 0 && !validate()) return;
+      setCurrentStep((step) => step + 1);
+      return;
+    }
     if (!validate()) return;
     if (form.gradeLevelId === "") return;
 
@@ -312,43 +451,52 @@ export function ClassFormPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto mt-6 space-y-6 pb-12 px-4 sm:px-6">
+    <div className="w-full space-y-4 pb-8 sm:space-y-6 sm:pb-12">
       <section className={cardClasses}>
         {/* Card header — back button + icon/title on the left, helper text on the right */}
         <div className={cardHeaderClasses}>
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <button
               type="button"
               onClick={() => navigate("/admin/classes")}
               aria-label="Go back"
-              className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-colors ${
+              className={`system-back-button shrink-0 ${
                 darkMode
                   ? "border-[#374151] hover:bg-white/10 text-white"
                   : "border-[#E5E7EB] hover:bg-[#F6F7FB] text-[#374151]"
               }`}
             >
-              <ArrowLeft size={14} />
+              <ArrowLeft />
             </button>
-            <h2 className={sectionTitleClasses}>
-              <BookOpen size={15} style={{ color: ACCENT }} />
-              {isEditing ? "Edit Class" : "Add New Class"}
-            </h2>
+            <div className="min-w-0">
+              <h1 className={sectionTitleClasses}>
+                {isEditing ? "Edit Class" : "Add New Class"}
+              </h1>
+              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+                {isEditing
+                  ? `Updating ${existing?.gradeLevel} - ${existing?.section}`
+                  : "Students matching the grade and section below sync automatically"}
+              </p>
+            </div>
           </div>
-          <span className={`text-xs font-semibold ${textMuted}`}>
-            {isEditing
-              ? `Updating ${existing?.gradeLevel} - ${existing?.section}`
-              : "Students matching the grade and section below sync automatically"}
-          </span>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-5 max-w-xl">
+        <form onSubmit={handleSubmit} className={isEditing ? "w-full space-y-5 p-4 sm:p-6" : "grid w-full gap-4 p-4 sm:p-6 md:grid-cols-[16rem_minmax(0,1fr)]"}>
+          {!isEditing && (
+            <aside className={`rounded-[12px] p-4 sm:p-5 ${darkMode ? "bg-[#0B1120]/60" : "bg-[#F8FAFC]"}`}>
+              <h3 className={`mb-4 text-sm font-semibold md:mb-6 ${textPrimary}`}>Add Class</h3>
+              <WorkflowStepper darkMode={darkMode} current={currentStep} steps={CLASS_FORM_STEPS} />
+            </aside>
+          )}
+          <div className={isEditing ? "space-y-5" : `w-full min-w-0 space-y-5 rounded-[12px] border p-4 sm:p-6 ${panelBorder} md:col-start-2 md:max-w-5xl`}>
           {submitError && (
-            <div className="rounded-xl border border-[#FCA5A5] bg-[#FEE2E2] px-3 py-2 text-xs font-semibold text-[#B91C1C]">
+            <div className="rounded-lg border border-[#FCA5A5] bg-[#FEE2E2] px-3 py-2 text-xs font-semibold text-[#B91C1C]">
               {submitError}
             </div>
           )}
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          {(isEditing || currentStep === 0) && <>
+          <div className="grid max-w-3xl gap-4 sm:grid-cols-2">
             <div>
               <label className={labelClasses}>Grade Level</label>
               <select
@@ -414,26 +562,19 @@ export function ClassFormPage() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid max-w-3xl gap-4 sm:grid-cols-2">
             <div>
               <label className={labelClasses}>Class Adviser</label>
-              <select
-                className={inputClasses}
+              <TeacherDropdown
+                label="Class adviser"
                 value={form.adviserId}
+                options={allTeachers}
                 disabled={loadingAllTeachers}
-                onChange={(e) =>
-                  setForm({ ...form, adviserId: e.target.value })
-                }
-              >
-                <option value="">
-                  {loadingAllTeachers ? "Loading…" : "Select a teacher…"}
-                </option>
-                {allTeachers.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.last_name}, {t.first_name}
-                  </option>
-                ))}
-              </select>
+                loading={loadingAllTeachers}
+                darkMode={darkMode}
+                className={inputClasses}
+                onChange={(adviserId) => setForm((current) => ({ ...current, adviserId }))}
+              />
               {errors.adviserId && (
                 <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
                   {errors.adviserId}
@@ -453,7 +594,9 @@ export function ClassFormPage() {
               />
             </div>
           </div>
+          </>}
 
+          {(isEditing || currentStep === 1) && <div className="space-y-5">
           <div>
             <div className="flex items-center justify-between mb-3 gap-2">
               <label className={`${labelClasses} mb-0`}>Class Schedule</label>
@@ -486,9 +629,9 @@ export function ClassFormPage() {
               {form.schedule.map((period) => (
                 <div
                   key={period.id}
-                  className={`rounded-xl border p-3 sm:p-4 space-y-3 ${panelBorder}`}
+                  className={`rounded-[12px] border p-3 sm:p-4 space-y-3 ${panelBorder}`}
                 >
-                  <div className="grid sm:grid-cols-2 gap-3">
+                  <div className="grid max-w-3xl gap-3 sm:grid-cols-2">
                     <select
                       className={inputClasses}
                       value={period.subject}
@@ -512,23 +655,16 @@ export function ClassFormPage() {
                         </option>
                       ))}
                     </select>
-                    <select
-                      className={inputClasses}
+                    <TeacherDropdown
+                      label="Subject teacher"
                       value={period.teacherId}
+                      options={allTeachers}
                       disabled={loadingAllTeachers}
-                      onChange={(e) =>
-                        updatePeriod(period.id, { teacherId: e.target.value })
-                      }
-                    >
-                      <option value="">
-                        {loadingAllTeachers ? "Loading…" : "Subject teacher…"}
-                      </option>
-                      {allTeachers.map((t) => (
-                        <option key={t.id} value={t.id}>
-                          {t.last_name}, {t.first_name}
-                        </option>
-                      ))}
-                    </select>
+                      loading={loadingAllTeachers}
+                      darkMode={darkMode}
+                      className={inputClasses}
+                      onChange={(teacherId) => updatePeriod(period.id, { teacherId })}
+                    />
                   </div>
 
                   <div className="flex flex-wrap gap-1">
@@ -594,12 +730,34 @@ export function ClassFormPage() {
               ))}
             </div>
           </div>
+          </div>}
 
-          <div className="flex gap-3 pt-2">
+          {!isEditing && currentStep === 2 && (
+            <section className={`rounded-[12px] border p-4 sm:p-5 ${panelBorder} ${darkMode ? "bg-white/[0.03]" : "bg-[#F8FAFC]"}`} aria-labelledby="class-review-title">
+              <h3 id="class-review-title" className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>Review class setup</h3>
+              <dl className="mt-4 grid gap-x-6 gap-y-4 sm:grid-cols-2">
+                {[
+                  ["Grade level", gradeLevels.find((grade) => String(grade.id) === String(form.gradeLevelId))?.grade_level ?? "—"],
+                  ["Section", form.section || "Unassigned"],
+                  ["Class adviser", allTeachers.find((teacher) => String(teacher.id) === form.adviserId)?.last_name ?? "—"],
+                  ["Room", form.room || "—"],
+                  ["Schedule periods", String(form.schedule.length)],
+                ].map(([label, value]) => (
+                  <div key={label} className="min-w-0">
+                    <dt className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>{label}</dt>
+                    <dd className={`mt-1 break-words text-sm font-semibold ${textPrimary}`}>{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          )}
+
+          <div className="flex flex-col-reverse gap-2 pt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:pt-5">
+            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:gap-3">
             <button
               type="button"
               onClick={() => navigate("/admin/classes")}
-              className={`h-10 px-4 rounded-xl text-xs font-bold border transition-colors ${
+              className={`h-10 w-full rounded-lg border px-4 text-xs font-bold transition-colors sm:w-auto ${
                 darkMode
                   ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
                   : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
@@ -607,19 +765,32 @@ export function ClassFormPage() {
             >
               Cancel
             </button>
+            {!isEditing && currentStep > 0 && (
+              <button
+                type="button"
+                onClick={() => setCurrentStep((step) => step - 1)}
+                className={`h-10 w-full rounded-lg border px-4 text-xs font-bold transition-colors sm:w-auto ${darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"}`}
+              >
+                Back
+              </button>
+            )}
+            </div>
             <button
               type="submit"
               disabled={submitting}
-              className="h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 transition-colors hover:bg-[#6B0000] disabled:opacity-60 disabled:cursor-not-allowed"
+              className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg px-5 text-xs font-bold text-white transition-colors hover:bg-[#6B0000] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
               style={{ background: ACCENT }}
             >
-              <Save size={14} />
-              {submitting
+              {(isEditing || currentStep === CLASS_FORM_STEPS.length - 1) && <Save size={14} />}
+              {!isEditing && currentStep < CLASS_FORM_STEPS.length - 1
+                ? "Continue"
+                : submitting
                 ? "Saving…"
                 : isEditing
                   ? "Save Changes"
                   : "Add Class"}
             </button>
+          </div>
           </div>
         </form>
       </section>

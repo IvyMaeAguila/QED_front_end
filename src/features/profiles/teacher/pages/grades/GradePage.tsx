@@ -250,7 +250,7 @@ export function GradesPage() {
 
   return (
     <div className="w-full min-h-full pb-12">
-      <div className="w-full px-6 lg:px-8 pt-6 space-y-4">
+      <div className="w-full space-y-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2.5">
             <div>
@@ -462,7 +462,7 @@ export function GradesPage() {
                 </p>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-max text-sm">
+                  <table className="teacher-user-table w-full min-w-max text-sm">
                     <thead>
                       <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
                         <th

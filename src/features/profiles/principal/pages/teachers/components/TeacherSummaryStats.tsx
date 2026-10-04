@@ -1,4 +1,3 @@
-import { DoorOpen, GraduationCap, CalendarDays } from "lucide-react";
 import { MiniStatRow, MiniStat } from "../../../../shared/components/DashboardUI";
 import type { TeacherProfile } from "../data/types";
 
@@ -24,7 +23,6 @@ export function TeacherSummaryStats({
       <MiniStat
         label="Advisory"
         value={`${teacher.gradeLevel ?? ""} · ${teacher.advisorySection ?? ""}`}
-        icon={GraduationCap}
         textPrimary={textPrimary}
         textMuted={textMuted}
         darkMode={darkMode}
@@ -33,7 +31,6 @@ export function TeacherSummaryStats({
       <MiniStat
         label="Room"
         value={teacher.room ?? ""}
-        icon={DoorOpen}
         textPrimary={textPrimary}
         textMuted={textMuted}
         darkMode={darkMode}
@@ -41,7 +38,6 @@ export function TeacherSummaryStats({
       <MiniStat
         label="Total Classes"
         value={`${teacher.schedule.length} / week`}
-        icon={CalendarDays}
         textPrimary={textPrimary}
         textMuted={textMuted}
         darkMode={darkMode}

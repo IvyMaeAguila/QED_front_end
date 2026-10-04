@@ -1,8 +1,6 @@
 import { X } from "lucide-react";
 import { HOLISTIC_LEVELS } from "../types/Grading";
 
-const ACCENT = "#6B0000";
-
 interface LegendsModalProps {
   onClose: () => void;
   darkMode: boolean;
@@ -14,16 +12,17 @@ export function LegendsModal({ onClose, darkMode, panelBorder, textPrimary }: Le
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
       <div
-        className={`w-full max-w-sm rounded-2xl overflow-hidden shadow-xl ${darkMode ? "bg-[#111827]" : "bg-white"}`}
+        className={`w-full max-w-md overflow-hidden rounded-2xl border border-t-4 border-t-[#800000] shadow-xl ${darkMode ? "border-white/10 bg-[#111827]" : "border-black/10 bg-white"}`}
+        style={{ borderTopColor: "#800000" }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-5 py-4 flex items-center justify-between" style={{ background: ACCENT }}>
-          <span className="text-white font-bold text-sm">Rating Legend</span>
+        <div className={`flex items-center justify-between border-b px-5 py-4 ${panelBorder}`}>
+          <span className={`text-sm font-bold ${textPrimary}`}>Rating Legend</span>
           <button
             onClick={onClose}
-            className="w-7 h-7 rounded-lg flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors"
+            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${darkMode ? "text-gray-300 hover:bg-white/10" : "text-gray-500 hover:bg-black/5"}`}
           >
-            <X size={14} className="text-white" />
+            <X size={16} />
           </button>
         </div>
 

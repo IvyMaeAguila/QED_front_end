@@ -20,15 +20,7 @@ const StudentNarrativeSnapshotContext =
 
 interface StudentNarrativeSnapshotProviderProps {
   studentId: string;
-  termNumber: number;
   children: ReactNode;
-  /**
-   * DEV/QA ONLY: forces the backend to skip its release gate (end_date
-   * check) so you can see real numbers before the term has actually ended.
-   * Defaults to false. Do NOT leave this true in anything parent-facing —
-   * see the warning on the controller's `preview` query param.
-   */
-  preview?: boolean;
 }
 
 const NARRATIVE_DOMAINS: StudentDomainKey[] = ["cognitive", "emotional", "behavioral", "social"];
@@ -54,33 +46,28 @@ function computeComposite(domainAverages: HolisticDomainAverages): number | null
  * single-term StudentNarrativeSnapshot shape this UI expects.
  *
  * KNOWN GAPS vs the original mock shape (flagging rather than guessing):
- * - `reportCardStatus` only distinguishes "released" / "not_released" here —
- *   the backend's `released` flag is a boolean (gated on the term's
- *   end_date), so there's no third "processing" state to map to yet. If a
- *   "processing" state is needed, the controller needs to start returning
- *   something to distinguish it first.
- * - `domainScores` now includes all 4 backend axes (cognitive/emotional/
- *   behavioral/social) — if `StudentDomainKey` and the components consuming
- *   this (HolisticAverage.tsx's STUDENT_DOMAIN_META, DOMAIN_AXIS_LABEL,
- *   radar chart) are still typed/wired for 3 domains only, those need
- *   updating too. This file alone can't fix that — flagging it here.
+ * - `reportCardStatus` distinguishes visible scores from future terms. The
+ *   active term is visible live; completed terms remain visible after end.
+ * - `domainScores` includes all 4 backend axes (cognitive/emotional/
+ *   behavioral/social).
  * - `studentName` isn't returned by this endpoint at all, so it's left as
  *   an empty string — callers that need a display name should keep sourcing
  *   it from their own student record (e.g. `DetailStudent.firstName`), same
  *   as HolisticAverage.tsx already does.
- * - `releasedAt` isn't returned by this endpoint either (the controller
- *   only returns a boolean, not a timestamp) — left as null. Add a
- *   `releasedAt`/`end_date` field server-side if this needs to be real.
+ * - `releasedAt` isn't returned by this endpoint, so it remains null.
  */
 function toStudentNarrativeSnapshot(
   studentId: string,
-  termNumber: number,
   allTerms: HolisticTermAverage[]
 ): StudentNarrativeSnapshot | null {
-  const current = allTerms.find((t) => t.termNumber === termNumber);
+  const current = allTerms.find((t) => t.isActive) ??
+    allTerms.reduce<HolisticTermAverage | undefined>(
+      (latest, term) => (!latest || term.termNumber > latest.termNumber ? term : latest),
+      undefined,
+    );
   if (!current) return null;
 
-  const previous = allTerms.find((t) => t.termNumber === termNumber - 1);
+  const previous = allTerms.find((t) => t.termNumber === current.termNumber - 1);
 
   const domainScores = NARRATIVE_DOMAINS.map((domain) => ({
     domain,
@@ -103,9 +90,7 @@ function toStudentNarrativeSnapshot(
 
 export function StudentNarrativeSnapshotProvider({
   studentId,
-  termNumber,
   children,
-  preview = true,
 }: StudentNarrativeSnapshotProviderProps) {
   const [snapshot, setSnapshot] = useState<StudentNarrativeSnapshot | null>(null);
   const [loading, setLoading] = useState(true);
@@ -114,41 +99,48 @@ export function StudentNarrativeSnapshotProvider({
   useEffect(() => {
     let cancelled = false;
 
-    async function load() {
-      setLoading(true);
-      setError(null);
+    async function load(force = false) {
+      if (!force) setLoading(true);
       try {
-        // Fetch every term (not just `termNumber`) so we have the prior
-        // term on hand for `previousCompositeScore` — this also means the
-        // request is cached per-studentId regardless of which term the
-        // user is viewing, so switching terms doesn't re-fetch.
-        const allTerms = await fetchStudentHolisticTermAverages(studentId, { preview });
+        const allTerms = await fetchStudentHolisticTermAverages(studentId, { force });
 
         if (cancelled) return;
 
-        const data = toStudentNarrativeSnapshot(studentId, termNumber, allTerms);
+        const data = toStudentNarrativeSnapshot(studentId, allTerms);
         if (data) {
           setSnapshot(data);
+          setError(null);
         } else {
           setSnapshot(null);
           setError("No snapshot found for this student/term.");
         }
       } catch (err) {
         if (!cancelled) {
-          setSnapshot(null);
+          if (!force) setSnapshot(null);
           setError(err instanceof Error ? err.message : "Failed to load narrative snapshot.");
         }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled && !force) setLoading(false);
       }
     }
 
     load();
 
+    const refreshTimer = window.setInterval(() => {
+      if (document.visibilityState === "visible") void load(true);
+    }, 30_000);
+
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === "visible") void load(true);
+    };
+    document.addEventListener("visibilitychange", refreshWhenVisible);
+
     return () => {
       cancelled = true;
+      window.clearInterval(refreshTimer);
+      document.removeEventListener("visibilitychange", refreshWhenVisible);
     };
-  }, [studentId, termNumber, preview]);
+  }, [studentId]);
 
   const value = useMemo(
     () => ({ snapshot, loading, error }),

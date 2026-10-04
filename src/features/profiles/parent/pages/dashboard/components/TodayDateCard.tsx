@@ -1,25 +1,39 @@
-import { useTodayParts } from '../../../hooks/useToday';
+import { useTodayParts } from "../../../hooks/useToday";
 
 interface TodayDateCardProps {
   panelBg?: string;
+  panelBorder?: string;
+  textPrimary?: string;
   textMuted?: string;
 }
 
 export default function TodayDateCard({
   panelBg = "bg-white",
+  panelBorder = "border-[#E5E7EB]",
+  textPrimary = "text-gray-900",
   textMuted = "text-gray-400",
 }: TodayDateCardProps) {
   const { day, month, year } = useTodayParts();
 
   return (
-    <div className={`hidden rounded-xl2 p-5 text-center shadow-card sm:block ${panelBg}`}>
-      <p className={`text-[11px] font-semibold uppercase tracking-wider ${textMuted}`}>
-        Today's Date
+    <div
+      className={`flex h-full min-h-[200px] flex-col items-center justify-center rounded-2xl border p-6 text-center ${panelBg} ${panelBorder}`}
+      style={{ boxShadow: "0 4px 20px -2px rgba(0,0,0,0.05), 0 2px 10px -2px rgba(0,0,0,0.03)" }}
+    >
+      <p className={`mb-2 text-xs font-bold uppercase tracking-[0.2em] ${textMuted}`}>
+        Today&apos;s Date
       </p>
-      <p className="mt-1 text-4xl font-extrabold text-maroon-dark">{day}</p>
-      <p className={`text-sm font-medium ${textMuted}`}>
-        {month} {year}
+      <h2 className="text-[44px] font-black leading-none tracking-tight" style={{ color: "#8B0D0D" }}>
+        {day}
+      </h2>
+      <p className={`mt-1 text-sm font-bold ${textPrimary}`}>
+        {month}, {year}
       </p>
+      <div className="mt-4 flex justify-center gap-1">
+        <span className="h-1 w-8 rounded-full" style={{ background: "#8B0D0D" }} />
+        <span className="h-1 w-2 rounded-full" style={{ background: "#8B0D0D33" }} />
+        <span className="h-1 w-2 rounded-full" style={{ background: "#8B0D0D33" }} />
+      </div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { StudentAvatar } from "@shared/components/StudentAvatar";
 import { AlertTriangle, CheckCircle2, Download, Send, X } from "lucide-react";
-import ExcelJS from "exceljs";
+import type ExcelJS from "exceljs";
 import type { RosterStudent } from "./data";
 import {
   formatShortDate,
@@ -233,7 +233,8 @@ async function downloadTemplateGradeRecord(args: {
   if (!structure || !layout) throw new Error("Upload the official grade template for this subject before exporting.");
 
   const templateBuffer = await downloadActiveGradeTemplate(args.subjectSectionId);
-  const templateWorkbook = new ExcelJS.Workbook();
+  const { default: ExcelJSRuntime } = await import("exceljs");
+  const templateWorkbook = new ExcelJSRuntime.Workbook();
   await templateWorkbook.xlsx.load(templateBuffer);
   const source = templateWorkbook.getWorksheet(`TERM ${args.termNumber}`);
   if (!source) throw new Error(`The uploaded template does not contain TERM ${args.termNumber}.`);
@@ -262,7 +263,7 @@ async function downloadTemplateGradeRecord(args: {
     insertedOffset += plan.count;
   }
 
-  const workbook = new ExcelJS.Workbook();
+  const workbook = new ExcelJSRuntime.Workbook();
   workbook.creator = "QED System";
   const worksheet = workbook.addWorksheet(source.name);
   const rowCount = Math.max(source.rowCount, ...layout.studentRows.map((entry) => entry.row));
@@ -852,7 +853,7 @@ export function AssessmentRecordsSection({
         </button>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full min-w-max text-xs border-collapse">
+        <table className="teacher-user-table w-full min-w-max text-xs border-collapse">
           <thead>
             <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
               <th
@@ -1067,7 +1068,7 @@ export function AssessmentRecordsSection({
             </div>
 
             <div className="flex-1 overflow-y-auto px-5 py-3">
-              <table className="w-full text-xs">
+              <table className="teacher-user-table w-full text-xs">
                 <thead>
                   <tr className={`border-b ${panelBorder} ${textMuted}`}>
                     <th className="py-2 text-left font-black uppercase">Student</th>
