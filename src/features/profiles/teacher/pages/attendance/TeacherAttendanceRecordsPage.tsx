@@ -54,10 +54,10 @@ export function TeacherAttendanceRecordsPage() {
                   textMuted={textMuted}
                 />
               )}
-              <div className={`flex items-center p-0.5 rounded-lg border ${panelBorder} bg-black/5 dark:bg-white/5`}>
+              <div className={`qed-segmented-control flex items-center rounded-lg p-0 ${darkMode ? "bg-white/5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]" : "bg-gray-50 shadow-[inset_0_0_0_1px_#e5e7eb]"}`}>
                 <button
                   onClick={() => setViewMode("month")}
-                  className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${
+                  className={`px-3 text-[11px] font-bold rounded-lg transition-all ${
                     viewMode === "month" ? "bg-[#800000] text-white shadow-sm" : `${textMuted} hover:${textPrimary}`
                   }`}
                 >
@@ -65,7 +65,7 @@ export function TeacherAttendanceRecordsPage() {
                 </button>
                 <button
                   onClick={() => setViewMode("summary")}
-                  className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${
+                  className={`px-3 text-[11px] font-bold rounded-lg transition-all ${
                     viewMode === "summary" ? "bg-[#800000] text-white shadow-sm" : `${textMuted} hover:${textPrimary}`
                   }`}
                 >

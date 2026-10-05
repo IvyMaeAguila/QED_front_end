@@ -15,15 +15,15 @@ export function Header({
   showNotifications = false,
 }: HeaderProps) {
   const { darkMode, toggleDarkMode } = useSettings();
-  const institutionText = darkMode ? "text-white/55" : "text-[#6B0000]";
+  const institutionText = darkMode ? "text-[#E7D8CF]" : "text-[#6B0000]";
 
   return (
     <header
       className={`shrink-0 z-20 border-b font-sans transition-colors ${
-        darkMode ? "bg-[#111827] border-[#374151]" : "bg-white border-[#E5E7EB]"
+        darkMode ? "bg-[#271916] border-[#543632]" : "bg-white border-[#E5E7EB]"
       }`}
     >
-      <div className={`flex min-h-8 items-center justify-center gap-2 px-3 py-1 text-[8px] font-semibold tracking-wide text-white/90 sm:px-6 sm:text-[10px] ${darkMode ? "bg-[#0F172A]" : "bg-[#4A0000]"}`}>
+      <div className={`flex min-h-8 items-center justify-center gap-2 px-3 py-1 text-[8px] font-semibold tracking-wide text-white/90 sm:px-6 sm:text-[10px] ${darkMode ? "bg-[#1A1110]" : "bg-[#4A0000]"}`}>
         <img src={eucLogo} alt="" aria-hidden="true" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
         <span className="max-w-full text-center leading-tight">MSEUF-CI</span>
       </div>

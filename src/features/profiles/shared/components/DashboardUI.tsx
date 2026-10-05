@@ -42,15 +42,15 @@ export function SectionCard({
   compact?: boolean;
 }) {
   return (
-    <div className={`rounded-2xl border ${panelBg} ${panelBorder} ${compact ? "p-4 sm:p-5" : "p-5 sm:p-6"} shadow-card`}>
+    <div className={`rounded-[12px] border ${panelBg} ${panelBorder} ${compact ? "p-4 sm:p-5" : "p-5 sm:p-6"} shadow-card`}>
       <div className={`flex items-center justify-between ${compact ? "mb-3" : "mb-5"}`}>
-        <h2 className={`flex items-center h-4 gap-1.5 text-xs font-bold uppercase tracking-wide leading-none ${textPrimary}`}>
+        <h2 className={`flex min-h-5 items-center gap-2 text-[15px] font-bold leading-tight ${textPrimary}`}>
           {Icon && (
-            <span className="inline-flex items-center justify-center h-4 w-4 shrink-0">
-              <Icon className="h-3.5 w-3.5 text-maroon" strokeWidth={2.75} />
+            <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center">
+              <Icon className="h-4 w-4 text-maroon" strokeWidth={2.5} />
             </span>
           )}
-          <span className="flex items-center h-4">{title}</span>
+          <span>{title}</span>
         </h2>
         {action}
       </div>
@@ -212,6 +212,7 @@ export function OverviewCard({
   textPrimary,
   textMuted,
   darkMode,
+  compact = false,
 }: {
   label: string;
   value: string;
@@ -225,22 +226,30 @@ export function OverviewCard({
   textMuted: string;
   darkMode: boolean;
   showIcon?: boolean;
+  compact?: boolean;
 }) {
-  const cardFrame = showIcon ? "rounded-2xl p-7 gap-5" : "rounded-table p-4 gap-4 sm:p-5";
+  const cardFrame = compact
+    ? "min-h-[132px] rounded-[12px] p-4 gap-3"
+    : showIcon ? "rounded-2xl p-7 gap-5" : "rounded-table p-4 gap-4 sm:p-5";
 
   if (variant === "spotlight") {
     return (
-      <div className={`flex flex-col ${cardFrame} text-white bg-maroon-gradient-vertical shadow-primary`}>
-        {(showIcon || trend) && (
-          <div className={`flex items-center ${showIcon ? "justify-between" : "justify-end"}`}>
+      <div
+        className={`flex flex-col ${cardFrame} ${compact ? "text-white shadow-primary" : "text-white bg-maroon-gradient-vertical shadow-primary"}`}
+        style={compact ? { background: "linear-gradient(180deg, #550000 0%, #BB0000 100%)" } : undefined}
+      >
+        {showIcon && (
+          <div className={`flex items-center ${compact ? "h-6 justify-end" : showIcon ? "justify-between" : "justify-end"}`}>
             {showIcon && <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/18"><Icon className="h-6 w-6 text-white" strokeWidth={2.25} /></div>}
-            {trend && <TrendChip trend={trend} darkMode={darkMode} />}
           </div>
         )}
-        <div>
+        <div className="flex flex-1 flex-col">
           <p className="text-xs font-bold uppercase tracking-widest text-white/75">{label}</p>
-          <p className="text-[38px] font-black leading-none tracking-tight tabular-nums mt-1.5">{value}</p>
-          <p className="text-xs mt-1.5 text-white/70">{sub}</p>
+          <p className={`${compact ? "text-[36px]" : "text-[38px]"} mt-1.5 font-black leading-none tracking-tight tabular-nums text-white`}>{value}</p>
+          <div className="mt-auto flex min-h-6 items-center justify-between gap-2 pt-1.5">
+            <p className="text-xs text-white/70">{sub}</p>
+            {trend && <TrendChip trend={trend} darkMode={darkMode} />}
+          </div>
         </div>
       </div>
     );
@@ -249,20 +258,22 @@ export function OverviewCard({
   const s = ICON_VARIANT_STYLE[variant](darkMode);
   return (
     <div className={`flex flex-col border ${cardFrame} transition-all hover:-translate-y-0.5 shadow-card ${panelBg} ${panelBorder}`}>
-      {(showIcon || trend) && (
-        <div className={`flex items-center ${showIcon ? "justify-between" : "justify-end"}`}>
+      {showIcon && (
+        <div className={`flex items-center ${compact ? "h-6 justify-end" : showIcon ? "justify-between" : "justify-end"}`}>
           {showIcon && (
             <div className={`flex h-14 w-14 items-center justify-center ${s.shape === "circle" ? "rounded-full" : "rounded-2xl"}`} style={{ backgroundColor: s.bg }}>
               <Icon className="h-6 w-6" style={{ color: s.icon }} strokeWidth={2.25} />
             </div>
           )}
-          {trend && <TrendChip trend={trend} darkMode={darkMode} />}
         </div>
       )}
-      <div>
+      <div className="flex flex-1 flex-col">
         <p className={`text-xs font-bold uppercase tracking-widest ${textMuted}`}>{label}</p>
-        <p className={`text-[38px] font-black leading-none tracking-tight tabular-nums mt-1.5 ${textPrimary}`}>{value}</p>
-        <p className={`text-xs mt-1.5 ${textMuted}`}>{sub}</p>
+        <p className={`${compact ? "text-[36px]" : "text-[38px]"} mt-1.5 font-black leading-none tracking-tight tabular-nums ${textPrimary}`}>{value}</p>
+        <div className="mt-auto flex min-h-6 items-center justify-between gap-2 pt-1.5">
+          <p className={`text-xs ${textMuted}`}>{sub}</p>
+          {trend && <TrendChip trend={trend} darkMode={darkMode} />}
+        </div>
       </div>
     </div>
   );

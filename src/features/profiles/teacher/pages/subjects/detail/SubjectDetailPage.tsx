@@ -440,7 +440,7 @@ export function SubjectDetailPage() {
                 <thead>
                   <tr className={darkMode ? "bg-white/3" : "bg-[#F8FAFC]"}>
                     <th
-                      className={`sticky left-0 z-10 min-w-60 px-5 py-4 text-left ${darkMode ? "bg-[#111827]" : "bg-[#F8FAFC]"}`}
+                      className={`sticky left-0 z-10 min-w-60 px-5 py-4 text-left ${darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"}`}
                     >
                       <Bone className="h-3 w-16" />
                     </th>
@@ -453,7 +453,7 @@ export function SubjectDetailPage() {
                   {[0, 1, 2, 3, 4, 5, 6].map((row) => (
                     <tr key={row} className={`border-t ${panelBorder}`}>
                       <td
-                        className={`sticky left-0 z-10 px-5 py-4 ${darkMode ? "bg-[#111827]" : "bg-white"}`}
+                        className={`sticky left-0 z-10 px-5 py-4 ${darkMode ? "bg-[#2A1A18]" : "bg-white"}`}
                       >
                         <div className="flex items-center gap-3">
                           <Bone className="h-9 w-9 rounded-full shrink-0" />

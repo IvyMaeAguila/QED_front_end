@@ -49,7 +49,7 @@ export function Sidebar({
   return (
     <aside
       className={`absolute lg:relative inset-y-0 left-0 z-30 ${collapsed ? "w-60 lg:w-[4.5rem]" : "w-60"} max-w-[85vw] h-full flex flex-col text-white rounded-tr-none rounded-br-[28px] lg:rounded-none shadow-[8px_0_30px_-12px_rgba(0,0,0,0.35)] transition-[width,transform] duration-300 ${APPLE_EASE} ${
-        darkMode ? "bg-[#0F172A]" : "bg-[#4A0000]"
+        darkMode ? "bg-[#1A1110]" : "bg-[#4A0000]"
       } ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
     >
       {/* Thick Metallic Gold Right Border Accent with rounded-br-[28px] */}

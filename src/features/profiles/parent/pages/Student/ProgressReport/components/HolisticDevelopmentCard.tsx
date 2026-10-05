@@ -5,9 +5,9 @@ import {
   LayoutGrid,
   Menu,
   Brain,
-  HeartHandshake,
-  Users2,
-  ShieldCheck,
+  Heart,
+  ListChecks,
+  UsersRound,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -34,10 +34,10 @@ type DomainEntry = HolisticAssessmentEntry["domains"][number];
 
 // Per-domain color + icon, echoing the radial language of the spider chart.
 const DOMAIN_META: Record<string, { color: string; icon: LucideIcon }> = {
-  cognitive: { color: "#2563EB", icon: Brain },
-  emotional: { color: "#7C3AED", icon: HeartHandshake },
-  social: { color: "#0D9488", icon: Users2 },
-  behavioral: { color: "#B45309", icon: ShieldCheck },
+  cognitive: { color: "#4779B8", icon: Brain },
+  emotional: { color: "#BB5660", icon: Heart },
+  social: { color: "#468273", icon: UsersRound },
+  behavioral: { color: "#A77622", icon: ListChecks },
 };
 const DEFAULT_DOMAIN_META = { color: "#8B0D0D", icon: Sparkle };
 
@@ -158,13 +158,13 @@ export function HolisticDevelopmentCard({
         </div>
 
         {/* View toggle */}
-        <div className={`flex shrink-0 items-center gap-1 rounded-lg border ${panelBorder} p-1`}>
+        <div className={`qed-segmented-control flex shrink-0 items-center gap-0 rounded-lg p-0 ${darkMode ? "bg-white/5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]" : "bg-gray-50 shadow-[inset_0_0_0_1px_#e5e7eb]"}`}>
           <button
             type="button"
             onClick={() => setViewMode("grid")}
             aria-pressed={viewMode === "grid"}
             aria-label="Grid view"
-            className={`flex h-7 w-7 items-center justify-center rounded-md transition-colors ${
+            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
               viewMode === "grid" ? "bg-[#6D0F1F] text-white" : `${textMuted} hover:bg-black/5`
             }`}
           >
@@ -175,7 +175,7 @@ export function HolisticDevelopmentCard({
             onClick={() => setViewMode("list")}
             aria-pressed={viewMode === "list"}
             aria-label="List view"
-            className={`flex h-7 w-7 items-center justify-center rounded-md transition-colors ${
+            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
               viewMode === "list" ? "bg-[#6D0F1F] text-white" : `${textMuted} hover:bg-black/5`
             }`}
           >
@@ -192,17 +192,17 @@ export function HolisticDevelopmentCard({
             }`}
           >
             {domains.length > 0 ? (
-              <div className="relative w-full max-w-[220px]">
+              <div className="relative mx-auto w-full max-w-[360px]">
                 <div
                   className="pointer-events-none absolute inset-0 m-auto h-40 w-40 rounded-full opacity-25 blur-3xl"
-                  style={{ background: "radial-gradient(circle, var(--color-gold, #D4A94A) 0%, var(--color-maroon, #8B0D0D) 55%, transparent 75%)" }}
+            style={{ background: "radial-gradient(circle, #EDF4FC 0%, #4779B8 55%, transparent 75%)" }}
                 />
-                <ResponsiveContainer width="100%" height={200}>
-                  <RadarChart data={radarData} outerRadius={70}>
+                <ResponsiveContainer width="100%" height={260}>
+                  <RadarChart data={radarData} outerRadius={88} margin={{ top: 24, right: 34, bottom: 24, left: 34 }}>
                     <defs>
                       <radialGradient id="holisticRadarFill" cx="50%" cy="50%" r="65%">
-                        <stop offset="0%" stopColor="#8B0D0D" stopOpacity={0.32} />
-                        <stop offset="100%" stopColor="#8B0D0D" stopOpacity={0.14} />
+                        <stop offset="0%" stopColor="#4779B8" stopOpacity={0.20} />
+                        <stop offset="100%" stopColor="#4779B8" stopOpacity={0.08} />
                       </radialGradient>
                     </defs>
                     <PolarGrid stroke={gridStroke} strokeDasharray="3 4" />
@@ -210,7 +210,7 @@ export function HolisticDevelopmentCard({
                     <PolarRadiusAxis domain={[0, 5]} tick={false} axisLine={false} tickCount={6} />
                     <Radar
                       dataKey="score"
-                      stroke="#8B0D0D"
+                      stroke="#4779B8"
                       fill="url(#holisticRadarFill)"
                       strokeWidth={2}
                       dot={makeRadarDot(domains, darkMode)}

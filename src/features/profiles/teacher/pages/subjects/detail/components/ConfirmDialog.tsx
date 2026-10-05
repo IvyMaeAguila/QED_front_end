@@ -35,7 +35,7 @@ export function ConfirmDialog({
         role="dialog"
         aria-modal="true"
         className={`w-full max-w-md overflow-hidden rounded-2xl border border-t-4 border-t-[#800000] shadow-card ${panelBorder} ${
-          darkMode ? "bg-[#111827]" : "bg-white"
+          darkMode ? "bg-[#2A1A18]" : "bg-white"
         }`}
         style={{ borderTopColor: "#800000" }}
         onClick={(e) => e.stopPropagation()}

@@ -597,7 +597,7 @@ export function AssessmentRecordsSection({
 }: AssessmentRecordsSectionProps) {
   const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
   const cellInputClasses = `w-14 rounded-md border px-1 py-0.5 text-center text-xs font-bold outline-none ${panelBorder} ${
-    darkMode ? "bg-[#0B1120] text-white" : "bg-white text-[#111827]"
+    darkMode ? "bg-[#2A1A18] text-white" : "bg-white text-[#111827]"
   }`;
 
   const examSubWeights = weights.examSubWeights;
@@ -823,7 +823,7 @@ export function AssessmentRecordsSection({
 
     return (
       <tr key={student.id} className={`border-t ${panelBorder} ${index % 2 ? (darkMode ? "bg-white/1.5" : "bg-black/[0.012]") : ""}`}>
-        <td className={`sticky left-0 z-10 px-4 py-2.5 text-sm font-bold ${darkMode ? "bg-[#111827]" : "bg-white"} ${textPrimary}`}>
+        <td className={`sticky left-0 z-10 px-4 py-2.5 text-sm font-bold ${darkMode ? "bg-[#2A1A18]" : "bg-white"} ${textPrimary}`}>
           <span className="inline-flex items-center gap-1.5">
             <StudentAvatar gender={student.gender} name={student.name} />
             {student.name}
@@ -858,7 +858,7 @@ export function AssessmentRecordsSection({
             <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
               <th
                 rowSpan={4}
-                className={`sticky left-0 z-10 min-w-52 border px-3 py-3 text-left text-sm font-black uppercase ${darkMode ? "bg-[#111827]" : "bg-white"} ${panelBorder} ${textPrimary}`}
+                className={`sticky left-0 z-10 min-w-52 border px-3 py-3 text-left text-sm font-black uppercase ${darkMode ? "bg-[#2A1A18]" : "bg-white"} ${panelBorder} ${textPrimary}`}
               >
                 Learners' Names
               </th>
@@ -1046,7 +1046,7 @@ export function AssessmentRecordsSection({
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4 modal-backdrop">
           <div
             className={`flex max-h-[85vh] w-full max-w-2xl flex-col rounded-2xl border shadow-xl ${panelBorder} ${
-              darkMode ? "bg-[#111827]" : "bg-white"
+              darkMode ? "bg-[#2A1A18]" : "bg-white"
             }`}
           >
             <div className={`flex items-center justify-between border-b px-5 py-4 ${panelBorder}`}>

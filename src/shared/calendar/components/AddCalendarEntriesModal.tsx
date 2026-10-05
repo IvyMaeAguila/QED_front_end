@@ -41,7 +41,7 @@ export function AddCalendarEntriesModal({
 
   const inputClasses = `w-full h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors ${
     darkMode
-      ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]"
+      ? "bg-[#2A1A18] border-[#543632] text-white focus:border-[#8B0D0D]"
       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
   }`;
   const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
@@ -145,7 +145,7 @@ export function AddCalendarEntriesModal({
           <button
             onClick={addRow}
             className={`w-full h-10 rounded-xl border border-dashed text-xs font-bold flex items-center justify-center gap-2 transition-colors ${
-              darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/5" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+              darkMode ? "border-[#543632] text-[#D1D5DB] hover:bg-white/5" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
             }`}
           >
             <Plus size={14} />
@@ -160,7 +160,7 @@ export function AddCalendarEntriesModal({
             onClick={onClose}
             disabled={saving}
             className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 ${
-              darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+              darkMode ? "border-[#543632] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
             }`}
           >
             Cancel

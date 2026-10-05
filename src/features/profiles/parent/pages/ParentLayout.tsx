@@ -54,9 +54,9 @@ export function ParentLayout({ onLogout }: ParentLayoutProps) {
   const theme: AdminThemeContext = {
     darkMode,
     panelBg: darkMode
-      ? "bg-[#111827]/85 backdrop-blur-md"
+      ? "bg-[#2A1A18]/90 backdrop-blur-md"
       : "bg-white/85 backdrop-blur-md",
-    panelBorder: darkMode ? "border-[#1F2937]" : "border-[#E5E7EB]",
+    panelBorder: darkMode ? "border-[#543632]" : "border-[#E5E7EB]",
     textPrimary: darkMode ? "text-white" : "text-[#111827]",
     textMuted: darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]",
   };
@@ -65,8 +65,8 @@ export function ParentLayout({ onLogout }: ParentLayoutProps) {
 
   return (
     <div
-      className={`parent-system flex h-dvh w-full overflow-hidden transition-colors ${
-        darkMode ? "bg-[#0B1120]" : "bg-[#F3F4F6]"
+      className={`qed-account-ui parent-system flex h-dvh w-full overflow-hidden transition-colors ${
+        darkMode ? "dark bg-[#1A1110]" : "bg-[#F3F4F6]"
       }`}
     >
       {/* lg:z-0 → on desktop the sidebar sits below <main> (z-10), so modals

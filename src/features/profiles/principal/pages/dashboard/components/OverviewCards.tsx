@@ -29,6 +29,7 @@ export function OverviewCards({
         sub="Currently enrolled"
         icon={GraduationCap}
         showIcon={false}
+        compact
         variant="spotlight"
         panelBg={panelBg}
         panelBorder={panelBorder}
@@ -42,6 +43,7 @@ export function OverviewCards({
         sub="Active teachers"
         icon={Users}
         showIcon={false}
+        compact
         variant="gold"
         panelBg={panelBg}
         panelBorder={panelBorder}
@@ -55,6 +57,7 @@ export function OverviewCards({
         sub={`${currentTermLabel} average`}
         icon={TrendingUp}
         showIcon={false}
+        compact
         trend={overview.attendance >= 93 ? "up" : "down"}
         variant="primary"
         panelBg={panelBg}
@@ -69,6 +72,7 @@ export function OverviewCards({
         sub={`${currentTermLabel} overall`}
         icon={TrendingUp}
         showIcon={false}
+        compact
         trend={overview.academicPerf >= 82 ? "up" : "down"}
         variant="primary"
         panelBg={panelBg}
@@ -83,6 +87,7 @@ export function OverviewCards({
         sub="Students flagged"
         icon={AlertTriangle}
         showIcon={false}
+        compact
         trend={overview.needsIntervention <= 35 ? "up" : "down"}
         variant="alert"
         panelBg={panelBg}

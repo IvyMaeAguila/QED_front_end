@@ -43,6 +43,16 @@ h6 {
   border-radius: 12px !important;
 }
 
+/* Normalize every control inside a search/filter toolbar, regardless of role
+   or feature, so compact filters do not jump between 32px and 40px sizes. */
+:is(div, section)[class*="rounded-"][class*="border"][class*="px-3"][class*="py-2"]:has(input, select) :is(input, select, button[aria-haspopup="listbox"], [role="group"] > button) {
+  height: 2rem !important;
+  min-height: 2rem !important;
+  font-size: 0.6875rem !important;
+  line-height: 1rem !important;
+  border-radius: 0.5rem !important;
+}
+
 /* Filter controls and dropdown menus use the compact 8px control radius. */
 button[aria-haspopup="listbox"],
 [role="listbox"],
@@ -171,12 +181,41 @@ select[aria-label*="month" i] {
   background-size: cover;
 }
 
-html.dark {
+/* Shared dimensions for search and filter controls across every role. */
+.qed-filter-control {
+  height: 2rem !important;
+  min-height: 2rem !important;
+  border-radius: 0.5rem !important;
+  font-size: 0.6875rem !important;
+  line-height: 1rem !important;
+}
+
+/* Shared segmented-control geometry: use the compact subject switch as the
+   standard across tabs, view toggles, and range selectors. */
+.qed-segmented-control {
+  height: 2rem !important;
+  min-height: 2rem !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  border: 0 !important;
+}
+
+.qed-segmented-control > button {
+  height: 2rem !important;
+  min-height: 2rem !important;
+  max-height: 2rem !important;
+  padding-block: 0 !important;
+  border-radius: 0.5rem !important;
+  font-size: 0.6875rem !important;
+  line-height: 1rem !important;
+}
+
+:is(html.dark, .dark) {
   color-scheme: dark;
   background: #1a1110;
 }
 
-html.dark body {
+:is(html.dark, .dark) body {
   background-color: #1a1110;
   color: #f1e8e5;
 }
@@ -215,13 +254,13 @@ button.system-back-button:hover {
   background-color: rgba(0, 0, 0, 0.04) !important;
 }
 
-html.dark button.system-back-button {
+:is(html.dark, .dark) button.system-back-button {
   background-color: transparent !important;
   color: #d1d5db !important;
   border-color: rgba(255, 255, 255, 0.16) !important;
 }
 
-html.dark button.system-back-button:hover {
+:is(html.dark, .dark) button.system-back-button:hover {
   background-color: rgba(255, 255, 255, 0.08) !important;
 }
 
@@ -242,6 +281,8 @@ button.system-back-button--inverse:hover {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.875rem;
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
   }
 
   .teacher-user-table thead tr {
@@ -260,6 +301,10 @@ button.system-back-button--inverse:hover {
     padding: 0.5rem 1rem !important;
   }
 
+  .teacher-user-table :is(th, td) {
+    font-family: inherit !important;
+  }
+
   .teacher-user-table tbody tr {
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     transition: background-color 150ms ease;
@@ -269,23 +314,72 @@ button.system-back-button--inverse:hover {
     background-color: rgba(0, 0, 0, 0.02);
   }
 
-  html.dark .teacher-user-table thead tr {
+  :is(html.dark, .dark) .teacher-user-table thead tr {
     background-color: rgba(255, 255, 255, 0.05) !important;
   }
 
-  html.dark .teacher-user-table tbody tr {
+  :is(html.dark, .dark) .teacher-user-table tbody tr {
     border-top-color: rgba(255, 255, 255, 0.1);
   }
 
-  html.dark .teacher-user-table tbody tr:hover {
+  :is(html.dark, .dark) .teacher-user-table tbody tr:hover {
     background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Keep table text on every teacher route on the same Inter typeface, with
+     tabular digits for dates, grades, and attendance counts. */
+  .qed-account-ui table {
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .qed-account-ui table :is(th, td) {
+    font-family: inherit !important;
+  }
+
+  .qed-account-ui {
+    --qed-table-text: #111827;
+    --qed-table-muted: #111827;
+  }
+
+  :is(html.dark .qed-account-ui, .qed-account-ui.dark) {
+    --qed-table-text: #c2b8b5;
+    --qed-table-muted: #a79c99;
+  }
+
+  .qed-account-ui table thead th {
+    color: var(--qed-table-muted) !important;
+    font-size: 0.6875rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.055em !important;
+  }
+
+  .qed-account-ui table tbody td {
+    color: var(--qed-table-text) !important;
+    font-size: 0.75rem !important;
+    font-weight: 500 !important;
+  }
+
+  .qed-account-ui table tbody :is(td, td *)[class~="text-[#111827]"],
+  .qed-account-ui table tbody :is(td, td *)[class~="text-white"]:not(button):not([class*="bg-"]) {
+    color: var(--qed-table-text) !important;
+    font-size: 0.75rem !important;
+    font-weight: 500 !important;
+  }
+
+  .qed-account-ui table tbody td[class~="uppercase"],
+  .qed-account-ui table tbody td [class~="uppercase"] {
+    color: var(--qed-table-muted) !important;
+    font-size: 0.6875rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.055em !important;
   }
 }
 
 /* Darken common fixed light surfaces used throughout older pages and forms.
    Theme-aware components already choose their own dark palette; these rules
    catch static light utility classes so no page is left glaringly white. */
-html.dark :is(
+:is(html.dark, .dark) :is(
   [class~="bg-white"],
   [class~="bg-white/80"],
   [class~="bg-white/85"],
@@ -304,7 +398,7 @@ html.dark :is(
   background-color: #2a1a18 !important;
 }
 
-html.dark :is(
+:is(html.dark, .dark) :is(
   [class~="bg-[#E5E7EB]"],
   [class~="bg-[#E5E5E5]"],
   [class~="bg-[#E9E9E9]"],
@@ -313,7 +407,7 @@ html.dark :is(
   background-color: #38221f !important;
 }
 
-html.dark :is(
+:is(html.dark, .dark) :is(
   [class~="text-black"],
   [class~="text-[#111827]"],
   [class~="text-[#1A1A1A]"],
@@ -328,7 +422,7 @@ html.dark :is(
   color: #e5e7eb !important;
 }
 
-html.dark :is(
+:is(html.dark, .dark) :is(
   [class~="text-[#6B7280]"],
   [class~="text-[#64748B]"],
   [class~="text-[#555]"],
@@ -340,7 +434,7 @@ html.dark :is(
   color: #9ca3af !important;
 }
 
-html.dark :is(
+:is(html.dark, .dark) :is(
   [class~="border-[#E5E7EB]"],
   [class~="border-[#EEF0F3]"],
   [class~="border-[#E3E6EA]"],
@@ -352,7 +446,7 @@ html.dark :is(
 }
 
 /* Warm dark palette: espresso surfaces with maroon-adjacent brown tones. */
-html.dark :is(
+:is(html.dark, .dark) :is(
   [class*="bg-[#0B1120]"],
   [class*="bg-[#0B0F17]"],
   [class*="bg-[#0F172A]"]
@@ -360,14 +454,14 @@ html.dark :is(
   background-color: #1a1110 !important;
 }
 
-html.dark :is(
+:is(html.dark, .dark) :is(
   [class*="bg-[#111827]"],
   [class*="bg-[#1a1a1a]"]
 ) {
   background-color: #2a1a18 !important;
 }
 
-html.dark :is(
+:is(html.dark, .dark) :is(
   [class*="bg-[#1F2937]"],
   [class*="bg-[#1E293B]"],
   [class*="bg-[#1f1d1d]"]
@@ -375,7 +469,7 @@ html.dark :is(
   background-color: #38221f !important;
 }
 
-html.dark :is(
+:is(html.dark, .dark) :is(
   [class~="bg-slate-900"], [class*="bg-slate-900/"],
   [class~="bg-zinc-900"], [class*="bg-zinc-900/"],
   [class~="bg-gray-900"], [class*="bg-gray-900/"]
@@ -383,7 +477,7 @@ html.dark :is(
   background-color: #2a1a18 !important;
 }
 
-html.dark :is(
+:is(html.dark, .dark) :is(
   [class~="bg-slate-800"], [class*="bg-slate-800/"],
   [class~="bg-zinc-800"], [class*="bg-zinc-800/"],
   [class~="bg-gray-800"], [class*="bg-gray-800/"]
@@ -391,7 +485,7 @@ html.dark :is(
   background-color: #38221f !important;
 }
 
-html.dark :is(
+:is(html.dark, .dark) :is(
   [class~="bg-slate-50"], [class~="bg-slate-100"], [class~="bg-slate-200"],
   [class~="bg-gray-50"], [class~="bg-gray-100"], [class~="bg-gray-200"],
   [class~="bg-zinc-50"], [class~="bg-zinc-100"], [class~="bg-zinc-200"]
@@ -399,7 +493,7 @@ html.dark :is(
   background-color: #34211e !important;
 }
 
-html.dark :is(
+:is(html.dark, .dark) :is(
   [class*="border-[#1F2937]"],
   [class*="border-[#2A3441]"],
   [class*="border-[#334155]"],
@@ -408,7 +502,7 @@ html.dark :is(
   border-color: #543632 !important;
 }
 
-html.dark :is(
+:is(html.dark, .dark) :is(
   [class~="border-slate-700"], [class~="border-slate-800"],
   [class~="border-gray-700"], [class~="border-gray-800"],
   [class~="border-zinc-700"], [class~="border-zinc-800"]
@@ -416,7 +510,7 @@ html.dark :is(
   border-color: #543632 !important;
 }
 
-html.dark :is(
+:is(html.dark, .dark) :is(
   .modal-backdrop > :not(.modal-backdrop),
   .modal-backdrop ~ [role="dialog"]:not([data-drawer-panel="true"]):not([data-notification-panel="true"]),
   [data-modal-panel="true"]
@@ -426,7 +520,7 @@ html.dark :is(
   border-color: #543632 !important;
 }
 
-html.dark :is(
+:is(html.dark, .dark) :is(
   .modal-backdrop > :not(.modal-backdrop) .text-white:not(button):not([class*="bg-"]):not(a),
   .modal-backdrop ~ [role="dialog"]:not([data-drawer-panel="true"]):not([data-notification-panel="true"]) .text-white:not(button):not([class*="bg-"]):not(a),
   [data-modal-panel="true"] .text-white:not(button):not([class*="bg-"]):not(a)
@@ -546,6 +640,24 @@ html.dark :is(
   --shadow-glass: 0 8px 32px -6px rgba(85, 0, 0, 0.12), 0 2px 8px -2px rgba(85, 0, 0, 0.06);
 }
 
+/* Shared brown dark theme for role-specific panels that still use the older
+   slate utility colors. The theme preference is set once on the document by
+   SettingsProvider, so it remains consistent across every signed-in role. */
+html[data-qed-theme="dark"] [class*="bg-[#0F172A]"],
+html[data-qed-theme="dark"] [class*="bg-[#111827]"],
+html[data-qed-theme="dark"] [class*="bg-[#1F2937]"] {
+  background-color: #2a1a18 !important;
+}
+
+html[data-qed-theme="dark"] [class*="bg-[#0B1120]"] {
+  background-color: #201311 !important;
+}
+
+html[data-qed-theme="dark"] [class*="border-[#1F2937]"],
+html[data-qed-theme="dark"] [class*="border-[#374151]"] {
+  border-color: #543632 !important;
+}
+
 /* ---------------------------------------------------------------------
    Glassmorphism utilities — iOS/iPhone-style frosted panels (heavy blur
    + saturation boost + a bright inset top edge to fake the glass catching
@@ -588,3 +700,4 @@ html.dark :is(
   --illustration-opacity: 0.8;
   --illustration-opacity-dark: 0.9; /* line art needs a touch more opacity on dark surfaces to read at the same visual weight */
 }
+

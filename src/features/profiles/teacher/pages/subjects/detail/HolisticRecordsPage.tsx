@@ -300,9 +300,9 @@ export function HolisticRecordsSection({
 
   const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
   const cellInputClasses = `h-7 w-10 rounded-lg border text-center text-[11px] font-black tabular-nums outline-none ${panelBorder} ${
-    darkMode ? "bg-[#0B1120] text-white" : "bg-white text-[#111827]"
+    darkMode ? "bg-[#2A1A18] text-white" : "bg-white text-[#111827]"
   }`;
-  const stickyCell = darkMode ? "bg-[#111827]" : "bg-white";
+  const stickyCell = darkMode ? "bg-[#2A1A18]" : "bg-white";
   const groupBand = `px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
     darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
   } ${textPrimary}`;
@@ -438,7 +438,7 @@ export function HolisticRecordsSection({
                     <th
                       rowSpan={3}
                       className={`sticky left-0 z-10 min-w-56 border px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${
-                        darkMode ? "bg-[#111827]" : "bg-[#F8FAFC]"
+                        darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
                       } ${panelBorder} ${textMuted}`}
                     >
                       Learner's Name

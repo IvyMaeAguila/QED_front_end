@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useState, type ReactNode } from "react";
 import { type Language, type SettingsState } from "../types/Settings";
 
 interface SettingsContextValue extends SettingsState {
@@ -33,6 +33,11 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [emailNotifications, setEmailNotifications] = useState(persisted.emailNotifications ?? true);
   const [pushNotifications, setPushNotifications] = useState(persisted.pushNotifications ?? true);
 
+  useLayoutEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+    document.documentElement.dataset.qedTheme = darkMode ? "dark" : "light";
+  }, [darkMode]);
+
   useEffect(() => {
     try {
       localStorage.setItem(
@@ -43,6 +48,21 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       // ignore storage errors (e.g. private browsing)
     }
   }, [darkMode, schoolAcronym, schoolName, language, emailNotifications, pushNotifications]);
+
+  // Keep the shared theme in sync across role changes and other open tabs.
+  useEffect(() => {
+    function syncSharedTheme(event: StorageEvent) {
+      if (event.key !== STORAGE_KEY) return;
+      try {
+        const next = event.newValue ? JSON.parse(event.newValue) : {};
+        setDarkMode(Boolean(next.darkMode));
+      } catch {
+        setDarkMode(false);
+      }
+    }
+    window.addEventListener("storage", syncSharedTheme);
+    return () => window.removeEventListener("storage", syncSharedTheme);
+  }, []);
 
   const value: SettingsContextValue = {
     darkMode,

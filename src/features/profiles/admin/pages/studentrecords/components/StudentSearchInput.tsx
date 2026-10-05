@@ -33,7 +33,7 @@ export function StudentSearchInput({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className={`relative w-full h-8 pl-8 pr-2.5 rounded-lg border text-[11px] font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${
+          className={`qed-filter-control relative w-full pl-8 pr-2.5 rounded-lg border font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${
             darkMode ? "text-white" : "text-[#111827]"
           } placeholder:text-gray-400 focus:border-maroon`}
         />

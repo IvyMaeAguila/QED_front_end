@@ -99,13 +99,13 @@
 //     setViewDate(new Date());
 //   }
 
-//   const stickyRightBg = darkMode ? "bg-[#111827]" : "bg-white";
+//   const stickyRightBg = darkMode ? "bg-[#2A1A18]" : "bg-white";
 
 //   return (
 //     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={onClose}>
 //       <div
 //         className={`w-full ${tab === "attendance" ? "max-w-4xl" : "max-w-2xl"} max-h-[85vh] rounded-2xl overflow-hidden shadow-xl flex flex-col ${
-//           darkMode ? "bg-[#111827]" : "bg-white"
+//           darkMode ? "bg-[#2A1A18]" : "bg-white"
 //         }`}
 //         onClick={(e) => e.stopPropagation()}
 //       >
@@ -176,7 +176,7 @@
 //                 <tr className={darkMode ? "bg-white/3" : "bg-[#F8FAFC]"}>
 //                   <th
 //                     className={`sticky left-0 z-20 min-w-48 px-4 py-2.5 text-left text-[10px] font-extrabold uppercase tracking-wider ${
-//                       darkMode ? "bg-[#111827]" : "bg-[#F8FAFC]"
+//                       darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
 //                     } ${textMuted}`}
 //                   >
 //                     Student
@@ -198,7 +198,7 @@
 //                   })}
 //                   <th
 //                     className={`sticky right-0 z-20 min-w-24 border-l px-3 py-2.5 text-center text-[10px] font-extrabold uppercase tracking-wider ${panelBorder} ${
-//                       darkMode ? "bg-[#111827]" : "bg-[#F8FAFC]"
+//                       darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
 //                     } ${textMuted}`}
 //                   >
 //                     Present / School Days
@@ -211,7 +211,7 @@
 //                   const rowStripe = index % 2 === 1 ? (darkMode ? "bg-white/[0.015]" : "bg-black/[0.012]") : "";
 //                   return (
 //                     <tr key={student.id} className={`border-t ${panelBorder} ${rowStripe}`}>
-//                       <td className={`sticky left-0 z-10 px-4 py-2 ${darkMode ? "bg-[#111827]" : "bg-white"}`}>
+//                       <td className={`sticky left-0 z-10 px-4 py-2 ${darkMode ? "bg-[#2A1A18]" : "bg-white"}`}>
 //                         <span className={`text-xs font-bold ${textPrimary}`}>{student.name}</span>
 //                       </td>
 //                       {days.map(({ iso, dayOfWeek }) => {

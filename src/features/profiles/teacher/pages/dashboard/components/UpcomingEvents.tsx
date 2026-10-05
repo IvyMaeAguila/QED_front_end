@@ -27,10 +27,10 @@ function EventRow({
 }) {
   return (
     <div
-      className={`flex items-center gap-3 rounded-lg p-2.5 ${darkMode ? "bg-[#1a1a1a]" : "bg-surface/60"}`}
+      className={`flex items-center gap-3 rounded-lg p-2.5 ${darkMode ? "bg-[#241614]" : "bg-surface/60"}`}
     >
       <div
-        className={`flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg text-maroon-dark shadow-sm ${darkMode ? "bg-[#111827]" : "bg-white"}`}
+        className={`flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg text-maroon-dark shadow-sm ${darkMode ? "bg-[#2A1A18]" : "bg-white"}`}
       >
         <span className="text-base font-extrabold leading-none">
           {event.day}

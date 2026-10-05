@@ -71,7 +71,7 @@ export function PrincipalGradebooksPage() {
   }, [filtered]);
 
   const toggleClass = (active: boolean) =>
-    `h-6 rounded-md px-2.5 text-[10px] font-bold transition-colors ${active ? "bg-[#800000] text-white" : `${textMuted} ${theme.darkMode ? "hover:text-white" : "hover:text-gray-700"}`}`;
+    `qed-segmented-control__item rounded-lg px-3 text-[11px] font-semibold transition-colors ${active ? "bg-[#800000] text-white" : `${textMuted} ${theme.darkMode ? "hover:text-white" : "hover:text-gray-700"}`}`;
 
   if (loading) {
     return <GradebooksSkeleton />;
@@ -117,7 +117,7 @@ export function PrincipalGradebooksPage() {
               darkMode={theme.darkMode}
             />
             <div
-              className={`flex items-center rounded-lg border p-0.5 ${theme.darkMode ? "border-white/10 bg-white/5" : "border-gray-200 bg-gray-50"}`}
+              className={`qed-segmented-control flex items-center rounded-lg p-0 ${theme.darkMode ? "bg-white/5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]" : "bg-gray-50 shadow-[inset_0_0_0_1px_#e5e7eb]"}`}
               role="group"
               aria-label="Gradebook view"
             >

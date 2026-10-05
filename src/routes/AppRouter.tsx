@@ -16,7 +16,6 @@ import { UsersProvider } from "../features/profiles/admin/pages/usermanagement/c
 
 import { TeachersProvider } from "../features/profiles/admin/pages/classes/context/TeachersContext";
 import { ClassesProvider } from "../features/profiles/admin/pages/classes/context/ClassesContext";
-import { SettingsProvider } from "../features/profiles/admin/pages/settings/context/SettingsContext";
 
 import { TeacherSection } from "./TeacherSection";
 
@@ -24,7 +23,6 @@ import { ParentSection } from "./ParentSection";
 
 import { PrincipalSection } from "./PrincipalSection";
 
-import { ForceChangePasswordGate } from "../shared/components/manage_password/ForceChangePasswordGate";
 
 import { QedSplash, QedLoader } from "../shared/components/QedLoader";
 
@@ -89,10 +87,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   if (isLoading) return <QedLoader fill />;
   if (!user) return <Navigate to="/login" replace />;
   return (
-    <SettingsProvider>
-      <ForceChangePasswordGate />
-      {children}
-    </SettingsProvider>
+    <>{children}</>
   );
 }
 

@@ -399,7 +399,7 @@ export function TodaysAttendanceSection({
           >
             <div>
               <p
-                className={`text-[11px] font-black uppercase tracking-wider ${textPrimary}`}
+                className={`text-sm font-semibold ${textPrimary}`}
               >
                 Attendance Rate by Grade Level
               </p>
@@ -412,7 +412,7 @@ export function TodaysAttendanceSection({
             </div>
 
             <span
-              className={`text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-full border ${
+              className={`rounded-full border px-2.5 py-1 text-xs font-medium ${
                 darkMode
                   ? "bg-white/4 border-white/10 text-white/70"
                   : "bg-gray-100 border-gray-200 text-gray-600"
@@ -505,7 +505,7 @@ export function TodaysAttendanceSection({
           {/* Present */}
           <div>
             <p
-              className={`text-[11px] font-bold uppercase tracking-wider ${textMuted}`}
+              className={`text-xs font-medium ${textMuted}`}
             >
               Present Today
             </p>
@@ -528,7 +528,7 @@ export function TodaysAttendanceSection({
           {/* Absent */}
           <div>
             <p
-              className={`text-[11px] font-bold uppercase tracking-wider ${textMuted}`}
+              className={`text-xs font-medium ${textMuted}`}
             >
               Absent Today
             </p>
@@ -551,7 +551,7 @@ export function TodaysAttendanceSection({
           {/* Concerning */}
           <div>
             <p
-              className={`text-[11px] font-bold uppercase tracking-wider ${textMuted}`}
+              className={`text-xs font-medium ${textMuted}`}
             >
               Concerning
             </p>

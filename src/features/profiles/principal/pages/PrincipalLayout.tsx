@@ -17,15 +17,15 @@ export function PrincipalLayout({ onLogout }: PrincipalLayoutProps) {
 
   const theme: AdminThemeContext = {
     darkMode,
-    panelBg: darkMode ? "bg-[#111827]" : "bg-white",
-    panelBorder: darkMode ? "border-[#1F2937]" : "border-[#E5E7EB]",
+    panelBg: darkMode ? "bg-[#2A1A18]" : "bg-white",
+    panelBorder: darkMode ? "border-[#543632]" : "border-[#E5E7EB]",
     textPrimary: darkMode ? "text-white" : "text-[#111827]",
     textMuted: darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]",
   };
 
   return (
     <div
-      className="relative flex h-screen w-full overflow-hidden"
+      className={`qed-account-ui relative flex h-screen w-full overflow-hidden ${darkMode ? "dark" : ""}`}
       style={{ fontFamily: "'Inter', sans-serif" }}
     >
       {/* Low-poly backdrop (paints its own background color) */}

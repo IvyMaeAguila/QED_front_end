@@ -525,11 +525,11 @@ export function StudentDetailPage() {
             Holistic Development Assessment
           </h2>
           <div
-            className={`inline-flex rounded-lg border p-0.5 ${darkMode ? "border-slate-700" : "border-[#8B0D0D]/30"}`}
+            className={`qed-segmented-control inline-flex rounded-lg p-0 ${darkMode ? "shadow-[inset_0_0_0_1px_#334155]" : "shadow-[inset_0_0_0_1px_rgba(139,13,13,0.3)]"}`}
           >
             <button
               onClick={() => setHolisticView("chart")}
-              className={`w-8 h-8 rounded-md flex items-center justify-center transition-colors ${
+              className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
                 holisticView === "chart"
                   ? "text-white"
                   : darkMode
@@ -544,7 +544,7 @@ export function StudentDetailPage() {
             </button>
             <button
               onClick={() => setHolisticView("list")}
-              className={`w-8 h-8 rounded-md flex items-center justify-center transition-colors ${
+              className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
                 holisticView === "list"
                   ? "text-white"
                   : darkMode

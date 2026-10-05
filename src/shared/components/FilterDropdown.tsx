@@ -38,7 +38,7 @@ export function FilterDropdown({
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className={`h-9 px-4 rounded-lg flex items-center gap-2 border transition-colors ${
+        className={`qed-filter-control px-3 rounded-lg flex items-center gap-2 border transition-colors ${
           darkMode
             ? "bg-[#111827] border-[#1F2937] text-white hover:border-[#374151]"
             : "bg-white border-[#E5E7EB] text-[#111827] hover:border-[#8B0D0D]"

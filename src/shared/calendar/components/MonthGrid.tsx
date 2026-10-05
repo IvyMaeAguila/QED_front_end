@@ -47,7 +47,7 @@ export function MonthGrid({
           <button
             onClick={onPrevMonth}
             className={`w-9 h-9 rounded-lg border flex items-center justify-center transition-colors ${
-              darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+              darkMode ? "border-[#543632] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
             }`}
           >
             <ChevronLeft size={16} />
@@ -55,7 +55,7 @@ export function MonthGrid({
           <button
             onClick={onNextMonth}
             className={`w-9 h-9 rounded-lg border flex items-center justify-center transition-colors ${
-              darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+              darkMode ? "border-[#543632] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
             }`}
           >
             <ChevronRight size={16} />
@@ -86,7 +86,7 @@ export function MonthGrid({
                 isSelected
                   ? "text-white"
                   : darkMode
-                  ? "border-[#374151] text-[#D1D5DB] hover:bg-white/5"
+                  ? "border-[#543632] text-[#D1D5DB] hover:bg-white/5"
                   : "border-[#F0DADA] text-[#111827] hover:bg-[#FDF2F2]"
               }`}
               style={isSelected ? { background: ACCENT, borderColor: ACCENT } : undefined}

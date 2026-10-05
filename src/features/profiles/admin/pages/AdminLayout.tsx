@@ -23,15 +23,15 @@ export function AdminLayout({ onLogout }: AdminLayoutProps) {
 
   const theme: AdminThemeContext = {
     darkMode,
-    panelBg: darkMode ? "bg-[#111827]/85 backdrop-blur-md" : "bg-white/85 backdrop-blur-md",
-    panelBorder: darkMode ? "border-[#1F2937]" : "border-[#E5E7EB]",
+    panelBg: darkMode ? "bg-[#2A1A18]/90 backdrop-blur-md" : "bg-white/85 backdrop-blur-md",
+    panelBorder: darkMode ? "border-[#543632]" : "border-[#E5E7EB]",
     textPrimary: darkMode ? "text-white" : "text-[#111827]",
     textMuted: darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]",
   };
 
   return (
     <div
-      className={`flex h-screen w-full overflow-hidden transition-colors ${darkMode ? "bg-[#1A1110]" : "bg-[#F3F4F6]"}`}
+      className={`qed-account-ui flex h-screen w-full overflow-hidden transition-colors ${darkMode ? "dark bg-[#1A1110]" : "bg-[#F3F4F6]"}`}
       style={{ fontFamily: "'Inter', sans-serif" }}
     >
       <div

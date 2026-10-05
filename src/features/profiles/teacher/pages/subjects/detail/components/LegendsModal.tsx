@@ -12,7 +12,7 @@ export function LegendsModal({ onClose, darkMode, panelBorder, textPrimary }: Le
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
       <div
-        className={`w-full max-w-md overflow-hidden rounded-2xl border border-t-4 border-t-[#800000] shadow-xl ${darkMode ? "border-white/10 bg-[#111827]" : "border-black/10 bg-white"}`}
+        className={`w-full max-w-md overflow-hidden rounded-2xl border border-t-4 border-t-[#800000] shadow-xl ${darkMode ? "border-white/10 bg-[#2A1A18]" : "border-black/10 bg-white"}`}
         style={{ borderTopColor: "#800000" }}
         onClick={(e) => e.stopPropagation()}
       >

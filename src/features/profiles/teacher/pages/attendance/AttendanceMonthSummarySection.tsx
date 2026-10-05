@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { CalendarCheck, CalendarX2, Loader2 } from "lucide-react";
+import { CalendarCheck, CalendarDays, Loader2 } from "lucide-react";
 import type { RosterStudent } from "../subjects/detail/data.ts";
 import {
   ATTENDANCE_META,
@@ -39,14 +39,6 @@ function monthLabel(key: string): string {
   return new Date(year, month - 1, 1).toLocaleDateString("en-US", {
     month: "long",
     year: "numeric",
-  });
-}
-
-function dateLabel(iso: string): string {
-  return parseISO(iso).toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
   });
 }
 
@@ -113,37 +105,54 @@ export function AttendanceMonthSummarySection({
     [selectedMonth],
   );
 
-  const { schoolDays, absencesByDate, totalAbsences } = useMemo(() => {
+  const { schoolDays, absences, totalPresent, totalLate, totalExcused, daySummaries, absencesByDate } = useMemo(() => {
     // A "school day" is a distinct date the teacher has marked attendance
     // for this section. Marking more students (or re-marking) on a date
     // that's already counted does not add another day — only a date the
     // teacher hasn't touched yet increments the total.
     const markedDates = new Set<string>();
-    const absentStudentsByDate: Record<string, RosterStudent[]> = {};
+    const summaries: Record<string, { present: number; absent: number; late: number; excused: number }> = {};
+    const absentStudents: Record<string, RosterStudent[]> = {};
 
     for (const iso of monthDates) {
       let dayHasMark = false;
-      const absentToday: RosterStudent[] = [];
+      const summary = { present: 0, absent: 0, late: 0, excused: 0 };
       for (const student of roster) {
         const status = attendance[student.id]?.[iso];
         if (!status) continue;
         dayHasMark = true;
-        if (status === "A") absentToday.push(student);
+        if (status === "P") summary.present += 1;
+        if (status === "A") summary.absent += 1;
+        if (status === "L") summary.late += 1;
+        if (status === "E") summary.excused += 1;
       }
       if (dayHasMark) markedDates.add(iso);
-      if (absentToday.length > 0) absentStudentsByDate[iso] = absentToday;
+      summaries[iso] = summary;
+      const absentOnDate = roster.filter((student) => attendance[student.id]?.[iso] === "A");
+      if (absentOnDate.length > 0) absentStudents[iso] = absentOnDate;
     }
-
-    const dateList = Object.entries(absentStudentsByDate)
-      .map(([iso, students]) => ({ iso, students }))
-      .sort((a, b) => a.iso.localeCompare(b.iso));
 
     return {
       schoolDays: markedDates.size,
-      absencesByDate: dateList,
-      totalAbsences: dateList.reduce((sum, d) => sum + d.students.length, 0),
+      absences: Object.values(summaries).reduce((sum, day) => sum + day.absent, 0),
+      totalPresent: Object.values(summaries).reduce((sum, day) => sum + day.present, 0),
+      totalLate: Object.values(summaries).reduce((sum, day) => sum + day.late, 0),
+      totalExcused: Object.values(summaries).reduce((sum, day) => sum + day.excused, 0),
+      daySummaries: summaries,
+      absencesByDate: Object.entries(absentStudents).map(([iso, students]) => ({ iso, students })),
     };
   }, [roster, monthDates, attendance]);
+
+  const calendarCells = useMemo(() => {
+    const firstDate = monthDates[0] ? parseISO(monthDates[0]).getDay() : 0;
+    const leading = Array.from({ length: firstDate }, () => null);
+    const cells: (string | null)[] = [
+      ...leading,
+      ...monthDates,
+    ];
+    const trailing = (7 - (cells.length % 7)) % 7;
+    return [...cells, ...Array.from({ length: trailing }, () => null)];
+  }, [monthDates]);
 
   if (months.length === 0) {
     return (
@@ -191,105 +200,96 @@ export function AttendanceMonthSummarySection({
           </p>
         </div>
       ) : (
-        <div className="p-5 space-y-6">
-          <div
-            className={`flex items-center gap-4 rounded-[12px] border p-4 ${panelBorder}`}
-            style={{ background: darkMode ? "transparent" : "#F8FAFC" }}
-          >
-            <CalendarCheck
-              size={35}
-              style={{ color: "#7A0022" }}
-              className="shrink-0"
-            />
-            <div>
-               <p
-                className={`mt-1 text-xs font-bold uppercase tracking-wider ${textMuted}`}
-              >
-                Total school day{schoolDays === 1 ? "" : "s"} marked in{" "}
-                {monthLabel(selectedMonth)}
-              </p>
-              <p
-                className={`text-3xl font-black tabular-nums leading-none ${textPrimary}`}
-              >
-                {schoolDays}
-              </p>
-            </div>
+        <div className="space-y-5 p-5">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {[
+              { label: "School days", value: schoolDays, color: "#7A0022", icon: CalendarCheck },
+              { label: "Present", value: totalPresent, color: ATTENDANCE_META.P.color },
+              { label: "Absent", value: absences, color: ATTENDANCE_META.A.color },
+              { label: "Late / Excused", value: `${totalLate} / ${totalExcused}`, color: ATTENDANCE_META.L.color },
+            ].map((metric) => (
+              <div key={metric.label} className={`flex min-h-20 items-center gap-3 rounded-xl border px-3 py-3 ${panelBorder} ${darkMode ? "bg-white/[0.03]" : "bg-[#FAFAF9]"}`}>
+                {metric.icon ? <metric.icon size={20} className="shrink-0" style={{ color: metric.color }} /> : <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: metric.color }} />}
+                <div className="min-w-0">
+                  <p className={`truncate text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>{metric.label}</p>
+                  <p className={`text-xl font-extrabold tabular-nums leading-tight ${textPrimary}`}>{metric.value}</p>
+                </div>
+              </div>
+            ))}
           </div>
 
-          {/* Absence list, one row per date, with a running total */}
-          <div className={`rounded-[12px] border ${panelBorder} overflow-hidden`}>
-            <div
-              className={`flex items-center gap-2 border-b px-4 py-2.5 ${panelBorder} ${darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}`}
-            >
-              <CalendarX2 size={14} className={textMuted} />
-              <h3
-                className={`text-xs font-extrabold uppercase tracking-wider ${textPrimary}`}
-              >
-                Absences This Month
-              </h3>
+          <div className={`overflow-hidden rounded-xl border ${panelBorder}`}>
+            <div className={`flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3 ${panelBorder} ${darkMode ? "bg-white/5" : "bg-[#FAFAF9]"}`}>
+              <div className="flex items-center gap-2">
+                <CalendarDays size={16} className="text-[#7A0022]" />
+                <h3 className={`text-sm font-bold ${textPrimary}`}>{monthLabel(selectedMonth)}</h3>
+              </div>
+              <div className={`flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] font-semibold ${textMuted}`}>
+                {(["P", "A", "L", "E"] as const).map((status) => (
+                  <span key={status} className="inline-flex items-center gap-1"><i className="h-2 w-2 rounded-full" style={{ backgroundColor: ATTENDANCE_META[status].color }} />{ATTENDANCE_META[status].label}</span>
+                ))}
+              </div>
             </div>
 
-            {absencesByDate.length > 0 ? (
-              <>
-                <ul
-                  className={`divide-y ${darkMode ? "divide-white/10" : "divide-black/10"}`}
-                >
-                  {absencesByDate.map(({ iso, students }) => (
-                    <li key={iso} className="px-4 py-3">
-                      <div className="flex items-center justify-between gap-4">
-                        <span
-                          className={`text-[10px] font-extrabold uppercase tracking-wider ${textMuted}`}
-                        >
-                          {dateLabel(iso)}
-                        </span>
-                        <span
-                          className="rounded-full px-2 py-0.5 text-[10px] font-black tabular-nums"
-                          style={{
-                            color: ATTENDANCE_META.A.color,
-                            backgroundColor: darkMode
-                              ? `${ATTENDANCE_META.A.color}22`
-                              : `${ATTENDANCE_META.A.color}14`,
-                          }}
-                        >
-                          {students.length} absent
-                        </span>
+            <div className="grid grid-cols-7">
+              {(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const).map((weekday) => (
+                <div key={weekday} className={`border-b px-1 py-2 text-center text-[10px] font-bold uppercase tracking-wide ${panelBorder} ${textMuted} ${darkMode ? "bg-white/[0.03]" : "bg-[#FAFAF9]"}`}>{weekday}</div>
+              ))}
+              {calendarCells.map((iso, index) => {
+                if (!iso) return <div key={`blank-${index}`} className={`min-h-20 border-b border-r ${panelBorder} sm:min-h-24`} />;
+                const summary = daySummaries[iso];
+                const isMarked = summary.present + summary.absent + summary.late + summary.excused > 0;
+                const isToday = iso === toISODate(new Date());
+                const date = parseISO(iso);
+                return (
+                  <div key={iso} className={`min-h-20 border-b border-r p-1.5 sm:min-h-24 sm:p-2 ${panelBorder} ${darkMode ? "bg-[#1A1110]" : "bg-white"}`}>
+                    <span className={`inline-flex h-6 min-w-6 items-center justify-center rounded-full px-1 text-[11px] font-bold tabular-nums ${isToday ? "bg-[#800000] text-white" : isMarked ? textPrimary : textMuted}`}>{date.getDate()}</span>
+                    {isMarked && (
+                      <div className="mt-1.5 flex flex-wrap gap-1">
+                        {(["P", "A", "L", "E"] as const).map((status) => {
+                          const count = status === "P" ? summary.present : status === "A" ? summary.absent : status === "L" ? summary.late : summary.excused;
+                          if (!count) return null;
+                          return <span key={status} title={`${count} ${ATTENDANCE_META[status].label.toLowerCase()}`} className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-[9px] font-bold tabular-nums" style={{ color: ATTENDANCE_META[status].color, backgroundColor: `${ATTENDANCE_META[status].color}${darkMode ? "24" : "12"}` }}>{status} {count}</span>;
+                        })}
                       </div>
-                      <ul className="mt-1.5 space-y-1">
-                        {students.map((s) => (
-                          <li
-                            key={s.id}
-                            className={`text-sm font-bold ${textPrimary}`}
-                          >
-                            {s.name}
-                          </li>
-                        ))}
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            <p className={`px-3 py-2 text-[10px] ${textMuted}`}>Days without marks are left blank. Counts show students by attendance status.</p>
+          </div>
+
+          <div className={`overflow-hidden rounded-xl border ${panelBorder}`}>
+            <div className={`flex items-center justify-between gap-3 border-b px-4 py-3 ${panelBorder} ${darkMode ? "bg-white/5" : "bg-[#FAFAF9]"}`}>
+              <h3 className={`text-sm font-bold ${textPrimary}`}>Absences this month</h3>
+              <span className={`text-xs font-semibold ${textMuted}`}>{absences} absent {absences === 1 ? "record" : "records"}</span>
+            </div>
+            {absencesByDate.length > 0 ? (
+              <ul className={`divide-y ${darkMode ? "divide-white/10" : "divide-black/10"}`}>
+                {absencesByDate.map(({ iso, students }) => (
+                  <li key={iso} className="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <p className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>
+                        {parseISO(iso).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+                      </p>
+                      <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                        {students.map((student) => <li key={student.id} className={`text-sm font-semibold ${textPrimary}`}>{student.name}</li>)}
                       </ul>
-                    </li>
-                  ))}
-                </ul>
-                <div
-                  className={`flex items-center justify-between gap-4 border-t px-4 py-2.5 ${panelBorder} ${darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}`}
-                >
-                  <span
-                    className={`text-xs font-extrabold uppercase tracking-wider ${textPrimary}`}
-                  >
-                    Total
-                  </span>
-                  <span
-                    className="text-sm font-black tabular-nums"
-                    style={{ color: ATTENDANCE_META.A.color }}
-                  >
-                    {totalAbsences}
-                  </span>
-                </div>
-              </>
+                    </div>
+                    <span className="w-fit shrink-0 rounded-full px-2 py-1 text-[10px] font-bold" style={{ color: ATTENDANCE_META.A.color, backgroundColor: `${ATTENDANCE_META.A.color}${darkMode ? "22" : "14"}` }}>
+                      {students.length} absent
+                    </span>
+                  </li>
+                ))}
+              </ul>
             ) : (
-              <p
-                className={`px-4 py-6 text-center text-xs font-medium ${textMuted}`}
-              >
-                No absences recorded this month.
-              </p>
+              <p className={`px-4 py-6 text-center text-xs font-medium ${textMuted}`}>No absences recorded this month.</p>
             )}
+            <div className={`flex items-center justify-between border-t px-4 py-2.5 ${panelBorder} ${darkMode ? "bg-white/5" : "bg-[#FAFAF9]"}`}>
+              <span className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>Total absent</span>
+              <span className="text-sm font-extrabold tabular-nums" style={{ color: ATTENDANCE_META.A.color }}>{absences}</span>
+            </div>
           </div>
         </div>
       )}

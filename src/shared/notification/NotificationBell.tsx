@@ -264,7 +264,7 @@ export function NotificationBell() {
 
               <div
                 role="tablist"
-                className={`mt-4 flex gap-1 rounded-lg p-1 ${tabsWrap}`}
+                className={`qed-segmented-control mt-4 flex gap-1 rounded-lg p-0 ${tabsWrap}`}
               >
                 {TABS.map((t) => (
                   <button
@@ -272,7 +272,7 @@ export function NotificationBell() {
                     role="tab"
                     aria-selected={tab === t.key}
                     onClick={() => setTab(t.key)}
-                    className={`flex-1 rounded-md py-1.5 text-sm font-semibold transition-colors ${
+                    className={`flex-1 rounded-lg text-[11px] font-semibold transition-colors ${
                       tab === t.key ? tabActive : tabIdle
                     }`}
                   >

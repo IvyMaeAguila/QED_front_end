@@ -51,7 +51,7 @@ function Dropdown({
         onBlur={() => setTimeout(() => setOpen(false), 120)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className={`h-8 min-w-32 px-3 rounded-lg border text-[11px] font-bold flex items-center justify-between gap-2 transition-colors ${
+        className={`qed-filter-control min-w-32 px-3 rounded-lg border font-bold flex items-center justify-between gap-2 transition-colors ${
           darkMode
             ? "bg-[#0B1120] border-[#374151] text-white hover:bg-[#111827]"
             : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] hover:bg-[#F1F5F9]"
@@ -171,7 +171,7 @@ export function SubjectFilters({
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search subject..."
-          className={`relative w-full h-8 pl-8 pr-2.5 rounded-lg border text-[11px] font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${
+          className={`qed-filter-control relative w-full pl-8 pr-2.5 rounded-lg border font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${
             darkMode ? "text-white" : "text-[#111827]"
           } placeholder:text-gray-400 focus:border-maroon`}
         />
@@ -207,8 +207,10 @@ export function SubjectFilters({
 
         {/* View toggle — group cards by Grade · Section, or show one flat list */}
         <div
-          className={`flex items-center rounded-lg border p-0.5 ${
-            darkMode ? "border-white/10 bg-white/5" : "border-gray-200 bg-gray-50"
+          className={`qed-segmented-control flex h-8 items-center box-border rounded-lg p-0 ${
+            darkMode
+              ? "bg-white/5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"
+              : "bg-gray-50 shadow-[inset_0_0_0_1px_#e5e7eb]"
           }`}
           role="group"
           aria-label="Subject view"
@@ -219,7 +221,7 @@ export function SubjectFilters({
               type="button"
               onClick={() => onGroupBySectionChange(opt.value)}
               aria-pressed={groupBySection === opt.value}
-              className={`px-2.5 h-6 rounded-md text-[10px] font-bold transition-colors ${
+              className={`qed-filter-control px-3 rounded-lg font-semibold transition-colors ${
                 groupBySection === opt.value
                   ? "bg-[#800000] text-white"
                   : darkMode

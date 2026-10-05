@@ -32,7 +32,7 @@
 // }: AxisCardProps) {
 //   const textareaClasses = `w-full px-2.5 py-2 rounded-lg border text-xs font-semibold outline-none transition-colors resize-none ${
 //     darkMode
-//       ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#6B0000]"
+//       ? "bg-[#2A1A18] border-[#543632] text-white focus:border-[#6B0000]"
 //       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#6B0000]"
 //   }`;
 

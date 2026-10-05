@@ -56,11 +56,9 @@ function ProgressReportSkeleton() {
 function ProgressReportSection({
   theme,
   student,
-  onUnavailableAcknowledge,
 }: {
   theme: AdminThemeContext;
   student: DetailStudent;
-  onUnavailableAcknowledge?: () => void;
 }) {
   const { data, loading, selectedTerm, selectedTermVisibility } = useProgressReport();
   const { downloading, handleDownload } = useFormalReportDownload({
@@ -85,7 +83,6 @@ function ProgressReportSection({
 
   function handleModalClose() {
     setModalOpen(false);
-    onUnavailableAcknowledge?.();
   }
 
   // Habang naglo-load PA, o naka-lock ang term (unavailable), manatiling
@@ -263,7 +260,6 @@ useEffect(() => {
               <ProgressReportSection
                 theme={theme}
                 student={student}
-                onUnavailableAcknowledge={() => setActiveTab("overview")}
               />
             </ProgressReportProvider>
           )}

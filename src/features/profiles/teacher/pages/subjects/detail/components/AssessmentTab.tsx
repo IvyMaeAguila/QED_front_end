@@ -223,7 +223,7 @@ export function AssessmentTab({
   const columnCount = 1 + Math.max(tabItems.length, 1);
 
   const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
-  const stickyCell = darkMode ? "bg-[#111827]" : "bg-white";
+  const stickyCell = darkMode ? "bg-[#2A1A18]" : "bg-white";
   const groupBand = `px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
     darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
   } ${textPrimary}`;
@@ -446,7 +446,7 @@ export function AssessmentTab({
                 <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
                   <th
                     className={`sticky left-0 z-10 min-w-56 px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${
-                      darkMode ? "bg-[#111827]" : "bg-[#F8FAFC]"
+                      darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
                     } ${textMuted}`}
                   >
                     Student

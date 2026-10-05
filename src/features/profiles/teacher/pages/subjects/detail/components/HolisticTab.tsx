@@ -96,7 +96,7 @@ export function HolisticTab({
         className={`border-t ${darkMode ? "border-white/10" : "border-black/10"}`}
       >
         <td
-          className={`sticky left-0 z-10 px-4 py-2 ${darkMode ? "bg-[#111827]" : "bg-white"}`}
+          className={`sticky left-0 z-10 px-4 py-2 ${darkMode ? "bg-[#2A1A18]" : "bg-white"}`}
         >
           <div className="flex min-w-0 items-center gap-2.5">
             <StudentAvatar gender={student.gender} name={student.name} />
@@ -237,7 +237,7 @@ export function HolisticTab({
                 <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
                   <th
                     className={`sticky left-0 z-10 min-w-56 px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${
-                      darkMode ? "bg-[#111827]" : "bg-[#F8FAFC]"
+                      darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
                     } ${textMuted}`}
                   >
                     Student

@@ -49,35 +49,40 @@ export function PrincipalDashboardHome() {
 
   // Early returns muna bago i-access ang anumang property ng `data` —
   // dito pa lang alam ni TypeScript na hindi na null ang `data` sa ibaba.
-  if (loading) return <DashboardSkeleton textMuted={textMuted} />;
+  if (loading) return <DashboardSkeleton textMuted={textMuted} darkMode={darkMode} />;
   if (error) return <DashboardError error={error} textMuted={textMuted} />;
   if (!data) return <DashboardError error={new Error("No dashboard data available.")} textMuted={textMuted} />;
 
   const fullRanking = data.subjectRankingByTerm[rankingTerm] ?? [];
   const top5Ranking = fullRanking.slice(0, 5);
-
   return (
-    <div className="flex flex-col gap-8 font-sans">
+    <div className="mx-auto flex w-full max-w-[1360px] flex-col gap-4 font-sans sm:gap-5 xl:gap-6">
       {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl p-8 sm:p-12 text-white bg-maroon-gradient shadow-panel">
+      <div
+        className="relative flex min-h-44 flex-col justify-center overflow-hidden rounded-[12px] p-5 text-white sm:min-h-52 sm:p-6 xl:p-8"
+        style={{
+          background: "linear-gradient(135deg, #550000 0%, #BB0000 100%)",
+          boxShadow: "0 12px 32px rgba(85,0,0,0.2)",
+        }}
+      >
         <GraduationCap
-          size={280}
+          size={210}
           strokeWidth={1}
-          className="absolute -right-10 -bottom-14 opacity-[0.07] pointer-events-none rotate-15"
+          className="pointer-events-none absolute -bottom-12 -right-6 rotate-15 text-white/[0.07]"
         />
         <div className="relative">
-          <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/10 text-white/80 text-[11px] font-bold tracking-widest uppercase mb-4 border border-white/10">
+          <span className="mb-3 inline-flex items-center rounded-full border border-white/10 bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white/80 sm:mb-4 sm:text-[11px]">
             {dateStr}
           </span>
-          <h1 className="text-2xl sm:text-[32px] font-black leading-tight tracking-tight">
+          <h1 className="break-words text-xl leading-tight tracking-tight sm:text-2xl xl:text-[30px]">
             Welcome, {user?.name ?? "Principal"}!
           </h1>
-          <p className="text-sm sm:text-[15px] text-white/80 mt-3 max-w-xl leading-relaxed">
+          <p className="mt-2 max-w-xl text-[13px] leading-relaxed text-white/80 sm:mt-3 sm:text-[15px]">
             Here's how the school is doing this{" "}
             <span className="font-bold text-white underline underline-offset-4 decoration-white/40">
               {data.currentTerm}
             </span>{" "}
-            of School Year {academicYear?.label}
+            of School Year {academicYear?.label ?? "…"}
           </p>
         </div>
       </div>

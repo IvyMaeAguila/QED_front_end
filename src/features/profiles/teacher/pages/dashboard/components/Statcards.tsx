@@ -28,7 +28,7 @@ export function StatCards({ stats, panelBg, panelBorder, textPrimary, textMuted 
           <Tag
             key={label}
             onClick={onClick}
-            className={`group rounded-table p-4 text-left transition-all sm:p-5 ${
+            className={`group relative rounded-table p-4 text-left transition-all sm:p-5 ${
               clickable ? "cursor-pointer active:scale-[0.98]" : ""
             } ${isPrimary ? "text-white" : `border ${panelBg} ${panelBorder} hover:-translate-y-0.5`}`}
             style={{
@@ -38,15 +38,13 @@ export function StatCards({ stats, panelBg, panelBorder, textPrimary, textMuted 
               background: isPrimary ? "linear-gradient(180deg, #550000 0%, #BB0000 100%)" : undefined,
             }}
           >
-            <div className="mb-4 flex justify-end sm:mb-5">
-              {clickable && (
-                <ArrowUpRight
-                  size={15}
-                  className="opacity-30 group-hover:opacity-100 transition-opacity"
-                  style={{ color: isPrimary ? "#fff" : "#8B0D0D" }}
-                />
-              )}
-            </div>
+            {clickable && (
+              <ArrowUpRight
+                size={15}
+                className="absolute right-4 top-4 opacity-30 transition-opacity group-hover:opacity-100"
+                style={{ color: isPrimary ? "#fff" : "#8B0D0D" }}
+              />
+            )}
 
             <div>
               <p

@@ -187,7 +187,7 @@ export function SubjectsPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search subject..."
-              className={`w-full h-8 pl-8 pr-2.5 rounded-lg border text-[11px] font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
+              className={`qed-filter-control w-full pl-8 pr-2.5 rounded-lg border font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
             />
           </div>
 
@@ -198,8 +198,10 @@ export function SubjectsPage() {
             </p>
 
             <div
-              className={`flex items-center rounded-lg border p-0.5 ${
-                darkMode ? "border-white/10 bg-white/5" : "border-gray-200 bg-gray-50"
+              className={`qed-segmented-control flex h-8 items-center box-border rounded-lg p-0 ${
+                darkMode
+                  ? "bg-white/5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"
+                  : "bg-gray-50 shadow-[inset_0_0_0_1px_#e5e7eb]"
               }`}
               role="group"
               aria-label="Subject view"
@@ -208,7 +210,7 @@ export function SubjectsPage() {
                 type="button"
                 onClick={() => setGroupBySection(true)}
                 aria-pressed={groupBySection}
-                className={`px-2.5 h-6 rounded-md text-[10px] font-bold transition-colors ${
+                className={`qed-filter-control px-3 rounded-lg font-semibold transition-colors ${
                   groupBySection
                     ? "bg-[#800000] text-white"
                     : `${textMuted} hover:${darkMode ? "text-white" : "text-gray-700"}`
@@ -220,7 +222,7 @@ export function SubjectsPage() {
                 type="button"
                 onClick={() => setGroupBySection(false)}
                 aria-pressed={!groupBySection}
-                className={`px-2.5 h-6 rounded-md text-[10px] font-bold transition-colors ${
+                className={`qed-filter-control px-3 rounded-lg font-semibold transition-colors ${
                   !groupBySection
                     ? "bg-[#800000] text-white"
                     : `${textMuted} hover:${darkMode ? "text-white" : "text-gray-700"}`

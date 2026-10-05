@@ -132,13 +132,13 @@ export function WholeChildSnapshot({
             {isCurrent ? "Viewing latest" : "Viewing previous"}{displayedDate ? ` · ${displayedDate}` : ""}
           </p>
           {previousEntry && (
-            <div className="flex items-center gap-1.5">
+            <div className={`qed-segmented-control flex items-center gap-0 rounded-lg p-0 ${darkMode ? "bg-white/5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]" : "bg-gray-50 shadow-[inset_0_0_0_1px_#e5e7eb]"}`}>
               <button type="button" onClick={() => setSelected("current")} aria-pressed={isCurrent}
-                className={`rounded-lg border px-3 py-1 text-[11px] font-bold ${isCurrent ? "border-[#6B0000] bg-[#6B0000] text-white" : `${panelBorder} ${textMuted}`}`}>
+                className={`rounded-lg px-3 text-[11px] font-bold ${isCurrent ? "bg-[#6B0000] text-white" : textMuted}`}>
                 Latest
               </button>
               <button type="button" onClick={() => setSelected("previous")} aria-pressed={!isCurrent}
-                className={`rounded-lg border px-3 py-1 text-[11px] font-bold ${!isCurrent ? "border-[#6B0000] bg-[#6B0000] text-white" : `${panelBorder} ${textMuted}`}`}>
+                className={`rounded-lg px-3 text-[11px] font-bold ${!isCurrent ? "bg-[#6B0000] text-white" : textMuted}`}>
                 Previous{previousEntry.date ?? previousEntry.label ? ` · ${previousEntry.date ?? previousEntry.label}` : ""}
               </button>
             </div>

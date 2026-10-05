@@ -145,7 +145,7 @@ export function AcademicPerformanceSection({
     <SectionCard title="Academic Performance Overview" icon={BarChart3} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} darkMode={darkMode}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         <div>
-          <p className={`text-xs font-bold uppercase tracking-widest mb-5 ${textMuted}`}>Performance by Grade Level</p>
+          <p className={`mb-4 text-sm font-semibold ${textMuted}`}>Performance by grade level</p>
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={performanceByGrade} barCategoryGap="28%">
               <CartesianGrid strokeDasharray="0" vertical={false} stroke={gridStroke} />
@@ -168,7 +168,7 @@ export function AcademicPerformanceSection({
           </ResponsiveContainer>
         </div>
         <div>
-          <p className={`text-xs font-bold uppercase tracking-widest mb-5 ${textMuted}`}>Performance Trend Across Terms</p>
+          <p className={`mb-4 text-sm font-semibold ${textMuted}`}>Performance trend across terms</p>
           <ResponsiveContainer width="100%" height={240}>
             <LineChart data={performanceTrend}>
               <CartesianGrid strokeDasharray="0" vertical={false} stroke={gridStroke} />

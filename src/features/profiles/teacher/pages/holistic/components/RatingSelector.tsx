@@ -25,7 +25,7 @@
 //                 selected
 //                   ? "text-white shadow-sm scale-[1.03]"
 //                   : darkMode
-//                   ? "border-[#374151] text-[#D1D5DB] hover:bg-white/5"
+//                   ? "border-[#543632] text-[#D1D5DB] hover:bg-white/5"
 //                   : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
 //               }`}
 //               style={selected ? { background: l.color, borderColor: l.color } : undefined}

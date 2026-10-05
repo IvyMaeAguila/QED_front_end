@@ -141,7 +141,7 @@ function CustomTooltip({ active, payload, darkMode }: any) {
   return (
     <div
       className={`min-w-56 rounded-xl border px-3.5 py-2.5 shadow-card backdrop-blur-sm ${
-        darkMode ? "border-white/10 bg-[#111827]/95" : "border-black/10 bg-white/95"
+        darkMode ? "border-white/10 bg-[#2A1A18]/95" : "border-black/10 bg-white/95"
       }`}
     >
       <p className={`text-xs font-bold ${darkMode ? "text-white" : "text-[#111827]"}`}>{row.weekLabel}</p>
