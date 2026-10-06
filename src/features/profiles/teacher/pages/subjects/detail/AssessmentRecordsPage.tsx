@@ -1,25 +1,20 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { StudentAvatar } from "@shared/components/StudentAvatar";
 import { AlertTriangle, CheckCircle2, Download, Send, X } from "lucide-react";
-import type ExcelJS from "exceljs";
 import type { RosterStudent } from "./data";
 import {
   formatShortDate,
-  type ExamType,
   type GradeItem,
   type ScoreMap,
 } from "./types/Grading";
 import {
-  computeInitialGrade,
   computePS,
   computeWS,
-  computeExamPS,
   computeTransmutedGrade,
-  type ExamSubWeights,
 } from "./utils/GradeWeights";
 import { submitGrades } from "../services/subjectGrading.service";
-import { downloadActiveGradeTemplate } from "../services/subjectGradeTemplate.service";
-import type { GradeTemplateStructure, TemplateDomain } from "../../../../shared/grading/gradeTemplate.types";
+import { downloadGradeRecordExport } from "../services/subjectGradeTemplate.service";
+import type { GradeTemplateStructure, TemplateDomain, TemplateExamComponent, TemplateExaminations } from "../../../../shared/grading/gradeTemplate.types";
 
 const ACCENT = "#6B0000";
 const INCOMPLETE_COLOR = "#CA8A04";
@@ -61,6 +56,10 @@ interface ComponentColumnGroup {
   domains?: TemplateDomain[];
   columns: ScoreColumn[];
   domainGroups?: DomainColumnGroup[];
+  examComponents?: { component: TemplateExamComponent; columns: ScoreColumn[]; items: GradeItem[]; showWeightedScore: boolean }[];
+  examOutputs?: { percentageScore: boolean; weightedScore: boolean };
+  templateCapacity?: number;
+  capacityOverflow?: number;
 }
 
 interface AssessmentRecordsSectionProps {
@@ -74,9 +73,8 @@ interface AssessmentRecordsSectionProps {
   // absent, the exams group falls back to the original pooled behavior —
   // this keeps subjects without a template working exactly as before
   // (the "grandfathered" rollout behavior).
-  weights: { ww: number; pt: number; exam: number; examSubWeights?: ExamSubWeights; templateStructure?: GradeTemplateStructure };
+  weights: { ww: number; pt: number; exam: number; examSubWeights?: { st1: number; st2: number; te: number }; examinations?: TemplateExaminations; templateStructure?: GradeTemplateStructure };
   term: string;
-  termNumber?: number;
   isEditing: boolean;
   onScoreChange: (studentId: string, itemId: string, maxItems: number, rawValue: string) => void;
   darkMode: boolean;
@@ -126,15 +124,13 @@ interface GroupResult {
   isComplete: boolean;
 }
 
-// Single source of truth for turning a group's items + scores into a
-// PS/WS pair. Branches only for "exams" when examSubWeights is supplied —
-// WW and PT always take the pooled path, and exams take the pooled path
-// too when no template is active for this subject.
+// Use the normalized pinned examination schema. ALL is retained for the
+// legacy manually configured pooled-exam case.
 function computeGroupResult(
   group: ComponentColumnGroup,
   studentId: string,
   scores: ScoreMap,
-  examSubWeights: ExamSubWeights | undefined,
+  examinations: TemplateExaminations | undefined,
 ): GroupResult {
   const pooled = studentTotals(group.items, studentId, scores);
 
@@ -162,7 +158,7 @@ function computeGroupResult(
     };
   }
 
-  if (group.key !== "exams" || !examSubWeights) {
+  if (group.key !== "exams" || !examinations?.enabled) {
     const ps = computePS(pooled.total, pooled.highestPossible);
     const ws = computeWS(ps, group.weight);
     return {
@@ -170,311 +166,72 @@ function computeGroupResult(
       ps,
       ws,
       hasAnyItems: pooled.totalItems > 0,
-      isComplete: pooled.totalItems === 0 || pooled.isComplete,
+      isComplete: pooled.totalItems > 0 && pooled.isComplete,
     };
   }
-
-  // Sub-weighted path: ST1/ST2/TE computed and combined separately rather
-  // than pooled together.
-  const types: ExamType[] = ["ST1", "ST2", "TE"];
-  const perType = types.map((t) => ({
-    type: t,
-    totals: studentTotals(group.items.filter((i) => i.examType === t), studentId, scores),
-  }));
-
-  const hasAnyItems = perType.some((p) => p.totals.totalItems > 0);
-  const allTypesPresent = perType.every((p) => p.totals.totalItems > 0);
-  const isComplete = hasAnyItems && allTypesPresent && perType.every((p) => p.totals.isComplete);
-
-  if (!allTypesPresent) {
-    // Can't produce a valid combined PS until ST1, ST2, and TE all have at
-    // least one item recorded for this term.
-    return { total: pooled.total, ps: null, ws: null, hasAnyItems, isComplete: false };
-  }
-
-  const totalsByType: Partial<Record<ExamType, { total: number; highestPossible: number }>> = {};
-  perType.forEach((p) => {
-    totalsByType[p.type] = { total: p.totals.total, highestPossible: p.totals.highestPossible };
-  });
-
-  const ps = computeExamPS(totalsByType, examSubWeights);
-  const ws = computeWS(ps, group.weight);
-
-  return { total: pooled.total, ps, ws, hasAnyItems, isComplete };
-}
-
-function columnLabel(item: GradeItem, groupKey: ComponentColumnGroup["key"]) {
-  return groupKey === "exams" ? (item.examType as ExamType) : formatShortDate(item.date);
-}
-
-function excelColumnLetter(columnNumber: number): string {
-  let column = columnNumber;
-  let label = "";
-  while (column > 0) {
-    const remainder = (column - 1) % 26;
-    label = String.fromCharCode(65 + remainder) + label;
-    column = Math.floor((column - 1) / 26);
-  }
-  return label;
-}
-
-async function downloadTemplateGradeRecord(args: {
-  subjectSectionId: string;
-  title: string;
-  termNumber: number;
-  roster: GenderedStudent[];
-  items: GradeItem[];
-  scores: ScoreMap;
-  groups: ComponentColumnGroup[];
-  weights: AssessmentRecordsSectionProps["weights"];
-}) {
-  const structure = args.weights.templateStructure;
-  const layout = structure?.layout;
-  if (!structure || !layout) throw new Error("Upload the official grade template for this subject before exporting.");
-
-  const templateBuffer = await downloadActiveGradeTemplate(args.subjectSectionId);
-  const { default: ExcelJSRuntime } = await import("exceljs");
-  const templateWorkbook = new ExcelJSRuntime.Workbook();
-  await templateWorkbook.xlsx.load(templateBuffer);
-  const source = templateWorkbook.getWorksheet(`TERM ${args.termNumber}`);
-  if (!source) throw new Error(`The uploaded template does not contain TERM ${args.termNumber}.`);
-
-  const overflowPlans: { key: string; originalAt: number; count: number }[] = [];
-  for (const group of args.groups.filter((entry) => entry.key !== "exams")) {
-    for (const domain of group.domains ?? []) {
-      const domainItems = (group.domains?.length ?? 0) > 1
-        ? group.items.filter((item) => item.templateDomainId === domain.id)
-        : group.items;
-      const scoreColumns = domain.scoreColumns ?? [];
-      const extraCount = Math.max(0, domainItems.length - scoreColumns.length);
-      if (!extraCount) continue;
-      if (!scoreColumns.length) throw new Error(`${domain.label || group.label} has no score slots in the uploaded template.`);
-      overflowPlans.push({ key: `${group.key}:${domain.id}`, originalAt: Math.max(...scoreColumns) + 1, count: extraCount });
+  let ps = 0;
+  let complete = true;
+  let hasAnyItems = false;
+  for (const component of examinations.components) {
+    const componentItems = component.key.toUpperCase() === "ALL"
+      ? group.items
+      : group.items.filter((item) => String(item.examType || "").toUpperCase() === component.key.toUpperCase());
+    const totals = studentTotals(componentItems, studentId, scores);
+    hasAnyItems ||= totals.totalItems > 0;
+    if (!totals.totalItems || !totals.isComplete || !totals.highestPossible) {
+      complete = false;
+      continue;
     }
+    ps += ((totals.total / totals.highestPossible) * 100 * component.weightPercent) / 100;
   }
-  overflowPlans.sort((a, b) => a.originalAt - b.originalAt);
-  const originalInsertions = overflowPlans.flatMap((plan) => Array.from({ length: plan.count }, () => plan.originalAt));
-  const inserted = originalInsertions.map((originalAt, index) => ({ originalAt, actualAt: originalAt + index }));
-  const shiftedColumn = (column: number) => column + inserted.filter((entry) => entry.originalAt <= column).length;
-  const overflowByDomain = new Map<string, number[]>();
-  let insertedOffset = 0;
-  for (const plan of overflowPlans) {
-    overflowByDomain.set(plan.key, inserted.slice(insertedOffset, insertedOffset + plan.count).map((entry) => entry.actualAt));
-    insertedOffset += plan.count;
-  }
-
-  const workbook = new ExcelJSRuntime.Workbook();
-  workbook.creator = "QED System";
-  const worksheet = workbook.addWorksheet(source.name);
-  const rowCount = Math.max(source.rowCount, ...layout.studentRows.map((entry) => entry.row));
-  for (let column = 1; column <= source.columnCount; column += 1) {
-    const from = source.getColumn(column);
-    const to = worksheet.getColumn(shiftedColumn(column));
-    to.width = from.width;
-    to.hidden = from.hidden;
-  }
-  for (let rowNumber = 1; rowNumber <= rowCount; rowNumber += 1) {
-    const fromRow = source.getRow(rowNumber);
-    const toRow = worksheet.getRow(rowNumber);
-    toRow.height = fromRow.height;
-    toRow.hidden = fromRow.hidden;
-    for (let column = 1; column <= source.columnCount; column += 1) {
-      const from = fromRow.getCell(column);
-      const to = toRow.getCell(shiftedColumn(column));
-      if (Object.keys(from.style).length > 0) to.style = JSON.parse(JSON.stringify(from.style)) as Partial<ExcelJS.Style>;
-      // Template formulas often link to INPUT DATA or HELPER sheets. This
-      // export intentionally includes only the selected term's class record.
-      if (typeof from.value === "string" || typeof from.value === "number" || from.value instanceof Date) {
-        to.value = from.value instanceof Date ? new Date(from.value.getTime()) : from.value;
-      }
-    }
-  }
-  for (const { actualAt } of inserted) {
-    worksheet.getColumn(actualAt).width = worksheet.getColumn(Math.max(1, actualAt - 1)).width;
-    for (let rowNumber = 1; rowNumber <= rowCount; rowNumber += 1) {
-      const from = worksheet.getCell(rowNumber, Math.max(1, actualAt - 1));
-      const to = worksheet.getCell(rowNumber, actualAt);
-      if (Object.keys(from.style).length > 0) to.style = JSON.parse(JSON.stringify(from.style)) as Partial<ExcelJS.Style>;
-    }
-  }
-  for (const range of source.model.merges) {
-    const [first, last] = range.split(":");
-    const start = source.getCell(first);
-    const end = source.getCell(last ?? first);
-    worksheet.mergeCells(
-      `${excelColumnLetter(shiftedColumn(start.fullAddress.col))}${start.fullAddress.row}:${excelColumnLetter(shiftedColumn(end.fullAddress.col))}${end.fullAddress.row}`,
-    );
-  }
-
-  const maleRows = layout.studentRows.filter((entry) => entry.gender === "M");
-  const femaleRows = layout.studentRows.filter((entry) => entry.gender === "F");
-  const maleStudents = args.roster.filter((student) => student.gender !== "F");
-  const femaleStudents = args.roster.filter((student) => student.gender === "F");
-  if (maleStudents.length > maleRows.length || femaleStudents.length > femaleRows.length) {
-    throw new Error("The uploaded template does not have enough learner rows for this class.");
-  }
-  const studentRows = new Map<string, number>();
-  maleStudents.forEach((student, index) => studentRows.set(student.id, maleRows[index].row));
-  femaleStudents.forEach((student, index) => studentRows.set(student.id, femaleRows[index].row));
-  for (const student of args.roster) worksheet.getCell(studentRows.get(student.id)!, layout.nameColumn).value = student.name;
-  worksheet.getCell("AA10").value = args.title;
-
-  const weightedScoreColumns: number[] = [];
-  const allWrittenAndPerformanceColumns: number[] = [];
-  const formulaRange = (columns: number[], row: number) => columns.map((column) => `${excelColumnLetter(column)}${row}`);
-  const scoreHeaderRow = layout.scoreHeaderRow;
-  const hpsRow = layout.highestPossibleRow;
-
-  for (const group of args.groups.filter((entry) => entry.key !== "exams")) {
-    for (const domain of group.domains ?? []) {
-      const domainItems = (group.domains?.length ?? 0) > 1
-        ? group.items.filter((item) => item.templateDomainId === domain.id)
-        : group.items;
-      const baseColumns = (domain.scoreColumns ?? []).map(shiftedColumn);
-      const overflowColumns = overflowByDomain.get(`${group.key}:${domain.id}`) ?? [];
-      const columns = [...baseColumns, ...overflowColumns].slice(0, domainItems.length);
-      columns.forEach((column, index) => {
-        const item = domainItems[index];
-        worksheet.getCell(scoreHeaderRow, column).value = index + 1;
-        worksheet.getCell(hpsRow, column).value = item?.maxItems ?? null;
-        allWrittenAndPerformanceColumns.push(column);
-        for (const student of args.roster) {
-          const row = studentRows.get(student.id)!;
-          worksheet.getCell(row, column).value = item ? (args.scores[student.id]?.[item.id] ?? null) : null;
-        }
-      });
-      for (const unusedColumn of [...baseColumns, ...overflowColumns].slice(domainItems.length)) {
-        worksheet.getCell(hpsRow, unusedColumn).value = null;
-        for (const student of args.roster) worksheet.getCell(studentRows.get(student.id)!, unusedColumn).value = null;
-      }
-      if (!columns.length) continue;
-
-      const totalColumn = Math.max(...columns) + 1;
-      const psColumn = totalColumn + 1;
-      const wsColumn = totalColumn + 2;
-      const totalLetter = excelColumnLetter(totalColumn);
-      const psLetter = excelColumnLetter(psColumn);
-      const wsLetter = excelColumnLetter(wsColumn);
-      const hpsRefs = formulaRange(columns, hpsRow).join(",");
-      worksheet.getCell(hpsRow, totalColumn).value = { formula: `IF(COUNT(${hpsRefs})=0,"",SUM(${hpsRefs}))` };
-      worksheet.getCell(hpsRow, psColumn).value = 100;
-      worksheet.getCell(hpsRow, wsColumn).value = domain.weightPercent / 100;
-      for (const student of args.roster) {
-        const row = studentRows.get(student.id)!;
-        const refs = formulaRange(columns, row).join(",");
-        worksheet.getCell(row, totalColumn).value = { formula: `IF(COUNT(${refs})=0,"",SUM(${refs}))` };
-        worksheet.getCell(row, psColumn).value = { formula: `IF(${totalLetter}${row}="","",IFERROR(${totalLetter}${row}/${totalLetter}$${hpsRow}*${psLetter}$${hpsRow},""))` };
-        worksheet.getCell(row, wsColumn).value = { formula: `IF(${psLetter}${row}="","",${psLetter}${row}*${wsLetter}$${hpsRow})` };
-      }
-      weightedScoreColumns.push(wsColumn);
-    }
-  }
-
-  const examColumnByType = {
-    ST1: shiftedColumn(layout.examScoreColumns.ST1),
-    ST2: shiftedColumn(layout.examScoreColumns.ST2),
-    TE: shiftedColumn(layout.examScoreColumns.TE),
-  };
-  const examWsColumns = layout.examWeightedScoreColumns
-    ? [layout.examWeightedScoreColumns.ST1, layout.examWeightedScoreColumns.ST2, layout.examWeightedScoreColumns.TE].map(shiftedColumn)
-    : [layout.examScoreColumns.ST1 + 3, layout.examScoreColumns.ST2 + 3, layout.examScoreColumns.TE + 3].map(shiftedColumn);
-  const examItems = args.groups.find((group) => group.key === "exams")?.items ?? [];
-  for (const type of ["ST1", "ST2", "TE"] as const) {
-    const typedItems = examItems.filter((item) => item.examType === type);
-    const scoreColumn = examColumnByType[type];
-    worksheet.getCell(hpsRow, scoreColumn).value = typedItems.length ? typedItems.reduce((sum, item) => sum + item.maxItems, 0) : null;
-    worksheet.getCell(hpsRow, examWsColumns[["ST1", "ST2", "TE"].indexOf(type)]).value =
-      structure.examSubWeights[type === "ST1" ? "st1" : type === "ST2" ? "st2" : "te"];
-    for (const student of args.roster) {
-      const row = studentRows.get(student.id)!;
-      const values = typedItems.map((item) => args.scores[student.id]?.[item.id]).filter((value): value is number => typeof value === "number");
-      worksheet.getCell(row, scoreColumn).value = values.length ? values.reduce((sum, value) => sum + value, 0) : null;
-      const subweightColumn = examWsColumns[["ST1", "ST2", "TE"].indexOf(type)];
-      const scoreLetter = excelColumnLetter(scoreColumn);
-      const subweightLetter = excelColumnLetter(subweightColumn);
-      worksheet.getCell(row, subweightColumn).value = {
-        formula: `IF(${scoreLetter}${row}="","",IFERROR(${scoreLetter}${row}/${scoreLetter}$${hpsRow}*${subweightLetter}$${hpsRow},""))`,
-      };
-    }
-  }
-  const examPsColumn = shiftedColumn(layout.examPsColumn ?? layout.examScoreColumns.TE + 4);
-  const examWsColumn = shiftedColumn(layout.examWeightedScoreColumn ?? layout.examScoreColumns.TE + 5);
-  const examWeightRowCell = worksheet.getCell(hpsRow, examWsColumn);
-  examWeightRowCell.value = args.weights.exam / 100;
-  for (const student of args.roster) {
-    const row = studentRows.get(student.id)!;
-    const rawExamRefs = Object.values(examColumnByType).map((column) => `${excelColumnLetter(column)}${row}`);
-    const weightedExamRefs = examWsColumns.map((column) => `${excelColumnLetter(column)}${row}`);
-    const rawCount = rawExamRefs.join(",");
-    const weightedSum = weightedExamRefs.join(",");
-    worksheet.getCell(row, examPsColumn).value = {
-      formula: `IF(COUNT(${rawCount})=0,"",SUM(${weightedSum}))`,
-    };
-    worksheet.getCell(row, examWsColumn).value = {
-      formula: `IF(${excelColumnLetter(examPsColumn)}${row}="","",${excelColumnLetter(examPsColumn)}${row}*${excelColumnLetter(examWsColumn)}$${hpsRow})`,
-    };
-  }
-  worksheet.getCell(hpsRow, examPsColumn).value = 100;
-  worksheet.getCell(hpsRow, examPsColumn).numFmt = "0";
-  weightedScoreColumns.push(examWsColumn);
-
-  const initialGradeColumn = shiftedColumn(layout.finalColumns.initialGrade);
-  const termGradeColumn = shiftedColumn(layout.finalColumns.termGrade);
-  const descriptorColumn = shiftedColumn(layout.finalColumns.descriptor);
-  const minRows = [...structure.transmutationTable].sort((a, b) => a.igMin - b.igMin);
-  const descriptorRows = [...structure.descriptorTable].sort((a, b) => a.numericalGrade - b.numericalGrade)
-    .filter((entry, index, list) => index === 0 || entry.descriptor !== list[index - 1].descriptor);
-  const minArray = `{${minRows.map((entry) => entry.igMin).join(",")}}`;
-  const gradeArray = `{${minRows.map((entry) => entry.transmuted).join(",")}}`;
-  const descriptorMinArray = `{${descriptorRows.map((entry) => entry.numericalGrade).join(",")}}`;
-  const descriptorArray = `{${descriptorRows.map((entry) => `"${entry.descriptor.replace(/"/g, '""')}"`).join(",")}}`;
-  for (const student of args.roster) {
-    const row = studentRows.get(student.id)!;
-    const scoreRefs = [...allWrittenAndPerformanceColumns, ...Object.values(examColumnByType)].map((column) => `${excelColumnLetter(column)}${row}`);
-    const wsRefs = weightedScoreColumns.map((column) => `${excelColumnLetter(column)}${row}`);
-    const initialLetter = excelColumnLetter(initialGradeColumn);
-    const termLetter = excelColumnLetter(termGradeColumn);
-    worksheet.getCell(row, initialGradeColumn).value = {
-      formula: `IF(COUNT(${scoreRefs.join(",")})=0,"",SUM(${wsRefs.join(",")}))`,
-    };
-    worksheet.getCell(row, termGradeColumn).value = {
-      formula: `IF(${initialLetter}${row}="","",LOOKUP(${initialLetter}${row},${minArray},${gradeArray}))`,
-    };
-    worksheet.getCell(row, descriptorColumn).value = {
-      formula: `IF(${termLetter}${row}="","",LOOKUP(${termLetter}${row},${descriptorMinArray},${descriptorArray}))`,
-    };
-  }
-
-  workbook.calcProperties.fullCalcOnLoad = true;
-  const buffer = await workbook.xlsx.writeBuffer();
-  const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = `${args.title.replace(/[^a-z0-9_-]+/gi, "-")}-TERM-${args.termNumber}.xlsx`;
-  link.click();
-  URL.revokeObjectURL(link.href);
+  complete &&= hasAnyItems;
+  return { total: pooled.total, ps: complete ? ps : null, ws: complete ? computeWS(ps, group.weight) : null, hasAnyItems, isComplete: complete };
 }
 
 function makeGroupColumns(
   key: ComponentColumnGroup["key"],
   items: GradeItem[],
   domains: TemplateDomain[] | undefined,
-  hasTemplate: boolean,
-): { columns: ScoreColumn[]; domainGroups?: DomainColumnGroup[] } {
+  examinations?: TemplateExaminations,
+): { columns: ScoreColumn[]; domainGroups?: DomainColumnGroup[]; templateCapacity?: number; capacityOverflow?: number; examComponents?: { component: TemplateExamComponent; columns: ScoreColumn[]; items: GradeItem[]; showWeightedScore: boolean }[]; examOutputs?: { percentageScore: boolean; weightedScore: boolean } } {
   if (key === "exams") {
-    if (hasTemplate) {
-      const columns = (["ST1", "ST2", "TE"] as const).flatMap((examType) => {
-        const examItems = items.filter((item) => item.examType === examType);
-        return examItems.length > 0
-          ? examItems.map((item) => ({ id: item.id, item, label: examType }))
-          : [{ id: `template-${examType}`, label: examType }];
-      });
-      return { columns };
-    }
-    if (items.length > 0) {
-      return { columns: items.map((item) => ({ id: item.id, item, label: columnLabel(item, key) })) };
-    }
-    return { columns: [] };
+    const hasMappedColumn = (column: number | undefined) => column !== undefined
+      && column !== null
+      && Number.isFinite(Number(column));
+    const examComponents = (examinations?.components ?? []).map((component) => {
+      const examItems = component.key.toUpperCase() === "ALL"
+        ? items
+        : items.filter((item) => String(item.examType || "").toUpperCase() === component.key.toUpperCase());
+      const isPooled = component.key.toUpperCase() === "ALL";
+      const columns = isPooled
+        ? Array.from({ length: Math.max(1, examItems.length) }, (_, index) => {
+          const item = examItems[index];
+          return { id: item?.id ?? `template-${component.key}-${index}`, item, label: String(index + 1), maxItems: item?.maxItems };
+        })
+        : [{
+          id: `template-${component.key}`,
+          item: examItems.length === 1 ? examItems[0] : undefined,
+          label: component.label,
+          maxItems: examItems.length ? examItems.reduce((sum, item) => sum + item.maxItems, 0) : undefined,
+        }];
+      return {
+        component,
+        columns,
+        items: examItems,
+        showWeightedScore: hasMappedColumn(component.weightedScoreColumn),
+      };
+    });
+    const outputs = examinations?.outputs;
+    return {
+      columns: examComponents.flatMap(({ columns }) => columns),
+      examComponents,
+      // Templates provide their mapped outputs. Manual pooled exams predate
+      // the template schema and retain their existing PS/WS summary columns.
+      examOutputs: {
+        percentageScore: outputs ? hasMappedColumn(outputs.percentageScoreColumn) : true,
+        weightedScore: outputs ? hasMappedColumn(outputs.weightedScoreColumn) : true,
+      },
+    };
   }
 
   // Without template domains, keep the existing component-level Total/PS/WS
@@ -482,10 +239,10 @@ function makeGroupColumns(
   // template actually defines those domains.
   if (!domains?.length) {
     return {
-      columns: items.map((item) => ({
+      columns: items.map((item, index) => ({
         id: item.id,
         item,
-        label: columnLabel(item, key),
+        label: String(index + 1),
         maxItems: item.maxItems,
       })),
     };
@@ -494,12 +251,16 @@ function makeGroupColumns(
   const domainGroups: DomainColumnGroup[] = [];
   const columns: ScoreColumn[] = [];
   const assignedItems = new Set<string>();
+  let templateCapacity = 0;
+  let capacityOverflow = 0;
   for (const domain of domains ?? []) {
     const domainItems = items.filter((item) =>
       (domains?.length ?? 0) > 1 ? item.templateDomainId === domain.id : true,
     );
     domainItems.forEach((item) => assignedItems.add(item.id));
     const slotCount = domain.scoreColumns?.length ?? 0;
+    templateCapacity += slotCount;
+    capacityOverflow += Math.max(0, domainItems.length - slotCount);
     const count = Math.max(slotCount, domainItems.length);
     const domainColumns: ScoreColumn[] = [];
     for (let index = 0; index < count; index += 1) {
@@ -507,17 +268,19 @@ function makeGroupColumns(
       domainColumns.push({
         id: item?.id ?? `template-${domain.id}-${index}`,
         item,
-        label: item ? columnLabel(item, key) : String(index + 1),
+        label: String(index + 1),
         maxItems: item?.maxItems,
       });
     }
-    domainGroups.push({
-      id: domain.id,
-      label: domain.label || "Assessment Items",
-      weightPercent: domain.weightPercent,
-      items: domainItems,
-      columns: domainColumns,
-    });
+    if (domains.length > 1) {
+      domainGroups.push({
+        id: domain.id,
+        label: domain.label || "Assessment Domain",
+        weightPercent: domain.weightPercent,
+        items: domainItems,
+        columns: domainColumns,
+      });
+    }
     columns.push(...domainColumns);
   }
 
@@ -525,7 +288,8 @@ function makeGroupColumns(
   // created before a template was uploaded) instead of hiding their scores.
   for (const item of items) {
     if (!assignedItems.has(item.id)) {
-      const column = { id: item.id, item, label: columnLabel(item, key), maxItems: item.maxItems };
+      if (domains.length > 1) capacityOverflow += 1;
+      const column = { id: item.id, item, label: String(columns.length + 1), maxItems: item.maxItems };
       columns.push(column);
       domainGroups.push({
         id: `unassigned-${item.id}`,
@@ -536,31 +300,35 @@ function makeGroupColumns(
       });
     }
   }
-  return { columns, domainGroups: domainGroups.length > 0 ? domainGroups : undefined };
+  return {
+    columns,
+    domainGroups: domainGroups.length > 0 ? domainGroups : undefined,
+    templateCapacity,
+    capacityOverflow,
+  };
 }
 
 function computeStudentGrade(
   student: GenderedStudent,
   groups: ComponentColumnGroup[],
   scores: ScoreMap,
-  examSubWeights: ExamSubWeights | undefined,
-): { initialGrade: number | null; anyGroupIncomplete: boolean } {
+  examinations: TemplateExaminations | undefined,
+): { initialGrade: number | null; anyGroupIncomplete: boolean; isComplete: boolean } {
   const weightedScores: number[] = [];
   let anyGroupIncomplete = false;
+  let isComplete = true;
 
   groups.forEach((group) => {
-    const result = computeGroupResult(group, student.id, scores, examSubWeights);
-    if (result.hasAnyItems && !result.isComplete) anyGroupIncomplete = true;
+    const result = computeGroupResult(group, student.id, scores, examinations);
+    if (!result.isComplete) { anyGroupIncomplete = true; isComplete = false; }
     if (result.ws !== null) weightedScores.push(result.ws);
   });
 
-  const initialGrade = computeInitialGrade(
-    weightedScores[0] ?? null,
-    weightedScores[1] ?? null,
-    weightedScores[2] ?? null,
-  );
+  const initialGrade = isComplete && weightedScores.length === groups.length
+    ? weightedScores.reduce((sum, value) => sum + value, 0)
+    : null;
 
-  return { initialGrade, anyGroupIncomplete };
+  return { initialGrade, anyGroupIncomplete, isComplete };
 }
 
 function getRemarks(termGrade: number): "PASSED" | "FAILED" {
@@ -584,7 +352,6 @@ export function AssessmentRecordsSection({
   scores,
   weights,
   term,
-  termNumber = 1,
   isEditing,
   onScoreChange,
   darkMode,
@@ -600,11 +367,35 @@ export function AssessmentRecordsSection({
     darkMode ? "bg-[#2A1A18] text-white" : "bg-white text-[#111827]"
   }`;
 
-  const examSubWeights = weights.examSubWeights;
+  const examinations: TemplateExaminations = weights.examinations
+    ?? weights.templateStructure?.examinations
+    ?? (weights.examSubWeights
+      ? { enabled: true, categoryWeightPercent: weights.exam, components: [
+        { key: "ST1", label: "ST1", weightPercent: weights.examSubWeights.st1 },
+        { key: "ST2", label: "ST2", weightPercent: weights.examSubWeights.st2 },
+        { key: "TE", label: "TE", weightPercent: weights.examSubWeights.te },
+      ] }
+      : weights.exam > 0
+        ? { enabled: true, categoryWeightPercent: weights.exam, components: [{ key: "ALL", label: "Examinations", weightPercent: 100 }] }
+        : { enabled: false, categoryWeightPercent: 0, components: [] });
 
   async function exportClassRecord() {
     try {
-      await downloadTemplateGradeRecord({ subjectSectionId, title, termNumber, roster, items, scores, groups, weights });
+      if (!term) throw new Error("Choose a grading period before exporting.");
+      const { buffer, fileName } = await downloadGradeRecordExport(subjectSectionId, term);
+      const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = fileName;
+      link.click();
+      URL.revokeObjectURL(link.href);
+      const exportedTerm = fileName.match(/TERM-(\d+)/i)?.[1];
+      setSnackbar({
+        type: "success",
+        message: exportedTerm
+          ? `Term ${exportedTerm} class record exported successfully.`
+          : "Class record exported successfully.",
+      });
     } catch (err) {
       setSnackbar({ type: "error", message: err instanceof Error ? err.message : "Excel export failed." });
     }
@@ -612,21 +403,20 @@ export function AssessmentRecordsSection({
   const groups: ComponentColumnGroup[] = useMemo(() => {
     const forTerm = (t: GradeItem["tab"]) =>
       items.filter((i) => i.tab === t && (!term || i.gradingPeriodId === term)).sort((a, b) => a.date.localeCompare(b.date));
-    const hasTemplate = Boolean(weights.templateStructure);
     const wwItems = forTerm("writtenWorks");
     const ptItems = forTerm("performanceTask");
     const examItems = forTerm("exams");
     const wwDomains = weights.templateStructure?.ww.domains;
     const ptDomains = weights.templateStructure?.pt.domains;
-    const wwLayout = makeGroupColumns("writtenWorks", wwItems, wwDomains, hasTemplate);
-    const ptLayout = makeGroupColumns("performanceTask", ptItems, ptDomains, hasTemplate);
-    const examLayout = makeGroupColumns("exams", examItems, undefined, hasTemplate);
-    return [
-      { key: "writtenWorks", label: "Written / Oral Works", weightLabel: `${weights.ww}%`, weight: weights.ww, items: wwItems, domains: wwDomains, ...wwLayout },
-      { key: "performanceTask", label: "Product / Performance Tasks", weightLabel: `${weights.pt}%`, weight: weights.pt, items: ptItems, domains: ptDomains, ...ptLayout },
-      { key: "exams", label: "Summative Tests and Term Examinations", weightLabel: `${weights.exam}%`, weight: weights.exam, items: examItems, ...examLayout },
-    ];
-  }, [items, term, weights]);
+    const wwLayout = makeGroupColumns("writtenWorks", wwItems, wwDomains);
+    const ptLayout = makeGroupColumns("performanceTask", ptItems, ptDomains);
+    const examLayout = makeGroupColumns("exams", examItems, undefined, examinations);
+    const groups: ComponentColumnGroup[] = [];
+    if (weights.ww > 0) groups.push({ key: "writtenWorks", label: "Written / Oral Works", weightLabel: `${weights.ww}%`, weight: weights.ww, items: wwItems, domains: wwDomains, ...wwLayout });
+    if (weights.pt > 0) groups.push({ key: "performanceTask", label: "Product / Performance Tasks", weightLabel: `${weights.pt}%`, weight: weights.pt, items: ptItems, domains: ptDomains, ...ptLayout });
+    if (examinations.enabled && weights.exam > 0) groups.push({ key: "exams", label: "Examinations", weightLabel: `${weights.exam}%`, weight: weights.exam, items: examItems, ...examLayout });
+    return groups;
+  }, [items, term, weights, examinations]);
 
   const grouped = useMemo(() => {
     const male = roster.filter((s) => s.gender !== "F");
@@ -638,35 +428,35 @@ export function AssessmentRecordsSection({
     if (roster.length === 0) return false;
     return roster.every((student) =>
       groups.every((group) => {
-        const result = computeGroupResult(group, student.id, scores, examSubWeights);
-        return !result.hasAnyItems || result.isComplete;
+        const result = computeGroupResult(group, student.id, scores, examinations);
+        return result.isComplete;
       }),
     );
-  }, [roster, groups, scores, examSubWeights]);
+  }, [roster, groups, scores, examinations]);
 
   const incompleteReasons = useMemo(() => {
     const reasons: string[] = [];
     groups.forEach((group) => {
       if (group.items.length === 0) return;
       const anyMissing = roster.some((student) => {
-        const result = computeGroupResult(group, student.id, scores, examSubWeights);
-        return result.hasAnyItems && !result.isComplete;
+        const result = computeGroupResult(group, student.id, scores, examinations);
+        return !result.isComplete;
       });
       if (anyMissing) reasons.push(group.label);
     });
     return reasons;
-  }, [groups, roster, scores, examSubWeights]);
+  }, [groups, roster, scores, examinations]);
 
   const gradePreviews: StudentGradePreview[] = useMemo(() => {
     return roster.map((student) => {
-      const { initialGrade } = computeStudentGrade(student, groups, scores, examSubWeights);
+      const { initialGrade } = computeStudentGrade(student, groups, scores, examinations);
       const termGrade = computeTransmutedGrade(initialGrade, weights.templateStructure?.transmutationTable);
       const remarks = termGrade === null ? null : getRemarks(termGrade);
       const description = termGrade === null ? "Template transmutation table unavailable" : (weights.templateStructure?.descriptorTable.find((row) => row.numericalGrade === termGrade)?.descriptor ?? "");
       const previewGrade = initialGrade ?? 0;
       return { id: student.id, name: student.name, previewGrade, termGrade, remarks, description };
     });
-  }, [roster, groups, scores, examSubWeights]);
+  }, [roster, groups, scores, examinations, weights.templateStructure?.descriptorTable, weights.templateStructure?.transmutationTable]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -720,24 +510,77 @@ export function AssessmentRecordsSection({
     }
   }
 
-  const columnCount = 1 + groups.reduce(
-    (sum, group) => sum + group.columns.length + 3 * (group.domainGroups?.length || 1),
-    0,
-  ) + 3;
+  const groupColumnSpan = (group: ComponentColumnGroup) => group.key === "exams"
+    ? group.columns.length
+      + (group.examComponents?.filter((entry) => entry.showWeightedScore).length ?? 0)
+      + Number(!!group.examOutputs?.percentageScore)
+      + Number(!!group.examOutputs?.weightedScore)
+    : group.columns.length + 3 * (group.domainGroups?.length || 1);
+  const columnCount = 1 + groups.reduce((sum, group) => sum + groupColumnSpan(group), 0) + 3;
 
   function renderStudentRow(student: GenderedStudent, index: number) {
-    const weightedScores: number[] = [];
     let anyGroupIncomplete = false;
     const missingIn: string[] = [];
 
     const groupCells = groups.map((group) => {
-      const result = computeGroupResult(group, student.id, scores, examSubWeights);
+      const result = computeGroupResult(group, student.id, scores, examinations);
 
-      if (result.hasAnyItems && !result.isComplete) {
+      if (!result.isComplete) {
         anyGroupIncomplete = true;
         missingIn.push(group.label);
       }
-      if (result.ws !== null) weightedScores.push(result.ws);
+      if (group.key === "exams" && group.examComponents) {
+        const componentWeightedCells = group.examComponents
+          .filter(({ showWeightedScore }) => showWeightedScore)
+          .map(({ component, items }) => {
+            const totals = studentTotals(items, student.id, scores);
+            const ps = totals.totalItems > 0 && totals.isComplete
+              ? computePS(totals.total, totals.highestPossible)
+              : null;
+            return { component, ws: computeWS(ps, component.weightPercent) };
+          });
+        return (
+          <Fragment key={group.key}>
+            {group.examComponents.map(({ component, columns, items }) => columns.map((column) => {
+              const totals = studentTotals(items, student.id, scores);
+              const componentItems = component.key.toUpperCase() === "ALL" ? (column.item ? [column.item] : []) : items;
+              const rawValue = component.key.toUpperCase() === "ALL"
+                ? column.item ? scores[student.id]?.[column.item.id] ?? "—" : "—"
+                : items.length === 1
+                  ? scores[student.id]?.[items[0].id] ?? "—"
+                  : totals.isComplete ? totals.total : "—";
+              const title = items.length > 1
+                ? `${items.map((item) => `${item.activityName} · ${formatShortDate(item.date)}`).join("; ")} · values combine into ${component.label}.`
+                : column.item ? `${column.item.activityName} · ${formatShortDate(column.item.date)}` : "No examination score recorded";
+              return (
+                <td key={column.id} title={title} className="min-w-14 whitespace-nowrap px-2 py-2.5 text-center text-xs font-bold tabular-nums">
+                  {isEditing && componentItems.length > 0 && component.key.toUpperCase() !== "ALL" && componentItems.length > 1 ? (
+                    <span className="inline-flex flex-wrap justify-center gap-1">
+                      {componentItems.map((item) => <input key={item.id} type="number" min={0} max={item.maxItems} step="1" inputMode="numeric"
+                        aria-label={`${component.label}: ${item.activityName}`}
+                        title={`${item.activityName} · ${formatShortDate(item.date)}`}
+                        value={scores[student.id]?.[item.id] ?? ""}
+                        onChange={(event) => onScoreChange(student.id, item.id, item.maxItems, event.target.value)}
+                        className={cellInputClasses} />)}
+                    </span>
+                  ) : isEditing && componentItems.length === 1 ? (
+                    <input type="number" min={0} max={componentItems[0].maxItems} step="1" inputMode="numeric"
+                      aria-label={`${component.label} score`} title={`${componentItems[0].activityName} · ${formatShortDate(componentItems[0].date)}`}
+                      value={scores[student.id]?.[componentItems[0].id] ?? ""}
+                      onChange={(event) => onScoreChange(student.id, componentItems[0].id, componentItems[0].maxItems, event.target.value)}
+                      className={cellInputClasses} />
+                  ) : rawValue}
+                </td>
+              );
+            }))}
+            {componentWeightedCells.map(({ component, ws }) => (
+              <td key={`ws-${component.key}`} className="min-w-16 whitespace-nowrap px-2 py-2.5 text-center text-xs font-bold tabular-nums">{ws === null ? "—" : ws.toFixed(2)}</td>
+            ))}
+            {group.examOutputs?.percentageScore && <td className="min-w-16 whitespace-nowrap px-2 py-2.5 text-center text-xs font-bold tabular-nums">{result.ps === null ? "—" : result.ps.toFixed(2)}</td>}
+            {group.examOutputs?.weightedScore && <td className="min-w-16 whitespace-nowrap px-2 py-2.5 text-center text-xs font-bold tabular-nums">{result.ws === null ? "—" : result.ws.toFixed(2)}</td>}
+          </Fragment>
+        );
+      }
 
       return (
         <Fragment key={group.key}>
@@ -748,7 +591,7 @@ export function AssessmentRecordsSection({
             return (
               <Fragment key={domain.id}>
                 {domain.columns.map((column) => (
-                  <td key={column.id} className="px-2 py-2.5 text-center text-xs font-bold tabular-nums">
+                  <td key={column.id} className="min-w-14 whitespace-nowrap px-2 py-2.5 text-center text-xs font-bold tabular-nums">
                     {column.item && isEditing ? (
                       <input
                         type="number"
@@ -779,7 +622,7 @@ export function AssessmentRecordsSection({
           }) : (
             <>
               {group.columns.map((column) => (
-                <td key={column.id} className="px-2 py-2.5 text-center text-xs font-bold tabular-nums">
+                <td key={column.id} className="min-w-14 whitespace-nowrap px-2 py-2.5 text-center text-xs font-bold tabular-nums">
                   {column.item && isEditing ? (
                     <input
                       type="number"
@@ -811,11 +654,7 @@ export function AssessmentRecordsSection({
       );
     });
 
-    const initialGrade = computeInitialGrade(
-      weightedScores[0] ?? null,
-      weightedScores[1] ?? null,
-      weightedScores[2] ?? null,
-    );
+    const { initialGrade } = computeStudentGrade(student, groups, scores, examinations);
     const termGrade = computeTransmutedGrade(initialGrade, weights.templateStructure?.transmutationTable);
     const descriptor = termGrade === null
       ? null
@@ -823,7 +662,7 @@ export function AssessmentRecordsSection({
 
     return (
       <tr key={student.id} className={`border-t ${panelBorder} ${index % 2 ? (darkMode ? "bg-white/1.5" : "bg-black/[0.012]") : ""}`}>
-        <td className={`sticky left-0 z-10 px-4 py-2.5 text-sm font-bold ${darkMode ? "bg-[#2A1A18]" : "bg-white"} ${textPrimary}`}>
+        <td className={`sticky left-0 z-20 min-w-60 border-r px-4 py-2.5 text-sm font-bold shadow-[2px_0_4px_rgba(15,23,42,0.05)] ${darkMode ? "bg-[#2A1A18]" : index % 2 ? "bg-[#FCFCFD]" : "bg-white"} ${panelBorder} ${textPrimary}`}>
           <span className="inline-flex items-center gap-1.5">
             <StudentAvatar gender={student.gender} name={student.name} />
             {student.name}
@@ -847,143 +686,89 @@ export function AssessmentRecordsSection({
   return (
     <section className={cardClasses} aria-label={title}>
       <div className={`flex items-center justify-between gap-3 border-b px-4 py-2 ${panelBorder}`}>
-        <span className={`text-xs font-semibold ${textMuted}`}>Excel export includes recorded scores and current grade calculations.</span>
+        <span className={`text-xs font-semibold ${textMuted}`}>Export this term's assessment records using the official DepEd template configured for this subject.</span>
         <button type="button" onClick={() => void exportClassRecord()} className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-[11px] font-bold ${panelBorder} ${textPrimary}`}>
-          <Download size={13} /> Export Excel
+          <Download size={13} /> Export DepEd Class Record
         </button>
       </div>
-      <div className="overflow-x-auto">
-        <table className="teacher-user-table w-full min-w-max text-xs border-collapse">
-          <thead>
+      {groups.some((group) => (group.capacityOverflow ?? 0) > 0) && (
+        <div role="status" className="border-b border-amber-200 bg-amber-50 px-4 py-3 text-xs font-semibold text-amber-900">
+          {groups.filter((group) => (group.capacityOverflow ?? 0) > 0)
+            .map((group) => `${group.label}: ${group.capacityOverflow} assessment${group.capacityOverflow === 1 ? "" : "s"} exceed the assigned template's mapped slots`)
+            .join(". ")}. Export is blocked until an appropriately mapped template is assigned; no assessments are hidden.
+        </div>
+      )}
+      <div className="max-h-[68vh] overflow-auto">
+        <table className="teacher-user-table w-full min-w-max border-collapse text-xs">
+          <thead className={`sticky top-0 z-30 ${darkMode ? "bg-[#241311]" : "bg-white"}`}>
             <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
-              <th
-                rowSpan={4}
-                className={`sticky left-0 z-10 min-w-52 border px-3 py-3 text-left text-sm font-black uppercase ${darkMode ? "bg-[#2A1A18]" : "bg-white"} ${panelBorder} ${textPrimary}`}
-              >
+              <th rowSpan={3} className={`sticky left-0 z-50 w-60 min-w-60 border px-3 py-3 text-left text-sm font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.08)] ${darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"} ${panelBorder} ${textPrimary}`}>
                 Learners' Names
               </th>
-              {groups.map((group) => (
-                <th
-                  key={group.key}
-                  colSpan={group.columns.length + 3 * (group.domainGroups?.length || 1)}
-                  className={`border px-2 py-3 text-center text-xs font-black uppercase ${panelBorder} ${textPrimary}`}
-                >
-                  {group.label} ({group.weightLabel})
-                </th>
-              ))}
-              <th rowSpan={4} className={`border px-3 py-3 text-center text-xs font-black uppercase ${panelBorder} ${textPrimary}`}>
-                Initial
-                <br />
-                Grade
-              </th>
-              <th rowSpan={4} className={`border px-3 py-3 text-center text-xs font-black uppercase ${panelBorder} ${textPrimary}`}>
-                Term
-                <br />
-                Grade
-              </th>
-              <th rowSpan={4} className={`border px-3 py-3 text-center text-xs font-black uppercase ${panelBorder} ${textPrimary}`}>
-                Descriptor
-              </th>
+              {groups.map((group) => <th key={group.key} colSpan={groupColumnSpan(group)} className={`border px-2 py-3 text-center text-xs font-black uppercase ${panelBorder} ${textPrimary}`}>
+                {group.label} ({group.weightLabel})
+              </th>)}
+              <th rowSpan={3} className={`min-w-24 border px-3 py-3 text-center text-xs font-black uppercase ${panelBorder} ${textPrimary}`}>Initial<br />Grade</th>
+              <th rowSpan={3} className={`min-w-24 border px-3 py-3 text-center text-xs font-black uppercase ${panelBorder} ${textPrimary}`}>Term<br />Grade</th>
+              <th rowSpan={3} className={`min-w-32 border px-3 py-3 text-center text-xs font-black uppercase ${panelBorder} ${textPrimary}`}>Descriptor</th>
             </tr>
             <tr className={darkMode ? "bg-white/3" : "bg-[#FAFBFC]"}>
-              {groups.map((group) => (
-                <Fragment key={group.key}>
-                  {group.domainGroups?.length
-                    ? group.domainGroups.map((domain) => (
-                        <th
-                          key={domain.id}
-                          colSpan={domain.columns.length + 3}
-                          className={`border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}
-                        >
-                          {domain.label}
-                          {(group.domainGroups?.length ?? 0) > 1 || Math.abs(domain.weightPercent - group.weight) > 0.01
-                            ? ` (${domain.weightPercent}%)`
-                            : ""}
-                        </th>
-                      ))
-                    : <th colSpan={group.columns.length + 3} className={`border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>
-                        {group.key === "exams" ? "Exam Components" : "Assessment Items"}
-                      </th>}
-                </Fragment>
-              ))}
+              {groups.map((group) => <Fragment key={group.key}>
+                {group.key === "exams" && group.examComponents ? <>
+                  {group.examComponents.flatMap(({ component, columns }) => columns.map((column) => <th key={column.id} rowSpan={2} title={column.item ? `${column.item.activityName} · ${formatShortDate(column.item.date)}` : `${component.label} examination input`} className={`min-w-14 border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>{component.key.toUpperCase() === "ALL" ? column.label : component.label}</th>))}
+                  {group.examComponents.filter((entry) => entry.showWeightedScore).map(({ component }) => <th key={`ws-${component.key}`} rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>WS {component.label}</th>)}
+                  {group.examOutputs?.percentageScore && <th rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>PS</th>}
+                  {group.examOutputs?.weightedScore && <th rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>WS</th>}
+                </> : group.domainGroups?.length ? group.domainGroups.map((domain) => <th key={domain.id} colSpan={domain.columns.length + 3} className={`border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>
+                  {domain.label}{(group.domainGroups?.length ?? 0) > 1 || Math.abs(domain.weightPercent - group.weight) > 0.01 ? ` (${domain.weightPercent}%)` : ""}
+                </th>) : <>
+                  {group.columns.map((column) => <th key={column.id} rowSpan={2} title={column.item ? `${column.item.activityName} · ${formatShortDate(column.item.date)}` : "Empty template slot"} className={`min-w-14 border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>{column.label}</th>)}
+                  <th rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>Total</th>
+                  <th rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>PS</th>
+                  <th rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>WS</th>
+                </>}
+              </Fragment>)}
             </tr>
             <tr className={darkMode ? "bg-white/3" : "bg-[#FAFBFC]"}>
-              {groups.map((group) => (
-                <Fragment key={group.key}>
-                  {group.domainGroups?.length
-                    ? group.domainGroups.map((domain) => (
-                        <Fragment key={domain.id}>
-                          {domain.columns.map((column) => (
-                            <th key={column.id} className={`border px-2 py-2 text-center font-bold ${panelBorder} ${textMuted}`}>
-                              {column.label}
-                            </th>
-                          ))}
-                          <th className={`border px-2 py-2 text-center font-black ${panelBorder} ${textMuted}`}>Total</th>
-                          <th className={`border px-2 py-2 text-center font-black ${panelBorder} ${textMuted}`}>PS</th>
-                          <th className={`border px-2 py-2 text-center font-black ${panelBorder} ${textMuted}`}>WS</th>
-                        </Fragment>
-                      ))
-                    : <>
-                        {group.columns.map((column) => (
-                          <th key={column.id} className={`border px-2 py-2 text-center font-bold ${panelBorder} ${textMuted}`}>
-                            {column.label}
-                          </th>
-                        ))}
-                        <th className={`border px-2 py-2 text-center font-black ${panelBorder} ${textMuted}`}>Total</th>
-                        <th className={`border px-2 py-2 text-center font-black ${panelBorder} ${textMuted}`}>PS</th>
-                        <th className={`border px-2 py-2 text-center font-black ${panelBorder} ${textMuted}`}>WS</th>
-                      </>}
-                </Fragment>
-              ))}
+              {groups.map((group) => <Fragment key={group.key}>
+                {group.key === "exams" && group.examComponents ? null : group.domainGroups?.length ? group.domainGroups.map((domain) => <Fragment key={domain.id}>
+                  {domain.columns.map((column) => <th key={column.id} title={column.item ? `${column.item.activityName} · ${formatShortDate(column.item.date)}` : "Empty template slot"} className={`min-w-14 border px-2 py-2 text-center font-bold ${panelBorder} ${textMuted}`}>{column.label}</th>)}
+                  <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder} ${textMuted}`}>Total</th><th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder} ${textMuted}`}>PS</th><th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder} ${textMuted}`}>WS</th>
+                </Fragment>) : null}
+              </Fragment>)}
             </tr>
             <tr className={darkMode ? "bg-white/2" : "bg-white"}>
-              {groups.map((group) => {
-                return (
-                  <Fragment key={group.key}>
-                    {group.domainGroups?.length
-                      ? group.domainGroups.map((domain) => {
-                          const highest = domain.items.reduce((sum, item) => sum + item.maxItems, 0);
-                          return (
-                            <Fragment key={domain.id}>
-                              {domain.columns.map((column) => (
-                                <td key={column.id} className={`border px-2 py-2 text-center font-bold ${panelBorder} ${textMuted}`}>
-                                  {column.maxItems ?? "—"}
-                                </td>
-                              ))}
-                              <td className={`border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>{highest || "—"}</td>
-                              <td className={`border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>100.00</td>
-                              <td className={`border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>{domain.weightPercent}%</td>
-                            </Fragment>
-                          );
-                        })
-                      : (() => {
-                          const highest = group.items.reduce((sum, item) => sum + item.maxItems, 0);
-                          return <>
-                            {group.columns.map((column) => (
-                              <td key={column.id} className={`border px-2 py-2 text-center font-bold ${panelBorder} ${textMuted}`}>
-                                {column.maxItems ?? "—"}
-                              </td>
-                            ))}
-                            <td className={`border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>{highest || "—"}</td>
-                            <td className={`border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>{(highest || weights.templateStructure) ? "100.00" : "—"}</td>
-                            <td className={`border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>{(highest || weights.templateStructure) ? group.weightLabel : "—"}</td>
-                          </>;
-                        })()}
-                  </Fragment>
-                );
-              })}
+              <th className={`sticky left-0 z-50 min-w-60 border-r px-3 py-2 text-left text-[10px] font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.08)] ${darkMode ? "bg-[#2A1A18]" : "bg-white"} ${panelBorder} ${textMuted}`}>HPS</th>
+              {groups.map((group) => <Fragment key={group.key}>
+                {group.key === "exams" && group.examComponents ? <>
+                  {group.examComponents.flatMap(({ columns }) => columns.map((column) => <th key={`${column.id}-hps`} className={`min-w-14 border px-2 py-2 text-center font-bold ${panelBorder} ${textMuted}`}>{column.maxItems ?? "—"}</th>))}
+                  {group.examComponents.filter((entry) => entry.showWeightedScore).map(({ component }) => <th key={`${component.key}-weight`} className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder} ${textMuted}`} style={{ color: ACCENT }}>{component.weightPercent}%</th>)}
+                  {group.examOutputs?.percentageScore && <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>100.00</th>}
+                  {group.examOutputs?.weightedScore && <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>{group.weight}%</th>}
+                </> : group.domainGroups?.length ? group.domainGroups.map((domain) => {
+                  const highest = domain.items.reduce((sum, item) => sum + item.maxItems, 0);
+                  return <Fragment key={domain.id}>
+                    {domain.columns.map((column) => <th key={column.id} className={`min-w-14 border px-2 py-2 text-center font-bold ${panelBorder} ${textMuted}`}>{column.maxItems ?? "—"}</th>)}
+                    <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>{highest || "—"}</th><th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>100.00</th><th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>{domain.weightPercent}%</th>
+                  </Fragment>;
+                }) : <>
+                  {group.columns.map((column) => <th key={column.id} className={`min-w-14 border px-2 py-2 text-center font-bold ${panelBorder} ${textMuted}`}>{column.maxItems ?? "—"}</th>)}
+                  <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>{group.items.reduce((sum, item) => sum + item.maxItems, 0) || "—"}</th>
+                  <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>{group.items.length || weights.templateStructure ? "100.00" : "—"}</th>
+                  <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>{group.items.length || weights.templateStructure ? group.weightLabel : "—"}</th>
+                </>}
+              </Fragment>)}
+              <th className={`min-w-24 border px-2 py-2 ${panelBorder}`} aria-label="No HPS for Initial Grade" />
+              <th className={`min-w-24 border px-2 py-2 ${panelBorder}`} aria-label="No HPS for Term Grade" />
+              <th className={`min-w-32 border px-2 py-2 ${panelBorder}`} aria-label="No HPS for Descriptor" />
             </tr>
           </thead>
           <tbody>
             {grouped.male.length > 0 && (
               <>
                 <tr>
-                  <td
-                    colSpan={columnCount}
-                    className={`border px-3 py-2 text-left text-xs font-black uppercase ${panelBorder} ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"} ${textPrimary}`}
-                  >
-                    Male
-                  </td>
+                  <td className={`sticky left-0 z-20 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.05)] ${panelBorder} ${darkMode ? "bg-[#34201D]" : "bg-[#F1F2F4]"} ${textPrimary}`}>Male</td>
+                  <td colSpan={columnCount - 1} className={`border px-3 py-2 ${panelBorder} ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"}`} />
                 </tr>
                 {grouped.male.map((student, index) => renderStudentRow(student, index))}
               </>
@@ -991,12 +776,8 @@ export function AssessmentRecordsSection({
             {grouped.female.length > 0 && (
               <>
                 <tr>
-                  <td
-                    colSpan={columnCount}
-                    className={`border px-3 py-2 text-left text-xs font-black uppercase ${panelBorder} ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"} ${textPrimary}`}
-                  >
-                    Female
-                  </td>
+                  <td className={`sticky left-0 z-20 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.05)] ${panelBorder} ${darkMode ? "bg-[#34201D]" : "bg-[#F1F2F4]"} ${textPrimary}`}>Female</td>
+                  <td colSpan={columnCount - 1} className={`border px-3 py-2 ${panelBorder} ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"}`} />
                 </tr>
                 {grouped.female.map((student, index) => renderStudentRow(student, index))}
               </>

@@ -82,11 +82,13 @@ export function StudentAttendanceSummaryModal({
     const months = monthsInTerm(term);
     let termClassDays = 0;
     let termPresent = 0;
+    let termAbsent = 0;
 
     const monthStats = months.map((ym) => {
       const dates = datesInMonthWithinTerm(ym, term);
       let classDays = 0;
       let present = 0;
+      let absent = 0;
       for (const iso of dates) {
         // A "class day" is any date someone on the roster was marked for —
         // same rule the main calendar's Present/School Days total uses.
@@ -94,10 +96,12 @@ export function StudentAttendanceSummaryModal({
         if (!marked) continue;
         classDays += 1;
         if (attendance[student.id]?.[iso] === "P") present += 1;
+        if (attendance[student.id]?.[iso] === "A") absent += 1;
       }
       termClassDays += classDays;
       termPresent += present;
-      return { ym, classDays, present, absent: classDays - present };
+      termAbsent += absent;
+      return { ym, classDays, present, absent };
     });
 
     return {
@@ -105,7 +109,7 @@ export function StudentAttendanceSummaryModal({
       monthStats,
       termClassDays,
       termPresent,
-      termAbsent: termClassDays - termPresent,
+      termAbsent,
     };
   });
 

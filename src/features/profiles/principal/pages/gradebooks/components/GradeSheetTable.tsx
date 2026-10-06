@@ -8,6 +8,7 @@ interface GradeSheetTableProps {
   subjects: string[];
   males: Student[];
   females: Student[];
+  rankedGroup?: { label: string; students: Student[] };
   panelBg: string;
   panelBorder: string;
   textPrimary: string;
@@ -22,6 +23,7 @@ export function GradeSheetTable({
   subjects,
   males,
   females,
+  rankedGroup,
   panelBg,
   panelBorder,
   textPrimary,
@@ -35,8 +37,9 @@ export function GradeSheetTable({
       </div>
       <StudentGroupTable
         groups={[
-          ...(males.length > 0 ? [{ label: "Male" as const, students: males }] : []),
-          ...(females.length > 0 ? [{ label: "Female" as const, students: females }] : []),
+          ...(rankedGroup ? [rankedGroup] : []),
+          ...(!rankedGroup && males.length > 0 ? [{ label: "Male" as const, students: males }] : []),
+          ...(!rankedGroup && females.length > 0 ? [{ label: "Female" as const, students: females }] : []),
         ]}
         subjects={subjects}
         panelBg={panelBg}

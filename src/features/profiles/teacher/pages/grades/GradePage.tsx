@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Search, CheckCircle2, AlertTriangle,
-  Download, Send, Loader2, Clock,
+  Download, Send, Loader2, Clock, History,
 } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
@@ -11,10 +11,12 @@ import {
   fetchAdvisoryGradebook,
   fetchAdvisorySections,
   fetchClassSubmissionStatus,
+  fetchClassSubmissionLogs,
   submitClassGrades,
   type AdvisoryGradebook,
   type AdvisorySectionOption,
   type GradebookStudent,
+  type GradeSubmissionLog,
 } from "./services/gradePage.service";
 import type { GradingPeriod } from "../subjects/detail/types/Grading";
 import { ParentVisibilitySection } from "./ParentVisibilitySection";
@@ -102,11 +104,12 @@ export function GradesPage() {
 
   const [submitted, setSubmitted] = useState(false);
   const [submittedAt, setSubmittedAt] = useState<string | null>(null);
+  const [submissionLogs, setSubmissionLogs] = useState<GradeSubmissionLog[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [showForceConfirm, setShowForceConfirm] = useState(false);
 
-  const [activeTab, setActiveTab] = useState<"gradebook" | "visibility">("gradebook");
+  const [activeTab, setActiveTab] = useState<"gradebook" | "visibility" | "history">("gradebook");
 
   // Load real grading periods (reused from subjectGrading.service)
   useEffect(() => {
@@ -146,6 +149,15 @@ export function GradesPage() {
     return () => {
       cancelled = true;
     };
+  }, [selectedTermId, selectedClassId]);
+
+  useEffect(() => {
+    if (!selectedTermId || !selectedClassId) return;
+    let cancelled = false;
+    fetchClassSubmissionLogs(selectedTermId, selectedClassId)
+      .then((logs) => { if (!cancelled) setSubmissionLogs(logs); })
+      .catch((err) => console.error("Failed to load grade submission history:", err));
+    return () => { cancelled = true; };
   }, [selectedTermId, selectedClassId]);
 
   // Load submission status
@@ -191,6 +203,7 @@ export function GradesPage() {
       await submitClassGrades(selectedTermId, selectedClassId);
       setSubmitted(true);
       setSubmittedAt(new Date().toISOString());
+      setSubmissionLogs(await fetchClassSubmissionLogs(selectedTermId, selectedClassId));
     } catch (err) {
       console.error("Failed to submit class grades:", err);
       setSubmitError(err instanceof Error ? err.message : "Failed to submit class grades. Please try again.");
@@ -226,6 +239,13 @@ export function GradesPage() {
   }, [gradebook, search, studentFilter]);
 
   const groupedStudents = useMemo(() => {
+    if (studentFilter === "Highest Grades" || studentFilter === "Lowest Grades") {
+      return [{
+        label: studentFilter === "Highest Grades" ? "Highest score ranking" : "Lowest score ranking",
+        students: filteredStudents,
+      }];
+    }
+
     const male = filteredStudents
       .filter((s) => s.gender === "M")
       .sort((a, b) => studentDisplayName(a).localeCompare(studentDisplayName(b)));
@@ -233,11 +253,11 @@ export function GradesPage() {
       .filter((s) => s.gender === "F")
       .sort((a, b) => studentDisplayName(a).localeCompare(studentDisplayName(b)));
 
-    const groups: { label: "Male" | "Female"; students: GradebookStudent[] }[] = [];
+    const groups: { label: string; students: GradebookStudent[] }[] = [];
     if (male.length) groups.push({ label: "Male", students: male });
     if (female.length) groups.push({ label: "Female", students: female });
     return groups;
-  }, [filteredStudents]);
+  }, [filteredStudents, studentFilter]);
 
   const gradeLevel = gradebook?.gradeLevel ?? students[0]?.gradeLevel ?? "";
   const isMatatag = /(?:grade\s*)?[1-3](?!\d)/i.test(gradeLevel);
@@ -279,6 +299,14 @@ export function GradesPage() {
               }`}
             >
               Parent Visibility
+            </button>
+            <button
+              onClick={() => setActiveTab("history")}
+              className={`inline-flex items-center gap-1.5 rounded-lg px-3 text-[11px] font-bold transition-colors ${
+                activeTab === "history" ? "bg-[#800000] text-white" : `${textMuted} hover:${textPrimary}`
+              }`}
+            >
+              <History size={12} /> Submission History
             </button>
           </div>
         </div>
@@ -561,7 +589,7 @@ export function GradesPage() {
               )}
             </section>
           </>
-        ) : (
+        ) : activeTab === "visibility" ? (
           <ParentVisibilitySection
             gradingPeriodId={selectedTermId}
             classId={selectedClassId}
@@ -572,6 +600,34 @@ export function GradesPage() {
             textPrimary={textPrimary}
             textMuted={textMuted}
           />
+        ) : (
+          <section className={`overflow-hidden rounded-xl border ${panelBg} ${panelBorder}`} aria-label="Grade submission history">
+            <div className={`flex items-center justify-between gap-3 border-b px-4 py-3 ${panelBorder}`}>
+              <div className="flex items-center gap-2">
+                <History size={15} className={textMuted} />
+                <h2 className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>Submission History</h2>
+              </div>
+              <span className={`text-[11px] font-semibold ${textMuted}`}>
+                {submissionLogs.length} record{submissionLogs.length === 1 ? "" : "s"}
+              </span>
+            </div>
+            {submissionLogs.length ? (
+              <ol className="divide-y divide-black/5">
+                {submissionLogs.map((log) => (
+                  <li key={log.id} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-3">
+                    <span className={`text-xs font-semibold ${textPrimary}`}>
+                      {log.label} <span className={textMuted}>· {log.type === "advisory" ? "Class submission" : "Subject submission"}</span>
+                    </span>
+                    <span className={`text-[11px] font-medium ${textMuted}`}>
+                      {log.submittedByName ? `${log.submittedByName} · ` : ""}{new Date(log.submittedAt).toLocaleString()}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p className={`px-4 py-8 text-center text-xs ${textMuted}`}>No grades have been submitted for this term yet.</p>
+            )}
+          </section>
         )}
       </div>
     </div>

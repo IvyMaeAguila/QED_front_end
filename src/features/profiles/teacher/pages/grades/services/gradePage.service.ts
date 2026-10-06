@@ -112,6 +112,25 @@ export async function fetchClassSubmissionStatus(
   return json.data;
 }
 
+export interface GradeSubmissionLog {
+  id: number;
+  type: "subject" | "advisory";
+  label: string;
+  submittedByName: string | null;
+  submittedAt: string;
+}
+
+export async function fetchClassSubmissionLogs(
+  gradingPeriodId: string,
+  classId?: string,
+): Promise<GradeSubmissionLog[]> {
+  const params = new URLSearchParams({ gradingPeriodId });
+  if (classId) params.set("classId", classId);
+  const res = await authedFetch(`${BASE_URL}/submission/logs?${params.toString()}`);
+  const json = await handleJsonResponse(res);
+  return json.data;
+}
+
 export async function submitClassGrades(gradingPeriodId: string, classId?: string): Promise<void> {
   const res = await authedFetch(`${BASE_URL}/submission`, {
     method: "POST",

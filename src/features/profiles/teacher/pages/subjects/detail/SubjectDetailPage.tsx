@@ -76,11 +76,11 @@ export function SubjectDetailPage() {
   useEffect(() => {
     if (!subjectId) return;
     let cancelled = false;
-    getEffectiveWeightsSafe(Number(subjectId)).then((weights) => {
+    getEffectiveWeightsSafe(Number(subjectId), selectedTerm || undefined).then((weights) => {
       if (!cancelled) setTemplateStructure(weights?.templateStructure);
     });
     return () => { cancelled = true; };
-  }, [subjectId]);
+  }, [subjectId, selectedTerm]);
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
@@ -570,6 +570,11 @@ export function SubjectDetailPage() {
               : activeTab === "performanceTask"
                 ? templateStructure?.pt.domains
                 : []}
+            examTypes={templateStructure?.examinations?.enabled
+              ? (templateStructure.examinations.components.some((component) => component.key.toUpperCase() === "ALL")
+                ? ["TE"]
+                : templateStructure.examinations.components.map((component) => component.key as "ST1" | "ST2" | "TE"))
+              : undefined}
           />
         )}
 

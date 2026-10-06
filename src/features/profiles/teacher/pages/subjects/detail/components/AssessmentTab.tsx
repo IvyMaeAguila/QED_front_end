@@ -11,6 +11,7 @@ import {
 import { StudentAvatar } from "@shared/components/StudentAvatar";
 import type { RosterStudent } from "../data";
 import type { TemplateDomain } from "../../../../../shared/grading/gradeTemplate.types";
+import type { ExamType } from "../types/Grading";
 
 type GenderedStudent = RosterStudent & { gender?: "M" | "F" };
 import {
@@ -58,6 +59,7 @@ interface AssessmentTabProps {
   textPrimary: string;
   textMuted: string;
   templateDomains?: TemplateDomain[];
+  examTypes?: ExamType[];
 }
 
 const scoreStyle = (percent: number | null) => {
@@ -87,6 +89,7 @@ export function AssessmentTab({
   textPrimary,
   textMuted,
   templateDomains = [],
+  examTypes,
 }: AssessmentTabProps) {
   const isWrittenWorks = tab === "writtenWorks";
 
@@ -567,6 +570,7 @@ export function AssessmentTab({
             panelBorder={panelBorder}
             textMuted={textMuted}
             templateDomains={templateDomains}
+            examTypes={examTypes}
           />
         )}
 

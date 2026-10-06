@@ -33,7 +33,7 @@ export async function uploadGradeTemplate(
   if (!res.ok || !json.success) {
     throw new Error(json.message ?? "Failed to upload grade template.");
   }
-  return json.data;
+  return { ...json.data, file_name: json.data.file_name ?? json.data.fileName };
 }
 
 export async function getActiveGradeTemplate(

@@ -5,7 +5,7 @@ import type { Student } from "../data/types";
 import { computeAverage, fullName } from "../utils/gradeSheetUtils";
 
 interface StudentGroupTableProps {
-  groups: { label: "Male" | "Female"; students: Student[] }[];
+  groups: { label: string; students: Student[] }[];
   subjects: string[];
   panelBg: string;
   panelBorder: string;

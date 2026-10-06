@@ -551,11 +551,12 @@ export function AddSubjectPage() {
               <div className="text-xs space-y-1 mt-3 pt-3 border-t border-current/10">
                 <p className={textPrimary}>WW: {formatGroup(templatePreview.ww)}</p>
                 <p className={textPrimary}>PT: {formatGroup(templatePreview.pt)}</p>
-                <p className={textPrimary}>Exam: {templatePreview.examWeightPercent}%</p>
-                <p className={textMuted}>
-                  Exam sub-weights — ST1: {templatePreview.examSubWeights.st1}% · ST2:{" "}
-                  {templatePreview.examSubWeights.st2}% · TE: {templatePreview.examSubWeights.te}%
-                </p>
+                {templatePreview.examinations?.enabled ? <>
+                  <p className={textPrimary}>Examinations: {templatePreview.examWeightPercent}%</p>
+                  <p className={textMuted}>
+                    Components — {templatePreview.examinations.components.map((component) => `${component.label}: ${component.weightPercent}%`).join(" · ")}
+                  </p>
+                </> : <p className={textMuted}>Examinations: not included in this template.</p>}
               </div>
             )}
 

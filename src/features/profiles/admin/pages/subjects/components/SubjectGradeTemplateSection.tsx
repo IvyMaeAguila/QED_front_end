@@ -81,11 +81,20 @@ export function SubjectGradeTemplateSection({
       </div>
 
       <p className="text-xs opacity-70 leading-relaxed">
-        Upload the official DepEd Electronic Class Record (.xlsx) for this
-        subject. Its WW/PT/Exam weights, any WW/PT domain breakdown (e.g.
-        Cognitive/Affective/Behavioral), and ST1/ST2/TE sub-weights will
-        replace manual weight entry.
+        Use the official DepEd Electronic Class Record configured for this
+        subject. Replacing it affects new grading periods; periods already
+        using an earlier version keep that workbook.
       </p>
+
+      {activeTemplate && (
+        <div className="flex flex-col gap-1 rounded-lg border border-current/10 px-3 py-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
+            <p className="text-[11px] font-semibold uppercase tracking-wide opacity-60">Current Template</p>
+            <p className="truncate text-sm font-semibold" title={activeTemplate.file_name}>{activeTemplate.file_name}</p>
+          </div>
+          <span className="w-fit shrink-0 rounded-full bg-emerald-600/10 px-2 py-1 text-[11px] font-bold text-emerald-700">Active</span>
+        </div>
+      )}
 
       <input
         ref={fileInputRef}
@@ -111,9 +120,20 @@ export function SubjectGradeTemplateSection({
           <Upload size={22} className="text-[#2F6FED]" />
         )}
         <p className="text-sm font-bold">
-          {uploading ? "Processing…" : "Drag the .xlsx here or click to browse"}
+          {uploading ? "Processing…" : "Drop an .xlsx here or choose a file"}
         </p>
       </div>
+
+      {!uploading && (
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className="w-full rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          style={{ background: "#8B0000" }}
+        >
+          {activeTemplate ? "Replace Template" : "Upload Template"}
+        </button>
+      )}
 
       {error && (
         <div className="flex items-center gap-2 text-xs font-semibold text-[#B91C1C]">
@@ -126,15 +146,14 @@ export function SubjectGradeTemplateSection({
         <div className="text-xs space-y-1 pt-2 border-t border-current/10">
           <div className="flex items-center gap-2 font-semibold text-[#15803D] mb-1">
             <CheckCircle size={14} />
-            New template parsed
+            Template saved
           </div>
           <p>WW: {formatGroup(preview.ww)}</p>
           <p>PT: {formatGroup(preview.pt)}</p>
-          <p>Exam: {preview.examWeightPercent}%</p>
-          <p>
-            Exam sub-weights — ST1: {preview.examSubWeights.st1}% · ST2:{" "}
-            {preview.examSubWeights.st2}% · TE: {preview.examSubWeights.te}%
-          </p>
+          {preview.examinations?.enabled ? <>
+            <p>Examinations: {preview.examWeightPercent}%</p>
+            <p>Components — {preview.examinations.components.map((component) => `${component.label}: ${component.weightPercent}%`).join(" · ")}</p>
+          </> : <p>Examinations: not included in this template.</p>}
         </div>
       )}
 

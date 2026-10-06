@@ -1,7 +1,7 @@
 // features/profiles/teacher/.../services/subjectGradeTemplate.service.ts
 
 import { API_CONFIG } from '../../../../../../config/api.config';
-import type { GradeTemplateStructure } from "../../../../shared/grading/gradeTemplate.types";
+import type { GradeTemplateStructure, TemplateExaminations } from "../../../../shared/grading/gradeTemplate.types";
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/subject`;
 
@@ -51,14 +51,19 @@ export interface EffectiveWeights {
   pt: number;
   exam: number;
   examSubWeights?: { st1: number; st2: number; te: number };
+  examinations?: TemplateExaminations;
   templateStructure?: GradeTemplateStructure;
+  templateId?: number;
+  templateChecksum?: string | null;
 }
 
 export async function getEffectiveWeightsSafe(
-  subjectSectionId: number
+  subjectSectionId: number,
+  gradingPeriodId?: string,
 ): Promise<EffectiveWeights | undefined> {
   try {
-    const res = await authedFetch(`${BASE_URL}/getEffectiveWeights/${subjectSectionId}`);
+    const periodQuery = gradingPeriodId ? `?gradingPeriodId=${encodeURIComponent(gradingPeriodId)}` : "";
+    const res = await authedFetch(`${BASE_URL}/getEffectiveWeights/${subjectSectionId}${periodQuery}`);
     const contentType = res.headers.get("content-type") ?? "";
     if (!contentType.includes("application/json")) return undefined;
 
@@ -81,4 +86,19 @@ export async function downloadActiveGradeTemplate(subjectSectionId: string): Pro
     throw new Error(message);
   }
   return res.arrayBuffer();
+}
+
+export async function downloadGradeRecordExport(subjectSectionId: string, gradingPeriodId: string): Promise<{ buffer: ArrayBuffer; fileName: string }> {
+  const res = await fetch(
+    `${BASE_URL}/exportGradeTemplateBySection/${subjectSectionId}?gradingPeriodId=${encodeURIComponent(gradingPeriodId)}`,
+    { credentials: "include" },
+  );
+  if (!res.ok) {
+    let message = "Could not create the official grade record export.";
+    try { const json = await res.json(); message = json.message ?? message; } catch { /* keep fallback */ }
+    throw new Error(message);
+  }
+  const disposition = res.headers.get("content-disposition") ?? "";
+  const fileName = disposition.match(/filename="?([^";]+)"?/i)?.[1] ?? `QED-TERM-${gradingPeriodId}.xlsx`;
+  return { buffer: await res.arrayBuffer(), fileName };
 }

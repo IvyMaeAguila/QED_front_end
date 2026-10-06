@@ -16,7 +16,7 @@ async function handleJsonResponse(res: Response) {
 
 export interface SubjectGrade {
   subject: string;
-  grade: number;
+  grade: number | null;
 }
 
 export interface Term {

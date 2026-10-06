@@ -27,6 +27,7 @@ interface AddItemModalProps {
   panelBorder: string;
   textMuted: string;
   templateDomains?: TemplateDomain[];
+  examTypes?: ExamType[];
 }
 
 export function AddItemModal({
@@ -41,6 +42,7 @@ export function AddItemModal({
   panelBorder,
   textMuted,
   templateDomains = [],
+  examTypes = EXAM_TYPES,
 }: AddItemModalProps) {
   const isExam = tab === "exams";
   const isWrittenWorks = tab === "writtenWorks";
@@ -193,7 +195,7 @@ export function AddItemModal({
                 onChange={(e) => setExamType(e.target.value as ExamType)}
                 className={`flex-1 bg-transparent outline-none ${textPrimary}`}
               >
-                {EXAM_TYPES.map((t) => (
+                {examTypes.map((t) => (
                   <option key={t} value={t}>
                     {t} — {EXAM_TYPE_LABELS[t]}
                   </option>

@@ -19,6 +19,24 @@ export interface TemplateDomain {
   scoreColumns?: number[]; // uploaded workbook item columns, one-based
 }
 
+export interface TemplateExamComponent {
+  key: string;
+  label: string;
+  weightPercent: number;
+  scoreColumn?: number;
+  weightedScoreColumn?: number;
+}
+
+export interface TemplateExaminations {
+  enabled: boolean;
+  categoryWeightPercent: number;
+  components: TemplateExamComponent[];
+  outputs?: {
+    percentageScoreColumn?: number;
+    weightedScoreColumn?: number;
+  };
+}
+
 export interface TemplateGroup {
   key: "writtenWorks" | "performanceTask";
   weightPercent: number;
@@ -45,17 +63,26 @@ export interface GradeTemplateStructure {
   ww: TemplateGroup;
   pt: TemplateGroup;
   examWeightPercent: number;
-  examSubWeights: ExamSubWeights;
+  examSubWeights?: ExamSubWeights;
+  examinations?: TemplateExaminations;
   transmutationTable: TransmutationRow[];
   descriptorTable: DescriptorRow[];
+  termConfigurations?: Record<string, {
+    ww: TemplateGroup;
+    pt: TemplateGroup;
+    examWeightPercent: number;
+    examSubWeights?: ExamSubWeights;
+    transmutationTable: TransmutationRow[];
+    descriptorTable: DescriptorRow[];
+  }>;
   layout?: {
     scoreHeaderRow: number;
     highestPossibleRow: number;
     nameColumn: number;
     studentRows: { row: number; gender: "M" | "F" }[];
     finalColumns: { initialGrade: number; termGrade: number; descriptor: number };
-    examScoreColumns: { ST1: number; ST2: number; TE: number };
-    examWeightedScoreColumns?: { ST1: number; ST2: number; TE: number };
+    examScoreColumns: Record<string, number>;
+    examWeightedScoreColumns?: Record<string, number>;
     examPsColumn?: number;
     examWeightedScoreColumn?: number;
   };

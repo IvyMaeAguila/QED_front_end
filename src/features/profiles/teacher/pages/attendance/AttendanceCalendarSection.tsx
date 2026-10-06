@@ -89,6 +89,7 @@ export function AttendanceCalendarSection({
 }: AttendanceCalendarSectionProps) {
   const [attendance, setAttendance] = useState<AttendanceMap>({});
   const [loading, setLoading] = useState(true);
+  const [attendanceError, setAttendanceError] = useState<string | null>(null);
   const [selectedTermId, setSelectedTermId] = useState<string>(() => terms.find((t) => t.isActive)?.id ?? terms[0]?.id ?? "");
   const [viewDate, setViewDate] = useState<Date>(() => {
     const t = terms.find((t) => t.id === selectedTermId) ?? terms[0];
@@ -98,13 +99,25 @@ export function AttendanceCalendarSection({
   const [summaryStudent, setSummaryStudent] = useState<RosterStudent | null>(null);
 
   const term = terms.find((t) => t.id === selectedTermId) ?? terms[0];
+  const todayISO = toISODate(new Date());
+  const activeTerm = terms.find((candidate) => candidate.isActive);
+  const canMarkToday = Boolean(
+    activeTerm && todayISO >= activeTerm.startDate && todayISO <= activeTerm.endDate,
+  );
 
   useEffect(() => {
-    fetchAdvisoryAttendance(sectionId)
-      .then((res) => setAttendance(res.data))
-      .catch((err) => console.error("Failed to load attendance:", err))
-      .finally(() => setLoading(false));
-  }, [sectionId]);
+    let cancelled = false;
+    setLoading(true);
+    setAttendanceError(null);
+    fetchAdvisoryAttendance(sectionId, { termId: selectedTermId })
+      .then((res) => { if (!cancelled) setAttendance(res.data); })
+      .catch((err) => {
+        console.error("Failed to load attendance:", err);
+        if (!cancelled) setAttendanceError("Couldn't load attendance for this term. Please try again.");
+      })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [sectionId, selectedTermId]);
 
   useEffect(() => {
     if (term) setViewDate(defaultViewDate(term));
@@ -152,6 +165,12 @@ export function AttendanceCalendarSection({
   function cycle(studentId: string, dateISO: string) {
     if (!editable) return;
     const current = attendance[studentId]?.[dateISO] ?? null;
+    const inSelectedTerm = Boolean(term && dateISO >= term.startDate && dateISO <= term.endDate);
+    const canMarkNewToday = Boolean(
+      dateISO === todayISO && canMarkToday && term?.id === activeTerm?.id,
+    );
+    const canEditExistingPast = Boolean(current && dateISO < todayISO);
+    if (!inSelectedTerm || (!canMarkNewToday && !canEditExistingPast)) return;
     const idx = ATTENDANCE_CYCLE.indexOf(current);
     const next = ATTENDANCE_CYCLE[(idx + 1) % ATTENDANCE_CYCLE.length];
 
@@ -160,7 +179,7 @@ export function AttendanceCalendarSection({
       [studentId]: { ...prev[studentId], [dateISO]: next },
     }));
 
-    saveAdvisoryAttendance(sectionId, studentId, dateISO, next).catch((err) => {
+    saveAdvisoryAttendance(sectionId, studentId, dateISO, next, selectedTermId).catch((err) => {
       console.error("Failed to save attendance:", err);
       setAttendance((prev) => ({
         ...prev,
@@ -200,13 +219,19 @@ export function AttendanceCalendarSection({
           const meta = status ? ATTENDANCE_META[status] : null;
           const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
           const inTerm = term ? iso >= term.startDate && iso <= term.endDate : false;
-          const clickable = editable && inTerm;
+          const canMarkNewToday = iso === todayISO && canMarkToday && term?.id === activeTerm?.id;
+          const canEditExistingPast = Boolean(status && iso < todayISO);
+          const clickable = editable && inTerm && (canMarkNewToday || canEditExistingPast);
           return (
             <td key={iso} className="p-0 text-center">
               <button
                 onClick={() => clickable && cycle(student.id, iso)}
                 disabled={!clickable}
-                title={inTerm ? formatDisplayDate(iso) : `${formatDisplayDate(iso)} — outside ${term?.label ?? ""}`}
+                title={clickable
+                  ? `${formatDisplayDate(iso)} — ${iso < todayISO ? "edit saved attendance" : "mark today's attendance"}`
+                  : !inTerm
+                    ? `${formatDisplayDate(iso)} — outside ${term?.label ?? ""}`
+                    : `${formatDisplayDate(iso)} — only saved past marks or today's attendance during an open term can be edited`}
                 className={`inline-flex h-6 w-6 items-center justify-center rounded-md text-[9px] font-extrabold tabular-nums transition-colors ${
                   clickable ? "hover:scale-105 cursor-pointer" : "cursor-not-allowed opacity-25"
                 } ${isWeekend && !status ? "opacity-60" : ""}`}
@@ -303,6 +328,12 @@ export function AttendanceCalendarSection({
         </div>
       </div>
 
+      {editable && !canMarkToday && (
+        <div className={`border-b px-5 py-2.5 text-xs font-medium ${panelBorder} ${textMuted}`}>
+          Today is outside an open term, so new attendance cannot be entered. Previously saved attendance remains editable.
+        </div>
+      )}
+
       <div className={`flex flex-wrap gap-3 border-b px-5 py-3 ${panelBorder}`}>
         {(Object.keys(ATTENDANCE_META) as (keyof typeof ATTENDANCE_META)[]).map((key) => {
           const meta = ATTENDANCE_META[key];
@@ -320,6 +351,8 @@ export function AttendanceCalendarSection({
           <Loader2 size={16} className={`animate-spin ${textMuted}`} />
           <p className={`text-sm font-semibold ${textMuted}`}>Loading attendance...</p>
         </div>
+      ) : attendanceError ? (
+        <p className="px-5 py-10 text-center text-sm font-semibold text-red-500" role="alert">{attendanceError}</p>
       ) : (
         <div className="overflow-auto">
           <table

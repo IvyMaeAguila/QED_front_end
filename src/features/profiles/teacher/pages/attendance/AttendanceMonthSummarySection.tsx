@@ -82,6 +82,7 @@ export function AttendanceMonthSummarySection({
 }: AttendanceMonthSummarySectionProps) {
   const [attendance, setAttendance] = useState<AttendanceMap>({});
   const [loading, setLoading] = useState(true);
+  const [attendanceError, setAttendanceError] = useState<string | null>(null);
 
   const months = useMemo(() => enumerateMonths(terms), [terms]);
   const [selectedMonth, setSelectedMonth] = useState<string>(() => {
@@ -92,10 +93,22 @@ export function AttendanceMonthSummarySection({
   });
 
   useEffect(() => {
-    fetchAdvisoryAttendance(sectionId)
-      .then((res) => setAttendance(res.data))
-      .catch((err) => console.error("Failed to load attendance:", err))
-      .finally(() => setLoading(false));
+    if (months.length === 0) return;
+    setSelectedMonth((current) => months.includes(current) ? current : months[months.length - 1]);
+  }, [months]);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setAttendanceError(null);
+    fetchAdvisoryAttendance(sectionId, { allPeriods: true })
+      .then((res) => { if (!cancelled) setAttendance(res.data); })
+      .catch((err) => {
+        console.error("Failed to load attendance:", err);
+        if (!cancelled) setAttendanceError("Couldn't load attendance history. Please try again.");
+      })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [sectionId]);
 
   const cardClasses = `overflow-hidden rounded-[12px] border shadow-sm ${panelBg} ${panelBorder}`;
@@ -199,6 +212,8 @@ export function AttendanceMonthSummarySection({
             Loading attendance...
           </p>
         </div>
+      ) : attendanceError ? (
+        <p className="px-5 py-10 text-center text-sm font-semibold text-red-500" role="alert">{attendanceError}</p>
       ) : (
         <div className="space-y-5 p-5">
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">

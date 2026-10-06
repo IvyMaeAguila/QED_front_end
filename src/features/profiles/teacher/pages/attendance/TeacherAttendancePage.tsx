@@ -45,6 +45,10 @@ export function TeacherAttendancePage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const iso = todayISO();
+  const activeTerm = section?.terms.find((term) => term.isActive);
+  const canMarkToday = Boolean(
+    activeTerm && iso >= activeTerm.startDate && iso <= activeTerm.endDate,
+  );
 
   // Loads/reloads attendance whenever the selected class changes (including
   // when the teacher switches tabs between two advisory sections).
@@ -80,7 +84,7 @@ export function TeacherAttendancePage() {
   }, [section?.classId]);
 
   function cycle(studentId: string) {
-    if (!section) return;
+    if (!section || !activeTerm || !canMarkToday) return;
     const current = attendance[studentId]?.[iso] ?? null;
     const idx = ATTENDANCE_CYCLE.indexOf(current);
     const next = ATTENDANCE_CYCLE[(idx + 1) % ATTENDANCE_CYCLE.length];
@@ -90,7 +94,7 @@ export function TeacherAttendancePage() {
       [studentId]: { ...prev[studentId], [iso]: next },
     }));
 
-    saveAdvisoryAttendance(section.classId, studentId, iso, next).catch(
+    saveAdvisoryAttendance(section.classId, studentId, iso, next, activeTerm.id).catch(
       (err) => {
         console.error("Failed to save attendance:", err);
         setAttendance((prev) => ({
@@ -102,7 +106,7 @@ export function TeacherAttendancePage() {
   }
 
   function markAllPresent() {
-    if (!section) return;
+    if (!section || !activeTerm || !canMarkToday) return;
     const targets = filteredRoster.length > 0 ? filteredRoster : section.roster;
 
     for (const student of targets) {
@@ -114,7 +118,7 @@ export function TeacherAttendancePage() {
         [student.id]: { ...prev[student.id], [iso]: PRESENT },
       }));
 
-      saveAdvisoryAttendance(section.classId, student.id, iso, PRESENT).catch(
+      saveAdvisoryAttendance(section.classId, student.id, iso, PRESENT, activeTerm.id).catch(
         (err) => {
           console.error("Failed to save attendance:", err);
           setAttendance((prev) => ({
@@ -194,7 +198,9 @@ export function TeacherAttendancePage() {
         <td className="whitespace-nowrap px-4 py-2 text-center">
           <button
             onClick={() => cycle(student.id)}
-            className="inline-flex h-7 min-w-13 items-center justify-center rounded-lg px-2.5 text-[11px] font-black tabular-nums transition-transform hover:scale-105"
+            disabled={!canMarkToday}
+            title={canMarkToday ? "Change today's attendance" : "Attendance entry is unavailable outside an open term"}
+            className="inline-flex h-7 min-w-13 items-center justify-center rounded-lg px-2.5 text-[11px] font-black tabular-nums transition-transform enabled:hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
             style={
               meta
                 ? {
@@ -358,6 +364,15 @@ export function TeacherAttendancePage() {
           </div>
         </div>
 
+        {!canMarkToday && (
+          <div
+            role="status"
+            className={`rounded-lg border px-3 py-2 text-xs font-medium ${panelBg} ${panelBorder} ${textMuted}`}
+          >
+            Attendance entry is closed because today is outside an open term. You can still review and edit attendance already recorded for earlier dates in Full Records.
+          </div>
+        )}
+
         <section className={cardClasses} aria-label="Today's attendance roster">
           <div
             className={`flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 ${panelBorder}`}
@@ -376,7 +391,7 @@ export function TeacherAttendancePage() {
 
             <button
               onClick={markAllPresent}
-              disabled={allMarkedPresent}
+              disabled={!canMarkToday || allMarkedPresent}
               className={`flex h-7 w-36 items-center justify-center gap-1 rounded-md border px-2.5 text-[11px] font-extrabold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                 darkMode
                   ? "border-white/10 bg-white/5 text-white hover:bg-white/10"

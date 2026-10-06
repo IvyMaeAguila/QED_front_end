@@ -136,7 +136,7 @@ export function SubjectRecordsPage() {
       // schema: `subject-section`.id, distinct from elem_subjects.id).
       // getEffectiveWeightsSafe resolves the subject_id join server-side,
       // so passing the section id directly here is correct.
-      getEffectiveWeightsSafe(Number(subjectId)),
+      getEffectiveWeightsSafe(Number(subjectId), term || undefined),
     ])
       .then(([freshItems, freshScores, weights]) => {
         if (cancelled) return;
@@ -170,6 +170,7 @@ export function SubjectRecordsPage() {
         pt: effectiveWeights.pt,
         exam: effectiveWeights.exam,
         examSubWeights: effectiveWeights.examSubWeights,
+        examinations: effectiveWeights.examinations,
         templateStructure: effectiveWeights.templateStructure,
       };
     }

@@ -25,8 +25,15 @@ export async function fetchAdvisorySections(): Promise<AdvisorySection[]> {
   return res.json();
 }
 
-export async function fetchAdvisoryAttendance(classId: string): Promise<{ data: AttendanceMap }> {
-  const res = await authedFetch(`${BASE_URL}/${classId}`);
+export async function fetchAdvisoryAttendance(
+  classId: string,
+  options: { termId?: string; allPeriods?: boolean } = {},
+): Promise<{ data: AttendanceMap }> {
+  const params = new URLSearchParams();
+  if (options.termId) params.set("term", options.termId);
+  if (options.allPeriods) params.set("allPeriods", "true");
+  const query = params.size ? `?${params.toString()}` : "";
+  const res = await authedFetch(`${BASE_URL}/${classId}${query}`);
   if (!res.ok) throw new Error(`Failed to fetch attendance (${res.status})`);
   return res.json();
 }
@@ -36,10 +43,11 @@ export async function saveAdvisoryAttendance(
   studentId: string,
   dateISO: string,
   status: AttendanceStatus,
+  termId?: string,
 ): Promise<void> {
   const res = await authedFetch(`${BASE_URL}/${classId}`, {
     method: "POST",
-    body: JSON.stringify({ studentId, date: dateISO, status }),
+    body: JSON.stringify({ studentId, date: dateISO, status, ...(termId ? { term: termId } : {}) }),
   });
   if (!res.ok) throw new Error(`Failed to save attendance (${res.status})`);
 }

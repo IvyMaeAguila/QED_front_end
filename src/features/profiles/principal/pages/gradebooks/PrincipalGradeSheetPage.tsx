@@ -13,7 +13,7 @@ import { GradeSheetHeader } from "./components/GradeSheetHeader";
 import { GradeSheetSummary } from "./components/GradeSheetSummary";
 import { GradeSheetTable } from "./components/GradeSheetTable";
 import { TermUnavailableModal } from "./components/TermUnavailableModal";
-import { fullName, sortByLastName } from "./utils/gradeSheetUtils";
+import { computeAverage, fullName, sortByLastName } from "./utils/gradeSheetUtils";
 import {
   fetchGradingPeriods,
   type GradingPeriod,
@@ -170,7 +170,7 @@ function GradeSheetContent({
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const [studentSearch, setStudentSearch] = useState("");
-  const [genderFilter, setGenderFilter] = useState<"all" | "Male" | "Female">("all");
+  const [studentFilter, setStudentFilter] = useState("All Students");
 
   const {
     students,
@@ -188,16 +188,31 @@ function GradeSheetContent({
 
   const query = studentSearch.trim().toLocaleLowerCase();
   const filteredStudents = students.filter((student) => {
-    const matchesGender = genderFilter === "all" || student.gender === genderFilter;
+    const matchesGender = studentFilter === "Boys"
+      ? student.gender === "Male"
+      : studentFilter === "Girls"
+        ? student.gender === "Female"
+        : true;
     const matchesSearch = !query || `${fullName(student)} ${student.studentId}`.toLocaleLowerCase().includes(query);
     return matchesGender && matchesSearch;
   });
-  const males = filteredStudents
-    .filter((s) => s.gender === "Male")
-    .sort(sortByLastName);
-  const females = filteredStudents
-    .filter((s) => s.gender === "Female")
-    .sort(sortByLastName);
+  const isRankingFilter = studentFilter === "Highest Grades" || studentFilter === "Lowest Grades";
+  const orderedStudents = isRankingFilter
+    ? [...filteredStudents].sort((a, b) => {
+        const scoreA = a.overallAverage ?? computeAverage(a.grades, subjects);
+        const scoreB = b.overallAverage ?? computeAverage(b.grades, subjects);
+        const difference = scoreB - scoreA;
+        return studentFilter === "Highest Grades" ? difference || sortByLastName(a, b) : -difference || sortByLastName(a, b);
+      })
+    : filteredStudents;
+  const males = orderedStudents.filter((s) => s.gender === "Male").sort(isRankingFilter ? () => 0 : sortByLastName);
+  const females = orderedStudents.filter((s) => s.gender === "Female").sort(isRankingFilter ? () => 0 : sortByLastName);
+  const groups = isRankingFilter
+    ? [{ label: studentFilter === "Highest Grades" ? "Highest score ranking" : "Lowest score ranking", students: orderedStudents }]
+    : [
+        ...(males.length ? [{ label: "Male", students: males }] : []),
+        ...(females.length ? [{ label: "Female", students: females }] : []),
+      ];
 
   const activeTermLabel = gradingPeriods.find((period) => period.id === gradingPeriodId)?.termLabel ?? "Term";
 
@@ -233,8 +248,8 @@ function GradeSheetContent({
         <>
           <GradeSheetSummary
             totalStudents={students.length}
-            maleCount={males.length}
-            femaleCount={females.length}
+            maleCount={filteredStudents.filter((student) => student.gender === "Male").length}
+            femaleCount={filteredStudents.filter((student) => student.gender === "Female").length}
             panelBg={panelBg}
             panelBorder={panelBorder}
             textPrimary={textPrimary}
@@ -256,15 +271,17 @@ function GradeSheetContent({
                 Showing {filteredStudents.length} of {students.length} students
               </span>
               <select
-                value={genderFilter}
-                onChange={(event) => setGenderFilter(event.target.value as typeof genderFilter)}
-                aria-label="Filter students by gender"
+                value={studentFilter}
+                onChange={(event) => setStudentFilter(event.target.value)}
+                aria-label="Filter students and grade ranking"
                 style={{ borderRadius: "8px" }}
                 className={`h-8 rounded-lg border px-3 text-[11px] font-semibold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
               >
-                <option value="all">All genders</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
+                <option>All Students</option>
+                <option>Highest Grades</option>
+                <option>Lowest Grades</option>
+                <option>Boys</option>
+                <option>Girls</option>
               </select>
               <label className={`flex h-8 items-center gap-2 rounded-lg border px-3 text-[11px] font-semibold ${panelBg} ${panelBorder} ${textMuted}`}>
                 <span>Term:</span>
@@ -286,8 +303,9 @@ function GradeSheetContent({
             termLabel={activeTermLabel}
             totalStudents={students.length}
             subjects={subjects}
-            males={males}
-            females={females}
+            males={groups.flatMap((group) => group.label === "Male" ? group.students : [])}
+            females={groups.flatMap((group) => group.label === "Female" ? group.students : [])}
+            rankedGroup={isRankingFilter ? groups[0] : undefined}
             panelBg={panelBg}
             panelBorder={panelBorder}
             textPrimary={textPrimary}
