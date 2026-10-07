@@ -39,7 +39,7 @@ function MissedActivitiesContent({ theme, student }: MissedActivitiesProps) {
   const topicText = darkMode ? "text-gray-100" : "text-gray-900";
   const subjectText = darkMode ? "text-gray-400" : "text-gray-500";
 
-  const typeBadgeBase = "inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide";
+  const typeBadgeBase = "inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold uppercase tracking-wide";
   const typeBadgeStyles: Record<MissedActivity["type"], string> = darkMode
     ? {
         "Written Works": "bg-sky-500/10 text-sky-300",
@@ -103,10 +103,10 @@ function MissedActivitiesContent({ theme, student }: MissedActivitiesProps) {
                 <span className="text-sm font-extrabold leading-none" style={{ color: MAROON }}>
                   {dueDate.split(",")[0]?.split(" ")[1] ?? ""}
                 </span>
-                <span className="text-[11px] font-bold uppercase leading-none" style={{ color: MAROON }}>
+                <span className="text-xs font-bold uppercase leading-none" style={{ color: MAROON }}>
                   {dueDate.split(",")[0]?.split(" ")[0] ?? ""}
                 </span>
-                <span className={`mt-1 text-[10px] ${dateSubText}`}>
+                <span className={`mt-1 text-xs ${dateSubText}`}>
                   {dueDate.split(",")[1]?.trim() ?? ""}
                 </span>
               </div>

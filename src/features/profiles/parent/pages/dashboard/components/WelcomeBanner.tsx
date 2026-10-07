@@ -48,13 +48,13 @@ export default function WelcomeBanner({
       }}
     >
       <div className="relative flex min-h-48 flex-col justify-center p-6 sm:p-8">
-        <span className="mb-4 inline-flex w-fit items-center rounded-full border border-white/10 bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-white/80">
+        <span className="qed-type-badge mb-4 inline-flex w-fit items-center rounded-full border border-white/10 bg-white/10 px-3 py-1 uppercase tracking-widest text-white/80">
           Welcome back
         </span>
-        <h1 className="text-2xl font-black leading-tight tracking-tight sm:text-[32px]">
+        <h1 className="qed-type-dashboard-hero">
           {greeting}, {parentName}!
         </h1>
-        <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/80 sm:text-[15px]">
+        <p className="qed-type-hero-description mt-2 max-w-xl text-white/80">
           Track your children's academic progress and stay connected with MSEUF-CI.
         </p>
 
@@ -105,12 +105,12 @@ export default function WelcomeBanner({
             <div className="grid gap-3 sm:grid-cols-3">
               {guideSteps.map((step) => (
                 <div key={step.number} className={`flex items-start gap-2.5 rounded-lg border p-3 ${panelBorder}`}>
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#550000] text-[11px] font-bold text-white">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#550000] text-xs font-bold text-white">
                     {step.number}
                   </span>
                   <div>
                     <p className={`text-xs font-semibold ${textPrimary}`}>{step.title}</p>
-                    <p className={`text-[11px] leading-snug ${textMuted}`}>{step.description}</p>
+                    <p className={`text-xs leading-snug ${textMuted}`}>{step.description}</p>
                   </div>
                 </div>
               ))}

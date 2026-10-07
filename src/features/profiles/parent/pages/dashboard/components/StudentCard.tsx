@@ -101,7 +101,7 @@ const StatusBadge = memo(function StatusBadge({
 
   return (
     <span
-      className={`inline-flex w-fit shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[10px] font-bold ${theme.bg} ${theme.text}`}
+      className={`inline-flex w-fit shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-bold ${theme.bg} ${theme.text}`}
     >
       <span
         aria-hidden="true"
@@ -160,7 +160,7 @@ function Stat({
         {value}
       </span>
       <p
-        className={`mt-1 text-[10px] font-bold uppercase tracking-widest ${textMuted}`}
+        className={`mt-1 text-xs font-bold uppercase tracking-widest ${textMuted}`}
       >
         {label}
       </p>
@@ -247,7 +247,7 @@ function StudentCard({
         <div className="hidden w-28 shrink-0 flex-col gap-1.5 sm:flex">
           <div className="flex items-baseline justify-between">
             <span
-              className={`text-[10px] font-bold uppercase tracking-widest ${t.textMuted}`}
+              className={`text-xs font-bold uppercase tracking-widest ${t.textMuted}`}
             >
               Score
             </span>

@@ -24,7 +24,7 @@ export function StudentGroupTable({
   darkMode,
 }: StudentGroupTableProps) {
   const columnCount = subjects.length + 2;
-  const groupBand = `px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
+  const groupBand = `qed-type-table-group px-4 py-1.5 uppercase ${
     darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
   } ${textPrimary}`;
 
@@ -33,16 +33,15 @@ export function StudentGroupTable({
       <table className="teacher-user-table w-full min-w-max text-sm">
         <thead>
           <tr className={`border-b ${panelBorder}`}>
-            <th className={`sticky left-0 z-10 min-w-56 py-2 pr-4 text-left font-black uppercase tracking-wider ${panelBg} ${textMuted}`}>
+            <th className={`qed-type-table-header sticky left-0 z-10 min-w-56 py-2 pr-4 text-left uppercase tracking-wider ${panelBg} ${textMuted}`}>
               Student
             </th>
             {subjects.map((subject) => (
-              <th key={subject} className={`min-w-28 whitespace-nowrap px-3 py-2 text-center font-black uppercase tracking-wider ${textMuted}`}>
+              <th key={subject} className={`qed-type-table-header min-w-28 whitespace-nowrap px-3 py-2 text-center uppercase tracking-wider ${textMuted}`}>
                 <span>{subject}</span>
-                <span className="block text-[10px] font-medium tracking-normal">Term Grade</span>
               </th>
             ))}
-            <th className={`min-w-28 py-2 pl-3 text-center font-black uppercase tracking-wider ${textMuted}`}>
+            <th className={`qed-type-table-header min-w-28 py-2 pl-3 text-center uppercase tracking-wider ${textMuted}`}>
               Overall Average
             </th>
           </tr>
@@ -57,40 +56,48 @@ export function StudentGroupTable({
               </tr>
               {group.students.map((student) => {
                 const average = student.overallAverage ?? computeAverage(student.grades, subjects);
+                const displayAverage = student.overallAverage ?? (average > 0 ? average : null);
                 return (
                   <tr key={student.studentId} className={`border-t ${darkMode ? "border-white/10" : "border-black/10"}`}>
                     <td className={`sticky left-0 z-10 px-4 py-2 ${darkMode ? "bg-[#111827]" : "bg-white"}`}>
                       <div className="flex min-w-0 items-center gap-2.5">
                         <StudentAvatar gender={student.gender} name={fullName(student)} />
-                        <span className={`truncate text-xs font-bold ${textPrimary}`}>
+                        <span className={`qed-type-table-body truncate ${textPrimary}`}>
                           {fullName(student)}
                         </span>
                       </div>
                     </td>
                     {subjects.map((subject) => {
                       const status = student.gradeStatuses[subject] ?? (student.grades[subject] === undefined ? "not_submitted" : "submitted");
+                      const grade = student.grades[subject];
                       return (
                         <td key={subject} className="px-3 py-2 text-center">
                           {status === "submitted" ? (
-                            <span className={`text-[13px] font-black tabular-nums ${student.grades[subject] == null ? "text-gray-400" : "text-[#800000]"}`}>
-                              {student.grades[subject] ?? "—"}
-                            </span>
+                            grade == null ? (
+                              <span className="qed-type-table-empty-value">—</span>
+                            ) : (
+                              <span className="qed-type-table-grade text-[#800000]">{grade}</span>
+                            )
                           ) : status === "pending" ? (
-                            <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-[#B45309]">
+                            <span className="qed-type-badge inline-flex items-center gap-1 uppercase tracking-wide text-[#B45309]">
                               <Clock size={10} aria-hidden="true" /> Pending
                             </span>
                           ) : (
-                            <span className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>
-                              {student.ownAdvisorySubjects[subject] ? "No Grades Yet" : "Not Submitted"}
-                            </span>
+                            student.ownAdvisorySubjects[subject] ? (
+                              <span className="qed-type-table-empty-value">No grades yet</span>
+                            ) : (
+                              <span className={`qed-type-badge uppercase tracking-wide ${textMuted}`}>Not Submitted</span>
+                            )
                           )}
                         </td>
                       );
                     })}
                     <td className="px-3 py-2 text-center">
-                      <span className={`text-[13px] font-black tabular-nums ${student.overallAverage == null ? "text-gray-400" : "text-[#800000]"}`}>
-                        {student.overallAverage ?? (average > 0 ? average : "—")}
-                      </span>
+                      {displayAverage == null ? (
+                        <span className="qed-type-table-empty-value">—</span>
+                      ) : (
+                        <span className="qed-type-table-grade text-[#800000]">{displayAverage}</span>
+                      )}
                     </td>
                   </tr>
                 );

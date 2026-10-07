@@ -61,7 +61,7 @@ export function PerGradeRanking({
       {ranking.length > 0 && (
         <div className={`mb-5 overflow-hidden rounded-xl border ${panelBorder} ${darkMode ? "bg-[#171315]" : "bg-[#FAF6F5]"}`}>
           <div className="px-4 pb-4 pt-3">
-            <p className={`text-[9px] font-bold uppercase tracking-[0.15em] ${textMuted}`}>Top three</p>
+            <p className={`text-xs font-bold uppercase tracking-[0.15em] ${textMuted}`}>Top three</p>
             <div className="grid h-[190px] grid-cols-3 items-end gap-2 pt-2 sm:gap-4">
               {podiumItems.map((item) => {
                 const podium = item.rank === 1
@@ -75,8 +75,8 @@ export function PerGradeRanking({
                       {item.rank === 1 && <Crown size={14} className="text-maroon" aria-label="First place" />}
                     </div>
                     <span className={`text-sm font-bold tabular-nums ${textPrimary}`}>{item.score}%</span>
-                    <p className={`mt-0.5 w-full truncate text-[10px] font-semibold ${textPrimary}`} title={`${item.subject} · ${item.grade}`}>{item.subject}</p>
-                    <p className={`mb-1 text-[9px] ${textMuted}`}>{item.grade}</p>
+                    <p className={`mt-0.5 w-full truncate text-xs font-semibold ${textPrimary}`} title={`${item.subject} · ${item.grade}`}>{item.subject}</p>
+                    <p className={`mb-1 text-xs ${textMuted}`}>{item.grade}</p>
                     <div className={`flex w-full items-center justify-center rounded-t-md border-x border-t text-lg font-bold shadow-inner ${podium.height}`} style={{ background: podium.background, color: podium.text, borderColor: "rgba(75,50,20,0.28)" }}>
                       {item.rank}
                     </div>
@@ -95,12 +95,12 @@ export function PerGradeRanking({
           <ol className={`overflow-hidden rounded-xl border ${panelBorder}`}>
             {visibleRows.map((item, index) => (
               <li key={`${item.subject}-${item.grade}`} className={`grid grid-cols-[28px_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 px-3.5 py-3 ${index > 0 ? `border-t ${panelBorder}` : ""}`}>
-                <span className={`flex h-6 w-6 items-center justify-center rounded-md text-[11px] font-bold ${item.rank > 3 ? (darkMode ? "bg-white/10 text-white/75" : "bg-[#F1F2F4] text-[#606875]") : "shadow-sm"}`} style={getMedalStyle(item.rank)}>
+                <span className={`flex h-6 w-6 items-center justify-center rounded-md text-xs font-bold ${item.rank > 3 ? (darkMode ? "bg-white/10 text-white/75" : "bg-[#F1F2F4] text-[#606875]") : "shadow-sm"}`} style={getMedalStyle(item.rank)}>
                   {item.rank}
                 </span>
                 <div className="flex min-w-0 items-center gap-2">
                   <p className={`truncate text-xs font-semibold ${textPrimary}`}>{item.subject}</p>
-                  <span className={`shrink-0 rounded-full px-2 py-0.5 text-[9px] ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"} ${textMuted}`}>{item.grade}</span>
+                  <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"} ${textMuted}`}>{item.grade}</span>
                 </div>
                 <span className={`text-xs font-bold tabular-nums ${textPrimary}`}>{item.score}%</span>
                 <div className="col-start-2 col-end-4">
@@ -114,7 +114,7 @@ export function PerGradeRanking({
               <button
                 type="button"
                 onClick={() => setShowFullRanking((value) => !value)}
-                className={`rounded-lg border px-3.5 py-2 text-[11px] font-semibold transition-colors ${panelBorder} ${darkMode ? "text-[#E5E7EB] hover:bg-white/5" : "text-maroon hover:bg-[#F8F1F1]"}`}
+                className={`rounded-lg border px-3.5 py-2 text-xs font-semibold transition-colors ${panelBorder} ${darkMode ? "text-[#E5E7EB] hover:bg-white/5" : "text-maroon hover:bg-[#F8F1F1]"}`}
               >
                 {showFullRanking ? "Show top three" : `View full ranking · ${ranking.length}`}
               </button>

@@ -116,7 +116,7 @@ export function SettingsMenu() {
 
   const mutedText = darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]";
   const borderColor = darkMode ? "border-[#1F2937]" : "border-[#EEF0F3]";
-  const labelClasses = `text-[10.5px] font-semibold uppercase tracking-wider ${mutedText}`;
+  const labelClasses = `text-xs font-semibold uppercase tracking-wider ${mutedText}`;
   const sectionBorder = `pt-4 border-t space-y-2.5 ${borderColor}`;
 
   const rowBase = `w-full h-10 px-3 rounded-lg border flex items-center justify-between transition-colors ${
@@ -157,7 +157,7 @@ export function SettingsMenu() {
               <Settings size={16} className={darkMode ? "text-white" : "text-[#6B0000]"} />
             </div>
             <p
-              className={`text-[15px] font-semibold ${darkMode ? "text-white" : "text-[#111827]"}`}
+              className={`text-base font-semibold ${darkMode ? "text-white" : "text-[#111827]"}`}
             >
               Settings
             </p>
@@ -204,7 +204,7 @@ export function SettingsMenu() {
                   onKeyDown={handleAcronymKeyDown}
                   onBlur={commitAcronym}
                   placeholder="QED"
-                  className={`flex-1 bg-transparent outline-none text-[13px] font-medium ${
+                  className={`flex-1 bg-transparent outline-none text-sm font-medium ${
                     darkMode ? "text-white" : "text-[#111827]"
                   }`}
                 />
@@ -219,7 +219,7 @@ export function SettingsMenu() {
               </div>
             ) : (
               <div className={rowBase}>
-                <span className={`text-[13px] font-medium ${darkMode ? "text-white" : "text-[#111827]"}`}>
+                <span className={`text-sm font-medium ${darkMode ? "text-white" : "text-[#111827]"}`}>
                   {schoolAcronym}
                 </span>
                 <button
@@ -245,7 +245,7 @@ export function SettingsMenu() {
                   onKeyDown={handleNameKeyDown}
                   onBlur={commitName}
                   placeholder="Quality Education"
-                  className={`flex-1 bg-transparent outline-none text-[13px] font-medium ${
+                  className={`flex-1 bg-transparent outline-none text-sm font-medium ${
                     darkMode ? "text-white" : "text-[#111827]"
                   }`}
                 />
@@ -260,7 +260,7 @@ export function SettingsMenu() {
               </div>
             ) : (
               <div className={rowBase}>
-                <span className={`text-[13px] font-medium truncate ${darkMode ? "text-white" : "text-[#111827]"}`}>
+                <span className={`text-sm font-medium truncate ${darkMode ? "text-white" : "text-[#111827]"}`}>
                   {schoolName}
                 </span>
                 <button
@@ -299,7 +299,7 @@ export function SettingsMenu() {
               <Info size={12} />
               System Information
             </p>
-            <dl className="space-y-2 text-[13px]">
+            <dl className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <dt className={mutedText}>System</dt>
                 <dd className={`font-semibold ${darkMode ? "text-white" : "text-[#111827]"}`}>

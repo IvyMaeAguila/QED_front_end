@@ -84,7 +84,7 @@ export function HolisticTab({
   }, [filtered]);
 
   const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
-  const groupBand = `px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
+  const groupBand = `px-4 py-1.5 text-xs font-black uppercase tracking-wider ${
     darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
   } ${textPrimary}`;
   const columnCount = 1 + HOLISTIC_COLUMNS.length;
@@ -126,7 +126,7 @@ export function HolisticTab({
                           onRate(student.id, col.key, level.value);
                           setToast("Weekly holistic records saved.");
                         }}
-                        className={`h-7 w-7 rounded-lg text-[11px] font-black tabular-nums transition-transform hover:scale-105 disabled:cursor-not-allowed disabled:hover:scale-100 ${
+                        className={`h-7 w-7 rounded-lg text-xs font-black tabular-nums transition-transform hover:scale-105 disabled:cursor-not-allowed disabled:hover:scale-100 ${
                           selected
                             ? "text-white"
                             : darkMode
@@ -165,7 +165,7 @@ export function HolisticTab({
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search student..."
             aria-label="Search student by name"
-            className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-[11px] font-medium outline-none transition-colors placeholder:text-gray-400 focus:border-maroon ${panelBg} ${panelBorder} ${textPrimary}`}
+            className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-xs font-medium outline-none transition-colors placeholder:text-gray-400 focus:border-maroon ${panelBg} ${panelBorder} ${textPrimary}`}
           />
         </div>
 
@@ -175,7 +175,7 @@ export function HolisticTab({
             .map((level) => (
               <span
                 key={level.value}
-                className="flex items-center gap-1 text-[11px] font-bold"
+                className="flex items-center gap-1 text-xs font-bold"
                 style={{ color: level.color }}
               >
                 <i
@@ -192,7 +192,7 @@ export function HolisticTab({
 
           <button
             onClick={onOpenRecords}
-            className={`flex h-8 items-center gap-1.5 rounded-lg border bg-[#800000] px-3 text-[11px] font-extrabold text-white transition-colors hover:bg-[#650000] ${
+            className={`flex h-8 items-center gap-1.5 rounded-lg border bg-[#800000] px-3 text-xs font-extrabold text-white transition-colors hover:bg-[#650000] ${
               darkMode ? "border-white/10" : "border-black/10"
             }`}
           >
@@ -213,14 +213,14 @@ export function HolisticTab({
               <Sparkles size={13} style={{ color: ACCENT }} />
               This Week's Ratings
             </p>
-            <p className={`truncate text-[11px] font-medium ${textMuted}`}>
+            <p className={`truncate text-xs font-medium ${textMuted}`}>
               · {formatWeekRange(weekStartDate)} · {filtered.length} student
               {filtered.length === 1 ? "" : "s"}
             </p>
           </div>
 
           {locked && (
-            <p className={`text-[11px] font-bold ${textMuted}`}>
+            <p className={`text-xs font-bold ${textMuted}`}>
               Locked — this week is closed for rating
             </p>
           )}
@@ -236,7 +236,7 @@ export function HolisticTab({
               <thead>
                 <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
                   <th
-                    className={`sticky left-0 z-10 min-w-56 px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${
+                    className={`sticky left-0 z-10 min-w-56 px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${
                       darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
                     } ${textMuted}`}
                   >
@@ -244,11 +244,11 @@ export function HolisticTab({
                   </th>
                   {HOLISTIC_COLUMNS.map((col) => (
                     <th key={col.key} className="min-w-32 px-3 py-2 text-center">
-                      <p className={`text-[11px] font-black ${textPrimary}`}>
+                      <p className={`text-xs font-black ${textPrimary}`}>
                         {col.label}
                       </p>
                       <p
-                        className={`mt-0.5 text-[10px] font-semibold ${textMuted}`}
+                        className={`mt-0.5 text-xs font-semibold ${textMuted}`}
                       >
                         {col.description}
                       </p>

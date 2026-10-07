@@ -43,7 +43,7 @@ function CustomTooltip({ active, payload, studentName }: any) {
     <div className="min-w-56 rounded-2xl border border-black/6 bg-white/95 px-4 py-3 shadow-xl backdrop-blur-sm">
       <p className="text-sm font-semibold text-[#1A1A1A]">{row.term}</p>
       {studentName && (
-        <p className="text-[11px] font-medium text-[#8A8F98]">
+        <p className="text-xs font-medium text-[#8A8F98]">
           {studentName}&apos;s grades
         </p>
       )}

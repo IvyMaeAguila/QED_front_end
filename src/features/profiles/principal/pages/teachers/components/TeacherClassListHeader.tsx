@@ -21,7 +21,7 @@ export function TeacherClassListHeader({
       <h2 className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>
         Class list
       </h2>
-      <span className={`text-[11px] font-medium ${textMuted}`}>
+      <span className={`text-xs font-medium ${textMuted}`}>
         {sectionCount} {sectionCount === 1 ? "section" : "sections"}
       </span>
     </header>

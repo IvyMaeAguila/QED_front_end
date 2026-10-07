@@ -27,15 +27,15 @@ export function PeriodicRatingCard({ rows, termAverages, theme, student }: Perio
         <table className="teacher-user-table w-full min-w-[420px] border-collapse text-sm">
           <thead>
             <tr className={darkMode ? "bg-white/5" : "bg-[#F6F7FB]"}>
-              <th className={`px-3 py-2 text-left text-[11px] font-semibold uppercase ${textMuted}`}>
+              <th className={`px-3 py-2 text-left text-xs font-semibold uppercase ${textMuted}`}>
                 Learning Areas
               </th>
               {TERMS.map((t) => (
-                <th key={t} className={`px-3 py-2 text-center text-[11px] font-semibold uppercase ${textMuted}`}>
+                <th key={t} className={`px-3 py-2 text-center text-xs font-semibold uppercase ${textMuted}`}>
                   {TERM_SHORT_LABELS[t]}
                 </th>
               ))}
-              <th className={`px-3 py-2 text-left text-[11px] font-semibold uppercase ${textMuted}`}>
+              <th className={`px-3 py-2 text-left text-xs font-semibold uppercase ${textMuted}`}>
                 Final Rating
               </th>
             </tr>

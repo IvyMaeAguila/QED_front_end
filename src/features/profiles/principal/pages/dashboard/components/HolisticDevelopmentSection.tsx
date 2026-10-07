@@ -78,7 +78,7 @@ export function HolisticDevelopmentSection({
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className={`flex flex-col items-center justify-center h-20 w-20 rounded-full shadow-card ${darkMode ? "bg-[#1A1A1A]" : "bg-white"}`}>
               <span className={`text-xl font-black tabular-nums leading-none ${textPrimary}`}>{overallScore}</span>
-              <span className={`mt-1 text-[10px] font-medium ${textMuted}`}>Overall</span>
+              <span className={`mt-1 text-xs font-medium ${textMuted}`}>Overall</span>
             </div>
           </div>
           </> : (
@@ -108,14 +108,14 @@ export function HolisticDevelopmentSection({
                   <div className="flex items-start justify-between gap-3">
               <span className={`text-xs font-medium ${textMuted}`}>{d.domain}</span>
                     <span
-                      className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold tabular-nums leading-none"
+                      className="shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums leading-none"
                       style={{ backgroundColor: darkMode ? `color-mix(in srgb, ${color} 20%, transparent)` : tint, color }}
                     >
                       {d.score.toFixed(1)}
                       <span className="opacity-60">/5</span>
                     </span>
                   </div>
-                  <p className={`mt-1 text-[13px] font-medium leading-snug ${textPrimary}`}>{rubricText}</p>
+                  <p className={`mt-1 text-sm font-medium leading-snug ${textPrimary}`}>{rubricText}</p>
                   <div className="mt-2.5 h-1 overflow-hidden rounded-full" style={{ backgroundColor: darkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.055)" }}>
                     <div className="h-full rounded-full" style={{ width: `${(d.score / 5) * 100}%`, backgroundColor: color, opacity: 0.88 }} />
                   </div>
@@ -123,7 +123,7 @@ export function HolisticDevelopmentSection({
               </div>
             );
           })}
-          <p className={`text-[11px] mt-1 leading-relaxed ${textMuted}`}>
+          <p className={`text-xs mt-1 leading-relaxed ${textMuted}`}>
             Interpretation reflects the closest matching rubric level (1–5) for each domain's average score this term, based on teacher observations schoolwide.
           </p>
         </div>

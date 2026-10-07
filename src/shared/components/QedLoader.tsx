@@ -13,7 +13,6 @@ const CSS = `
   flex-direction: column;
   align-items: center;
   gap: 40px;
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -88,7 +87,7 @@ const CSS = `
 }
 
 .qed-footer {
-  font-size: 11px;
+  font-size: var(--text-xs);
   letter-spacing: 0.16em;
   line-height: 14px;
   color: var(--qed-maroon-dim);

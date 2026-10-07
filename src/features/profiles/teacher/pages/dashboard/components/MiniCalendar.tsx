@@ -68,10 +68,10 @@
 //           </button>
 
 //           <div className="text-center">
-//             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60">
+//             <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/60">
 //               {year}
 //             </p>
-//             <p className="text-[16px] font-black text-white leading-tight">
+//             <p className="text-base font-black text-white leading-tight">
 //               {MONTH_NAMES[month]}
 //             </p>
 //           </div>
@@ -88,7 +88,7 @@
 //         {!isCurrentMonthView && (
 //           <button
 //             onClick={goToToday}
-//             className="relative mt-3 mx-auto flex items-center gap-1.5 text-[10px] font-bold text-white/90 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full transition-colors"
+//             className="relative mt-3 mx-auto flex items-center gap-1.5 text-xs font-bold text-white/90 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full transition-colors"
 //           >
 //             <CalendarCheck2 size={11} />
 //             Jump to today
@@ -102,7 +102,7 @@
 //           {WEEKDAYS.map((d, i) => (
 //             <span
 //               key={`${d}-${i}`}
-//               className={`text-center text-[10px] font-bold ${
+//               className={`text-center text-xs font-bold ${
 //                 i === 0 || i === 6 ? "text-[#8B0D0D]/60" : textMuted
 //               }`}
 //             >
@@ -118,7 +118,7 @@
 //             ) : (
 //               <div key={day} className="flex items-center justify-center">
 //                 <button
-//                   className={`relative w-8 h-8 flex items-center justify-center rounded-full text-[12.5px] font-bold transition-all ${
+//                   className={`relative w-8 h-8 flex items-center justify-center rounded-full text-xs font-bold transition-all ${
 //                     isToday(day)
 //                       ? "text-white scale-100"
 //                       : isWeekend(i)
@@ -154,9 +154,9 @@
 //               className="w-2.5 h-2.5 rounded-full"
 //               style={{ background: "linear-gradient(135deg, #8B0D0D 0%, #6B0000 100%)" }}
 //             />
-//             <span className={`text-[10.5px] font-semibold ${textMuted}`}>Today</span>
+//             <span className={`text-xs font-semibold ${textMuted}`}>Today</span>
 //           </div>
-//           <span className={`text-[10.5px] font-bold ${textPrimary}`}>
+//           <span className={`text-xs font-bold ${textPrimary}`}>
 //             {today.toLocaleDateString(undefined, { weekday: "long" })}
 //           </span>
 //         </div>

@@ -79,7 +79,7 @@
 //         })}
 //       </svg>
 //       {!hasAnyScore && (
-//         <p className={`text-[11px] font-semibold mt-1 ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
+//         <p className={`text-xs font-semibold mt-1 ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
 //           Rate each axis to build the profile
 //         </p>
 //       )}

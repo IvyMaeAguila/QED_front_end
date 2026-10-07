@@ -89,10 +89,10 @@ export function SubjectGradeTemplateSection({
       {activeTemplate && (
         <div className="flex flex-col gap-1 rounded-lg border border-current/10 px-3 py-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-wide opacity-60">Current Template</p>
+            <p className="text-xs font-semibold uppercase tracking-wide opacity-60">Current Template</p>
             <p className="truncate text-sm font-semibold" title={activeTemplate.file_name}>{activeTemplate.file_name}</p>
           </div>
-          <span className="w-fit shrink-0 rounded-full bg-emerald-600/10 px-2 py-1 text-[11px] font-bold text-emerald-700">Active</span>
+          <span className="w-fit shrink-0 rounded-full bg-emerald-600/10 px-2 py-1 text-xs font-bold text-emerald-700">Active</span>
         </div>
       )}
 

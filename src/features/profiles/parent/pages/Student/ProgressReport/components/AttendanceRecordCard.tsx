@@ -42,11 +42,11 @@ export function AttendanceRecordCard({ record, theme, student }: AttendanceRecor
           <table className="teacher-user-table w-full min-w-[420px] border-collapse text-sm">
             <thead>
               <tr className={darkMode ? "bg-white/5" : "bg-[#F6F7FB]"}>
-                <th className={`px-3 py-2 text-left text-[11px] font-semibold uppercase ${textMuted}`}>Month</th>
-                <th className={`px-3 py-2 text-right text-[11px] font-semibold uppercase ${textMuted}`}>School Days</th>
-                <th className={`px-3 py-2 text-right text-[11px] font-semibold uppercase ${textMuted}`}>Present</th>
-                <th className={`px-3 py-2 text-right text-[11px] font-semibold uppercase ${textMuted}`}>Absent</th>
-                <th className={`px-3 py-2 text-right text-[11px] font-semibold uppercase ${textMuted}`}>Tardy</th>
+                <th className={`px-3 py-2 text-left text-xs font-semibold uppercase ${textMuted}`}>Month</th>
+                <th className={`px-3 py-2 text-right text-xs font-semibold uppercase ${textMuted}`}>School Days</th>
+                <th className={`px-3 py-2 text-right text-xs font-semibold uppercase ${textMuted}`}>Present</th>
+                <th className={`px-3 py-2 text-right text-xs font-semibold uppercase ${textMuted}`}>Absent</th>
+                <th className={`px-3 py-2 text-right text-xs font-semibold uppercase ${textMuted}`}>Tardy</th>
               </tr>
             </thead>
             <tbody>
@@ -67,21 +67,21 @@ export function AttendanceRecordCard({ record, theme, student }: AttendanceRecor
         <div className="flex flex-1 flex-col gap-3">
           <div className="grid grid-cols-2 gap-3">
             <div className={`rounded-xl border ${panelBorder} p-3 text-center`}>
-              <p className={`text-[10px] font-semibold uppercase ${textMuted}`}>Total School Days</p>
+              <p className={`text-xs font-semibold uppercase ${textMuted}`}>Total School Days</p>
               <p className={`mt-1 text-lg font-bold ${textPrimary}`}>{totals.schoolDays}</p>
             </div>
             <div className={`rounded-xl border ${panelBorder} p-3 text-center`}>
-              <p className={`text-[10px] font-semibold uppercase ${textMuted}`}>Present</p>
+              <p className={`text-xs font-semibold uppercase ${textMuted}`}>Present</p>
               <p className={`mt-1 text-lg font-bold ${textPrimary}`}>{totals.present}</p>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className={`rounded-xl border ${panelBorder} p-3 text-center`}>
-              <p className={`text-[10px] font-semibold uppercase ${textMuted}`}>Absences</p>
+              <p className={`text-xs font-semibold uppercase ${textMuted}`}>Absences</p>
               <p className={`mt-1 text-lg font-bold ${textPrimary}`}>{totals.absent}</p>
             </div>
             <div className={`rounded-xl border ${panelBorder} p-3 text-center`}>
-              <p className={`text-[10px] font-semibold uppercase ${textMuted}`}>Tardiness</p>
+              <p className={`text-xs font-semibold uppercase ${textMuted}`}>Tardiness</p>
               <p className={`mt-1 text-lg font-bold ${textPrimary}`}>{totals.tardy}</p>
             </div>
           </div>

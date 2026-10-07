@@ -1,4 +1,4 @@
-import { AlertTriangle, X } from "lucide-react";
+import { ConfirmationModal } from "@shared/components/ConfirmationModal";
 
 interface ConfirmDialogProps {
   title: string;
@@ -10,8 +10,6 @@ interface ConfirmDialogProps {
   darkMode: boolean;
 }
 
-const ACCENT = "#6B0000";
-
 export function ConfirmDialog({
   title,
   message,
@@ -21,73 +19,17 @@ export function ConfirmDialog({
   onCancel,
   darkMode,
 }: ConfirmDialogProps) {
-  const textPrimary = darkMode ? "text-white" : "text-[#111827]";
-  const textMuted = darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]";
-  const panelBorder = darkMode ? "border-white/10" : "border-black/10";
-
   return (
-    <div
-      className="fixed inset-0 z-100 flex items-center justify-center p-4 modal-backdrop"
-      style={{ backgroundColor: "rgba(10,10,15,0.56)", backdropFilter: "blur(6px)" }}
-      onClick={onCancel}
-    >
-      <div
-        role="dialog"
-        aria-modal="true"
-        className={`w-full max-w-md overflow-hidden rounded-2xl border border-t-4 border-t-[#800000] shadow-card ${panelBorder} ${
-          darkMode ? "bg-[#2A1A18]" : "bg-white"
-        }`}
-        style={{ borderTopColor: "#800000" }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className={`flex items-start gap-3 border-b px-5 py-4 ${panelBorder}`}>
-          <span
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
-            style={{ backgroundColor: danger ? "#FEE2E2" : "#F8EDEE", color: danger ? "#DC2626" : ACCENT }}
-          >
-            <AlertTriangle size={15} />
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className={`text-sm font-bold ${textPrimary}`}>{title}</p>
-            <p className={`mt-1 text-xs font-medium ${textMuted}`}>{message}</p>
-          </div>
-          <button
-            onClick={onCancel}
-            aria-label="Cancel"
-            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition-colors ${
-              darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#64748B] hover:bg-black/5"
-            }`}
-          >
-            <X size={14} />
-          </button>
-        </div>
-
-        <div className="flex justify-end gap-2 px-5 py-4">
-          <button
-            onClick={onCancel}
-            className={`flex h-8 items-center rounded-lg border px-3 text-[11px] font-bold transition-colors ${
-              darkMode
-                ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
-                : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
-            }`}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onConfirm}
-            className="flex h-8 items-center rounded-lg px-3 text-[11px] font-extrabold text-white transition-colors"
-            style={{ backgroundColor: danger ? "#DC2626" : "#800000" }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = danger ? "#B91C1C" : "#650000";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = danger ? "#DC2626" : "#800000";
-            }}
-          >
-            {confirmLabel}
-          </button>
-        </div>
-      </div>
-    </div>
+    <ConfirmationModal
+      title={title}
+      description={message}
+      onClose={onCancel}
+      onConfirm={onConfirm}
+      confirmLabel={confirmLabel}
+      variant={danger ? "danger" : "default"}
+      darkMode={darkMode}
+      zIndexClass="z-100"
+      panelClassName={`border-t-4 border-t-[#800000] shadow-card ${darkMode ? "bg-[#2A1A18]" : "bg-white"}`}
+    />
   );
 }

@@ -35,8 +35,8 @@ export function TeacherAttendanceRecordsPage() {
               <ArrowLeft size={18} />
             </button>
             <div>
-              <h1 className={`text-lg font-black tracking-tight ${textPrimary}`}>Attendance Records</h1>
-              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+              <h1 className={`qed-type-page-title ${textPrimary}`}>Attendance Records</h1>
+              <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
                 {displaySectionName} · Click a cell to edit — changes save immediately.
               </p>
             </div>
@@ -57,7 +57,7 @@ export function TeacherAttendanceRecordsPage() {
               <div className={`qed-segmented-control flex items-center rounded-lg p-0 ${darkMode ? "bg-white/5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]" : "bg-gray-50 shadow-[inset_0_0_0_1px_#e5e7eb]"}`}>
                 <button
                   onClick={() => setViewMode("month")}
-                  className={`px-3 text-[11px] font-bold rounded-lg transition-all ${
+                  className={`px-3 text-xs font-bold rounded-lg transition-all ${
                     viewMode === "month" ? "bg-[#800000] text-white shadow-sm" : `${textMuted} hover:${textPrimary}`
                   }`}
                 >
@@ -65,7 +65,7 @@ export function TeacherAttendanceRecordsPage() {
                 </button>
                 <button
                   onClick={() => setViewMode("summary")}
-                  className={`px-3 text-[11px] font-bold rounded-lg transition-all ${
+                  className={`px-3 text-xs font-bold rounded-lg transition-all ${
                     viewMode === "summary" ? "bg-[#800000] text-white shadow-sm" : `${textMuted} hover:${textPrimary}`
                   }`}
                 >

@@ -76,9 +76,9 @@
 //         </button>
 //       </div>
 
-//       {customError && <p className="text-[11px] font-bold text-[#B91C1C]">{customError}</p>}
+//       {customError && <p className="text-xs font-bold text-[#B91C1C]">{customError}</p>}
 
-//       <p className={`text-[11px] font-semibold ${mutedText}`}>
+//       <p className={`text-xs font-semibold ${mutedText}`}>
 //         Subjects, classes, and the calendar are dated against this year.
 //       </p>
 //     </div>

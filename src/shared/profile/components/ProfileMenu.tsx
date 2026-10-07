@@ -82,9 +82,9 @@ export function ProfileMenu() {
   const mutedText = darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]";
   const textPrimary = darkMode ? "text-white" : "text-[#111827]";
   const borderColor = darkMode ? "border-[#1F2937]" : "border-[#EEF0F3]";
-  const labelClasses = `text-[10.5px] font-semibold uppercase tracking-wider ${mutedText}`;
+  const labelClasses = `text-xs font-semibold uppercase tracking-wider ${mutedText}`;
   const avatarBorderColor = user.role === "TEACHER" ? getTeacherAvatarBorderColor(user.gender) : "#D1D5DB";
-  const inputClasses = `w-full h-10 px-3 rounded-lg border text-[13px] font-medium outline-none transition-colors ${
+  const inputClasses = `w-full h-10 px-3 rounded-lg border text-sm font-medium outline-none transition-colors ${
     darkMode
       ? "bg-[#0B1120] border-[#2A3441] text-white focus:border-[#8A1F1F]"
       : "bg-[#FAFBFC] border-[#E3E6EA] text-[#111827] focus:border-[#6B0000]"
@@ -170,7 +170,7 @@ export function ProfileMenu() {
           </div>
 
           <p
-            className={`mt-3.5 text-[16px] font-semibold truncate max-w-full ${
+            className={`mt-3.5 text-base font-semibold truncate max-w-full ${
               darkMode ? "text-white" : "text-[#111827]"
             }`}
           >
@@ -178,7 +178,7 @@ export function ProfileMenu() {
           </p>
 
           <span
-            className={`inline-block mt-1.5 text-[10.5px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
+            className={`inline-block mt-1.5 text-xs font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
               darkMode
                 ? "bg-white/10 text-white/70"
                 : "bg-[#F3E9E9] text-[#6B0000]"
@@ -214,7 +214,7 @@ export function ProfileMenu() {
                           <span className="h-14 w-14 overflow-hidden rounded-full border-2 bg-white" style={{ borderColor: genderAccent }}>
                             <img src={avatar.src} alt="" className="h-full w-full object-cover" />
                           </span>
-                          <span className={`w-full truncate text-center text-[10px] font-medium ${textPrimary}`}>{avatar.label}</span>
+                          <span className={`w-full truncate text-center text-xs font-medium ${textPrimary}`}>{avatar.label}</span>
                         </button>
                       );
                     })}
@@ -273,7 +273,7 @@ export function ProfileMenu() {
                             {f.label}
                           </p>
                           <p
-                            className={`text-[13px] font-medium text-right break-words ${
+                            className={`text-sm font-medium text-right break-words ${
                               value ? (darkMode ? "text-[#E5E7EB]" : "text-[#1F2937]") : mutedText
                             }`}
                           >
@@ -297,7 +297,7 @@ export function ProfileMenu() {
               <button
                 onClick={cancel}
                 disabled={saving}
-                className={`flex-1 h-10 rounded-lg text-[13px] font-semibold border transition-colors ${
+                className={`flex-1 h-10 rounded-lg text-sm font-semibold border transition-colors ${
                   darkMode
                     ? "border-[#2A3441] text-[#D1D5DB] hover:bg-white/5"
                     : "border-[#E3E6EA] text-[#374151] hover:bg-[#F6F7F9]"
@@ -308,7 +308,7 @@ export function ProfileMenu() {
               <button
                 onClick={save}
                 disabled={saving}
-                className="flex-1 h-10 rounded-lg text-[13px] font-semibold text-white inline-flex items-center justify-center gap-1.5 shadow-sm transition-opacity hover:opacity-90"
+                className="flex-1 h-10 rounded-lg text-sm font-semibold text-white inline-flex items-center justify-center gap-1.5 shadow-sm transition-opacity hover:opacity-90"
                 style={{ background: ACCENT }}
               >
                 <Check size={14} />
@@ -319,7 +319,7 @@ export function ProfileMenu() {
           ) : (
             <button
               onClick={startEdit}
-              className="w-full h-10 rounded-lg text-[13px] font-semibold text-white inline-flex items-center justify-center gap-1.5 shadow-sm transition-opacity hover:opacity-90"
+              className="w-full h-10 rounded-lg text-sm font-semibold text-white inline-flex items-center justify-center gap-1.5 shadow-sm transition-opacity hover:opacity-90"
               style={{ background: ACCENT }}
             >
               <Pencil size={13} />
@@ -358,12 +358,12 @@ export function ProfileMenu() {
 
         <div className="hidden lg:block leading-tight text-left">
           <p
-            className={`text-sm font-bold ${darkMode ? "text-white" : "text-black"}`}
+            className={`qed-type-header ${darkMode ? "text-white" : "text-black"}`}
           >
             {user.name}
           </p>
           <p
-            className={`text-xs ${darkMode ? "text-[#D1D5DB]" : "text-[#555]"}`}
+            className={`qed-type-small-metadata ${darkMode ? "text-[#D1D5DB]" : "text-[#555]"}`}
           >
             {user.role}
           </p>

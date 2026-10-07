@@ -87,14 +87,14 @@ function ClassScheduleContent({ theme, student }: ClassScheduleProps) {
                   <p className={`truncate text-sm font-semibold ${textPrimary}`}>
                     {item.subject}
                   </p>
-                  <p className={`truncate text-[11px] ${textMuted}`}>{item.teacher}</p>
+                  <p className={`truncate text-xs ${textMuted}`}>{item.teacher}</p>
                 </div>
                 <div className="shrink-0 text-right">
                   <p className={`whitespace-nowrap text-xs font-semibold ${textPrimary}`}>
                     {item.startTime} - {item.endTime}
                   </p>
                   {selectedDay === "All" && (
-                    <p className={`mt-0.5 truncate text-[10px] ${textMuted}`}>
+                    <p className={`mt-0.5 truncate text-xs ${textMuted}`}>
                       {item.days.join(" · ")}
                     </p>
                   )}

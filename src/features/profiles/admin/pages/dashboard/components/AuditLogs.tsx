@@ -80,8 +80,8 @@ export function AuditLogs({ darkMode, panelBg, panelBorder, textPrimary, textMut
         <select aria-label="Filter by action" value={action} onChange={(event) => { setAction(event.target.value); setPageNumber(1); }} className={inputClass}>
           <option value="">All actions</option><option value="LOGIN">Login</option><option value="CREATE">Create</option><option value="UPDATE">Update</option><option value="DELETE">Delete</option><option value="UPLOAD">Upload</option><option value="SUBMIT">Submit</option><option value="CHANGE">Other change</option>
         </select>
-        <label className={`flex items-center gap-1 text-[10px] font-semibold ${textMuted}`}>From<input aria-label="From date" type="date" value={from} onChange={(event) => { setFrom(event.target.value); setPageNumber(1); }} className={inputClass} /></label>
-        <label className={`flex items-center gap-1 text-[10px] font-semibold ${textMuted}`}>To<input aria-label="To date" type="date" value={to} onChange={(event) => { setTo(event.target.value); setPageNumber(1); }} className={inputClass} /></label>
+        <label className={`flex items-center gap-1 text-xs font-semibold ${textMuted}`}>From<input aria-label="From date" type="date" value={from} onChange={(event) => { setFrom(event.target.value); setPageNumber(1); }} className={inputClass} /></label>
+        <label className={`flex items-center gap-1 text-xs font-semibold ${textMuted}`}>To<input aria-label="To date" type="date" value={to} onChange={(event) => { setTo(event.target.value); setPageNumber(1); }} className={inputClass} /></label>
       </div>
 
       {error && <div role="alert" className="mx-4 mb-3 rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-xs font-semibold text-red-800">{error}</div>}
@@ -97,7 +97,7 @@ export function AuditLogs({ darkMode, panelBg, panelBorder, textPrimary, textMut
               return (
                 <tr key={entry.id} className={`border-t ${panelBorder}`}>
                   <td className={`whitespace-nowrap px-4 py-3 ${textMuted}`}>{formatTimestamp(entry.createdAt)}</td>
-                  <td className={`px-4 py-3 ${textPrimary}`}><span className="font-bold">{entry.actorFullName || entry.actorUsername || "Unknown actor"}</span><span className={`mt-0.5 block text-[10px] ${textMuted}`}>{entry.actorUsername ? `@${entry.actorUsername} · ` : ""}{entry.actorRole || "Unknown role"}</span></td>
+                  <td className={`px-4 py-3 ${textPrimary}`}><span className="font-bold">{entry.actorFullName || entry.actorUsername || "Unknown actor"}</span><span className={`mt-0.5 block text-xs ${textMuted}`}>{entry.actorUsername ? `@${entry.actorUsername} · ` : ""}{entry.actorRole || "Unknown role"}</span></td>
                   <td className={`px-4 py-3 ${textPrimary}`}><span className="font-bold">{entry.action}</span><span className={`mt-0.5 block ${textMuted}`}>{entry.resource}{entry.resourceId ? ` · #${entry.resourceId}` : ""}</span></td>
                   <td className={`max-w-80 break-all px-4 py-3 ${textMuted}`}><span className={`font-bold ${textPrimary}`}>{entry.httpMethod}</span> {entry.endpoint}</td>
                   <td className="px-4 py-3 text-center"><span className={`rounded-full px-2 py-1 font-bold ${entry.statusCode < 400 ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>{entry.statusCode}</span></td>

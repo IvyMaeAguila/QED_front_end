@@ -238,10 +238,10 @@ export function ManageSubjectsPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-2.5">
           <div>
-            <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>
+            <h1 className={`qed-type-page-title ${textPrimary}`}>
               Manage Subjects
             </h1>
-            <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+            <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
               {filtered.length} of {gradeSubjects.length} subject
               {gradeSubjects.length === 1 ? "" : "s"} shown
             </p>
@@ -298,7 +298,7 @@ export function ManageSubjectsPage() {
                     >
                       {group.label}
                     </h4>
-                    <span className={`text-[10px] font-semibold ${textMuted}`}>
+                    <span className={`text-xs font-semibold ${textMuted}`}>
                       ({group.items.length} subject
                       {group.items.length === 1 ? "" : "s"})
                     </span>

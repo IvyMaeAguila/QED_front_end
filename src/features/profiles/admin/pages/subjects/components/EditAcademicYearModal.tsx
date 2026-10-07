@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { X } from "lucide-react";
 import { ACCENT } from "../types/types";
 import type { AcademicYear, SchoolYearStatus } from "../types/academicyear";
+import { ModalBody, ModalFooter, ModalFrame, ModalHeader } from "@shared/components/modal";
 
 interface EditAcademicYearModalProps {
   academicYear: AcademicYear;
@@ -21,7 +21,6 @@ const STATUS_OPTIONS: SchoolYearStatus[] = ["Active", "Inactive"];
 export function EditAcademicYearModal({
   academicYear,
   darkMode,
-  panelBg,
   panelBorder,
   textPrimary,
   textMuted,
@@ -53,25 +52,17 @@ export function EditAcademicYearModal({
   }
 
   return (
-    <div className="fixed inset-0 z-60 flex items-center justify-center p-4 modal-backdrop">
-      <div
-        className={`w-full max-w-md rounded-[12px] border shadow-xl ${panelBg} ${panelBorder}`}
-      >
-        <div className={`flex items-center justify-between px-6 py-4 border-b ${panelBorder}`}>
-          <h3 className={`text-sm font-black ${textPrimary}`}>
-            Change Academic Year
-          </h3>
-          <button
-            onClick={onClose}
-            className={`rounded-lg p-1 transition-colors ${
-              darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
-            }`}
-          >
-            <X size={16} className={textMuted} />
-          </button>
-        </div>
+    <ModalFrame shellVariant={darkMode ? "dark" : "standard"} onClose={onClose} size="narrow" zIndexClass="z-60" ariaLabel="Change Academic Year">
+        <ModalHeader
+          title="Change Academic Year"
+          onClose={onClose}
+          closeDarkMode={darkMode}
+          closeDisabled={saving}
+          titleClassName={textPrimary}
+          className={`items-center border-b px-6 py-4 ${panelBorder}`}
+        />
 
-        <div className="px-6 py-5 space-y-4">
+        <ModalBody className="space-y-4 px-6 py-5">
           {error && (
             <p className="text-xs font-semibold text-red-500">{error}</p>
           )}
@@ -121,12 +112,12 @@ export function EditAcademicYearModal({
               ))}
             </select>
           </div>
-        </div>
+        </ModalBody>
 
-        <div className={`flex justify-end gap-2 px-6 py-4 border-t ${panelBorder}`}>
+        <ModalFooter className={panelBorder}>
           <button
             onClick={onClose}
-            className={`h-10 px-4 rounded-lg text-xs font-bold border transition-colors ${
+            className={`qed-type-button h-10 px-4 rounded-lg border transition-colors ${
               darkMode
                 ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
                 : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
@@ -137,13 +128,12 @@ export function EditAcademicYearModal({
           <button
             onClick={handleSave}
             disabled={saving}
-            className="h-10 px-4 rounded-lg text-xs font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+            className="qed-type-button h-10 px-4 rounded-lg text-white transition-opacity hover:opacity-90 disabled:opacity-60"
             style={{ background: ACCENT }}
           >
             {saving ? "Saving..." : "Save Changes"}
           </button>
-        </div>
-      </div>
-    </div>
+        </ModalFooter>
+    </ModalFrame>
   );
 }

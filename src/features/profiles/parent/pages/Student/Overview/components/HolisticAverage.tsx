@@ -125,7 +125,7 @@ function StudentNarrativeSnapshotContent({
       <div className="flex flex-1 flex-col p-4 sm:p-5">
         {loading ? (
           <p
-            className={`py-6 text-center text-[13px] font-medium ${textMuted}`}
+            className={`py-6 text-center text-sm font-medium ${textMuted}`}
           >
             Loading…
           </p>
@@ -195,7 +195,7 @@ function StudentNarrativeSnapshotContent({
                               {DOMAIN_AXIS_LABEL[d.domain]}
                             </span>
                             <span
-                              className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold"
+                              className="shrink-0 rounded-full px-2 py-0.5 text-xs font-bold"
                               style={{
                                 color: band.color,
                                 backgroundColor: `${band.color}18`,
@@ -213,10 +213,10 @@ function StudentNarrativeSnapshotContent({
                   </div>
 
                   <div className={`border-t pt-3 ${panelBorder}`}>
-                    <p className="text-[10.5px] font-semibold uppercase tracking-wider" style={{ color: accentColor }}>
+                    <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: accentColor }}>
                       {snapshot.termLabel} snapshot
                     </p>
-                    <p className={`mt-1 text-[13.5px] font-medium leading-relaxed ${textPrimary}`}>
+                    <p className={`mt-1 text-sm font-medium leading-relaxed ${textPrimary}`}>
                       {strongest && weakest && strongest.domain !== weakest.domain ? (
                         <>
                           {student.firstName} is showing the most strength in{" "}
@@ -237,7 +237,7 @@ function StudentNarrativeSnapshotContent({
                 </div>
               </div>
             ) : (
-              <p className={`py-6 text-center text-[13px] font-medium ${textMuted}`}>
+              <p className={`py-6 text-center text-sm font-medium ${textMuted}`}>
                 No domain scores available yet.
               </p>
             );          })()

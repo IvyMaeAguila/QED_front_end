@@ -52,7 +52,7 @@ export function Dropdown<T extends string>({
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className={`h-8 min-w-32 px-3 rounded-lg border text-[11px] font-bold flex items-center justify-between gap-2 transition-colors ${
+        className={`h-8 min-w-32 px-3 rounded-lg border text-xs font-bold flex items-center justify-between gap-2 transition-colors ${
           darkMode
             ? "bg-[#0B1120] border-[#374151] text-white hover:bg-[#111827]"
             : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] hover:bg-[#F1F5F9]"

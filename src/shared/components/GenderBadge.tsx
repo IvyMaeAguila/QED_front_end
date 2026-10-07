@@ -18,7 +18,7 @@ export function GenderBadge({ gender, darkMode }: GenderBadgeProps) {
 
   return (
     <span
-      className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold ${classes}`}
+      className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold ${classes}`}
     >
       {isMale ? "M" : "F"}
     </span>

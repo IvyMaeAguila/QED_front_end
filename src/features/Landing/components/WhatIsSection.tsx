@@ -10,7 +10,7 @@ export const WhatIsSection = () => {
           <div className="relative flex h-36 w-36 items-center justify-center rounded-full border border-[#E7DADB] bg-white shadow-sm sm:h-44 sm:w-44">
             <img src={universitySeal} alt="Manuel S. Enverga University Foundation seal" className="h-24 w-24 object-contain sm:h-32 sm:w-32" />
           </div>
-          <span className="absolute bottom-7 left-1/2 -translate-x-1/2 rounded-full bg-[#F6F5F2] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#800000]">MSEUF-Candelaria</span>
+          <span className="absolute bottom-7 left-1/2 -translate-x-1/2 rounded-full bg-[#F6F5F2] px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-[#800000]">MSEUF-Candelaria</span>
         </Reveal>
         <Reveal delay={100}>
           <span className="text-xs font-bold uppercase tracking-[0.17em] text-[#800000]">A clearer view of school life</span>

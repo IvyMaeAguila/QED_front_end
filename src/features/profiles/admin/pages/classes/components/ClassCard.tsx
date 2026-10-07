@@ -130,11 +130,11 @@ export function ClassCard({
         </div>
 
         {/* Title + divider (subject card lettering) */}
-        <h3 className={`mt-4 text-base font-semibold leading-snug truncate ${textPrimary}`} title={className}>
+        <h3 className={`qed-type-card-title mt-4 leading-snug truncate ${textPrimary}`} title={className}>
           {className}
         </h3>
         <div className="mt-2 h-px w-full" style={{ background: dividerColor }} />
-        <p className={`mt-2 text-xs ${textMuted}`}>{studentCount} students</p>
+        <p className={`qed-type-metadata mt-2 ${textMuted}`}>{studentCount} students</p>
 
         {/* Details */}
         <div className="mt-auto pt-4 space-y-2.5">

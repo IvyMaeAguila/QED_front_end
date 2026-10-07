@@ -165,10 +165,10 @@ export function SubjectsPage() {
         {/* Header — same pattern as TeacherAttendancePage */}
         <div className="flex items-start gap-2.5">
           <div>
-            <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>
+            <h1 className={`qed-type-page-title ${textPrimary}`}>
               Subjects
             </h1>
-            <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+            <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
               Everything you teach, organized in one place.
             </p>
           </div>
@@ -192,7 +192,7 @@ export function SubjectsPage() {
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-            <p className={`text-[11px] font-semibold whitespace-nowrap ${textMuted}`}>
+            <p className={`text-xs font-semibold whitespace-nowrap ${textMuted}`}>
               {filteredSubjects.length} subject
               {filteredSubjects.length === 1 ? "" : "s"} shown
             </p>
@@ -281,7 +281,7 @@ export function SubjectsPage() {
                         >
                           {sectionLabel}
                         </h4>
-                        <span className={`text-[10px] font-semibold ${textMuted}`}>
+                        <span className={`text-xs font-semibold ${textMuted}`}>
                           ({sectionSubjects.length} subject
                           {sectionSubjects.length === 1 ? "" : "s"})
                         </span>
@@ -389,13 +389,13 @@ function SubjectCard({
         <>
           <button
             onClick={onRecordGrades}
-            className="h-7 whitespace-nowrap rounded-lg bg-[#800000] px-2 text-[10px] font-extrabold text-white transition-colors hover:bg-[#650000] sm:px-2.5 sm:text-[11px]"
+            className="h-7 whitespace-nowrap rounded-lg bg-[#800000] px-2 text-xs font-extrabold text-white transition-colors hover:bg-[#650000] sm:px-2.5 sm:text-xs"
           >
             Record Grades
           </button>
           <button
             onClick={onClassList}
-            className={`inline-flex items-center gap-1 whitespace-nowrap text-[11px] font-bold uppercase tracking-wide transition-colors hover:underline ${darkMode ? "text-white hover:text-white/80" : "text-[#800020] hover:text-[#5A0017]"}`}
+            className={`inline-flex items-center gap-1 whitespace-nowrap text-xs font-bold uppercase tracking-wide transition-colors hover:underline ${darkMode ? "text-white hover:text-white/80" : "text-[#800020] hover:text-[#5A0017]"}`}
           >
             View Class List <ChevronRight className="h-3 w-3" aria-hidden="true" />
           </button>

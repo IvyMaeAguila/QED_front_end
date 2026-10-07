@@ -84,7 +84,7 @@ export function StatCards({ panelBg, panelBorder, textPrimary, textMuted }: Stat
               </p>
               <div className="flex items-baseline gap-2">
                 <p
-                  className={`text-3xl font-black leading-none tracking-tight tabular-nums sm:text-[36px] ${
+                  className={`text-3xl font-black leading-none tracking-tight tabular-nums ${
                     isPrimary ? "text-white" : textPrimary
                   }`}
                 >

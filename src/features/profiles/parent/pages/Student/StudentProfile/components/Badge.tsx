@@ -33,7 +33,7 @@ export function Badge({ children, variant = "neutral", darkMode, icon }: BadgePr
   const classes = VARIANT_CLASSES[variant];
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold whitespace-nowrap ${
+      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap ${
         darkMode ? classes.dark : classes.light
       }`}
     >

@@ -50,7 +50,7 @@ export function StudentDirectoryTable({
     <section className={`overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder} ${className}`} aria-label="Student directory">
       <div className={`flex items-center gap-1.5 border-b px-4 py-3 ${panelBorder}`}>
         <p className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>Student directory</p>
-        <span className={`ml-1 text-[11px] ${textMuted}`}>· {students.length} of {totalStudents} students</span>
+        <span className={`ml-1 text-xs ${textMuted}`}>· {students.length} of {totalStudents} students</span>
       </div>
       {students.length === 0 ? (
         <p className={`px-4 py-10 text-center text-xs font-medium ${textMuted}`}>No students found.</p>
@@ -59,15 +59,15 @@ export function StudentDirectoryTable({
           <table className="teacher-user-table w-full min-w-208 text-sm">
             <thead>
               <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
-                <th className={`w-12 px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>No.</th>
-                <th className={`px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>Student</th>
+                <th className={`w-12 px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${textMuted}`}>No.</th>
+                <th className={`px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${textMuted}`}>Student</th>
               </tr>
             </thead>
             <tbody>
               {groups.map(({ label, rows }) => rows.length > 0 && (
                 <Fragment key={label}>
                   <tr>
-                    <td colSpan={2} className={`px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"} ${textPrimary}`}>
+                    <td colSpan={2} className={`px-4 py-1.5 text-xs font-black uppercase tracking-wider ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"} ${textPrimary}`}>
                       {label} <span className={textMuted}>({rows.length})</span>
                     </td>
                   </tr>
@@ -79,7 +79,7 @@ export function StudentDirectoryTable({
                       title={activationHint}
                       className={`border-t transition-colors ${panelBorder} ${onActivate ? "cursor-pointer" : ""} ${darkMode ? "hover:bg-white/5" : "hover:bg-black/[0.02]"}`}
                     >
-                      <td className={`px-4 py-2.5 text-[11px] font-bold tabular-nums ${textMuted}`}>{index + 1}</td>
+                      <td className={`px-4 py-2.5 text-xs font-bold tabular-nums ${textMuted}`}>{index + 1}</td>
                       <td className="px-4 py-2.5">
                         <div className="flex min-w-0 items-center gap-2.5">
                           <StudentAvatar gender={student.gender} name={student.name} className="h-8 w-8" />

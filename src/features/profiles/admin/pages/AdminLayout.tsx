@@ -32,7 +32,6 @@ export function AdminLayout({ onLogout }: AdminLayoutProps) {
   return (
     <div
       className={`qed-account-ui flex h-screen w-full overflow-hidden transition-colors ${darkMode ? "dark bg-[#1A1110]" : "bg-[#F3F4F6]"}`}
-      style={{ fontFamily: "'Inter', sans-serif" }}
     >
       <div
         className={`fixed inset-y-0 left-0 z-50 lg:relative lg:translate-x-0 transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}

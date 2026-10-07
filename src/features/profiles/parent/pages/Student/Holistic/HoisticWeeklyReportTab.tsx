@@ -48,7 +48,7 @@ export default function HolisticTab({ termKey, student, theme }: HolisticTabProp
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className={`text-lg font-bold sm:hidden ${textPrimary}`}>
+      <h1 className={`qed-type-page-title sm:hidden ${textPrimary}`}>
         Holistic Development
       </h1>
       <SnapshotThemeProvider value={theme}>

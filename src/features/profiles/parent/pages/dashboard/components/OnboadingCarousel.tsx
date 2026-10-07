@@ -260,7 +260,7 @@ export default function OnboardingCarousel({
                   how short/long the step copy is (same math as above, 3 lines). */}
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#711111] text-[10px] font-bold text-white">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#711111] text-xs font-bold text-white">
                     {stepIndex + 1}
                   </span>
                   <p className={`text-base font-bold ${textPrimary}`}>

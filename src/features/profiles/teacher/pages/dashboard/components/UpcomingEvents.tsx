@@ -35,7 +35,7 @@ function EventRow({
         <span className="text-base font-extrabold leading-none">
           {event.day}
         </span>
-        <span className="text-[9px] font-bold uppercase leading-none">
+        <span className="text-xs font-bold uppercase leading-none">
           {event.month}
         </span>
       </div>
@@ -46,7 +46,7 @@ function EventRow({
           {event.title}
         </p>
         {event.holidayType && (
-          <p className="truncate text-[11px] text-gray-500">
+          <p className="truncate text-xs text-gray-500">
             {event.holidayType}
           </p>
         )}
@@ -67,7 +67,7 @@ export function UpcomingEvents({
   return (
     <div className={`rounded-[12px] p-4 sm:p-5 shadow-card ${panelBg}`}>
       <p
-        className={`mb-2.5 sm:mb-3 flex items-center gap-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wide ${textMuted}`}
+        className={`mb-2.5 sm:mb-3 flex items-center gap-1.5 text-xs sm:text-xs font-bold uppercase tracking-wide ${textMuted}`}
       >
         <CalendarDays size={13} className="text-maroon-dark shrink-0 sm:hidden" />
         <CalendarDays size={14} className="text-maroon-dark shrink-0 hidden sm:block" />
@@ -75,7 +75,7 @@ export function UpcomingEvents({
       </p>
 
       <div className="mb-3">
-        <p className={`mb-1.5 text-[10.5px] sm:text-[11px] font-semibold ${textMuted}`}>
+        <p className={`mb-1.5 text-xs sm:text-xs font-semibold ${textMuted}`}>
           Activities
         </p>
         {activities.length > 0 ? (
@@ -85,14 +85,14 @@ export function UpcomingEvents({
             ))}
           </div>
         ) : (
-          <p className={`py-1 text-[11px] sm:text-xs ${textMuted}`}>
+          <p className={`py-1 text-xs sm:text-xs ${textMuted}`}>
             No upcoming activities recorded for this month.
           </p>
         )}
       </div>
 
       <div>
-        <p className={`mb-1.5 text-[10.5px] sm:text-[11px] font-semibold ${textMuted}`}>
+        <p className={`mb-1.5 text-xs sm:text-xs font-semibold ${textMuted}`}>
           Holidays
         </p>
         {holidays.length > 0 ? (
@@ -102,7 +102,7 @@ export function UpcomingEvents({
             ))}
           </div>
         ) : (
-          <p className={`py-1 text-[11px] sm:text-xs ${textMuted}`}>
+          <p className={`py-1 text-xs sm:text-xs ${textMuted}`}>
             There are no official holidays scheduled for this month.
           </p>
         )}

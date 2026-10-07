@@ -27,11 +27,11 @@ export function EnrolledChildrenPage() {
       <header className="mb-6 flex items-center gap-3 sm:gap-4 lg:mb-8">
         <div className="min-w-0">
           <h1
-            className={`text-2xl font-extrabold tracking-tight sm:text-2xl ${titleColor}`}
+            className={`qed-type-page-title ${titleColor}`}
           >
             Enrolled Children
           </h1>
-          <p className={`mt-0.5 text-xs sm:text-sm ${subtitleColor}`}>
+          <p className={`qed-type-page-description mt-0.5 ${subtitleColor}`}>
             View your linked students and connect new ones to monitor their
             progress.
           </p>

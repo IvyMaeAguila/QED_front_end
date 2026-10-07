@@ -85,7 +85,7 @@ function HolidayRow({
         }`}
       >
         <span className="text-base font-extrabold leading-none">{day}</span>
-        <span className="text-[9px] font-bold uppercase leading-none">
+        <span className="text-xs font-bold uppercase leading-none">
           {monthAbbr}
         </span>
       </div>
@@ -104,7 +104,7 @@ function HolidayRow({
         </p>
         {holiday.type && (
           <p
-            className={`truncate text-[11px] ${
+            className={`truncate text-xs ${
               happeningToday
                 ? "text-white/80"
                 : darkMode
@@ -147,7 +147,7 @@ export function HolidayGroupList({
     <div className="flex flex-col gap-3">
       {grouped.map(({ month, items }) => (
         <div key={month} className="mb-3">
-          <p className={`mb-1.5 text-[11px] font-semibold ${textMuted}`}>
+          <p className={`mb-1.5 text-xs font-semibold ${textMuted}`}>
             {month}
           </p>
           <div className="flex flex-col gap-2">
@@ -190,7 +190,7 @@ export function HolidaysCard({
             <CalendarHeart size={14} className="text-maroon-dark" />
             Holidays
           </p>
-          {selectedDate && <p className={`mt-1 pl-5 text-[11px] ${textMuted}`}>{selectedDate.toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}</p>}
+          {selectedDate && <p className={`mt-1 pl-5 text-xs ${textMuted}`}>{selectedDate.toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}</p>}
         </div>
         <button
           onClick={onExpand}

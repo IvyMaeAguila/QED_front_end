@@ -65,10 +65,10 @@ export function PrincipalStudentsPage() {
     <div className="flex flex-col gap-6 font-sans">
       {/* Header */}
       <div>
-        <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>
+        <h1 className={`qed-type-page-title ${textPrimary}`}>
           Students
         </h1>
-        <p className={`text-sm mt-2 ${textMuted}`}>
+        <p className={`qed-type-page-description mt-2 ${textMuted}`}>
           Enrollment overview by grade level &middot; School Year {schoolYear}
         </p>
       </div>
@@ -102,10 +102,10 @@ export function PrincipalStudentsPage() {
         <div
           className={`flex h-8 shrink-0 items-center gap-2 rounded-lg border px-2.5 ${panelBg} ${panelBorder}`}
         >
-          <span className={`text-[11px] font-extrabold ${textPrimary}`}>
+          <span className={`text-xs font-extrabold ${textPrimary}`}>
             {totalStudents.toLocaleString()}
           </span>
-          <span className={`text-[11px] font-medium ${textMuted}`}>
+          <span className={`text-xs font-medium ${textMuted}`}>
             Total Students
           </span>
         </div>

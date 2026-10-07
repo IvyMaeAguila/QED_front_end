@@ -108,11 +108,11 @@ function ProgressReportSection({
   return (
     <>
       <div className="flex flex-col gap-1 mt-4 mb-2">
-        <h1 className={`text-lg font-bold ${theme.textPrimary}`}>
+        <h1 className={`qed-type-page-title ${theme.textPrimary}`}>
           Progess Report
         </h1>
         <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-          <p className={`text-sm ${theme.textMuted} self-start sm:self-auto`}>
+          <p className={`qed-type-page-description self-start sm:self-auto ${theme.textMuted}`}>
             Monitor your child's class performance, attendance, and holistic
             development across all quarters.
           </p>
@@ -195,10 +195,10 @@ useEffect(() => {
           {activeTab === "overview" && (
             <ProgressReportProvider studentId={studentId}>
               <div className="flex flex-col gap-1 mt-4 mb-2">
-                <h1 className={`text-lg font-bold ${theme.textPrimary}`}>
+                <h1 className={`qed-type-page-title ${theme.textPrimary}`}>
                   Overview
                 </h1>
-                <p className={`text-sm ${textMuted}`}>
+                <p className={`qed-type-page-description ${textMuted}`}>
                   A quick summary of monthly attendance, academic performance,
                   and holistic development.
                 </p>
@@ -218,10 +218,10 @@ useEffect(() => {
           {activeTab === "academic" && (
             <>
               <div className="flex flex-col gap-1 mt-4 mb-2">
-                <h1 className={`text-lg font-bold ${theme.textPrimary}`}>
+                <h1 className={`qed-type-page-title ${theme.textPrimary}`}>
                   Aademic Support
                 </h1>
-                <p className={`text-sm ${textMuted}`}>
+                <p className={`qed-type-page-description ${textMuted}`}>
                   Monitor your child's class schedule, keep track of missed
                   assignments, and access personalized learning support.
                 </p>
@@ -237,10 +237,10 @@ useEffect(() => {
           {activeTab === "holistic" && (
             <>
               <div className="flex flex-col gap-1 mt-4 mb-2">
-                <h1 className={`text-lg font-bold ${theme.textPrimary}`}>
+                <h1 className={`qed-type-page-title ${theme.textPrimary}`}>
                   Holistic Development
                 </h1>
-                <p className={`text-sm ${textMuted}`}>
+                <p className={`qed-type-page-description ${textMuted}`}>
                   Track your child's cognitive, emotional, social, and
                   behavioral development across every subject.
                 </p>

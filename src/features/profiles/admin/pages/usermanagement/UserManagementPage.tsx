@@ -47,10 +47,10 @@ export function UserManagementPage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2.5">
             <div>
-              <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>
+              <h1 className={`qed-type-page-title ${textPrimary}`}>
                 User Management
               </h1>
-              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+              <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
                 {filtered.length} of {users.length} account
                 {users.length === 1 ? "" : "s"} shown
               </p>
@@ -82,7 +82,7 @@ export function UserManagementPage() {
           />
           <button
             onClick={() => navigate("/admin/users/new")}
-            className="h-8 px-3 rounded-lg text-[11px] font-extrabold text-white flex items-center gap-1.5 shrink-0 transition-colors hover:bg-[#6B0000]"
+            className="h-8 px-3 rounded-lg text-xs font-extrabold text-white flex items-center gap-1.5 shrink-0 transition-colors hover:bg-[#6B0000]"
             style={{ background: ACCENT }}
           >
             <UserPlus size={13} />

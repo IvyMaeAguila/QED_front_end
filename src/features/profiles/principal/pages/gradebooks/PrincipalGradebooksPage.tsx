@@ -71,7 +71,7 @@ export function PrincipalGradebooksPage() {
   }, [filtered]);
 
   const toggleClass = (active: boolean) =>
-    `qed-segmented-control__item rounded-lg px-3 text-[11px] font-semibold transition-colors ${active ? "bg-[#800000] text-white" : `${textMuted} ${theme.darkMode ? "hover:text-white" : "hover:text-gray-700"}`}`;
+    `qed-segmented-control__item rounded-lg px-3 text-xs font-semibold transition-colors ${active ? "bg-[#800000] text-white" : `${textMuted} ${theme.darkMode ? "hover:text-white" : "hover:text-gray-700"}`}`;
 
   if (loading) {
     return <GradebooksSkeleton />;

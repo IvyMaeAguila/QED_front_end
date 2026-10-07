@@ -73,12 +73,12 @@ export function TodayAttendance({
       <div className={`flex items-center justify-between gap-3 border-b px-4 py-4 sm:px-6 ${panelBorder}`}>
         <div className="flex min-w-0 items-center gap-2.5">
           <ClipboardCheck size={16} className="shrink-0" style={{ color: "#8B0D0D" }} />
-          <h2 className={`text-[15px] font-bold ${textPrimary}`}>Today&apos;s Attendance</h2>
+          <h2 className={`text-base font-bold ${textPrimary}`}>Today&apos;s Attendance</h2>
         </div>
         {onViewFull && (
           <button
             onClick={onViewFull}
-            className="shrink-0 text-[10px] font-bold uppercase tracking-wider hover:underline sm:text-xs"
+            className="shrink-0 text-xs font-bold uppercase tracking-wider hover:underline sm:text-xs"
             style={{ color: "#8B0D0D" }}
           >
             Full Report
@@ -120,7 +120,7 @@ export function TodayAttendance({
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className={`text-3xl font-black ${textPrimary}`}>{rate}%</span>
             <span
-              className="text-[10px] font-bold uppercase tracking-[0.12em] mt-0.5"
+              className="text-xs font-bold uppercase tracking-[0.12em] mt-0.5"
               style={{ color: darkMode ? "rgba(255,255,255,0.4)" : "#94A3B8" }}
             >
               Present rate
@@ -147,8 +147,8 @@ export function TodayAttendance({
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline justify-between gap-2">
-                    <p className={`text-[13px] font-bold ${textPrimary}`}>{g.label}</p>
-                    <p className={`text-[15px] font-black shrink-0 ${textPrimary}`}>
+                    <p className={`text-sm font-bold ${textPrimary}`}>{g.label}</p>
+                    <p className={`text-base font-black shrink-0 ${textPrimary}`}>
                       {String(g.count).padStart(2, "0")}
                     </p>
                   </div>
@@ -164,7 +164,7 @@ export function TodayAttendance({
                 </div>
 
                 <span
-                  className="text-[10.5px] font-bold shrink-0 w-9 text-right"
+                  className="text-xs font-bold shrink-0 w-9 text-right"
                   style={{ color: g.text }}
                 >
                   {pct}%

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AlertTriangle } from "lucide-react";
 import { useToast } from "@shared/context/ToastContext";
+import { ConfirmationModal } from "./ConfirmationModal";
 
 interface DangerConfirmModalTheme {
   darkMode: boolean;
@@ -78,27 +78,29 @@ export function DangerConfirmModal({
   }
 
   return (
-    <div
-      className="fixed inset-0 z-[60] flex items-center justify-center p-4 modal-backdrop"
-      onClick={submitting ? undefined : onClose}
+    <ConfirmationModal
+      title={title}
+      description={
+        <>
+          {description}
+          {error && <span className="mt-2 block text-[#B91C1C]">{error}</span>}
+        </>
+      }
+      onClose={onClose}
+      zIndexClass="z-[60]"
+      onConfirm={handleConfirm}
+      confirmLabel={confirmLabel}
+      loadingLabel="Deleting…"
+      variant="danger"
+      darkMode={darkMode}
+      loading={submitting}
+      disabled={!isMatch}
+      cancelLabel="Cancel"
+      panelClassName={`${panelBg} ${panelBorder}`}
+      descriptionClassName={textMuted}
     >
-      <div
-        className={`w-full max-w-sm rounded-2xl border shadow-xl overflow-hidden flex flex-col ${panelBg} ${panelBorder}`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="p-5 flex flex-col items-center text-center gap-3">
-          <div className="w-11 h-11 rounded-full flex items-center justify-center bg-[#FEE2E2]">
-            <AlertTriangle size={20} className="text-[#B91C1C]" />
-          </div>
-          <div>
-            <p className={`text-sm font-bold ${textPrimary}`}>{title}</p>
-            <div className={`text-xs font-semibold mt-1 ${textMuted}`}>
-              {description}
-            </div>
-          </div>
-
           <div className="w-full text-left mt-1">
-            <label className={`text-[11px] font-bold block mb-1 ${textMuted}`}>
+            <label className={`text-xs font-bold block mb-1 ${textMuted}`}>
               Type <span className={textPrimary}>{confirmPhrase}</span> to
               continue
             </label>
@@ -117,31 +119,6 @@ export function DangerConfirmModal({
               }`}
             />
           </div>
-
-          {error && <p className="text-xs font-bold text-[#B91C1C]">{error}</p>}
-        </div>
-
-        <div className="p-5 pt-0 flex gap-3">
-          <button
-            onClick={onClose}
-            disabled={submitting}
-            className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 ${
-              darkMode
-                ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-                : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
-            }`}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleConfirm}
-            disabled={!isMatch || submitting}
-            className="flex-1 h-10 rounded-xl text-xs font-bold text-white bg-[#B91C1C] transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            {submitting ? "Deleting…" : confirmLabel}
-          </button>
-        </div>
-      </div>
-    </div>
+    </ConfirmationModal>
   );
 }

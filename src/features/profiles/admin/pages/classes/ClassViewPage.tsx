@@ -61,8 +61,8 @@ export function ClassViewPage() {
         <BackButton onClick={() => navigate("/admin/classes")} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} />
         <div className="flex min-w-0 flex-1 items-start justify-between gap-4">
           <div className="min-w-0">
-            <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>Class Details</h1>
-            <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+            <h1 className={`qed-type-page-title ${textPrimary}`}>Class Details</h1>
+            <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
               {schoolClass.gradeLevel}{schoolClass.section ? ` · Section ${schoolClass.section}` : ""}
             </p>
           </div>
@@ -122,8 +122,8 @@ export function ClassViewPage() {
               <table className="teacher-user-table w-full min-w-160 border-collapse text-xs">
                 <thead>
                   <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
-                    <th className={`px-4 py-2.5 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>Time</th>
-                    {DAYS_OF_WEEK.map((day) => <th key={day} className={`border-l px-4 py-2.5 text-center text-[11px] font-black uppercase tracking-wider ${panelBorder} ${textMuted}`}>{day}</th>)}
+                    <th className={`px-4 py-2.5 text-left text-xs font-black uppercase tracking-wider ${textMuted}`}>Time</th>
+                    {DAYS_OF_WEEK.map((day) => <th key={day} className={`border-l px-4 py-2.5 text-center text-xs font-black uppercase tracking-wider ${panelBorder} ${textMuted}`}>{day}</th>)}
                   </tr>
                 </thead>
                 <tbody>
@@ -132,7 +132,7 @@ export function ClassViewPage() {
                       <td className="whitespace-nowrap px-4 py-3 align-top font-bold text-white" style={{ background: rowHeaderBg }}>{formatTimeRange(slot.startTime, slot.endTime)}</td>
                       {DAYS_OF_WEEK.map((day) => {
                         const period = cellFor(day, slot.startTime, slot.endTime);
-                        return <td key={day} className={`border-l px-4 py-3 text-center align-top ${panelBorder}`}>{period ? <><p className={`font-bold ${textPrimary}`}>{period.subject}</p><p className={`mt-0.5 text-[11px] font-semibold ${textMuted}`}>{period.teacherName || "Unassigned"}</p></> : <span className={textMuted}>—</span>}</td>;
+                        return <td key={day} className={`border-l px-4 py-3 text-center align-top ${panelBorder}`}>{period ? <><p className={`font-bold ${textPrimary}`}>{period.subject}</p><p className={`mt-0.5 text-xs font-semibold ${textMuted}`}>{period.teacherName || "Unassigned"}</p></> : <span className={textMuted}>—</span>}</td>;
                       })}
                     </tr>
                   ))}

@@ -41,12 +41,12 @@ export function EnrolledChildrenList({
         className={`flex items-center justify-between gap-2 border-b px-4 py-3.5 sm:px-5 ${dividerColor}`}
       >
         <p
-          className={`text-[11px] font-semibold uppercase tracking-wider ${mutedColor}`}
+          className={`text-xs font-semibold uppercase tracking-wider ${mutedColor}`}
         >
           Linked students
         </p>
         <span
-          className={`rounded-full px-2.5 py-0.5 text-[11px] font-medium ${pillClass}`}
+          className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${pillClass}`}
           style={pillStyle}
         >
           {students.length} {students.length === 1 ? "child" : "children"}
@@ -105,7 +105,7 @@ export function EnrolledChildrenList({
       {/* Footer hint */}
       {students.length > 0 && (
         <p
-          className={`border-t px-4 py-3 text-[11px] sm:px-5 ${dividerColor} ${mutedColor}`}
+          className={`border-t px-4 py-3 text-xs sm:px-5 ${dividerColor} ${mutedColor}`}
         >
           Select a child to view their profile and progress.
         </p>

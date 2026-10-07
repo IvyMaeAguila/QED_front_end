@@ -15,7 +15,7 @@ export function ReportMetricCards({ items, panelBg, panelBorder, textPrimary, te
           className={`min-w-0 rounded-xl border px-4 py-3.5 ${panelBg} ${panelBorder}`}
           style={index === 0 ? { borderColor: "var(--color-maroon)", borderTopWidth: 2 } : undefined}
         >
-          <p className="text-[11px] font-semibold text-maroon">{item.label}</p>
+          <p className="text-xs font-semibold text-maroon">{item.label}</p>
           <p className={`mt-1.5 truncate text-xl font-bold tabular-nums ${textPrimary}`} title={item.value}>{item.value}</p>
           <p className={`mt-1 truncate text-xs ${textMuted}`} title={item.detail}>{item.detail}</p>
         </article>

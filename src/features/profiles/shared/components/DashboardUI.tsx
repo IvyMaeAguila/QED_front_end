@@ -44,7 +44,7 @@ export function SectionCard({
   return (
     <div className={`rounded-[12px] border ${panelBg} ${panelBorder} ${compact ? "p-4 sm:p-5" : "p-5 sm:p-6"} shadow-card`}>
       <div className={`flex items-center justify-between ${compact ? "mb-3" : "mb-5"}`}>
-        <h2 className={`flex min-h-5 items-center gap-2 text-[15px] font-bold leading-tight ${textPrimary}`}>
+        <h2 className={`qed-type-section-title flex min-h-5 items-center gap-2 leading-tight ${textPrimary}`}>
           {Icon && (
             <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center">
               <Icon className="h-4 w-4 text-maroon" strokeWidth={2.5} />
@@ -100,7 +100,7 @@ export function Dropdown({
 
   return (
     <div className="relative flex shrink-0 flex-col gap-1">
-      {label && <label htmlFor={selectId} className={`text-[11px] font-semibold ${textMuted}`}>{label}</label>}
+      {label && <label htmlFor={selectId} className={`qed-type-label ${textMuted}`}>{label}</label>}
       {Icon && (
         <Icon className={`h-4 w-4 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none ${textMuted}`} />
       )}
@@ -108,7 +108,7 @@ export function Dropdown({
         id={selectId}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`appearance-none ${compact ? "h-8 text-[11px] font-bold rounded-lg shadow-none" : "text-sm font-bold rounded-lg shadow-card"} border ${panelBorder} ${panelBg} ${textPrimary} focus:outline-none focus:ring-2 focus:ring-maroon/30 cursor-pointer transition-colors ${
+        className={`appearance-none ${compact ? "h-8 text-xs font-bold rounded-lg shadow-none" : "text-sm font-bold rounded-lg shadow-card"} border ${panelBorder} ${panelBg} ${textPrimary} focus:outline-none focus:ring-2 focus:ring-maroon/30 cursor-pointer transition-colors ${
           Icon ? "pl-9" : compact ? "pl-2.5" : "pl-3.5"
         } ${compact ? "pr-7" : "pr-9"} ${compact ? "py-1.5" : "py-2"}`}
       >
@@ -244,10 +244,10 @@ export function OverviewCard({
           </div>
         )}
         <div className="flex flex-1 flex-col">
-          <p className="text-xs font-bold uppercase tracking-widest text-white/75">{label}</p>
-          <p className={`${compact ? "text-[36px]" : "text-[38px]"} mt-1.5 font-black leading-none tracking-tight tabular-nums text-white`}>{value}</p>
+          <p className="qed-type-kpi-label uppercase tracking-widest text-white/75">{label}</p>
+          <p className="qed-type-kpi mt-1.5 leading-none tracking-tight text-white">{value}</p>
           <div className="mt-auto flex min-h-6 items-center justify-between gap-2 pt-1.5">
-            <p className="text-xs text-white/70">{sub}</p>
+            <p className="qed-type-metadata text-white/70">{sub}</p>
             {trend && <TrendChip trend={trend} darkMode={darkMode} />}
           </div>
         </div>
@@ -268,10 +268,10 @@ export function OverviewCard({
         </div>
       )}
       <div className="flex flex-1 flex-col">
-        <p className={`text-xs font-bold uppercase tracking-widest ${textMuted}`}>{label}</p>
-        <p className={`${compact ? "text-[36px]" : "text-[38px]"} mt-1.5 font-black leading-none tracking-tight tabular-nums ${textPrimary}`}>{value}</p>
+        <p className={`qed-type-kpi-label uppercase tracking-widest ${textMuted}`}>{label}</p>
+        <p className={`qed-type-kpi mt-1.5 leading-none tracking-tight ${textPrimary}`}>{value}</p>
         <div className="mt-auto flex min-h-6 items-center justify-between gap-2 pt-1.5">
-          <p className={`text-xs ${textMuted}`}>{sub}</p>
+          <p className={`qed-type-metadata ${textMuted}`}>{sub}</p>
           {trend && <TrendChip trend={trend} darkMode={darkMode} />}
         </div>
       </div>
@@ -316,9 +316,9 @@ export function StatPanel({
     <div className={`rounded-2xl border p-5 flex flex-col transition-all hover:-translate-y-0.5 shadow-card ${panelBg} ${panelBorder}`}>
       <div className="flex items-start justify-between">
         <div>
-          <p className={`text-xs font-bold uppercase tracking-widest ${textMuted}`}>{label}</p>
-          <p className={`text-3xl font-black leading-none tracking-tight tabular-nums mt-2 ${textPrimary}`}>{value}</p>
-          <p className={`text-xs mt-1.5 ${textMuted}`}>{sub}</p>
+        <p className={`qed-type-kpi-label uppercase tracking-widest ${textMuted}`}>{label}</p>
+        <p className={`qed-type-kpi mt-2 leading-none tracking-tight ${textPrimary}`}>{value}</p>
+        <p className={`qed-type-metadata mt-1.5 ${textMuted}`}>{sub}</p>
         </div>
         <div
           className={`w-12 h-12 flex items-center justify-center shrink-0 ${s.shape === "circle" ? "rounded-full" : "rounded-2xl"}`}
@@ -393,7 +393,7 @@ export function MiniStat({
         </span>
       )}
       <div className="min-w-0">
-        <p className={`text-[10px] font-bold uppercase tracking-widest ${textMuted}`}>{label}</p>
+        <p className={`text-xs font-bold uppercase tracking-widest ${textMuted}`}>{label}</p>
         <p className={`text-sm font-bold truncate ${textPrimary}`}>{value}</p>
       </div>
     </div>
@@ -461,9 +461,9 @@ export function FolderCard({
         <div className="flex items-end justify-between gap-2">
           <div className="flex items-baseline gap-1 min-w-0">
             <span className="text-xl font-black leading-none tracking-tight tabular-nums">{value}</span>
-            <span className="text-[10px] font-medium text-white/70 truncate">{valueLabel}</span>
+            <span className="text-xs font-medium text-white/70 truncate">{valueLabel}</span>
           </div>
-          {secondaryLabel && <span className="text-[10px] font-medium text-white/70 shrink-0">{secondaryLabel}</span>}
+          {secondaryLabel && <span className="text-xs font-medium text-white/70 shrink-0">{secondaryLabel}</span>}
         </div>
       </div>
     </div>
@@ -495,7 +495,7 @@ export function RankBadge({ rank, darkMode }: { rank: number; darkMode: boolean 
       <span className="text-xl font-black leading-none tabular-nums" style={{ color }}>
         {rank}
       </span>
-      <span className="text-[9px] font-bold uppercase tracking-wider mt-1" style={{ color }}>
+      <span className="text-xs font-bold uppercase tracking-wider mt-1" style={{ color }}>
         {rank <= 3 ? "RANK" : `${rank}th`}
       </span>
     </div>
@@ -545,16 +545,16 @@ export function HeroActionCard({
           </div>
           {gradeLabel && (
             <div className="flex flex-col items-end">
-              <span className="text-2xl font-black leading-none tabular-nums">{gradeLabel}</span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-white/70 mt-1">
+          <span className="qed-type-kpi leading-none">{gradeLabel}</span>
+              <span className="text-xs font-bold uppercase tracking-widest text-white/70 mt-1">
                 Class Average
               </span>
             </div>
           )}
         </div>
         <div>
-          <h3 className="text-2xl font-black leading-tight tracking-tight">{title}</h3>
-          <p className="text-sm font-bold mt-1 text-white/85">{subtitle}</p>
+          <h3 className="qed-type-card-title leading-tight tracking-tight">{title}</h3>
+          <p className="qed-type-metadata mt-1 text-white/85">{subtitle}</p>
         </div>
         <div>
           <div className="flex items-center gap-1.5 text-sm text-white/85">

@@ -12,7 +12,7 @@ import { fetchAdvisoryAttendance, saveAdvisoryAttendance } from "./services/atte
 import { StudentAttendanceSummaryModal } from "./StudentAttendanceSummaryModal";
 
 const ACCENT = "#6B0000";
-const WEEKDAY_LABELS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+const WEEKDAY_LABELS = ["SN", "M", "T", "W", "TTH", "F", "ST"];
 const STUDENT_COLUMN_WIDTH = 180;
 const DAY_COLUMN_WIDTH = 28;
 const TERM_COLUMN_WIDTH = 112;
@@ -218,12 +218,16 @@ export function AttendanceCalendarSection({
           const status = attendance[student.id]?.[iso] ?? null;
           const meta = status ? ATTENDANCE_META[status] : null;
           const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+          const isToday = iso === todayISO;
           const inTerm = term ? iso >= term.startDate && iso <= term.endDate : false;
           const canMarkNewToday = iso === todayISO && canMarkToday && term?.id === activeTerm?.id;
           const canEditExistingPast = Boolean(status && iso < todayISO);
           const clickable = editable && inTerm && (canMarkNewToday || canEditExistingPast);
           return (
-            <td key={iso} className="p-0 text-center">
+            <td
+              key={iso}
+              className={`p-0 text-center ${isToday ? (darkMode ? "bg-[#800000]/10" : "bg-[#800000]/[0.035]") : ""}`}
+            >
               <button
                 onClick={() => clickable && cycle(student.id, iso)}
                 disabled={!clickable}
@@ -232,7 +236,7 @@ export function AttendanceCalendarSection({
                   : !inTerm
                     ? `${formatDisplayDate(iso)} — outside ${term?.label ?? ""}`
                     : `${formatDisplayDate(iso)} — only saved past marks or today's attendance during an open term can be edited`}
-                className={`inline-flex h-6 w-6 items-center justify-center rounded-md text-[9px] font-extrabold tabular-nums transition-colors ${
+                className={`inline-flex h-6 w-6 items-center justify-center rounded-md text-xs font-extrabold tabular-nums transition-colors ${
                   clickable ? "hover:scale-105 cursor-pointer" : "cursor-not-allowed opacity-25"
                 } ${isWeekend && !status ? "opacity-60" : ""}`}
                 style={
@@ -247,14 +251,14 @@ export function AttendanceCalendarSection({
           );
         })}
         <td className={`sticky right-[76px] z-10 border-l px-1 py-2 text-center ${panelBorder} ${stickyRightBg}`}>
-          <span className="text-[11px] font-extrabold tabular-nums" style={{ color: ACCENT }}>
+          <span className="text-xs font-extrabold tabular-nums" style={{ color: ACCENT }}>
             {present}/{total}
           </span>
         </td>
         <td className={`sticky right-0 z-10 border-l px-1 py-2 text-center ${panelBorder} ${stickyRightBg}`}>
           <button
             onClick={() => setSummaryStudent(student)}
-            className={`inline-flex min-h-7 items-center justify-center rounded-lg px-2 text-[10px] font-bold transition-colors ${
+            className={`inline-flex min-h-7 items-center justify-center rounded-lg px-2 text-xs font-bold transition-colors ${
               darkMode ? "hover:bg-white/10" : "hover:bg-[#F6F7FB]"
             }`}
             style={{ color: ACCENT }}
@@ -368,7 +372,7 @@ export function AttendanceCalendarSection({
             <thead>
               <tr className={darkMode ? "bg-white/3" : "bg-[#F8FAFC]"}>
                 <th
-                  className={`sticky left-0 z-20 px-3 py-3 text-left text-[10px] font-extrabold uppercase tracking-wider ${
+                  className={`sticky left-0 z-20 px-3 py-3 text-left text-xs font-extrabold uppercase tracking-wider ${
                     darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
                   } ${textMuted}`}
                 >
@@ -377,13 +381,18 @@ export function AttendanceCalendarSection({
                 {days.map(({ date, iso, dayOfWeek }) => {
                   const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
                   const inTerm = iso >= term.startDate && iso <= term.endDate;
+                  const isToday = iso === todayISO;
                   return (
-                    <th key={iso} className={`px-0 py-2.5 ${isWeekend ? (darkMode ? "bg-white/[0.02]" : "bg-black/[0.02]") : ""}`}>
+                    <th
+                      key={iso}
+                      aria-current={isToday ? "date" : undefined}
+                      className={`px-0 py-2.5 ${isToday ? (darkMode ? "bg-[#800000]/20" : "bg-[#800000]/[0.06]") : isWeekend ? (darkMode ? "bg-white/[0.02]" : "bg-black/[0.02]") : ""}`}
+                    >
                       <div className="flex flex-col items-center gap-0.5">
-                        <span className={`text-[8px] font-bold uppercase ${isWeekend || !inTerm ? "opacity-40" : ""} ${textMuted}`}>
+                        <span className={`qed-attendance-weekday uppercase ${isToday ? "text-[#800000]" : `${isWeekend || !inTerm ? "opacity-40" : ""} ${textMuted}`}`}>
                           {WEEKDAY_LABELS[dayOfWeek]}
                         </span>
-                        <span className={`text-[11px] font-extrabold tabular-nums ${isWeekend || !inTerm ? "opacity-40" : ""} ${textPrimary}`}>
+                        <span className={`text-xs font-extrabold tabular-nums ${isToday ? "text-[#800000]" : `${isWeekend || !inTerm ? "opacity-40" : ""} ${textPrimary}`}`}>
                           {date.getDate()}
                         </span>
                       </div>
@@ -391,7 +400,7 @@ export function AttendanceCalendarSection({
                   );
                 })}
                 <th
-                  className={`sticky right-[76px] z-20 border-l px-2 py-3 text-center text-[9px] font-extrabold uppercase tracking-wide ${panelBorder} ${
+                  className={`sticky right-[76px] z-20 border-l px-2 py-3 text-center text-xs font-extrabold uppercase tracking-wide ${panelBorder} ${
                     darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
                   } ${textMuted}`}
                 >
@@ -400,7 +409,7 @@ export function AttendanceCalendarSection({
                   <span className="normal-case font-semibold">({term.label})</span>
                 </th>
                 <th
-                  className={`sticky right-0 z-20 border-l px-1 py-3 text-center text-[9px] font-extrabold uppercase tracking-wide ${panelBorder} ${
+                  className={`sticky right-0 z-20 border-l px-1 py-3 text-center text-xs font-extrabold uppercase tracking-wide ${panelBorder} ${
                     darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
                   } ${textMuted}`}
                 >
@@ -412,7 +421,7 @@ export function AttendanceCalendarSection({
               {groupedRoster.male.length > 0 && (
                 <>
                   <tr>
-                    <td className={`sticky left-0 z-20 border-t px-3 py-1.5 text-left text-[10px] font-bold uppercase tracking-wider ${panelBorder} ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"} ${textPrimary}`}>
+                    <td className={`sticky left-0 z-20 border-t px-3 py-1.5 text-left text-xs font-bold uppercase tracking-wider ${panelBorder} ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"} ${textPrimary}`}>
                       Male
                     </td>
                     <td colSpan={columnCount - 1} className={`border-t ${panelBorder} ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"}`} />
@@ -424,7 +433,7 @@ export function AttendanceCalendarSection({
               {groupedRoster.female.length > 0 && (
                 <>
                   <tr>
-                    <td className={`sticky left-0 z-20 border-t px-3 py-1.5 text-left text-[10px] font-bold uppercase tracking-wider ${panelBorder} ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"} ${textPrimary}`}>
+                    <td className={`sticky left-0 z-20 border-t px-3 py-1.5 text-left text-xs font-bold uppercase tracking-wider ${panelBorder} ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"} ${textPrimary}`}>
                       Female
                     </td>
                     <td colSpan={columnCount - 1} className={`border-t ${panelBorder} ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"}`} />

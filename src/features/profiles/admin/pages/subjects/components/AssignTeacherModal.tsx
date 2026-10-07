@@ -32,7 +32,7 @@ export function AssignTeacherModal({
       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
   }`;
   const disabledInputClasses = `${inputClasses} opacity-60 cursor-not-allowed`;
-  const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${theme.textMuted}`;
+  const labelClasses = `block text-xs font-bold uppercase tracking-wide mb-1.5 ${theme.textMuted}`;
 
   function handleClose() {
     if (saving) return;

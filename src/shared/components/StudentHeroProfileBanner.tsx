@@ -38,7 +38,7 @@ export function HeroProfileBanner({
   textMuted,
 }: HeroProfileBannerProps) {
   const pillBase = "px-3 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1.5";
-  const fieldLabel = `text-[11px] font-bold uppercase tracking-wider ${textMuted}`;
+  const fieldLabel = `text-xs font-bold uppercase tracking-wider ${textMuted}`;
 
   return (
     <section className={`rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder} relative`}>
@@ -56,8 +56,8 @@ export function HeroProfileBanner({
           </div>
 
           <div className="mt-2 sm:mt-0">
-            <h1 className={`text-xl font-bold tracking-tight ${textPrimary}`}>{title}</h1>
-            <p className={`text-xs font-semibold mt-0.5 ${textMuted}`}>{subtitle}</p>
+            <h1 className={`qed-type-page-title ${textPrimary}`}>{title}</h1>
+            <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>{subtitle}</p>
           </div>
         </div>
 

@@ -26,7 +26,6 @@ export function PrincipalLayout({ onLogout }: PrincipalLayoutProps) {
   return (
     <div
       className={`qed-account-ui relative flex h-screen w-full overflow-hidden ${darkMode ? "dark" : ""}`}
-      style={{ fontFamily: "'Inter', sans-serif" }}
     >
       {/* Low-poly backdrop (paints its own background color) */}
       <PolygonBackdrop darkMode={darkMode} />

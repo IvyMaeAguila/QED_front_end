@@ -120,8 +120,8 @@ export function HelpSupportPage({ audience = "ADMIN" }: HelpSupportPageProps) {
     <div className="mx-auto w-full max-w-5xl space-y-6 pb-8">
       <header>
         <div>
-          <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>Help &amp; Support</h1>
-          <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>{pageCopy.description}</p>
+          <h1 className={`qed-type-page-title ${textPrimary}`}>Help &amp; Support</h1>
+          <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>{pageCopy.description}</p>
         </div>
       </header>
 

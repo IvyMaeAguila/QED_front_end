@@ -1,7 +1,7 @@
-import { useEffect } from "react";
-import { X, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { TrendChip, ProgressBar, RankBadge } from "../../../../shared/components/DashboardUI";
 import type { SubjectRankingItem, Term } from "../data/types";
+import { ModalBody, ModalFrame, ModalHeader } from "@shared/components/modal";
 
 interface FullRankingModalProps {
   ranking: SubjectRankingItem[];
@@ -26,49 +26,17 @@ export function FullRankingModal({
   textMuted,
   darkMode,
 }: FullRankingModalProps) {
-  // Close on Escape, and lock background scroll while open
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = originalOverflow;
-    };
-  }, [onClose]);
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Full subject ranking"
-    >
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 modal-backdrop"
-        onClick={onClose}
-      />
-
-      {/* Modal panel */}
-      <div
-        data-modal-panel="true"
-        className={`relative w-full max-w-2xl max-h-[85vh] flex flex-col rounded-3xl shadow-2xl border ${panelBg} ${panelBorder}`}
-      >
-        {/* Header */}
-        <div
-          className="flex items-center justify-between px-6 py-5 shrink-0"
-          style={{ borderBottom: `1px solid ${darkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)"}` }}
-        >
-          <div>
-            <h2 className={`text-base font-bold ${textPrimary}`}>School-wide Subject Ranking</h2>
-            <p className={`text-xs mt-0.5 ${textMuted}`}>{ranking.length} subjects ranked</p>
-          </div>
-
-          <div className="flex items-center gap-3">
+    <ModalFrame shellVariant={darkMode ? "dark" : "standard"} onClose={onClose} size="lg" ariaLabel="Full subject ranking" className="max-h-[85vh]">
+        <ModalHeader
+          title="School-wide Subject Ranking"
+          subtitle={`${ranking.length} subjects ranked`}
+          titleClassName={textPrimary}
+          subtitleClassName={textMuted}
+          onClose={onClose}
+          closeDarkMode={darkMode}
+          className="items-center border-b px-6 py-5"
+          actions={(
             <div className="relative">
               <select
                 value={term}
@@ -81,19 +49,11 @@ export function FullRankingModal({
               </select>
               <ChevronDown className={`h-3.5 w-3.5 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none ${textMuted}`} />
             </div>
-
-            <button
-              onClick={onClose}
-              className={`h-9 w-9 rounded-full flex items-center justify-center border ${panelBorder} ${textMuted} hover:text-white hover:bg-maroon hover:border-maroon transition-colors`}
-              aria-label="Close ranking"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
+          )}
+        />
 
         {/* Scrollable ranking list */}
-        <div className="overflow-y-auto px-6 py-5 flex flex-col gap-3">
+        <ModalBody className="flex flex-col gap-3 px-6 py-5">
           {ranking.length === 0 ? (
             <p className={`text-sm text-center py-10 ${textMuted}`}>No ranking data for this term yet.</p>
           ) : (
@@ -118,8 +78,7 @@ export function FullRankingModal({
               </div>
             ))
           )}
-        </div>
-      </div>
-    </div>
+        </ModalBody>
+    </ModalFrame>
   );
 }

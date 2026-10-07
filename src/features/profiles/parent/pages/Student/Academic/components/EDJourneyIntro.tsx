@@ -229,7 +229,7 @@ function EnergyBlock({ name, filled, total }: { name: string; filled: number; to
 function LevelPath({ levels }: { levels: InterventionState["levels"] }) {
   return (
     <div className="w-full rounded-2xl bg-white/60 px-3 py-2 ring-1 ring-white/70">
-      <p className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-900/80">
+      <p className="flex items-center gap-1.5 text-xs font-semibold text-emerald-900/80">
         <Sparkles size={12} className="text-amber-500" />
         Your quiz levels
       </p>
@@ -243,7 +243,7 @@ function LevelPath({ levels }: { levels: InterventionState["levels"] }) {
           return (
             <div key={d} className="flex flex-1 items-center gap-1">
               <span
-                className={`flex flex-1 items-center justify-center gap-1 rounded-lg py-1.5 text-[10px] font-black ${
+                className={`flex flex-1 items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-black ${
                   isLocked ? "bg-white/70 text-gray-400" : `${meta.color} text-white`
                 }`}
               >
@@ -328,7 +328,7 @@ export default function EDJourneyIntro({
 
         {/* header: title + scene dots */}
         <div className="relative flex items-center justify-between px-5 pt-5">
-          <p className="flex w-fit items-center gap-1.5 rounded-full bg-white/70 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-rose-700 ring-1 ring-white">
+          <p className="flex w-fit items-center gap-1.5 rounded-full bg-white/70 px-3 py-1 text-xs font-bold uppercase tracking-wider text-rose-700 ring-1 ring-white">
             <Sparkles size={11} className="text-amber-500" />
             {petName}'s Story
           </p>
@@ -392,7 +392,7 @@ export default function EDJourneyIntro({
         {/* dialogue box, replays per scene */}
         <div key={currentScene} className="flex flex-col gap-3">
           <div className="relative">
-            <span className="absolute -top-3 left-5 z-10 rounded-full bg-rose-500 px-3 py-0.5 text-[11px] font-black uppercase tracking-wide text-white shadow">
+            <span className="absolute -top-3 left-5 z-10 rounded-full bg-rose-500 px-3 py-0.5 text-xs font-black uppercase tracking-wide text-white shadow">
               {petName}
             </span>
             <div className="relative rounded-3xl border-[3px] border-sky-200 bg-white px-4 pb-3.5 pt-5 text-left shadow-[0_5px_0_0_#bae6fd]">

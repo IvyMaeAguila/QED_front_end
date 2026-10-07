@@ -169,7 +169,7 @@ export function StudentFormPage() {
 
   const cardClasses = `rounded-[12px] border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
   const cardHeaderClasses = `flex flex-col gap-2 border-b px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 ${panelBorder}`;
-  const sectionTitleClasses = `text-xl font-black tracking-tight ${textPrimary}`;
+  const sectionTitleClasses = `qed-type-page-title ${textPrimary}`;
 
   if (isEditing && !existing) {
     return (
@@ -199,7 +199,7 @@ export function StudentFormPage() {
       ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]"
       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
   }`;
-  const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
+  const labelClasses = `block text-xs font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 
   function validate(step?: number): boolean {
     const next: Partial<Record<keyof FormState, string>> = {};
@@ -300,7 +300,7 @@ export function StudentFormPage() {
               <h1 className={sectionTitleClasses}>
                 {isEditing ? "Edit Student Record" : "Add New Student Record"}
               </h1>
-              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+              <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
                 {isEditing
                   ? `Updating ${existing?.studentId}'s record`
                   : "Enter a unique student ID for this record"}
@@ -331,7 +331,7 @@ export function StudentFormPage() {
                 placeholder="A23-0001"
               />
               {errors.studentId && (
-                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.studentId}
                 </p>
               )}
@@ -349,7 +349,7 @@ export function StudentFormPage() {
                 placeholder="123456789012"
               />
               {errors.lrn && (
-                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.lrn}
                 </p>
               )}
@@ -366,7 +366,7 @@ export function StudentFormPage() {
                 placeholder="Dela Cruz"
               />
               {errors.lastName && (
-                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.lastName}
                 </p>
               )}
@@ -382,7 +382,7 @@ export function StudentFormPage() {
                 placeholder="Juan"
               />
               {errors.firstName && (
-                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.firstName}
                 </p>
               )}
@@ -456,7 +456,7 @@ export function StudentFormPage() {
                   ))}
               </select>
               {errors.gradeLevel && (
-                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.gradeLevel}
                 </p>
               )}
@@ -483,7 +483,7 @@ export function StudentFormPage() {
                 ))}
               </select>
               {errors.section && (
-                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.section}
                 </p>
               )}
@@ -504,7 +504,7 @@ export function StudentFormPage() {
                   ["Section", sections.find((section) => String(section.id) === form.section)?.section_name ?? "Unassigned"],
                 ].map(([label, value]) => (
                   <div key={label} className="min-w-0">
-                    <dt className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>{label}</dt>
+                    <dt className={`text-xs font-bold uppercase tracking-wide ${textMuted}`}>{label}</dt>
                     <dd className={`mt-1 break-words text-sm font-semibold ${textPrimary}`}>{value}</dd>
                   </div>
                 ))}

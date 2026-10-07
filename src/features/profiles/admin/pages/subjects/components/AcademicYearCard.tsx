@@ -38,7 +38,7 @@ export function AcademicYearCard({
   const cardClasses = `rounded-[12px] border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
   const cardHeaderClasses = `px-5 py-3 flex items-center justify-between border-b sm:px-6 ${panelBorder}`;
   const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
-  const labelClasses = `text-[11px] font-bold uppercase tracking-wide mb-1 ${textMuted}`;
+  const labelClasses = `text-xs font-bold uppercase tracking-wide mb-1 ${textMuted}`;
 
   return (
     <section className={cardClasses}>

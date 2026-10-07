@@ -69,20 +69,20 @@ export function SubjectAssignmentCard({
         />
 
         <div className="relative z-10">
-        <div className={`flex items-center gap-1.5 text-[11px] font-medium ${textMuted}`}>
+        <div className={`qed-type-metadata flex items-center gap-1.5 ${textMuted}`}>
           <span>{schoolYear}</span>
           <span aria-hidden="true">·</span>
-          <span className="font-semibold" style={{ color: statusColor }}>{status}</span>
+          <span className="qed-type-badge" style={{ color: statusColor }}>{status}</span>
         </div>
-        <h3 className={`mt-1 truncate pr-14 text-[15px] font-semibold leading-snug ${textPrimary}`} title={title}>{title}</h3>
-        {subtitle && <p className={`mt-0.5 truncate pr-14 text-xs ${textMuted}`} title={subtitle}>{subtitle}</p>}
-        {detail && <p className={`mt-0.5 truncate pr-14 text-[11px] ${textMuted}`} title={detail}>{detail}</p>}
+        <h3 className={`qed-type-card-title mt-1 truncate pr-14 leading-snug ${textPrimary}`} title={title}>{title}</h3>
+        {subtitle && <p className={`qed-type-metadata mt-0.5 truncate pr-14 ${textMuted}`} title={subtitle}>{subtitle}</p>}
+        {detail && <p className={`qed-type-metadata mt-0.5 truncate pr-14 ${textMuted}`} title={detail}>{detail}</p>}
         </div>
 
         <div className={`mt-auto mb-3 border-t ${darkMode ? "border-white/10" : "border-gray-200"}`} aria-hidden="true" />
         <div className="flex items-center gap-2">
         {showStudentCount && (
-            <span className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold ${isPending ? "bg-gray-100 text-gray-600" : darkMode ? "bg-white/10 text-white/80" : "bg-[#F5E9EA] text-[#800020]"}`}>
+            <span className={`qed-type-badge shrink-0 rounded-full px-2.5 py-1 ${isPending ? "bg-gray-100 text-gray-600" : darkMode ? "bg-white/10 text-white/80" : "bg-[#F5E9EA] text-[#800020]"}`}>
             {studentCount} student{studentCount === 1 ? "" : "s"}
           </span>
         )}

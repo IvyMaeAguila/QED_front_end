@@ -180,13 +180,13 @@ export function AddSubjectPage() {
 
   const cardClasses = `rounded-[12px] border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
   const cardHeaderClasses = `flex flex-col gap-2 border-b px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 ${panelBorder}`;
-  const sectionTitleClasses = `text-xl font-black tracking-tight ${textPrimary}`;
+  const sectionTitleClasses = `qed-type-page-title ${textPrimary}`;
   const subCardClasses = `rounded-[12px] border p-4 space-y-3 ${darkMode ? "border-[#374151] bg-[#0B1120]/60" : "border-[#E5E7EB] bg-[#F8FAFC]"}`;
   const subCardLabelClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2 ${textPrimary}`;
 
   const inputClasses = `w-full h-10 px-3 rounded-lg border text-sm font-semibold outline-none transition-colors ${darkMode ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]" : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"}`;
   const disabledInputClasses = `${inputClasses} opacity-60 cursor-not-allowed placeholder:text-current`;
-  const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
+  const labelClasses = `block text-xs font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
   const noGradeSelected = gradeLevel === "";
   const trimmedName = name.trim();
 
@@ -348,7 +348,7 @@ export function AddSubjectPage() {
             </button>
             <div className="min-w-0">
               <h1 className={sectionTitleClasses}>Add New Subject</h1>
-              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+              <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
                 This subject will be assigned the next available ID
               </p>
             </div>
@@ -404,7 +404,7 @@ export function AddSubjectPage() {
                 className={noGradeSelected ? disabledInputClasses : inputClasses}
               />
               {isDuplicate && (
-                <p className="mt-1 text-[11px] font-semibold text-[#B91C1C]">
+                <p className="mt-1 text-xs font-semibold text-[#B91C1C]">
                   This subject is already available
                 </p>
               )}
@@ -447,7 +447,7 @@ export function AddSubjectPage() {
               Official DepEd Grade Template
             </span>
             {templateActive && (
-              <span className="text-[10px] font-bold uppercase tracking-wide text-[#B91C1C]">
+              <span className="text-xs font-bold uppercase tracking-wide text-[#B91C1C]">
                 Required
               </span>
             )}
@@ -542,7 +542,7 @@ export function AddSubjectPage() {
             )}
 
             {templateError && (
-              <p className="text-[11px] font-semibold text-[#B91C1C] mt-2">
+              <p className="text-xs font-semibold text-[#B91C1C] mt-2">
                 {templateError}
               </p>
             )}
@@ -561,7 +561,7 @@ export function AddSubjectPage() {
             )}
 
             {templateActive && !templatePreview && !templateParsing && !templateError && (
-              <p className="text-[11px] font-semibold text-[#B91C1C] mt-3">
+              <p className="text-xs font-semibold text-[#B91C1C] mt-3">
                 You must upload a valid DepEd .xlsx template before you can
                 add this subject.
               </p>
@@ -582,7 +582,7 @@ export function AddSubjectPage() {
                   ["Grade template", isGraded ? templateFileName || "Not selected" : "Not required"],
                 ].map(([label, value]) => (
                   <div key={label} className="min-w-0">
-                    <dt className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>{label}</dt>
+                    <dt className={`text-xs font-bold uppercase tracking-wide ${textMuted}`}>{label}</dt>
                     <dd className={`mt-1 break-words text-sm font-semibold ${textPrimary}`}>{value}</dd>
                   </div>
                 ))}

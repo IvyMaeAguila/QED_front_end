@@ -14,7 +14,7 @@ export default function AcademicTab({ student, theme }: AcademicTabProps) {
 
   return (
     <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
-      <h1 className={`text-lg font-bold lg:hidden ${textPrimary}`}>
+      <h1 className={`qed-type-page-title lg:hidden ${textPrimary}`}>
         Academic Support
       </h1>
       <div className="flex flex-1 flex-col gap-4">

@@ -53,14 +53,14 @@ export function GradeLevelCard({
           >
             <GraduationCap size={20} />
           </span>
-          <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${darkMode ? "bg-white/10 text-white/80" : "bg-[#F8FAFC] text-[#6B7280]"}`}>
+          <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${darkMode ? "bg-white/10 text-white/80" : "bg-[#F8FAFC] text-[#6B7280]"}`}>
             {gradeLevel.classId !== null ? "Class assigned" : "Grade roster"}
           </span>
         </div>
 
-        <h2 className={`mt-4 truncate text-base font-semibold leading-snug ${textPrimary}`} title={title}>{title}</h2>
+        <h2 className={`qed-type-card-title mt-4 truncate leading-snug ${textPrimary}`} title={title}>{title}</h2>
         <div className={`mt-2 h-px w-full ${darkMode ? "bg-white/10" : "bg-[#EADADA]"}`} />
-        <p className={`mt-2 text-xs ${textMuted}`}>{count} student{count === 1 ? "" : "s"}</p>
+        <p className={`qed-type-metadata mt-2 ${textMuted}`}>{count} student{count === 1 ? "" : "s"}</p>
 
         <div className="mt-auto space-y-2.5 pt-4">
           <div className={rowClass}>

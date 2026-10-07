@@ -183,7 +183,7 @@ export function TeacherAttendancePage() {
         }`}
       >
         <td
-          className={`whitespace-nowrap px-4 py-2 text-[11px] font-bold tabular-nums ${textMuted}`}
+          className={`whitespace-nowrap px-4 py-2 text-xs font-bold tabular-nums ${textMuted}`}
         >
           {index + 1}
         </td>
@@ -200,7 +200,7 @@ export function TeacherAttendancePage() {
             onClick={() => cycle(student.id)}
             disabled={!canMarkToday}
             title={canMarkToday ? "Change today's attendance" : "Attendance entry is unavailable outside an open term"}
-            className="inline-flex h-7 min-w-13 items-center justify-center rounded-lg px-2.5 text-[11px] font-black tabular-nums transition-transform enabled:hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex h-7 min-w-13 items-center justify-center rounded-lg px-2.5 text-xs font-black tabular-nums transition-transform enabled:hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
             style={
               meta
                 ? {
@@ -226,7 +226,7 @@ export function TeacherAttendancePage() {
       <tr>
         <th
           colSpan={3}
-          className={`px-4 py-1.5 text-left text-[11px] font-black uppercase tracking-wider ${
+          className={`px-4 py-1.5 text-left text-xs font-black uppercase tracking-wider ${
             darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
           } ${textPrimary}`}
         >
@@ -292,11 +292,11 @@ export function TeacherAttendancePage() {
           <div className="flex items-start gap-2.5">
             <div>
               <h1
-                className={`text-2xl font-black tracking-tight ${textPrimary}`}
+                className={`qed-type-page-title ${textPrimary}`}
               >
                 Attendance — {displaySectionName}
               </h1>
-              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+              <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
                 {todayLabel} · {markedCount}/{section.roster.length} marked
               </p>
             </div>
@@ -317,7 +317,7 @@ export function TeacherAttendancePage() {
                   `/teacher/attendance/records?classId=${section.classId}`,
                 )
               }
-              className={`flex h-8 items-center gap-1.5 rounded-lg border bg-[#800000] text-white px-3 text-[11px] font-extrabold transition-colors hover:bg-[#650000] ${
+              className={`flex h-8 items-center gap-1.5 rounded-lg border bg-[#800000] text-white px-3 text-xs font-extrabold transition-colors hover:bg-[#650000] ${
                 darkMode ? "border-white/10" : "border-black/10"
               }`}
             >
@@ -339,7 +339,7 @@ export function TeacherAttendancePage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search student..."
-              className={`relative w-full h-8 pl-8 pr-2.5 rounded-lg border text-[11px] font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
+              className={`relative w-full h-8 pl-8 pr-2.5 rounded-lg border text-xs font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
             />
           </div>
           <div className="flex flex-wrap gap-2.5">
@@ -350,7 +350,7 @@ export function TeacherAttendancePage() {
               return (
                 <span
                   key={key}
-                  className="flex items-center gap-1 text-[11px] font-bold"
+                  className="flex items-center gap-1 text-xs font-bold"
                   style={{ color: meta.color }}
                 >
                   <i
@@ -383,7 +383,7 @@ export function TeacherAttendancePage() {
               >
                 Today's Roster
               </p>
-              <p className={`truncate text-[11px] font-medium ${textMuted}`}>
+              <p className={`truncate text-xs font-medium ${textMuted}`}>
                 · {filteredRoster.length} student
                 {filteredRoster.length === 1 ? "" : "s"}
               </p>
@@ -392,7 +392,7 @@ export function TeacherAttendancePage() {
             <button
               onClick={markAllPresent}
               disabled={!canMarkToday || allMarkedPresent}
-              className={`flex h-7 w-36 items-center justify-center gap-1 rounded-md border px-2.5 text-[11px] font-extrabold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+              className={`flex h-7 w-36 items-center justify-center gap-1 rounded-md border px-2.5 text-xs font-extrabold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                 darkMode
                   ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
                   : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
@@ -426,7 +426,7 @@ export function TeacherAttendancePage() {
                     ].map((h) => (
                       <th
                         key={h.label}
-                        className={`whitespace-nowrap px-4 py-2 text-[11px] font-black uppercase tracking-wider ${h.cls} ${textMuted}`}
+                        className={`whitespace-nowrap px-4 py-2 text-xs font-black uppercase tracking-wider ${h.cls} ${textMuted}`}
                       >
                         {h.label}
                       </th>

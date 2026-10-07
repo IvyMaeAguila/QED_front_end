@@ -73,7 +73,7 @@ function KitchenSinkSection({
 }) {
   return (
     <div className="flex flex-col gap-4">
-      <p className={`text-[11px] font-bold uppercase tracking-widest ${textMuted}`}>{title}</p>
+      <p className={`text-xs font-bold uppercase tracking-widest ${textMuted}`}>{title}</p>
       {children}
     </div>
   );
@@ -92,10 +92,10 @@ export function ComponentKitchenSink() {
         {/* Page header + light/dark toggle */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className={`text-2xl sm:text-[32px] font-black leading-tight tracking-tight ${textPrimary}`}>
+            <h1 className={`qed-type-page-title ${textPrimary}`}>
               Component Kitchen Sink
             </h1>
-            <p className={`text-sm mt-2 ${textMuted}`}>
+            <p className={`qed-type-page-description mt-2 ${textMuted}`}>
               Every shared DashboardUI component and design token, for visual QA. Dev-only — not for production nav.
             </p>
           </div>
@@ -117,8 +117,8 @@ export function ComponentKitchenSink() {
                   style={{ backgroundColor: `var(${t.varName})`, borderColor: darkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)" }}
                 />
                 <div>
-                  <p className={`text-[11px] font-bold ${textPrimary}`}>{t.label}</p>
-                  <p className={`text-[10px] font-sans ${textMuted}`}>{t.varName}</p>
+                  <p className={`text-xs font-bold ${textPrimary}`}>{t.label}</p>
+                  <p className={`text-xs font-sans ${textMuted}`}>{t.varName}</p>
                 </div>
               </div>
             ))}
@@ -143,7 +143,7 @@ export function ComponentKitchenSink() {
             {(["shadow-card", "shadow-panel", "shadow-primary"] as const).map((s) => (
               <div key={s} className="flex flex-col items-center gap-3 py-4">
                 <div className={`h-16 w-16 rounded-2xl ${panelBg} ${s}`} />
-                <p className={`text-[11px] font-sans ${textMuted}`}>{s}</p>
+                <p className={`text-xs font-sans ${textMuted}`}>{s}</p>
               </div>
             ))}
           </div>
@@ -158,7 +158,7 @@ export function ComponentKitchenSink() {
               <p className="text-xs font-bold uppercase tracking-wide text-white">
                 {darkMode ? "glass-dark" : "glass"}
               </p>
-              <p className="text-[11px] mt-1 text-white/80">
+              <p className="text-xs mt-1 text-white/80">
                 Frosted panel over a colored background — used for the Subject Performance mini-cards and Holistic legend rows.
               </p>
             </div>
@@ -275,7 +275,7 @@ export function ComponentKitchenSink() {
               darkMode={darkMode}
             />
           </div>
-          <p className={`text-[11px] font-sans ${textMuted}`}>
+          <p className={`text-xs font-sans ${textMuted}`}>
             variant: {(["spotlight", "primary", "gold", "alert"] as CardVariant[]).join(" | ")}
           </p>
         </KitchenSinkSection>
@@ -310,7 +310,7 @@ export function ComponentKitchenSink() {
               <ProgressBar value={94} darkMode={darkMode} />
             </StatPanel>
           </div>
-          <p className={`text-[11px] ${textMuted}`}>
+          <p className={`text-xs ${textMuted}`}>
             Same visual punch as OverviewCard, but with a <code>children</code> slot for supporting content
             (a progress bar, a breakdown list, an action link) underneath the number.
           </p>
@@ -322,7 +322,7 @@ export function ComponentKitchenSink() {
             {TREND_OPTIONS.map((t) => (
               <div key={t} className="flex flex-col items-center gap-2">
                 <TrendChip trend={t} darkMode={darkMode} />
-                <p className={`text-[11px] font-sans ${textMuted}`}>{t}</p>
+                <p className={`text-xs font-sans ${textMuted}`}>{t}</p>
               </div>
             ))}
           </div>
@@ -358,7 +358,7 @@ export function ComponentKitchenSink() {
             <MiniStat label="Adviser" value="Ms. Reyes" icon={Users} textPrimary={textPrimary} textMuted={textMuted} darkMode={darkMode} />
             <MiniStat label="Total Students" value="8" textPrimary={textPrimary} textMuted={textMuted} darkMode={darkMode} />
           </MiniStatRow>
-          <p className={`text-[11px] ${textMuted}`}>
+          <p className={`text-xs ${textMuted}`}>
             For short facts (2–4 values) where a full OverviewCard grid would be overkill. Icon is optional — omit it
             for plain label/value pairs.
           </p>
@@ -371,7 +371,7 @@ export function ComponentKitchenSink() {
             <FolderCard label="Grade 2" value="91%" valueLabel="avg" secondaryLabel="30 students" darkMode={darkMode} onClick={() => {}} />
             <FolderCard label="Grade 3" value="87%" valueLabel="avg" darkMode={darkMode} />
           </div>
-          <p className={`text-[11px] ${textMuted}`}>
+          <p className={`text-xs ${textMuted}`}>
             Grid of glanceable summary tiles, each leading to a detail view (a grade, a class, a category). The
             second "card" peeking through the pocket notch is decorative — always present, not data-driven.
           </p>
@@ -392,7 +392,7 @@ export function ComponentKitchenSink() {
               panelBg={panelBg}
             />
           </div>
-          <p className={`text-[11px] ${textMuted}`}>
+          <p className={`text-xs ${textMuted}`}>
             More visual presence than StatPanel — for a grid of cards where each one leads to a single detail view
             (a subject, a grade, a class) that deserves to feel like a destination.
           </p>

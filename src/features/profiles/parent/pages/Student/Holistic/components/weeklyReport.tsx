@@ -78,7 +78,7 @@ function RatingBadge({ score }: { score: number | null }) {
   if (score === null) return null;
   const rating = evaluationFor(score);
   return (
-    <span className="shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold" style={{ color: rating.color, backgroundColor: `${rating.color}18` }}>
+    <span className="shrink-0 rounded-full px-2.5 py-1 text-xs font-bold" style={{ color: rating.color, backgroundColor: `${rating.color}18` }}>
       {rating.remark}
     </span>
   );
@@ -134,11 +134,11 @@ export function WholeChildSnapshot({
           {previousEntry && (
             <div className={`qed-segmented-control flex items-center gap-0 rounded-lg p-0 ${darkMode ? "bg-white/5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]" : "bg-gray-50 shadow-[inset_0_0_0_1px_#e5e7eb]"}`}>
               <button type="button" onClick={() => setSelected("current")} aria-pressed={isCurrent}
-                className={`rounded-lg px-3 text-[11px] font-bold ${isCurrent ? "bg-[#6B0000] text-white" : textMuted}`}>
+                className={`rounded-lg px-3 text-xs font-bold ${isCurrent ? "bg-[#6B0000] text-white" : textMuted}`}>
                 Latest
               </button>
               <button type="button" onClick={() => setSelected("previous")} aria-pressed={!isCurrent}
-                className={`rounded-lg px-3 text-[11px] font-bold ${!isCurrent ? "bg-[#6B0000] text-white" : textMuted}`}>
+                className={`rounded-lg px-3 text-xs font-bold ${!isCurrent ? "bg-[#6B0000] text-white" : textMuted}`}>
                 Previous{previousEntry.date ?? previousEntry.label ? ` · ${previousEntry.date ?? previousEntry.label}` : ""}
               </button>
             </div>
@@ -192,10 +192,10 @@ export function WholeChildSnapshot({
             </div>
             <div className={`overflow-hidden rounded-xl2 border ${panelBorder} ${darkMode ? "bg-[#111827]" : "bg-white"}`}>
               <div className={`hidden grid-cols-[minmax(0,1.4fr)_minmax(110px,0.8fr)_repeat(4,minmax(90px,1fr))] items-center gap-3 border-b px-4 py-3 md:grid ${panelBorder} ${darkMode ? "bg-white/[0.04]" : "bg-gray-50"}`}>
-                <span className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>Subject</span>
-                <span className={`text-center text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>Overall</span>
+                <span className={`text-xs font-bold uppercase tracking-wide ${textMuted}`}>Subject</span>
+                <span className={`text-center text-xs font-bold uppercase tracking-wide ${textMuted}`}>Overall</span>
                 {DOMAIN_KEYS.map((domain) => (
-                  <span key={domain} className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>{DOMAIN_META[domain].label}</span>
+                  <span key={domain} className={`text-xs font-bold uppercase tracking-wide ${textMuted}`}>{DOMAIN_META[domain].label}</span>
                 ))}
               </div>
               {subjects.map((subject, index) => {
@@ -216,7 +216,7 @@ export function WholeChildSnapshot({
                     </div>
 
                     <div className="min-w-0 text-center">
-                      <p className={`mb-1 text-[9px] font-bold uppercase tracking-wide text-gray-500 md:hidden`}>Overall</p>
+                      <p className={`mb-1 text-xs font-bold uppercase tracking-wide text-gray-500 md:hidden`}>Overall</p>
                       {score === null ? (
                         <span className={`text-sm ${textMuted}`}>—</span>
                       ) : (
@@ -230,7 +230,7 @@ export function WholeChildSnapshot({
                         const rating = value === null ? null : evaluationFor(value);
                         return (
                           <div key={domain} className="min-w-0">
-                            <p className={`mb-1 text-[9px] font-bold uppercase tracking-wide text-gray-500 md:hidden`}>{DOMAIN_META[domain].label}</p>
+                            <p className={`mb-1 text-xs font-bold uppercase tracking-wide text-gray-500 md:hidden`}>{DOMAIN_META[domain].label}</p>
                             <p className="text-xs font-semibold tabular-nums" style={{ color: rating ? "#6B0000" : "#9CA3AF" }}>
                               {value === null ? "—" : rating?.remark}
                             </p>

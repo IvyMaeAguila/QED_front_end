@@ -56,10 +56,10 @@ export function ClassesPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-2.5">
           <div>
-            <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>
+            <h1 className={`qed-type-page-title ${textPrimary}`}>
               Classes Management
             </h1>
-            <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+            <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
               {filtered.length} of {classes.length} class
               {classes.length === 1 ? "" : "es"} shown
             </p>
@@ -80,7 +80,7 @@ export function ClassesPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search classes..."
-            className={`relative w-full h-8 pl-8 pr-2.5 rounded-lg border text-[11px] font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${
+            className={`relative w-full h-8 pl-8 pr-2.5 rounded-lg border text-xs font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${
               darkMode ? "text-white" : "text-[#111827]"
             } placeholder:text-gray-400 focus:border-maroon`}
           />
@@ -96,7 +96,7 @@ export function ClassesPage() {
           />
           <button
             onClick={() => navigate("new")}
-            className="h-8 px-3 rounded-lg text-[11px] font-extrabold text-white flex items-center gap-1.5 shrink-0 transition-colors hover:bg-[#6B0000]"
+            className="h-8 px-3 rounded-lg text-xs font-extrabold text-white flex items-center gap-1.5 shrink-0 transition-colors hover:bg-[#6B0000]"
             style={{ background: "#8B0D0D" }}
           >
             <Plus size={13} />

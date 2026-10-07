@@ -88,10 +88,10 @@ export function CalendarPageView({}: CalendarPageProps) {
   return (
     <div className="space-y-6 pb-12">
       <div>
-        <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>
+        <h1 className={`qed-type-page-title ${textPrimary}`}>
           Calendar
         </h1>
-        <p className={`text-sm font-semibold mt-1 ${textMuted}`}>
+        <p className={`qed-type-page-description mt-1 ${textMuted}`}>
           View your schedule and upcoming events.
         </p>
       </div>

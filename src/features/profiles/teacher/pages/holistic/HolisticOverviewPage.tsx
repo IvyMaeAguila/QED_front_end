@@ -202,7 +202,7 @@ export function HolisticOverviewPage() {
             <StudentAvatar gender={genderById.get(String(student.studentId))} name={student.studentName} />
             <div className="min-w-0">
               <p className={`truncate text-xs font-bold ${textPrimary}`}>{student.studentName}</p>
-              <p className={`truncate text-[11px] font-medium ${textMuted}`}>
+              <p className={`truncate text-xs font-medium ${textMuted}`}>
                 {student.isAdvisory
                   ? "Overall (your advisory)"
                   : `${student.subjects.length} subject${student.subjects.length === 1 ? "" : "s"} you teach`}
@@ -213,31 +213,31 @@ export function HolisticOverviewPage() {
         <td className="whitespace-nowrap px-4 py-2">
           {primary.currentWeekAverage !== null ? (
             <span>
-              <span className="text-[13px] font-black tabular-nums text-[#800000]">
+              <span className="text-sm font-black tabular-nums text-[#800000]">
                 {primary.currentWeekAverage.toFixed(1)}
               </span>
-              <span className={`ml-1 text-[11px] font-medium ${textMuted}`}>/ 5.0</span>
+              <span className={`ml-1 text-xs font-medium ${textMuted}`}>/ 5.0</span>
             </span>
           ) : (
-            <span className={`text-[11px] font-medium ${textMuted}`}>—</span>
+            <span className={`text-xs font-medium ${textMuted}`}>—</span>
           )}
         </td>
         <td className="whitespace-nowrap px-4 py-2">
           {evaluation ? (
             <span
-              className="inline-flex items-center gap-1.5 text-[11px] font-bold"
+              className="inline-flex items-center gap-1.5 text-xs font-bold"
               style={{ color: evaluation.color }}
             >
               <i className="h-2 w-2 rounded-full" style={{ backgroundColor: evaluation.color }} />
               {evaluation.remark}
             </span>
           ) : (
-            <span className={`text-[11px] font-medium ${textMuted}`}>—</span>
+            <span className={`text-xs font-medium ${textMuted}`}>—</span>
           )}
         </td>
         <td className="whitespace-nowrap px-4 py-2">
           <span
-            className="inline-flex items-center gap-1 text-[11px] font-bold"
+            className="inline-flex items-center gap-1 text-xs font-bold"
             style={{ color: trendMeta.color }}
           >
             {primary.trend === "Improving" && <TrendingUp size={12} />}
@@ -259,7 +259,7 @@ export function HolisticOverviewPage() {
       <tr>
         <th
           colSpan={5}
-          className={`px-4 py-1.5 text-left text-[11px] font-black uppercase tracking-wider ${
+          className={`px-4 py-1.5 text-left text-xs font-black uppercase tracking-wider ${
             darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
           } ${textPrimary}`}
         >
@@ -275,8 +275,8 @@ export function HolisticOverviewPage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2.5">
             <div>
-              <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>Holistic Overview</h1>
-              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+              <h1 className={`qed-type-page-title ${textPrimary}`}>Holistic Overview</h1>
+              <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
                 Current state, growth over the term, and a per-domain breakdown per student.
               </p>
             </div>
@@ -297,7 +297,7 @@ export function HolisticOverviewPage() {
               type="button"
               disabled={selectedTerm === null}
               onClick={() => navigate(`domain-trends?term=${selectedTerm}`)}
-              className={`flex h-8 shrink-0 items-center gap-1.5 rounded-lg border bg-[#800000] px-3 text-[11px] font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-50 ${
+              className={`flex h-8 shrink-0 items-center gap-1.5 rounded-lg border bg-[#800000] px-3 text-xs font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-50 ${
                 darkMode ? "border-white/10" : "border-black/10"
               }`}
             >
@@ -321,7 +321,7 @@ export function HolisticOverviewPage() {
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search student..."
               aria-label="Search student by name"
-              className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-[11px] font-medium outline-none transition-colors placeholder:text-gray-400 focus:border-maroon ${panelBg} ${panelBorder} ${textPrimary}`}
+              className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-xs font-medium outline-none transition-colors placeholder:text-gray-400 focus:border-maroon ${panelBg} ${panelBorder} ${textPrimary}`}
             />
           </div>
 
@@ -334,7 +334,7 @@ export function HolisticOverviewPage() {
                   key={level}
                   type="button"
                   onClick={() => setStatusFilter(active ? "all" : String(level))}
-                  className={`flex items-center gap-1.5 rounded-md px-1.5 py-1 text-[11px] font-bold transition-colors ${
+                  className={`flex items-center gap-1.5 rounded-md px-1.5 py-1 text-xs font-bold transition-colors ${
                     active ? (darkMode ? "bg-white/10" : "bg-black/5") : ""
                   }`}
                   style={{ color: evaluation.color }}
@@ -356,7 +356,7 @@ export function HolisticOverviewPage() {
               <p className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textPrimary}`}>
                 Assessment Roster
               </p>
-              <p className={`truncate text-[11px] font-medium ${textMuted}`}>
+              <p className={`truncate text-xs font-medium ${textMuted}`}>
                 · {filtered.length} student{filtered.length === 1 ? "" : "s"}
               </p>
             </div>
@@ -368,7 +368,7 @@ export function HolisticOverviewPage() {
                 onChange={(e) => setSelectedTerm(Number(e.target.value))}
                 disabled={terms.length === 0}
                 aria-label="Select term"
-                className={`h-7 w-full appearance-none rounded-md border pl-2.5 pr-7 text-[11px] font-bold outline-none transition-colors focus:border-maroon disabled:opacity-50 ${panelBg} ${panelBorder} ${textPrimary}`}
+                className={`h-7 w-full appearance-none rounded-md border pl-2.5 pr-7 text-xs font-bold outline-none transition-colors focus:border-maroon disabled:opacity-50 ${panelBg} ${panelBorder} ${textPrimary}`}
               >
                 {terms.length === 0 && <option value="">No terms set up yet</option>}
                 {terms.map((t) => (
@@ -403,7 +403,7 @@ export function HolisticOverviewPage() {
                     {["Student", "Score", "Evaluation", "Trend", ""].map((h) => (
                       <th
                         key={h}
-                        className={`whitespace-nowrap px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}
+                        className={`whitespace-nowrap px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${textMuted}`}
                       >
                         {h}
                       </th>

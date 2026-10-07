@@ -53,7 +53,7 @@ function EventRow({
         <span className="text-base font-extrabold leading-none">
           {event.day}
         </span>
-        <span className="text-[9px] font-bold uppercase leading-none">
+        <span className="text-xs font-bold uppercase leading-none">
           {event.month}
         </span>
       </div>
@@ -65,7 +65,7 @@ function EventRow({
         </p>
         {event.holidayType && (
           <p
-            className={`truncate text-[11px] ${darkMode ? "text-gray-500" : "text-gray-500"}`}
+            className={`truncate text-xs ${darkMode ? "text-gray-500" : "text-gray-500"}`}
           >
             {event.holidayType}
           </p>
@@ -191,7 +191,7 @@ export default function EventsCard({
       {!loading && !error && (
         <>
           <div className="mb-3">
-            <p className={`mb-1.5 text-[11px] font-semibold ${textMuted}`}>
+            <p className={`mb-1.5 text-xs font-semibold ${textMuted}`}>
               Activities
             </p>
             {activity.length > 0 ? (
@@ -212,7 +212,7 @@ export default function EventsCard({
           </div>
 
           <div>
-            <p className={`mb-1.5 text-[11px] font-semibold ${textMuted}`}>
+            <p className={`mb-1.5 text-xs font-semibold ${textMuted}`}>
               Holidays
             </p>
             {holiday.length > 0 ? (

@@ -33,7 +33,7 @@ function renderMarkdownLite(content: string, textSecondary: string, darkMode: bo
     blocks.push(
       <ul key={key} className="my-2 space-y-2 pl-0">
         {bulletBuffer.map((b, i) => (
-          <li key={i} className={`flex gap-2.5 text-[15px] leading-relaxed ${textSecondary}`}>
+          <li key={i} className={`flex gap-2.5 text-base leading-relaxed ${textSecondary}`}>
             <span
               className="mt-2.25 h-1.5 w-1.5 shrink-0 rounded-full bg-[#8B0D0D]"
             />
@@ -56,7 +56,7 @@ function renderMarkdownLite(content: string, textSecondary: string, darkMode: bo
           key={i}
           className={`mt-5 mb-3 flex items-center justify-between gap-3 rounded-xl2 py-3 pl-4 pr-3 first:mt-0 ${darkMode ? "bg-[#43252A]" : "bg-[#7A1128]"}`}
         >
-          <h3 className="font-sans text-[15px] font-semibold tracking-tight text-[#FBEFD9]">
+          <h3 className="font-sans text-base font-semibold tracking-tight text-[#FBEFD9]">
             {label}
           </h3>
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15">
@@ -71,7 +71,7 @@ function renderMarkdownLite(content: string, textSecondary: string, darkMode: bo
     } else {
       flushBullets(`bul-${i}`);
       blocks.push(
-        <p key={i} className={`text-[15px] leading-relaxed ${textSecondary}`}>
+        <p key={i} className={`text-base leading-relaxed ${textSecondary}`}>
           {trimmed}
         </p>
       );
@@ -203,8 +203,8 @@ export default function CoursewareView({ darkMode = false }: CoursewareViewProps
           <ArrowLeft size={18} />
         </button>
         <div className="min-w-0">
-          <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${darkMode ? "text-rose-200" : "text-[#8B0D0D]"}`}>Study Quest</p>
-          <h1 className={`truncate font-sans text-[17px] font-semibold tracking-tight ${headingColor}`}>
+          <p className={`text-xs font-bold uppercase tracking-[0.16em] ${darkMode ? "text-rose-200" : "text-[#8B0D0D]"}`}>Study Quest</p>
+          <h1 className={`qed-type-page-title font-sans ${headingColor}`}>
             {data?.document.title ?? "Learning resources"}
           </h1>
         </div>
@@ -230,7 +230,7 @@ export default function CoursewareView({ darkMode = false }: CoursewareViewProps
                 </div>
               ))}
             </div>
-            <p className={`text-center text-[13px] ${textSecondary}`}>
+            <p className={`text-center text-sm ${textSecondary}`}>
               Generating learning resources for this topic&hellip;
             </p>
           </>
@@ -245,7 +245,7 @@ export default function CoursewareView({ darkMode = false }: CoursewareViewProps
               <div className="pointer-events-none absolute -right-8 -top-10 h-40 w-40 rounded-full border-[18px] border-white/10" />
               <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
                 <div className="max-w-xl">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">
                     <Compass size={13} /> Your learning quest
                   </span>
                   <h2 className="mt-3 text-xl font-extrabold text-white sm:text-2xl">Ready to explore {data.document.title}?</h2>
@@ -279,7 +279,7 @@ export default function CoursewareView({ darkMode = false }: CoursewareViewProps
                   <div>
                     <h2 className={`text-lg font-bold ${headingColor}`}>Watch and learn</h2>
                   </div>
-                  <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${darkMode ? "bg-white/10 text-white/75" : "bg-white text-[#596273]"}`}>{videos.length} videos</span>
+                  <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${darkMode ? "bg-white/10 text-white/75" : "bg-white text-[#596273]"}`}>{videos.length} videos</span>
                 </div>
                 {selectedVideo && (
                   <div className={`mb-4 overflow-hidden rounded-xl2 border ${panelBorder} ${panelBg}`}>
@@ -322,7 +322,7 @@ export default function CoursewareView({ darkMode = false }: CoursewareViewProps
                         <div className="absolute inset-0 bg-linear-to-t from-[#2B0D14]/95 via-[#2B0D14]/10 to-transparent" />
 
                         <div className="absolute inset-x-0 bottom-0 p-3 pr-14">
-                          <p className="line-clamp-2 text-[13.5px] font-medium leading-snug text-white">
+                          <p className="line-clamp-2 text-sm font-medium leading-snug text-white">
                             {v.title}
                           </p>
                           <p className="mt-0.5 text-xs text-[#EADFC7]">{v.channelName}</p>
@@ -334,7 +334,7 @@ export default function CoursewareView({ darkMode = false }: CoursewareViewProps
                       </div>
                       <div className="flex items-center justify-between gap-2 px-3 py-2.5">
                         <p className={`line-clamp-1 text-xs font-semibold ${headingColor}`}>{v.title}</p>
-                        <span className="shrink-0 text-[10px] font-bold text-[#8B0D0D]">Watch here</span>
+                        <span className="shrink-0 text-xs font-bold text-[#8B0D0D]">Watch here</span>
                       </div>
                     </button>
                   ))}

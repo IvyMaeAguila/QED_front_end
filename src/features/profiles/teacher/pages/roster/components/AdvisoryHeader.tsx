@@ -49,15 +49,15 @@ export function AdvisoryHeader({
         </button>
         <div>
           <p
-            className="text-[10px] font-extrabold uppercase tracking-[0.18em]"
+            className="text-xs font-extrabold uppercase tracking-[0.18em]"
             style={{ color: accentColor }}
           >
             {gradeLevel} · Section {sectionName}
           </p>
-          <h1 className={`mt-1 text-xl font-black tracking-tight ${textPrimary}`}>
+          <h1 className={`qed-type-page-title mt-1 ${textPrimary}`}>
             Class Roster
           </h1>
-          <p className={`mt-1 text-xs font-medium ${textMuted}`}>
+          <p className={`qed-type-page-description mt-1 ${textMuted}`}>
             {totalStudents} student{totalStudents === 1 ? "" : "s"} · {maleCount} male ·{" "}
             {femaleCount} female
           </p>
@@ -70,7 +70,7 @@ export function AdvisoryHeader({
           type="button"
           onClick={onExport}
           disabled={totalStudents === 0}
-          className={`flex h-8 shrink-0 items-center gap-1.5 rounded-lg border bg-[#800000] px-3 text-[11px] font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-40 ${
+          className={`flex h-8 shrink-0 items-center gap-1.5 rounded-lg border bg-[#800000] px-3 text-xs font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-40 ${
             darkMode ? "border-white/10" : "border-black/10"
           }`}
         >

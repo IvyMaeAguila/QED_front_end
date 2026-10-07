@@ -128,7 +128,6 @@ export function FormalReportTemplate({ data }: FormalReportTemplateProps) {
         padding: "40px",
         background: "#ffffff",
         color: "#111111",
-        fontFamily: "'Inter', sans-serif",
         fontSize: "12px",
       }}
     >

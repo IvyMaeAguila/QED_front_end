@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
-import { X, Calendar, Tag, Plus, ListChecks } from "lucide-react";
+import { Calendar, Tag, Plus, ListChecks } from "lucide-react";
+import { ModalBody, ModalFooter, ModalFrame, ModalHeader } from "@shared/components/modal";
 import {
   ASSESSMENT_TAB_LABELS,
   EXAM_TYPES,
@@ -38,7 +38,6 @@ export function AddItemModal({
   onClose,
   onConfirm,
   darkMode,
-  panelBg,
   panelBorder,
   textMuted,
   templateDomains = [],
@@ -139,44 +138,26 @@ export function AddItemModal({
     }
   }
 
-  const fieldRow = `flex h-10 w-full items-center gap-2.5 rounded-lg border px-3 text-xs font-bold outline-none transition-colors ${
+  const fieldRow = `flex h-10 w-full items-center gap-2.5 rounded-lg border px-3 outline-none transition-colors ${
     darkMode ? "border-white/10 bg-white/5" : "border-black/10 bg-[#F8FAFC]"
   }`;
   const inputBare = `flex-1 bg-transparent outline-none ${
     darkMode ? "text-white placeholder:text-[#6B7280]" : "text-[#111827] placeholder:text-[#9CA3AF]"
   }`;
 
-  return createPortal(
-    <div
-      className="fixed inset-0 z-[1000] flex items-center justify-center p-4 modal-backdrop"
-      onClick={onClose}
-    >
-      <div
-        role="dialog"
-        aria-modal="true"
-        className={`w-full max-w-lg overflow-hidden rounded-2xl border border-t-4 border-t-[#800000] shadow-card ${panelBg} ${panelBorder}`}
-        style={{ borderTopColor: "#800000" }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className={`flex items-center justify-between gap-3 border-b px-5 py-4 ${panelBorder}`}>
-          <div className="min-w-0">
-            <p className={`truncate text-sm font-bold uppercase tracking-wide ${textPrimary}`}>{subjectName}</p>
-            <p className={`text-xs font-medium ${textMuted}`}>
-              {isEdit ? "Edit" : "Add"} {ASSESSMENT_TAB_LABELS[tab]}
-            </p>
-          </div>
-          <button
-            onClick={onClose}
-            aria-label="Close"
-            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
-              darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#64748B] hover:bg-black/5"
-            }`}
-          >
-            <X size={16} />
-          </button>
-        </div>
+  return (
+    <ModalFrame shellVariant={darkMode ? "dark" : "standard"} onClose={onClose} size="md" zIndexClass="z-[1000]" ariaLabel={`${isEdit ? "Edit" : "Add"} ${ASSESSMENT_TAB_LABELS[tab]}`}>
+        <ModalHeader
+          title={subjectName}
+          subtitle={`${isEdit ? "Edit" : "Add"} ${ASSESSMENT_TAB_LABELS[tab]}`}
+          titleClassName={`${textPrimary} truncate uppercase`}
+          subtitleClassName={textMuted}
+          onClose={onClose}
+          closeDarkMode={darkMode}
+          className={`items-center border-b px-5 py-4 ${panelBorder}`}
+        />
 
-        <div className="space-y-3 p-5">
+        <ModalBody className="space-y-3 p-5">
           <label className={fieldRow}>
             <Calendar size={13} className={textMuted} />
             <input
@@ -206,7 +187,7 @@ export function AddItemModal({
 
           {!isExam && templateDomains.length > 1 && (
             <label className={`${fieldRow} justify-between`}>
-              <span className={`text-[10px] uppercase tracking-wide ${textMuted}`}>Template domain</span>
+              <span className={`qed-type-label ${textMuted}`}>Template domain</span>
               <select value={templateDomainId} onChange={(e) => setTemplateDomainId(e.target.value)} className={`${inputBare} text-right`}>
                 {templateDomains.map((domain) => <option key={domain.id} value={domain.id}>{domain.label} ({domain.weightPercent}%)</option>)}
               </select>
@@ -230,14 +211,14 @@ export function AddItemModal({
                 <button
                   onClick={handleCreateTopicInline}
                   disabled={creatingTopic || !newTopicName.trim()}
-                  className="shrink-0 rounded-md bg-[#800000] px-2 py-1 text-[11px] font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-40"
+                  className="shrink-0 rounded-md bg-[#800000] px-2 py-1 qed-type-button text-white transition-colors hover:bg-[#650000] disabled:opacity-40"
                 >
                   Save
                 </button>
                 {topics.length > 0 && (
                   <button
                     onClick={() => setNewTopicMode(false)}
-                    className={`shrink-0 text-[11px] font-bold ${textMuted}`}
+                  className={`shrink-0 ${textMuted}`}
                   >
                     Cancel
                   </button>
@@ -263,7 +244,7 @@ export function AddItemModal({
                 </select>
                 <button
                   onClick={() => setNewTopicMode(true)}
-                  className={`flex shrink-0 items-center gap-1 text-[11px] font-bold ${textMuted}`}
+                  className={`flex shrink-0 items-center gap-1 qed-type-button ${textMuted}`}
                 >
                   <Plus size={12} />
                   New
@@ -272,7 +253,7 @@ export function AddItemModal({
             ))}
 
           <label className={fieldRow}>
-            <span className={`shrink-0 text-[11px] font-bold uppercase tracking-wide ${textMuted}`}>
+            <span className={`shrink-0 qed-type-label uppercase tracking-wide ${textMuted}`}>
               {isExam ? "Score" : "Total items"}
             </span>
             <input
@@ -283,22 +264,22 @@ export function AddItemModal({
               value={maxItems}
               onChange={(event) => setMaxItems(event.target.value)}
               placeholder="e.g. 25"
-              className={`min-w-0 flex-1 bg-transparent text-right font-black outline-none ${textPrimary}`}
+              className={`min-w-0 flex-1 bg-transparent text-right outline-none ${textPrimary}`}
             />
           </label>
 
-          {error && <p className="text-[11px] font-bold text-[#DC2626]">{error}</p>}
+          {error && <p className="text-xs font-bold text-[#DC2626]">{error}</p>}
 
+        </ModalBody>
+        <ModalFooter className={`border-t-0 px-5 pb-5 pt-0 ${panelBorder}`}>
           <button
             onClick={handleConfirm}
             disabled={submitting}
-            className="mt-1 flex h-10 w-full items-center justify-center rounded-lg bg-[#800000] text-sm font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-60"
+            className="flex h-10 w-full items-center justify-center rounded-lg bg-[#800000] qed-type-button text-white transition-colors hover:bg-[#650000] disabled:opacity-60"
           >
             {submitting ? "Saving..." : isEdit ? "Save Changes" : "Confirm"}
           </button>
-        </div>
-      </div>
-    </div>,
-    document.body,
+        </ModalFooter>
+    </ModalFrame>
   );
 }

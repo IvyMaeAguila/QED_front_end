@@ -42,7 +42,7 @@ export const UserRolesSection = () => (
             <article className="landing-polygon-surface flex h-full min-h-[190px] flex-col rounded-3xl border border-[#E0E4E9] bg-white p-5 shadow-[0_8px_24px_rgba(31,41,55,0.06)] sm:p-6">
               <div className="flex items-center justify-between">
                 <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#F0EEEB] [&_svg]:h-5 [&_svg]:w-5">{role.icon}</span>
-                <span className="text-[10px] font-semibold tabular-nums text-[#8A8180]">0{index + 1}</span>
+                <span className="text-xs font-semibold tabular-nums text-[#8A8180]">0{index + 1}</span>
               </div>
               <h3 className="mt-7 font-sans text-xl font-semibold text-[#241B1C]">{role.role}</h3>
               <p className="mt-2 text-sm leading-6 text-[#62595A]">{role.description}</p>
@@ -56,7 +56,7 @@ export const UserRolesSection = () => (
           <div className="flex items-start gap-4">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/25 bg-white/10 text-white"><UsersRound size={20} /></span>
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-white/70">Family connection</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/70">Family connection</p>
               <h3 className="mt-1 font-sans text-xl font-semibold sm:text-2xl">Parents can follow progress and stay involved.</h3>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-white/75">Relevant academic, holistic, and classroom information is available through the parent view.</p>
             </div>

@@ -117,7 +117,7 @@ export function ParentVisibilitySection({
   }
 
   const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
-  const groupBand = `px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
+  const groupBand = `px-4 py-1.5 text-xs font-black uppercase tracking-wider ${
     darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
   } ${textPrimary}`;
 
@@ -126,7 +126,7 @@ export function ParentVisibilitySection({
       <div className={`flex flex-col gap-2.5 border-b px-4 py-2.5 lg:flex-row lg:items-center lg:justify-between ${panelBorder}`}>
         <div className="min-w-0">
           <p className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>Parent Visibility</p>
-          <p className={`truncate text-[11px] font-medium ${textMuted}`}>
+          <p className={`truncate text-xs font-medium ${textMuted}`}>
             {termLabel} · Choose which students' grades parents can currently see
           </p>
         </div>
@@ -134,7 +134,7 @@ export function ParentVisibilitySection({
           <button
             onClick={() => applyVisibility(true)}
             disabled={selected.size === 0 || applying !== null}
-            className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-[11px] font-extrabold text-[#157F3B] transition-colors disabled:opacity-50 ${
+            className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-extrabold text-[#157F3B] transition-colors disabled:opacity-50 ${
               darkMode ? "border-white/10 bg-white/5 hover:bg-white/10" : "border-black/10 bg-white hover:bg-black/5"
             }`}
           >
@@ -144,7 +144,7 @@ export function ParentVisibilitySection({
           <button
             onClick={() => applyVisibility(false)}
             disabled={selected.size === 0 || applying !== null}
-            className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-[11px] font-extrabold transition-colors disabled:opacity-50 ${
+            className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-extrabold transition-colors disabled:opacity-50 ${
               darkMode
                 ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
                 : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
@@ -183,16 +183,16 @@ export function ParentVisibilitySection({
                     )}
                   </button>
                 </th>
-                <th className={`px-3 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>
+                <th className={`px-3 py-2 text-left text-xs font-black uppercase tracking-wider ${textMuted}`}>
                   Student
                 </th>
-                <th className={`px-3 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>
+                <th className={`px-3 py-2 text-left text-xs font-black uppercase tracking-wider ${textMuted}`}>
                   Parent/Guardian
                 </th>
-                <th className={`px-3 py-2 text-center text-[11px] font-black uppercase tracking-wider ${textMuted}`}>
+                <th className={`px-3 py-2 text-center text-xs font-black uppercase tracking-wider ${textMuted}`}>
                   Visible to Parents
                 </th>
-                <th className={`px-3 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>
+                <th className={`px-3 py-2 text-left text-xs font-black uppercase tracking-wider ${textMuted}`}>
                   Last Updated
                 </th>
               </tr>
@@ -236,27 +236,27 @@ export function ParentVisibilitySection({
                           <div className="min-w-0">
                             <p className={`truncate text-xs font-bold ${textPrimary}`}>{student.parentName}</p>
                             {student.parentContactNumber && (
-                              <p className={`text-[11px] font-medium ${textMuted}`}>
+                              <p className={`text-xs font-medium ${textMuted}`}>
                                 {student.parentContactNumber}
                               </p>
                             )}
                           </div>
                         ) : (
-                          <span className={`text-[11px] italic font-medium ${textMuted}`}>No parent linked</span>
+                          <span className={`text-xs italic font-medium ${textMuted}`}>No parent linked</span>
                         )}
                       </td>
                       <td className="px-3 py-2 text-center">
                         {student.isVisible ? (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#157F3B]">
+                          <span className="inline-flex items-center gap-1 text-xs font-bold text-[#157F3B]">
                             <Eye size={12} /> Visible
                           </span>
                         ) : (
-                          <span className={`inline-flex items-center gap-1 text-[11px] font-bold ${textMuted}`}>
+                          <span className={`inline-flex items-center gap-1 text-xs font-bold ${textMuted}`}>
                             <EyeOff size={12} /> Hidden
                           </span>
                         )}
                       </td>
-                      <td className={`px-3 py-2 text-[11px] font-medium ${textMuted}`}>
+                      <td className={`px-3 py-2 text-xs font-medium ${textMuted}`}>
                         {student.updatedAt ? new Date(student.updatedAt).toLocaleString() : "—"}
                       </td>
                     </tr>

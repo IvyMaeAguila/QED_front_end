@@ -226,7 +226,7 @@ export function AttendanceMonthSummarySection({
               <div key={metric.label} className={`flex min-h-20 items-center gap-3 rounded-xl border px-3 py-3 ${panelBorder} ${darkMode ? "bg-white/[0.03]" : "bg-[#FAFAF9]"}`}>
                 {metric.icon ? <metric.icon size={20} className="shrink-0" style={{ color: metric.color }} /> : <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: metric.color }} />}
                 <div className="min-w-0">
-                  <p className={`truncate text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>{metric.label}</p>
+                  <p className={`truncate text-xs font-bold uppercase tracking-wide ${textMuted}`}>{metric.label}</p>
                   <p className={`text-xl font-extrabold tabular-nums leading-tight ${textPrimary}`}>{metric.value}</p>
                 </div>
               </div>
@@ -239,7 +239,7 @@ export function AttendanceMonthSummarySection({
                 <CalendarDays size={16} className="text-[#7A0022]" />
                 <h3 className={`text-sm font-bold ${textPrimary}`}>{monthLabel(selectedMonth)}</h3>
               </div>
-              <div className={`flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] font-semibold ${textMuted}`}>
+              <div className={`flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold ${textMuted}`}>
                 {(["P", "A", "L", "E"] as const).map((status) => (
                   <span key={status} className="inline-flex items-center gap-1"><i className="h-2 w-2 rounded-full" style={{ backgroundColor: ATTENDANCE_META[status].color }} />{ATTENDANCE_META[status].label}</span>
                 ))}
@@ -248,7 +248,7 @@ export function AttendanceMonthSummarySection({
 
             <div className="grid grid-cols-7">
               {(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const).map((weekday) => (
-                <div key={weekday} className={`border-b px-1 py-2 text-center text-[10px] font-bold uppercase tracking-wide ${panelBorder} ${textMuted} ${darkMode ? "bg-white/[0.03]" : "bg-[#FAFAF9]"}`}>{weekday}</div>
+                <div key={weekday} className={`border-b px-1 py-2 text-center text-xs font-bold uppercase tracking-wide ${panelBorder} ${textMuted} ${darkMode ? "bg-white/[0.03]" : "bg-[#FAFAF9]"}`}>{weekday}</div>
               ))}
               {calendarCells.map((iso, index) => {
                 if (!iso) return <div key={`blank-${index}`} className={`min-h-20 border-b border-r ${panelBorder} sm:min-h-24`} />;
@@ -258,13 +258,13 @@ export function AttendanceMonthSummarySection({
                 const date = parseISO(iso);
                 return (
                   <div key={iso} className={`min-h-20 border-b border-r p-1.5 sm:min-h-24 sm:p-2 ${panelBorder} ${darkMode ? "bg-[#1A1110]" : "bg-white"}`}>
-                    <span className={`inline-flex h-6 min-w-6 items-center justify-center rounded-full px-1 text-[11px] font-bold tabular-nums ${isToday ? "bg-[#800000] text-white" : isMarked ? textPrimary : textMuted}`}>{date.getDate()}</span>
+                    <span className={`inline-flex h-6 min-w-6 items-center justify-center rounded-full px-1 text-xs font-bold tabular-nums ${isToday ? "bg-[#800000] text-white" : isMarked ? textPrimary : textMuted}`}>{date.getDate()}</span>
                     {isMarked && (
                       <div className="mt-1.5 flex flex-wrap gap-1">
                         {(["P", "A", "L", "E"] as const).map((status) => {
                           const count = status === "P" ? summary.present : status === "A" ? summary.absent : status === "L" ? summary.late : summary.excused;
                           if (!count) return null;
-                          return <span key={status} title={`${count} ${ATTENDANCE_META[status].label.toLowerCase()}`} className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-[9px] font-bold tabular-nums" style={{ color: ATTENDANCE_META[status].color, backgroundColor: `${ATTENDANCE_META[status].color}${darkMode ? "24" : "12"}` }}>{status} {count}</span>;
+                          return <span key={status} title={`${count} ${ATTENDANCE_META[status].label.toLowerCase()}`} className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-xs font-bold tabular-nums" style={{ color: ATTENDANCE_META[status].color, backgroundColor: `${ATTENDANCE_META[status].color}${darkMode ? "24" : "12"}` }}>{status} {count}</span>;
                         })}
                       </div>
                     )}
@@ -272,7 +272,7 @@ export function AttendanceMonthSummarySection({
                 );
               })}
             </div>
-            <p className={`px-3 py-2 text-[10px] ${textMuted}`}>Days without marks are left blank. Counts show students by attendance status.</p>
+            <p className={`px-3 py-2 text-xs ${textMuted}`}>Days without marks are left blank. Counts show students by attendance status.</p>
           </div>
 
           <div className={`overflow-hidden rounded-xl border ${panelBorder}`}>
@@ -285,14 +285,14 @@ export function AttendanceMonthSummarySection({
                 {absencesByDate.map(({ iso, students }) => (
                   <li key={iso} className="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-start sm:justify-between">
                     <div>
-                      <p className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>
+                      <p className={`text-xs font-bold uppercase tracking-wide ${textMuted}`}>
                         {parseISO(iso).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
                       </p>
                       <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
                         {students.map((student) => <li key={student.id} className={`text-sm font-semibold ${textPrimary}`}>{student.name}</li>)}
                       </ul>
                     </div>
-                    <span className="w-fit shrink-0 rounded-full px-2 py-1 text-[10px] font-bold" style={{ color: ATTENDANCE_META.A.color, backgroundColor: `${ATTENDANCE_META.A.color}${darkMode ? "22" : "14"}` }}>
+                    <span className="w-fit shrink-0 rounded-full px-2 py-1 text-xs font-bold" style={{ color: ATTENDANCE_META.A.color, backgroundColor: `${ATTENDANCE_META.A.color}${darkMode ? "22" : "14"}` }}>
                       {students.length} absent
                     </span>
                   </li>

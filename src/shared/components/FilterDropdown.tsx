@@ -62,6 +62,8 @@ export function FilterDropdown({
             <button
               key={opt}
               type="button"
+              role="option"
+              aria-selected={value === opt}
               onClick={() => {
                 onChange(opt);
                 setOpen(false);

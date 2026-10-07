@@ -58,9 +58,9 @@ export function TeacherClassRosters({
                 <header className={`flex items-center justify-between gap-3 border-b px-3 py-2.5 ${panelBorder}`}>
                   <div className="min-w-0">
                     <h3 className={`truncate text-sm font-bold ${textPrimary}`}>{roster.sectionLabel}</h3>
-                    <p className={`mt-0.5 text-[11px] ${textMuted}`}>{roster.room || "Room not assigned"}</p>
+                    <p className={`mt-0.5 text-xs ${textMuted}`}>{roster.room || "Room not assigned"}</p>
                   </div>
-                  <span className={`shrink-0 rounded-full px-2 py-1 text-[10px] font-semibold ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"} ${textMuted}`}>
+                  <span className={`shrink-0 rounded-full px-2 py-1 text-xs font-semibold ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"} ${textMuted}`}>
                     {roster.students.length} students
                   </span>
                 </header>
@@ -70,7 +70,7 @@ export function TeacherClassRosters({
                     { label: "Female", students: femaleStudents },
                   ].map((group) => (
                     <div key={group.label} className="min-w-0">
-                      <p className={`border-b px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider ${panelBorder} ${textMuted}`}>
+                      <p className={`border-b px-3 py-1.5 text-xs font-bold uppercase tracking-wider ${panelBorder} ${textMuted}`}>
                         {group.label} <span className="font-semibold">({group.students.length})</span>
                       </p>
                       {group.students.length === 0 ? (

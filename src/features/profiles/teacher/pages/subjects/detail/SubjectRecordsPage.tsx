@@ -6,13 +6,11 @@ import {
   useParams,
 } from "react-router-dom";
 import {
-  AlertTriangle,
   ArrowLeft,
   Check,
   ClipboardList,
   Loader2,
   Pencil,
-  X,
 } from "lucide-react";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
 import type { RosterStudent } from "./data";
@@ -34,6 +32,7 @@ import {
   getEffectiveWeightsSafe,
   type EffectiveWeights,
 } from "../services/subjectGradeTemplate.service";
+import { ConfirmationModal } from "@shared/components/ConfirmationModal";
 
 const ACCENT = "#6B0000";
 
@@ -305,7 +304,7 @@ export function SubjectRecordsPage() {
               <ClipboardList size={28} />
             </span>
             <div>
-              <h1 className={`text-lg font-black tracking-tight ${textPrimary}`}>
+              <h1 className={`qed-type-page-title ${textPrimary}`}>
                 Records
               </h1>
             </div>
@@ -347,10 +346,10 @@ export function SubjectRecordsPage() {
               <ClipboardList size={28} />
             </span>
             <div>
-              <h1 className={`text-lg font-black tracking-tight ${textPrimary}`}>
+              <h1 className={`qed-type-page-title ${textPrimary}`}>
                 {subjectName} — {title}
               </h1>
-              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+              <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
                 {subtitle}
               </p>
               {loadError && (
@@ -366,7 +365,7 @@ export function SubjectRecordsPage() {
           className={`flex flex-wrap items-center justify-between gap-2.5 rounded-xl border px-3 py-2 ${panelBg} ${panelBorder}`}
         >
           <span
-            className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-extrabold"
+            className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-extrabold"
             style={{ backgroundColor: "#F8EDEE", color: ACCENT }}
           >
             {roster.length} student{roster.length === 1 ? "" : "s"}
@@ -378,7 +377,7 @@ export function SubjectRecordsPage() {
                 <select
                   value={term}
                   onChange={(e) => setTerm(e.target.value)}
-                  className={`h-8 rounded-lg border px-2.5 text-[11px] font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
+                  className={`h-8 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
                   aria-label="Term"
                 >
                   {terms.map((t) => (
@@ -392,7 +391,7 @@ export function SubjectRecordsPage() {
               {isAssessment && (
                 <button
                   onClick={handleDoneClick}
-                  className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-[11px] font-extrabold transition-colors ${
+                  className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-extrabold transition-colors ${
                     isEditing
                       ? "border-black/10 bg-[#800000] text-white hover:bg-[#650000]"
                       : darkMode
@@ -459,45 +458,33 @@ export function SubjectRecordsPage() {
       </div>
 
       {showEmptyScoreModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center px-4 modal-backdrop"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="empty-score-modal-title"
-        >
-          <div
-            className={`w-full max-w-md rounded-2xl border shadow-2xl ${panelBg} ${panelBorder}`}
-          >
-            <div className="flex items-start gap-3 px-5 pt-5">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600">
-                <AlertTriangle size={18} />
-              </span>
-              <div className="flex-1">
-                <h2
-                  id="empty-score-modal-title"
-                  className={`text-sm font-black ${textPrimary}`}
-                >
-                  Save with missing scores?
-                </h2>
-                <p className={`mt-1 text-xs font-medium ${textMuted}`}>
+        <ConfirmationModal
+          title="Save with missing scores?"
+          description={
+            <>
                   {uniqueMissingStudents.length} student
                   {uniqueMissingStudents.length === 1 ? "" : "s"} still
                   {uniqueMissingStudents.length === 1 ? " has" : " have"}{" "}
                   blank score{pendingMissing.length === 1 ? "" : "s"} in this
                   record. Leaving them blank will flag the activity as
                   missing to parents.
-                </p>
-              </div>
-              <button
-                onClick={cancelEmptyScoreModal}
-                aria-label="Close"
-                className={`shrink-0 ${textMuted} hover:${textPrimary}`}
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            <div className="px-5 pt-3">
+            </>
+          }
+          onClose={cancelEmptyScoreModal}
+          onConfirm={confirmSaveWithEmptyScores}
+          confirmLabel="Save Anyway"
+          cancelLabel="Keep Editing"
+          variant="warning"
+          size="narrow"
+          darkMode={darkMode}
+          panelClassName={`shadow-2xl ${panelBg} ${panelBorder}`}
+          titleClassName={textPrimary}
+          descriptionClassName={textMuted}
+          bodyClassName="px-5 pb-4 pt-0"
+          footerClassName="px-5 py-4"
+          cancelButtonClassName={`${panelBorder} ${textPrimary} hover:bg-black/5`}
+          confirmButtonClassName="border border-black/10 bg-[#800000] hover:bg-[#650000]"
+        >
               <ul
                 className={`max-h-40 space-y-1 overflow-y-auto rounded-lg border px-3 py-2 text-xs font-semibold ${panelBorder} ${textPrimary}`}
               >
@@ -510,24 +497,7 @@ export function SubjectRecordsPage() {
                   </li>
                 )}
               </ul>
-            </div>
-
-            <div className="flex items-center justify-end gap-2 px-5 py-4">
-              <button
-                onClick={cancelEmptyScoreModal}
-                className={`h-8 rounded-lg border px-3 text-[11px] font-extrabold ${panelBorder} ${textPrimary} hover:bg-black/5`}
-              >
-                Keep Editing
-              </button>
-              <button
-                onClick={confirmSaveWithEmptyScores}
-                className="h-8 rounded-lg border border-black/10 bg-[#800000] px-3 text-[11px] font-extrabold text-white hover:bg-[#650000]"
-              >
-                Save Anyway
-              </button>
-            </div>
-          </div>
-        </div>
+        </ConfirmationModal>
       )}
     </div>
   );

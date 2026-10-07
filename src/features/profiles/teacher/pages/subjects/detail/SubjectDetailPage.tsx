@@ -524,11 +524,11 @@ export function SubjectDetailPage() {
           </button>
           <div className="min-w-0">
             <h1
-              className={`text-lg font-black tracking-tight truncate ${textPrimary}`}
+              className={`qed-type-page-title ${textPrimary}`}
             >
               {subjectName}
             </h1>
-            <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+            <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
               {currentSchoolYearLabel()}
             </p>
           </div>

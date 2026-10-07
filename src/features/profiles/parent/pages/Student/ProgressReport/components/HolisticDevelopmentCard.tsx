@@ -132,13 +132,13 @@ export function HolisticDevelopmentCard({
           >
             <Icon size={14} />
           </span>
-          <p className={`truncate text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>{d.label}</p>
+          <p className={`truncate text-xs font-bold uppercase tracking-wide ${textMuted}`}>{d.label}</p>
         </div>
 
         <p className="mt-2.5 text-base font-black leading-tight" style={{ color: band.color }}>
           {band.remark}
         </p>
-        <p className={`text-[11px] font-bold ${textMuted}`}>
+        <p className={`text-xs font-bold ${textMuted}`}>
           {d.score.toFixed(1)} / {d.maxScore.toFixed(1)}
         </p>
       </div>
@@ -221,7 +221,7 @@ export function HolisticDevelopmentCard({
                   <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                     <div className={`flex h-16 w-16 flex-col items-center justify-center rounded-full shadow-sm ${darkMode ? "bg-[#1A1A1A]" : "bg-white"}`}>
                       <span className={`text-lg font-black leading-none tabular-nums ${textPrimary}`}>{overallScore}</span>
-                      <span className={`mt-1 text-[8px] font-bold uppercase tracking-wider ${textMuted}`}>Overall</span>
+                      <span className={`mt-1 text-xs font-bold uppercase tracking-wider ${textMuted}`}>Overall</span>
                     </div>
                   </div>
                 )}

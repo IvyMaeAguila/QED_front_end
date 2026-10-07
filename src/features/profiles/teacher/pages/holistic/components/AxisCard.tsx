@@ -47,7 +47,7 @@
 //         </span>
 //         <div className="min-w-0">
 //           <p className={`font-bold text-sm leading-tight ${textPrimary}`}>{label}</p>
-//           <p className={`text-[11px] font-semibold ${textMuted}`}>{description}</p>
+//           <p className={`text-xs font-semibold ${textMuted}`}>{description}</p>
 //         </div>
 //       </div>
 

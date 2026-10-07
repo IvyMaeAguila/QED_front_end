@@ -19,7 +19,7 @@ export function TodayAgenda({
   return (
     <div className={`rounded-[12px] p-4 sm:p-5 shadow-card ${panelBg}`}>
       <p
-        className={`mb-2.5 sm:mb-3 flex items-center gap-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wide ${textMuted}`}
+        className={`mb-2.5 sm:mb-3 flex items-center gap-1.5 text-xs sm:text-xs font-bold uppercase tracking-wide ${textMuted}`}
       >
         <ClipboardList size={13} className="text-maroon-dark shrink-0 sm:hidden" />
         <ClipboardList size={14} className="text-maroon-dark shrink-0 hidden sm:block" />
@@ -27,7 +27,7 @@ export function TodayAgenda({
       </p>
 
       {agenda.length === 0 ? (
-        <p className={`py-2 text-[11px] sm:text-xs ${textMuted}`}>
+        <p className={`py-2 text-xs sm:text-xs ${textMuted}`}>
           No classes scheduled today.
         </p>
       ) : (
@@ -35,7 +35,7 @@ export function TodayAgenda({
           {agenda.map((item) => (
             <li
               key={item.id}
-              className="border-l-2 border-maroon pl-2.5 sm:pl-3 text-[11.5px] sm:text-xs leading-relaxed"
+              className="border-l-2 border-maroon pl-2.5 sm:pl-3 text-xs sm:text-xs leading-relaxed"
             >
               {item.timeLabel && (
                 <span className={`flex items-center gap-1 font-semibold ${textMuted}`}>
@@ -46,7 +46,7 @@ export function TodayAgenda({
               <span className={`font-semibold ${textPrimary}`}>
                 {item.subjectName}
               </span>
-              <span className={`block text-[10.5px] ${textMuted}`}>
+              <span className={`block text-xs ${textMuted}`}>
                 {item.className}
                 {item.room ? ` • ${item.room}` : ""}
               </span>

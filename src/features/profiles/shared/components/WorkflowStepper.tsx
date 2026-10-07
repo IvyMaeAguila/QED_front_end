@@ -75,7 +75,7 @@ export function WorkflowStepper({ darkMode, current, steps }: WorkflowStepperPro
             </div>
             <div className="mt-1.5 min-w-0 md:mt-0 md:pt-1">
               <span
-                className={`block whitespace-nowrap text-[11px] font-semibold md:text-sm md:leading-6 ${labelColor}`}
+                className={`block whitespace-nowrap text-xs font-semibold md:text-sm md:leading-6 ${labelColor}`}
               >
                 {name}
               </span>

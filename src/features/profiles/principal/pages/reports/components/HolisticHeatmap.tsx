@@ -98,9 +98,9 @@ export function HolisticHeatmap({ rows, rowHeader, panelBorder, textPrimary, tex
       <div className={`overflow-hidden rounded-2xl border ${panelBorder}`}>
         <div className="grid" style={{ gridTemplateColumns: `140px repeat(${domainKeys.length}, 1fr)` }}>
           {/* header row */}
-          <div className={`flex items-center px-4 py-3 text-[10px] font-bold uppercase tracking-wider border-b border-r ${hairline} ${darkMode ? "bg-white/[0.04]" : "bg-[#F4F5F7]"} ${textMuted}`}>{rowHeader}</div>
+          <div className={`flex items-center px-4 py-3 text-xs font-bold uppercase tracking-wider border-b border-r ${hairline} ${darkMode ? "bg-white/[0.04]" : "bg-[#F4F5F7]"} ${textMuted}`}>{rowHeader}</div>
           {domainKeys.map((key) => (
-            <div key={key} className={`flex items-center justify-center px-2 py-3 text-[10px] font-bold uppercase tracking-wider border-b ${hairline} ${darkMode ? "bg-white/[0.04]" : "bg-[#F4F5F7]"} ${textMuted}`}>
+            <div key={key} className={`flex items-center justify-center px-2 py-3 text-xs font-bold uppercase tracking-wider border-b ${hairline} ${darkMode ? "bg-white/[0.04]" : "bg-[#F4F5F7]"} ${textMuted}`}>
               {DOMAIN_META[key].label}
             </div>
           ))}
@@ -127,8 +127,8 @@ export function HolisticHeatmap({ rows, rowHeader, panelBorder, textPrimary, tex
         {BANDS.map((band) => (
           <div key={band.label} className="flex items-center gap-1.5">
             <span className="h-3 w-3 rounded-sm border border-black/10" style={{ backgroundColor: band.color }} />
-            <span className={`text-[10px] font-semibold ${textMuted}`}>{band.label}</span>
-            <span className={`text-[10px] tabular-nums ${textMuted}`}>{band.range}</span>
+            <span className={`text-xs font-semibold ${textMuted}`}>{band.label}</span>
+            <span className={`text-xs tabular-nums ${textMuted}`}>{band.range}</span>
           </div>
         ))}
       </div>
@@ -205,7 +205,7 @@ function RowCells({
               boxShadow: isHovered ? "inset 0 0 0 2px #6B0000" : undefined,
             }}
           >
-            {value === null ? <span className={`text-[10px] font-medium ${textMuted}`}>&mdash;</span> : value.toFixed(1)}
+            {value === null ? <span className={`text-xs font-medium ${textMuted}`}>&mdash;</span> : value.toFixed(1)}
           </button>
         );
       })}

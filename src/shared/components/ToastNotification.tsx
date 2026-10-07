@@ -58,7 +58,7 @@ function ToastCard({
       >
         {toast.type === "success" ? "✓" : toast.type === "error" ? "✕" : "i"}
       </div>
-      <p className={`text-sm font-semibold flex-1 pt-0.5 ${darkMode ? "text-white" : "text-[#111827]"}`}>
+      <p className={`qed-type-body flex-1 pt-0.5 ${darkMode ? "text-white" : "text-[#111827]"}`}>
         {toast.message}
       </p>
       <button

@@ -37,7 +37,7 @@ export function StudentDirectory({ students, panelBg, panelBorder, textPrimary, 
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search student..."
             aria-label="Search students by name or ID"
-            className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-[11px] font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
+            className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-xs font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
           />
         </div>
         <select
@@ -45,7 +45,7 @@ export function StudentDirectory({ students, panelBg, panelBorder, textPrimary, 
           onChange={(event) => setGender(event.target.value as typeof gender)}
           aria-label="Filter students by gender"
           style={{ borderRadius: "8px" }}
-          className={`h-8 rounded-lg border px-2.5 text-[11px] font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
+          className={`h-8 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
         >
           <option value="All">All genders</option>
           <option value="Male">Male</option>

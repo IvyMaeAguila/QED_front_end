@@ -38,7 +38,7 @@ function cellDisplayValue(cell: { status: string; termGrade?: number | null; ave
   if (!cell) return "Not Submitted";
   if (cell.status === "submitted") return cell.termGrade ?? cell.average ?? "—";
   if (cell.status === "pending") return "Pending";
-  return cell.isOwnAdvisory ? "No Grades Yet" : "Not Submitted";
+  return cell.isOwnAdvisory ? "No grades yet" : "Not Submitted";
 }
 
 function toCSV(gradebook: AdvisoryGradebook) {
@@ -263,7 +263,7 @@ export function GradesPage() {
   const isMatatag = /(?:grade\s*)?[1-3](?!\d)/i.test(gradeLevel);
   const curriculum = isMatatag ? "Matatag Curriculum" : "Intermediate Grades";
   const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
-  const groupBand = `px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
+  const groupBand = `px-4 py-1.5 text-xs font-black uppercase tracking-wider ${
     darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
   } ${textPrimary}`;
   const columnCount = 2 + (gradebook?.subjects.length ?? 0);
@@ -274,8 +274,8 @@ export function GradesPage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2.5">
             <div>
-              <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>Gradebook</h1>
-              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+              <h1 className={`qed-type-page-title ${textPrimary}`}>Gradebook</h1>
+              <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
                 {gradeLevel || "Advisory class"} · {curriculum}
               </p>
             </div>
@@ -286,7 +286,7 @@ export function GradesPage() {
           >
             <button
               onClick={() => setActiveTab("gradebook")}
-              className={`rounded-lg px-3 text-[11px] font-bold transition-colors ${
+              className={`rounded-lg px-3 text-xs font-bold transition-colors ${
                 activeTab === "gradebook" ? "bg-[#800000] text-white" : `${textMuted} hover:${textPrimary}`
               }`}
             >
@@ -294,7 +294,7 @@ export function GradesPage() {
             </button>
             <button
               onClick={() => setActiveTab("visibility")}
-              className={`rounded-lg px-3 text-[11px] font-bold transition-colors ${
+              className={`rounded-lg px-3 text-xs font-bold transition-colors ${
                 activeTab === "visibility" ? "bg-[#800000] text-white" : `${textMuted} hover:${textPrimary}`
               }`}
             >
@@ -302,7 +302,7 @@ export function GradesPage() {
             </button>
             <button
               onClick={() => setActiveTab("history")}
-              className={`inline-flex items-center gap-1.5 rounded-lg px-3 text-[11px] font-bold transition-colors ${
+              className={`inline-flex items-center gap-1.5 rounded-lg px-3 text-xs font-bold transition-colors ${
                 activeTab === "history" ? "bg-[#800000] text-white" : `${textMuted} hover:${textPrimary}`
               }`}
             >
@@ -319,25 +319,25 @@ export function GradesPage() {
             >
               <div className="flex flex-wrap items-center gap-2">
                 {gradebookLoading ? (
-                  <span className={`flex items-center gap-1.5 text-[11px] font-bold ${textMuted}`}>
+                  <span className={`flex items-center gap-1.5 text-xs font-bold ${textMuted}`}>
                     <Loader2 size={12} className="animate-spin" /> Checking records…
                   </span>
                 ) : allComplete ? (
                   <span
-                    className="flex items-center gap-1.5 rounded-lg border border-[#157F3B]/25 bg-[#157F3B]/5 px-2.5 py-1 text-[11px] font-bold text-[#157F3B]"
+                    className="flex items-center gap-1.5 rounded-lg border border-[#157F3B]/25 bg-[#157F3B]/5 px-2.5 py-1 text-xs font-bold text-[#157F3B]"
                   >
                     <CheckCircle2 size={12} /> Official · All subjects submitted
                   </span>
                 ) : (
                   <span
-                    className="flex items-center gap-1.5 rounded-lg border border-[#C2255C]/25 bg-[#C2255C]/5 px-2.5 py-1 text-[11px] font-bold text-[#C2255C]"
+                    className="flex items-center gap-1.5 rounded-lg border border-[#C2255C]/25 bg-[#C2255C]/5 px-2.5 py-1 text-xs font-bold text-[#C2255C]"
                   >
                     <AlertTriangle size={12} />
                     Not yet official · {incompleteSubjectCount} subject{incompleteSubjectCount === 1 ? "" : "s"} not submitted
                   </span>
                 )}
                 {submitted && (
-                  <span className={`text-[11px] font-medium ${textMuted}`}>
+                  <span className={`text-xs font-medium ${textMuted}`}>
                     Submitted {submittedAt ? new Date(submittedAt).toLocaleString() : ""}
                   </span>
                 )}
@@ -346,7 +346,7 @@ export function GradesPage() {
                 <button
                   onClick={handleExport}
                   disabled={!gradebook}
-                  className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-[11px] font-extrabold transition-colors disabled:opacity-50 ${
+                  className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-extrabold transition-colors disabled:opacity-50 ${
                     darkMode
                       ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
                       : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
@@ -357,7 +357,7 @@ export function GradesPage() {
                 <button
                   onClick={() => (allComplete ? handleSubmit() : setShowForceConfirm(true))}
                   disabled={submitting || gradebookLoading || !gradebook}
-                  className={`flex h-8 items-center gap-1.5 rounded-lg border bg-[#800000] px-3 text-[11px] font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-60 ${
+                  className={`flex h-8 items-center gap-1.5 rounded-lg border bg-[#800000] px-3 text-xs font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-60 ${
                     darkMode ? "border-white/10" : "border-black/10"
                   }`}
                 >
@@ -369,7 +369,7 @@ export function GradesPage() {
 
             {submitError && (
               <div
-                className={`flex items-center gap-2 rounded-xl border border-[#C2255C]/25 bg-[#C2255C]/5 px-4 py-2.5 text-[11px] font-bold text-[#C2255C]`}
+                className={`flex items-center gap-2 rounded-xl border border-[#C2255C]/25 bg-[#C2255C]/5 px-4 py-2.5 text-xs font-bold text-[#C2255C]`}
                 role="alert"
               >
                 <AlertTriangle size={12} className="shrink-0" />
@@ -380,14 +380,14 @@ export function GradesPage() {
             {showForceConfirm && (
               <div className={`rounded-xl border px-4 py-3 ${panelBg} ${panelBorder}`}>
                 <p className={`text-xs font-bold ${textPrimary}`}>Submit incomplete grades?</p>
-                <p className={`mt-1 text-[11px] font-medium ${textMuted}`}>
+                <p className={`mt-1 text-xs font-medium ${textMuted}`}>
                   One or more subjects still haven't been submitted by their subject teacher yet. You can submit
                   now and reconcile later, or cancel and follow up with the subject teachers first.
                 </p>
                 <div className="mt-2.5 flex gap-2">
                   <button
                     onClick={() => setShowForceConfirm(false)}
-                    className={`flex h-8 items-center rounded-lg border px-3 text-[11px] font-bold transition-colors ${
+                    className={`flex h-8 items-center rounded-lg border px-3 text-xs font-bold transition-colors ${
                       darkMode
                         ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
                         : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
@@ -397,7 +397,7 @@ export function GradesPage() {
                   </button>
                   <button
                     onClick={handleSubmit}
-                    className="flex h-8 items-center rounded-lg bg-[#800000] px-3 text-[11px] font-extrabold text-white transition-colors hover:bg-[#650000]"
+                    className="flex h-8 items-center rounded-lg bg-[#800000] px-3 text-xs font-extrabold text-white transition-colors hover:bg-[#650000]"
                   >
                     Submit anyway
                   </button>
@@ -468,10 +468,10 @@ export function GradesPage() {
             <section className={`relative z-0 ${cardClasses}`} aria-label="Advisory class grades">
               <div className={`flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 ${panelBorder}`}>
                 <div className="flex min-w-0 items-center gap-2">
-                  <p className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textPrimary}`}>
+                  <p className={`qed-type-table-group flex items-center gap-1.5 uppercase ${textPrimary}`}>
                     {gradebook?.sectionName || "Advisory Class"}
                   </p>
-                  <p className={`truncate text-[11px] font-medium ${textMuted}`}>
+                  <p className={`truncate text-xs font-medium ${textMuted}`}>
                     · {terms.find((t) => t.id === selectedTermId)?.label ?? "—"} · {filteredStudents.length} student
                     {filteredStudents.length === 1 ? "" : "s"}
                   </p>
@@ -494,7 +494,7 @@ export function GradesPage() {
                     <thead>
                       <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
                         <th
-                          className={`sticky left-0 z-10 min-w-56 px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${
+                          className={`qed-type-table-header sticky left-0 z-10 min-w-56 px-4 py-2 text-left uppercase tracking-wider ${
                             darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
                           } ${textMuted}`}
                         >
@@ -503,12 +503,12 @@ export function GradesPage() {
                         {gradebook.subjects.map((subject) => (
                           <th
                             key={subject.subjectSectionId}
-                            className={`min-w-28 px-3 py-2 text-center text-[11px] font-black uppercase tracking-wider ${textMuted}`}
+                            className={`qed-type-table-header min-w-28 px-3 py-2 text-center uppercase tracking-wider ${textMuted}`}
                           >
-                            <span>{subject.subjectName}</span><span className="block text-[9px] font-medium">Term Grade</span>
+                            <span>{subject.subjectName}</span>
                           </th>
                         ))}
-                        <th className={`min-w-28 px-3 py-2 text-center text-[11px] font-black uppercase tracking-wider ${textMuted}`}>
+                        <th className={`qed-type-table-header min-w-28 px-3 py-2 text-center uppercase tracking-wider ${textMuted}`}>
                           Overall Average
                         </th>
                       </tr>
@@ -529,7 +529,7 @@ export function GradesPage() {
                               <td className={`sticky left-0 z-10 px-4 py-2 ${darkMode ? "bg-[#2A1A18]" : "bg-white"}`}>
                                 <div className="flex min-w-0 items-center gap-2.5">
                                   <StudentAvatar gender={student.gender} name={studentDisplayName(student)} />
-                                  <span className={`truncate text-xs font-bold ${textPrimary}`}>
+                                  <span className={`qed-type-table-body truncate ${textPrimary}`}>
                                     {studentDisplayName(student)}
                                   </span>
                                 </div>
@@ -537,33 +537,37 @@ export function GradesPage() {
                               {gradebook.subjects.map((subject) => {
                                 const cell = student.grades[subject.subjectSectionId];
                                 const status = cell?.status ?? "not_submitted";
+                                const grade = cell?.termGrade ?? cell?.average;
 
                                 return (
                                   <td key={subject.subjectSectionId} className="px-3 py-2 text-center">
                                     {status === "submitted" ? (
-                                      <span
-                                        className={`text-[13px] font-black tabular-nums ${gradeTextColor(cell?.termGrade ?? cell?.average ?? null)}`}
-                                        title={cell?.submittedByName ? `Submitted by ${cell.submittedByName}` : undefined}
-                                      >
-                                        {cell?.termGrade ?? cell?.average ?? "—"}
-                                      </span>
+                                      grade != null ? (
+                                          <span
+                                            className={`qed-type-table-grade ${gradeTextColor(grade)}`}
+                                            title={cell?.submittedByName ? `Submitted by ${cell.submittedByName}` : undefined}
+                                          >
+                                            {grade}
+                                          </span>
+                                        )
+                                        : <span className="qed-type-table-empty-value">—</span>
                                     ) : status === "pending" ? (
                                       <span
-                                        className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-[#B45309]"
+                                        className="qed-type-badge inline-flex items-center gap-1 uppercase tracking-wide text-[#B45309]"
                                         title="Scores are complete but the subject teacher hasn't submitted yet"
                                       >
                                         <Clock size={10} /> Pending
                                       </span>
                                     ) : cell?.isOwnAdvisory ? (
                                       <span
-                                        className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}
+                                        className="qed-type-table-empty-value"
                                         title="No grades recorded yet for this subject"
                                       >
-                                        No Grades Yet
+                                        No grades yet
                                       </span>
                                     ) : (
                                       <span
-                                        className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}
+                                        className={`qed-type-badge uppercase tracking-wide ${textMuted}`}
                                         title="This subject's grade has not been submitted yet"
                                       >
                                         Not Submitted
@@ -573,11 +577,13 @@ export function GradesPage() {
                                 );
                               })}
                               <td className="px-3 py-2 text-center">
-                                <span
-                                  className={`text-[13px] font-black tabular-nums ${gradeTextColor(student.overallAverage)}`}
-                                >
-                                  {student.overallAverage ?? "—"}
-                                </span>
+                                {student.overallAverage == null ? (
+                                  <span className="qed-type-table-empty-value">—</span>
+                                ) : (
+                                  <span className={`qed-type-table-grade ${gradeTextColor(student.overallAverage)}`}>
+                                    {student.overallAverage}
+                                  </span>
+                                )}
                               </td>
                             </tr>
                           ))}
@@ -607,7 +613,7 @@ export function GradesPage() {
                 <History size={15} className={textMuted} />
                 <h2 className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>Submission History</h2>
               </div>
-              <span className={`text-[11px] font-semibold ${textMuted}`}>
+              <span className={`text-xs font-semibold ${textMuted}`}>
                 {submissionLogs.length} record{submissionLogs.length === 1 ? "" : "s"}
               </span>
             </div>
@@ -618,7 +624,7 @@ export function GradesPage() {
                     <span className={`text-xs font-semibold ${textPrimary}`}>
                       {log.label} <span className={textMuted}>· {log.type === "advisory" ? "Class submission" : "Subject submission"}</span>
                     </span>
-                    <span className={`text-[11px] font-medium ${textMuted}`}>
+                    <span className={`text-xs font-medium ${textMuted}`}>
                       {log.submittedByName ? `${log.submittedByName} · ` : ""}{new Date(log.submittedAt).toLocaleString()}
                     </span>
                   </li>

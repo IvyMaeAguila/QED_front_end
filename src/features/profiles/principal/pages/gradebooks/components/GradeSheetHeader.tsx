@@ -25,13 +25,13 @@ export function GradeSheetHeader({
     <div className="flex items-start gap-2.5">
       <BackButton onClick={onBack} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} />
       <div className="min-w-0">
-        <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-maroon">
+        <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-maroon">
           {gradeLabel}{sectionName ? ` · ${sectionName}` : ""}
         </p>
-        <h1 className={`mt-1 text-xl font-black tracking-tight ${textPrimary}`}>
+        <h1 className={`qed-type-page-title mt-1 ${textPrimary}`}>
           Grade Sheet
         </h1>
-        <p className={`mt-1 text-xs font-medium ${textMuted}`}>School Year {schoolYear}</p>
+        <p className={`qed-type-page-description mt-1 ${textMuted}`}>School Year {schoolYear}</p>
       </div>
     </div>
   );

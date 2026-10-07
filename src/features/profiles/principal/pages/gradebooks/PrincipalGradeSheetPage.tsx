@@ -263,11 +263,11 @@ function GradeSheetContent({
                 onChange={(event) => setStudentSearch(event.target.value)}
                 placeholder="Search student name or ID..."
                 aria-label="Search students by name or ID"
-                className={`h-8 w-full rounded-lg border px-2.5 text-[11px] font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
+                className={`h-8 w-full rounded-lg border px-2.5 text-xs font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
               />
             </div>
             <div className="flex flex-wrap items-center gap-2.5">
-              <span className={`whitespace-nowrap text-[11px] font-semibold ${textMuted}`}>
+              <span className={`whitespace-nowrap text-xs font-semibold ${textMuted}`}>
                 Showing {filteredStudents.length} of {students.length} students
               </span>
               <select
@@ -275,7 +275,7 @@ function GradeSheetContent({
                 onChange={(event) => setStudentFilter(event.target.value)}
                 aria-label="Filter students and grade ranking"
                 style={{ borderRadius: "8px" }}
-                className={`h-8 rounded-lg border px-3 text-[11px] font-semibold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
+                className={`h-8 rounded-lg border px-3 text-xs font-semibold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
               >
                 <option>All Students</option>
                 <option>Highest Grades</option>
@@ -283,7 +283,7 @@ function GradeSheetContent({
                 <option>Boys</option>
                 <option>Girls</option>
               </select>
-              <label className={`flex h-8 items-center gap-2 rounded-lg border px-3 text-[11px] font-semibold ${panelBg} ${panelBorder} ${textMuted}`}>
+              <label className={`flex h-8 items-center gap-2 rounded-lg border px-3 text-xs font-semibold ${panelBg} ${panelBorder} ${textMuted}`}>
                 <span>Term:</span>
                 <select
                   value={String(gradingPeriodId)}

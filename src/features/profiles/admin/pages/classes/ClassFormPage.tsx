@@ -324,7 +324,7 @@ export function ClassFormPage() {
   // ── Shared design tokens (same as StudentFormPage) ──
   const cardClasses = `rounded-[12px] border shadow-xs overflow-visible transition-all ${panelBg} ${panelBorder}`;
   const cardHeaderClasses = `flex flex-col gap-2 border-b px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 ${panelBorder}`;
-  const sectionTitleClasses = `text-xl font-black tracking-tight ${textPrimary}`;
+  const sectionTitleClasses = `qed-type-page-title ${textPrimary}`;
 
   if (isEditing && !existing) {
     return (
@@ -354,7 +354,7 @@ export function ClassFormPage() {
       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
   }`;
   const inputClasses = `w-full ${fieldBase}`;
-  const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
+  const labelClasses = `block text-xs font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 
   function updatePeriod(id: string, updates: Partial<SchedulePeriod>) {
     setForm((f) => ({
@@ -472,7 +472,7 @@ export function ClassFormPage() {
               <h1 className={sectionTitleClasses}>
                 {isEditing ? "Edit Class" : "Add New Class"}
               </h1>
-              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+              <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
                 {isEditing
                   ? `Updating ${existing?.gradeLevel} - ${existing?.section}`
                   : "Students matching the grade and section below sync automatically"}
@@ -523,7 +523,7 @@ export function ClassFormPage() {
                 ))}
               </select>
               {errors.gradeLevelId && (
-                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.gradeLevelId}
                 </p>
               )}
@@ -555,7 +555,7 @@ export function ClassFormPage() {
                 ))}
               </select>
               {errors.section && (
-                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.section}
                 </p>
               )}
@@ -576,7 +576,7 @@ export function ClassFormPage() {
                 onChange={(adviserId) => setForm((current) => ({ ...current, adviserId }))}
               />
               {errors.adviserId && (
-                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.adviserId}
                 </p>
               )}
@@ -673,7 +673,7 @@ export function ClassFormPage() {
                         key={day}
                         type="button"
                         onClick={() => toggleDay(period.id, day)}
-                        className={`w-9 h-9 rounded-lg text-[11px] font-bold transition-colors shrink-0 ${
+                        className={`w-9 h-9 rounded-lg text-xs font-bold transition-colors shrink-0 ${
                           period.days.includes(day)
                             ? "text-white"
                             : darkMode
@@ -744,7 +744,7 @@ export function ClassFormPage() {
                   ["Schedule periods", String(form.schedule.length)],
                 ].map(([label, value]) => (
                   <div key={label} className="min-w-0">
-                    <dt className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>{label}</dt>
+                    <dt className={`text-xs font-bold uppercase tracking-wide ${textMuted}`}>{label}</dt>
                     <dd className={`mt-1 break-words text-sm font-semibold ${textPrimary}`}>{value}</dd>
                   </div>
                 ))}

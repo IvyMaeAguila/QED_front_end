@@ -295,13 +295,13 @@ export function StudentHolisticProfilePage() {
           <ArrowLeft size={16} />
         </button>
         <div>
-          {/* <h1 className={` font-bold uppercase tracking-wider ${textMuted}`}>Holistic Development Profile</h1>
+          {/* <h1 className={`font-bold uppercase tracking-wider ${textMuted}`}>Holistic Development Profile</h1>
           <h1 className={`mt-0.5 text-3xl font-black tracking-tight ${textPrimary}`}>
             {profile?.studentName ?? "Student"}
           </h1> */}
 
-          <h1 className={`text-lg font-black tracking-tight ${textPrimary}`}>Holistic Development Profile</h1>
-              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+          <h1 className={`qed-type-page-title ${textPrimary}`}>Holistic Development Profile</h1>
+              <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
                 Current state, growth over the term, and a per-domain breakdown per subjects.
               </p>
         </div>
@@ -338,7 +338,7 @@ export function StudentHolisticProfilePage() {
                   {initials || "?"}
                 </div>
                 <div className="min-w-0">
-                  <p className={`mb-1 text-[10px] font-bold uppercase tracking-[0.12em] ${textMuted}`}>Student profile</p>
+                  <p className={`mb-1 text-xs font-bold uppercase tracking-[0.12em] ${textMuted}`}>Student profile</p>
                   <h2 className={`truncate text-lg font-bold tracking-tight sm:text-xl ${textPrimary}`}>
                     {profile.studentName || "Student"}
                   </h2>
@@ -410,7 +410,7 @@ export function StudentHolisticProfilePage() {
                   </h2>
                   {activeTab === "all" && (
                     <p
-                      className={`mt-0.5 text-[11px] font-semibold ${textMuted}`}
+                      className={`mt-0.5 text-xs font-semibold ${textMuted}`}
                     >
                       Pooled across every subject — open a subject tab for the
                       actionable trend.
@@ -522,7 +522,7 @@ export function StudentHolisticProfilePage() {
                                   <Icon size={15} />
                                 </span>
                                 <p
-                                  className={`text-[11px] font-bold uppercase tracking-wide ${textMuted}`}
+                                  className={`text-xs font-bold uppercase tracking-wide ${textMuted}`}
                                 >
                                   {label}
                                 </p>
@@ -561,7 +561,7 @@ export function StudentHolisticProfilePage() {
                                 }}
                               >
                                 <span
-                                  className={`text-[10px] font-extrabold uppercase tracking-wider ${domainEval ? "" : textMuted}`}
+                                  className={`text-xs font-extrabold uppercase tracking-wider ${domainEval ? "" : textMuted}`}
                                   style={{
                                     color: domainEval
                                       ? domainEval.color
@@ -571,7 +571,7 @@ export function StudentHolisticProfilePage() {
                                   {domainEval ? "Insight" : "Pending"}
                                 </span>
                                 <p
-                                  className={`mt-1 text-[13px] font-bold leading-snug ${textPrimary}`}
+                                  className={`mt-1 text-sm font-bold leading-snug ${textPrimary}`}
                                 >
                                   {domainEval && value !== null
                                     ? interpretationFor(domain, value)
@@ -616,7 +616,7 @@ export function StudentHolisticProfilePage() {
                                   </span>
                                   <div>
                                     <span
-                                      className="mr-2 inline-block rounded-full px-2 py-0.5 text-[10px] font-extrabold align-middle"
+                                      className="mr-2 inline-block rounded-full px-2 py-0.5 text-xs font-extrabold align-middle"
                                       style={{
                                         backgroundColor: `${color}18`,
                                         color,
@@ -667,7 +667,7 @@ export function StudentHolisticProfilePage() {
                           {subj.subjectName}
                         </span>
                         <span
-                          className="rounded-full px-2.5 py-1 text-[10px] font-bold"
+                          className="rounded-full px-2.5 py-1 text-xs font-bold"
                           style={{
                             backgroundColor: `${RISK_BADGE[subj.riskLevel].color}18`,
                             color: RISK_BADGE[subj.riskLevel].color,
@@ -689,7 +689,7 @@ export function StudentHolisticProfilePage() {
                             return (
                               <div key={domain} className="text-center">
                                 <p
-                                  className={`text-[10px] font-bold ${textMuted}`}
+                                  className={`text-xs font-bold ${textMuted}`}
                                 >
                                   {short}
                                 </p>
@@ -713,7 +713,7 @@ export function StudentHolisticProfilePage() {
                         className={`flex items-center justify-between border-t px-4 py-3 ${panelBorder}`}
                       >
                         <span
-                          className={`text-[11px] font-semibold ${textMuted}`}
+                          className={`text-xs font-semibold ${textMuted}`}
                         >
                           {subj.evaluationCount} eval
                           {subj.evaluationCount === 1 ? "" : "s"}
@@ -727,7 +727,7 @@ export function StudentHolisticProfilePage() {
                           )}
                           {trendMeta && (
                             <span
-                              className="inline-flex items-center gap-1 text-[11px] font-extrabold"
+                              className="inline-flex items-center gap-1 text-xs font-extrabold"
                               style={{ color: trendMeta.color ?? undefined }}
                             >
                               <trendMeta.Icon

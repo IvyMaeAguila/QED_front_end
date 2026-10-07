@@ -40,7 +40,7 @@ export function PerformanceByGrade({
         ].map(([label, dot]) => (
           <div key={label} className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full" style={{ background: dot }} />
-            <span className={`text-[10px] font-bold ${textMuted}`}>{label}</span>
+            <span className={`text-xs font-bold ${textMuted}`}>{label}</span>
           </div>
         ))}
       </div>
@@ -52,7 +52,7 @@ export function PerformanceByGrade({
               {["Grade", "Academic", "Holistic", "Students", "Trend", "Status", ""].map((h) => (
                 <th
                   key={h}
-                  className={`text-left font-bold text-[11px] uppercase tracking-wider px-5 py-3 ${textMuted}`}
+                  className={`text-left font-bold text-xs uppercase tracking-wider px-5 py-3 ${textMuted}`}
                 >
                   {h}
                 </th>
@@ -77,7 +77,7 @@ export function PerformanceByGrade({
                   </td>
                   <td className="px-5 py-4">
                     <span
-                      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold"
+                      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold"
                       style={{ background: darkMode ? `${t.color}25` : t.bg, color: t.color }}
                     >
                       <t.Icon size={12} />
@@ -86,7 +86,7 @@ export function PerformanceByGrade({
                   </td>
                   <td className="px-5 py-4">
                     <span
-                      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold"
+                      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold"
                       style={{ background: darkMode ? `${status.color}25` : status.bg, color: status.color }}
                     >
                       <span className="w-1.5 h-1.5 rounded-full" style={{ background: status.dot }} />
@@ -95,7 +95,7 @@ export function PerformanceByGrade({
                   </td>
                   <td className="px-5 py-4 text-right">
                     <button
-                      className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-bold transition-colors ${
+                      className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-bold transition-colors ${
                         darkMode
                           ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
                           : "border-[#E5E7EB] text-[#64748B] hover:bg-[#F6F7FB]"
@@ -121,7 +121,7 @@ export function PerformanceByGrade({
               <div className="flex items-center justify-between">
                 <h4 className={`font-extrabold text-base ${textPrimary}`}>{grade}</h4>
                 <span
-                  className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold"
+                  className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold"
                   style={{ background: darkMode ? `${status.color}25` : status.bg, color: status.color }}
                 >
                   <span className="w-1.5 h-1.5 rounded-full" style={{ background: status.dot }} />
@@ -131,11 +131,11 @@ export function PerformanceByGrade({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <p className={`text-[10px] font-bold uppercase mb-1 ${textMuted}`}>Academic</p>
+                  <p className={`text-xs font-bold uppercase mb-1 ${textMuted}`}>Academic</p>
                   <MiniBar value={academic} color="#8B0D0D" dark={darkMode} />
                 </div>
                 <div>
-                  <p className={`text-[10px] font-bold uppercase mb-1 ${textMuted}`}>Holistic</p>
+                  <p className={`text-xs font-bold uppercase mb-1 ${textMuted}`}>Holistic</p>
                   <MiniBar value={holistic} color="#1D70D6" dark={darkMode} />
                 </div>
               </div>
@@ -148,7 +148,7 @@ export function PerformanceByGrade({
                   </span>
                 </span>
                 <span
-                  className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold"
+                  className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold"
                   style={{ background: darkMode ? `${t.color}25` : t.bg, color: t.color }}
                 >
                   <t.Icon size={12} />

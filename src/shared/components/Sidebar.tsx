@@ -65,8 +65,8 @@ export function Sidebar({
         </div>
 
         <div className={`flex flex-col min-w-0 flex-1 ${collapsed ? "lg:hidden" : ""}`}>
-          <span className="font-bold text-[15px] leading-tight truncate">QED</span>
-          <span className="text-[9px] opacity-50 uppercase tracking-widest truncate">
+          <span className="qed-type-brand-name">QED</span>
+          <span className="qed-type-brand-descriptor mt-0.5 uppercase opacity-60">
             Quality Education
           </span>
         </div>
@@ -80,7 +80,7 @@ export function Sidebar({
         </button>
       </div>
 
-      <div className={`px-5 pt-2.5 pb-2 border-t border-white/10 text-[10px] font-bold opacity-30 uppercase tracking-widest ${collapsed ? "lg:hidden" : ""}`}>
+      <div className={`px-5 pt-2.5 pb-2 border-t border-white/10 text-xs font-bold opacity-30 uppercase tracking-widest ${collapsed ? "lg:hidden" : ""}`}>
         Main Menu
       </div>
 
@@ -109,7 +109,7 @@ export function Sidebar({
               onClick={onClose}
               title={collapsed ? item.label : undefined}
               aria-label={collapsed ? item.label : undefined}
-              className={`sidebar-nav-item group flex items-center justify-between ${collapsed ? "lg:justify-center lg:px-0" : "px-3.5"} py-2.5 rounded-2xl text-[13px] transition-all duration-300 ${APPLE_EASE} active:scale-[0.97] ${
+              className={`sidebar-nav-item ${isActive ? "qed-type-nav-item-active" : "qed-type-nav-item"} group flex items-center justify-between ${collapsed ? "lg:justify-center lg:px-0" : "px-3.5"} py-2.5 rounded-2xl text-sm transition-all duration-300 ${APPLE_EASE} active:scale-[0.97] ${
                 isActive
                   ? "bg-white/10 text-white shadow-[0_8px_20px_rgba(0,0,0,0.18),inset_0_1px_1px_rgba(255,255,255,0.35),inset_0_-1px_1px_rgba(0,0,0,0.25)] backdrop-blur-xl translate-x-1 border border-white/15"
                   : "text-white/55 hover:bg-white/5 hover:text-white hover:translate-x-1 border border-transparent"
@@ -146,7 +146,7 @@ export function Sidebar({
           onClick={onClose}
           title={collapsed ? helpItem.label : undefined}
           aria-label={collapsed ? helpItem.label : undefined}
-          className={`sidebar-nav-item flex w-full items-center ${collapsed ? "lg:justify-center lg:px-0" : "gap-3 px-3"} text-left text-[13px] text-white/55 hover:text-white hover:bg-white/10 py-2.5 rounded-2xl cursor-pointer transition-all duration-300 ${APPLE_EASE} hover:translate-x-1 active:scale-[0.97]`}
+          className={`sidebar-nav-item qed-type-nav-item flex w-full items-center ${collapsed ? "lg:justify-center lg:px-0" : "gap-3 px-3"} text-left text-sm text-white/55 hover:text-white hover:bg-white/10 py-2.5 rounded-2xl cursor-pointer transition-all duration-300 ${APPLE_EASE} hover:translate-x-1 active:scale-[0.97]`}
         >
           <HelpCircle size={16} className="shrink-0" /> <span className={collapsed ? "lg:hidden" : ""}>{helpItem.label}</span>
         </Link>
@@ -156,7 +156,7 @@ export function Sidebar({
           onClick={onLogout}
           title={collapsed ? "Log Out" : undefined}
           aria-label={collapsed ? "Log Out" : undefined}
-          className={`sidebar-nav-item flex w-full items-center ${collapsed ? "lg:justify-center lg:px-0" : "gap-3 px-3"} text-[13px] text-white/55 hover:text-white hover:bg-white/10 py-2.5 rounded-2xl cursor-pointer transition-all duration-300 ${APPLE_EASE} hover:translate-x-1 active:scale-[0.97]`}
+          className={`sidebar-nav-item qed-type-nav-item flex w-full items-center ${collapsed ? "lg:justify-center lg:px-0" : "gap-3 px-3"} text-sm text-white/55 hover:text-white hover:bg-white/10 py-2.5 rounded-2xl cursor-pointer transition-all duration-300 ${APPLE_EASE} hover:translate-x-1 active:scale-[0.97]`}
         >
           <LogOut size={16} className="shrink-0" /> <span className={collapsed ? "lg:hidden" : ""}>Log Out</span>
         </button>

@@ -227,10 +227,10 @@ export function AssessmentTab({
 
   const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
   const stickyCell = darkMode ? "bg-[#2A1A18]" : "bg-white";
-  const groupBand = `px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
+  const groupBand = `px-4 py-1.5 text-xs font-black uppercase tracking-wider ${
     darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
   } ${textPrimary}`;
-  const toolButton = `flex h-7 items-center gap-1 rounded-md border px-2.5 text-[11px] font-extrabold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+  const toolButton = `flex h-7 items-center gap-1 rounded-md border px-2.5 text-xs font-extrabold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
     darkMode
       ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
       : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
@@ -276,7 +276,7 @@ export function AssessmentTab({
                   }));
                 }}
                 placeholder="—"
-                className="h-7 w-14 rounded-lg text-center text-[11px] font-black tabular-nums outline-none transition-colors focus:ring-2"
+                className="h-7 w-14 rounded-lg text-center text-xs font-black tabular-nums outline-none transition-colors focus:ring-2"
                 style={
                   {
                     backgroundColor:
@@ -313,7 +313,7 @@ export function AssessmentTab({
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search student..."
             aria-label="Search student by name"
-            className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-[11px] font-medium outline-none transition-colors placeholder:text-gray-400 focus:border-maroon ${panelBg} ${panelBorder} ${textPrimary}`}
+            className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-xs font-medium outline-none transition-colors placeholder:text-gray-400 focus:border-maroon ${panelBg} ${panelBorder} ${textPrimary}`}
           />
         </div>
 
@@ -321,7 +321,7 @@ export function AssessmentTab({
           {SCORE_LEGEND.map((entry) => (
             <span
               key={entry.label}
-              className="flex items-center gap-1 text-[11px] font-bold"
+              className="flex items-center gap-1 text-xs font-bold"
               style={{ color: entry.color }}
             >
               <i
@@ -339,7 +339,7 @@ export function AssessmentTab({
           {tab !== "exams" && (
             <button
               onClick={() => setTopicManagerOpen(true)}
-              className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-[11px] font-extrabold transition-colors ${
+              className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-extrabold transition-colors ${
                 darkMode
                   ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
                   : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
@@ -351,7 +351,7 @@ export function AssessmentTab({
           )}
           <button
             onClick={onOpenRecords}
-            className={`flex h-8 items-center gap-1.5 rounded-lg border bg-[#800000] px-3 text-[11px] font-extrabold text-white transition-colors hover:bg-[#650000] ${
+            className={`flex h-8 items-center gap-1.5 rounded-lg border bg-[#800000] px-3 text-xs font-extrabold text-white transition-colors hover:bg-[#650000] ${
               darkMode ? "border-white/10" : "border-black/10"
             }`}
           >
@@ -373,7 +373,7 @@ export function AssessmentTab({
               <ClipboardList size={13} style={{ color: ACCENT }} />
               Score Sheet
             </p>
-            <p className={`truncate text-[11px] font-medium ${textMuted}`}>
+            <p className={`truncate text-xs font-medium ${textMuted}`}>
               · {tabItems.length} item{tabItems.length === 1 ? "" : "s"} ·{" "}
               {filtered.length} student{filtered.length === 1 ? "" : "s"}
               {isDirty && (
@@ -407,7 +407,7 @@ export function AssessmentTab({
                   ? `Delete ${selectedItem.activityName}`
                   : "Select an item column to enable delete"
               }
-              className={`flex h-7 items-center gap-1 rounded-md border px-2.5 text-[11px] font-extrabold text-[#DC2626] transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+              className={`flex h-7 items-center gap-1 rounded-md border px-2.5 text-xs font-extrabold text-[#DC2626] transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                 darkMode
                   ? "border-white/10 bg-white/5 enabled:hover:bg-[#DC2626]/15"
                   : "border-black/10 bg-white enabled:hover:bg-[#FEF2F2]"
@@ -448,7 +448,7 @@ export function AssessmentTab({
               <thead>
                 <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
                   <th
-                    className={`sticky left-0 z-10 min-w-56 px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${
+                    className={`sticky left-0 z-10 min-w-56 px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${
                       darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
                     } ${textMuted}`}
                   >
@@ -456,7 +456,7 @@ export function AssessmentTab({
                   </th>
                   {tabItems.length === 0 ? (
                     <th
-                      className={`px-4 py-2 text-left text-[11px] font-bold ${textMuted}`}
+                      className={`px-4 py-2 text-left text-xs font-bold ${textMuted}`}
                     >
                       No items yet — tap Add Item
                     </th>
@@ -487,12 +487,12 @@ export function AssessmentTab({
                           >
                             <div className="relative flex min-h-4 items-center justify-center">
                               <p
-                                className={`text-[11px] font-black leading-none ${textPrimary}`}
+                                className={`text-xs font-black leading-none ${textPrimary}`}
                               >
                                 {formatDisplayDate(item.date)}
                               </p>
                               <span
-                                className={`absolute right-0 shrink-0 rounded-full bg-[#DC2626] px-1.5 py-0.5 text-[8px] font-black uppercase tracking-wide text-white transition-opacity ${
+                                className={`absolute right-0 shrink-0 rounded-full bg-[#DC2626] px-1.5 py-0.5 text-xs font-black uppercase tracking-wide text-white transition-opacity ${
                                   isSelected
                                     ? "opacity-100"
                                     : "pointer-events-none opacity-0"
@@ -504,7 +504,7 @@ export function AssessmentTab({
 
                             {!isWrittenWorks && (
                               <p
-                                className={`mt-1 truncate text-[10px] font-semibold leading-none ${textMuted}`}
+                                className={`mt-1 truncate text-xs font-semibold leading-none ${textMuted}`}
                                 title={item.activityName}
                               >
                                 {item.activityName} · {item.maxItems} pts
@@ -512,7 +512,7 @@ export function AssessmentTab({
                             )}
 
                             <p
-                              className="mt-1 truncate text-[10px] font-bold leading-none"
+                              className="mt-1 truncate text-xs font-bold leading-none"
                               style={{ color: ACCENT }}
                               title={item.topic}
                             >

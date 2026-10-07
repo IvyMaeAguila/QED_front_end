@@ -21,7 +21,7 @@
 //               type="button"
 //               onClick={() => onChange(l.value)}
 //               title={l.label}
-//               className={`h-9 rounded-lg text-[11px] font-bold border transition-all ${
+//               className={`h-9 rounded-lg text-xs font-bold border transition-all ${
 //                 selected
 //                   ? "text-white shadow-sm scale-[1.03]"
 //                   : darkMode
@@ -35,7 +35,7 @@
 //           );
 //         })}
 //       </div>
-//       <p className={`mt-1.5 text-[11px] font-bold ${level ? "" : textMuted}`} style={level ? { color: level.color } : undefined}>
+//       <p className={`mt-1.5 text-xs font-bold ${level ? "" : textMuted}`} style={level ? { color: level.color } : undefined}>
 //         {level ? level.label : "Not rated yet"}
 //       </p>
 //     </div>

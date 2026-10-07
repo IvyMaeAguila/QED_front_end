@@ -1,4 +1,5 @@
 import { AlertTriangle } from "lucide-react";
+import { ConfirmationModal } from "@shared/components/ConfirmationModal";
 
 export default function LeaveQuizConfirm({
   onConfirm,
@@ -8,33 +9,23 @@ export default function LeaveQuizConfirm({
   onCancel: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
-      <div className="w-full max-w-xs rounded-3xl bg-white p-5 text-center shadow-xl">
-        <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100">
-          <AlertTriangle size={24} className="text-amber-500" />
-        </div>
-        <p className="text-base font-extrabold text-gray-800">Leave this round?</p>
-        <p className="mt-1.5 text-sm text-gray-500">
-          Your progress on this round hasn't been saved yet. If you leave now, you'll need to start it over.
-        </p>
-        <div className="mt-4 flex gap-2">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="flex-1 rounded-2xl bg-gray-100 py-2.5 text-sm font-bold text-gray-600 active:bg-gray-200"
-          >
-            Keep going
-          </button>
-          <button
-            type="button"
-            onClick={onConfirm}
-            className="flex-1 rounded-2xl bg-rose-500 py-2.5 text-sm font-bold text-white active:bg-rose-600"
-          >
-            Leave
-          </button>
-        </div>
-      </div>
-    </div>
+    <ConfirmationModal
+      title="Leave this round?"
+      description="Your progress on this round hasn't been saved yet. If you leave now, you'll need to start it over."
+      onClose={onCancel}
+      onConfirm={onConfirm}
+      confirmLabel="Leave"
+      cancelLabel="Keep going"
+      variant="warning"
+      size="sm"
+      panelClassName="max-w-xs rounded-3xl border-0 bg-white shadow-xl"
+      icon={<AlertTriangle size={24} className="text-amber-500" />}
+      iconClassName="bg-amber-100"
+      bodyClassName="px-6 pb-5 pt-0"
+      footerClassName="px-5 pb-5 pt-0"
+      cancelButtonClassName="flex-1 rounded-2xl border-0 bg-gray-100 py-2.5 text-gray-600 hover:bg-gray-200"
+      confirmButtonClassName="flex-1 rounded-2xl bg-rose-500 py-2.5 text-white hover:bg-rose-600"
+    />
   );
 }
 // Confirmation modal shown when the student tries to back out of an

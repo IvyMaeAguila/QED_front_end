@@ -34,21 +34,21 @@ export function SubjectCard({
         <>
           <button
             onClick={onEdit}
-            className="h-8 rounded-lg bg-[#800000] px-3 text-[11px] font-extrabold text-white transition-colors hover:bg-[#650000]"
+            className="h-8 rounded-lg bg-[#800000] px-3 text-xs font-extrabold text-white transition-colors hover:bg-[#650000]"
           >
             Edit
           </button>
           {!teacher && (
             <button
               onClick={onAssign}
-              className="h-8 whitespace-nowrap rounded-lg border border-[#D8C3C6] bg-white px-3 text-[11px] font-extrabold text-[#800020] transition-colors hover:bg-[#FFF8F8]"
+              className="h-8 whitespace-nowrap rounded-lg border border-[#D8C3C6] bg-white px-3 text-xs font-extrabold text-[#800020] transition-colors hover:bg-[#FFF8F8]"
             >
               Assign teacher
             </button>
           )}
           <button
             onClick={onToggleStatus}
-            className={`h-8 whitespace-nowrap rounded-lg border px-3 text-[11px] font-extrabold transition-colors ${isActive ? "border-gray-200 bg-white text-gray-600 hover:border-[#D8C3C6] hover:text-[#800020]" : "border-[#D8C3C6] bg-[#FFF8F8] text-[#800020] hover:bg-[#F5E9EA]"}`}
+            className={`h-8 whitespace-nowrap rounded-lg border px-3 text-xs font-extrabold transition-colors ${isActive ? "border-gray-200 bg-white text-gray-600 hover:border-[#D8C3C6] hover:text-[#800020]" : "border-[#D8C3C6] bg-[#FFF8F8] text-[#800020] hover:bg-[#F5E9EA]"}`}
           >
             {isActive ? "Deactivate" : "Activate"}
           </button>

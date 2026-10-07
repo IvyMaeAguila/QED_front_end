@@ -80,7 +80,7 @@ export const FeatureSection = () => (
             <div className="relative overflow-hidden bg-[#650000] px-6 py-7 text-white sm:px-8 sm:py-9">
               <div aria-hidden="true" className="absolute -right-12 -top-16 h-48 w-48 rounded-full border-[24px] border-white/[0.06]" />
               <div className="relative max-w-xl">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-[#F2D6AE]">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.15em] text-[#F2D6AE]">
                   <Brain size={14} /> Holistic development
                 </span>
                 <h3 className="mt-4 font-sans text-2xl font-bold leading-tight sm:text-3xl">
@@ -122,7 +122,7 @@ export const FeatureSection = () => (
               <article className="landing-polygon-surface flex h-full min-h-[190px] flex-col rounded-2xl border border-[#E1DDD7] bg-white p-5 shadow-sm sm:p-6">
                 <div className="flex items-center justify-between gap-3">
                   <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F0EEEB] [&_svg]:h-5 [&_svg]:w-5">{f.icon}</span>
-                  <span className="text-[10px] font-semibold text-[#8A8180]">{f.eyebrow}</span>
+                  <span className="text-xs font-semibold text-[#8A8180]">{f.eyebrow}</span>
                 </div>
                 <div className="mt-7">
                   <h3 className="max-w-[16rem] font-sans text-xl font-semibold text-[#241B1C]">{f.title}</h3>

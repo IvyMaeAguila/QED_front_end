@@ -25,14 +25,14 @@ function EventRow({ event, darkMode }: { event: EventItem; darkMode: boolean }) 
         className={`flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg text-maroon-dark shadow-sm ${darkMode ? "bg-[#111827]" : "bg-white"}`}
       >
         <span className="text-base font-extrabold leading-none">{event.day}</span>
-        <span className="text-[9px] font-bold uppercase leading-none">{event.month}</span>
+        <span className="text-xs font-bold uppercase leading-none">{event.month}</span>
       </div>
       <div className="min-w-0">
         <p className={`truncate text-xs font-semibold ${darkMode ? "text-gray-200" : "text-gray-800"}`}>
           {event.title}
         </p>
         {event.holidayType && (
-          <p className="truncate text-[11px] text-gray-500">{event.holidayType}</p>
+          <p className="truncate text-xs text-gray-500">{event.holidayType}</p>
         )}
       </div>
     </div>
@@ -45,14 +45,14 @@ export function UpcomingEvents({ events, panelBg, textMuted, darkMode }: Upcomin
 
   return (
     <div className={`rounded-xl2 p-4 sm:p-5 shadow-card ${panelBg}`}>
-      <p className={`mb-2.5 sm:mb-3 flex items-center gap-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wide ${textMuted}`}>
+      <p className={`mb-2.5 sm:mb-3 flex items-center gap-1.5 text-xs sm:text-xs font-bold uppercase tracking-wide ${textMuted}`}>
         <CalendarDays size={13} className="text-maroon-dark shrink-0 sm:hidden" />
         <CalendarDays size={14} className="text-maroon-dark shrink-0 hidden sm:block" />
         School Calendar
       </p>
 
       <div className="mb-3">
-        <p className={`mb-1.5 text-[10.5px] sm:text-[11px] font-semibold ${textMuted}`}>Activities</p>
+        <p className={`mb-1.5 text-xs sm:text-xs font-semibold ${textMuted}`}>Activities</p>
         {activities.length > 0 ? (
           <div className="flex flex-col gap-2 max-h-56 overflow-y-auto pr-1">
             {activities.map((event) => (
@@ -60,14 +60,14 @@ export function UpcomingEvents({ events, panelBg, textMuted, darkMode }: Upcomin
             ))}
           </div>
         ) : (
-          <p className={`py-1 text-[11px] sm:text-xs ${textMuted}`}>
+          <p className={`py-1 text-xs sm:text-xs ${textMuted}`}>
             No upcoming activities recorded for this month.
           </p>
         )}
       </div>
 
       <div>
-        <p className={`mb-1.5 text-[10.5px] sm:text-[11px] font-semibold ${textMuted}`}>Holidays</p>
+        <p className={`mb-1.5 text-xs sm:text-xs font-semibold ${textMuted}`}>Holidays</p>
         {holidays.length > 0 ? (
           <div className="flex flex-col gap-2 max-h-56 overflow-y-auto pr-1">
             {holidays.map((event) => (
@@ -75,7 +75,7 @@ export function UpcomingEvents({ events, panelBg, textMuted, darkMode }: Upcomin
             ))}
           </div>
         ) : (
-          <p className={`py-1 text-[11px] sm:text-xs ${textMuted}`}>
+          <p className={`py-1 text-xs sm:text-xs ${textMuted}`}>
             There are no official holidays scheduled for this month.
           </p>
         )}

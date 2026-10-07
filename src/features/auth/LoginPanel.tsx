@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Logo from "../../shared/images/QED_Logo.png";
 import { UserIDIcon, PasswordIcon } from "./components/LoginIcon";
@@ -8,6 +8,7 @@ import { AuthService } from "../auth/services/authentication.service";
 import { ForgotPasswordModal } from "../../shared/components/manage_password/ForgotPasswordModal";
 import { OtpVerificationModal } from "../../shared/components/manage_password/OtpVerificationModal";
 import { ResetPasswordModal } from "../../shared/components/manage_password/ResetPasswordModal";
+import { ModalCloseButton, ModalFrame } from "../../shared/components/modal";
 
 interface LoginModalProps {
   open: boolean;
@@ -43,7 +44,6 @@ function getSafeRedirect(search: string): string | null {
 type ForgotPasswordStep = "closed" | "email" | "otp" | "reset";
 
 export function LoginPanel({ open, onClose }: LoginModalProps) {
-  const panelRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
@@ -59,22 +59,6 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
   const [resetUserName, setResetUserName] = useState("");
   const [resetEmail, setResetEmail] = useState("");
   const [resetToken, setResetToken] = useState("");
-
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [open, onClose]);
-
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
 
   if (!open) return null;
 
@@ -113,42 +97,32 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-100 flex items-center justify-center px-4 modal-backdrop"
-      style={{
+    <>
+    <ModalFrame
+      shellVariant="specialized"
+      onClose={onClose}
+      size="compact"
+      zIndexClass="z-100"
+      ariaLabel="Institutional Login"
+      backdropClassName="px-4"
+      backdropStyle={{
         backgroundColor: "rgba(10,10,15,0.6)",
         backdropFilter: "blur(8px)",
       }}
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) onClose();
+      className="qed-login-modal relative max-w-105 overflow-hidden rounded-[12px] border-0 bg-white shadow-none"
+      panelStyle={{
+        boxShadow: "0 24px 64px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.1)",
+        animation: "modalIn 0.2s cubic-bezier(0.16,1,0.3,1)",
       }}
     >
-      <div
-        ref={panelRef}
-        className="relative w-full max-w-105 overflow-hidden rounded-[12px] bg-white"
-        style={{
-          boxShadow: "0 24px 64px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.1)",
-          animation: "modalIn 0.2s cubic-bezier(0.16,1,0.3,1)",
-        }}
-      >
         {/* Top accent bar */}
         <div className="h-1 w-full bg-[#550000]" />
 
         {/* Close button */}
-        <button
-          onClick={onClose}
-          aria-label="Close"
-          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg text-[#9d9d9d] transition-all hover:bg-[#f4f4f4] hover:text-black"
-        >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path
-              d="M1 1L13 13M13 1L1 13"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-            />
-          </svg>
-        </button>
+        <ModalCloseButton
+          onClose={onClose}
+          className="absolute right-4 top-4 text-[#9d9d9d] hover:bg-[#f4f4f4] hover:text-black"
+        />
 
         <div className="px-10 pt-10 pb-10 flex flex-col">
           {/* Logo + branding */}
@@ -164,7 +138,7 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
               <p className="text-2xl font-black tracking-tight leading-none text-[#550000]">
                 QED
               </p>
-              <p className="text-[10px] font-medium text-[#aaa] tracking-[0.18em] uppercase mt-0.5">
+              <p className="text-xs font-medium text-[#aaa] tracking-[0.18em] uppercase mt-0.5">
                 Quality Education
               </p>
             </div>
@@ -172,17 +146,17 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
 
           {/* Section label */}
           <div className="mb-6 text-center">
-            <p className="text-[15px] font-semibold text-black">
+            <p className="text-[18px] font-semibold leading-[1.35] text-black">
               Institutional Login
             </p>
-            <p className="text-[12px] text-[#9d9d9d] mt-0.5">
+            <p className="text-[13px] font-normal leading-[1.4] text-[#9d9d9d] mt-0.5">
               Enter your credentials to continue
             </p>
           </div>
 
           {/* Error message */}
           {error && (
-            <div className="mb-4 px-3.5 py-2.5 rounded-lg bg-[#fdecec] border border-[#f5c2c2] text-[#a30000] text-[12px] font-medium text-center">
+            <div className="mb-4 px-3.5 py-2.5 rounded-lg bg-[#fdecec] border border-[#f5c2c2] text-[#a30000] text-xs font-medium text-center">
               {error}
             </div>
           )}
@@ -191,7 +165,7 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
           <div className="flex flex-col gap-4">
             {/* Username */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-semibold text-[#5d5d5d] tracking-wide uppercase">
+              <label className="qed-type-label-compact text-[#5d5d5d] uppercase">
                 Username
               </label>
               <div className="relative">
@@ -204,7 +178,7 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
                   onChange={(e) => setuserName(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="e.g. TC_maria.delacruz"
-                  className="w-full pl-12 pr-4 py-3 rounded-xl text-[13px] text-black bg-[#f7f7f8] border border-transparent outline-none transition-all placeholder:text-[#ccc]"
+                  className="w-full pl-12 pr-4 py-3 rounded-xl text-sm text-black bg-[#f7f7f8] border border-transparent outline-none transition-all placeholder:text-[#ccc]"
                   style={{ boxShadow: "none" }}
                   onFocus={(e) => {
                     e.currentTarget.style.background = "#fff";
@@ -223,7 +197,7 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
 
             {/* Password */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-semibold text-[#5d5d5d] tracking-wide uppercase">
+              <label className="qed-type-label-compact text-[#5d5d5d] uppercase">
                 Password
               </label>
               <div className="relative">
@@ -236,7 +210,7 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="••••••••"
-                  className="w-full rounded-lg border border-transparent bg-[#f7f7f8] py-3 pl-12 pr-11 text-[13px] text-black outline-none transition-all placeholder:text-[#ccc]"
+                  className="w-full rounded-lg border border-transparent bg-[#f7f7f8] py-3 pl-12 pr-11 text-sm text-black outline-none transition-all placeholder:text-[#ccc]"
                   onFocus={(e) => {
                     e.currentTarget.style.background = "#fff";
                     e.currentTarget.style.borderColor = "rgba(85,0,0,0.35)";
@@ -269,14 +243,14 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
                 type="checkbox"
                 className="w-3.5 h-3.5 accent-[#550000] cursor-pointer"
               />
-              <span className="text-[11px] text-[#7d7d7d] group-hover:text-black transition-colors">
+              <span className="text-[13px] font-normal leading-[1.4] text-[#7d7d7d] group-hover:text-black transition-colors">
                 Remember me
               </span>
             </label>
             <button
               type="button"
               onClick={() => setForgotStep("email")}
-              className="text-[11px] text-[#550000] hover:text-[#bb0000] font-medium transition-colors"
+              className="text-xs text-[#550000] hover:text-[#bb0000] font-medium transition-colors"
             >
               Forgot password?
             </button>
@@ -285,7 +259,7 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
           {/* Login button */}
           <button
             disabled={loading}
-            className="mt-7 w-full rounded-lg py-3.5 text-[15px] font-semibold text-white transition-opacity hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-7 w-full rounded-lg py-3.5 qed-type-button text-white transition-opacity hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
             style={{
               background: "#800000",
               boxShadow: "0 4px 16px rgba(85,0,0,0.16)",
@@ -297,13 +271,13 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
           </button>
 
           {/* Footer note */}
-          <p className="text-center text-[10px] text-[#c0c0c0] mt-6 leading-relaxed">
+          <p className="text-center text-xs text-[#c0c0c0] mt-6 leading-relaxed">
             For authorized personnel only. Unauthorized access
             <br />
             is prohibited and subject to disciplinary action.
           </p>
         </div>
-      </div>
+    </ModalFrame>
 
       <style>{`
         @keyframes modalIn {
@@ -342,6 +316,6 @@ export function LoginPanel({ open, onClose }: LoginModalProps) {
           onSuccess={() => setForgotStep("closed")}
         />
       )}
-    </div>
+    </>
   );
 }

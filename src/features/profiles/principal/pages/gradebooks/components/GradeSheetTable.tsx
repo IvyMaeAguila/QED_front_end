@@ -32,7 +32,7 @@ export function GradeSheetTable({
 }: GradeSheetTableProps) {
   return (
     <section className={`overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`}>
-      <div className={`border-b px-4 py-3 text-[11px] font-bold uppercase tracking-wide ${panelBorder} ${textPrimary}`}>
+      <div className={`border-b px-4 py-3 text-xs font-bold uppercase tracking-wide ${panelBorder} ${textPrimary}`}>
         {sectionName} <span className={textMuted}>· {termLabel} · {totalStudents} students</span>
       </div>
       <StudentGroupTable

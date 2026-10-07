@@ -33,7 +33,7 @@ export function AdvisoryTable({
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search student..."
             aria-label="Search student by name"
-            className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-[11px] font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
+            className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-xs font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
           />
         </div>
         <select
@@ -41,7 +41,7 @@ export function AdvisoryTable({
           onChange={(event) => setGenderFilter(event.target.value as GenderFilter)}
           aria-label="Filter by gender"
           style={{ borderRadius: "8px" }}
-          className={`h-8 rounded-lg border px-2.5 text-[11px] font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
+          className={`h-8 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
         >
           <option value="All">All genders</option>
           <option value="M">Male</option>

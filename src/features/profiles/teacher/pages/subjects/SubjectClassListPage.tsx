@@ -120,7 +120,7 @@ export function SubjectClassListPage() {
         key={student.studentId}
         className={`border-t ${darkMode ? "border-white/10" : "border-black/10"}`}
       >
-        <td className={`px-4 py-2 text-[11px] font-bold tabular-nums ${textMuted}`}>{index + 1}</td>
+        <td className={`px-4 py-2 text-xs font-bold tabular-nums ${textMuted}`}>{index + 1}</td>
         <td className="px-4 py-2">
           <div className="flex min-w-0 items-center gap-2.5">
             <StudentAvatar gender={student.gender} name={`${student.lastName}, ${student.firstName}`} />
@@ -150,15 +150,15 @@ export function SubjectClassListPage() {
             </button>
             <div>
               <p
-                className="text-[10px] font-extrabold uppercase tracking-[0.18em]"
+                className="text-xs font-extrabold uppercase tracking-[0.18em]"
                 style={{ color: ACCENT }}
               >
                 {displaySectionName}
               </p>
-              <h1 className={`mt-1 text-xl font-black tracking-tight ${textPrimary}`}>
+              <h1 className={`qed-type-page-title mt-1 ${textPrimary}`}>
                 {subjectName || "Class List"}
               </h1>
-              <p className={`mt-1 text-xs font-medium ${textMuted}`}>
+              <p className={`qed-type-page-description mt-1 ${textMuted}`}>
                 {students.length} student{students.length === 1 ? "" : "s"} · {maleCount} male ·{" "}
                 {femaleCount} female
               </p>
@@ -168,7 +168,7 @@ export function SubjectClassListPage() {
           <button
             onClick={handleExport}
             disabled={loading || !!error || students.length === 0}
-            className={`flex h-8 shrink-0 items-center gap-1.5 self-start rounded-lg border bg-[#800000] px-3 text-[11px] font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-40 sm:self-center ${
+            className={`flex h-8 shrink-0 items-center gap-1.5 self-start rounded-lg border bg-[#800000] px-3 text-xs font-extrabold text-white transition-colors hover:bg-[#650000] disabled:opacity-40 sm:self-center ${
               darkMode ? "border-white/10" : "border-black/10"
             }`}
           >
@@ -200,10 +200,10 @@ export function SubjectClassListPage() {
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search student..."
                   aria-label="Search student by name or ID"
-                  className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-[11px] font-medium outline-none transition-colors placeholder:text-gray-400 focus:border-maroon ${panelBg} ${panelBorder} ${textPrimary}`}
+                  className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-xs font-medium outline-none transition-colors placeholder:text-gray-400 focus:border-maroon ${panelBg} ${panelBorder} ${textPrimary}`}
                 />
               </div>
-              <p className={`text-[11px] font-bold ${textMuted}`}>
+              <p className={`text-xs font-bold ${textMuted}`}>
                 Showing {filteredCount} of {students.length}
               </p>
             </div>
@@ -228,17 +228,17 @@ export function SubjectClassListPage() {
                     <thead>
                       <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
                         <th
-                          className={`w-12 px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}
+                          className={`w-12 px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${textMuted}`}
                         >
                           No.
                         </th>
                         <th
-                          className={`px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}
+                          className={`px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${textMuted}`}
                         >
                           Name
                         </th>
                         <th
-                          className={`px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}
+                          className={`px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${textMuted}`}
                         >
                           Student ID
                         </th>
@@ -250,7 +250,7 @@ export function SubjectClassListPage() {
                           <tr>
                             <td
                               colSpan={3}
-                              className={`px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
+                              className={`px-4 py-1.5 text-xs font-black uppercase tracking-wider ${
                                 darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
                               } ${textPrimary}`}
                             >
@@ -266,7 +266,7 @@ export function SubjectClassListPage() {
                           <tr>
                             <td
                               colSpan={3}
-                              className={`px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
+                              className={`px-4 py-1.5 text-xs font-black uppercase tracking-wider ${
                                 darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
                               } ${textPrimary}`}
                             >

@@ -167,7 +167,7 @@ export function LoginFrequency({
           <div className="absolute inset-0 flex flex-col justify-between pb-6">
             {ticks.map((tick) => (
               <div key={tick} className="flex items-center gap-2">
-                <span className={`w-8 text-right text-[10px] font-medium ${textMuted}`}>
+                <span className={`w-8 text-right text-xs font-medium ${textMuted}`}>
                   {Math.round(tick)}
                 </span>
                 <div className={`flex-1 h-px ${darkMode ? "bg-[#1F2937]" : "bg-[#EEF1F6]"}`} />
@@ -203,7 +203,7 @@ export function LoginFrequency({
                       className="flex flex-col items-center gap-2 h-full justify-end shrink-0"
                     >
                       <span
-                        className={`text-[11px] font-semibold tabular-nums ${
+                        className={`text-xs font-semibold tabular-nums ${
                           isPeak ? "text-[#8B0D0D]" : textMuted
                         }`}
                       >

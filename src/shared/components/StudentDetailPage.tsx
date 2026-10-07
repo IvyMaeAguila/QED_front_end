@@ -184,7 +184,7 @@ function HolisticRadarChart({
       </svg>
       {!hasAnyScore && (
         <p
-          className={`text-[11px] font-semibold mt-1 ${darkMode ? "text-slate-400" : "text-slate-500"}`}
+          className={`text-xs font-semibold mt-1 ${darkMode ? "text-slate-400" : "text-slate-500"}`}
         >
           Awaiting assessment — showing baseline
         </p>
@@ -247,7 +247,7 @@ export function StudentDetailPage() {
   const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
   const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
   const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
-  const fieldLabel = `text-[11px] font-bold uppercase tracking-wider ${textMuted}`;
+  const fieldLabel = `text-xs font-bold uppercase tracking-wider ${textMuted}`;
   const fieldValue = `text-sm font-semibold mt-1 ${textPrimary}`;
 
   return (
@@ -430,7 +430,7 @@ export function StudentDetailPage() {
             <table className="teacher-user-table w-full text-left border-collapse">
               <thead>
                 <tr
-                  className={`border-b text-[11px] font-bold uppercase tracking-wider ${panelBorder} ${darkMode ? "bg-slate-900/60" : "bg-slate-50"}`}
+                  className={`border-b text-xs font-bold uppercase tracking-wider ${panelBorder} ${darkMode ? "bg-slate-900/60" : "bg-slate-50"}`}
                 >
                   <th className="px-6 py-3.5">Subject</th>
                   <th className="px-6 py-3.5">Assigned Teacher</th>
@@ -461,7 +461,7 @@ export function StudentDetailPage() {
                       </td>
                       <td className="px-6 py-4">
                         <span
-                          className={`px-2.5 py-1 rounded-full text-[11px] font-bold border ${darkMode ? "bg-amber-950/40 text-amber-400 border-amber-800" : "bg-amber-50 text-amber-700 border-amber-200"}`}
+                          className={`px-2.5 py-1 rounded-full text-xs font-bold border ${darkMode ? "bg-amber-950/40 text-amber-400 border-amber-800" : "bg-amber-50 text-amber-700 border-amber-200"}`}
                         >
                           Pending
                         </span>
@@ -592,7 +592,7 @@ export function StudentDetailPage() {
                     / 5.0
                   </span>
                 </p>
-                <p className="text-[11px] font-semibold mt-1.5 text-white/70">
+                <p className="text-xs font-semibold mt-1.5 text-white/70">
                   {note}
                 </p>
               </div>
@@ -670,7 +670,7 @@ export function StudentDetailPage() {
               <p className="text-lg font-black text-emerald-600 dark:text-emerald-400">
                 0
               </p>
-              <p className="text-[10px] font-bold tracking-wider uppercase text-emerald-700 dark:text-emerald-400 mt-0.5">
+              <p className="text-xs font-bold tracking-wider uppercase text-emerald-700 dark:text-emerald-400 mt-0.5">
                 Present
               </p>
             </div>
@@ -680,7 +680,7 @@ export function StudentDetailPage() {
               <p className="text-lg font-black text-rose-600 dark:text-rose-400">
                 0
               </p>
-              <p className="text-[10px] font-bold tracking-wider uppercase text-rose-700 dark:text-rose-400 mt-0.5">
+              <p className="text-xs font-bold tracking-wider uppercase text-rose-700 dark:text-rose-400 mt-0.5">
                 Absent
               </p>
             </div>
@@ -690,7 +690,7 @@ export function StudentDetailPage() {
               <p className="text-lg font-black text-amber-600 dark:text-amber-400">
                 0
               </p>
-              <p className="text-[10px] font-bold tracking-wider uppercase text-amber-700 dark:text-amber-400 mt-0.5">
+              <p className="text-xs font-bold tracking-wider uppercase text-amber-700 dark:text-amber-400 mt-0.5">
                 Late
               </p>
             </div>

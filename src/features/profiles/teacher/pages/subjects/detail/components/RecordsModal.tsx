@@ -127,12 +127,12 @@
 //                 return (
 //                   <div key={key} className="flex items-center gap-1.5">
 //                     <span
-//                       className="flex h-6 w-6 items-center justify-center rounded-md text-[10px] font-black"
+//                       className="flex h-6 w-6 items-center justify-center rounded-md text-xs font-black"
 //                       style={{ background: meta.bg, color: meta.color }}
 //                     >
 //                       {key}
 //                     </span>
-//                     <span className={`text-[11px] font-semibold ${textMuted}`}>{meta.label}</span>
+//                     <span className={`text-xs font-semibold ${textMuted}`}>{meta.label}</span>
 //                   </div>
 //                 );
 //               })}
@@ -175,7 +175,7 @@
 //               <thead>
 //                 <tr className={darkMode ? "bg-white/3" : "bg-[#F8FAFC]"}>
 //                   <th
-//                     className={`sticky left-0 z-20 min-w-48 px-4 py-2.5 text-left text-[10px] font-extrabold uppercase tracking-wider ${
+//                     className={`sticky left-0 z-20 min-w-48 px-4 py-2.5 text-left text-xs font-extrabold uppercase tracking-wider ${
 //                       darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
 //                     } ${textMuted}`}
 //                   >
@@ -186,10 +186,10 @@
 //                     return (
 //                       <th key={iso} className="px-0 py-2.5">
 //                         <div className="flex flex-col items-center gap-0.5">
-//                           <span className={`text-[8px] font-bold uppercase ${isWeekend ? "opacity-40" : ""} ${textMuted}`}>
+//                           <span className={`text-xs font-bold uppercase ${isWeekend ? "opacity-40" : ""} ${textMuted}`}>
 //                             {WEEKDAY_LETTERS[dayOfWeek]}
 //                           </span>
-//                           <span className={`text-[11px] font-black tabular-nums ${isWeekend ? "opacity-40" : ""} ${textPrimary}`}>
+//                           <span className={`text-xs font-black tabular-nums ${isWeekend ? "opacity-40" : ""} ${textPrimary}`}>
 //                             {date.getDate()}
 //                           </span>
 //                         </div>
@@ -197,7 +197,7 @@
 //                     );
 //                   })}
 //                   <th
-//                     className={`sticky right-0 z-20 min-w-24 border-l px-3 py-2.5 text-center text-[10px] font-extrabold uppercase tracking-wider ${panelBorder} ${
+//                     className={`sticky right-0 z-20 min-w-24 border-l px-3 py-2.5 text-center text-xs font-extrabold uppercase tracking-wider ${panelBorder} ${
 //                       darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
 //                     } ${textMuted}`}
 //                   >
@@ -221,7 +221,7 @@
 //                         return (
 //                           <td key={iso} className="p-1 text-center">
 //                             <span
-//                               className={`inline-flex h-6 w-6 items-center justify-center rounded-md text-[10px] font-black tabular-nums ${
+//                               className={`inline-flex h-6 w-6 items-center justify-center rounded-md text-xs font-black tabular-nums ${
 //                                 isWeekend && !status ? "opacity-30" : ""
 //                               }`}
 //                               style={

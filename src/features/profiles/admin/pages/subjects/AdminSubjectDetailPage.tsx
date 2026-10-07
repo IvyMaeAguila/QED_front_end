@@ -41,7 +41,7 @@ export function AdminSubjectDetailPage() {
 
   const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
   const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
-  const sectionTitleClasses = `text-xl font-black tracking-tight ${textPrimary}`;
+  const sectionTitleClasses = `qed-type-page-title ${textPrimary}`;
 
   return (
     <div className="w-full space-y-6 pb-12">
@@ -62,7 +62,7 @@ export function AdminSubjectDetailPage() {
             </button>
             <div className="min-w-0">
               <h1 className={sectionTitleClasses}>Subject Details</h1>
-              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+              <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
                 Review the active grade template for this subject.
               </p>
             </div>

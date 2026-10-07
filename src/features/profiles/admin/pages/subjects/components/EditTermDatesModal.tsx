@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { X } from "lucide-react";
 import { ACCENT } from "../types/types";
 import type { Term } from "../types/academicyear";
 import type { TermInput } from "../services/academicyear.service";
+import { ModalBody, ModalFooter, ModalFrame, ModalHeader } from "@shared/components/modal";
 
 interface EditTermDatesModalProps {
   terms: Term[];
@@ -45,7 +45,6 @@ function buildInitialDrafts(terms: Term[]): TermDraft[] {
 export function EditTermDatesModal({
   terms,
   darkMode,
-  panelBg,
   panelBorder,
   textPrimary,
   textMuted,
@@ -78,25 +77,17 @@ export function EditTermDatesModal({
   }
 
   return (
-    <div className="fixed inset-0 z-60 flex items-center justify-center p-4 modal-backdrop">
-      <div
-        className={`w-full max-w-lg rounded-[12px] border shadow-xl ${panelBg} ${panelBorder}`}
-      >
-        <div className={`flex items-center justify-between px-6 py-4 border-b ${panelBorder}`}>
-          <h3 className={`text-sm font-black ${textPrimary}`}>
-            Edit Term Dates
-          </h3>
-          <button
-            onClick={onClose}
-            className={`rounded-lg p-1 transition-colors ${
-              darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
-            }`}
-          >
-            <X size={16} className={textMuted} />
-          </button>
-        </div>
+    <ModalFrame shellVariant={darkMode ? "dark" : "standard"} onClose={onClose} size="md" zIndexClass="z-60" ariaLabel="Edit Term Dates">
+        <ModalHeader
+          title="Edit Term Dates"
+          onClose={onClose}
+          closeDarkMode={darkMode}
+          closeDisabled={saving}
+          titleClassName={textPrimary}
+          className={`items-center border-b px-6 py-4 ${panelBorder}`}
+        />
 
-        <div className="px-6 py-5 space-y-5 max-h-[60vh] overflow-y-auto">
+        <ModalBody className="max-h-[60vh] space-y-5 px-6 py-5">
           {error && (
             <p className="text-xs font-semibold text-red-500">{error}</p>
           )}
@@ -146,12 +137,12 @@ export function EditTermDatesModal({
               </div>
             </div>
           ))}
-        </div>
+        </ModalBody>
 
-        <div className={`flex justify-end gap-2 px-6 py-4 border-t ${panelBorder}`}>
+        <ModalFooter className={panelBorder}>
           <button
             onClick={onClose}
-            className={`h-10 px-4 rounded-lg text-xs font-bold border transition-colors ${
+            className={`qed-type-button h-10 px-4 rounded-lg border transition-colors ${
               darkMode
                 ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
                 : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
@@ -162,13 +153,12 @@ export function EditTermDatesModal({
           <button
             onClick={handleSave}
             disabled={saving}
-            className="h-10 px-4 rounded-lg text-xs font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+            className="qed-type-button h-10 px-4 rounded-lg text-white transition-opacity hover:opacity-90 disabled:opacity-60"
             style={{ background: ACCENT }}
           >
             {saving ? "Saving..." : "Save Term Dates"}
           </button>
-        </div>
-      </div>
-    </div>
+        </ModalFooter>
+    </ModalFrame>
   );
 }

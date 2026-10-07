@@ -51,7 +51,7 @@ export function GradeLevelCards({
                   type="button"
                   disabled={!isSubmitted}
                   onClick={() => onSelectGrade(g)}
-                  className={`whitespace-nowrap text-[10px] font-bold uppercase transition-colors ${isSubmitted ? "text-[#800020] hover:text-[#5A0017]" : "cursor-not-allowed text-gray-400"}`}
+                  className={`whitespace-nowrap text-xs font-bold uppercase transition-colors ${isSubmitted ? "text-[#800020] hover:text-[#5A0017]" : "cursor-not-allowed text-gray-400"}`}
                 >
                   {isSubmitted ? (
                     "View gradebook ›"

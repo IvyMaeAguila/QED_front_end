@@ -50,7 +50,7 @@ export function ProfileOverviewCard({
         <div className={`mt-4 grid grid-cols-1 divide-y divide-slate-200 border-y py-1 sm:grid-cols-3 sm:divide-x sm:divide-y-0 dark:divide-white/10 ${panelBorder}`}>
           {stats.slice(0, 3).map((stat) => (
             <div key={stat.label} className="min-w-0 px-3 py-2 sm:px-4">
-              <p className={`text-[10px] font-bold uppercase tracking-wider ${textMuted}`}>{stat.label}</p>
+              <p className={`text-xs font-bold uppercase tracking-wider ${textMuted}`}>{stat.label}</p>
               <p className={`truncate text-xs font-semibold ${textPrimary}`}>{stat.value}</p>
             </div>
           ))}
@@ -68,7 +68,7 @@ export function ProfileOverviewCard({
             className={`-mb-px inline-flex items-center gap-2 border-b-2 px-3 py-2.5 text-xs font-semibold transition-colors ${activeTab === tab.id ? "border-maroon text-maroon" : `border-transparent ${textMuted} hover:text-maroon`}`}
           >
             {tab.label}
-            {tab.count !== undefined && <span className={`rounded-full px-1.5 py-0.5 text-[10px] ${darkMode ? "bg-white/10" : "bg-black/[0.05]"}`}>{tab.count}</span>}
+            {tab.count !== undefined && <span className={`rounded-full px-1.5 py-0.5 text-xs ${darkMode ? "bg-white/10" : "bg-black/[0.05]"}`}>{tab.count}</span>}
           </button>
         ))}
         {actions && <div className="ml-auto py-1.5">{actions}</div>}

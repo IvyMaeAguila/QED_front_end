@@ -143,10 +143,10 @@ function AttendanceOverviewContent({ theme }: AttendanceOverviewContentProps) {
         <div className="flex items-center gap-3">
           <Calendar size={18} style={{ color: "#8B0D0D" }} />
           <div>
-            <h2 className={`text-[15px] font-bold ${textPrimary}`}>
+            <h2 className={`text-base font-bold ${textPrimary}`}>
               Attendance Overview
             </h2>
-            <p className={`text-[11px] font-medium ${textMuted}`}>
+            <p className={`text-xs font-medium ${textMuted}`}>
               {loading
                 ? "Loading attendance..."
                 : error
@@ -229,7 +229,7 @@ function AttendanceOverviewContent({ theme }: AttendanceOverviewContentProps) {
               {loading ? "…" : `${selectedPct}%`}
             </span>
             <span
-              className="text-[10px] font-bold uppercase tracking-[0.12em] mt-0.5"
+              className="text-xs font-bold uppercase tracking-[0.12em] mt-0.5"
               style={{ color: darkMode ? "rgba(255,255,255,0.4)" : "#94A3B8" }}
             >
               {selectedGroup.label} rate
@@ -267,8 +267,8 @@ function AttendanceOverviewContent({ theme }: AttendanceOverviewContentProps) {
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline justify-between gap-2">
-                    <p className={`text-[13px] font-bold ${textPrimary}`}>{g.label}</p>
-                    <p className={`text-[15px] font-black shrink-0 ${textPrimary}`}>
+                    <p className={`text-sm font-bold ${textPrimary}`}>{g.label}</p>
+                    <p className={`text-base font-black shrink-0 ${textPrimary}`}>
                       {loading ? "…" : String(g.count)}
                     </p>
                   </div>

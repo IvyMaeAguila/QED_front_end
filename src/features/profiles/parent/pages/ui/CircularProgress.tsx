@@ -59,7 +59,7 @@ export default function CircularProgress({
           </span>
         )}
         {sublabel && (
-          <span className={`text-[9px] font-medium uppercase tracking-wide ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
+          <span className={`text-xs font-medium uppercase tracking-wide ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
             {sublabel}
           </span>
         )}

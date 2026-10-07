@@ -46,7 +46,7 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
       ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]"
       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
   }`;
-  const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
+  const labelClasses = `block text-xs font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 
   async function handleAdd() {
     const result = await addSection(gradeLevel, name);
@@ -149,7 +149,7 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
             <Plus size={16} />
           </button>
         </div>
-        {error && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1.5">{error}</p>}
+        {error && <p className="text-xs font-semibold text-[#B91C1C] mt-1.5">{error}</p>}
       </div>
 
       <div>
@@ -199,7 +199,7 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
                         <X size={14} />
                       </button>
                     </div>
-                    {editError && <p className="text-[11px] font-semibold text-[#B91C1C] mt-1.5">{editError}</p>}
+                    {editError && <p className="text-xs font-semibold text-[#B91C1C] mt-1.5">{editError}</p>}
                   </div>
                 );
               }
@@ -239,7 +239,7 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
                     </div>
                   </div>
                   {removeErrorForThis && (
-                    <p className="text-[11px] font-semibold text-[#B91C1C] mt-1.5">{removeErrorForThis}</p>
+                    <p className="text-xs font-semibold text-[#B91C1C] mt-1.5">{removeErrorForThis}</p>
                   )}
                 </div>
               );

@@ -77,7 +77,7 @@ export function TeacherDirectoryTable({
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search name, grade, section, or room..."
             aria-label="Search teachers by name, advisory, or room"
-            className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-[11px] font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
+            className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-xs font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
           />
         </div>
         <div className="flex w-full gap-2 sm:w-auto">
@@ -86,7 +86,7 @@ export function TeacherDirectoryTable({
             onChange={(event) => setGenderFilter(event.target.value as typeof genderFilter)}
             aria-label="Filter teachers by gender"
             style={{ borderRadius: "8px" }}
-            className={`h-8 min-w-0 flex-1 rounded-lg border px-2.5 text-[11px] font-bold outline-none sm:flex-none ${panelBg} ${panelBorder} ${textPrimary}`}
+            className={`h-8 min-w-0 flex-1 rounded-lg border px-2.5 text-xs font-bold outline-none sm:flex-none ${panelBg} ${panelBorder} ${textPrimary}`}
           >
             <option value="all">All genders</option>
             <option value="Female">Female</option>
@@ -96,7 +96,7 @@ export function TeacherDirectoryTable({
             value={advisoryFilter}
             onChange={(event) => setAdvisoryFilter(event.target.value as typeof advisoryFilter)}
             aria-label="Filter teachers by advisory assignment"
-            className={`h-8 min-w-0 flex-1 rounded-[12px] border px-2.5 text-[11px] font-bold outline-none sm:flex-none ${panelBg} ${panelBorder} ${textPrimary}`}
+            className={`h-8 min-w-0 flex-1 rounded-[12px] border px-2.5 text-xs font-bold outline-none sm:flex-none ${panelBg} ${panelBorder} ${textPrimary}`}
           >
             <option value="all">All teachers</option>
             <option value="assigned">With advisory</option>
@@ -107,17 +107,17 @@ export function TeacherDirectoryTable({
       <section className={`overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`} aria-label="Teacher directory">
         <div className={`flex items-center gap-1.5 border-b px-4 py-3 ${panelBorder}`}>
           <p className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>Teacher directory</p>
-          <span className={`ml-1 text-[11px] ${textMuted}`}>· {visibleTeachers.length} of {teachers.length} teachers</span>
+          <span className={`ml-1 text-xs ${textMuted}`}>· {visibleTeachers.length} of {teachers.length} teachers</span>
         </div>
         <div className="overflow-x-auto">
         <table className="teacher-user-table w-full min-w-208 text-sm">
           <thead>
             <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
-              <th className={`w-12 px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>No.</th>
-              <th className={`px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>Teacher</th>
-              <th className={`px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>Advisory &amp; Grade Level</th>
-              <th className={`px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>Room</th>
-              <th className={`px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${textMuted}`}>Schedule</th>
+              <th className={`w-12 px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${textMuted}`}>No.</th>
+              <th className={`px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${textMuted}`}>Teacher</th>
+              <th className={`px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${textMuted}`}>Advisory &amp; Grade Level</th>
+              <th className={`px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${textMuted}`}>Room</th>
+              <th className={`px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${textMuted}`}>Schedule</th>
             </tr>
           </thead>
           <tbody>
@@ -133,7 +133,7 @@ export function TeacherDirectoryTable({
                   onClick={() => onSelectTeacher(t.teacherId)}
                   className={`cursor-pointer border-t transition-colors ${panelBorder} ${darkMode ? "hover:bg-white/5" : "hover:bg-black/1.5"}`}
                 >
-                  <td className={`px-4 py-2.5 text-[11px] font-bold tabular-nums ${textMuted}`}>{index + 1}</td>
+                  <td className={`px-4 py-2.5 text-xs font-bold tabular-nums ${textMuted}`}>{index + 1}</td>
                   <td className={`px-4 py-2.5 text-xs font-bold ${textPrimary}`}>
                     <div className="flex min-w-0 items-center gap-2.5">
                       <span className={`flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 ${darkMode ? "bg-white/10" : "bg-[#EEF0F3]"}`} style={{ borderColor: avatarBorderColor }}>
@@ -152,7 +152,7 @@ export function TeacherDirectoryTable({
                       {rooms.map((room, idx) => (
                         <span
                           key={`${t.teacherId}-room-${idx}`}
-                          className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-bold"
+                          className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-bold"
                           style={{
                             backgroundColor: darkMode ? "var(--color-maroon-soft-dark)" : "var(--color-maroon-soft)",
                             color: "var(--color-maroon)",
@@ -164,7 +164,7 @@ export function TeacherDirectoryTable({
                     </div>
                   </td>
                   <td className="px-4 py-2.5">
-                    <span className="flex items-center gap-1 whitespace-nowrap text-[11px] font-bold text-maroon">
+                    <span className="flex items-center gap-1 whitespace-nowrap text-xs font-bold text-maroon">
                       View <ChevronRight className="h-3 w-3" />
                     </span>
                   </td>

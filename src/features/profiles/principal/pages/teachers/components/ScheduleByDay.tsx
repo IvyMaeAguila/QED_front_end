@@ -22,7 +22,7 @@ export function ScheduleByDay({
     <SectionCard
       title="Class Schedule"
       compact
-      action={<span className={`text-[11px] font-medium ${textMuted}`}>{scheduleByDay.reduce((total, day) => total + day.entries.length, 0)} sessions</span>}
+      action={<span className={`text-xs font-medium ${textMuted}`}>{scheduleByDay.reduce((total, day) => total + day.entries.length, 0)} sessions</span>}
       panelBg={panelBg}
       panelBorder={panelBorder}
       textPrimary={textPrimary}
@@ -36,7 +36,7 @@ export function ScheduleByDay({
             <section key={day} className={`overflow-hidden rounded-xl border ${panelBorder}`}>
               <header className="flex items-center justify-between border-b border-white/15 bg-maroon px-3 py-2">
                 <h3 className="text-xs font-bold text-white">{day}</h3>
-                <span className="text-[10px] font-medium text-white/80">{entries.length} {entries.length === 1 ? "class" : "classes"}</span>
+                <span className="text-xs font-medium text-white/80">{entries.length} {entries.length === 1 ? "class" : "classes"}</span>
               </header>
               <div className="divide-y divide-black/[0.06] dark:divide-white/[0.08]">
                 {entries.map((e, i) => (
@@ -45,13 +45,13 @@ export function ScheduleByDay({
                     className="flex flex-col justify-between gap-1.5 px-3 py-2.5 sm:flex-row sm:items-center sm:gap-4"
                   >
                     <div className="flex min-w-0 items-start gap-3">
-                      <span className={`w-28 shrink-0 pt-0.5 text-[11px] font-semibold tabular-nums ${textMuted}`}>{e.time}</span>
+                      <span className={`w-28 shrink-0 pt-0.5 text-xs font-semibold tabular-nums ${textMuted}`}>{e.time}</span>
                       <div className="min-w-0">
                         <p className={`truncate text-xs font-semibold ${textPrimary}`}>{e.subject}</p>
-                        <p className={`mt-0.5 truncate text-[10px] ${textMuted}`}>{e.gradeSection || "Section not assigned"}</p>
+                        <p className={`mt-0.5 truncate text-xs ${textMuted}`}>{e.gradeSection || "Section not assigned"}</p>
                       </div>
                     </div>
-                    <div className={`pl-28 text-[10px] font-medium sm:pl-0 sm:text-right ${textMuted}`}>
+                    <div className={`pl-28 text-xs font-medium sm:pl-0 sm:text-right ${textMuted}`}>
                       {e.room || "Room not assigned"}
                     </div>
                   </div>

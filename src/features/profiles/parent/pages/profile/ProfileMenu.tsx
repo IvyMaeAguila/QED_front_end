@@ -44,7 +44,7 @@
 //       ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#6B0000]"
 //       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#6B0000]"
 //   }`;
-//   const dropdownLabel = `text-[10px] font-bold uppercase tracking-wide mb-1.5 ${mutedText}`;
+//   const dropdownLabel = `text-xs font-bold uppercase tracking-wide mb-1.5 ${mutedText}`;
 
 //   function startEdit() {
 //     setDraft(profile);

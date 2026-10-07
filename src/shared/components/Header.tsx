@@ -23,7 +23,7 @@ export function Header({
         darkMode ? "bg-[#271916] border-[#543632]" : "bg-white border-[#E5E7EB]"
       }`}
     >
-      <div className={`flex min-h-8 items-center justify-center gap-2 px-3 py-1 text-[8px] font-semibold tracking-wide text-white/90 sm:px-6 sm:text-[10px] ${darkMode ? "bg-[#1A1110]" : "bg-[#4A0000]"}`}>
+      <div className={`flex min-h-8 items-center justify-center gap-2 px-3 py-1 text-xs font-semibold tracking-wide text-white/90 sm:px-6 sm:text-xs ${darkMode ? "bg-[#1A1110]" : "bg-[#4A0000]"}`}>
         <img src={eucLogo} alt="" aria-hidden="true" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
         <span className="max-w-full text-center leading-tight">MSEUF-CI</span>
       </div>
@@ -40,7 +40,7 @@ export function Header({
         <div className="min-w-0 flex-1 pl-11 sm:pl-12 lg:pl-0">
           <p
             title="Manuel S. Enverga University Foundation - Candelara, Inc."
-            className={`break-words text-[10px] font-semibold leading-tight tracking-tight sm:text-[14px] sm:leading-normal lg:truncate ${institutionText}`}
+            className={`qed-type-header break-words leading-tight tracking-tight lg:truncate ${institutionText}`}
           >
             Manuel S. Enverga University Foundation - Candelara, Inc.
           </p>

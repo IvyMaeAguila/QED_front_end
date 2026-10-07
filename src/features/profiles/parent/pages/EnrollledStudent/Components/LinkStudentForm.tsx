@@ -90,9 +90,9 @@ function Field({
 
         <label
           htmlFor={id}
-          className={`pointer-events-none absolute px-1 leading-none transition-all duration-150 peer-focus:left-3 peer-focus:top-0 peer-focus:text-[11px] peer-focus:font-medium peer-focus:text-maroon ${surface} ${
+          className={`pointer-events-none absolute px-1 leading-none transition-all duration-150 peer-focus:left-3 peer-focus:top-0 peer-focus:text-xs peer-focus:font-medium peer-focus:text-maroon ${surface} ${
             floated
-              ? "left-3 top-0 -translate-y-1/2 text-[11px] font-medium text-maroon"
+              ? "left-3 top-0 -translate-y-1/2 text-xs font-medium text-maroon"
               : `top-1/2 -translate-y-1/2 text-sm peer-focus:-translate-y-1/2 ${idleLabel} ${
                   icon ? "left-10" : "left-3"
                 }`
@@ -103,7 +103,7 @@ function Field({
       </div>
       {hint && (
         <p
-          className={`mt-1.5 px-1 text-[11px] ${
+          className={`mt-1.5 px-1 text-xs ${
             darkMode ? "text-gray-500" : "text-gray-400"
           }`}
         >
@@ -195,7 +195,7 @@ function Stepper({
 
             <div className="mt-1.5 md:mt-0 md:pt-1">
               <span
-                className={`block whitespace-nowrap text-[11px] font-semibold md:text-sm md:leading-6 ${labelColor}`}
+                className={`block whitespace-nowrap text-xs font-semibold md:text-sm md:leading-6 ${labelColor}`}
               >
                 {name}
               </span>
@@ -276,11 +276,11 @@ export function LinkStudentForm({
             <div className="flex flex-col gap-5">
               <div className="flex items-center justify-between">
                 <p
-                  className={`text-[10px] font-semibold uppercase tracking-wider ${sectionLabel}`}
+                  className={`text-xs font-semibold uppercase tracking-wider ${sectionLabel}`}
                 >
                   Student credentials
                 </p>
-                <p className={`text-[11px] ${mutedColor}`}>Step 1 of 3</p>
+                <p className={`text-xs ${mutedColor}`}>Step 1 of 3</p>
               </div>
 
               <Field

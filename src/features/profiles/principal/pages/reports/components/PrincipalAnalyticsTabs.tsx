@@ -19,7 +19,7 @@ export function PrincipalAnalyticsTabs({ textMuted }: PrincipalAnalyticsTabsProp
         <NavLink
           key={tab.to}
           to={tab.to}
-          className={({ isActive }) => `flex h-8 items-center justify-center gap-1.5 rounded-lg px-2.5 text-[11px] transition-colors ${
+          className={({ isActive }) => `flex h-8 items-center justify-center gap-1.5 rounded-lg px-2.5 text-xs transition-colors ${
             isActive
               ? "bg-[#880000] font-bold text-white shadow-sm"
               : `font-medium ${textMuted} hover:bg-[#880000] hover:text-white`

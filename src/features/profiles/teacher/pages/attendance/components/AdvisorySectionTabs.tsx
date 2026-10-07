@@ -29,7 +29,7 @@ export function AdvisorySectionTabs({
           <button
             key={s.classId}
             onClick={() => onSelect(s.classId)}
-            className={`h-8 rounded-lg px-3 text-[11px] font-extrabold transition-colors ${
+            className={`h-8 rounded-lg px-3 text-xs font-extrabold transition-colors ${
               active
                 ? "bg-[#800000] text-white"
                 : `${textMuted} ${darkMode ? "hover:bg-white/10" : "hover:bg-black/5"}`

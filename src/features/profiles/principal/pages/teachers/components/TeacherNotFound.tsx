@@ -14,7 +14,7 @@ export function TeacherNotFound({ panelBg, panelBorder, textPrimary, textMuted }
     <div className="flex flex-col gap-6 font-sans">
       <div className="flex items-center gap-3">
         <BackButton onClick={() => navigate("/principal/teachers")} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} />
-        <h1 className={`text-xl font-black tracking-tight ${textPrimary}`}>Teacher Not Found</h1>
+        <h1 className={`qed-type-page-title ${textPrimary}`}>Teacher Not Found</h1>
       </div>
       <div className={`rounded-2xl border ${panelBg} ${panelBorder} p-8 text-center shadow-card`}>
         <p className={`text-sm ${textMuted}`}>No schedule record found for this teacher.</p>

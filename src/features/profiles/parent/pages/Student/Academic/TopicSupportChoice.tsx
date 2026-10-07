@@ -40,7 +40,7 @@ export default function TopicSupportChoice() {
         >
           <ArrowLeft size={18} />
         </button>
-        <span className={`text-[15px] font-black ${textPrimary}`}>Quest Board</span>
+        <span className={`text-base font-black ${textPrimary}`}>Quest Board</span>
       </div>
 
       <div className="flex w-full flex-col items-stretch gap-6 sm:gap-7">
@@ -172,7 +172,7 @@ function QuestCard({
       }}
     >
       <span
-        className={`rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-white ${colors.badgeBg}`}
+        className={`rounded-full px-2.5 py-1 text-xs font-black uppercase tracking-wide text-white ${colors.badgeBg}`}
       >
         {eyebrow}
       </span>
@@ -189,7 +189,7 @@ function QuestCard({
         </div>
       </div>
 
-      <p className={`text-[13px] font-medium leading-snug ${textMuted}`}>{description}</p>
+      <p className={`text-sm font-medium leading-snug ${textMuted}`}>{description}</p>
     </button>
   );
 }

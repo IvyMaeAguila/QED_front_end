@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
-import { CheckCircle2, Rocket, Sparkles, Star, Trophy, X, Zap } from "lucide-react";
+import { CheckCircle2, Rocket, Sparkles, Star, Trophy, Zap } from "lucide-react";
 import type { Difficulty } from "../service/petQuiz.service";
 import { HungerMeter } from "./QuizWidgets";
 import { DIFFICULTY_ORDER } from "./QuizShared";
+import { ModalCloseButton, ModalFrame } from "@shared/components/modal";
 
 // ---------- shared bits ----------
 const PRIMARY_BTN =
@@ -71,13 +72,7 @@ export function EndInterventionConfirm({
   isEnding?: boolean;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="end-intervention-title"
-        className="qm-pop relative w-full max-w-sm rounded-3xl bg-white px-5 pb-5 pt-14 text-center shadow-[0_6px_0_0_#fecdd3]"
-      >
+    <ModalFrame shellVariant="specialized" onClose={onCancel} size="sm" labelledBy="end-intervention-title" className="qm-pop max-w-sm overflow-visible border-0 rounded-3xl bg-white px-5 pb-5 pt-14 text-center shadow-[0_6px_0_0_#fecdd3]">
         {/* the coin sits half outside the top of the card */}
         <div className="absolute -top-11 left-1/2 -translate-x-1/2">
           <Coin face="bg-rose-400" edge="bg-rose-600">
@@ -109,8 +104,7 @@ export function EndInterventionConfirm({
         </div>
 
         <ModalStyles />
-      </div>
-    </div>
+    </ModalFrame>
   );
 }
 
@@ -123,21 +117,12 @@ const CHECK_COLOR: Record<Difficulty, string> = {
 
 export function AccomplishmentModal({ onContinue }: { onContinue: () => void }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="accomplishment-title"
-        className="qm-pop relative w-full max-w-sm rounded-3xl bg-linear-to-b from-amber-200 to-amber-300 px-5 pb-6 pt-14 text-center shadow-[0_8px_0_0_#b45309] ring-4 ring-white/60"
-      >
-        <button
-          type="button"
-          onClick={onContinue}
-          aria-label="Close"
-          className="absolute -right-2 -top-2 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-rose-600 text-white shadow-md ring-4 ring-white transition-transform active:scale-90"
-        >
-          <X size={18} strokeWidth={3} />
-        </button>
+    <ModalFrame shellVariant="specialized" onClose={onContinue} size="sm" labelledBy="accomplishment-title" className="qm-pop max-w-sm overflow-visible border-0 rounded-3xl bg-linear-to-b from-amber-200 to-amber-300 px-5 pb-6 pt-14 text-center shadow-[0_8px_0_0_#b45309] ring-4 ring-white/60">
+        <ModalCloseButton
+          onClose={onContinue}
+          inverse
+          className="absolute -right-2 -top-2 z-10 rounded-full bg-rose-600 text-white shadow-md ring-4 ring-white hover:bg-rose-700 hover:text-white active:scale-90"
+        />
 
         {/* little twinkles around the trophy */}
         <div className="pointer-events-none" aria-hidden="true">
@@ -199,8 +184,7 @@ export function AccomplishmentModal({ onContinue }: { onContinue: () => void }) 
         </button>
 
         <ModalStyles />
-      </div>
-    </div>
+    </ModalFrame>
   );
 }
 // The two popups shown when the whole intervention is finished.

@@ -60,7 +60,7 @@ export function StudentViewPage() {
         <div className="grid sm:grid-cols-2 gap-5 max-w-xl">
           {fields.map((f) => (
             <div key={f.label}>
-              <p className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>{f.label}</p>
+              <p className={`text-xs font-bold uppercase tracking-wide ${textMuted}`}>{f.label}</p>
               <p className={`mt-1 text-base font-bold ${textPrimary}`}>{f.value}</p>
             </div>
           ))}

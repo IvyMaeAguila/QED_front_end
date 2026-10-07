@@ -55,7 +55,7 @@ function StoryNode({ onClick }: { onClick: () => void }) {
         </span>
       </button>
 
-      <span className="mt-2 rounded-full bg-white px-2.5 py-0.5 text-[11px] font-black text-gray-700 shadow-sm">
+      <span className="mt-2 rounded-full bg-white px-2.5 py-0.5 text-xs font-black text-gray-700 shadow-sm">
         Story
       </span>
     </div>
@@ -120,7 +120,7 @@ function LevelNode({
       </button>
 
       <span
-        className={`mt-2 rounded-full px-2.5 py-0.5 text-[11px] font-black ${
+        className={`mt-2 rounded-full px-2.5 py-0.5 text-xs font-black ${
           locked ? "bg-white/70 text-gray-400" : "bg-white text-gray-700 shadow-sm"
         }`}
       >
@@ -184,7 +184,7 @@ function BonusNode({
       </button>
 
       <span
-        className={`mt-2 rounded-full px-2.5 py-0.5 text-[11px] font-black ${
+        className={`mt-2 rounded-full px-2.5 py-0.5 text-xs font-black ${
           locked ? "bg-white/70 text-gray-400" : "bg-white text-gray-700 shadow-sm"
         }`}
       >
@@ -203,7 +203,7 @@ function SoonNode({ icon: Icon }: { icon: LucideIcon }) {
           <Icon size={28} className="text-gray-300" />
         </span>
       </div>
-      <span className="mt-2 rounded-full bg-white/70 px-2.5 py-0.5 text-[11px] font-black text-gray-400">
+      <span className="mt-2 rounded-full bg-white/70 px-2.5 py-0.5 text-xs font-black text-gray-400">
         Coming soon
       </span>
     </div>

@@ -299,11 +299,11 @@ export function HolisticRecordsSection({
   }, [roster]);
 
   const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
-  const cellInputClasses = `h-7 w-10 rounded-lg border text-center text-[11px] font-black tabular-nums outline-none ${panelBorder} ${
+  const cellInputClasses = `h-7 w-10 rounded-lg border text-center text-xs font-black tabular-nums outline-none ${panelBorder} ${
     darkMode ? "bg-[#2A1A18] text-white" : "bg-white text-[#111827]"
   }`;
   const stickyCell = darkMode ? "bg-[#2A1A18]" : "bg-white";
-  const groupBand = `px-4 py-1.5 text-[11px] font-black uppercase tracking-wider ${
+  const groupBand = `px-4 py-1.5 text-xs font-black uppercase tracking-wider ${
     darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
   } ${textPrimary}`;
   const domainCount = HOLISTIC_COLUMNS.length;
@@ -342,7 +342,7 @@ export function HolisticRecordsSection({
                     />
                   ) : (
                     <span
-                      className={`inline-flex h-7 w-7 items-center justify-center rounded-lg text-[11px] font-black tabular-nums ${
+                      className={`inline-flex h-7 w-7 items-center justify-center rounded-lg text-xs font-black tabular-nums ${
                         level ? "text-white" : textMuted
                       }`}
                       style={level ? { backgroundColor: level.color } : undefined}
@@ -437,7 +437,7 @@ export function HolisticRecordsSection({
                   <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
                     <th
                       rowSpan={3}
-                      className={`sticky left-0 z-10 min-w-56 border px-4 py-2 text-left text-[11px] font-black uppercase tracking-wider ${
+                      className={`sticky left-0 z-10 min-w-56 border px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${
                         darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
                       } ${panelBorder} ${textMuted}`}
                     >
@@ -447,7 +447,7 @@ export function HolisticRecordsSection({
                       <th
                         key={week}
                         colSpan={domainCount}
-                        className={`border px-2 py-2 text-center text-[11px] font-black uppercase tracking-wider ${panelBorder} ${textPrimary}`}
+                        className={`border px-2 py-2 text-center text-xs font-black uppercase tracking-wider ${panelBorder} ${textPrimary}`}
                       >
                         Week {i + 1}
                       </th>
@@ -459,7 +459,7 @@ export function HolisticRecordsSection({
                       <th
                         key={week}
                         colSpan={domainCount}
-                        className={`border px-2 py-1.5 text-center text-[11px] font-bold normal-case ${panelBorder} ${textMuted}`}
+                        className={`border px-2 py-1.5 text-center text-xs font-bold normal-case ${panelBorder} ${textMuted}`}
                       >
                         {formatWeekRange(week)}
                       </th>
@@ -472,7 +472,7 @@ export function HolisticRecordsSection({
                         {HOLISTIC_COLUMNS.map((column) => (
                           <th
                             key={`${week}-${column.key}`}
-                            className={`min-w-16 border px-1.5 py-1.5 text-center text-[11px] font-bold ${panelBorder} ${textMuted}`}
+                            className={`min-w-16 border px-1.5 py-1.5 text-center text-xs font-bold ${panelBorder} ${textMuted}`}
                           >
                             {column.label}
                           </th>

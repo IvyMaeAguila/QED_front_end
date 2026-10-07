@@ -28,7 +28,7 @@ export function ProgressReportContent({ theme, student }: ProgressReportTabProps
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p
-            className={`text-[10px] font-semibold uppercase tracking-wide ${theme.textMuted}`}
+            className={`text-xs font-semibold uppercase tracking-wide ${theme.textMuted}`}
           >
             Filter
           </p>

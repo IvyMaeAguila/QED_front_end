@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { UserIcon, Mail } from "lucide-react";
 import { AuthService } from "../../../features/auth/services/authentication.service";
+import { ModalFrame } from "../modal";
 
 interface ForgotPasswordModalProps {
   onClose: () => void;
@@ -40,26 +41,19 @@ export function ForgotPasswordModal({ onClose, onOtpSent }: ForgotPasswordModalP
   };
 
   return (
-    <div
-      className="fixed inset-0 z-200 flex items-center justify-center px-4 modal-backdrop"
-      style={{
+    <ModalFrame shellVariant="specialized" onClose={onClose} size="compact" zIndexClass="z-200" ariaLabel="Forgot Password" backdropClassName="px-4" backdropStyle={{
         backgroundColor: "rgba(10,10,15,0.6)",
         backdropFilter: "blur(8px)",
-      }}
-    >
-      <div
-        className="relative w-full max-w-105 bg-white rounded-2xl overflow-hidden"
-        style={{
+      }} className="relative max-w-105 overflow-hidden rounded-2xl border-0 bg-white shadow-none" panelStyle={{
           boxShadow: "0 24px 64px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.1)",
           animation: "modalIn 0.2s cubic-bezier(0.16,1,0.3,1)",
-        }}
-      >
+        }}>
         <div className="h-1 w-full bg-linear-to-r from-[#550000] to-[#bb0000]" />
 
         <div className="px-10 pt-10 pb-10 flex flex-col">
           <div className="mb-6 text-center">
-            <p className="text-[15px] font-semibold text-black">Forgot Password</p>
-            <p className="text-[12px] text-[#9d9d9d] mt-1.5 leading-relaxed">
+            <p className="qed-type-modal-title text-black">Forgot Password</p>
+            <p className="qed-type-modal-subtitle mt-1.5 leading-relaxed text-[#9d9d9d]">
               Enter your User name and registered email
               <br />
               address and we'll send you a one-time code.
@@ -69,7 +63,7 @@ export function ForgotPasswordModal({ onClose, onOtpSent }: ForgotPasswordModalP
           <div className="flex flex-col gap-4">
             {/* User Name */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-semibold text-[#5d5d5d] tracking-wide uppercase">
+              <label className="qed-type-label text-[#5d5d5d] uppercase">
                 User Name
               </label>
               <div className="relative">
@@ -82,7 +76,7 @@ export function ForgotPasswordModal({ onClose, onOtpSent }: ForgotPasswordModalP
                   onChange={(e) => setUserName(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="e.g. PRT_juan.delacruz"
-                  className="w-full pl-12 pr-4 py-3 rounded-xl text-[13px] text-black bg-[#f7f7f8] border border-transparent outline-none transition-all placeholder:text-[#ccc]"
+                  className="w-full pl-12 pr-4 py-3 rounded-xl text-sm text-black bg-[#f7f7f8] border border-transparent outline-none transition-all placeholder:text-[#ccc]"
                   onFocus={(e) => {
                     e.currentTarget.style.background = "#fff";
                     e.currentTarget.style.borderColor = "rgba(85,0,0,0.35)";
@@ -99,7 +93,7 @@ export function ForgotPasswordModal({ onClose, onOtpSent }: ForgotPasswordModalP
 
             {/* Email */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-semibold text-[#5d5d5d] tracking-wide uppercase">
+              <label className="qed-type-label text-[#5d5d5d] uppercase">
                 Email Address
               </label>
               <div className="relative">
@@ -112,7 +106,7 @@ export function ForgotPasswordModal({ onClose, onOtpSent }: ForgotPasswordModalP
                   onChange={(e) => setEmail(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="you@example.com"
-                  className="w-full pl-12 pr-11 py-3 rounded-xl text-[13px] text-black bg-[#f7f7f8] border border-transparent outline-none transition-all placeholder:text-[#ccc]"
+                  className="w-full pl-12 pr-11 py-3 rounded-xl text-sm text-black bg-[#f7f7f8] border border-transparent outline-none transition-all placeholder:text-[#ccc]"
                   onFocus={(e) => {
                     e.currentTarget.style.background = "#fff";
                     e.currentTarget.style.borderColor = "rgba(85,0,0,0.35)";
@@ -129,14 +123,14 @@ export function ForgotPasswordModal({ onClose, onOtpSent }: ForgotPasswordModalP
           </div>
 
           {error && (
-            <div className="mt-4 px-3.5 py-2.5 rounded-lg bg-[#fdecec] border border-[#f5c2c2] text-[#a30000] text-[12px] font-medium text-center">
+            <div className="mt-4 px-3.5 py-2.5 rounded-lg bg-[#fdecec] border border-[#f5c2c2] text-[#a30000] text-xs font-medium text-center">
               {error}
             </div>
           )}
 
           <button
             disabled={loading}
-            className={`w-full py-3.5 rounded-xl font-semibold text-[15px] text-white transition-opacity hover:opacity-90 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed ${error ? "mt-3" : "mt-7"}`}
+            className={`w-full py-3.5 rounded-xl qed-type-button text-white transition-opacity hover:opacity-90 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed ${error ? "mt-3" : "mt-7"}`}
             style={{
               background: "linear-gradient(135deg, #550000 0%, #bb0000 100%)",
               boxShadow: "0 4px 16px rgba(85,0,0,0.3)",
@@ -150,12 +144,11 @@ export function ForgotPasswordModal({ onClose, onOtpSent }: ForgotPasswordModalP
           <button
             type="button"
             onClick={onClose}
-            className="mt-3 text-[12px] font-medium text-[#9d9d9d] hover:text-[#5d5d5d] transition-colors"
+            className="mt-3 text-xs font-medium text-[#9d9d9d] hover:text-[#5d5d5d] transition-colors"
           >
             Back to login
           </button>
         </div>
-      </div>
 
       <style>{`
         @keyframes modalIn {
@@ -163,6 +156,6 @@ export function ForgotPasswordModal({ onClose, onOtpSent }: ForgotPasswordModalP
           to   { opacity: 1; transform: scale(1)    translateY(0); }
         }
       `}</style>
-    </div>
+    </ModalFrame>
   );
 }

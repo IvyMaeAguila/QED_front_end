@@ -3,7 +3,6 @@ import {
   Upload,
   Download,
   FileSpreadsheet,
-  X,
   AlertTriangle,
   CheckCircle2,
   Loader2,
@@ -21,6 +20,7 @@ import {
   type ImportParseResult,
 } from "../utils/studentExcel";
 import { ToastContainer, type ToastItem } from "@shared/components/ToastNotification";
+import { ModalBody, ModalFooter, ModalFrame, ModalHeader } from "@shared/components/modal";
 
 interface StudentImportExportToolbarProps {
   filteredStudents: Student[];
@@ -240,7 +240,7 @@ export function StudentImportExportToolbar({
     }
   };
 
-  // Compact, h-8/text-[11px] scale to match the search bar's dropdowns and Add button
+  // Compact, h-8/text-xs scale to match the search bar's dropdowns and Add button
   const buttonBase = darkMode
     ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
     : "border-[#E5E7EB] text-[#475569] hover:bg-[#F6F7FB]";
@@ -257,7 +257,7 @@ export function StudentImportExportToolbar({
       <button
         onClick={() => fileInputRef.current?.click()}
         disabled={isParsing}
-        className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-[11px] font-bold transition-colors disabled:opacity-50 shrink-0 ${buttonBase}`}
+        className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-bold transition-colors disabled:opacity-50 shrink-0 ${buttonBase}`}
       >
         <Upload size={13} />
         {isParsing ? "Reading..." : "Import"}
@@ -265,14 +265,14 @@ export function StudentImportExportToolbar({
       <button
         onClick={() => exportStudentsToExcel(filteredStudents)}
         disabled={filteredStudents.length === 0}
-        className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-[11px] font-bold transition-colors disabled:opacity-50 shrink-0 ${buttonBase}`}
+        className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-bold transition-colors disabled:opacity-50 shrink-0 ${buttonBase}`}
       >
         <Download size={13} />
         Export
       </button>
       <button
         onClick={() => downloadStudentImportTemplate()}
-        className={`inline-flex h-8 items-center gap-1 rounded-lg px-1.5 text-[11px] font-semibold underline shrink-0 ${textMuted}`}
+        className={`inline-flex h-8 items-center gap-1 rounded-lg px-1.5 text-xs font-semibold underline shrink-0 ${textMuted}`}
       >
         <FileSpreadsheet size={12} />
         Template
@@ -326,22 +326,18 @@ function ImportPreviewModal({
   const hasErrors = result.invalid.length > 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
-      <div
-        className={`w-full max-w-lg rounded-2xl border ${panelBorder} p-6 ${
-          darkMode ? "bg-[#0B1120]" : "bg-white"
-        }`}
-      >
-        <div className="flex items-start justify-between">
-          <h3 className={`text-base font-extrabold ${textPrimary}`}>
-            Review import
-          </h3>
-          <button onClick={onCancel} className={textMuted} disabled={isSaving}>
-            <X size={18} />
-          </button>
-        </div>
+    <ModalFrame shellVariant={darkMode ? "dark" : "standard"} onClose={onCancel} size="md" ariaLabel="Review import"
+    >
+        <ModalHeader
+          title="Review import"
+          titleClassName={textPrimary}
+          onClose={onCancel}
+          closeDarkMode={darkMode}
+          closeDisabled={isSaving}
+          className={`border-b px-6 py-4 ${panelBorder}`}
+        />
 
-        <div className="mt-4 space-y-2">
+        <ModalBody className="space-y-2 px-6 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[#16A34A]">
             <CheckCircle2 size={16} />
             {result.valid.length} student{result.valid.length === 1 ? "" : "s"}{" "}
@@ -357,11 +353,9 @@ function ImportPreviewModal({
               </span>
             </div>
           )}
-        </div>
-
         {hasErrors && (
           <div
-            className={`mt-3 max-h-40 overflow-y-auto rounded-lg border ${panelBorder} p-3 text-xs`}
+            className={`max-h-40 overflow-y-auto rounded-lg border ${panelBorder} p-3 text-xs`}
           >
             {result.invalid.map((r) => (
               <p key={r.row} className={textMuted}>
@@ -371,12 +365,12 @@ function ImportPreviewModal({
             ))}
           </div>
         )}
-
-        <div className="mt-6 flex justify-end gap-2">
+        </ModalBody>
+        <ModalFooter className={`px-6 py-4 ${panelBorder}`}>
           <button
             onClick={onCancel}
             disabled={isSaving}
-            className={`rounded-lg border px-4 py-2 text-xs font-bold disabled:opacity-50 ${panelBorder} ${textMuted}`}
+            className={`rounded-lg border px-4 py-2 qed-type-button disabled:opacity-50 ${panelBorder} ${textMuted}`}
           >
             Cancel
           </button>
@@ -384,7 +378,7 @@ function ImportPreviewModal({
             onClick={onConfirm}
             disabled={result.valid.length === 0 || hasErrors || isSaving}
             title={hasErrors ? "Fix all row errors before importing" : undefined}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[#1D70D6] px-4 py-2 text-xs font-bold text-white disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[#1D70D6] px-4 py-2 qed-type-button text-white disabled:opacity-50"
           >
             {isSaving && <Loader2 size={14} className="animate-spin" />}
             {isSaving
@@ -393,8 +387,7 @@ function ImportPreviewModal({
                   result.valid.length === 1 ? "" : "s"
                 }`}
           </button>
-        </div>
-      </div>
-    </div>
+        </ModalFooter>
+    </ModalFrame>
   );
 }

@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { StudentAvatar } from "@shared/components/StudentAvatar";
 import { AlertTriangle, CheckCircle2, Download, Send, X } from "lucide-react";
+import { ConfirmationModal } from "@shared/components/ConfirmationModal";
 import type { RosterStudent } from "./data";
 import {
   formatShortDate,
@@ -687,7 +688,7 @@ export function AssessmentRecordsSection({
     <section className={cardClasses} aria-label={title}>
       <div className={`flex items-center justify-between gap-3 border-b px-4 py-2 ${panelBorder}`}>
         <span className={`text-xs font-semibold ${textMuted}`}>Export this term's assessment records using the official DepEd template configured for this subject.</span>
-        <button type="button" onClick={() => void exportClassRecord()} className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-[11px] font-bold ${panelBorder} ${textPrimary}`}>
+        <button type="button" onClick={() => void exportClassRecord()} className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold ${panelBorder} ${textPrimary}`}>
           <Download size={13} /> Export DepEd Class Record
         </button>
       </div>
@@ -715,17 +716,17 @@ export function AssessmentRecordsSection({
             <tr className={darkMode ? "bg-white/3" : "bg-[#FAFBFC]"}>
               {groups.map((group) => <Fragment key={group.key}>
                 {group.key === "exams" && group.examComponents ? <>
-                  {group.examComponents.flatMap(({ component, columns }) => columns.map((column) => <th key={column.id} rowSpan={2} title={column.item ? `${column.item.activityName} · ${formatShortDate(column.item.date)}` : `${component.label} examination input`} className={`min-w-14 border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>{component.key.toUpperCase() === "ALL" ? column.label : component.label}</th>))}
-                  {group.examComponents.filter((entry) => entry.showWeightedScore).map(({ component }) => <th key={`ws-${component.key}`} rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>WS {component.label}</th>)}
-                  {group.examOutputs?.percentageScore && <th rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>PS</th>}
-                  {group.examOutputs?.weightedScore && <th rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>WS</th>}
-                </> : group.domainGroups?.length ? group.domainGroups.map((domain) => <th key={domain.id} colSpan={domain.columns.length + 3} className={`border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>
+                  {group.examComponents.flatMap(({ component, columns }) => columns.map((column) => <th key={column.id} rowSpan={2} title={column.item ? `${column.item.activityName} · ${formatShortDate(column.item.date)}` : `${component.label} examination input`} className={`min-w-14 border px-2 py-2 text-center text-xs font-black uppercase ${panelBorder} ${textMuted}`}>{component.key.toUpperCase() === "ALL" ? column.label : component.label}</th>))}
+                  {group.examComponents.filter((entry) => entry.showWeightedScore).map(({ component }) => <th key={`ws-${component.key}`} rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-xs font-black uppercase ${panelBorder} ${textMuted}`}>WS {component.label}</th>)}
+                  {group.examOutputs?.percentageScore && <th rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-xs font-black uppercase ${panelBorder} ${textMuted}`}>PS</th>}
+                  {group.examOutputs?.weightedScore && <th rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-xs font-black uppercase ${panelBorder} ${textMuted}`}>WS</th>}
+                </> : group.domainGroups?.length ? group.domainGroups.map((domain) => <th key={domain.id} colSpan={domain.columns.length + 3} className={`border px-2 py-2 text-center text-xs font-black uppercase ${panelBorder} ${textMuted}`}>
                   {domain.label}{(group.domainGroups?.length ?? 0) > 1 || Math.abs(domain.weightPercent - group.weight) > 0.01 ? ` (${domain.weightPercent}%)` : ""}
                 </th>) : <>
-                  {group.columns.map((column) => <th key={column.id} rowSpan={2} title={column.item ? `${column.item.activityName} · ${formatShortDate(column.item.date)}` : "Empty template slot"} className={`min-w-14 border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>{column.label}</th>)}
-                  <th rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>Total</th>
-                  <th rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>PS</th>
-                  <th rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-[10px] font-black uppercase ${panelBorder} ${textMuted}`}>WS</th>
+                  {group.columns.map((column) => <th key={column.id} rowSpan={2} title={column.item ? `${column.item.activityName} · ${formatShortDate(column.item.date)}` : "Empty template slot"} className={`min-w-14 border px-2 py-2 text-center text-xs font-black uppercase ${panelBorder} ${textMuted}`}>{column.label}</th>)}
+                  <th rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-xs font-black uppercase ${panelBorder} ${textMuted}`}>Total</th>
+                  <th rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-xs font-black uppercase ${panelBorder} ${textMuted}`}>PS</th>
+                  <th rowSpan={2} className={`min-w-16 border px-2 py-2 text-center text-xs font-black uppercase ${panelBorder} ${textMuted}`}>WS</th>
                 </>}
               </Fragment>)}
             </tr>
@@ -738,7 +739,7 @@ export function AssessmentRecordsSection({
               </Fragment>)}
             </tr>
             <tr className={darkMode ? "bg-white/2" : "bg-white"}>
-              <th className={`sticky left-0 z-50 min-w-60 border-r px-3 py-2 text-left text-[10px] font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.08)] ${darkMode ? "bg-[#2A1A18]" : "bg-white"} ${panelBorder} ${textMuted}`}>HPS</th>
+              <th className={`sticky left-0 z-50 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.08)] ${darkMode ? "bg-[#2A1A18]" : "bg-white"} ${panelBorder} ${textMuted}`}>HPS</th>
               {groups.map((group) => <Fragment key={group.key}>
                 {group.key === "exams" && group.examComponents ? <>
                   {group.examComponents.flatMap(({ columns }) => columns.map((column) => <th key={`${column.id}-hps`} className={`min-w-14 border px-2 py-2 text-center font-bold ${panelBorder} ${textMuted}`}>{column.maxItems ?? "—"}</th>))}
@@ -824,31 +825,35 @@ export function AssessmentRecordsSection({
       )}
 
       {showConfirmModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 modal-backdrop">
-          <div
-            className={`flex max-h-[85vh] w-full max-w-2xl flex-col rounded-2xl border shadow-xl ${panelBorder} ${
-              darkMode ? "bg-[#2A1A18]" : "bg-white"
-            }`}
-          >
-            <div className={`flex items-center justify-between border-b px-5 py-4 ${panelBorder}`}>
-              <div>
-                <h3 className={`text-sm font-black uppercase tracking-wide ${textPrimary}`}>Confirm Submission</h3>
-                <p className={`mt-1 text-xs font-semibold ${textMuted}`}>
+        <ConfirmationModal
+          title="Confirm Submission"
+          description={
+            <>
                   This sends {roster.length} {roster.length === 1 ? "grade" : "grades"} to{" "}
                   {adviserName ? `${adviserName}'s` : "the adviser's"} gradesheet. Review before confirming.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowConfirmModal(false)}
-                className={`rounded-lg p-1.5 ${darkMode ? "hover:bg-white/10" : "hover:bg-black/5"}`}
-                aria-label="Close"
-              >
-                <X className={`h-4 w-4 ${textMuted}`} />
-              </button>
-            </div>
-
-            <div className="flex-1 overflow-y-auto px-5 py-3">
+            </>
+          }
+          onClose={() => setShowConfirmModal(false)}
+          onConfirm={handleConfirmSubmit}
+          confirmLabel="Confirm & Submit"
+          cancelLabel="Cancel"
+          loadingLabel="Submitting…"
+          variant="default"
+          darkMode={darkMode}
+          loading={isSubmitting}
+          allowBackdropCloseWhileLoading
+          disabled={isSubmitting}
+          size="lg"
+          panelClassName={`max-h-[85vh] rounded-2xl shadow-xl ${panelBorder} ${darkMode ? "bg-[#2A1A18]" : "bg-white"}`}
+          titleClassName={`uppercase ${textPrimary}`}
+          descriptionClassName={textMuted}
+          bodyClassName="space-y-3 px-5 pb-4 pt-0"
+          footerClassName={`border-t px-5 py-4 ${panelBorder}`}
+          cancelButtonClassName={`h-9 rounded-xl uppercase tracking-wide ${panelBorder} ${textPrimary}`}
+          confirmButtonClassName="h-9 rounded-xl bg-maroon-gradient uppercase tracking-wide shadow-primary"
+          confirmLeading={<Send className="h-3.5 w-3.5" />}
+        >
+          <>
               <table className="teacher-user-table w-full text-xs">
                 <thead>
                   <tr className={`border-b ${panelBorder} ${textMuted}`}>
@@ -871,7 +876,7 @@ export function AssessmentRecordsSection({
                       </td>
                       <td className="py-2 text-center">
                         <span
-                          className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-black uppercase"
+                          className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-black uppercase"
                           style={{
                             backgroundColor: preview.remarks === "PASSED" ? "#DCFCE7" : preview.remarks === "FAILED" ? "#FEE2E2" : "#E5E7EB",
                             color: preview.remarks === "PASSED" ? "#16A34A" : preview.remarks === "FAILED" ? "#DC2626" : "#6B7280",
@@ -885,8 +890,6 @@ export function AssessmentRecordsSection({
                   ))}
                 </tbody>
               </table>
-            </div>
-
             {submitError && (
               <div className="px-5 pb-1">
                 <span className="inline-flex items-center gap-1 text-xs font-bold text-red-600">
@@ -895,28 +898,9 @@ export function AssessmentRecordsSection({
                 </span>
               </div>
             )}
+          </>
 
-            <div className={`flex items-center justify-end gap-2 border-t px-5 py-4 ${panelBorder}`}>
-              <button
-                type="button"
-                onClick={() => setShowConfirmModal(false)}
-                disabled={isSubmitting}
-                className={`h-9 rounded-xl border px-4 text-xs font-bold uppercase tracking-wide disabled:cursor-not-allowed disabled:opacity-50 ${panelBorder} ${textPrimary}`}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleConfirmSubmit}
-                disabled={isSubmitting}
-                className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-maroon-gradient px-4 text-xs font-bold uppercase tracking-wide text-white shadow-primary transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <Send className="h-3.5 w-3.5" />
-                {isSubmitting ? "Submitting…" : "Confirm & Submit"}
-              </button>
-            </div>
-          </div>
-        </div>
+        </ConfirmationModal>
       )}
 
       {snackbar && (

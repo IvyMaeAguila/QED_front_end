@@ -141,7 +141,7 @@ export function UserFormPage() {
   // ── Shared design tokens (same as StudentFormPage) ──
   const cardClasses = `rounded-[12px] border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
   const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
-  const sectionTitleClasses = `text-xl font-black tracking-tight ${textPrimary}`;
+  const sectionTitleClasses = `qed-type-page-title ${textPrimary}`;
 
   if (isEditing && !existing) {
     return (
@@ -173,7 +173,7 @@ export function UserFormPage() {
       ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]"
       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
   }`;
-  const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
+  const labelClasses = `block text-xs font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 
   function validate(step?: number): boolean {
     const next: Partial<Record<keyof FormState, string>> = {};
@@ -333,7 +333,7 @@ export function UserFormPage() {
               <h1 className={sectionTitleClasses}>
                 {isEditing ? "Edit User Record" : "Add New User Account"}
               </h1>
-              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+              <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
                 {isEditing
                   ? `Updating record ${existing?.id}`
                   : "This user will be assigned the next available ID"}
@@ -384,7 +384,7 @@ export function UserFormPage() {
                 placeholder="Herrera"
               />
               {errors.lastName && (
-                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.lastName}
                 </p>
               )}
@@ -400,7 +400,7 @@ export function UserFormPage() {
                 placeholder="Bienvenido"
               />
               {errors.firstName && (
-                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.firstName}
                 </p>
               )}
@@ -420,7 +420,7 @@ export function UserFormPage() {
                 placeholder="S"
               />
               {errors.middleName && (
-                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.middleName}
                 </p>
               )}
@@ -465,12 +465,12 @@ export function UserFormPage() {
                 <option value="Female">Female</option>
               </select>
               {errors.gender && (
-                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.gender}
                 </p>
               )}
               {isEditing && !existing?.gender && (
-                <p className={`mt-1 text-[11px] ${textMuted}`}>
+                <p className={`mt-1 text-xs ${textMuted}`}>
                   Choose the correct value for this existing account.
                 </p>
               )}
@@ -490,7 +490,7 @@ export function UserFormPage() {
               placeholder="name@qedschool.edu"
             />
             {errors.email && (
-              <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+              <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                 {errors.email}
               </p>
             )}
@@ -511,7 +511,7 @@ export function UserFormPage() {
                 placeholder="0917-123-4567"
               />
               {errors.contactNumber && (
-                <p className="text-[11px] font-semibold text-[#B91C1C] mt-1">
+                <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.contactNumber}
                 </p>
               )}
@@ -548,7 +548,7 @@ export function UserFormPage() {
                   ["Status", form.status],
                 ].map(([label, value]) => (
                   <div key={label} className="min-w-0">
-                    <dt className={`text-[10px] font-bold uppercase tracking-wide ${textMuted}`}>{label}</dt>
+                    <dt className={`text-xs font-bold uppercase tracking-wide ${textMuted}`}>{label}</dt>
                     <dd className={`mt-1 break-words text-sm font-semibold ${textPrimary}`}>{value}</dd>
                   </div>
                 ))}

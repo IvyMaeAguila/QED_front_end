@@ -1,7 +1,6 @@
-import { useEffect } from "react";
-import { X, Mail, Phone, MessageCircleQuestion, BookOpen, LifeBuoy } from "lucide-react";
+import { Mail, Phone, MessageCircleQuestion, BookOpen, LifeBuoy } from "lucide-react";
+import { ModalBody, ModalFrame, ModalHeader } from "./modal";
 
-const ACCENT = "#6B0000";
 
 interface FaqItem {
   question: string;
@@ -36,47 +35,31 @@ interface HelpSupportModalProps {
 }
 
 export function HelpSupportModal({ open, onClose, darkMode }: HelpSupportModalProps) {
-  useEffect(() => {
-    if (!open) return;
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [open, onClose]);
-
   if (!open) return null;
 
   const mutedText = darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]";
   const cardBg = darkMode ? "bg-[#0B1120] border-[#374151]" : "bg-[#F8FAFC] border-[#E5E7EB]";
-  const sectionLabel = `text-[10px] font-bold uppercase tracking-wide mb-2 ${mutedText}`;
+  const sectionLabel = `text-xs font-bold uppercase tracking-wide mb-2 ${mutedText}`;
 
   return (
-    <div
-      className="fixed inset-0 z-60 flex items-center justify-center p-4 modal-backdrop"
-      onClick={onClose}
+    <ModalFrame
+      shellVariant={darkMode ? "dark" : "standard"}
+      open={open}
+      onClose={onClose}
+      size="md"
+      zIndexClass="z-60"
+      ariaLabel="Help and Support"
+      className="max-h-[85vh]"
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className={`w-full max-w-md rounded-2xl border shadow-lg overflow-hidden max-h-[85vh] flex flex-col ${
-          darkMode ? "bg-[#111827] border-[#374151]" : "bg-white border-[#E5E7EB]"
-        }`}
-      >
-        <div className="px-4 py-3 flex items-center justify-between shrink-0" style={{ background: ACCENT }}>
-          <span className="text-white font-bold text-sm inline-flex items-center gap-2">
-            <LifeBuoy size={16} />
-            Help &amp; Support
-          </span>
-          <button
-            onClick={onClose}
-            aria-label="Close"
-            className="w-6 h-6 rounded-md flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors"
-          >
-            <X size={13} className="text-white" />
-          </button>
-        </div>
+        <ModalHeader
+          title="Help & Support"
+          onClose={onClose}
+          closeDarkMode={darkMode}
+          className="items-center border-b-0 px-4 py-3"
+          leading={<LifeBuoy size={16} />}
+        />
 
-        <div className="p-4 space-y-5 overflow-y-auto">
+        <ModalBody className="space-y-5 p-4">
           <div>
             <p className={`${sectionLabel} flex items-center gap-1.5`}>
               <MessageCircleQuestion size={12} />
@@ -115,7 +98,7 @@ export function HelpSupportModal({ open, onClose, darkMode }: HelpSupportModalPr
                 <Phone size={14} className="shrink-0 text-[#6B0000]" />
                 +63 917 123 4567
               </a>
-              <p className={`text-[11px] pt-1 ${mutedText}`}>
+              <p className={`text-xs pt-1 ${mutedText}`}>
                 Support hours: Monday&ndash;Friday, 8:00 AM&ndash;5:00 PM
               </p>
             </div>
@@ -133,8 +116,7 @@ export function HelpSupportModal({ open, onClose, darkMode }: HelpSupportModalPr
               </p>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+        </ModalBody>
+    </ModalFrame>
   );
 }

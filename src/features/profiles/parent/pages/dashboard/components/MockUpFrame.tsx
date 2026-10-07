@@ -48,7 +48,7 @@ export default function MockupFrame({
 
   const badge = (letter: string) => (
     <span
-      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-[10px] font-bold ${
+      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-xs font-bold ${
         darkMode
           ? "border-red-400 text-red-400 bg-[#1a1a1a]"
           : "border-red-600 text-red-600 bg-white"

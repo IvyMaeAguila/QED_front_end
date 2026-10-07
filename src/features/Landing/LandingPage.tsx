@@ -51,7 +51,7 @@ function DashboardPreview() {
             </div>
           </div>
         </div>
-        <div className="border-t border-[#E8E4DE] px-5 py-3 text-[11px] text-[#817777] sm:px-6">Illustrative school data</div>
+        <div className="border-t border-[#E8E4DE] px-5 py-3 text-xs text-[#817777] sm:px-6">Illustrative school data</div>
       </div>
     </div>
   );
@@ -67,13 +67,13 @@ export default function LandingPage() {
       <LoginPanel open={loginOpen} onClose={() => setLoginOpen(false)} />
 
       <header className="sticky top-0 z-50 border-b border-[#E2E5E9] bg-white/95 backdrop-blur-xl">
-        <div className="flex h-7 items-center justify-between bg-[#550000] px-4 text-[9px] font-medium tracking-wide text-white/85 sm:px-8 lg:px-12">
+        <div className="flex h-7 items-center justify-between bg-[#550000] px-4 text-xs font-medium tracking-wide text-white/85 sm:px-8 lg:px-12">
           <span>MANUEL S. ENVERGA UNIVERSITY FOUNDATION · CANDELARIA</span><span className="hidden sm:inline">QUALITY EDUCATION · STUDENT SUPPORT</span>
         </div>
         <div className="mx-auto flex h-[72px] max-w-[1360px] items-center gap-5 px-4 sm:px-8 lg:px-12">
           <a href="#home" aria-label="QED home" className="flex shrink-0 items-center gap-3">
             <LogoComponent size="sm" />
-            <span><span className="block font-sans text-xl font-bold leading-none text-[#550000]">QED</span><span className="mt-1 block text-[9px] font-semibold tracking-[0.14em] text-slate-500">QUALITY EDUCATION</span></span>
+            <span><span className="block font-sans text-xl font-bold leading-none text-[#550000]">QED</span><span className="mt-1 block text-xs font-semibold tracking-[0.14em] text-slate-500">QUALITY EDUCATION</span></span>
           </a>
           <nav className="ml-auto hidden items-center gap-8 md:flex" aria-label="Main navigation">
             {[ ["Home", "#home"], ["About QED", "#about"], ["Features", "#features"], ["Intervention", "#intervention"] ].map(([label, href]) => <a key={href} href={href} className="text-xs font-semibold text-slate-700 transition-colors hover:text-[#800000]">{label}</a>)}
@@ -91,12 +91,12 @@ export default function LandingPage() {
           <div className="mx-auto grid max-w-[1360px] items-center gap-12 px-4 py-14 sm:px-8 sm:py-20 lg:grid-cols-[0.92fr_1.08fr] lg:gap-14 lg:px-12 lg:py-24">
             <div className="relative z-10">
               <Reveal>
-                <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.17em] text-[#800000] sm:text-xs">
+                <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.17em] text-[#800000] sm:text-xs">
                   MSEUF-Candelaria · Elementary Department
                 </span>
               </Reveal>
               <Reveal delay={100}>
-                <h1 className="mt-5 max-w-2xl font-sans text-[2.8rem] font-bold leading-[1.04] tracking-[-0.035em] text-[#201819] sm:text-5xl lg:text-[4rem]">
+                <h1 className="qed-type-display mt-5 max-w-2xl font-sans text-[#201819]">
                   Better insight. Stronger support for every student.
                 </h1>
               </Reveal>
@@ -126,7 +126,7 @@ export default function LandingPage() {
         </section>
 
         <div className="landing-polygon-surface border-b border-[#E5E1DE] bg-white">
-          <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-center gap-x-8 gap-y-2 px-4 py-5 text-center text-[10px] font-semibold uppercase tracking-[0.13em] text-[#6C6263] sm:px-8 sm:text-xs">
+          <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-center gap-x-8 gap-y-2 px-4 py-5 text-center text-xs font-semibold uppercase tracking-[0.13em] text-[#6C6263] sm:px-8 sm:text-xs">
             {[["01", "Student records"], ["02", "Academic progress"], ["03", "Attendance"], ["04", "Family connection"]].map(([number, label]) => <a href="#features" key={number} className="group flex items-center gap-3 px-3 py-3 sm:px-5"><span className="font-sans text-xs font-black text-[#9B1C31]">{number}</span><span className="text-xs font-bold text-slate-600 transition-colors group-hover:text-[#800000] sm:text-sm">{label}</span><ArrowRight size={13} className="ml-auto text-slate-300 transition group-hover:translate-x-1 group-hover:text-[#800000]" /></a>)}
           </div>
         </div>

@@ -113,10 +113,10 @@ export function AcademicYearPage() {
             <ArrowLeft />
           </button>
           <div>
-            <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>
+            <h1 className={`qed-type-page-title ${textPrimary}`}>
               Academic Year
             </h1>
-            <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+            <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
               Manage school years, grading periods, and term settings.
             </p>
           </div>

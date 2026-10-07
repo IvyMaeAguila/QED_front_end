@@ -1,35 +1,129 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
-/* App-wide type system. Heading weight is tied to semantic level so the
-   public landing page and every signed-in role share the same hierarchy. */
+/* Typography source of truth: change the family and scale here for every role. */
 :root {
-  --type-weight-page-title: 800;
-  --type-weight-section-title: 700;
-  --type-weight-card-title: 600;
+  --qed-font-primary: "Inter";
+  --qed-font-fallback: ui-sans-serif, system-ui, sans-serif;
+  --qed-type-page-title: clamp(1.25rem, 1.125rem + 0.5vw, 1.375rem);
+  --qed-type-page-description: 0.875rem;
+  --qed-type-section-title: 1.1875rem;
+  --qed-type-modal-title: 1.125rem;
+  --qed-type-modal-subtitle: 0.8125rem;
+  --qed-type-subsection-title: 1.125rem;
+  --qed-type-card-title: 1rem;
+  --qed-type-body: 0.875rem;
+  --qed-type-metadata: 0.8125rem;
+  --qed-type-small-metadata: 0.75rem;
+  --qed-type-label: 0.875rem;
+  --qed-type-compact-label: 0.75rem;
+  --qed-type-button: 0.875rem;
+  --qed-type-small-control: 0.8125rem;
+  --qed-type-header: 0.875rem;
+  --qed-type-badge: 0.75rem;
+  --qed-type-table-heading: 0.8125rem;
+  --qed-type-table-body: 0.875rem;
+  --qed-type-kpi: clamp(1.5rem, 1.375rem + 0.5vw, 1.75rem);
+  --qed-type-kpi-label: 0.8125rem;
+  --qed-type-nav: 0.875rem;
+  --qed-type-brand-name: 1.125rem;
+  --qed-type-brand-descriptor: 0.6875rem;
+  --qed-type-table-group: 0.75rem;
+  --qed-type-table-empty-value: 0.75rem;
+  --qed-weight-regular: 400;
+  --qed-weight-medium: 500;
+  --qed-weight-semibold: 600;
+  --qed-weight-bold: 700;
 }
 
 html,
 body,
 #root {
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--qed-font-primary), var(--qed-font-fallback);
   font-style: normal;
   font-synthesis: none;
 }
 
 h1 {
-  font-weight: var(--type-weight-page-title);
+  font-size: var(--qed-type-page-title);
+  font-weight: var(--qed-weight-bold);
+  line-height: 1.2;
+  letter-spacing: -0.025em;
 }
 
-h2 {
-  font-weight: var(--type-weight-section-title);
+h2:not(.font-bold):not(.font-extrabold):not(.font-black) {
+  font-weight: var(--qed-weight-semibold);
 }
 
-h3,
-h4,
-h5,
-h6 {
-  font-weight: var(--type-weight-card-title);
+h3:not(.font-bold):not(.font-extrabold):not(.font-black),
+h4:not(.font-bold):not(.font-extrabold):not(.font-black),
+h5:not(.font-bold):not(.font-extrabold):not(.font-black),
+h6:not(.font-bold):not(.font-extrabold):not(.font-black) {
+  font-weight: var(--qed-weight-semibold);
+}
+
+/* Canonical shell for ordinary centered QED dialogs. Feature components may
+   still choose their dimensions and body layout without restyling the shell. */
+.qed-modal-frame:not(.qed-modal-frame--specialized):not(.qed-modal-frame--dark) {
+  position: relative;
+  border: 1px solid #e5e7eb !important;
+  border-top: 3px solid #800000 !important;
+  border-radius: 1rem !important;
+  background: #fff !important;
+  box-shadow: 0 20px 45px -18px rgb(15 23 42 / 0.28), 0 8px 18px -12px rgb(15 23 42 / 0.18) !important;
+}
+
+.qed-modal-frame.qed-modal-frame--dark:not(.qed-modal-frame--specialized) {
+  position: relative;
+  border: 1px solid #374151 !important;
+  border-top: 3px solid #800000 !important;
+  border-radius: 1rem !important;
+  background: #111827 !important;
+  box-shadow: 0 20px 45px -18px rgb(15 23 42 / 0.5), 0 8px 18px -12px rgb(0 0 0 / 0.35) !important;
+}
+
+.qed-modal-header:not(.qed-modal-header--dark) {
+  min-height: 4.25rem;
+  align-items: center !important;
+  padding: 1rem 1.5rem !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  background: #fff !important;
+}
+
+.qed-modal-header.qed-modal-header--dark {
+  min-height: 4.25rem;
+  align-items: center !important;
+  padding: 1rem 1.5rem !important;
+  border-bottom: 1px solid #374151 !important;
+  background: #111827 !important;
+}
+
+.qed-modal-header .qed-type-modal-title {
+  font-family: var(--qed-font-primary), var(--qed-font-fallback);
+  font-size: var(--qed-type-modal-title);
+  font-weight: var(--qed-weight-semibold);
+  line-height: 1.3;
+}
+
+.qed-modal-header .qed-type-modal-subtitle {
+  margin-top: 0.25rem;
+  font-family: var(--qed-font-primary), var(--qed-font-fallback);
+  font-size: var(--qed-type-modal-subtitle);
+  font-weight: var(--qed-weight-regular);
+  line-height: 1.4;
+}
+
+.qed-modal-leading {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.qed-modal-footer > button {
+  font-family: var(--qed-font-primary), var(--qed-font-fallback);
+  font-size: var(--qed-type-button);
+  font-weight: var(--qed-weight-semibold);
 }
 
 /* Table cards use the softer 12px frame from the grade-sheet reference,
@@ -48,8 +142,8 @@ h6 {
 :is(div, section)[class*="rounded-"][class*="border"][class*="px-3"][class*="py-2"]:has(input, select) :is(input, select, button[aria-haspopup="listbox"], [role="group"] > button) {
   height: 2rem !important;
   min-height: 2rem !important;
-  font-size: 0.6875rem !important;
-  line-height: 1rem !important;
+  font-size: var(--qed-type-body) !important;
+  line-height: 1.25rem !important;
   border-radius: 0.5rem !important;
 }
 
@@ -80,15 +174,15 @@ button[aria-label^="Close" i] {
 button:is([class*="bg-maroon"], [class*="bg-[#800000]"], [class*="bg-[#8B0D0D]"]):not([aria-label]):not(:has(> svg:only-child)) {
   min-height: 2.5rem;
   border-radius: 8px !important;
-  font-size: 0.875rem;
+  font-size: var(--qed-type-button);
   font-weight: 600;
   line-height: 1.25rem;
 }
 
-button:is([class*="bg-maroon"], [class*="bg-[#800000]"], [class*="bg-[#8B0D0D]"]):is([class~="text-xs"], [class*="text-[11px]"]):not([aria-label]):not(:has(> svg:only-child)) {
+button:is([class*="bg-maroon"], [class*="bg-[#800000]"], [class*="bg-[#8B0D0D]"]):is([class~="text-xs"]):not([aria-label]):not(:has(> svg:only-child)) {
   min-height: 2.25rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  font-size: var(--qed-type-small-control);
+  line-height: 1.125rem;
 }
 
 /* Parent panels follow the 12px system frame, even where older components use
@@ -133,13 +227,12 @@ button:is([class*="bg-maroon"], [class*="bg-[#800000]"], [class*="bg-[#8B0D0D]"]
 }
 
 .parent-system {
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   font-style: normal;
   font-synthesis: none;
 }
 
 .parent-system [class~="font-black"] {
-  font-weight: 800 !important;
+  font-weight: var(--qed-weight-bold) !important;
 }
 
 .parent-system [class~="italic"] {
@@ -162,15 +255,396 @@ select[aria-label*="month" i] {
 @layer base {
   html,
   body {
-    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-size: 16px;
+    font-weight: var(--qed-weight-regular);
+    line-height: 1.5;
+  }
+
+  body {
+    font-size: var(--qed-type-body);
+  }
+
+  button,
+  input,
+  select,
+  textarea,
+  option,
+  optgroup {
+    font-family: inherit;
   }
 
   button,
   input,
   select,
   textarea {
-    font-family: inherit;
+    font-size: var(--qed-type-body);
   }
+
+  button {
+    font-weight: var(--qed-weight-semibold);
+  }
+
+  label {
+    font-size: var(--qed-type-label);
+    font-weight: var(--qed-weight-medium);
+  }
+}
+
+/* Named semantic styles are available to new and refactored views. */
+.qed-type-page-title,
+.qed-account-ui h1:not(.qed-type-display):not(.qed-type-dashboard-hero):not([data-type-exempt="true"]) {
+  font-size: var(--qed-type-page-title);
+  font-weight: var(--qed-weight-bold);
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.qed-type-page-description,
+.qed-account-ui h1:not(.qed-type-display):not(.qed-type-dashboard-hero):not([data-type-exempt="true"]) + p {
+  font-size: var(--qed-type-page-description);
+  font-weight: var(--qed-weight-regular);
+  line-height: 1.5;
+}
+
+/* The public landing hero has a deliberately larger display heading. */
+.qed-type-display {
+  font-size: clamp(2.8rem, 2.1rem + 2.7vw, 4rem);
+  font-weight: var(--qed-weight-bold);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+
+.qed-type-dashboard-hero {
+  font-size: clamp(2rem, 1.75rem + 1.5vw, 2.625rem);
+  font-weight: var(--qed-weight-bold);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.qed-type-hero-description {
+  font-size: 1rem;
+  font-weight: var(--qed-weight-regular);
+  line-height: 1.5;
+}
+
+.qed-type-section-title {
+  font-size: var(--qed-type-section-title);
+  font-weight: var(--qed-weight-semibold);
+  line-height: 1.3;
+}
+
+.qed-type-subsection-title {
+  font-size: var(--qed-type-subsection-title);
+  font-weight: var(--qed-weight-semibold);
+  line-height: 1.35;
+}
+
+.qed-type-card-title {
+  font-size: var(--qed-type-card-title);
+  font-weight: var(--qed-weight-semibold);
+  line-height: 1.4;
+}
+
+.qed-type-body {
+  font-size: var(--qed-type-body);
+  font-weight: var(--qed-weight-regular);
+  line-height: 1.5;
+}
+
+.qed-type-metadata {
+  font-size: var(--qed-type-metadata);
+  font-weight: var(--qed-weight-regular);
+  line-height: 1.45;
+}
+
+.qed-type-small-metadata {
+  font-size: var(--qed-type-small-metadata);
+  font-weight: var(--qed-weight-medium);
+  line-height: 1.4;
+}
+
+.qed-type-label {
+  font-size: var(--qed-type-label);
+  font-weight: var(--qed-weight-medium);
+  line-height: 1.4;
+}
+
+.qed-type-modal-title {
+  font-size: var(--qed-type-modal-title);
+  font-weight: var(--qed-weight-semibold);
+  line-height: 1.3;
+}
+
+.qed-type-modal-subtitle {
+  font-size: var(--qed-type-modal-subtitle);
+  font-weight: var(--qed-weight-regular);
+  line-height: 1.4;
+}
+
+.qed-type-label-compact {
+  font-family: inherit;
+  font-size: var(--qed-type-compact-label);
+  font-weight: var(--qed-weight-medium);
+  line-height: 1.4;
+}
+
+.qed-login-modal label.qed-type-label-compact {
+  font-family: var(--qed-font-primary), var(--qed-font-fallback);
+  font-size: var(--qed-type-compact-label);
+  font-weight: var(--qed-weight-medium);
+  line-height: 1.4;
+}
+
+.qed-type-button {
+  font-size: var(--qed-type-button);
+  font-weight: var(--qed-weight-semibold);
+  line-height: 1.25;
+}
+
+.qed-type-header {
+  font-size: var(--qed-type-header);
+  font-weight: var(--qed-weight-semibold);
+  line-height: 1.35;
+}
+
+.qed-type-table-header {
+  font-size: var(--qed-type-table-heading);
+  font-weight: var(--qed-weight-semibold);
+  line-height: 1.4;
+}
+
+.qed-type-table-body {
+  font-size: var(--qed-type-table-body);
+  font-weight: var(--qed-weight-regular);
+  line-height: 1.45;
+}
+
+.qed-type-brand-name {
+  font-family: var(--qed-font-primary), var(--qed-font-fallback);
+  font-size: var(--qed-type-brand-name);
+  font-weight: var(--qed-weight-bold);
+  line-height: 1.2;
+}
+
+.qed-type-brand-descriptor {
+  font-family: var(--qed-font-primary), var(--qed-font-fallback);
+  font-size: var(--qed-type-brand-descriptor);
+  font-weight: var(--qed-weight-medium);
+  line-height: 1.3;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.qed-type-table-group {
+  font-family: var(--qed-font-primary), var(--qed-font-fallback);
+  font-size: var(--qed-type-table-group);
+  font-weight: var(--qed-weight-semibold);
+  line-height: 1.35;
+  letter-spacing: 0.04em;
+}
+
+.qed-type-table-empty-value {
+  font-family: var(--qed-font-primary), var(--qed-font-fallback);
+  font-size: var(--qed-type-table-empty-value);
+  font-weight: var(--qed-weight-medium);
+  line-height: 1.3;
+  color: var(--qed-table-muted, #6b7280) !important;
+}
+
+.qed-attendance-weekday {
+  font-family: var(--qed-font-primary), var(--qed-font-fallback);
+  font-size: 0.625rem;
+  font-weight: var(--qed-weight-semibold);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.qed-type-table-grade {
+  font-family: var(--qed-font-primary), var(--qed-font-fallback);
+  font-size: var(--qed-type-table-body);
+  font-weight: var(--qed-weight-semibold);
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+
+.qed-type-badge {
+  font-size: var(--qed-type-badge);
+  font-weight: var(--qed-weight-semibold);
+  line-height: 1.35;
+}
+
+.qed-type-kpi {
+  font-size: var(--qed-type-kpi);
+  font-weight: var(--qed-weight-bold);
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.qed-type-kpi-label {
+  font-size: var(--qed-type-kpi-label);
+  font-weight: var(--qed-weight-medium);
+  line-height: 1.4;
+}
+
+.qed-type-nav-item,
+.qed-type-nav-item-active {
+  font-size: var(--qed-type-nav);
+  line-height: 1.4;
+}
+
+.qed-type-nav-item {
+  font-weight: var(--qed-weight-medium);
+}
+
+.qed-type-nav-item-active {
+  font-weight: var(--qed-weight-semibold);
+}
+
+.qed-account-ui label {
+  font-size: var(--qed-type-label);
+  font-weight: var(--qed-weight-medium);
+}
+
+.qed-account-ui :is(input:not([type="checkbox"]):not([type="radio"]), textarea) {
+  font-size: var(--qed-type-body);
+  font-weight: var(--qed-weight-regular);
+}
+
+.qed-account-ui select {
+  font-size: var(--qed-type-body);
+  font-weight: var(--qed-weight-medium);
+}
+
+.qed-account-ui [class*="rounded-full"][class~="text-xs"] {
+  font-size: var(--qed-type-badge);
+  font-weight: var(--qed-weight-semibold);
+}
+
+.qed-account-ui button[class~="text-xs"]:not(.qed-segmented-control > button) {
+  font-size: var(--qed-type-small-control);
+}
+
+/* Global interactive-control type scale. These unlayered base rules keep
+   Tailwind utility classes from changing equivalent controls by page/role. */
+button,
+input,
+select,
+textarea,
+option,
+optgroup {
+  font-family: inherit;
+}
+
+button {
+  font-size: var(--qed-type-button);
+  font-weight: var(--qed-weight-semibold);
+  line-height: 1.25;
+}
+
+button[class~="text-xs"]:not(.qed-segmented-control > button) {
+  font-size: var(--qed-type-small-control);
+}
+
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea,
+option,
+optgroup {
+  font-size: var(--qed-type-body);
+  font-weight: var(--qed-weight-regular);
+  line-height: 1.5;
+}
+
+select,
+[role="combobox"] {
+  font-weight: var(--qed-weight-medium);
+}
+
+input::placeholder,
+textarea::placeholder {
+  font-family: inherit;
+  font-size: var(--qed-type-body);
+  font-weight: var(--qed-weight-regular);
+}
+
+label {
+  font-size: var(--qed-type-label);
+  font-weight: var(--qed-weight-medium);
+}
+
+button[aria-haspopup="listbox"],
+button.qed-filter-control,
+.qed-account-ui button.qed-filter-control {
+  font-size: var(--qed-type-body);
+  font-weight: var(--qed-weight-medium);
+}
+
+button[aria-haspopup="listbox"] :is(span, label),
+button.qed-filter-control :is(span, label) {
+  font-size: var(--qed-type-body);
+  font-weight: var(--qed-weight-medium);
+}
+
+[role="tab"] {
+  font-size: var(--qed-type-body);
+  font-weight: var(--qed-weight-medium);
+}
+
+[role="tab"][aria-selected="true"],
+[role="tab"][aria-current="page"] {
+  font-weight: var(--qed-weight-semibold);
+}
+
+button[aria-pressed="false"] {
+  font-weight: var(--qed-weight-medium);
+}
+
+button[aria-pressed="true"] {
+  font-weight: var(--qed-weight-semibold);
+}
+
+/* Popovers rendered outside the account root still receive QED Inter styles. */
+[role="listbox"],
+[role="menu"],
+[role="dialog"],
+[data-radix-popper-content-wrapper] {
+  font-family: var(--qed-font-primary), var(--qed-font-fallback);
+}
+
+[role="listbox"] button,
+[role="option"],
+[role="menuitem"] {
+  font-family: inherit;
+  font-size: var(--qed-type-body);
+  font-weight: var(--qed-weight-regular);
+}
+
+[role="option"][aria-selected="true"],
+[role="menuitem"][aria-current="true"] {
+  font-weight: var(--qed-weight-medium);
+}
+
+.qed-account-ui button[role="tab"] {
+  font-size: var(--qed-type-body);
+  font-weight: var(--qed-weight-medium);
+}
+
+.qed-account-ui button[role="tab"][aria-selected="true"],
+.qed-account-ui button[role="tab"][aria-current="page"] {
+  font-weight: var(--qed-weight-semibold);
+}
+
+.qed-account-ui [role="listbox"] button,
+.qed-account-ui [role="option"],
+.qed-account-ui [role="menuitem"] {
+  font-family: inherit;
+  font-size: var(--qed-type-body);
+  font-weight: var(--qed-weight-regular);
+}
+
+.qed-account-ui [role="option"][aria-selected="true"],
+.qed-account-ui [role="menuitem"][aria-current="true"] {
+  font-weight: var(--qed-weight-medium);
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -186,8 +660,14 @@ select[aria-label*="month" i] {
   height: 2rem !important;
   min-height: 2rem !important;
   border-radius: 0.5rem !important;
-  font-size: 0.6875rem !important;
-  line-height: 1rem !important;
+  font-size: var(--qed-type-body) !important;
+  font-weight: var(--qed-weight-medium);
+  line-height: 1.25rem !important;
+}
+
+input.qed-filter-control,
+textarea.qed-filter-control {
+  font-weight: var(--qed-weight-regular);
 }
 
 /* Shared segmented-control geometry: use the compact subject switch as the
@@ -206,8 +686,26 @@ select[aria-label*="month" i] {
   max-height: 2rem !important;
   padding-block: 0 !important;
   border-radius: 0.5rem !important;
-  font-size: 0.6875rem !important;
-  line-height: 1rem !important;
+  font-size: var(--qed-type-button) !important;
+  font-weight: var(--qed-weight-medium) !important;
+  line-height: 1.25rem !important;
+}
+
+.qed-segmented-control > button[aria-pressed="true"],
+.qed-segmented-control > button[aria-selected="true"],
+.qed-segmented-control > button[aria-current="true"],
+.qed-segmented-control > button[class*="bg-[#800000]"] {
+  font-weight: var(--qed-weight-semibold) !important;
+}
+
+.qed-tab-control {
+  font-size: var(--qed-type-body);
+  font-weight: var(--qed-weight-medium);
+  line-height: 1.25;
+}
+
+.qed-tab-control[data-active="true"] {
+  font-weight: var(--qed-weight-semibold);
 }
 
 :is(html.dark, .dark) {
@@ -281,7 +779,6 @@ button.system-back-button--inverse:hover {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.875rem;
-    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
     font-variant-numeric: tabular-nums;
   }
 
@@ -291,9 +788,9 @@ button.system-back-button--inverse:hover {
 
   .teacher-user-table th {
     padding: 0.5rem 1rem !important;
-    font-size: 0.6875rem !important;
-    font-weight: 900 !important;
-    letter-spacing: 0.06em !important;
+    font-size: var(--qed-type-table-heading) !important;
+    font-weight: var(--qed-weight-semibold) !important;
+    letter-spacing: 0.04em !important;
     text-transform: uppercase !important;
   }
 
@@ -329,7 +826,6 @@ button.system-back-button--inverse:hover {
   /* Keep table text on every teacher route on the same Inter typeface, with
      tabular digits for dates, grades, and attendance counts. */
   .qed-account-ui table {
-    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
     font-variant-numeric: tabular-nums;
   }
 
@@ -349,31 +845,55 @@ button.system-back-button--inverse:hover {
 
   .qed-account-ui table thead th {
     color: var(--qed-table-muted) !important;
-    font-size: 0.6875rem !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.055em !important;
+    font-size: var(--qed-type-table-heading) !important;
+    font-weight: var(--qed-weight-semibold) !important;
+    letter-spacing: 0.04em !important;
   }
 
   .qed-account-ui table tbody td {
     color: var(--qed-table-text) !important;
-    font-size: 0.75rem !important;
-    font-weight: 500 !important;
+    font-size: var(--qed-type-table-body) !important;
+    font-weight: var(--qed-weight-regular) !important;
+  }
+
+  .qed-account-ui table tbody td :is(span, p, a, strong, em):not([class*="rounded-full"]):not(.qed-type-badge) {
+    font-size: var(--qed-type-table-body) !important;
   }
 
   .qed-account-ui table tbody :is(td, td *)[class~="text-[#111827]"],
   .qed-account-ui table tbody :is(td, td *)[class~="text-white"]:not(button):not([class*="bg-"]) {
     color: var(--qed-table-text) !important;
-    font-size: 0.75rem !important;
-    font-weight: 500 !important;
+    font-size: var(--qed-type-table-body) !important;
+    font-weight: var(--qed-weight-regular) !important;
   }
 
   .qed-account-ui table tbody td[class~="uppercase"],
   .qed-account-ui table tbody td [class~="uppercase"] {
     color: var(--qed-table-muted) !important;
-    font-size: 0.6875rem !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.055em !important;
+    font-size: var(--qed-type-table-heading) !important;
+    font-weight: var(--qed-weight-semibold) !important;
+    letter-spacing: 0.04em !important;
   }
+}
+
+/* Semantic overrides for inline data values inside the shared table reset. */
+.qed-account-ui table tbody td .qed-type-table-empty-value {
+  font-size: var(--qed-type-table-empty-value) !important;
+  font-weight: var(--qed-weight-medium) !important;
+  line-height: 1.3 !important;
+  color: var(--qed-table-muted, #6b7280) !important;
+}
+
+.qed-account-ui table tbody td .qed-type-table-grade {
+  font-size: var(--qed-type-table-body) !important;
+  font-weight: var(--qed-weight-semibold) !important;
+  line-height: 1.4 !important;
+}
+
+.qed-account-ui table tbody td.qed-type-table-group {
+  font-size: var(--qed-type-table-group) !important;
+  font-weight: var(--qed-weight-semibold) !important;
+  line-height: 1.35 !important;
 }
 
 /* Darken common fixed light surfaces used throughout older pages and forms.
@@ -560,8 +1080,39 @@ button.system-back-button--inverse:hover {
 }
 
 @theme {
-  /* --- font: Inter app-wide --- */
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* Central font and weight scale used by every Tailwind utility. */
+  --font-sans: var(--qed-font-primary), var(--qed-font-fallback);
+  --font-weight-thin: var(--qed-weight-regular);
+  --font-weight-extralight: var(--qed-weight-regular);
+  --font-weight-light: var(--qed-weight-regular);
+  --font-weight-normal: var(--qed-weight-regular);
+  --font-weight-medium: var(--qed-weight-medium);
+  --font-weight-semibold: var(--qed-weight-semibold);
+  --font-weight-bold: var(--qed-weight-bold);
+  --font-weight-extrabold: var(--qed-weight-bold);
+  --font-weight-black: var(--qed-weight-bold);
+
+  /* Application-wide type scale. */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.25rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.5rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 1.75rem;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 2rem;
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: 2.25rem;
+  --text-4xl: 2.25rem;
+  --text-4xl--line-height: 2.5rem;
+  --text-5xl: 3rem;
+  --text-5xl--line-height: 1;
+  --text-6xl: 3.75rem;
+  --text-6xl--line-height: 1;
 
   /* --- maroon: same gradient identity, still #550000 -> #BB0000, but the
      solid mid-tone used for chart fills/icon chips is pulled back very

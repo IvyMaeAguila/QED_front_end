@@ -56,7 +56,7 @@ export function StudentsTable({
       <tr>
         <th
           colSpan={6}
-          className={`px-4 py-1.5 text-left text-[11px] font-black uppercase tracking-wider ${
+          className={`px-4 py-1.5 text-left text-xs font-black uppercase tracking-wider ${
             darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
           } ${textPrimary}`}
         >
@@ -82,11 +82,11 @@ export function StudentsTable({
         }`}
       >
         <td
-          className={`whitespace-nowrap px-4 py-2 text-[11px] font-bold tabular-nums ${textMuted}`}
+          className={`whitespace-nowrap px-4 py-2 text-xs font-bold tabular-nums ${textMuted}`}
         >
           {index + 1}
         </td>
-        <td className={`px-4 py-2 text-[11px] font-extrabold tabular-nums ${textPrimary}`}>
+        <td className={`px-4 py-2 text-xs font-extrabold tabular-nums ${textPrimary}`}>
           {student.studentId}
         </td>
         <td className="px-4 py-2">
@@ -99,7 +99,7 @@ export function StudentsTable({
         </td>
         <td className="px-4 py-2">
           <span
-            className="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-bold"
+            className="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold"
             style={{
               background: darkMode ? `${badge.color}25` : badge.bg,
               color: badge.color,
@@ -108,12 +108,12 @@ export function StudentsTable({
             {student.gender}
           </span>
         </td>
-        <td className={`px-4 py-2 text-[11px] font-bold ${textPrimary}`}>
+        <td className={`px-4 py-2 text-xs font-bold ${textPrimary}`}>
           {student.gradeLevel}
         </td>
         <td className="px-4 py-2">
           <div className="flex items-center justify-between gap-2">
-            <span className={`text-[11px] font-bold ${textPrimary}`}>{student.section}</span>
+            <span className={`text-xs font-bold ${textPrimary}`}>{student.section}</span>
             <RowActionMenu
               darkMode={darkMode}
               // onView={() => onView(student)}
@@ -142,7 +142,7 @@ export function StudentsTable({
               ].map((h) => (
                 <th
                   key={h.label}
-                  className={`whitespace-nowrap px-4 py-2 text-[11px] font-black uppercase tracking-wider ${h.cls} ${textMuted}`}
+                  className={`whitespace-nowrap px-4 py-2 text-xs font-black uppercase tracking-wider ${h.cls} ${textMuted}`}
                 >
                   {h.label}
                 </th>
@@ -190,7 +190,7 @@ export function StudentsTable({
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <span
-                    className="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-bold"
+                    className="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold"
                     style={{
                       background: darkMode ? `${badge.color}25` : badge.bg,
                       color: badge.color,

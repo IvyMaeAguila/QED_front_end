@@ -179,7 +179,7 @@ export function EditSubjectModal({
       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
   }`;
   const disabledInputClasses = `${inputClasses} opacity-60 cursor-not-allowed`;
-  const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
+  const labelClasses = `block text-xs font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 
   function updateRow(rowId: string, patch: Partial<WeightDistributionItem>) {
     setWeights((prev) =>
@@ -227,7 +227,7 @@ export function EditSubjectModal({
       icon={Pencil}
       onClose={onClose}
       closeDisabled={saving}
-      widthClass="max-w-5xl"
+      size="xl"
       {...theme}
     >
       <p className={`text-xs font-medium leading-relaxed lg:col-span-2 ${textMuted}`}>
@@ -335,7 +335,7 @@ export function EditSubjectModal({
           <div className="flex items-center justify-between">
             <label className={`${labelClasses} mb-0`}>Weight Distribution</label>
             <span
-              className={`text-[11px] font-bold ${
+              className={`text-xs font-bold ${
                 totalWeight === 100 ? textMuted : "text-[#B91C1C]"
               }`}
             >
@@ -344,7 +344,7 @@ export function EditSubjectModal({
           </div>
 
           {activeTemplate && (
-            <p className={`text-[11px] font-semibold ${textMuted}`}>
+            <p className={`text-xs font-semibold ${textMuted}`}>
               The active Excel template controls these weights. Upload a replacement template to change them.
             </p>
           )}
@@ -446,7 +446,7 @@ export function EditSubjectModal({
             type="button"
             onClick={addRow}
             disabled={saving || Boolean(activeTemplate) || allTypesUsed || assessmentTypes.length === 0}
-            className={`w-full h-9 rounded-lg border border-dashed text-[11px] font-bold inline-flex items-center justify-center gap-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+            className={`w-full h-9 rounded-lg border border-dashed text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
               darkMode
                 ? "border-[#374151] text-[#D1D5DB] hover:bg-white/5"
                 : "border-[#CBD5E1] text-[#374151] hover:bg-white"

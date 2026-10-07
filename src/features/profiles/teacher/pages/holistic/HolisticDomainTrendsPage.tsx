@@ -145,7 +145,7 @@ function CustomTooltip({ active, payload, darkMode }: any) {
       }`}
     >
       <p className={`text-xs font-bold ${darkMode ? "text-white" : "text-[#111827]"}`}>{row.weekLabel}</p>
-      <p className={`text-[10px] font-medium ${darkMode ? "text-white/50" : "text-[#8A8F98]"}`}>
+      <p className={`text-xs font-medium ${darkMode ? "text-white/50" : "text-[#8A8F98]"}`}>
         {formatWeekLong(row.weekStartDate)}
       </p>
       <div className="mt-2 space-y-2">
@@ -155,7 +155,7 @@ function CustomTooltip({ active, payload, darkMode }: any) {
           const interpretation = interpretScore(domain, value);
           return (
             <div key={entry.dataKey}>
-              <div className="flex items-center justify-between gap-4 text-[11px]">
+              <div className="flex items-center justify-between gap-4 text-xs">
                 <span
                   className={`flex items-center gap-1.5 font-bold ${
                     darkMode ? "text-white/70" : "text-[#5B6069]"
@@ -170,7 +170,7 @@ function CustomTooltip({ active, payload, darkMode }: any) {
               </div>
               {interpretation && (
                 <p
-                  className={`mt-0.5 pl-3 text-[10px] font-medium leading-snug ${
+                  className={`mt-0.5 pl-3 text-xs font-medium leading-snug ${
                     darkMode ? "text-white/50" : "text-[#8A8F98]"
                   }`}
                 >
@@ -327,8 +327,8 @@ export function HolisticDomainTrendsPage() {
               <Activity size={28} />
             </span>
             <div>
-              <h1 className={`text-lg font-black tracking-tight ${textPrimary}`}>Domain Trends</h1>
-              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+              <h1 className={`qed-type-page-title ${textPrimary}`}>Domain Trends</h1>
+              <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
                 Weekly ratings averaged across the students in the selected section — pooled across every subject they take, or narrowed to one.
               </p>
             </div>
@@ -352,7 +352,7 @@ export function HolisticDomainTrendsPage() {
                 onChange={(e) => setSelectedTerm(Number(e.target.value))}
                 disabled={terms.length === 0}
                 aria-label="Select term"
-                className={`h-8 w-full appearance-none rounded-lg border pl-3 pr-7 text-[11px] font-bold outline-none transition-colors focus:border-maroon disabled:opacity-50 ${panelBg} ${panelBorder} ${textPrimary}`}
+                className={`h-8 w-full appearance-none rounded-lg border pl-3 pr-7 text-xs font-bold outline-none transition-colors focus:border-maroon disabled:opacity-50 ${panelBg} ${panelBorder} ${textPrimary}`}
               >
                 {terms.length === 0 && <option value="">No terms set up yet</option>}
                 {terms.map((t) => (
@@ -378,7 +378,7 @@ export function HolisticDomainTrendsPage() {
             <button
               type="button"
               onClick={() => setActiveTab("overall")}
-              className={`rounded-lg px-3 py-1.5 text-[11px] font-extrabold transition-colors ${
+              className={`rounded-lg px-3 py-1.5 text-xs font-extrabold transition-colors ${
                 activeTab === "overall"
                   ? "bg-maroon text-white"
                   : `${textMuted} ${darkMode ? "hover:bg-white/10" : "hover:bg-black/5"}`
@@ -391,7 +391,7 @@ export function HolisticDomainTrendsPage() {
                 key={subj.subjectSectionId}
                 type="button"
                 onClick={() => setActiveTab(subj.subjectSectionId)}
-                className={`rounded-lg px-3 py-1.5 text-[11px] font-extrabold transition-colors ${
+                className={`rounded-lg px-3 py-1.5 text-xs font-extrabold transition-colors ${
                   activeTab === subj.subjectSectionId
                     ? "bg-maroon text-white"
                     : `${textMuted} ${darkMode ? "hover:bg-white/10" : "hover:bg-black/5"}`
@@ -432,13 +432,13 @@ export function HolisticDomainTrendsPage() {
                     <span className="text-3xl font-black leading-none tabular-nums text-white">
                       {compositeScore.toFixed(1)}
                     </span>
-                    <span className="text-[10.5px] font-bold uppercase tracking-wide text-white/70">
+                    <span className="text-xs font-bold uppercase tracking-wide text-white/70">
                       Composite · {bandFor(compositeScore).label}
                     </span>
                   </div>
                 )}
                 <div className="min-w-0 flex-1 p-4 sm:p-5">
-                  <p className="text-[11px] font-bold uppercase tracking-wide" style={{ color: ACCENT }}>
+                  <p className="text-xs font-bold uppercase tracking-wide" style={{ color: ACCENT }}>
                     {activeTab === "overall" ? "Whole-class snapshot" : `${activeSubjectName} snapshot`}
                   </p>
                   <p className={`mt-1.5 text-xs font-medium leading-relaxed sm:text-sm ${textPrimary}`}>
@@ -458,7 +458,7 @@ export function HolisticDomainTrendsPage() {
                       "Domain scores are holding steady across the board this week."
                     )}
                   </p>
-                  <p className={`mt-1.5 text-[11px] font-medium ${textMuted}`}>
+                  <p className={`mt-1.5 text-xs font-medium ${textMuted}`}>
                     Based on {chartRows.length} week{chartRows.length === 1 ? "" : "s"} of ratings recorded so far in this term.
                   </p>
                 </div>
@@ -491,12 +491,12 @@ export function HolisticDomainTrendsPage() {
 
                     <div className="min-w-0 flex-1 p-3.5">
                       <div className="flex items-center justify-between gap-2">
-                        <p className={`truncate text-[10.5px] font-bold uppercase tracking-wider ${textMuted}`}>
+                        <p className={`truncate text-xs font-bold uppercase tracking-wider ${textMuted}`}>
                           {meta.label}
                         </p>
                         {band && (
                           <span
-                            className="shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold"
+                            className="shrink-0 rounded-full px-1.5 py-0.5 text-xs font-bold"
                             style={{ backgroundColor: `${band.color}16`, color: band.color }}
                           >
                             {band.label}
@@ -507,10 +507,10 @@ export function HolisticDomainTrendsPage() {
                         <span className={`text-lg font-black tabular-nums leading-none ${textPrimary}`}>
                           {latest !== null ? latest.toFixed(1) : "\u2014"}
                         </span>
-                        <span className={`text-[10px] font-bold ${textMuted}`}>/ 5.0</span>
+                        <span className={`text-xs font-bold ${textMuted}`}>/ 5.0</span>
                         {DeltaIcon && (
                           <span
-                            className="ml-auto flex items-center gap-0.5 text-[10px] font-bold"
+                            className="ml-auto flex items-center gap-0.5 text-xs font-bold"
                             style={{ color: deltaColor }}
                           >
                             <DeltaIcon size={10} />
@@ -534,12 +534,12 @@ export function HolisticDomainTrendsPage() {
                     <Sparkles size={13} style={{ color: ACCENT }} />
                     Weekly Progression
                   </p>
-                  <p className={`truncate text-[11px] font-medium ${textMuted}`}>
+                  <p className={`truncate text-xs font-medium ${textMuted}`}>
                     · Tap a card above to isolate or hide its line
                   </p>
                 </div>
                 <span
-                  className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[10.5px] font-bold"
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold"
                   style={{ backgroundColor: `${ACCENT}12`, color: ACCENT }}
                 >
                   {activeTab === "overall" ? "All subjects pooled" : activeSubjectName}
@@ -629,7 +629,7 @@ export function HolisticDomainTrendsPage() {
                         key={key}
                         type="button"
                         onClick={() => toggleDomain(key)}
-                        className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-bold transition-opacity ${panelBorder} ${
+                        className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-bold transition-opacity ${panelBorder} ${
                           darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
                         } ${isHidden ? "opacity-40" : ""}`}
                       >
@@ -646,7 +646,7 @@ export function HolisticDomainTrendsPage() {
             <section className={cardClasses} aria-label="Interpreted domain results">
               <div className={`border-b px-4 py-2.5 ${panelBorder}`}>
                 <p className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>What the data means</p>
-                <p className={`mt-0.5 text-[11px] font-medium ${textMuted}`}>
+                <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
                   A plain-language read of each domain's latest score, for{" "}
                   {activeTab === "overall" ? "the whole class" : activeSubjectName}
                 </p>
@@ -686,7 +686,7 @@ export function HolisticDomainTrendsPage() {
                           <h3 className={`text-sm font-bold ${textPrimary}`}>{meta.label}</h3>
                           {band && (
                             <span
-                              className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold"
+                              className="shrink-0 rounded-full px-2 py-0.5 text-xs font-bold"
                               style={{ backgroundColor: `${band.color}16`, color: band.color }}
                             >
                               {band.label}
@@ -697,11 +697,11 @@ export function HolisticDomainTrendsPage() {
                         <div className="mt-0.5 flex items-center gap-2">
                           <span className={`text-xs font-bold tabular-nums ${textMuted}`}>
                             {latest !== null ? latest.toFixed(1) : "\u2014"}
-                            <span className="text-[10px] font-medium">/5.0</span>
+                            <span className="text-xs font-medium">/5.0</span>
                           </span>
                           {DeltaIcon && (
                             <span
-                              className="flex items-center gap-0.5 text-[10px] font-bold"
+                              className="flex items-center gap-0.5 text-xs font-bold"
                               style={{ color: deltaColor }}
                             >
                               <DeltaIcon size={10} />
@@ -715,7 +715,7 @@ export function HolisticDomainTrendsPage() {
                             {interpretation}
                           </p>
                         ) : (
-                          <p className={`mt-2 text-[11px] font-medium ${textMuted}`}>
+                          <p className={`mt-2 text-xs font-medium ${textMuted}`}>
                             Not enough data yet to interpret this domain.
                           </p>
                         )}
@@ -723,7 +723,7 @@ export function HolisticDomainTrendsPage() {
                         <button
                           type="button"
                           onClick={() => toggleDomain(key)}
-                          className={`mt-2.5 text-[10.5px] font-bold ${textMuted} underline decoration-dotted underline-offset-2 transition-opacity hover:opacity-70`}
+                          className={`mt-2.5 text-xs font-bold ${textMuted} underline decoration-dotted underline-offset-2 transition-opacity hover:opacity-70`}
                         >
                           {isHidden ? "Show on chart" : "Hide from chart"}
                         </button>

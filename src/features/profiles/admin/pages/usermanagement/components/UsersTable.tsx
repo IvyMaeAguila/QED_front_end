@@ -49,7 +49,7 @@ export function UsersTable({
             : "border-black/10 hover:bg-black/5"
         }`}
       >
-        <td className={`whitespace-nowrap px-4 py-2 text-[11px] font-bold tabular-nums ${textMuted}`}>
+        <td className={`whitespace-nowrap px-4 py-2 text-xs font-bold tabular-nums ${textMuted}`}>
           {index + 1}
         </td>
         <td className={`px-4 py-2 text-xs font-bold whitespace-nowrap ${textPrimary}`}>
@@ -57,21 +57,21 @@ export function UsersTable({
         </td>
         <td className="px-4 py-2">
           <span
-            className="inline-flex items-center gap-1 text-[11px] font-bold whitespace-nowrap"
+            className="inline-flex items-center gap-1 text-xs font-bold whitespace-nowrap"
             style={{ color: ROLE_COLOR }}
           >
             {user.role === "PRINCIPAL" && <Crown size={11} />}
             {ROLE_LABELS[user.role]}
           </span>
         </td>
-        <td className={`px-4 py-2 text-[11px] font-medium ${textMuted}`}>{user.email}</td>
-        <td className={`px-4 py-2 text-[11px] font-medium whitespace-nowrap ${textMuted}`}>
+        <td className={`px-4 py-2 text-xs font-medium ${textMuted}`}>{user.email}</td>
+        <td className={`px-4 py-2 text-xs font-medium whitespace-nowrap ${textMuted}`}>
           {user.contactNumber}
         </td>
         <td className="px-4 py-2">
           <div className="flex items-center justify-between gap-2">
             <span
-              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold whitespace-nowrap"
               style={{ background: darkMode ? `${sBadge.color}25` : sBadge.bg, color: sBadge.color }}
             >
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: sBadge.dot }} />
@@ -105,7 +105,7 @@ export function UsersTable({
               ].map((h) => (
                 <th
                   key={h.label}
-                  className={`whitespace-nowrap px-4 py-2 text-[11px] font-black uppercase tracking-wider ${h.cls} ${textMuted}`}
+                  className={`whitespace-nowrap px-4 py-2 text-xs font-black uppercase tracking-wider ${h.cls} ${textMuted}`}
                 >
                   {h.label}
                 </th>
@@ -128,7 +128,7 @@ export function UsersTable({
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <span
-                    className="inline-flex items-center gap-1 text-[11px] font-bold"
+                    className="inline-flex items-center gap-1 text-xs font-bold"
                     style={{ color: ROLE_COLOR }}
                   >
                     {user.role === "PRINCIPAL" && <Crown size={11} />}
@@ -148,7 +148,7 @@ export function UsersTable({
 
               <div className="pt-1">
                 <span
-                  className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold"
+                  className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold"
                   style={{ background: darkMode ? `${sBadge.color}25` : sBadge.bg, color: sBadge.color }}
                 >
                   <span className="w-1.5 h-1.5 rounded-full" style={{ background: sBadge.dot }} />

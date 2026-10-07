@@ -25,7 +25,7 @@ export function WholeElementaryRanking({ term, ranking, panelBg, panelBorder, te
     <SectionCard title="Whole Elementary Department Ranking" compact panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} darkMode={darkMode}>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <p className={`text-sm ${textMuted}`}>Average subject scores across all grade levels · {term}</p>
-        <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${darkMode ? "bg-white/5" : "bg-[#F4F5F7]"} ${textMuted}`}>
+        <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${darkMode ? "bg-white/5" : "bg-[#F4F5F7]"} ${textMuted}`}>
           {ranking.length} subjects
         </span>
       </div>

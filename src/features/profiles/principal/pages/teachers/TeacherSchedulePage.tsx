@@ -115,8 +115,8 @@ export function TeacherSchedulePage({ teacherIdOverride, backPath = "/principal/
         <BackButton onClick={() => navigate(backPath)} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} />
         <div className="flex min-w-0 flex-1 items-start justify-between gap-4">
           <div className="min-w-0">
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-maroon">Teachers</p>
-            <h1 className={`mt-1 text-xl font-black tracking-tight ${textPrimary}`}>Teacher Profile</h1>
+            <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-maroon">Teachers</p>
+            <h1 className={`qed-type-page-title mt-1 ${textPrimary}`}>Teacher Profile</h1>
           </div>
           {headerActions}
         </div>

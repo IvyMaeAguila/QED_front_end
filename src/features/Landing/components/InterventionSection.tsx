@@ -41,7 +41,7 @@ function SlideVisual({ visual }: { visual: (typeof SLIDES)[number]["visual"] }) 
   if (visual === "signal") {
     return (
       <div className="flex min-h-[280px] flex-col items-center justify-center rounded-2xl bg-[#F4F2F0] p-6 text-center">
-        <span className="rounded-full bg-white px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#800000]">Topic needs review</span>
+        <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#800000]">Topic needs review</span>
         <img src={petHungry} alt="ED waiting for help" className="mt-2 h-36 w-36 object-contain sm:h-40 sm:w-40" />
         <p className="text-sm font-semibold text-[#241B1C]">Fractions on a number line</p>
         <p className="mt-1 text-xs text-[#817777]">A focused intervention begins</p>
@@ -78,7 +78,7 @@ function SlideVisual({ visual }: { visual: (typeof SLIDES)[number]["visual"] }) 
           ))}
         </div>
         <div className="mt-4 rounded-xl border border-dashed border-[#D8CECA] bg-white/70 px-4 py-3">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#817777]">Then complete the bonus rounds</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#817777]">Then complete the bonus rounds</p>
           <div className="mt-2 flex flex-wrap gap-2"><span className="rounded-full bg-[#F2EEEE] px-3 py-1.5 text-xs font-medium text-[#650000]">Matching</span><span className="rounded-full bg-[#F2EEEE] px-3 py-1.5 text-xs font-medium text-[#650000]">Memory</span></div>
         </div>
       </div>
@@ -92,9 +92,9 @@ function SlideVisual({ visual }: { visual: (typeof SLIDES)[number]["visual"] }) 
         <div className="mt-5 grid grid-cols-5 gap-2">
           {Array.from({ length: 5 }, (_, index) => (
             <div key={index} className="rounded-xl border border-[#E2DDD8] bg-white px-1 py-4 text-center">
-              <span className="block text-[10px] font-medium uppercase tracking-wide text-[#817777]">Day</span>
+              <span className="block text-xs font-medium uppercase tracking-wide text-[#817777]">Day</span>
               <span className="mt-1 block text-xl font-semibold tabular-nums text-[#650000]">{index + 1}</span>
-              <span className="mt-1 block text-[10px] text-[#62595A]">Practice</span>
+              <span className="mt-1 block text-xs text-[#62595A]">Practice</span>
             </div>
           ))}
         </div>
@@ -105,7 +105,7 @@ function SlideVisual({ visual }: { visual: (typeof SLIDES)[number]["visual"] }) 
 
   return (
     <div className="flex min-h-[280px] flex-col items-center justify-center rounded-2xl bg-[#F4F2F0] p-5 text-center sm:p-7">
-      <span className="rounded-full bg-white px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#800000]">ED’s story</span>
+      <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#800000]">ED’s story</span>
       <img src={petHappy} alt="ED recharged and ready to continue his journey" className="h-40 w-40 object-contain" />
       <blockquote className="max-w-md text-sm leading-6 text-[#62595A]">“I got lost when my spaceship ran out of energy. Every correct answer helps me recharge and find my way home.”</blockquote>
     </div>

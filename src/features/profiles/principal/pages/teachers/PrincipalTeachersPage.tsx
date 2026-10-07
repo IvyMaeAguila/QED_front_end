@@ -11,8 +11,8 @@ export function PrincipalTeachersPage() {
   return (
     <div className="flex flex-col gap-8 font-sans">
       <div>
-        <h1 className={`text-2xl font-black tracking-tight ${textPrimary}`}>Teachers</h1>
-        <p className={`text-sm mt-2 ${textMuted}`}>
+        <h1 className={`qed-type-page-title ${textPrimary}`}>Teachers</h1>
+        <p className={`qed-type-page-description mt-2 ${textMuted}`}>
           Teacher list and advisory assignments &middot; School Year {schoolYear}
         </p>
       </div>

@@ -22,7 +22,7 @@ export function UserViewPage() {
 
   const cardClasses = `rounded-xl border shadow-xs overflow-hidden transition-all ${panelBg} ${panelBorder}`;
   const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
-  const sectionTitleClasses = `text-xl font-black tracking-tight ${textPrimary}`;
+  const sectionTitleClasses = `qed-type-page-title ${textPrimary}`;
 
   if (!user) {
     return (
@@ -110,7 +110,7 @@ export function UserViewPage() {
             </button>
             <div className="min-w-0">
               <h1 className={sectionTitleClasses}>{formatFullName(user)}</h1>
-              <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+              <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
                 {ROLE_LABELS[user.role]} account details
               </p>
             </div>
@@ -121,7 +121,7 @@ export function UserViewPage() {
           <div className="grid sm:grid-cols-2 gap-5 max-w-xl">
             {fields.map((f) => (
               <div key={f.label}>
-                <p className={`text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`}>{f.label}</p>
+                <p className={`text-xs font-bold uppercase tracking-wide mb-1.5 ${textMuted}`}>{f.label}</p>
                 <p className={`text-sm font-semibold ${textPrimary}`}>{f.value}</p>
               </div>
             ))}

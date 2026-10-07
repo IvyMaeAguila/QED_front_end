@@ -96,7 +96,7 @@ function CustomTooltip({
         </p>
 
         <p
-          className={`text-[10px] uppercase tracking-wider ${textMuted}`}
+          className={`text-xs uppercase tracking-wider ${textMuted}`}
         >
           Attendance breakdown
         </p>
@@ -122,7 +122,7 @@ function CustomTooltip({
               {/* Section name */}
               {section.section && (
                 <p
-                  className={`text-[11px] font-black mb-1.5 ${textPrimary}`}
+                  className={`text-xs font-black mb-1.5 ${textPrimary}`}
                 >
                   {section.section}
                 </p>
@@ -133,13 +133,13 @@ function CustomTooltip({
                   {/* Present */}
                   <div className="flex justify-between gap-4">
                     <span
-                      className={`text-[10px] ${textMuted}`}
+                      className={`text-xs ${textMuted}`}
                     >
                       Present
                     </span>
 
                     <span
-                      className={`text-[10px] font-bold ${textPrimary}`}
+                      className={`text-xs font-bold ${textPrimary}`}
                     >
                       {section.present}
                     </span>
@@ -148,13 +148,13 @@ function CustomTooltip({
                   {/* Absent */}
                   <div className="flex justify-between gap-4">
                     <span
-                      className={`text-[10px] ${textMuted}`}
+                      className={`text-xs ${textMuted}`}
                     >
                       Absent
                     </span>
 
                     <span
-                      className={`text-[10px] font-bold ${textPrimary}`}
+                      className={`text-xs font-bold ${textPrimary}`}
                     >
                       {section.absent}
                     </span>
@@ -163,13 +163,13 @@ function CustomTooltip({
                   {/* Total */}
                   <div className="flex justify-between gap-4">
                     <span
-                      className={`text-[10px] ${textMuted}`}
+                      className={`text-xs ${textMuted}`}
                     >
                       Total
                     </span>
 
                     <span
-                      className={`text-[10px] font-bold ${textPrimary}`}
+                      className={`text-xs font-bold ${textPrimary}`}
                     >
                       {section.total}
                     </span>
@@ -177,7 +177,7 @@ function CustomTooltip({
                 </div>
               ) : (
                 <p
-                  className={`text-[10px] italic ${textMuted}`}
+                  className={`text-xs italic ${textMuted}`}
                 >
                   Not yet recorded
                 </p>
@@ -187,7 +187,7 @@ function CustomTooltip({
         </div>
       ) : (
         <p
-          className={`text-[10px] ${textMuted}`}
+          className={`text-xs ${textMuted}`}
         >
           No section data
         </p>
@@ -204,13 +204,13 @@ function CustomTooltip({
         >
           <div className="flex justify-between mb-1">
             <span
-              className={`text-[10px] ${textMuted}`}
+              className={`text-xs ${textMuted}`}
             >
               Total Present
             </span>
 
             <span
-              className={`text-[10px] font-black ${textPrimary}`}
+              className={`text-xs font-black ${textPrimary}`}
             >
               {data.present}
             </span>
@@ -218,13 +218,13 @@ function CustomTooltip({
 
           <div className="flex justify-between mb-1">
             <span
-              className={`text-[10px] ${textMuted}`}
+              className={`text-xs ${textMuted}`}
             >
               Total Absent
             </span>
 
             <span
-              className={`text-[10px] font-black ${textPrimary}`}
+              className={`text-xs font-black ${textPrimary}`}
             >
               {data.absent}
             </span>
@@ -232,13 +232,13 @@ function CustomTooltip({
 
           <div className="flex justify-between">
             <span
-              className={`text-[10px] font-bold ${textMuted}`}
+              className={`text-xs font-bold ${textMuted}`}
             >
               Attendance
             </span>
 
             <span
-              className="text-[11px] font-black"
+              className="text-xs font-black"
               style={{
                 color: "var(--color-maroon)",
               }}
@@ -259,13 +259,13 @@ function CustomTooltip({
           }`}
         >
           <span
-            className={`text-[10px] font-bold ${textMuted}`}
+            className={`text-xs font-bold ${textMuted}`}
           >
             Attendance
           </span>
 
           <span
-            className="text-[11px] font-black"
+            className="text-xs font-black"
             style={{
               color: "var(--color-maroon)",
             }}
@@ -405,7 +405,7 @@ export function TodaysAttendanceSection({
               </p>
 
               <p
-                className={`text-[11px] mt-0.5 ${textMuted}`}
+                className={`text-xs mt-0.5 ${textMuted}`}
               >
                 Hover a grade to view section attendance
               </p>

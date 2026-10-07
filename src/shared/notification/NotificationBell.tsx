@@ -231,7 +231,7 @@ export function NotificationBell() {
       >
         <Bell size={21} />
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 min-w-4 h-4 px-1 rounded-full bg-[#DC2626] text-white text-[10px] font-semibold leading-4 text-center">
+          <span className="absolute top-1 right-1 min-w-4 h-4 px-1 rounded-full bg-[#DC2626] text-white text-xs font-semibold leading-4 text-center">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
@@ -272,7 +272,7 @@ export function NotificationBell() {
                     role="tab"
                     aria-selected={tab === t.key}
                     onClick={() => setTab(t.key)}
-                    className={`flex-1 rounded-lg text-[11px] font-semibold transition-colors ${
+                    className={`flex-1 rounded-lg text-xs font-semibold transition-colors ${
                       tab === t.key ? tabActive : tabIdle
                     }`}
                   >
@@ -323,7 +323,7 @@ export function NotificationBell() {
                             />
                           )}
                           <span
-                            className={`ml-auto shrink-0 whitespace-nowrap text-[10px] ${muted}`}
+                            className={`ml-auto shrink-0 whitespace-nowrap text-xs ${muted}`}
                           >
                             {formatStamp(n.createdAt)}
                           </span>

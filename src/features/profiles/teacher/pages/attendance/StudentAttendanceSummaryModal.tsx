@@ -1,5 +1,4 @@
-import { createPortal } from "react-dom";
-import { X } from "lucide-react";
+import { ModalBody, ModalFrame, ModalHeader } from "@shared/components/modal";
 import { StudentAvatar } from "@shared/components/StudentAvatar";
 import type { RosterStudent } from "../subjects/detail/data";
 import {
@@ -64,14 +63,13 @@ export function StudentAttendanceSummaryModal({
   attendance,
   terms,
   darkMode,
-  panelBg,
   panelBorder,
   textPrimary,
   textMuted,
   onClose,
 }: StudentAttendanceSummaryModalProps) {
   const cellBase = `px-3 py-2.5 text-center text-xs font-bold tabular-nums ${textPrimary}`;
-  const headBase = `px-3 py-2.5 text-center text-[10px] font-extrabold uppercase tracking-wider ${textMuted}`;
+  const headBase = `px-3 py-2.5 text-center text-xs font-extrabold uppercase tracking-wider ${textMuted}`;
   const subtleBg = darkMode ? "bg-white/5" : "bg-[#F8FAFC]";
   const zebraBg = darkMode ? "bg-white/[0.02]" : "bg-black/[0.012]";
 
@@ -126,49 +124,29 @@ export function StudentAttendanceSummaryModal({
       ? Math.round((overall.present / overall.classDays) * 1000) / 10
       : null;
 
-  return createPortal(
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop"
-      onClick={onClose}
+  return (
+    <ModalFrame
+      shellVariant={darkMode ? "dark" : "standard"}
+      onClose={onClose}
+      size="xl"
+      ariaLabel={`Attendance Summary for ${student.name}`}
+      className="max-h-[88vh]"
     >
-      <div
-        className={`flex max-h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-[12px] border shadow-2xl ${panelBg} ${panelBorder}`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header — accent bar + large student identity */}
+        {/* Rich identity header within the shared modal shell. */}
         <div className="relative shrink-0">
-          <div className="h-1.5 w-full" style={{ backgroundColor: ACCENT }} />
-          <div
-            className={`flex items-center justify-between gap-4 border-b px-8 py-6 ${panelBorder}`}
-          >
-            <div className="flex items-center gap-4">
-              <StudentAvatar gender={student.gender} name={student.name} className="h-14 w-14 shadow-sm" />
-              <div>
-                <p
-                  className={`text-[11px] font-extrabold uppercase tracking-widest ${textMuted}`}
-                >
-                  Attendance Summary
-                </p>
-                <h3
-                  className={`mt-0.5 text-2xl font-black leading-tight ${textPrimary}`}
-                >
-                  {student.name}
-                </h3>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              aria-label="Close"
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border transition-colors ${panelBorder} ${
-                darkMode ? "hover:bg-white/10" : "hover:bg-[#F6F7FB]"
-              } ${textMuted}`}
-            >
-              <X size={18} />
-            </button>
-          </div>
+          <ModalHeader
+            title={student.name}
+            subtitle="Attendance Summary"
+            titleClassName={textPrimary}
+            subtitleClassName={textMuted}
+            leading={<StudentAvatar gender={student.gender} name={student.name} className="h-14 w-14 shadow-sm" />}
+            onClose={onClose}
+            closeDarkMode={darkMode}
+            className={`items-center gap-4 border-b px-8 py-6 ${panelBorder}`}
+          />
         </div>
 
-        <div className="overflow-y-auto">
+        <ModalBody className="p-0">
           {/* Overall totals across every term, at a glance */}
           <div
             className={`grid grid-cols-2 gap-3 border-b px-8 py-6 sm:grid-cols-4 ${panelBorder}`}
@@ -177,7 +155,7 @@ export function StudentAttendanceSummaryModal({
               className={`rounded-[12px] border px-4 py-3 ${panelBorder} ${subtleBg}`}
             >
               <p
-                className={`text-[10px] font-extrabold uppercase tracking-wider ${textMuted}`}
+                className={`text-xs font-extrabold uppercase tracking-wider ${textMuted}`}
               >
                 Total School Days
               </p>
@@ -191,7 +169,7 @@ export function StudentAttendanceSummaryModal({
               className={`rounded-[12px] border px-4 py-3 ${panelBorder} ${subtleBg}`}
             >
               <p
-                className={`text-[10px] font-extrabold uppercase tracking-wider ${textMuted}`}
+                className={`text-xs font-extrabold uppercase tracking-wider ${textMuted}`}
               >
                 Days Present
               </p>
@@ -206,7 +184,7 @@ export function StudentAttendanceSummaryModal({
               className={`rounded-[12px] border px-4 py-3 ${panelBorder} ${subtleBg}`}
             >
               <p
-                className={`text-[10px] font-extrabold uppercase tracking-wider ${textMuted}`}
+                className={`text-xs font-extrabold uppercase tracking-wider ${textMuted}`}
               >
                 Days Absent
               </p>
@@ -221,7 +199,7 @@ export function StudentAttendanceSummaryModal({
               className={`rounded-[12px] border px-4 py-3 ${panelBorder} ${subtleBg}`}
             >
               <p
-                className={`text-[10px] font-extrabold uppercase tracking-wider ${textMuted}`}
+                className={`text-xs font-extrabold uppercase tracking-wider ${textMuted}`}
               >
                 Attendance Rate
               </p>
@@ -343,9 +321,7 @@ export function StudentAttendanceSummaryModal({
               </p>
             )}
           </div>
-        </div>
-      </div>
-    </div>,
-    document.body
+        </ModalBody>
+    </ModalFrame>
   );
 }

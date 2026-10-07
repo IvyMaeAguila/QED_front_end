@@ -28,7 +28,7 @@ export default function StudentInfoTable({ student, theme }: StudentInfoTablePro
       {fields.map((field, index) => (
         <div key={field.label} className="contents sm:flex sm:flex-1 sm:items-center">
           <div className="sm:flex-1 sm:px-5 sm:py-4">
-            <p className={`text-[10px] font-semibold uppercase tracking-wide ${textMuted}`}>
+            <p className={`text-xs font-semibold uppercase tracking-wide ${textMuted}`}>
               {field.label}
             </p>
             <p className={`mt-1 text-sm font-bold ${textPrimary}`}>{field.value}</p>

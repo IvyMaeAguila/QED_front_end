@@ -270,7 +270,7 @@
 
 //   const inputClasses = `w-full h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors ${darkMode ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]" : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"}`;
 //   const disabledInputClasses = `${inputClasses} opacity-60 cursor-not-allowed placeholder:text-current`;
-//   const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
+//   const labelClasses = `block text-xs font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 //   const noGradeSelected = gradeLevel === "";
 //   const trimmedName = name.trim();
 
@@ -368,7 +368,7 @@
 //             className={noGradeSelected ? disabledInputClasses : inputClasses}
 //           />
 //           {isDuplicate && (
-//             <p className="mt-1 text-[11px] font-semibold text-[#B91C1C]">
+//             <p className="mt-1 text-xs font-semibold text-[#B91C1C]">
 //               This subject is already available
 //             </p>
 //           )}
@@ -408,7 +408,7 @@
 //                 Weight Distribution
 //               </label>
 //               <span
-//                 className={`text-[11px] font-bold ${totalWeight === 100 ? textMuted : "text-[#B91C1C]"}`}
+//                 className={`text-xs font-bold ${totalWeight === 100 ? textMuted : "text-[#B91C1C]"}`}
 //               >
 //                 Total: {totalWeight}%
 //               </span>
@@ -656,12 +656,12 @@
 //                   </div>
 
 //                   {addingLabelForRowId === row.id && newLabelError && (
-//                     <p className="text-[11px] font-semibold text-[#B91C1C]">
+//                     <p className="text-xs font-semibold text-[#B91C1C]">
 //                       {newLabelError}
 //                     </p>
 //                   )}
 //                   {isMissingFromCatalog && (
-//                     <p className="text-[11px] font-semibold text-[#B91C1C]">
+//                     <p className="text-xs font-semibold text-[#B91C1C]">
 //                       This assessment type is no longer available in the
 //                       catalog.
 //                     </p>
@@ -679,7 +679,7 @@
 //                 assessmentTypes.length === 0 ||
 //                 weightDistribution.length >= assessmentTypes.length
 //               }
-//               className={`w-full h-9 rounded-xl border border-dashed text-[11px] font-bold inline-flex items-center justify-center gap-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/5" : "border-[#CBD5E1] text-[#374151] hover:bg-white"}`}
+//               className={`w-full h-9 rounded-xl border border-dashed text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/5" : "border-[#CBD5E1] text-[#374151] hover:bg-white"}`}
 //             >
 //               <Plus size={13} /> Add Assessment Type
 //             </button>

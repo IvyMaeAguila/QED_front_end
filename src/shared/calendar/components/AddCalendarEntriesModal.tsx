@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { X, Plus, Trash2, CalendarDays } from "lucide-react";
+import { Plus, Trash2, CalendarDays } from "lucide-react";
 import { ACCENT, HOLIDAY_TYPE_LABELS, type HolidayType, type CalendarTheme } from "../types/Calendar";
+import { ModalBody, ModalFooter, ModalFrame, ModalHeader } from "../../components/modal";
 
 export type EntryKind = "activity" | "holiday";
 
@@ -28,7 +29,6 @@ export function AddCalendarEntriesModal({
   onClose,
   onSave,
   darkMode,
-  panelBg,
   panelBorder,
   textMuted,
 }: AddCalendarEntriesModalProps) {
@@ -39,12 +39,12 @@ export function AddCalendarEntriesModal({
   const isActivity = kind === "activity";
   const heading = isActivity ? "Add Activities" : "Add Holidays";
 
-  const inputClasses = `w-full h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors ${
+  const inputClasses = `w-full h-10 px-3 rounded-xl border outline-none transition-colors ${
     darkMode
       ? "bg-[#2A1A18] border-[#543632] text-white focus:border-[#8B0D0D]"
       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
   }`;
-  const labelClasses = `block text-[11px] font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
+  const labelClasses = `qed-type-label block mb-1.5 ${textMuted}`;
 
   function updateRow(key: string, patch: Partial<DraftEntry>) {
     setRows((prev) => prev.map((r) => (r.key === key ? { ...r, ...patch } : r)));
@@ -71,22 +71,17 @@ export function AddCalendarEntriesModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
-      <div
-        className={`w-full max-w-lg rounded-2xl border shadow-xl overflow-hidden max-h-[90vh] flex flex-col ${panelBg} ${panelBorder}`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="px-5 py-4 flex items-center justify-between shrink-0" style={{ background: ACCENT }}>
-          <h3 className="text-white font-bold text-sm flex items-center gap-2">
-            <CalendarDays size={15} />
-            {heading}
-          </h3>
-          <button onClick={onClose} className="w-7 h-7 rounded-lg flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors">
-            <X size={14} className="text-white" />
-          </button>
-        </div>
+    <ModalFrame shellVariant={darkMode ? "dark" : "standard"} onClose={onClose} size="md" ariaLabel={heading} className="max-h-[90vh]">
+        <ModalHeader
+          title={heading}
+          onClose={onClose}
+          closeDisabled={saving}
+          closeDarkMode={darkMode}
+          className="items-center border-b-0 px-5 py-4"
+          leading={<CalendarDays size={15} />}
+        />
 
-        <div className="p-5 space-y-4 overflow-y-auto">
+        <ModalBody className="space-y-4 p-5">
           {rows.map((row, idx) => (
             <div key={row.key} className={`rounded-xl border p-4 space-y-3 ${panelBorder}`}>
               <div className="flex items-center justify-between">
@@ -153,13 +148,13 @@ export function AddCalendarEntriesModal({
           </button>
 
           {error && <p className="text-xs font-bold text-[#B91C1C]">{error}</p>}
-        </div>
+        </ModalBody>
 
-        <div className={`p-5 border-t flex gap-3 shrink-0 ${panelBorder}`}>
+        <ModalFooter className={`justify-stretch ${panelBorder}`}>
           <button
             onClick={onClose}
             disabled={saving}
-            className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 ${
+            className={`qed-type-button flex-1 h-10 rounded-xl border transition-colors disabled:opacity-50 ${
               darkMode ? "border-[#543632] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
             }`}
           >
@@ -168,13 +163,12 @@ export function AddCalendarEntriesModal({
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex-1 h-10 rounded-xl text-xs font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+            className="qed-type-button flex-1 h-10 rounded-xl text-white transition-opacity hover:opacity-90 disabled:opacity-50"
             style={{ background: ACCENT }}
           >
             {saving ? "Saving…" : "Save"}
           </button>
-        </div>
-      </div>
-    </div>
+        </ModalFooter>
+    </ModalFrame>
   );
 }
