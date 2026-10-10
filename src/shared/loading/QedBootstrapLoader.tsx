@@ -2,7 +2,7 @@ import { useState, type ReactNode } from "react";
 import logo from "../../assets/images/QED_Logo.png";
 import { LoadingRegion } from "./LoadingRegion";
 
-/** The sole brand-loading exception: the authenticated role is still unknown. */
+/** The sole brand-loading exception: auth is pending or the known role's code is arriving. */
 export function QedBootstrapLoader({ loading, children }: { loading: boolean; children: ReactNode }) {
   const [allowed, setAllowed] = useState(false);
   const [previousLoading, setPreviousLoading] = useState(loading);

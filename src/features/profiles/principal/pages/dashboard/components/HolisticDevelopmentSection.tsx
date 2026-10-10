@@ -2,14 +2,7 @@ import { Skeleton, SkeletonText } from "@shared/components/SkeletonLoading";
 import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 import { PendingRadar } from "./PrincipalChartLoading";
 import { Sparkles, Brain, Heart, ListChecks, UsersRound, type LucideIcon } from "lucide-react";
-import {
-  ResponsiveContainer,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  Radar,
-} from "recharts";
+import { DeferredChart } from "@shared/loading/DeferredChart";
 import { SectionCard } from "../../../../shared/components/DashboardUI";
 import type { HolisticDomain, HolisticDomainName, HolisticRubric } from "../data/types";
 
@@ -59,7 +52,7 @@ export function HolisticDevelopmentSection({
       <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-2 xl:gap-10">
         <div className="relative">
           {domains.length > 0 ? <>
-          <ResponsiveContainer width="100%" height={340}>
+          <DeferredChart loading={loading}>{({ ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar }) => (<ResponsiveContainer width="100%" height={340}>
             <RadarChart data={domains} outerRadius={130}>
               <PolarGrid stroke={gridStroke} strokeDasharray="3 4" />
               <PolarAngleAxis dataKey="domain" tick={{ fill: axisColor, fontSize: 12, fontWeight: 700 }} />
@@ -73,7 +66,7 @@ export function HolisticDevelopmentSection({
                 activeDot={{ r: 6 }}
               />
             </RadarChart>
-          </ResponsiveContainer>
+          </ResponsiveContainer>)}</DeferredChart>
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className={`flex flex-col items-center justify-center h-20 w-20 rounded-full shadow-card ${darkMode ? "bg-[#1A1A1A]" : "bg-white"}`}>
               <span className={`text-xl font-black tabular-nums leading-none ${textPrimary}`}>{loading ? <SkeletonText width="3ch" /> : overallScore}</span>

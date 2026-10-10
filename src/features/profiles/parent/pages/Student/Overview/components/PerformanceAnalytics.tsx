@@ -1,15 +1,7 @@
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { PendingLine } from "../../../../../principal/pages/dashboard/components/PrincipalChartLoading";
 import { useMemo } from "react";
-import {
-  CartesianGrid, Customized,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { DeferredChart } from "@shared/loading/DeferredChart";
 import SectionHeader from "../../../ui/SectionHeader";
 import type { AdminThemeContext } from "../../../../../admin/pages/AdminLayout";
 import type { DetailStudent } from "../../GlobalTypes/types";
@@ -139,7 +131,7 @@ export default function TermAverageTrendChart({
               No released terms yet.
             </div>
           ) : (
-            <ResponsiveContainer width="100%" height="100%">
+            <DeferredChart loading={pending}>{({ CartesianGrid, Customized, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis }) => (<ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={pending ? TERMS.map(term=>({term:TERM_LABELS[term],plotAverage:85})) : termPoints}
                 margin={{ top: 8, right: 24, bottom: 0, left: 8 }}
@@ -207,7 +199,7 @@ export default function TermAverageTrendChart({
                   animationDuration={450}
                 />
               </LineChart>
-            </ResponsiveContainer>
+            </ResponsiveContainer>)}</DeferredChart>
           ))}>{null}</LoadingRegion>
         </div>
       </div>

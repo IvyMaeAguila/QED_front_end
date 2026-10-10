@@ -1,0 +1,218 @@
+
+Running 7 tests using 1 worker
+
+  x  1 tests\role-bundles.spec.ts:7:1 › public login requests no protected role code (382ms)
+  x  2 tests\role-bundles.spec.ts:14:65 › TEACHER login requests only its own role code (1.1s)
+  x  3 tests\role-bundles.spec.ts:14:65 › ADMIN login requests only its own role code (983ms)
+  x  4 tests\role-bundles.spec.ts:14:65 › PRINCIPAL login requests only its own role code (1.2s)
+  x  5 tests\role-bundles.spec.ts:14:65 › PARENT login requests only its own role code (1.0s)
+  x  6 tests\role-bundles.spec.ts:22:1 › a 1500ms role import uses bootstrap then the real shell and registered skeleton (156ms)
+  x  7 tests\role-bundles.spec.ts:44:1 › chart skeletons retain bars, line and radar while the heavy chart chunk is unavailable (163ms)
+
+
+  1) tests\role-bundles.spec.ts:7:1 › public login requests no protected role code ─────────────────
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 6
+
+    - Array []
+    + Array [
+    +   "admin",
+    +   "parent",
+    +   "principal",
+    +   "teacher",
+    + ]
+
+       9 |   await page.goto(server.url + '/login');
+      10 |   await expect(page.getByPlaceholder('e.g. TC_maria.delacruz')).toBeVisible();
+    > 11 |   expect(rolesInChunks(fixture.requests)).toEqual([]);
+         |                                           ^
+      12 |   fixture.release();
+      13 | });
+      14 | for (const role of ['TEACHER', 'ADMIN', 'PRINCIPAL', 'PARENT']) test(`${role} login requests only its own role code`, async ({ page }) => {
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\role-bundles.spec.ts:11:43
+
+    Error Context: test-results\role-bundles-public-login-requests-no-protected-role-code\error-context.md
+
+    Error Context: test-results\role-bundles-public-login-requests-no-protected-role-code\error-context.md
+
+  2) tests\role-bundles.spec.ts:14:65 › TEACHER login requests only its own role code ──────────────
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 3
+
+      Array [
+    +   "admin",
+    +   "parent",
+    +   "principal",
+        "teacher",
+      ]
+
+      17 |   await login(page);
+      18 |   await expect(page.locator('.qed-account-ui')).toBeVisible();
+    > 19 |   expect(rolesInChunks(fixture.requests)).toEqual([role.toLowerCase()]);
+         |                                           ^
+      20 |   fixture.release();
+      21 | });
+      22 | test('a 1500ms role import uses bootstrap then the real shell and registered skeleton', async ({ page }) => {
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\role-bundles.spec.ts:19:43
+
+    Error Context: test-results\role-bundles-TEACHER-login-requests-only-its-own-role-code\error-context.md
+
+    Error Context: test-results\role-bundles-TEACHER-login-requests-only-its-own-role-code\error-context.md
+
+  3) tests\role-bundles.spec.ts:14:65 › ADMIN login requests only its own role code ────────────────
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 3
+
+      Array [
+        "admin",
+    +   "parent",
+    +   "principal",
+    +   "teacher",
+      ]
+
+      17 |   await login(page);
+      18 |   await expect(page.locator('.qed-account-ui')).toBeVisible();
+    > 19 |   expect(rolesInChunks(fixture.requests)).toEqual([role.toLowerCase()]);
+         |                                           ^
+      20 |   fixture.release();
+      21 | });
+      22 | test('a 1500ms role import uses bootstrap then the real shell and registered skeleton', async ({ page }) => {
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\role-bundles.spec.ts:19:43
+
+    Error Context: test-results\role-bundles-ADMIN-login-requests-only-its-own-role-code\error-context.md
+
+    Error Context: test-results\role-bundles-ADMIN-login-requests-only-its-own-role-code\error-context.md
+
+  4) tests\role-bundles.spec.ts:14:65 › PRINCIPAL login requests only its own role code ────────────
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 3
+
+      Array [
+    +   "admin",
+    +   "parent",
+        "principal",
+    +   "teacher",
+      ]
+
+      17 |   await login(page);
+      18 |   await expect(page.locator('.qed-account-ui')).toBeVisible();
+    > 19 |   expect(rolesInChunks(fixture.requests)).toEqual([role.toLowerCase()]);
+         |                                           ^
+      20 |   fixture.release();
+      21 | });
+      22 | test('a 1500ms role import uses bootstrap then the real shell and registered skeleton', async ({ page }) => {
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\role-bundles.spec.ts:19:43
+
+    Error Context: test-results\role-bundles-PRINCIPAL-login-requests-only-its-own-role-code\error-context.md
+
+    Error Context: test-results\role-bundles-PRINCIPAL-login-requests-only-its-own-role-code\error-context.md
+
+  5) tests\role-bundles.spec.ts:14:65 › PARENT login requests only its own role code ───────────────
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 3
+
+      Array [
+    +   "admin",
+        "parent",
+    +   "principal",
+    +   "teacher",
+      ]
+
+      17 |   await login(page);
+      18 |   await expect(page.locator('.qed-account-ui')).toBeVisible();
+    > 19 |   expect(rolesInChunks(fixture.requests)).toEqual([role.toLowerCase()]);
+         |                                           ^
+      20 |   fixture.release();
+      21 | });
+      22 | test('a 1500ms role import uses bootstrap then the real shell and registered skeleton', async ({ page }) => {
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\role-bundles.spec.ts:19:43
+
+    Error Context: test-results\role-bundles-PARENT-login-requests-only-its-own-role-code\error-context.md
+
+    Error Context: test-results\role-bundles-PARENT-login-requests-only-its-own-role-code\error-context.md
+
+  6) tests\role-bundles.spec.ts:22:1 › a 1500ms role import uses bootstrap then the real shell and registered skeleton 
+
+    Error: protected layout must be outside the public entry
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      23 |   const fixture = await prepareLogin(page);
+      24 |   const chunk = bundleAudit().find((item: { modules: string[] }) => item.modules.some(id => id.endsWith('/teacher/pages/TeacherLayout.tsx')));
+    > 25 |   expect(chunk.isEntry, 'protected layout must be outside the public entry').toBe(false);
+         |                                                                              ^
+      26 |   let arrived!: () => void;
+      27 |   const requested = new Promise<void>(resolve => { arrived = resolve; });
+      28 |   await page.route('**/' + chunk.fileName, async route => {
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\role-bundles.spec.ts:25:78
+
+    Error Context: test-results\role-bundles-a-1500ms-role-0b346-ell-and-registered-skeleton\error-context.md
+
+    Error Context: test-results\role-bundles-a-1500ms-role-0b346-ell-and-registered-skeleton\error-context.md
+
+  7) tests\role-bundles.spec.ts:44:1 › chart skeletons retain bars, line and radar while the heavy chart chunk is unavailable 
+
+    Error: chart library must be outside the public entry
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      45 |   const fixture = await prepareLogin(page, 'PRINCIPAL');
+      46 |   const chunk = bundleAudit().find((item: { modules: string[] }) => item.modules.some(id => /node_modules\/recharts\//.test(id)));
+    > 47 |   expect(chunk.isEntry, 'chart library must be outside the public entry').toBe(false);
+         |                                                                           ^
+      48 |   let releaseCode!: () => void;
+      49 |   const gate = new Promise<void>(resolve => { releaseCode = resolve; });
+      50 |   let requested!: () => void;
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\role-bundles.spec.ts:47:75
+
+    Error Context: test-results\role-bundles-chart-skeleto-760f9--chart-chunk-is-unavailable\error-context.md
+
+    Error Context: test-results\role-bundles-chart-skeleto-760f9--chart-chunk-is-unavailable\error-context.md
+
+  7 failed
+    tests\role-bundles.spec.ts:7:1 › public login requests no protected role code ──────────────────
+    tests\role-bundles.spec.ts:14:65 › TEACHER login requests only its own role code ───────────────
+    tests\role-bundles.spec.ts:14:65 › ADMIN login requests only its own role code ─────────────────
+    tests\role-bundles.spec.ts:14:65 › PRINCIPAL login requests only its own role code ─────────────
+    tests\role-bundles.spec.ts:14:65 › PARENT login requests only its own role code ────────────────
+    tests\role-bundles.spec.ts:22:1 › a 1500ms role import uses bootstrap then the real shell and registered skeleton 
+    tests\role-bundles.spec.ts:44:1 › chart skeletons retain bars, line and radar while the heavy chart chunk is unavailable 
+[WebServer] (node:31860) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:30508) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34960) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:20488) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:28592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:32256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:23308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:18944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

@@ -1,5 +1,5 @@
 // services/gradeTemplateParser.service.ts
-import * as XLSX from "xlsx";
+import type * as XLSX from "xlsx";
 import type {
   ExamSubWeights,
   TemplateDomain,
@@ -20,14 +20,14 @@ function key(row: number, col: number): string {
   return `${row},${col}`;
 }
 
-function buildGrid(sheet: XLSX.WorkSheet, maxRow: number, maxCol: number): CellGrid {
+function buildGrid(sheet: XLSX.WorkSheet, maxRow: number, maxCol: number, runtime: typeof XLSX): CellGrid {
   const grid: CellGrid = new Map();
-  const range = XLSX.utils.decode_range(sheet["!ref"] ?? "A1");
+  const range = runtime.utils.decode_range(sheet["!ref"] ?? "A1");
   const lastRow = Math.min(maxRow, range.e.r + 1);
   const lastCol = Math.min(maxCol, range.e.c + 1);
   for (let r = 1; r <= lastRow; r++) {
     for (let c = 1; c <= lastCol; c++) {
-      const ref = XLSX.utils.encode_cell({ r: r - 1, c: c - 1 });
+      const ref = runtime.utils.encode_cell({ r: r - 1, c: c - 1 });
       const cell = sheet[ref];
       if (cell && cell.v !== undefined && cell.v !== null && cell.v !== "") {
         grid.set(key(r, c), cell.v);
@@ -160,7 +160,8 @@ function parseGroup(
  * authoritative on its own.
  */
 export function parseGradeTemplate(file: File): Promise<GradeTemplateStructure> {
-  return file.arrayBuffer().then((buf) => {
+  return file.arrayBuffer().then(async (buf) => {
+    const XLSX = await import("xlsx");
     const workbook = XLSX.read(buf, { type: "array" });
 
     const sheet = workbook.Sheets["TERM 1"];
@@ -176,7 +177,7 @@ export function parseGradeTemplate(file: File): Promise<GradeTemplateStructure> 
       );
     }
 
-    const grid = buildGrid(sheet, 40, 60);
+    const grid = buildGrid(sheet, 40, 60, XLSX);
 
     const wwPos = findText(grid, /WRITTEN.*ORAL WORKS/i);
     const ptPos = findText(grid, /PRODUCT.*PERFORMANCE/i);
@@ -213,7 +214,7 @@ export function parseGradeTemplate(file: File): Promise<GradeTemplateStructure> 
       throw new Error(`WW + PT${examinations.enabled ? " + Exam" : ""} weights read ${weightSum}%, expected 100%. Check the template.`);
     }
 
-    const helperGrid = buildGrid(helperSheet, 60, 10);
+    const helperGrid = buildGrid(helperSheet, 60, 10, XLSX);
     const igMinPos = findText(helperGrid, /^IG \(Min\.\)$/i);
     const numGradePos = findText(helperGrid, /^Numerical Grade$/i);
     if (!igMinPos || !numGradePos) {

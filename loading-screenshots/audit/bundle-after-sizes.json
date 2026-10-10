@@ -1,0 +1,62 @@
+{
+  "compression": "node:zlib gzip, default level 6; bytes, not rounded Vite estimates",
+  "budget": {
+    "entryGzipBytes": 112153,
+    "entryEagerClosureGzipBytes": 135349
+  },
+  "entry": {
+    "fileName": "assets/index-CALc1q2j.js",
+    "rawBytes": 338746,
+    "gzipBytes": 101957
+  },
+  "entryEagerClosure": {
+    "rawBytes": 395536,
+    "gzipBytes": 123044
+  },
+  "roles": {
+    "ADMIN": {
+      "fileName": "assets/AdminRoutes-BbETZipo.js",
+      "chunk": {
+        "rawBytes": 13269,
+        "gzipBytes": 4304
+      },
+      "eagerDownloadBeyondPublic": {
+        "rawBytes": 525294,
+        "gzipBytes": 180012
+      }
+    },
+    "TEACHER": {
+      "fileName": "assets/TeacherRoutes-BcVPtBEz.js",
+      "chunk": {
+        "rawBytes": 13258,
+        "gzipBytes": 4529
+      },
+      "eagerDownloadBeyondPublic": {
+        "rawBytes": 580949,
+        "gzipBytes": 193035
+      }
+    },
+    "PRINCIPAL": {
+      "fileName": "assets/PrincipalRoutes-CL94VgOn.js",
+      "chunk": {
+        "rawBytes": 6622,
+        "gzipBytes": 2389
+      },
+      "eagerDownloadBeyondPublic": {
+        "rawBytes": 416263,
+        "gzipBytes": 141842
+      }
+    },
+    "PARENT": {
+      "fileName": "assets/ParentRoutes-DP26tR3X.js",
+      "chunk": {
+        "rawBytes": 11003,
+        "gzipBytes": 4247
+      },
+      "eagerDownloadBeyondPublic": {
+        "rawBytes": 517673,
+        "gzipBytes": 162968
+      }
+    }
+  }
+}

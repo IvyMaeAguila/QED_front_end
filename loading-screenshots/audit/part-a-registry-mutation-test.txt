@@ -1,0 +1,57 @@
+[WebServer] (node:11004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:34768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:38988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\bundle-budget.spec.ts:9:1 › registry guard rejects an eager page import and accepts the restored metadata (56ms)
+
+
+  1) tests\bundle-budget.spec.ts:9:1 › registry guard rejects an eager page import and accepts the restored metadata 
+
+    Error: expect(received).not.toThrow()
+
+    Error name:    "Error"
+    Error message: "Registry must contain metadata and lazy references only; eager imports are forbidden"
+
+           6 |   const ast = ts.createSourceFile('routeSkeletons.ts', source, ts.ScriptTarget.Latest, true);
+           7 |   for (const statement of ast.statements) if (ts.isImportDeclaration(statement) && !statement.importClause?.isTypeOnly)
+        >  8 |     throw new Error('Registry must contain metadata and lazy references only; eager imports are forbidden');
+             |           ^
+           9 | }
+          10 | export function inspectBuild() {
+          11 |   checkRegistry();
+
+          at checkRegistry (file:/C:/Users/Mavys/Downloads/QED_System/QED_front_end/scripts/check-bundle-budget.mjs:8:11)
+          at file:/C:/Users/Mavys/Downloads/QED_System/QED_front_end/tests/bundle-budget.spec.ts:11:16
+          at Object.<anonymous> (node_modules/playwright/lib/matchers/expect.js:11834:9)
+          at invokeMatcher (node_modules/playwright/lib/matchers/expect.js:13368:20)
+          at invoke (node_modules/playwright/lib/matchers/expect.js:13346:109)
+          at _Zone.run (node_modules/playwright-core/lib/coreBundle.js:11049:40)
+          at callMatcherAsStep (node_modules/playwright/lib/matchers/expect.js:13347:64)
+          at Object.toThrow (node_modules/playwright/lib/matchers/expect.js:13308:23)
+          at file:/C:/Users/Mavys/Downloads/QED_System/QED_front_end/tests/bundle-budget.spec.ts:11:37
+          at node_modules/playwright/lib/worker/workerProcessEntry.js:1654:15
+          at node_modules/playwright/lib/worker/workerProcessEntry.js:1134:17
+          at TimeoutManager.withRunnable (node_modules/playwright/lib/worker/workerProcessEntry.js:404:9)
+          at TestInfoImpl._runWithTimeout (node_modules/playwright/lib/worker/workerProcessEntry.js:1132:34)
+          at node_modules/playwright/lib/worker/workerProcessEntry.js:1652:22
+          at WorkerMain._runTest (node_modules/playwright/lib/worker/workerProcessEntry.js:1625:5)
+          at WorkerMain.runTestGroup (node_modules/playwright/lib/worker/workerProcessEntry.js:1520:9)
+          at process.<anonymous> (node_modules/playwright/lib/common/index.js:1955:25)
+
+       9 | test('registry guard rejects an eager page import and accepts the restored metadata', () => {
+      10 |   expect(() => checkRegistry('import { TeacherLayout } from "../../features/profiles/teacher/pages/TeacherLayout";')).toThrow('eager imports are forbidden');
+    > 11 |   expect(() => checkRegistry()).not.toThrow();
+         |                                     ^
+      12 | });
+      13 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bundle-budget.spec.ts:11:37
+
+    Error Context: test-results\bundle-budget-registry-gua-5622f-cepts-the-restored-metadata\error-context.md
+
+  1 failed
+    tests\bundle-budget.spec.ts:9:1 › registry guard rejects an eager page import and accepts the restored metadata 

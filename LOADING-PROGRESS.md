@@ -1,3 +1,17 @@
+# Current Part A / Part B checkpoint — 2026-10-10
+
+Part A implementation builds and its 16 targeted checks pass. Nine new tests: seven role/chart tests fail baseline 417100a; the bundle test fails baseline; the already-correct registry family fails a real eager-import mutation and passes restoration. Current code is on codex/finish-loading-verification. No main/remote/deployment writes. No full suite run during Part A.
+
+Public entry: 338746 raw / 101957 gzip bytes (Vite prints 102.98kB); full eager dependency closure 395536 raw / 123044 gzip bytes. Baseline 1708984 raw / 481009 gzip (Vite prints 485.95kB). Guard is part of npm run build. Startup medians: login visible 14889.3→3802.5ms; teacher login→skeleton 1551.7→4753.2ms; login→data 2152.1→6371.8ms. Added first-data delay 4219.7ms is significant; report it without altering the chosen no-prefetch design. Raw samples in loading-screenshots/audit/startup-{before,after}.json.
+
+Next: commit Part A; create backup/loading-before-main-sync; git merge main on loading branch. Local main is already the merge base, so anticipate no incoming file changes. Then npm run build; node scripts/check-bundle-budget.mjs; npx playwright test tests/bootstrap-loading.spec.ts tests/role-bundles.spec.ts tests/bundle-budget.spec.ts; freeze source/config/test hashes; npx playwright test --reporter=line --workers=1 exactly once. Expected total 603. Preserve raw output at loading-screenshots/audit/part-b-final-suite.txt. Do not edit source/tests during the suite. Complete sync report/commit, then git merge-tree --write-tree main codex/finish-loading-verification and confirm main's original cbc1623a72da35d159424d777d733a2824bdb5d6 ref. Never execute merge into main or push; provide those commands only.
+
+All 55 routes retain registrations; independent AST coverage now reads AppRouter plus the four role route files and checks each role manifest. Existing zero-request assertion is unchanged. Only fast-bootstrap setup changed with explicit user approval. Charts use the original chart JSX for lightweight previews and deferred Recharts rendering; XLSX parsing calculations/effects are untouched.
+
+Uncertified until final run: full-suite regression and refreshed screenshots. Standing gaps: exhaustive optional/offscreen region overlays/classification/line-cache paths and live backend/accounts.
+
+This checkpoint supersedes historical state below.
+
 # QED loading migration progress
 
 Workspace: C:/Users/Mavys/Downloads/QED_System/QED_front_end

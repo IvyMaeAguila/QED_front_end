@@ -18,16 +18,7 @@ Users2,
 import { useMemo,useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
-import {
-CartesianGrid,
-Line,
-LineChart as RLineChart,
-ReferenceArea,
-ResponsiveContainer,
-Tooltip,
-XAxis,
-YAxis,
-} from "recharts";
+import { DeferredChart } from "@shared/loading/DeferredChart";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
 import { BackButton } from "../../../shared/components/DashboardUI";
 import { AdvisorySectionTabs } from "../attendance/components/AdvisorySectionTabs";
@@ -413,7 +404,7 @@ function useHolisticDomainTrendsPageState() {
 
               <div className="px-3 pb-4 pt-4 sm:px-4">
                 <div className="sk-surface-domain-trend-plot relative h-80 w-full" data-sk-region="domain-trend-plot" data-sk-chart="lines">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <DeferredChart loading={pending}>{({ CartesianGrid, Line, LineChart: RLineChart, ReferenceArea, ResponsiveContainer, Tooltip, XAxis, YAxis }) => (<ResponsiveContainer width="100%" height="100%">
                     <RLineChart data={pending ? Array.from({length: lastKnownCount(`${subjectView}-weeks`, 3)}, (_, index) => ({ weekLabel: "", weekStartDate: "", weekTick: String(index), cognitive: null, emotional: null, behavioral: null, social: null })) : chartRows} margin={{ top: 8, right: 20, bottom: 0, left: -8 }}>
                       <CartesianGrid
                         strokeDasharray="3 3"
@@ -481,7 +472,7 @@ function useHolisticDomainTrendsPageState() {
                         );
                       })}
                     </RLineChart>
-                  </ResponsiveContainer>
+                  </ResponsiveContainer>)}</DeferredChart>
                   {pending && <div aria-hidden="true" className="pointer-events-none absolute bottom-6 left-7 right-5 top-2">{[0, 1, 2, 3].map(index => <Skeleton key={index} data-sk-line="" className="absolute inset-0 h-full w-full rounded-none" style={{ clipPath: `polygon(0% ${68-index*12}%, 25% ${45-index*7}%, 50% ${56-index*9}%, 75% ${30+index*5}%, 100% ${18+index*8}%, 100% ${20+index*8}%, 75% ${32+index*5}%, 50% ${58-index*9}%, 25% ${47-index*7}%, 0% ${70-index*12}%)` }} />)}</div>}
                 </div>
 

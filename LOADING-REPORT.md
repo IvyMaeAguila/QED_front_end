@@ -1,3 +1,17 @@
+# Current role-bundle verification — 2026-10-10
+
+Part A implemented; production build and 16 targeted tests pass. Part B sync/full-suite verification pending. This section supersedes historical performance and manifest notes below; the full 55-route inventory remains applicable.
+
+Entry decreased from 1708.984 raw / 481.009 gzip kB to 338.746 raw / 101.957 gzip kB using Node gzip level 6. Vite's printed gzip estimates are 485.95→102.98kB. Entry plus eager dependencies is 395.536 raw / 123.044 gzip kB. Fixed guard ceilings: 112153 entry gzip bytes and 135349 eager-closure gzip bytes. Registry eager imports are forbidden. Role details and download closures: loading-screenshots/audit/part-a-budget-restored.txt; baseline: bundle-before-size.json. Role facade sizes alone omit eagerly loaded compositions, so report both facade and extra eager download totals.
+
+Slow 4G/4x CPU, three cold contexts, medians (ms): login visible 14889.3→3802.5; teacher login→first page skeleton 1551.7→4753.2; teacher login→first data 2152.1→6371.8. First data is 4219.7ms slower after login, a significant cost. The selected no-prefetch design is unchanged. Both runs serve uncompressed local production assets and mock APIs with the same 320ms dashboard delay; deployed gzip/real backend timings are uncertified. All raw samples and exact method are retained in startup-before.json/startup-after.json and scripts/measure-startup.mjs.
+
+New tests: seven role/chart tests fail the actual baseline and pass restored code. Budget test fails the old entry and passes restored code. Registry guard already accepts correct baseline metadata; a temporary real eager import causes its test to fail, then restoration passes. Raw logs: part-a-before-tests.txt, part-a-budget-before-tests.txt, part-a-registry-mutation-test.txt, part-a-budget-restored-tests.txt and part-a-targeted-final.txt. The fast-bootstrap setup is the only approved existing-test change; all assertions, including zero page requests during a held controller import, remain intact.
+
+Ownership exceptions are shared functionality, not role bundles: HelpSupport serves every role; TeacherSchedule is already used by both Admin UserView and Principal teacher profiles. Shared providers/types/images likewise do not imply loading another role's workspace. No other role's shell or exclusive view is requested in isolation tests.
+
+Historical report follows.
+
 # QED loading verification report
 
 ## Current follow-up — 2026-10-10

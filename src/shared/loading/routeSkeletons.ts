@@ -4,6 +4,7 @@
  */
 export const routeSkeletons = {
   "/teacher/holistic": {
+    role: "TEACHER",
     component: "HolisticOverviewPage",
     skeleton: "HolisticOverviewPageComposition",
     load: () => import("../../features/profiles/teacher/pages/holistic/HolisticOverviewPage").then(module => ({ default: module.HolisticOverviewPage })),
@@ -15,6 +16,7 @@ export const routeSkeletons = {
     ],
   },
   "/teacher/attendance/records": {
+    role: "TEACHER",
     component: "TeacherAttendanceRecordsPage",
     skeleton: "TeacherAttendanceRecordsPageComposition",
     load: () => import("../../features/profiles/teacher/pages/attendance/TeacherAttendanceRecordsPage").then(module => ({ default: module.TeacherAttendanceRecordsPage })),
@@ -28,6 +30,7 @@ export const routeSkeletons = {
     ],
   },
   "/teacher/holistic/domain-trends": {
+    role: "TEACHER",
     component: "HolisticDomainTrendsPage",
     skeleton: "HolisticDomainTrendsPageComposition",
     load: () => import("../../features/profiles/teacher/pages/holistic/HolisticDomainTrendsPage").then(module => ({ default: module.HolisticDomainTrendsPage })),
@@ -41,6 +44,7 @@ export const routeSkeletons = {
     ],
   },
   "/principal/gradebooks/:grade": {
+    role: "PRINCIPAL",
     component: "PrincipalGradeSheetPage",
     skeleton: "PrincipalGradeSheetPageComposition",
     load: () => import("../../features/profiles/principal/pages/gradebooks/PrincipalGradeSheetPage").then(module => ({ default: module.PrincipalGradeSheetPage })),
@@ -53,6 +57,7 @@ export const routeSkeletons = {
     ],
   },
   "/admin/classes/new": {
+    role: "ADMIN",
     component: "ClassFormPage",
     skeleton: "ClassFormPageComposition",
     load: () => import("../../features/profiles/admin/pages/classes/ClassFormPage").then(module => ({ default: module.ClassFormPage })),
@@ -62,6 +67,7 @@ export const routeSkeletons = {
     ],
   },
   "/admin/classes/:classId/edit": {
+    role: "ADMIN",
     component: "ClassFormPage",
     skeleton: "ClassFormPageComposition",
     load: () => import("../../features/profiles/admin/pages/classes/ClassFormPage").then(module => ({ default: module.ClassFormPage })),
@@ -73,6 +79,7 @@ export const routeSkeletons = {
     ],
   },
   "/admin/subjects/new": {
+    role: "ADMIN",
     component: "AddSubjectPage",
     skeleton: "AddSubjectPageComposition",
     load: () => import("../../features/profiles/admin/pages/subjects/AddSubjectPage").then(module => ({ default: module.AddSubjectPage })),
@@ -83,6 +90,7 @@ export const routeSkeletons = {
     ],
   },
   "/admin/students/new": {
+    role: "ADMIN",
     component: "StudentFormPage",
     skeleton: "StudentFormPageComposition",
     load: () => import("../../features/profiles/admin/pages/studentrecords/StudentFormPage").then(module => ({ default: module.StudentFormPage })),
@@ -92,6 +100,7 @@ export const routeSkeletons = {
     ],
   },
   "/admin/students/:studentId/edit": {
+    role: "ADMIN",
     component: "StudentFormPage",
     skeleton: "StudentFormPageComposition",
     load: () => import("../../features/profiles/admin/pages/studentrecords/StudentFormPage").then(module => ({ default: module.StudentFormPage })),
@@ -102,6 +111,7 @@ export const routeSkeletons = {
     ],
   },
   "/admin/users/new": {
+    role: "ADMIN",
     component: "UserFormPage",
     skeleton: "UserFormPageComposition",
     load: () => import("../../features/profiles/admin/pages/usermanagement/UserFormPage").then(module => ({ default: module.UserFormPage })),
@@ -112,6 +122,7 @@ export const routeSkeletons = {
     ],
   },
   "/admin/users/:role/:userId/edit": {
+    role: "ADMIN",
     component: "UserFormPage",
     skeleton: "UserFormPageComposition",
     load: () => import("../../features/profiles/admin/pages/usermanagement/UserFormPage").then(module => ({ default: module.UserFormPage })),
@@ -123,6 +134,7 @@ export const routeSkeletons = {
   },
 
   "/teacher/subjects/:subjectId": {
+    role: "TEACHER",
     component: "SubjectDetailPage",
     skeleton: "SubjectDetailPageComposition",
     load: () => import("../../features/profiles/teacher/pages/subjects/detail/SubjectDetailPage").then(module => ({ default: module.SubjectDetailPage })),
@@ -134,6 +146,7 @@ export const routeSkeletons = {
     ],
   },
   "/principal/reports": {
+    role: "PRINCIPAL",
     component: "AnalyticsPage",
     skeleton: "AnalyticsPageComposition",
     load: () => import("../../features/profiles/principal/pages/reports/AnalyticsPage").then(module => ({ default: module.AnalyticsPage })),
@@ -146,6 +159,7 @@ export const routeSkeletons = {
     ],
   },
   "/teacher/students/:studentId": {
+    role: "TEACHER",
     component: "StudentDetailPage",
     skeleton: "StudentDetailPageComposition",
     load: () => import("../components/StudentDetailPage").then(module => ({ default: module.StudentDetailPage })),
@@ -157,6 +171,7 @@ export const routeSkeletons = {
     ],
   },
   "/admin/users/:role/:userId": {
+    role: "ADMIN",
     component: "UserViewPage",
     skeleton: "UserViewPageComposition",
     load: () => import("../../features/profiles/admin/pages/usermanagement/UserViewPage").then(module => ({ default: module.UserViewPage })),
@@ -167,6 +182,7 @@ export const routeSkeletons = {
     ],
   },
   "/admin/classes/:classId": {
+    role: "ADMIN",
     component: "ClassViewPage",
     skeleton: "ClassViewPageComposition",
     load: () => import("../../features/profiles/admin/pages/classes/ClassViewPage").then(module => ({ default: module.ClassViewPage })),
@@ -179,6 +195,7 @@ export const routeSkeletons = {
     ],
   },
   "/admin/subjects/:subjectId": {
+    role: "ADMIN",
     component: "AdminSubjectDetailPage",
     skeleton: "AdminSubjectDetailPageComposition",
     load: () => import("../../features/profiles/admin/pages/subjects/AdminSubjectDetailPage").then(module => ({ default: module.AdminSubjectDetailPage })),
@@ -189,12 +206,14 @@ export const routeSkeletons = {
     ],
   },
   "/parent/students/:studentId/topics/:topicId/support": {
+    role: "PARENT",
     component: "TopicSupportChoice",
     skeleton: "TopicSupportChoiceComposition",
     load: () => import("../../features/profiles/parent/pages/Student/Academic/TopicSupportChoice"),
     regions: [{ name: "topic-support-content", classification: "STATIC", reason: "Quest choices, illustrations and instructions are bundled; route IDs only construct navigation targets", count: "Real immediately" }],
   },
   "/parent/students/:studentId/topics/:topicId/courseware": {
+    role: "PARENT",
     component: "CoursewareView",
     skeleton: "CoursewareViewComposition",
     load: () => import("../../features/profiles/parent/pages/Student/Academic/CoursewareView"),
@@ -206,6 +225,7 @@ export const routeSkeletons = {
     ],
   },
   "/teacher/attendance": {
+    role: "TEACHER",
     component: "TeacherAttendancePage",
     skeleton: "TeacherAttendancePageComposition",
     load: () => import("../../features/profiles/teacher/pages/attendance/TeacherAttendancePage").then(module => ({ default: module.TeacherAttendancePage })),
@@ -217,6 +237,7 @@ export const routeSkeletons = {
     ],
   },
   "/principal/gradebooks": {
+    role: "PRINCIPAL",
     component: "PrincipalGradebooksPage",
     skeleton: "PrincipalGradebooksPageComposition",
     load: () => import("../../features/profiles/principal/pages/gradebooks/PrincipalGradebooksPage").then(module => ({ default: module.PrincipalGradebooksPage })),
@@ -227,6 +248,7 @@ export const routeSkeletons = {
     ],
   },
   "/teacher/advisory": {
+    role: "TEACHER",
     component: "AdvisoryRosterPage",
     skeleton: "AdvisoryRosterPageComposition",
     load: () => import("../../features/profiles/teacher/pages/roster/AdvisoryRosterPage").then(module => ({ default: module.AdvisoryRosterPage })),
@@ -237,6 +259,7 @@ export const routeSkeletons = {
     ],
   },
   "/teacher/subjects/:subjectSectionId/students": {
+    role: "TEACHER",
     component: "SubjectClassListPage",
     skeleton: "SubjectClassListPageComposition",
     load: () => import("../../features/profiles/teacher/pages/subjects/SubjectClassListPage").then(module => ({ default: module.SubjectClassListPage })),
@@ -247,42 +270,49 @@ export const routeSkeletons = {
     ],
   },
   "/": {
+    role: "PUBLIC",
     component: "LandingPage",
     skeleton: "LandingPageComposition",
     load: () => import("../../features/Landing/LandingPage"),
     regions: [{ name: "landing-content", classification: "STATIC", reason: "All sections and illustrative preview data are bundled locally; no page data request", count: "Real immediately" }],
   },
   "/login": {
+    role: "PUBLIC",
     component: "LoginPanel",
     skeleton: "LoginPanelComposition",
     load: () => import("../../features/auth/LoginPanel").then(module => ({ default: module.LoginPanel })),
     regions: [{ name: "login-content", classification: "STATIC", reason: "Form controls and institutional branding are known; login is a preserved user-triggered action", count: "Real immediately" }],
   },
   "/admin/help": {
+    role: "ADMIN",
     component: "HelpSupportPage",
     skeleton: "HelpSupportPageComposition",
     load: () => import("../../features/profiles/admin/pages/help/HelpSupportPage").then(module => ({ default: module.HelpSupportPage })),
     regions: [{ name: "help-content", classification: "STATIC", reason: "Role-specific FAQ, support contacts and resource copy are bundled locally", count: "Real immediately" }],
   },
   "/principal/help": {
+    role: "PRINCIPAL",
     component: "HelpSupportPage",
     skeleton: "HelpSupportPageComposition",
     load: () => import("../../features/profiles/admin/pages/help/HelpSupportPage").then(module => ({ default: module.HelpSupportPage })),
     regions: [{ name: "help-content", classification: "STATIC", reason: "Role-specific FAQ, support contacts and resource copy are bundled locally", count: "Real immediately" }],
   },
   "/teacher/help": {
+    role: "TEACHER",
     component: "HelpSupportPage",
     skeleton: "HelpSupportPageComposition",
     load: () => import("../../features/profiles/admin/pages/help/HelpSupportPage").then(module => ({ default: module.HelpSupportPage })),
     regions: [{ name: "help-content", classification: "STATIC", reason: "Role-specific FAQ, support contacts and resource copy are bundled locally", count: "Real immediately" }],
   },
   "/parent/help": {
+    role: "PARENT",
     component: "HelpSupportPage",
     skeleton: "HelpSupportPageComposition",
     load: () => import("../../features/profiles/admin/pages/help/HelpSupportPage").then(module => ({ default: module.HelpSupportPage })),
     regions: [{ name: "help-content", classification: "STATIC", reason: "Role-specific FAQ, support contacts and resource copy are bundled locally", count: "Real immediately" }],
   },
   "/parent": {
+    role: "PARENT",
     component: "ParentDashboardHome",
     skeleton: "ParentDashboardHomeComposition",
     load: () => import("../../features/profiles/parent/pages/dashboard/ParentDashboardHome"),
@@ -295,36 +325,42 @@ export const routeSkeletons = {
     ],
   },
   "/principal/students": {
+    role: "PRINCIPAL",
     component: "PrincipalStudentsPage",
     skeleton: "PrincipalStudentsPageComposition",
     load: () => import("../../features/profiles/principal/pages/students/PrincipalStudentsPage").then(module => ({ default: module.PrincipalStudentsPage })),
     regions: [{ name: "grade overview", classification: "VARIABLE", reason: "Returned grade/section count and optional section filter", count: "Per-search/grade/section count cache then viewport" }],
   },
   "/admin/calendar": {
+    role: "ADMIN",
     component: "CalendarPage",
     skeleton: "CalendarPageComposition",
     load: () => import("../calendar/CalendarPage").then(module => ({ default: module.CalendarPage })),
     regions: [{ name: "event collections", classification: "VARIABLE", reason: "Returned dates, group headings and event count", count: "Selected-day / expanded view count cache then viewport; month grid and controls real" }],
   },
   "/principal/calendar": {
+    role: "PRINCIPAL",
     component: "CalendarPage",
     skeleton: "CalendarPageComposition",
     load: () => import("../calendar/CalendarPage").then(module => ({ default: module.CalendarPage })),
     regions: [{ name: "event collections", classification: "VARIABLE", reason: "Returned dates, group headings and event count", count: "Selected-day / expanded view count cache then viewport; month grid and controls real" }],
   },
   "/teacher/calendar": {
+    role: "TEACHER",
     component: "CalendarPageView",
     skeleton: "CalendarPageViewComposition",
     load: () => import("../calendar/CalendarPageView").then(module => ({ default: module.CalendarPageView })),
     regions: [{ name: "event collections", classification: "VARIABLE", reason: "Returned dates, group headings and event count", count: "Selected-day / expanded view count cache then viewport; month grid and controls real" }],
   },
   "/parent/calendar": {
+    role: "PARENT",
     component: "CalendarPageView",
     skeleton: "CalendarPageViewComposition",
     load: () => import("../calendar/CalendarPageView").then(module => ({ default: module.CalendarPageView })),
     regions: [{ name: "event collections", classification: "VARIABLE", reason: "Returned dates, group headings and event count", count: "Selected-day / expanded view count cache then viewport; month grid and controls real" }],
   },
   "/principal/teachers/:teacherId": {
+    role: "PRINCIPAL",
     component: "TeacherSchedulePage",
     skeleton: "TeacherSchedulePageComposition",
     load: () => import("../../features/profiles/principal/pages/teachers/TeacherSchedulePage").then(module => ({ default: module.TeacherSchedulePage })),
@@ -336,6 +372,7 @@ export const routeSkeletons = {
     ],
   },
   "/admin/academic-year": {
+    role: "ADMIN",
     component: "AcademicYearPage",
     skeleton: "AcademicYearPageComposition",
     load: () => import("../../features/profiles/admin/pages/subjects/AcademicYearPage").then(module => ({ default: module.AcademicYearPage })),
@@ -346,6 +383,7 @@ export const routeSkeletons = {
     ],
   },
   "/admin/subjects": {
+    role: "ADMIN",
     component: "ManageSubjectsPage",
     skeleton: "ManageSubjectsPageComposition",
     load: () => import("../../features/profiles/admin/pages/subjects/ManageSubjectsPage").then(module => ({ default: module.ManageSubjectsPage })),
@@ -355,6 +393,7 @@ export const routeSkeletons = {
     ],
   },
   "/admin/students": {
+    role: "ADMIN",
     component: "StudentRecordsPage",
     skeleton: "StudentRecordsPageComposition",
     load: () => import("../../features/profiles/admin/pages/studentrecords/StudentRecordsPage").then(module => ({ default: module.StudentRecordsPage })),
@@ -365,18 +404,21 @@ export const routeSkeletons = {
     ],
   },
   "/principal/teachers": {
+    role: "PRINCIPAL",
     component: "PrincipalTeachersPage",
     skeleton: "PrincipalTeachersPageComposition",
     load: () => import("../../features/profiles/principal/pages/teachers/PrincipalTeachersPage").then(module => ({ default: module.PrincipalTeachersPage })),
     regions: [{ name: "teacher directory", classification: "AUTO-COLUMN", reason: "Measured native columns vary with teacher names and advisory assignments; optional room chips and rows affect height", count: "Search/advisory/gender view; column cache then typical metrics; row cache then viewport" }],
   },
   "/parent/enrolled-children": {
+    role: "PARENT",
     component: "EnrolledChildrenPage",
     skeleton: "EnrolledChildrenPageComposition",
     load: () => import("../../features/profiles/parent/pages/EnrollledStudent/EnrolledChildrenPage").then(module => ({ default: module.EnrolledChildrenPage })),
     regions: [{ name: "linked students", classification: "VARIABLE", reason: "Returned student count and optional collection footer", count: "Cached child count then viewport" }],
   },
   "/admin": {
+    role: "ADMIN",
     component: "AdminDashboardHome",
     skeleton: "AdminDashboardHomeComposition",
     load: () => import("../../features/profiles/admin/pages/dashboard/AdminDashboardHome").then(module => ({ default: module.AdminDashboardHome })),
@@ -388,12 +430,14 @@ export const routeSkeletons = {
     ],
   },
   "/admin/classes": {
+    role: "ADMIN",
     component: "ClassesPage",
     skeleton: "ClassesPageComposition",
     load: () => import("../../features/profiles/admin/pages/classes/ClassPage").then(module => ({ default: module.ClassesPage })),
     regions: [{ name: "class collection", classification: "VARIABLE", reason: "Returned class count and optional metadata", count: "Cache per grade/search view then viewport" }],
   },
   "/admin/users": {
+    role: "ADMIN",
     component: "UserManagementPage",
     skeleton: "UserManagementPageComposition",
     load: () => import("../../features/profiles/admin/pages/usermanagement/UserManagementPage").then(module => ({ default: module.UserManagementPage })),
@@ -403,6 +447,7 @@ export const routeSkeletons = {
     ],
   },
   "/teacher/subjects": {
+    role: "TEACHER",
     component: "SubjectsPage",
     skeleton: "SubjectsPageComposition",
     load: () => import("../../features/profiles/teacher/pages/subjects/SubjectPage").then(module => ({ default: module.SubjectsPage })),
@@ -412,6 +457,7 @@ export const routeSkeletons = {
     ],
   },
   "/teacher": {
+    role: "TEACHER",
     component: "TeacherDashboardHome",
     skeleton: "TeacherDashboardHomeComposition",
     load: () => import("../../features/profiles/teacher/pages/dashboard/TeacherDashboardHome").then(module => ({ default: module.TeacherDashboardHome })),
@@ -426,6 +472,7 @@ export const routeSkeletons = {
     ],
   },
   "/teacher/holistic/:studentId": {
+    role: "TEACHER",
     component: "StudentHolisticProfilePage",
     skeleton: "StudentHolisticProfilePageComposition",
     load: () => import("../../features/profiles/teacher/pages/holistic/StudentHolisticProfilePage").then(module => ({ default: module.StudentHolisticProfilePage })),
@@ -437,6 +484,7 @@ export const routeSkeletons = {
     ],
   },
   "/principal": {
+    role: "PRINCIPAL",
     component: "PrincipalDashboardHome",
     skeleton: "PrincipalDashboardHomeComposition",
     load: () => import("../../features/profiles/principal/pages/dashboard/PrincipalDashboardHome").then(module => ({ default: module.PrincipalDashboardHome })),
@@ -449,6 +497,7 @@ export const routeSkeletons = {
     ],
   },
   "/teacher/grades": {
+    role: "TEACHER",
     component: "GradesPage",
     skeleton: "GradesPageComposition",
     load: () => import("../../features/profiles/teacher/pages/grades/GradePage").then(module => ({ default: module.GradesPage })),
@@ -461,18 +510,21 @@ export const routeSkeletons = {
   },
 
   "/principal/students/class/:classId": {
+    role: "PRINCIPAL",
     component: "ClassListPage",
     skeleton: "ClassListPageComposition",
     load: () => import("../../features/profiles/principal/pages/students/ClassListPage").then(module => ({ default: module.ClassListPage })),
     regions: [{ name: "class header and roster", classification: "VARIABLE", reason: "Wrapping fetched grade/adviser/room text and returned roster count; existing centered Back is variable-aligned with fixed dimensions", count: "Cached header lines then two/three; cached roster count then viewport" }, { name: "roster columns", classification: "AUTO-COLUMN", reason: "Shared StudentDirectoryTable native columns vary with student names", count: "View column cache then header and typical metrics" }],
   },
   "/principal/students/grade/:gradeId": {
+    role: "PRINCIPAL",
     component: "ClassListPage",
     skeleton: "ClassListPageComposition",
     load: () => import("../../features/profiles/principal/pages/students/ClassListPage").then(module => ({ default: module.ClassListPage })),
     regions: [{ name: "grade header and roster", classification: "VARIABLE", reason: "Optional fetched section/adviser/room fields and returned roster count; existing Back alignment follows variable header once", count: "Cached header lines then two/three; cached roster count then viewport" }, { name: "roster columns", classification: "AUTO-COLUMN", reason: "Shared StudentDirectoryTable native columns vary with names", count: "View column cache then header and typical metrics" }],
   },
   "/principal/holistic-performance-analytics": {
+    role: "PRINCIPAL",
     component: "HolisticPerformanceAnalyticsPage",
     skeleton: "HolisticPerformanceAnalyticsPageComposition",
     load: () => import("../../features/profiles/principal/pages/reports/HolisticPerformanceAnalyticsPage").then(module => ({ default: module.HolisticPerformanceAnalyticsPage })),
@@ -480,6 +532,7 @@ export const routeSkeletons = {
   },
 
   "/teacher/subjects/:subjectId/records": {
+    role: "TEACHER",
     component: "SubjectRecordsPage",
     skeleton: "SubjectRecordsPageComposition",
     load: () => import("../../features/profiles/teacher/pages/subjects/detail/SubjectRecordsPage").then(module => ({ default: module.SubjectRecordsPage })),
@@ -487,6 +540,7 @@ export const routeSkeletons = {
   },
 
   "/parent/students/:studentId": {
+    role: "PARENT",
     component: "ChildDetailPage",
     skeleton: "ChildDetailPageComposition",
     load: () => import("../../features/profiles/parent/pages/Student/ChildDetailPage"),
@@ -501,6 +555,7 @@ export const routeSkeletons = {
     ],
   },
   "/parent/students/:studentId/topics/:topicId/quiz": {
+    role: "PARENT",
     component:"PetQuizPage",
     skeleton: "PetQuizPageComposition",
     load: () => import("../../features/profiles/parent/pages/Student/Academic/PetQuizPage"),

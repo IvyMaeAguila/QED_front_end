@@ -13,14 +13,7 @@ import {
   UsersRound,
   type LucideIcon,
 } from "lucide-react";
-import {
-  ResponsiveContainer,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  Radar,
-} from "recharts";
+import { DeferredChart } from "@shared/loading/DeferredChart";
 import type { HolisticAssessmentEntry, TermFilter } from "../types/types";
 import SectionHeader from "../../../ui/SectionHeader";
 import type { DetailStudent } from "../../GlobalTypes/types";
@@ -202,7 +195,7 @@ export function HolisticDevelopmentCard({
                   className="pointer-events-none absolute inset-0 m-auto h-40 w-40 rounded-full opacity-25 blur-3xl"
             style={{ background: "var(--brand-soft)" }}
                 />
-                <ResponsiveContainer width="100%" height={260}>
+                <DeferredChart loading={loading}>{({ ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar }) => (<ResponsiveContainer width="100%" height={260}>
                   <RadarChart data={radarData} outerRadius={88} margin={{ top: 24, right: 34, bottom: 24, left: 34 }}>
                     <PolarGrid stroke={gridStroke} strokeDasharray="3 4" />
                     <PolarAngleAxis dataKey="domain" tick={{ fill: axisColor, fontSize: 11, fontWeight: 700 }} />
@@ -215,7 +208,7 @@ export function HolisticDevelopmentCard({
                       dot={loading ? false : makeRadarDot(domains, darkMode)}
                     />
                   </RadarChart>
-                </ResponsiveContainer>
+                </ResponsiveContainer>)}</DeferredChart>
                 {overallScore && (
                   <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                     <div className={`flex h-16 w-16 flex-col items-center justify-center rounded-full shadow-sm ${darkMode ? "bg-[#1A1A1A]" : "bg-white"}`}>

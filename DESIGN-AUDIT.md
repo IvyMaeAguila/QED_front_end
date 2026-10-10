@@ -590,3 +590,11 @@ The first follow-up full run exposed subject-provider scope: subject fallbacks m
 
 All 28 mutation families were rejected when their protected implementation was deliberately broken and passed after source restoration. Exact minimal patches, failure titles, raw logs, hashes and restored summaries are in LOADING-BEFORE-COVERAGE.json. This is the user-approved family proof, not an assertion that all individual cases failed original code. Exhaustive per-region optional-field/overlay/line-cache certification is still distinct from route coverage.
 
+
+## Role boundary audit — 2026-10-10
+
+All 55 route classifications and data-dependent geometry rules are retained. The registry now records role metadata; concrete compositions are supplied by AdminViews, TeacherViews, PrincipalViews and ParentViews after the corresponding role import. Routes and providers were copied structurally without changing page effects, requests, calculations or loaded chart JSX. Public Landing/Login are static imports.
+
+Chart frames remain FIXED-SIZE for the existing client-known width/height props; axes, labels, domain, margins, data-derived series counts and shape callbacks come from the same JSX. Lightweight preview renderers have no Recharts dependency; the library arrives independently. No new table widths, truncation, loaded fixed dimensions, height animation or brand colors were introduced. Wrapping fields/lists/native columns remain VARIABLE/AUTO-COLUMN according to earlier observations. Shared HelpSupport is audience-aware across roles. TeacherSchedule is an existing shared profile used by both Admin UserView and Principal; it is not exclusive Principal workspace code.
+
+The unchanged fast-auth assertion conflicted with cold code arrival. Explicit user decision: allow ONLY its setup to prepare the fixture role before app mounting; retain all assertions, especially the held-controller zero-request assertion. The separate 1500ms role import test covers delayed opacity-only bootstrap and protected-render gating. No application prefetch before receiving the role, and no page-data prefetch at any time.

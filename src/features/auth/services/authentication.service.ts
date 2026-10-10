@@ -1,5 +1,6 @@
 import type { UserProfile, Role } from "../../../shared/profile/types/types";
 import { API_CONFIG } from '../../../config/api.config';
+import { preloadRole } from "../../../routes/roleModules";
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/auth`;
 
@@ -105,6 +106,7 @@ export const AuthService = {
       throw new Error(data?.message || "Invalid User ID or password.");
     }
 
+    preloadRole(data.user.role);
     return {
       ...mapToUserProfile(data.user),
       token: data.user.token,
@@ -131,6 +133,7 @@ export const AuthService = {
       return null;
     }
 
+    preloadRole(data.user.role);
     return {
       ...mapToUserProfile(data.user),
       mustChangePassword: !!data.user.mustChangePassword,

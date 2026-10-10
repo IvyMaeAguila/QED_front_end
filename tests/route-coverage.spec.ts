@@ -5,8 +5,9 @@ import { routeSkeletons } from "../src/shared/loading/routeSkeletons";
 
 /** Independent AST walk: includes new eager, inline and lazy route components. */
 function appRoutes() {
-  const file = ts.createSourceFile("AppRouter.tsx", fs.readFileSync("src/routes/AppRouter.tsx", "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
   const paths: string[] = [];
+  for (const [filename, root] of [["src/routes/AppRouter.tsx", ""], ...["Admin", "Teacher", "Principal", "Parent"].map(role => [`src/routes/roles/${role}Routes.tsx`, `/${role.toLowerCase()}`])]) {
+  const file = ts.createSourceFile(filename, fs.readFileSync(filename, "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
   function visit(node: ts.Node, prefix = "") {
     if (ts.isJsxElement(node) || ts.isJsxSelfClosingElement(node)) {
       const opening = ts.isJsxElement(node) ? node.openingElement : node;
@@ -16,14 +17,15 @@ function appRoutes() {
         const literal = path && ts.isJsxAttribute(path) && path.initializer && ts.isStringLiteral(path.initializer) ? path.initializer.text : "";
         const full = literal.startsWith("/") ? literal : `${prefix}/${literal}`.replace(/\/$/, "");
         const children = ts.isJsxElement(node) ? node.children.filter(c => ts.isJsxElement(c) || ts.isJsxSelfClosingElement(c)) : [];
-        if (!children.length) paths.push(full || prefix);
+        if (!children.length && !literal.endsWith("/*")) paths.push(full || prefix);
         else for (const child of children) visit(child, full);
         return;
       }
     }
     ts.forEachChild(node, child => visit(child, prefix));
   }
-  visit(file);
+  visit(file, root);
+  }
   return paths;
 }
 
@@ -32,14 +34,23 @@ test("every real route must register its own loading composition", () => {
   expect(routes.length).toBeGreaterThan(0);
   const uncovered = routes.filter(route => !(route in routeSkeletons));
   expect(uncovered, `Routes still requiring migration and real-route verification:\n${uncovered.join("\n")}`).toEqual([]);
-  const views = fs.readFileSync("src/shared/loading/routeViews.tsx", "utf8");
+  const views = ["Admin", "Teacher", "Principal", "Parent"].map(role => fs.readFileSync(`src/routes/roles/${role}Views.tsx`, "utf8")).join("\n");
   for (const entry of Object.values(routeSkeletons)) {
     expect(entry.skeleton).toBe(`${entry.component}Composition`);
-    expect(views).toContain(`import { ${entry.skeleton} }`);
-    expect(views).toContain(`  ${entry.skeleton},`);
+    if (entry.role === "PUBLIC") {
+      const source = fs.readFileSync(entry.component === "LandingPage" ? "src/features/Landing/LandingPage.tsx" : "src/features/auth/LoginPanel.tsx", "utf8");
+      expect(source).toContain(`import { ${entry.skeleton}`);
+      expect(source).toContain(`<${entry.skeleton}`);
+    } else {
+      const roleViews = fs.readFileSync(`src/routes/roles/${entry.role[0]}${entry.role.slice(1).toLowerCase()}Views.tsx`, "utf8");
+      expect(roleViews).toContain(`import { ${entry.skeleton} }`);
+      expect(roleViews).toContain(`  ${entry.skeleton},`);
+      expect(views).toContain(`import { ${entry.skeleton} }`);
+    }
   }
-  const source = ts.createSourceFile("AppRouter.tsx", fs.readFileSync("src/routes/AppRouter.tsx", "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
   const connected = new Set<string>();
+  for (const filename of ["src/routes/AppRouter.tsx", ...["Admin", "Teacher", "Principal", "Parent"].map(role => `src/routes/roles/${role}Routes.tsx`)]) {
+  const source = ts.createSourceFile(filename, fs.readFileSync(filename, "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
   function checkConnection(node: ts.Node) {
     if (ts.isCallExpression(node) && node.expression.getText(source) === "lazy") {
       const loader = node.arguments[0];
@@ -52,5 +63,13 @@ test("every real route must register its own loading composition", () => {
     ts.forEachChild(node, checkConnection);
   }
   checkConnection(source);
+  if (filename.endsWith("AppRouter.tsx")) {
+    expect(source.text).toContain('import LandingPage from "../features/Landing/LandingPage"');
+    expect(source.text).toContain('import { LoginPanel } from "../features/auth/LoginPanel"');
+    expect(source.text).toContain('<LandingPage/>');
+    expect(source.text).toContain('<LoginPanel open={true}');
+    connected.add("LandingPage"); connected.add("LoginPanel");
+  }
+  }
   expect([...new Set(Object.values(routeSkeletons).map(entry => entry.component))].filter(component => !connected.has(component)), "registered page compositions must be connected to the actual lazy router").toEqual([]);
 });

@@ -1,7 +1,7 @@
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { Skeleton, SkeletonText } from "@shared/components/SkeletonLoading";
 import { rememberRows, skeletonRows } from "@shared/loading/reservations";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell, ResponsiveContainer, LabelList } from "recharts";
+import { DeferredChart } from "@shared/loading/DeferredChart";
 import { SectionCard } from "../../../../shared/components/DashboardUI";
 import type { AggregatedSubjectRank, Term } from "../data/types";
 import { LeadingSubjectsPanel } from "./LeadingSubjectsPanel";
@@ -42,7 +42,7 @@ export function WholeElementaryRanking({ term, ranking: loadedRanking, loading =
       ) : (
         <div className="min-w-0 overflow-x-auto">
             <div data-sk-region="subject-ranking-plot" data-sk-chart="bars" className="min-w-[460px]" style={{ height: chartHeight }}>
-              <ResponsiveContainer width="100%" height="100%">
+              <DeferredChart loading={pending}>{({ BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell, ResponsiveContainer, LabelList }) => (<ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} layout="vertical" margin={{ top: 6, right: 34, bottom: 2, left: 4 }} barCategoryGap={12}>
                   <CartesianGrid strokeDasharray="3 5" stroke={chartGridColor} horizontal={false} />
                   <XAxis type="number" domain={[0, 100]} tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(value) => `${value}%`} />
@@ -60,7 +60,7 @@ export function WholeElementaryRanking({ term, ranking: loadedRanking, loading =
                     <LabelList content={pending ? (props: unknown) => { const box = props as { x: number; y: number; width: number; height: number }; return <foreignObject x={box.x + box.width + 5} y={box.y} width={26} height={box.height}><SkeletonText width="3ch" style={{ fontSize: 11, lineHeight: `${box.height}px` }} /></foreignObject>; } : undefined} dataKey="scoreLabel" position="right" fill={chartAxisColor} fontSize={11} fontWeight={700} />
                   </Bar>
                 </BarChart>
-              </ResponsiveContainer>
+              </ResponsiveContainer>)}</DeferredChart>
             </div>
         </div>
       )}

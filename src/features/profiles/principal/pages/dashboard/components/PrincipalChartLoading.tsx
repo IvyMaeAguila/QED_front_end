@@ -1,6 +1,6 @@
-import { usePlotArea } from "recharts";
+import { usePreviewPlotArea as usePlotArea } from "@shared/loading/PreviewCharts";
 import { Skeleton, SkeletonText } from "@shared/components/SkeletonLoading";
-// These shapes render inside the original Recharts plot and axes, preserving its layout.
+// These shapes use the preview plot computed from the original chart JSX and axes.
 export function PendingBar({x=0,y=0,width=0,height=0}: {x?:number;y?:number;width?:number;height?:number}) {
  return <foreignObject data-sk-chart="bar" x={x} y={y} width={width} height={height}><Skeleton className="h-full w-full rounded-b-none rounded-t-md" /></foreignObject>;
 }

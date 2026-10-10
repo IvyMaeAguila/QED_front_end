@@ -29,7 +29,37 @@ async function bootstrap(page: import("@playwright/test").Page, quick = false) {
   return { release, releaseData, requests };
 }
 test("bootstrap 60ms never shows the brand loader or status", async ({ page }) => {
-  const { releaseData } = await bootstrap(page, true);
+  // Explicit fast-code fixture: preload the known fixture role before mounting
+  // the real app. This isolates the 60ms auth path from cold dev compilation.
+  // Application login/session imports still start only after receiving the role;
+  // role-bundles.spec.ts separately exercises cold and 1500ms role imports.
+  await page.route("https://fonts.googleapis.com/**", route => route.abort());
+  const releaseData = await mockTeacher(page, false);
+  await page.addInitScript(() => {
+    Object.assign(window, { bootstrapFrames: [] });
+    new MutationObserver(() => {
+      const root = document.querySelector('[data-sk-region="auth-bootstrap"], .qed-fill');
+      const logo = root?.querySelector('[data-bootstrap-loader], .qed-wrap');
+      if (root) (window as unknown as { bootstrapFrames: unknown[] }).bootstrapFrames.push({
+        visible: !!logo && getComputedStyle(logo).visibility !== "hidden" && logo.getBoundingClientRect().height > 0,
+        status: root.querySelectorAll(':scope > [role="status"]').length,
+      });
+    }).observe(document, { subtree: true, childList: true, attributes: true });
+  });
+  await page.route("**/api/auth/me", async route => {
+    await new Promise(resolve => setTimeout(resolve, 60));
+    await route.fulfill({ json: { user: { id: "1", role: "TEACHER", name: "Marie Dela Cruz", user_name: "teacher" } } });
+  });
+  await page.route("**/bootstrap-fast-role.html", route => route.fulfill({ contentType: "text/html", body: '<!doctype html><html><body><div id="root"></div></body></html>' }));
+  await page.goto("/bootstrap-fast-role.html");
+  await page.evaluate(async () => {
+    const refresh = await import(/* @vite-ignore */ "/@react-refresh");
+    refresh.default.injectIntoGlobalHook(window);
+    Object.assign(window, { $RefreshReg$: () => {}, $RefreshSig$: () => (type: unknown) => type, __vite_plugin_react_preamble_installed__: true });
+    await import(/* @vite-ignore */ "/src/routes/roles/TeacherRoutes.tsx");
+    history.replaceState(null, "", "/teacher");
+    await import(/* @vite-ignore */ "/src/main.tsx");
+  });
   await expect(page.getByRole("heading", { name: /Good .*, Marie Dela Cruz!/ })).toBeVisible();
   expect(await page.evaluate(() => (window as unknown as { bootstrapFrames: { visible: boolean; status: number }[] }).bootstrapFrames.some(x => x.visible || x.status))).toBe(false);
   await expect(page.locator('[data-bootstrap-loader], .qed-wrap')).toHaveCount(0);

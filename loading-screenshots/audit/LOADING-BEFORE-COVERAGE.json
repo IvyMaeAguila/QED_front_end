@@ -1174,5 +1174,22 @@
       "bootstrap-protection"
     ],
     "gateCleanupStrengthened": "Entire gate removed; protected content mounts once after settlement."
+  },
+  "roleBundleFollowup": {
+    "baseline": "417100aa76a51a0571ceecd2ee1e148e63d7ad05",
+    "newCases": 9,
+    "observedBaselineFail": 8,
+    "baselineAlreadyCorrect": 1,
+    "roleAndChartBefore": "part-a-before-tests.txt",
+    "budgetBefore": "part-a-budget-before-tests.txt",
+    "alreadyCorrectFamily": {
+      "name": "registry eager-import guard",
+      "mutation": "Temporary real eager TeacherLayout import inserted into routeSkeletons.ts; test rejects it, original bytes restored",
+      "failed": "part-a-registry-mutation-test.txt",
+      "restored": "part-a-budget-restored-tests.txt"
+    },
+    "targetedAfter": "part-a-targeted-final.txt",
+    "targetedSummary": "16 passed (23.2s)",
+    "approvedExistingTestChange": "Only fast-bootstrap fixture setup; all assertions retained, zero-request assertion exact"
   }
 }

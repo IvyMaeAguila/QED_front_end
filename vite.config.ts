@@ -15,6 +15,16 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
   },
   plugins: [
+    {
+      name: "qed-bundle-audit",
+      generateBundle(_options, bundle) {
+        this.emitFile({ type: "asset", fileName: "bundle-audit.json", source: JSON.stringify(
+          Object.values(bundle).filter(item => item.type === "chunk").map(item => ({
+            fileName: item.fileName, isEntry: item.isEntry, imports: item.imports,
+            modules: Object.keys(item.modules).map(id => id.replaceAll("\\", "/").replace(__dirname.replaceAll("\\", "/") + "/", "")),
+          })), null, 2) });
+      },
+    },
     tailwindcss(),
     react(),
     babel({ presets: [reactCompilerPreset()] }),

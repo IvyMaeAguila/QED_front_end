@@ -30,7 +30,7 @@ Anything known before the fetch renders for real: session identity, date/calenda
 
 ## New-page rule
 
-**Build the loading state from the page's real shared composition, document its regions, verify the actual route at 375px/1280px in light/dark with the relevant short/typical/long/empty and repeat-cache cases, then register both its lazy controller and eager composition in `routeSkeletons.ts`/`routeViews.tsx`.** The route guard rejects missing or disconnected registrations.
+**Build the loading state from the page's real shared composition, document its regions, verify the actual route at 375px/1280px in light/dark with the relevant short/typical/long/empty and repeat-cache cases, then register its role and lazy controller in `routeSkeletons.ts`, connect its route in that role's `src/routes/roles/*Routes.tsx`, and register its eager composition in that role's `*Views.tsx`.** The independent router AST guard rejects missing or disconnected registrations, including nested routes.
 
 ## Auth and lazy routes
 
@@ -43,3 +43,7 @@ Before auth resolves, `QedBootstrapLoader` is the single allowed brand-loader ex
 Run `npm run build`, then `npx playwright test --reporter=line --workers=1` **once**, per the latest user decision. Do not edit source/tests during a running browser suite. Current raw output is retained in `loading-decision-final-suite.log`; earlier three-run logs are historical. Screenshots are in `loading-screenshots/`, including `diff/` and `phases/` evidence. No retries are configured. Mutation proofs are recorded per family in `loading-screenshots/audit/LOADING-BEFORE-COVERAGE.json`; `node scripts/verify-loading-mutations.mjs` runs missing proofs, restoring each mutation before its control. Delete only the desired ledger entry to deliberately repeat a proof.
 
 Preserve the nine save/submit/import/upload spinners and the determinate progress graph. Pet Quiz gameplay/story/breathing/hunger/challenge animations are explicitly preserved; cleanup requires zero remaining **loading** animations. The user's exact decision was: “Preserve game animations; require zero remaining loading animations (recommended)”.
+
+## Role code and library boundaries
+
+AuthService preloads only the role named by the successful login/session response. No page data is prefetched. The bootstrap gate also covers arrival of known-role code; shells and matching views live in role-specific modules. Shared help and teacher profiles are used by their existing audiences. Recharts loads when a chart mounts, in parallel with its existing data effects; the lightweight preview interprets the original chart JSX/axes without waiting for that library. XLSX loads only when parsing an uploaded template. Never import concrete views into the metadata registry or a global all-role manifest. npm run build enforces fixed entry/eager-closure budgets and these graph boundaries.

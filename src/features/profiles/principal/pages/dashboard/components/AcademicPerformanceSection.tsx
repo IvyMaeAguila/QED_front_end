@@ -1,17 +1,6 @@
 import { PendingBar, PendingAxisTick, PendingLine } from "./PrincipalChartLoading";
 import { BarChart3 } from "lucide-react";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Customized,
-} from "recharts";
+import { DeferredChart } from "@shared/loading/DeferredChart";
 import { SectionCard } from "../../../../shared/components/DashboardUI";
 import type { GradePerformance, PerformanceTrendPoint } from "../data/types";
 
@@ -150,7 +139,7 @@ export function AcademicPerformanceSection({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         <div data-sk-region="principal-grade-performance-plot">
           <p className={`mb-4 text-sm font-semibold ${textMuted}`}>Performance by grade level</p>
-          <ResponsiveContainer width="100%" height={240}>
+          <DeferredChart loading={loading}>{({ ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip }) => (<ResponsiveContainer width="100%" height={240}>
             <BarChart data={performanceByGrade} barCategoryGap="28%">
               <CartesianGrid strokeDasharray="0" vertical={false} stroke={gridStroke} />
               <XAxis dataKey="grade" tick={loading ? <PendingAxisTick /> : {fill:axisColor,fontSize:11,fontWeight:700}} axisLine={{ stroke: gridStroke }} tickLine={false} />
@@ -169,11 +158,11 @@ export function AcademicPerformanceSection({
               />
               <Bar isAnimationActive={!loading} shape={loading ? <PendingBar /> : undefined} dataKey="score" fill="var(--chart-primary)" radius={[6, 6, 0, 0]} maxBarSize={36} />
             </BarChart>
-          </ResponsiveContainer>
+          </ResponsiveContainer>)}</DeferredChart>
         </div>
         <div data-sk-region="principal-term-trend-plot">
           <p className={`mb-4 text-sm font-semibold ${textMuted}`}>Performance trend across terms</p>
-          <ResponsiveContainer width="100%" height={240}>
+          <DeferredChart loading={loading}>{({ ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Customized }) => (<ResponsiveContainer width="100%" height={240}>
             <LineChart data={performanceTrend}>
               <CartesianGrid strokeDasharray="0" vertical={false} stroke={gridStroke} />
               <XAxis
@@ -199,7 +188,7 @@ export function AcademicPerformanceSection({
               {loading && <Customized component={PendingLine} />}
               <Line isAnimationActive={!loading} opacity={loading ? 0 : 1} type="monotone" dataKey="overall" name="Overall" stroke="var(--color-green)" strokeWidth={3} dot={{ r: 4, fill: "var(--color-green)" }} activeDot={{ r: 6 }} connectNulls />
             </LineChart>
-          </ResponsiveContainer>
+          </ResponsiveContainer>)}</DeferredChart>
         </div>
       </div>
     </SectionCard>

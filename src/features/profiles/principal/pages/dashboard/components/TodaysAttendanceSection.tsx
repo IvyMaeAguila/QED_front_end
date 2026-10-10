@@ -1,15 +1,7 @@
 import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { PendingBar, PendingAxisTick } from "./PrincipalChartLoading";
 import { Users } from "lucide-react";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-} from "recharts";
+import { DeferredChart } from "@shared/loading/DeferredChart";
 import { SectionCard } from "../../../../shared/components/DashboardUI";
 import type {
   GradeAttendance,
@@ -426,7 +418,7 @@ export function TodaysAttendanceSection({
             </span>
           </div>
 
-          <ResponsiveContainer
+          <DeferredChart loading={loading}>{({ ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip }) => (<ResponsiveContainer
             width="100%"
             height={220}
           >
@@ -488,7 +480,7 @@ export function TodaysAttendanceSection({
                 maxBarSize={36}
               />
             </BarChart>
-          </ResponsiveContainer>
+          </ResponsiveContainer>)}</DeferredChart>
         </div>
 
         {/* =========================
