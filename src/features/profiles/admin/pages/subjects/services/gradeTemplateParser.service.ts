@@ -95,6 +95,7 @@ function readNumber(grid: CellGrid, row: number, col: number | undefined, label 
 }
 
 function categoryWeight(grid: CellGrid, row: number, col: number | undefined, label: string): number {
+  // Excel stores percentage-formatted cells as fractions too; normalize once.
   const raw = readNumber(grid, row, col, `${label} weight`);
   if (raw < 0 || raw > 1) throw new Error(`${label} weight must be a numeric percentage between 0 and 1 in the workbook.`);
   return Math.round(raw * 10000) / 100;
@@ -127,7 +128,7 @@ function parseGroup(
     domains.push({
       id: "default",
       label: "",
-      weightPercent: Math.round(weight * 100 * 100) / 100,
+      weightPercent: weight,
       scoreColumns: scoreColumnsInRange(grid, columnHeaderRow, colRange[0], colRange[1]),
     });
   } else {
@@ -139,7 +140,7 @@ function parseGroup(
       domains.push({
         id: slug(entry.label),
         label: entry.label,
-        weightPercent: Math.round(weight * 100 * 100) / 100,
+        weightPercent: weight,
         scoreColumns: scoreColumnsInRange(grid, columnHeaderRow, entry.col, endCol),
       });
     });
