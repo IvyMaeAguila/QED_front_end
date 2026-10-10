@@ -21,8 +21,10 @@ import {
 } from "../types/assessmentTypes";
 import {
   getActiveGradeTemplate,
+  uploadGradeTemplate,
   type ActiveGradeTemplate,
 } from "../services/subjectGradeTemplate.service";
+import type { ParsedGradeTemplate } from "../services/gradeTemplateParser.service";
 import { fetchAllSchoolYears, type SchoolYearRow } from "../services/academicyear.service";
 
 interface EditSubjectModalProps extends SubjectsTheme {
@@ -45,10 +47,15 @@ export function EditSubjectModal({
   onClose,
   onSave,
   onManageSections,
-  saving = false,
+  saving: parentSaving = false,
   error = null,
   ...theme
 }: EditSubjectModalProps) {
+  const [savingTemplate, setSavingTemplate] = useState(false);
+  const [processingTemplate, setProcessingTemplate] = useState(false);
+  const [pendingTemplate, setPendingTemplate] = useState<{ file: File; preview: ParsedGradeTemplate } | null>(null);
+  const [saveTemplateError, setSaveTemplateError] = useState<string | null>(null);
+  const saving = parentSaving || savingTemplate;
   const { teachers } = useTeachers();
   const { getSectionsForGrade, loadSectionsForGrade } = useSections();
   const { assessmentTypes, loadAssessmentTypes, loading: loadingCatalog } =
@@ -107,15 +114,16 @@ export function EditSubjectModal({
     return () => { active = false; };
   }, [subject.subjectId, subject.id, templateAttempt]);
 
+  // Preview pending weights locally; persist only through Save Changes.
   // A saved template is authoritative for a graded subject. Keep the legacy
   // manual weight rows in sync so the normal Save Changes validation and API
   // payload remain valid, while preserving the assessment type IDs.
   useEffect(() => {
-    if (!activeTemplate || assessmentTypes.length === 0) return;
+    if ((!activeTemplate && !pendingTemplate) || assessmentTypes.length === 0) return;
     const templateWeights = [
-      activeTemplate.wwWeightPercent,
-      activeTemplate.ptWeightPercent,
-      activeTemplate.examWeightPercent,
+      pendingTemplate?.preview.ww.weightPercent ?? activeTemplate!.wwWeightPercent,
+      pendingTemplate?.preview.pt.weightPercent ?? activeTemplate!.ptWeightPercent,
+      pendingTemplate?.preview.examWeightPercent ?? activeTemplate!.examWeightPercent,
     ];
     const rows = DEFAULT_ASSESSMENT_TYPES.map((defaultType, index) => {
       const category = assessmentTypes.find(
@@ -132,7 +140,7 @@ export function EditSubjectModal({
     if (rows.every((row) => row !== null)) {
       setWeights(rows as WeightDistributionItem[]);
     }
-  }, [activeTemplate, assessmentTypes]);
+  }, [activeTemplate, pendingTemplate, assessmentTypes]);
 
   const gradeSections = getSectionsForGrade(gradeLevel);
   const sectionOptions =
@@ -215,25 +223,38 @@ export function EditSubjectModal({
     onClose();
   }
 
-  function handleSave() {
-    if (saving || !weightsValid || !name.trim() || !section.trim() || !schoolYear) return;
-    void onSave({
-      name: name.trim(),
-      gradeLevel,
-      schoolYear,
-      teacherId: teacherId || null,
-      section,
-      status: subject.status,
-      isGraded,
-      weightDistribution: isGraded ? weights : [],
-    });
+  async function handleSave() {
+    if (saving || processingTemplate || !weightsValid || !name.trim() || !section.trim() || !schoolYear) return;
+    setSavingTemplate(true);
+    setSaveTemplateError(null);
+    try {
+      if (isGraded && pendingTemplate) {
+        const saved = await uploadGradeTemplate(Number(subject.subjectId ?? subject.id), pendingTemplate.file);
+        setActiveTemplate(saved);
+        setPendingTemplate(null);
+      }
+      await onSave({
+        name: name.trim(),
+        gradeLevel,
+        schoolYear,
+        teacherId: teacherId || null,
+        section,
+        status: subject.status,
+        isGraded,
+        weightDistribution: isGraded ? weights : [],
+      });
+    } catch (err) {
+      setSaveTemplateError(err instanceof Error ? err.message : "Could not save changes.");
+    } finally {
+      setSavingTemplate(false);
+    }
   }
 
   return (
     <ModalShell
       title="Edit Subject"
       icon={Pencil}
-      onClose={onClose}
+      onClose={handleClose}
       closeDisabled={saving}
       size="xl"
       {...theme}
@@ -243,7 +264,7 @@ export function EditSubjectModal({
         new subject.
       </p>
 
-      {error && (
+      {(error || saveTemplateError) && (
         <div
           className={`flex items-start gap-2 rounded-lg border px-3 py-2.5 text-xs font-semibold lg:col-span-2 ${
             darkMode
@@ -252,7 +273,7 @@ export function EditSubjectModal({
           }`}
         >
           <AlertCircle size={14} className="mt-0.5 shrink-0" />
-          <span>{error}</span>
+          <span>{saveTemplateError || error}</span>
         </div>
       )}
 
@@ -378,7 +399,7 @@ export function EditSubjectModal({
                   onChange={(e) =>
                     updateRow(row.id, { assessmentType: e.target.value })
                   }
-                  disabled={saving || loadingCatalog || Boolean(activeTemplate)}
+                  disabled={saving || loadingCatalog || Boolean(activeTemplate || pendingTemplate)}
                   className={`${
                     saving ? disabledInputClasses : inputClasses
                   } flex-1`}
@@ -420,7 +441,7 @@ export function EditSubjectModal({
                         ),
                       })
                     }
-                    disabled={saving || Boolean(activeTemplate)}
+                    disabled={saving || Boolean(activeTemplate || pendingTemplate)}
                     placeholder="0"
                     className={`${
                       saving ? disabledInputClasses : inputClasses
@@ -436,7 +457,7 @@ export function EditSubjectModal({
                 <button
                   type="button"
                   onClick={() => removeRow(row.id)}
-                  disabled={saving || Boolean(activeTemplate)}
+                  disabled={saving || Boolean(activeTemplate || pendingTemplate)}
                   title="Remove"
                   className={`h-10 w-10 shrink-0 rounded-lg border inline-flex items-center justify-center transition-colors disabled:opacity-50 ${
                     darkMode
@@ -453,7 +474,7 @@ export function EditSubjectModal({
           <button
             type="button"
             onClick={addRow}
-            disabled={saving || Boolean(activeTemplate) || allTypesUsed || assessmentTypes.length === 0}
+            disabled={saving || Boolean(activeTemplate || pendingTemplate) || allTypesUsed || assessmentTypes.length === 0}
             className={`w-full h-9 rounded-lg border border-dashed text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
               darkMode
                 ? "border-[#374151] text-[#D1D5DB] hover:bg-white/5"
@@ -475,6 +496,12 @@ export function EditSubjectModal({
             darkMode={darkMode}
             activeTemplate={activeTemplate}
             onTemplateUpdated={setActiveTemplate}
+            disabled={saving}
+            onProcessingChange={setProcessingTemplate}
+            onTemplateSelected={(file, preview) => {
+              setPendingTemplate({ file, preview });
+              setSaveTemplateError(null);
+            }}
           />
         )}>{null}</LoadingRegion>
       </div>
@@ -494,9 +521,9 @@ export function EditSubjectModal({
         </button>
         <button
           onClick={handleSave}
-          disabled={saving || !weightsValid || !name.trim() || !section.trim() || !schoolYear}
+          disabled={saving || processingTemplate || !weightsValid || !name.trim() || !section.trim() || !schoolYear}
           className={`inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg px-5 text-xs font-bold text-white transition-opacity sm:w-auto ${
-            saving || !weightsValid || !name.trim() || !section.trim() || !schoolYear
+            saving || processingTemplate || !weightsValid || !name.trim() || !section.trim() || !schoolYear
               ? "opacity-50 cursor-not-allowed"
               : "hover:opacity-90"
           }`}

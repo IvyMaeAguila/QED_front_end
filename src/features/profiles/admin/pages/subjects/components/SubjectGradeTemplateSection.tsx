@@ -13,6 +13,9 @@ interface Props {
   activeTemplate: ActiveGradeTemplate | null;
   onTemplateUpdated: (template: ActiveGradeTemplate) => void;
   loading?: boolean;
+  disabled?: boolean;
+  onTemplateSelected?: (file: File, preview: ParsedGradeTemplate) => void;
+  onProcessingChange?: (processing: boolean) => void;
 }
 
 function formatGroup(group: ParsedGradeTemplate["ww"]): string {
@@ -29,31 +32,50 @@ export function SubjectGradeTemplateSection({
   activeTemplate,
   onTemplateUpdated,
   loading = false,
+  disabled = false,
+  onTemplateSelected,
+  onProcessingChange,
 }: Props) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<ParsedGradeTemplate | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
 
   async function handleFile(file: File) {
+    if (uploading || loading || disabled) return;
     setError(null);
-    setPreview(null);
     setUploading(true);
+    onProcessingChange?.(true);
     try {
       // Client-side preview first — instant feedback, not authoritative.
       const previewResult = await parseGradeTemplate(file);
       setPreview(previewResult);
-
-      // Server re-parses and persists authoritatively.
-      const saved = await uploadGradeTemplate(subjectId, file);
-      onTemplateUpdated(saved);
+      setPendingFile(file);
+      onTemplateSelected?.(file, previewResult);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not process that file.");
-      setPreview(null);
     } finally {
       setUploading(false);
+      onProcessingChange?.(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  }
+
+  async function handleSaveTemplate() {
+    if (!pendingFile || uploading || loading || disabled) return;
+    setUploading(true);
+    setError(null);
+    try {
+      const saved = await uploadGradeTemplate(subjectId, pendingFile);
+      onTemplateUpdated(saved);
+      setPendingFile(null);
+      setPreview(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not save that template.");
+    } finally {
+      setUploading(false);
     }
   }
 
@@ -65,7 +87,7 @@ export function SubjectGradeTemplateSection({
   function handleDrop(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
     setIsDragOver(false);
-    if (uploading || loading) return;
+    if (uploading || loading || disabled) return;
     const file = e.dataTransfer.files?.[0];
     if (file) void handleFile(file);
   }
@@ -103,14 +125,14 @@ export function SubjectGradeTemplateSection({
         ref={fileInputRef}
         type="file"
         accept=".xlsx"
-        disabled={uploading || loading}
+        disabled={uploading || loading || disabled}
         onChange={handleInputChange}
         className="hidden"
       />
 
       <div
-        onClick={() => !uploading && !loading && fileInputRef.current?.click()}
-        onDragOver={(e) => { e.preventDefault(); if (!uploading && !loading) setIsDragOver(true); }}
+        onClick={() => !uploading && !loading && !disabled && fileInputRef.current?.click()}
+        onDragOver={(e) => { e.preventDefault(); if (!uploading && !loading && !disabled) setIsDragOver(true); }}
         onDragLeave={(e) => { e.preventDefault(); setIsDragOver(false); }}
         onDrop={handleDrop}
         data-upload-progress={uploading ? "" : undefined}
@@ -131,7 +153,7 @@ export function SubjectGradeTemplateSection({
       {!uploading && (
         <button
           type="button"
-          disabled={loading}
+          disabled={loading || disabled}
           onClick={() => fileInputRef.current?.click()}
           className="sk-surface-brand w-full rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
           style={{ background: "var(--color-maroon)" }} data-sk-region="subjectgradetemplatesection-button-field-3"
@@ -151,7 +173,7 @@ export function SubjectGradeTemplateSection({
         <div className="text-xs space-y-1 pt-2 border-t border-current/10">
           <div className="flex items-center gap-2 font-semibold text-[#15803D] mb-1">
             <CheckCircle size={14} />
-            Template saved
+            Ready to save — {pendingFile?.name}
           </div>
           <p>WW: {formatGroup(preview.ww)}</p>
           <p>PT: {formatGroup(preview.pt)}</p>
@@ -159,7 +181,15 @@ export function SubjectGradeTemplateSection({
             <p>Examinations: {preview.examWeightPercent}%</p>
             <p>Components — {preview.examinations.components.map((component) => `${component.label}: ${component.weightPercent}%`).join(" · ")}</p>
           </> : <p data-sk-region="subjectgradetemplatesection-examinations-not-included-in-this-template-" data-sk-static="">Examinations: not included in this template.</p>}
+          <p>{onTemplateSelected ? "Click Save Changes to apply this template." : "Click Save Template to apply this template."}</p>
         </div>
+      )}
+
+      {pendingFile && !onTemplateSelected && (
+        <button type="button" disabled={uploading || loading || disabled} onClick={() => void handleSaveTemplate()}
+          className="w-full rounded-lg bg-maroon px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-50">
+          {uploading ? "Saving…" : "Save Template"}
+        </button>
       )}
 
       {!preview && (loading || activeTemplate) && !error && (
