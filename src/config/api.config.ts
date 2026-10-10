@@ -1,8 +1,4 @@
-// const API_BASE_URL = "http://localhost:7400";
-const API_BASE_URL= "https://thesis-qed-1.onrender.com";
-
-
-
+// Vite selects .env.development for the dev server and .env.production for builds.
 export const API_CONFIG = {
-  baseURL: API_BASE_URL
+  baseURL: (import.meta.env.VITE_API_BASE_URL || "https://thesis-qed-1.onrender.com").replace(/\/+$/, ""),
 };

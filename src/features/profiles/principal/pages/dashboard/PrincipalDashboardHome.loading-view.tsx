@@ -1,7 +1,8 @@
 import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { lastKnownCount,rememberRows,skeletonRows } from "@shared/loading/reservations";
-import { GraduationCap } from "lucide-react";
+import { DashboardWelcomeBanner } from "@shared/components/DashboardWelcomeBanner";
+import TodayDateCard from "../../../parent/pages/dashboard/components/TodayDateCard";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import { useAuth } from "../../../../auth/context/authContext";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
@@ -31,13 +32,6 @@ function usePrincipalDashboardHomeState() {
   const [yearAttempt, setYearAttempt] = useState(0);
   const [showFullRanking, setShowFullRanking] = useState(false);
 
-  const today = new Date();
-  const dateStr = today.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
   const gridStroke = darkMode
     ? "var(--color-grid-line-dark)"
     : "var(--color-grid-line)";
@@ -136,36 +130,16 @@ function usePrincipalDashboardHomeState() {
   };
   return { content: ((
     <div className="mx-auto flex w-full max-w-[1360px] flex-col gap-4 font-sans sm:gap-5 xl:gap-6">
-      {/* Header */}
-      <div
-        className="sk-surface-brand relative flex min-h-44 flex-col justify-center overflow-hidden rounded-[12px] p-5 text-white sm:min-h-52 sm:p-6 xl:p-8"
-        style={{
-          background: "var(--color-maroon)",
-          boxShadow: "0 12px 32px color-mix(in srgb, var(--brand-primary) 20%, transparent)",
-        }}
-      >
-        <GraduationCap
-          size={210}
-          strokeWidth={1}
-          className="pointer-events-none absolute -bottom-12 -right-6 rotate-15 text-white/[0.07]"
-        />
-        <div className="relative">
-          <span className="qed-type-badge mb-3 inline-flex items-center rounded-full border border-white/10 bg-white/10 px-3 py-1 uppercase tracking-widest text-white/80 sm:mb-4">
-            {dateStr}
-          </span>
-          <h1 className="qed-type-dashboard-hero break-words">
-            Welcome, {user?.name ?? "Principal"}!
-          </h1>
-          <p className="qed-type-hero-description mt-2 max-w-xl text-white/80 sm:mt-3">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,3fr)_minmax(280px,1fr)]">
+        <DashboardWelcomeBanner name={user?.name ?? "Principal"} description={<>
             Here's how the school is doing this{" "}
-            <span className="font-bold text-white underline underline-offset-4 decoration-white/40">
+            <span >
               <LoadingRegion as="span" loading={loading && !error} name="principal-current-term" variable skeleton={<SkeletonText width="6ch" className="inline-block align-top" />}>{data?.currentTerm}</LoadingRegion>
             </span>{" "}
             of School Year <LoadingRegion as="span" loading={yearLoading} error={yearError} retry={() => setYearAttempt(value => value + 1)} name="principal-school-year" variable skeleton={<SkeletonText width="9ch" className="inline-block align-top" />}>{academicYear?.label}</LoadingRegion>
-          </p>
-        </div>
+        </>} />
+        <TodayDateCard panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} />
       </div>
-
       <LoadingRegion loading={loading} error={error} retry={refetch} name="principal-dashboard-data" variable retainPrevious hasContent={Boolean(data)} skeleton={null} frame={renderData} onSettled={() => { if (data) {rememberRows("principal-dashboard-grades", data.topSubjectPerGrade.length); rememberRows("principal-dashboard-ranking", data.subjectRankingByTerm[rankingTerm]?.length ?? 0);} }}>{null}</LoadingRegion>
     </div>
   )), scope: { setYearLoading, setYearError, fetchActiveAcademicYear, setAcademicYear, yearAttempt } };

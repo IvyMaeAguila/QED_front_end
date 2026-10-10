@@ -61,7 +61,7 @@ function useTeacherDashboardHomeState() {
   return { content: ((
     <div className="flex flex-col gap-4 sm:gap-5 xl:gap-6">
       {errors.length > 0 && <div role="alert" className={`rounded-xl border p-4 ${panelBg} ${panelBorder} ${textPrimary}`}>
-        <p>Unable to load: {errors.join(", ")}. Other sections are available.</p>
+        <p>Unable to load: {errors.map(section => section === "agenda" ? "weekly schedule" : section).join(", ")}. Other sections are available.</p>
         <button className="mt-2 font-semibold underline" onClick={() => setRefresh(value => value + 1)}>Retry</button>
       </div>}
       <div className="grid grid-cols-1 items-start gap-4 sm:gap-5 xl:grid-cols-[minmax(0,3fr)_minmax(280px,1fr)] xl:gap-6">

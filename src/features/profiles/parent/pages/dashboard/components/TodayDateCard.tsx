@@ -17,7 +17,7 @@ export default function TodayDateCard({
 
   return (
     <div
-      className={`flex h-full min-h-[200px] flex-col items-center justify-center rounded-2xl border p-6 text-center ${panelBg} ${panelBorder}`}
+      className={`flex h-full min-h-48 flex-col items-center justify-center rounded-[12px] border p-5 sm:p-6 text-center ${panelBg} ${panelBorder}`}
       style={{ boxShadow: "0 4px 20px -2px rgba(0,0,0,0.05), 0 2px 10px -2px rgba(0,0,0,0.03)" }}
     >
       <p className={`mb-2 text-xs font-bold uppercase tracking-[0.2em] ${textMuted}`}>
