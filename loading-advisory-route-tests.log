@@ -1,0 +1,41 @@
+
+[WebServer] (node:30028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21316) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 5 tests using 1 worker
+
+(node:28096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/5] tests\advisory-roster.spec.ts:17:68 › advisory roster 375 light: real labels, actions and table
+[2/5] tests\advisory-roster.spec.ts:17:68 › advisory roster 375 dark: real labels, actions and table
+[3/5] tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 light: real labels, actions and table
+[4/5] tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 dark: real labels, actions and table
+[5/5] tests\advisory-roster.spec.ts:36:1 › student directory classification observes native columns across short/long names
+  1) tests\advisory-roster.spec.ts:36:1 › student directory classification observes native columns across short/long names 
+
+    Error: unmarked student directory column 1
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 1
+    Received:    1040.015625
+
+      45 |   }
+      46 |   // This shared table is currently unmarked: it must retain strict column geometry.
+    > 47 |   for (const [index, width] of widths[0].entries()) expect(Math.abs(width - widths[1][index]), `unmarked student directory column ${index}`).toBeLessThanOrEqual(1);
+         |                                                                                                                                              ^
+      48 | });
+      49 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\advisory-roster.spec.ts:47:142
+
+    Error Context: test-results\advisory-roster-student-di-a8c9e-mns-across-short-long-names\error-context.md
+
+
+  1 failed
+    tests\advisory-roster.spec.ts:36:1 › student directory classification observes native columns across short/long names 
+  4 passed (15.2s)

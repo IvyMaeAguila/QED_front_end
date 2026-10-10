@@ -1,0 +1,46 @@
+import { waitForDataRoute } from "./fixtures/routeReady";
+import { test, expect, type Page } from '@playwright/test';
+import fs from 'node:fs';
+import { mockDirectory } from './fixtures/directory';
+import { assertNoDataSpinner, checkRenderedContrast, checkShimmerPixels } from './design-pixels';
+async function fixture(page: Page, dark = false, count = 3, long = false, tab = "writtenWorks") {
+  const context = await mockDirectory(page, 'TEACHER', dark);
+  const roster = Array.from({length: count}, (_, i) => ({id: String(i+1), name: long ? 'MariaAlexandraIsabellaDelosSantosVillanueva '.repeat(9)+i : 'Ana Cruz '+i, gender: i%2 ? 'F' : 'M'}));
+  const items = ['writtenWorks','performanceTask','exams'].map((tab,i) => ({id: String(i+1), tab, date:'2026-10-09',activityName:'Activity '+i,topic:'Numbers',format:'Quiz',maxItems:10,gradingPeriodId:'1'}));
+  await page.addInitScript(({roster,items,tab}) => history.replaceState({usr:{subjectName:'Mathematics',subjectCategory:null,gradeLevel:'Grade 1',tab,roster,items,scores:{},holistic:{},terms:[{id:'1',label:'Term 1',termNumber:1},{id:'2',label:'Term 2',termNumber:2}],selectedTerm:'1',isOwnAdvisory:false,adviserName:'Teacher One'},key:'records-test',idx:0},'',location.href), {roster,items,tab});
+  let finish!:()=>void; let gate=new Promise<void>(r=>finish=r); let failed='';
+  await page.route('**/api/teacherGrading/**',async route=>{await gate;const path=new URL(route.request().url()).pathname;const kind=path.endsWith('scores')?'scores':'items';await route.fulfill({status:failed===kind?500:200,json:failed===kind?{success:false,message:'Records unavailable'}:{success:true,data:kind==='items'?items:Object.fromEntries(roster.map(s=>[s.id,{'1':9,'2':8,'3':7}]))}});});
+  await page.route('**/api/subject/getEffectiveWeights/**',async route=>{await gate;await route.fulfill({status:failed==='weights'?500:200,json:failed==='weights'?{success:false}:{success:true,data:{source:'manual',ww:30,pt:50,exam:20}}});});
+  return Object.assign(()=>{context();finish();},{fail:(kind:string)=>failed=kind,recover:()=>failed='',hold:()=>{gate=new Promise<void>(r=>finish=r);},release:()=>finish()});
+}
+for(const width of [375,1280]) for(const dark of [false,true]) test(`subject records ${width} ${dark?'dark':'light'} preserves known roster and headers`,async({page})=>{
+  await page.setViewportSize({width,height:1100});const release=await fixture(page,dark);
+  await page.goto('/teacher/subjects/1/records');await waitForDataRoute(page);
+  await expect(page.getByRole('columnheader',{name:"Learners' Names",exact:true})).toBeVisible();
+  await expect(page.getByText('Ana Cruz 0',{exact:true})).toBeVisible();
+  await expect(page.getByRole('button',{name:'Edit Records',exact:true})).toBeVisible();
+  const region=page.locator('[data-sk-region="subject-assessment-records"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');
+  await assertNoDataSpinner(page);
+  fs.mkdirSync('loading-screenshots',{recursive:true});const prefix=`loading-screenshots/teacher-subject-records-${width}-${dark?'dark':'light'}`;
+  await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});release();
+  await expect(region).toHaveAttribute('data-sk-phase','settled');await expect(page.getByRole('alert')).toHaveCount(0);
+  await expect(page.locator('[data-sk-primitive]')).toHaveCount(0);await page.screenshot({path:prefix+'-loaded.png',fullPage:true});
+});
+for(const kind of ['items','scores','weights'])test(`subject records retries ${kind} without indefinite shapes`,async({page})=>{const release=await fixture(page);release.fail(kind);await page.goto('/teacher/subjects/1/records');await waitForDataRoute(page);release();await expect(page.getByRole('alert').first()).toBeVisible();await expect(page.locator('[data-sk-primitive]')).toHaveCount(0);release.recover();await page.getByRole('button',{name:'Retry',exact:true}).first().click();await expect(page.locator('[data-sk-region="subject-assessment-records"]')).toHaveAttribute('data-sk-phase','settled');await expect(page.getByRole('alert')).toHaveCount(0);});
+for(const count of [0,1,9])test(`subject records retains ${count} known roster rows`,async({page})=>{const release=await fixture(page,false,count,count===9);await page.goto('/teacher/subjects/1/records');await waitForDataRoute(page);release();await expect(page.locator('[data-sk-region="subject-assessment-records"]')).toHaveAttribute('data-sk-phase','settled');await expect(page.locator('[data-sk-region="subject-record-student"]')).toHaveCount(count);});
+for(const dark of [false,true])test(`subject records ${dark?'dark':'light'} actual score surface pixels`,async({page})=>{const release=await fixture(page,dark);await page.goto('/teacher/subjects/1/records');await waitForDataRoute(page);await expect(page.locator('[data-sk-region="subject-assessment-records"]')).toHaveAttribute('data-sk-phase','revealed');const target=page.locator('[data-sk-region="subject-assessment-records"] tbody [data-sk-primitive]').first();await checkRenderedContrast(target,"subject score");await checkShimmerPixels(target,`subject-records-${dark?'dark':'light'}`);release();});
+test('subject records keeps native table markup valid',async({page})=>{const errors:string[]=[];page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});const release=await fixture(page);await page.goto('/teacher/subjects/1/records');await waitForDataRoute(page);await expect(page.locator('[data-sk-region="subject-assessment-records"]')).toHaveAttribute('data-sk-phase','revealed');release();await expect(page.locator('[data-sk-region="subject-assessment-records"]')).toHaveAttribute('data-sk-phase','settled');expect(errors.filter(x=>/cannot be a child|cannot contain|hydration error|whitespace text nodes/.test(x))).toEqual([]);});
+
+
+for(const width of [375,1280])for(const dark of [false,true])test(`subject holistic records ${width} ${dark?'dark':'light'} keeps known table and domains`,async({page})=>{
+ await page.setViewportSize({width,height:1100});const release=await fixture(page,dark,3,false,'holistic');let finish!:()=>void;const gate=new Promise<void>(r=>finish=r);
+ await page.route('**/api/gradingPeriods',async r=>{await gate;await r.fulfill({json:{success:true,data:[{id:'1',termNumber:1,termLabel:'Term 1',startDate:'2026-10-01',endDate:'2026-10-31',isActive:true}]}});});
+ await page.route('**/api/teacherHolistic/**',async r=>{await gate;await r.fulfill({json:{success:true,data:{},weekStartDate:'2026-10-05'}});});
+ await page.goto('/teacher/subjects/1/records');await waitForDataRoute(page);await expect(page.getByRole('columnheader',{name:"Learner's Name",exact:true})).toBeVisible();await expect(page.getByRole('columnheader',{name:'Cognitive',exact:true}).first()).toBeVisible();await expect(page.getByText('Ana Cruz 0',{exact:true})).toBeVisible();
+ const region=page.locator('[data-sk-region="subject-holistic-records"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);const prefix=`loading-screenshots/teacher-subject-holistic-records-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});release();finish();await expect(region).toHaveAttribute('data-sk-phase','settled');await page.screenshot({path:prefix+'-loaded.png',fullPage:true});
+});
+test('subject records auto columns vary with actual learner names',async({browser})=>{const widths:number[][]=[];for(const long of [false,true]){const page=await browser.newPage({baseURL:'http://127.0.0.1:5187'});const release=await fixture(page,false,3,long);await page.goto('/teacher/subjects/1/records');await waitForDataRoute(page);release();const region=page.locator('[data-sk-region="subject-assessment-records"]');await expect(region).toHaveAttribute('data-sk-phase','settled');widths.push(await region.locator('tbody tr[data-sk-region="subject-record-student"]').first().locator('td').evaluateAll(els=>els.map(el=>el.getBoundingClientRect().width)));await page.unroute('**/api/**');await page.unroute('**/api/teacherGrading/**');await page.unroute('**/api/subject/getEffectiveWeights/**');await page.close();}expect(widths[0].some((w,i)=>Math.abs(w-widths[1][i])>1)).toBe(true);});
+
+test('subject records repeats cached native leaf columns within 2px',async({page})=>{const release=await fixture(page);await page.goto('/teacher/subjects/1/records');await waitForDataRoute(page);release();const region=page.locator('[data-sk-region="subject-assessment-records"]');await expect(region).toHaveAttribute('data-sk-phase','settled');const loaded=await region.locator('tbody tr[data-sk-region="subject-record-student"]').first().locator('td').evaluateAll(els=>els.map(el=>el.getBoundingClientRect().width));for(const term of ['2','1']){release.hold();await page.getByRole('combobox',{name:'Term',exact:true}).selectOption(term);await expect(region).toHaveAttribute('data-sk-phase','revealed');if(term==='1'){const pending=await region.locator('tbody tr[data-sk-region="subject-record-student"]').first().locator('td').evaluateAll(els=>els.map(el=>el.getBoundingClientRect().width));expect(pending).toHaveLength(loaded.length);pending.forEach((w,i)=>expect(Math.abs(w-loaded[i])).toBeLessThanOrEqual(2));}release.release();await expect(region).toHaveAttribute('data-sk-phase','settled');}});
+
+

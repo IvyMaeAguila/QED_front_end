@@ -1,0 +1,24 @@
+
+[WebServer] (node:37932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18116) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 10 tests using 1 worker
+
+
+(node:22532) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/10] tests\user-details-loading.spec.ts:22:68 › user details 375 light: real field labels and actions
+[2/10] tests\user-details-loading.spec.ts:22:68 › user details 375 dark: real field labels and actions
+[3/10] tests\user-details-loading.spec.ts:22:68 › user details 1280 light: real field labels and actions
+[4/10] tests\user-details-loading.spec.ts:22:68 › user details 1280 dark: real field labels and actions
+[5/10] tests\user-details-loading.spec.ts:40:61 › ADMIN details preserve short and wrapping fields
+[6/10] tests\user-details-loading.spec.ts:40:61 › PRINCIPAL details preserve short and wrapping fields
+[7/10] tests\user-details-loading.spec.ts:40:61 › PARENT details preserve short and wrapping fields
+[8/10] tests\user-details-loading.spec.ts:52:1 › user details error removes shapes and retries the account request
+[9/10] tests\user-details-loading.spec.ts:64:1 › missing user uses the real not-found state only after the request
+[10/10] tests\user-details-loading.spec.ts:72:1 › teacher user details wait for the teacher ID mapping and preserve real profile controls
+  10 passed (30.9s)

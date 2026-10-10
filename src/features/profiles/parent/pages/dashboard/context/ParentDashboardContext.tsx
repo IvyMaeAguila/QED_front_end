@@ -1,13 +1,6 @@
 // src/features/ParentDashboard/context/ParentDashboardContext.tsx
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { dailyUpdateService } from "../services/dashboard.service";
 import {
   verificationService,
@@ -93,11 +86,11 @@ function toStudentFallback(match: MatchedStudentRecord): Student {
 
 export function ParentDashboardProvider({ children }: { children: ReactNode }) {
   const [students, setStudents] = useState<Student[]>([]);
-  const [isLoadingStudents, setIsLoadingStudents] = useState(false);
+  const [isLoadingStudents, setIsLoadingStudents] = useState(true);
   const [studentsError, setStudentsError] = useState<string | null>(null);
 
   const [dailyUpdates, setDailyUpdates] = useState<DailyUpdate[]>([]);
-  const [isLoadingDailyUpdates, setIsLoadingDailyUpdates] = useState(false);
+  const [isLoadingDailyUpdates, setIsLoadingDailyUpdates] = useState(true);
   const [dailyUpdatesError, setDailyUpdatesError] = useState<string | null>(
     null,
   );

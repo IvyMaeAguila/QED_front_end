@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { GradeLevelSummary } from "../data/types";
 import { getGradeLevels, getSchoolYear } from "../services/students.service";
 
@@ -8,6 +9,7 @@ interface UsePrincipalStudentsOverviewResult {
   schoolYear: string;
   loading: boolean;
   error: Error | null;
+  retry: () => void;
 }
 
 export function usePrincipalStudentsOverview(): UsePrincipalStudentsOverviewResult {
@@ -16,6 +18,7 @@ export function usePrincipalStudentsOverview(): UsePrincipalStudentsOverviewResu
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
@@ -38,9 +41,10 @@ export function usePrincipalStudentsOverview(): UsePrincipalStudentsOverviewResu
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [attempt]);
 
   const totalStudents = gradeLevels.reduce((sum, g) => sum + g.totalStudents, 0);
 
-  return { gradeLevels, totalStudents, schoolYear, loading, error };
+  return { gradeLevels, totalStudents, schoolYear, loading, error, retry: () => setAttempt(value => value + 1) };
 }
+

@@ -38,7 +38,7 @@ export function HelpSupportModal({ open, onClose, darkMode }: HelpSupportModalPr
   if (!open) return null;
 
   const mutedText = darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]";
-  const cardBg = darkMode ? "bg-[#0B1120] border-[#374151]" : "bg-[#F8FAFC] border-[#E5E7EB]";
+  const cardBg = darkMode ? "bg-[#0B1120] border-[#374151]" : "bg-brand-light border-border-subtle";
   const sectionLabel = `text-xs font-bold uppercase tracking-wide mb-2 ${mutedText}`;
 
   return (
@@ -82,20 +82,20 @@ export function HelpSupportModal({ open, onClose, darkMode }: HelpSupportModalPr
             <div className={`rounded-lg border p-3 space-y-2.5 ${cardBg}`}>
               <a
                 href="mailto:support@qed.edu.ph"
-                className={`flex items-center gap-2.5 text-xs font-semibold hover:text-[#6B0000] transition-colors ${
+                className={`flex items-center gap-2.5 text-xs font-semibold hover:text-maroon-light transition-colors ${
                   darkMode ? "text-white" : "text-[#111827]"
                 }`}
               >
-                <Mail size={14} className="shrink-0 text-[#6B0000]" />
+                <Mail size={14} className="shrink-0 text-brand-ink" />
                 support@qed.edu.ph
               </a>
               <a
                 href="tel:+639171234567"
-                className={`flex items-center gap-2.5 text-xs font-semibold hover:text-[#6B0000] transition-colors ${
+                className={`flex items-center gap-2.5 text-xs font-semibold hover:text-maroon-light transition-colors ${
                   darkMode ? "text-white" : "text-[#111827]"
                 }`}
               >
-                <Phone size={14} className="shrink-0 text-[#6B0000]" />
+                <Phone size={14} className="shrink-0 text-brand-ink" />
                 +63 917 123 4567
               </a>
               <p className={`text-xs pt-1 ${mutedText}`}>

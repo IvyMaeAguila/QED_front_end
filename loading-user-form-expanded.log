@@ -1,0 +1,23 @@
+[WebServer] (node:34016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:19184) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\user-form-loading.spec.ts:10:62 › edit user 375 light keeps real form labels and controls (5.0s)
+  ok  2 tests\user-form-loading.spec.ts:10:62 › edit user 375 dark keeps real form labels and controls (1.9s)
+  ok  3 tests\user-form-loading.spec.ts:10:62 › edit user 1280 light keeps real form labels and controls (2.0s)
+  ok  4 tests\user-form-loading.spec.ts:10:62 › edit user 1280 dark keeps real form labels and controls (2.0s)
+  ok  5 tests\user-form-loading.spec.ts:20:1 › edit user failure clears value placeholders and retries accounts (778ms)
+  ok  6 tests\user-form-loading.spec.ts:25:1 › edit user not found waits for the accounts result (675ms)
+  ok  7 tests\user-form-loading.spec.ts:29:62 › new user 375 light renders known fields and workflow immediately (825ms)
+  ok  8 tests\user-form-loading.spec.ts:29:62 › new user 375 dark renders known fields and workflow immediately (802ms)
+  ok  9 tests\user-form-loading.spec.ts:29:62 › new user 1280 light renders known fields and workflow immediately (944ms)
+  ok 10 tests\user-form-loading.spec.ts:29:62 › new user 1280 dark renders known fields and workflow immediately (894ms)
+  ok 11 tests\user-form-loading.spec.ts:36:1 › editing a loaded user preserves the existing endpoint and payload (797ms)
+  ok 12 tests\user-form-loading.spec.ts:43:1 › new principal optional conflict reserves wrapping text then shrinks once without resetting input (1.7s)
+
+  12 passed (21.6s)

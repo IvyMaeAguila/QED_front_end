@@ -1,0 +1,54 @@
+[WebServer] (node:40924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:22696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:13692) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{
+  loaded: [
+          240,        56,
+      72.8125,  75.34375,
+    65.234375, 60.765625,
+    79.015625, 81.765625,
+     70.84375,        56,
+     75.34375, 65.234375,
+           96,        96,
+          128
+  ],
+  pending: [
+          240, 70.234375,
+      72.8125,  75.34375,
+    65.234375, 69.734375,
+    79.015625, 81.765625,
+     70.84375, 69.734375,
+     75.34375, 69.734375,
+           96,        96,
+          128
+  ]
+}
+  x  1 tests\subject-records-loading.spec.ts:43:1 › subject records repeats cached native leaf columns within 2px (10.9s)
+
+
+  1) tests\subject-records-loading.spec.ts:43:1 › subject records repeats cached native leaf columns within 2px 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2
+    Received:    14.234375
+
+      41 | test('subject records auto columns vary with actual learner names',async({browser})=>{const widths:number[][]=[];for(const long of [false,true]){const page=await browser.newPage({baseURL:'http://127.0.0.1:5187'});const release=await fixture(page,false,3,long);await page.goto('/teacher/subjects/1/records');release();const region=page.locator('[data-sk-region="subject-assessment-records"]');await expect(region).toHaveAttribute('data-sk-phase','settled');widths.push(await region.locator('tbody tr[data-sk-region="subject-record-student"]').first().locator('td').evaluateAll(els=>els.map(el=>el.getBoundingClientRect().width)));await page.unroute('**/api/**');await page.unroute('**/api/teacherGrading/**');await page.unroute('**/api/subject/getEffectiveWeights/**');await page.close();}expect(widths[0].some((w,i)=>Math.abs(w-widths[1][i])>1)).toBe(true);});
+      42 |
+    > 43 | test('subject records repeats cached native leaf columns within 2px',async({page})=>{const release=await fixture(page);await page.goto('/teacher/subjects/1/records');release();const region=page.locator('[data-sk-region="subject-assessment-records"]');await expect(region).toHaveAttribute('data-sk-phase','settled');const loaded=await region.locator('tbody tr[data-sk-region="subject-record-student"]').first().locator('td').evaluateAll(els=>els.map(el=>el.getBoundingClientRect().width));for(const term of ['2','1']){release.hold();await page.getByRole('combobox',{name:'Term',exact:true}).selectOption(term);await expect(region).toHaveAttribute('data-sk-phase','revealed');if(term==='1'){const pending=await region.locator('tbody tr[data-sk-region="subject-record-student"]').first().locator('td').evaluateAll(els=>els.map(el=>el.getBoundingClientRect().width));console.log({loaded,pending});expect(pending).toHaveLength(loaded.length);pending.forEach((w,i)=>expect(Math.abs(w-loaded[i])).toBeLessThanOrEqual(2));}release.release();await expect(region).toHaveAttribute('data-sk-phase','settled');}});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ^
+      44 |
+      45 |
+        at forEach (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\subject-records-loading.spec.ts:43:991)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\subject-records-loading.spec.ts:43:946
+
+    Error Context: test-results\subject-records-loading-su-3934a-ive-leaf-columns-within-2px\error-context.md
+
+  1 failed
+    tests\subject-records-loading.spec.ts:43:1 › subject records repeats cached native leaf columns within 2px 

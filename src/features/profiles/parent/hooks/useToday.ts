@@ -1,5 +1,6 @@
 // hooks/useToday.ts
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 
 /**
  * Returns the current Date, and automatically updates when the

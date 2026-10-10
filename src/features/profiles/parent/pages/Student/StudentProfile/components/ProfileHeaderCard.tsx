@@ -1,3 +1,5 @@
+import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
+import { SkeletonAvatar } from "@shared/components/SkeletonLoading";
 // components/ProfileHeaderCard.tsx
 import { useState } from "react";
 import type { ReactNode } from "react";
@@ -7,6 +9,7 @@ import type { StudentProfileData, PersonalInformation } from "../types/types";
 
 interface ProfileHeaderCardProps {
   student: StudentProfileData;
+  loading?: boolean;
   personalInformation?: PersonalInformation | null;
   darkMode: boolean;
   panelBorder: string;
@@ -67,13 +70,14 @@ function EditInput({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       className={`mt-1 w-full rounded-lg border px-2.5 py-1.5 text-sm font-semibold outline-none transition focus:ring-2 focus:ring-[#7A1212]/40 ${
-        darkMode ? "border-white/10 bg-white/5 text-white" : "border-[#6B0000]/20 bg-white text-[#111827]"
+        darkMode ? "border-white/10 bg-white/5 text-white" : "border-maroon/20 bg-white text-[#111827]"
       }`}
     />
   );
 }
 
 export function ProfileHeaderCard({
+  loading = false,
   student,
   personalInformation: personalInformationProp,
   darkMode,
@@ -113,25 +117,24 @@ export function ProfileHeaderCard({
   const orNotSpecified = (v?: string | null) =>
     v && v.trim() ? v : <span className="font-medium text-[#9CA3AF]">Not specified</span>;
 
-  const base = darkMode ? "#4A0000" : "#6B0000";
-  const end = darkMode ? "#7A1212" : "#9C1414";
+  const base = darkMode ? "var(--color-maroon)" : "var(--color-maroon)";
 
   return (
     <div
       className={`overflow-hidden rounded-2xl border p-6 shadow-sm sm:p-8 ${panelBorder}`}
       style={{
-        backgroundImage: `radial-gradient(circle at 90% 0%, rgba(255,255,255,0.12), transparent 45%), linear-gradient(135deg, ${base} 0%, ${end} 100%)`,
+        backgroundColor: base,
       }}
     >
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(240px,300px)_1fr] lg:gap-10">
         {/* Left: identity */}
         <div className="flex flex-col items-center gap-4 text-center lg:items-start lg:justify-center lg:text-left">
-          <div className="h-36 w-36 overflow-hidden rounded-full bg-white/90 ring-4 ring-white/25 sm:h-40 sm:w-40">
-            <StudentAvatar
+          <div data-sk-region="parent-profile-avatar" className="sk-surface-profile-avatar h-36 w-36 overflow-hidden rounded-full bg-white/90 ring-4 ring-white/25 sm:h-40 sm:w-40">
+            {loading && !student.gender ? <SkeletonAvatar className="h-full w-full" /> : <StudentAvatar
               gender={student.gender}
               name={fullDisplayName}
               className="h-full w-full rounded-full object-cover"
-            />
+            />}
           </div>
 
           <div>
@@ -160,7 +163,7 @@ export function ProfileHeaderCard({
                   type="button"
                   onClick={handleSave}
                   disabled={isSaving}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-white px-3 py-1.5 text-xs font-semibold text-[#6B0000] transition hover:bg-white/90 disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-white px-3 py-1.5 text-xs font-semibold text-brand-ink transition hover:bg-white/90 disabled:opacity-50"
                 >
                   <Save className="h-3.5 w-3.5" />
                   {isSaving ? "Saving..." : "Save Changes"}
@@ -169,6 +172,7 @@ export function ProfileHeaderCard({
             ) : (
               <button
                 type="button"
+                disabled={loading}
                 onClick={startEdit}
                 className="inline-flex items-center gap-1.5 rounded-xl border border-white/30 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-white/20"
               >
@@ -180,13 +184,13 @@ export function ProfileHeaderCard({
 
           <div className="grid flex-1 grid-cols-1 auto-rows-fr gap-3 sm:grid-cols-2">
             <InfoTile label="Student ID" darkMode={darkMode}>
-              {orNotSpecified(student.studentId)}
+              {loading ? <SkeletonParagraph field="parent-profile-studentId" typical={2} width="100%" /> : orNotSpecified(student.studentId)}
             </InfoTile>
             <InfoTile label="LRN" darkMode={darkMode}>
-              {orNotSpecified(student.lrn)}
+              {loading ? <SkeletonParagraph field="parent-profile-lrn" typical={2} width="100%" /> : orNotSpecified(student.lrn)}
             </InfoTile>
             <InfoTile label="Gender" darkMode={darkMode}>
-              {orNotSpecified(student.gender)}
+              {loading ? <SkeletonParagraph field="parent-profile-gender" typical={2} width="100%" /> : orNotSpecified(student.gender)}
             </InfoTile>
             <InfoTile label="Current class" darkMode={darkMode}>
               {orNotSpecified(personalInformation.currentClass ?? subtitle)}
@@ -195,14 +199,14 @@ export function ProfileHeaderCard({
               {isEditing ? (
                 <EditInput type="date" value={dateOfBirth} onChange={setDateOfBirth} darkMode={darkMode} />
               ) : (
-                orNotSpecified(formatDate(personalInformation.dateOfBirth))
+                loading ? <SkeletonParagraph field="parent-profile-date" typical={2} width="100%" /> : orNotSpecified(formatDate(personalInformation.dateOfBirth))
               )}
             </InfoTile>
             <InfoTile label="Residential address" darkMode={darkMode} editing={isEditing}>
               {isEditing ? (
                 <EditInput type="text" value={residentialAddress} onChange={setResidentialAddress} darkMode={darkMode} />
               ) : (
-                orNotSpecified(personalInformation.residentialAddress)
+                loading ? <SkeletonParagraph field="parent-profile-address" typical={2} width="100%" /> : <span data-sk-field="parent-profile-address">{orNotSpecified(personalInformation.residentialAddress)}</span>
               )}
             </InfoTile>
           </div>

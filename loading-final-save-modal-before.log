@@ -1,0 +1,172 @@
+[WebServer] (node:35596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:17356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 5 tests using 1 worker
+
+(node:24548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/5] tests\student-form-loading.spec.ts:35:1 › student edit retains the existing update endpoint and payload
+  1) tests\student-form-loading.spec.ts:35:1 › student edit retains the existing update endpoint and payload 
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator:  locator('main input').first()
+    Expected: "A23-0001"
+    Received: ""
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveValue" locator('main input').first() with timeout 5000ms
+      - waiting for locator('main input').first()
+        9 × locator resolved to <input value="" placeholder="A23-0001" class="w-full h-10 px-3 rounded-lg border text-sm font-semibold outline-none transition-colors bg-brand-light border-border-subtle text-[#111827] focus:border-maroon-light"/>
+          - unexpected value ""
+
+
+      36 |  const release=await fixture(page,false);let payload:unknown;let requests=0;let finishSave!:()=>void;const saveGate=new Promise<void>(resolve=>finishSave=resolve);
+      37 |  await page.route('**/api/student/updateStudent/1',async route=>{requests++;payload=route.request().postDataJSON();await saveGate;await route.fulfill({json:{success:true}});});
+    > 38 |  await page.goto('/admin/students/1/edit');release();await expect(page.locator('main input').first()).toHaveValue('A23-0001');await page.getByPlaceholder('Juan').fill('Alicia');
+         |                                                                                                       ^
+      39 |  await page.getByRole('button',{name:'Continue',exact:true}).click();await page.getByRole('button',{name:'Continue',exact:true}).click();
+      40 |  await expect(page.getByRole('heading',{name:'Review student record',exact:true})).toBeVisible();
+      41 |  await page.evaluate(()=>new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve()))));
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\student-form-loading.spec.ts:38:103
+
+    Error Context: test-results\student-form-loading-stude-7653e-update-endpoint-and-payload\error-context.md
+
+
+(node:17180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[2/5] tests\subject-edit-modal-loading.spec.ts:6:62 › edit subject template 375 light settles errors and retries
+  2) tests\subject-edit-modal-loading.spec.ts:6:62 › edit subject template 375 light settles errors and retries 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: locator('[data-sk-region="edit-subject-template"]')
+    Expected: "revealed"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" locator('[data-sk-region="edit-subject-template"]') with timeout 5000ms
+      - waiting for locator('[data-sk-region="edit-subject-template"]')
+
+
+      15 |   await page.route('**/getActiveGradeTemplate/*',async route=>{requests++;await gate;await route.fulfill({status:failed?500:200,json:failed?{success:false,message:'Template unavailable'}:{success:true,data:null}});});
+      16 |   await page.goto('/admin/subjects');await page.getByRole('button',{name:'Edit',exact:true}).first().click();
+    > 17 |   const region=page.locator('[data-sk-region="edit-subject-template"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+         |                                                                                              ^
+      18 |   finish();await expect(region.getByRole('alert')).toBeVisible();await expect(region.locator('[data-sk-primitive]')).toHaveCount(0);
+      19 |   const beforeRetry=requests;expect(beforeRetry).toBeGreaterThan(0);failed=false;await region.getByRole('button',{name:'Retry',exact:true}).click();await expect(region).toHaveAttribute('data-sk-phase','settled');await expect(region.getByRole('alert')).toHaveCount(0);expect(requests).toBe(beforeRetry+1);
+      20 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\subject-edit-modal-loading.spec.ts:17:94
+
+    Error Context: test-results\subject-edit-modal-loading-e8108--settles-errors-and-retries\error-context.md
+
+
+(node:36036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[3/5] tests\subject-edit-modal-loading.spec.ts:6:62 › edit subject template 375 dark settles errors and retries
+  3) tests\subject-edit-modal-loading.spec.ts:6:62 › edit subject template 375 dark settles errors and retries 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: locator('[data-sk-region="edit-subject-template"]')
+    Expected: "revealed"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" locator('[data-sk-region="edit-subject-template"]') with timeout 5000ms
+      - waiting for locator('[data-sk-region="edit-subject-template"]')
+
+
+      15 |   await page.route('**/getActiveGradeTemplate/*',async route=>{requests++;await gate;await route.fulfill({status:failed?500:200,json:failed?{success:false,message:'Template unavailable'}:{success:true,data:null}});});
+      16 |   await page.goto('/admin/subjects');await page.getByRole('button',{name:'Edit',exact:true}).first().click();
+    > 17 |   const region=page.locator('[data-sk-region="edit-subject-template"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+         |                                                                                              ^
+      18 |   finish();await expect(region.getByRole('alert')).toBeVisible();await expect(region.locator('[data-sk-primitive]')).toHaveCount(0);
+      19 |   const beforeRetry=requests;expect(beforeRetry).toBeGreaterThan(0);failed=false;await region.getByRole('button',{name:'Retry',exact:true}).click();await expect(region).toHaveAttribute('data-sk-phase','settled');await expect(region.getByRole('alert')).toHaveCount(0);expect(requests).toBe(beforeRetry+1);
+      20 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\subject-edit-modal-loading.spec.ts:17:94
+
+    Error Context: test-results\subject-edit-modal-loading-2c5cb--settles-errors-and-retries\error-context.md
+
+
+(node:808) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[4/5] tests\subject-edit-modal-loading.spec.ts:6:62 › edit subject template 1280 light settles errors and retries
+  4) tests\subject-edit-modal-loading.spec.ts:6:62 › edit subject template 1280 light settles errors and retries 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: locator('[data-sk-region="edit-subject-template"]')
+    Expected: "revealed"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" locator('[data-sk-region="edit-subject-template"]') with timeout 5000ms
+      - waiting for locator('[data-sk-region="edit-subject-template"]')
+
+
+      15 |   await page.route('**/getActiveGradeTemplate/*',async route=>{requests++;await gate;await route.fulfill({status:failed?500:200,json:failed?{success:false,message:'Template unavailable'}:{success:true,data:null}});});
+      16 |   await page.goto('/admin/subjects');await page.getByRole('button',{name:'Edit',exact:true}).first().click();
+    > 17 |   const region=page.locator('[data-sk-region="edit-subject-template"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+         |                                                                                              ^
+      18 |   finish();await expect(region.getByRole('alert')).toBeVisible();await expect(region.locator('[data-sk-primitive]')).toHaveCount(0);
+      19 |   const beforeRetry=requests;expect(beforeRetry).toBeGreaterThan(0);failed=false;await region.getByRole('button',{name:'Retry',exact:true}).click();await expect(region).toHaveAttribute('data-sk-phase','settled');await expect(region.getByRole('alert')).toHaveCount(0);expect(requests).toBe(beforeRetry+1);
+      20 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\subject-edit-modal-loading.spec.ts:17:94
+
+    Error Context: test-results\subject-edit-modal-loading-510ca--settles-errors-and-retries\error-context.md
+
+
+(node:18844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[5/5] tests\subject-edit-modal-loading.spec.ts:6:62 › edit subject template 1280 dark settles errors and retries
+  5) tests\subject-edit-modal-loading.spec.ts:6:62 › edit subject template 1280 dark settles errors and retries 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: locator('[data-sk-region="edit-subject-template"]')
+    Expected: "revealed"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" locator('[data-sk-region="edit-subject-template"]') with timeout 5000ms
+      - waiting for locator('[data-sk-region="edit-subject-template"]')
+
+
+      15 |   await page.route('**/getActiveGradeTemplate/*',async route=>{requests++;await gate;await route.fulfill({status:failed?500:200,json:failed?{success:false,message:'Template unavailable'}:{success:true,data:null}});});
+      16 |   await page.goto('/admin/subjects');await page.getByRole('button',{name:'Edit',exact:true}).first().click();
+    > 17 |   const region=page.locator('[data-sk-region="edit-subject-template"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+         |                                                                                              ^
+      18 |   finish();await expect(region.getByRole('alert')).toBeVisible();await expect(region.locator('[data-sk-primitive]')).toHaveCount(0);
+      19 |   const beforeRetry=requests;expect(beforeRetry).toBeGreaterThan(0);failed=false;await region.getByRole('button',{name:'Retry',exact:true}).click();await expect(region).toHaveAttribute('data-sk-phase','settled');await expect(region.getByRole('alert')).toHaveCount(0);expect(requests).toBe(beforeRetry+1);
+      20 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\subject-edit-modal-loading.spec.ts:17:94
+
+    Error Context: test-results\subject-edit-modal-loading-78dba--settles-errors-and-retries\error-context.md
+
+
+  5 failed
+    tests\student-form-loading.spec.ts:35:1 › student edit retains the existing update endpoint and payload 
+    tests\subject-edit-modal-loading.spec.ts:6:62 › edit subject template 375 light settles errors and retries 
+    tests\subject-edit-modal-loading.spec.ts:6:62 › edit subject template 375 dark settles errors and retries 
+    tests\subject-edit-modal-loading.spec.ts:6:62 › edit subject template 1280 light settles errors and retries 
+    tests\subject-edit-modal-loading.spec.ts:6:62 › edit subject template 1280 dark settles errors and retries 

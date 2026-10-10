@@ -1,0 +1,121 @@
+[WebServer] (node:25516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:21700) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 2 tests using 1 worker
+
+(node:25756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/2] tests\design-contract.spec.ts:6:1 › skeleton CSS has token-only colors
+  1) tests\design-contract.spec.ts:6:1 › skeleton CSS has token-only colors ────────────────────────
+
+    Error: the active primitive must use the audited token stylesheet
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected substring: "sk-primitive"
+    Received string:    "import { twMerge } from \"tailwind-merge\";···
+    export function Skeleton({ className = \"\" }) {·
+      return (·
+        <div·
+          className={twMerge(\"animate-pulse rounded-md bg-gray-200 dark:bg-gray-250\", className)}·
+        />·
+      );·
+    }···
+    "
+
+       9 |   for (const declaration of css.matchAll(/(?:background|color|border-color)\s*:\s*([^;}]+)/g)) expect(declaration[1]).toMatch(/var\(--sk-/);
+      10 |   const primitive = fs.readFileSync("src/shared/components/SkeletonLoading.tsx", "utf8");
+    > 11 |   expect(primitive, "the active primitive must use the audited token stylesheet").toContain("sk-primitive");
+         |                                                                                   ^
+      12 |   expect(primitive).not.toMatch(/animate-pulse|bg-(?:gray|slate|zinc|neutral)-\d+/);
+      13 | });
+      14 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-contract.spec.ts:11:83
+
+    Error Context: test-results\design-contract-skeleton-CSS-has-token-only-colors\error-context.md
+
+
+(node:12784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[2/2] tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition
+  2) tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition 
+
+    Error: registered page compositions must be connected to the actual lazy router
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 48
+
+    - Array []
+    + Array [
+    +   "HolisticOverviewPage",
+    +   "TeacherAttendanceRecordsPage",
+    +   "HolisticDomainTrendsPage",
+    +   "PrincipalGradeSheetPage",
+    +   "ClassFormPage",
+    +   "AddSubjectPage",
+    +   "StudentFormPage",
+    +   "UserFormPage",
+    +   "SubjectDetailPage",
+    +   "AnalyticsPage",
+    +   "StudentDetailPage",
+    +   "UserViewPage",
+    +   "ClassViewPage",
+    +   "AdminSubjectDetailPage",
+    +   "TopicSupportChoice",
+    +   "CoursewareView",
+    +   "TeacherAttendancePage",
+    +   "PrincipalGradebooksPage",
+    +   "AdvisoryRosterPage",
+    +   "SubjectClassListPage",
+    +   "LandingPage",
+    +   "LoginPanel",
+    +   "HelpSupportPage",
+    +   "ParentDashboardHome",
+    +   "PrincipalStudentsPage",
+    +   "CalendarPage",
+    +   "CalendarPageView",
+    +   "TeacherSchedulePage",
+    +   "AcademicYearPage",
+    +   "ManageSubjectsPage",
+    +   "StudentRecordsPage",
+    +   "PrincipalTeachersPage",
+    +   "EnrolledChildrenPage",
+    +   "AdminDashboardHome",
+    +   "ClassesPage",
+    +   "UserManagementPage",
+    +   "SubjectsPage",
+    +   "TeacherDashboardHome",
+    +   "StudentHolisticProfilePage",
+    +   "PrincipalDashboardHome",
+    +   "GradesPage",
+    +   "ClassListPage",
+    +   "HolisticPerformanceAnalyticsPage",
+    +   "SubjectRecordsPage",
+    +   "ChildDetailPage",
+    +   "PetQuizPage",
+    + ]
+
+      47 |   }
+      48 |   checkConnection(source);
+    > 49 |   expect([...new Set(Object.values(routeSkeletons).map(entry => entry.component))].filter(component => !connected.has(component)), "registered page compositions must be connected to the actual lazy router").toEqual([]);
+         |                                                                                                                                                                                                                ^
+      50 | });
+      51 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\route-coverage.spec.ts:49:208
+
+    Error Context: test-results\route-coverage-every-real--4a050-its-own-loading-composition\error-context.md
+
+
+  2 failed
+    tests\design-contract.spec.ts:6:1 › skeleton CSS has token-only colors ─────────────────────────
+    tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition ─

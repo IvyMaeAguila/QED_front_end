@@ -1,0 +1,243 @@
+
+[WebServer] (node:21320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 8 tests using 1 worker
+
+(node:18496) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/8] tests\design-contract.spec.ts:6:1 › skeleton CSS has token-only colors
+[2/8] tests\design-contract.spec.ts:12:40 › light: pixel area survives all four shimmer phases on every surface
+  1) tests\design-contract.spec.ts:12:40 › light: pixel area survives all four shimmer phases on every surface 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: light-card: hard interior edge at 2,5
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 8
+    Received:    16
+
+       at design-pixels.ts:37
+
+      35 |       const index = y * frame.width + x;
+      36 |       if (![index - 1, index, index + 1].every(pixel => mask[pixel])) continue;
+    > 37 |       const jump = Math.max(...[0, 1, 2].map(channel => Math.abs(frame.data[index * 4 + channel] - frame.data[(index - 1) * 4 + channel])));
+         |                                                                ^
+      38 |       maximumJump = Math.max(maximumJump, jump);
+      39 |     }
+      40 |     expect(maximumJump, `${name}: hard interior sweep edge`).toBeLessThanOrEqual(8);
+        at checkShimmerPixels (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-pixels.ts:37:64)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-contract.spec.ts:14:82
+
+    Error Context: test-results\design-contract-light-pixe-82e97-mer-phases-on-every-surface\error-context.md
+
+
+
+(node:30196) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[3/8] tests\design-contract.spec.ts:12:40 › dark: pixel area survives all four shimmer phases on every surface
+  2) tests\design-contract.spec.ts:12:40 › dark: pixel area survives all four shimmer phases on every surface 
+
+    Error: dark-page: hard interior edge at 2,5
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 8
+    Received:    21
+
+       at design-pixels.ts:37
+
+      35 |       const index = y * frame.width + x;
+      36 |       if (![index - 1, index, index + 1].every(pixel => mask[pixel])) continue;
+    > 37 |       const jump = Math.max(...[0, 1, 2].map(channel => Math.abs(frame.data[index * 4 + channel] - frame.data[(index - 1) * 4 + channel])));
+         |                                                                ^
+      38 |       maximumJump = Math.max(maximumJump, jump);
+      39 |     }
+      40 |     expect(maximumJump, `${name}: hard interior sweep edge`).toBeLessThanOrEqual(8);
+        at checkShimmerPixels (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-pixels.ts:37:64)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-contract.spec.ts:14:82
+
+    Error Context: test-results\design-contract-dark-pixel-61479-mer-phases-on-every-surface\error-context.md
+
+
+(node:13672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[4/8] tests\design-contract.spec.ts:17:68 › teacher 375 light: static content and spinner guard
+  3) tests\design-contract.spec.ts:17:68 › teacher 375 light: static content and spinner guard ─────
+
+    Error: data-loading spinner/text outside preserved actions
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 9
+
+    - Array []
+    + Array [
+    +   "<div class=\"qed-splash\"><div class=\"qed-wrap\" role=\"status\" aria-live=\"polite\" aria-label=\"Loading\"><style>
+    + .qed-wrap {
+    +   --qed-maroon: #7a1010;
+    +   --qed-maroon-dim: #7a1010aa;
+    +   --qed-ink: #3a2c2c;
+    +   display: flex;
+    +   flex-direction: column;",
+    + ]
+
+       at design-pixels.ts:58
+
+      56 |     const patterns = [...document.querySelectorAll('[role="progressbar"], .animate-spin, .qed-loader, .qed-splash, .MuiCircularProgress-root, .ant-spin')].filter(element => visible(element) && !actionable(element));
+      57 |     const loadingText = [...document.querySelectorAll("body *")].filter(element => visible(element) && !actionable(element) && !element.closest('[role="status"].sk-status') && [...element.childNodes].some(node => node.nodeType === Node.TEXT_NODE && /^\s*loading(?:\s+[^.]+)?(?:\.{3}|…)\s*$/i.test(node.textContent ?? "")));
+    > 58 |     return [...patterns, ...loadingText].map(element => element.outerHTML.slice(0, 240));
+         |                                                                           ^
+      59 |   });
+      60 |   expect(failures, "data-loading spinner/text outside preserved actions").toEqual([]);
+      61 | }
+        at assertNoDataSpinner (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-pixels.ts:58:75)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-contract.spec.ts:23:3
+
+    Error Context: test-results\design-contract-teacher-37-0b5fa-c-content-and-spinner-guard\error-context.md
+
+
+
+(node:39596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[5/8] tests\design-contract.spec.ts:17:68 › teacher 375 dark: static content and spinner guard
+  4) tests\design-contract.spec.ts:17:68 › teacher 375 dark: static content and spinner guard ──────
+
+    Error: data-loading spinner/text outside preserved actions
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 9
+
+    - Array []
+    + Array [
+    +   "<div class=\"qed-splash\"><div class=\"qed-wrap\" role=\"status\" aria-live=\"polite\" aria-label=\"Loading\"><style>
+    + .qed-wrap {
+    +   --qed-maroon: #7a1010;
+    +   --qed-maroon-dim: #7a1010aa;
+    +   --qed-ink: #3a2c2c;
+    +   display: flex;
+    +   flex-direction: column;",
+    + ]
+
+       at design-pixels.ts:58
+
+      56 |     const patterns = [...document.querySelectorAll('[role="progressbar"], .animate-spin, .qed-loader, .qed-splash, .MuiCircularProgress-root, .ant-spin')].filter(element => visible(element) && !actionable(element));
+      57 |     const loadingText = [...document.querySelectorAll("body *")].filter(element => visible(element) && !actionable(element) && !element.closest('[role="status"].sk-status') && [...element.childNodes].some(node => node.nodeType === Node.TEXT_NODE && /^\s*loading(?:\s+[^.]+)?(?:\.{3}|…)\s*$/i.test(node.textContent ?? "")));
+    > 58 |     return [...patterns, ...loadingText].map(element => element.outerHTML.slice(0, 240));
+         |                                                                           ^
+      59 |   });
+      60 |   expect(failures, "data-loading spinner/text outside preserved actions").toEqual([]);
+      61 | }
+        at assertNoDataSpinner (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-pixels.ts:58:75)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-contract.spec.ts:23:3
+
+    Error Context: test-results\design-contract-teacher-37-23d0e-c-content-and-spinner-guard\error-context.md
+
+
+(node:23376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[6/8] tests\design-contract.spec.ts:17:68 › teacher 1280 light: static content and spinner guard
+  5) tests\design-contract.spec.ts:17:68 › teacher 1280 light: static content and spinner guard ────
+
+    Error: data-loading spinner/text outside preserved actions
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 9
+
+    - Array []
+    + Array [
+    +   "<div class=\"qed-splash\"><div class=\"qed-wrap\" role=\"status\" aria-live=\"polite\" aria-label=\"Loading\"><style>
+    + .qed-wrap {
+    +   --qed-maroon: #7a1010;
+    +   --qed-maroon-dim: #7a1010aa;
+    +   --qed-ink: #3a2c2c;
+    +   display: flex;
+    +   flex-direction: column;",
+    + ]
+
+       at design-pixels.ts:58
+
+      56 |     const patterns = [...document.querySelectorAll('[role="progressbar"], .animate-spin, .qed-loader, .qed-splash, .MuiCircularProgress-root, .ant-spin')].filter(element => visible(element) && !actionable(element));
+      57 |     const loadingText = [...document.querySelectorAll("body *")].filter(element => visible(element) && !actionable(element) && !element.closest('[role="status"].sk-status') && [...element.childNodes].some(node => node.nodeType === Node.TEXT_NODE && /^\s*loading(?:\s+[^.]+)?(?:\.{3}|…)\s*$/i.test(node.textContent ?? "")));
+    > 58 |     return [...patterns, ...loadingText].map(element => element.outerHTML.slice(0, 240));
+         |                                                                           ^
+      59 |   });
+      60 |   expect(failures, "data-loading spinner/text outside preserved actions").toEqual([]);
+      61 | }
+        at assertNoDataSpinner (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-pixels.ts:58:75)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-contract.spec.ts:23:3
+
+    Error Context: test-results\design-contract-teacher-12-8a905-c-content-and-spinner-guard\error-context.md
+
+
+(node:32680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[7/8] tests\design-contract.spec.ts:17:68 › teacher 1280 dark: static content and spinner guard
+  6) tests\design-contract.spec.ts:17:68 › teacher 1280 dark: static content and spinner guard ─────
+
+    Error: data-loading spinner/text outside preserved actions
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 9
+
+    - Array []
+    + Array [
+    +   "<div class=\"qed-splash\"><div class=\"qed-wrap\" role=\"status\" aria-live=\"polite\" aria-label=\"Loading\"><style>
+    + .qed-wrap {
+    +   --qed-maroon: #7a1010;
+    +   --qed-maroon-dim: #7a1010aa;
+    +   --qed-ink: #3a2c2c;
+    +   display: flex;
+    +   flex-direction: column;",
+    + ]
+
+       at design-pixels.ts:58
+
+      56 |     const patterns = [...document.querySelectorAll('[role="progressbar"], .animate-spin, .qed-loader, .qed-splash, .MuiCircularProgress-root, .ant-spin')].filter(element => visible(element) && !actionable(element));
+      57 |     const loadingText = [...document.querySelectorAll("body *")].filter(element => visible(element) && !actionable(element) && !element.closest('[role="status"].sk-status') && [...element.childNodes].some(node => node.nodeType === Node.TEXT_NODE && /^\s*loading(?:\s+[^.]+)?(?:\.{3}|…)\s*$/i.test(node.textContent ?? "")));
+    > 58 |     return [...patterns, ...loadingText].map(element => element.outerHTML.slice(0, 240));
+         |                                                                           ^
+      59 |   });
+      60 |   expect(failures, "data-loading spinner/text outside preserved actions").toEqual([]);
+      61 | }
+        at assertNoDataSpinner (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-pixels.ts:58:75)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-contract.spec.ts:23:3
+
+    Error Context: test-results\design-contract-teacher-12-d5bb6-c-content-and-spinner-guard\error-context.md
+
+
+(node:33952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[8/8] tests\design-contract.spec.ts:32:1 › negative control: shine blending into the surface is caught by the pixel guard
+  6 failed
+    tests\design-contract.spec.ts:12:40 › light: pixel area survives all four shimmer phases on every surface 
+    tests\design-contract.spec.ts:12:40 › dark: pixel area survives all four shimmer phases on every surface 
+    tests\design-contract.spec.ts:17:68 › teacher 375 light: static content and spinner guard ──────
+    tests\design-contract.spec.ts:17:68 › teacher 375 dark: static content and spinner guard ───────
+    tests\design-contract.spec.ts:17:68 › teacher 1280 light: static content and spinner guard ─────
+    tests\design-contract.spec.ts:17:68 › teacher 1280 dark: static content and spinner guard ──────
+  2 passed (1.0m)

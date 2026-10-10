@@ -2,7 +2,7 @@
 // import { User, ChevronDown, Mail, Shield, Pencil, Check } from "lucide-react";
 // import { useSettings } from "../../../admin/pages/settings/context/SettingsContext";
 
-// const ACCENT = "#6B0000";
+// const ACCENT = "var(--color-maroon)";
 
 // interface ParentsProfile {
 //   name: string;
@@ -41,8 +41,8 @@
 //   const mutedText = darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]";
 //   const inputClasses = `w-full h-9 px-2.5 rounded-lg border text-xs font-semibold outline-none transition-colors ${
 //     darkMode
-//       ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#6B0000]"
-//       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#6B0000]"
+//       ? "bg-[#0B1120] border-[#374151] text-white focus:border-maroon-light"
+//       : "bg-brand-light border-border-subtle text-[#111827] focus:border-maroon-light"
 //   }`;
 //   const dropdownLabel = `text-xs font-bold uppercase tracking-wide mb-1.5 ${mutedText}`;
 
@@ -75,10 +75,10 @@
 //       >
 //         <div
 //           className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ring-2 ring-transparent transition-all duration-200 ${
-//             darkMode ? "bg-[#374151] group-hover:ring-[#6B0000]/40" : "bg-[#E5E5E5] group-hover:ring-[#6B0000]/25"
+//             darkMode ? "bg-[#374151] group-hover:ring-maroon-light/40" : "bg-[#E5E5E5] group-hover:ring-maroon-light/25"
 //           }`}
 //         >
-//           <User size={17} className="text-[#6B0000]" />
+//           <User size={17} className="text-brand-ink" />
 //         </div>
 
 //         <div className="hidden lg:block leading-tight text-left">
@@ -97,7 +97,7 @@
 //       {open && (
 //         <div
 //           className={`absolute right-0 top-14 z-30 w-72 rounded-2xl border shadow-lg overflow-hidden ${
-//             darkMode ? "bg-[#111827] border-[#374151]" : "bg-white border-[#E5E7EB]"
+//             darkMode ? "bg-[#111827] border-[#374151]" : "bg-white border-border-subtle"
 //           }`}
 //         >
 //           <div className="px-4 py-4 flex items-center gap-3" style={{ background: ACCENT }}>
@@ -131,7 +131,7 @@
 //                     className={`flex-1 h-9 rounded-lg text-xs font-bold border transition-colors ${
 //                       darkMode
 //                         ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-//                         : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+//                         : "border-border-subtle text-[#374151] hover:bg-brand-light"
 //                     }`}
 //                   >
 //                     Cancel

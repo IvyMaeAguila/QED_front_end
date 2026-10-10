@@ -14,7 +14,7 @@
 // } from "../types/Grading";
 // import type { SubjectDetailTab } from "./TabNav";
 
-// const ACCENT = "#6B0000";
+// const ACCENT = "var(--color-maroon)";
 // const WEEKDAY_LETTERS = ["S", "M", "T", "W", "T", "F", "S"];
 
 // interface RecordsModalProps {
@@ -99,13 +99,13 @@
 //     setViewDate(new Date());
 //   }
 
-//   const stickyRightBg = darkMode ? "bg-[#2A1A18]" : "bg-white";
+//   const stickyRightBg = darkMode ? "bg-panel-dark" : "bg-white";
 
 //   return (
 //     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={onClose}>
 //       <div
 //         className={`w-full ${tab === "attendance" ? "max-w-4xl" : "max-w-2xl"} max-h-[85vh] rounded-2xl overflow-hidden shadow-xl flex flex-col ${
-//           darkMode ? "bg-[#2A1A18]" : "bg-white"
+//           darkMode ? "bg-panel-dark" : "bg-white"
 //         }`}
 //         onClick={(e) => e.stopPropagation()}
 //       >
@@ -143,7 +143,7 @@
 //                 onClick={goToPrevMonth}
 //                 aria-label="Previous month"
 //                 className={`flex h-7 w-7 items-center justify-center rounded-lg transition-colors ${
-//                   darkMode ? "hover:bg-white/10" : "hover:bg-[#F6F7FB]"
+//                   darkMode ? "hover:bg-white/10" : "hover:bg-brand-light"
 //                 } ${textMuted}`}
 //               >
 //                 <ChevronLeft size={14} />
@@ -151,7 +151,7 @@
 //               <button
 //                 onClick={goToToday}
 //                 className={`min-w-28 rounded-lg px-2 py-1 text-center text-xs font-extrabold transition-colors ${
-//                   darkMode ? "hover:bg-white/10" : "hover:bg-[#F6F7FB]"
+//                   darkMode ? "hover:bg-white/10" : "hover:bg-brand-light"
 //                 } ${textPrimary}`}
 //               >
 //                 {monthLabel(viewDate)}
@@ -160,7 +160,7 @@
 //                 onClick={goToNextMonth}
 //                 aria-label="Next month"
 //                 className={`flex h-7 w-7 items-center justify-center rounded-lg transition-colors ${
-//                   darkMode ? "hover:bg-white/10" : "hover:bg-[#F6F7FB]"
+//                   darkMode ? "hover:bg-white/10" : "hover:bg-brand-light"
 //                 } ${textMuted}`}
 //               >
 //                 <ChevronRight size={14} />
@@ -173,10 +173,10 @@
 //           {tab === "attendance" && (
 //             <table className="w-full min-w-max text-sm">
 //               <thead>
-//                 <tr className={darkMode ? "bg-white/3" : "bg-[#F8FAFC]"}>
+//                 <tr className={darkMode ? "bg-white/3" : "bg-brand-light"}>
 //                   <th
 //                     className={`sticky left-0 z-20 min-w-48 px-4 py-2.5 text-left text-xs font-extrabold uppercase tracking-wider ${
-//                       darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
+//                       darkMode ? "bg-panel-dark" : "bg-brand-light"
 //                     } ${textMuted}`}
 //                   >
 //                     Student
@@ -198,7 +198,7 @@
 //                   })}
 //                   <th
 //                     className={`sticky right-0 z-20 min-w-24 border-l px-3 py-2.5 text-center text-xs font-extrabold uppercase tracking-wider ${panelBorder} ${
-//                       darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
+//                       darkMode ? "bg-panel-dark" : "bg-brand-light"
 //                     } ${textMuted}`}
 //                   >
 //                     Present / School Days
@@ -211,7 +211,7 @@
 //                   const rowStripe = index % 2 === 1 ? (darkMode ? "bg-white/[0.015]" : "bg-black/[0.012]") : "";
 //                   return (
 //                     <tr key={student.id} className={`border-t ${panelBorder} ${rowStripe}`}>
-//                       <td className={`sticky left-0 z-10 px-4 py-2 ${darkMode ? "bg-[#2A1A18]" : "bg-white"}`}>
+//                       <td className={`sticky left-0 z-10 px-4 py-2 ${darkMode ? "bg-panel-dark" : "bg-white"}`}>
 //                         <span className={`text-xs font-bold ${textPrimary}`}>{student.name}</span>
 //                       </td>
 //                       {days.map(({ iso, dayOfWeek }) => {
@@ -226,8 +226,8 @@
 //                               }`}
 //                               style={
 //                                 meta
-//                                   ? { backgroundColor: darkMode ? `${meta.color}25` : meta.bg, color: meta.color }
-//                                   : { backgroundColor: darkMode ? "#ffffff10" : "#F3F4F6", color: "#9CA3AF" }
+//                                   ? { backgroundColor: darkMode ? `color-mix(in srgb, ${meta.color} 14.51%, transparent)` : meta.bg, color: meta.color }
+//                                   : { backgroundColor: darkMode ? "#ffffff10" : "var(--surface-page)", color: "#9CA3AF" }
 //                               }
 //                             >
 //                               {status ?? "·"}
@@ -236,7 +236,7 @@
 //                         );
 //                       })}
 //                       <td className={`sticky right-0 z-10 border-l px-3 py-2 text-center ${panelBorder} ${stickyRightBg}`}>
-//                         <span className="text-xs font-black tabular-nums" style={{ color: ACCENT }}>
+//                         <span className="text-xs font-black tabular-nums" style={{ color: "var(--brand-ink)" }}>
 //                           {present}/{total}
 //                         </span>
 //                       </td>
@@ -281,7 +281,7 @@
 //                       <p className={`text-xs font-semibold mt-0.5 ${textMuted}`}>
 //                         Topic: {item.topic} &middot; {item.format} &middot; out of {item.maxItems}
 //                       </p>
-//                       <p className={`text-xs font-bold mt-1.5`} style={{ color: ACCENT }}>
+//                       <p className={`text-xs font-bold mt-1.5`} style={{ color: "var(--brand-ink)" }}>
 //                         Class average: {avg !== null ? avg.toFixed(1) : "No scores yet"}
 //                       </p>
 //                     </div>

@@ -1,0 +1,42 @@
+[WebServer] (node:17020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:22896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:19468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\removed-loading-guard.spec.ts:9:1 › removed splash and duplicate advisory skeleton cannot be reintroduced
+  1) tests\removed-loading-guard.spec.ts:9:1 › removed splash and duplicate advisory skeleton cannot be reintroduced 
+
+    Error: obsolete data loaders must not be imported, used, or restyled
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "src\\shared\\loading\\skeleton.css",
+    + ]
+
+      12 |     return /\b(?:QedLoader|QedSplash|AdvisorySkeleton|DashboardSkeleton|QuizLoading)\b|\.qed-(?:splash|spinner)(?:\b|-)/.test(source) ? [file] : [];
+      13 |   });
+    > 14 |   expect(failures, "obsolete data loaders must not be imported, used, or restyled").toEqual([]);
+         |                                                                                     ^
+      15 |   for (const file of ["src/routes/ProtectedRoute.tsx", "src/features/profiles/principal/pages/gradebooks/components/DashboardStatus.tsx"])
+      16 |     expect(fs.existsSync(file), `unused legacy loading UI must not be restored: ${file}`).toBe(false);
+      17 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\removed-loading-guard.spec.ts:14:85
+
+    Error Context: test-results\removed-loading-guard-remo-8ad66-eton-cannot-be-reintroduced\error-context.md
+
+
+  1 failed
+    tests\removed-loading-guard.spec.ts:9:1 › removed splash and duplicate advisory skeleton cannot be reintroduced 

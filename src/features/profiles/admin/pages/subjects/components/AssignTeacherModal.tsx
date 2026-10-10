@@ -28,8 +28,8 @@ export function AssignTeacherModal({
 
   const inputClasses = `w-full h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors ${
     darkMode
-      ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]"
-      : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
+      ? "bg-[#0B1120] border-[#374151] text-white focus:border-maroon-light"
+      : "bg-brand-light border-border-subtle text-[#111827] focus:border-maroon-light"
   }`;
   const disabledInputClasses = `${inputClasses} opacity-60 cursor-not-allowed`;
   const labelClasses = `block text-xs font-bold uppercase tracking-wide mb-1.5 ${theme.textMuted}`;
@@ -99,7 +99,7 @@ export function AssignTeacherModal({
           className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
             darkMode
               ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-              : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+              : "border-border-subtle text-[#374151] hover:bg-brand-light"
           }`}
         >
           Cancel

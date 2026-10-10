@@ -268,7 +268,7 @@
 //     setDeleteTarget(null);
 //   }
 
-//   const inputClasses = `w-full h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors ${darkMode ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]" : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"}`;
+//   const inputClasses = `w-full h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors ${darkMode ? "bg-[#0B1120] border-[#374151] text-white focus:border-maroon-light" : "bg-brand-light border-border-subtle text-[#111827] focus:border-maroon-light"}`;
 //   const disabledInputClasses = `${inputClasses} opacity-60 cursor-not-allowed placeholder:text-current`;
 //   const labelClasses = `block text-xs font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 //   const noGradeSelected = gradeLevel === "";
@@ -381,7 +381,7 @@
 //               type="button"
 //               onClick={() => setIsGraded(true)}
 //               disabled={saving || noGradeSelected}
-//               className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${isGraded === true ? "text-white border-transparent" : darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"}`}
+//               className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${isGraded === true ? "text-white border-transparent" : darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-border-subtle text-[#374151] hover:bg-brand-light"}`}
 //               style={isGraded === true ? { background: ACCENT } : undefined}
 //             >
 //               Graded
@@ -391,7 +391,7 @@
 //               type="button"
 //               onClick={() => setIsGraded(false)}
 //               disabled={saving || noGradeSelected}
-//               className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${isGraded === false ? "text-white border-transparent" : darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"}`}
+//               className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${isGraded === false ? "text-white border-transparent" : darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-border-subtle text-[#374151] hover:bg-brand-light"}`}
 //               style={isGraded === false ? { background: ACCENT } : undefined}
 //             >
 //               Non-graded
@@ -401,7 +401,7 @@
 
 //         {isGraded === true && (
 //           <div
-//             className={`rounded-xl border p-3 space-y-2.5 ${darkMode ? "border-[#374151] bg-[#0B1120]/60" : "border-[#E5E7EB] bg-[#F8FAFC]"}`}
+//             className={`rounded-xl border p-3 space-y-2.5 ${darkMode ? "border-[#374151] bg-[#0B1120]/60" : "border-border-subtle bg-brand-light"}`}
 //           >
 //             <div className="flex items-center justify-between">
 //               <label className={`${labelClasses} mb-0`}>
@@ -459,7 +459,7 @@
 //                               prev === row.id ? null : row.id,
 //                             )
 //                           }
-//                           className={`w-full h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors text-left flex items-center justify-between ${darkMode ? "bg-[#0B1120] border-[#374151] text-white hover:border-[#6B7280]" : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] hover:border-[#CBD5E1]"}`}
+//                           className={`w-full h-10 px-3 rounded-xl border text-sm font-semibold outline-none transition-colors text-left flex items-center justify-between ${darkMode ? "bg-[#0B1120] border-[#374151] text-white hover:border-[#6B7280]" : "bg-brand-light border-border-subtle text-[#111827] hover:border-[#CBD5E1]"}`}
 //                         >
 //                           <span className={row.assessmentType ? "" : textMuted}>
 //                             {loadingCatalog
@@ -471,7 +471,7 @@
 
 //                         {openAssessmentRowId === row.id && (
 //                           <div
-//                             className={`absolute z-100 left-0 right-0 mt-1 rounded-xl border shadow-lg overflow-hidden ${darkMode ? "bg-[#111827] border-[#374151]" : "bg-white border-[#E5E7EB]"}`}
+//                             className={`absolute z-100 left-0 right-0 mt-1 rounded-xl border shadow-lg overflow-hidden ${darkMode ? "bg-[#111827] border-[#374151]" : "bg-white border-border-subtle"}`}
 //                           >
 //                             <div className="max-h-56 overflow-y-auto">
 //                               {assessmentTypes.length === 0 ? (
@@ -484,7 +484,7 @@
 //                                 assessmentTypes.map((type) => (
 //                                   <div
 //                                     key={type.id}
-//                                     className={`flex items-center gap-1 px-2 py-1.5 transition-colors ${darkMode ? "hover:bg-white/5" : "hover:bg-[#F8FAFC]"}`}
+//                                     className={`flex items-center gap-1 px-2 py-1.5 transition-colors ${darkMode ? "hover:bg-white/5" : "hover:bg-brand-light"}`}
 //                                   >
 //                                     {editingAssessmentId === type.id ? (
 //                                       <>
@@ -510,7 +510,7 @@
 //                                               setEditingAssessmentName("");
 //                                             }
 //                                           }}
-//                                           className={`flex-1 min-w-0 h-8 px-2 rounded-lg border text-sm font-semibold outline-none ${darkMode ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]" : "bg-white border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"}`}
+//                                           className={`flex-1 min-w-0 h-8 px-2 rounded-lg border text-sm font-semibold outline-none ${darkMode ? "bg-[#0B1120] border-[#374151] text-white focus:border-maroon-light" : "bg-white border-border-subtle text-[#111827] focus:border-maroon-light"}`}
 //                                         />
 
 //                                         <button
@@ -544,7 +544,7 @@
 //                                             setEditingAssessmentId(null);
 //                                             setEditingAssessmentName("");
 //                                           }}
-//                                           className={`h-8 px-2 rounded-lg text-xs font-semibold ${darkMode ? "text-[#9CA3AF] hover:bg-white/10" : "text-[#6B7280] hover:bg-[#F3F4F6]"}`}
+//                                           className={`h-8 px-2 rounded-lg text-xs font-semibold ${darkMode ? "text-[#9CA3AF] hover:bg-white/10" : "text-[#6B7280] hover:bg-surface"}`}
 //                                         >
 //                                           Cancel
 //                                         </button>
@@ -564,7 +564,7 @@
 //                                               type.assessmentName,
 //                                             )
 //                                           }
-//                                           className={`flex-1 min-w-0 text-left px-2 py-1.5 rounded-lg text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed ${darkMode ? "text-[#E5E7EB]" : "text-[#374151]"}`}
+//                                           className={`flex-1 min-w-0 text-left px-2 py-1.5 rounded-lg text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed ${darkMode ? "text-border-border-subtle" : "text-[#374151]"}`}
 //                                         >
 //                                           <span className="truncate block">
 //                                             {type.assessmentName}
@@ -581,7 +581,7 @@
 //                                               type.assessmentName,
 //                                             );
 //                                           }}
-//                                           className={`h-8 w-8 inline-flex items-center justify-center rounded-lg transition-colors ${darkMode ? "text-[#9CA3AF] hover:text-white hover:bg-white/10" : "text-[#6B7280] hover:text-[#111827] hover:bg-[#F3F4F6]"}`}
+//                                           className={`h-8 w-8 inline-flex items-center justify-center rounded-lg transition-colors ${darkMode ? "text-[#9CA3AF] hover:text-white hover:bg-white/10" : "text-[#6B7280] hover:text-[#111827] hover:bg-surface"}`}
 //                                         >
 //                                           <Pencil size={14} />
 //                                         </button>
@@ -614,7 +614,7 @@
 //                                 setNewLabelDraft("");
 //                                 setNewLabelError(null);
 //                               }}
-//                               className={`w-full border-t px-3 py-2.5 text-left text-sm font-semibold ${darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/5" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F8FAFC]"}`}
+//                               className={`w-full border-t px-3 py-2.5 text-left text-sm font-semibold ${darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/5" : "border-border-subtle text-[#374151] hover:bg-brand-light"}`}
 //                             >
 //                               + Add new type…
 //                             </button>
@@ -649,7 +649,7 @@
 //                       onClick={() => removeWeightRow(row.id)}
 //                       disabled={saving || weightDistribution.length === 1}
 //                       title="Remove"
-//                       className={`h-10 w-10 shrink-0 rounded-xl border inline-flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${darkMode ? "border-[#374151] text-[#F87171] hover:bg-white/10" : "border-[#E5E7EB] text-[#B91C1C] hover:bg-[#FEF2F2]"}`}
+//                       className={`h-10 w-10 shrink-0 rounded-xl border inline-flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${darkMode ? "border-[#374151] text-[#F87171] hover:bg-white/10" : "border-border-subtle text-[#B91C1C] hover:bg-[#FEF2F2]"}`}
 //                     >
 //                       <Trash2 size={14} />
 //                     </button>
@@ -695,7 +695,7 @@
 //             type="button"
 //             onClick={handleClose}
 //             disabled={saving}
-//             className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"}`}
+//             className={`flex-1 h-10 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10" : "border-border-subtle text-[#374151] hover:bg-brand-light"}`}
 //           >
 //             Cancel
 //           </button>

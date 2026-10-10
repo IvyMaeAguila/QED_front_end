@@ -1,0 +1,182 @@
+
+[WebServer] (node:17124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 594 tests using 1 worker
+
+(node:2396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/594] tests\add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners
+
+[WebServer] 10:02:37 AM [vite] (client) [Unhandled error] Error: useGradeLevels must be used within a GradeLevelsProvider
+[WebServer]  > useGradeLevels src/features/profiles/admin/pages/subjects/context/gradeLevelsContext.tsx:46:18
+[WebServer]     44 |  export function useGradeLevels() {
+[WebServer]     45 |    const ctx = useContext(GradeLevelsContext);
+[WebServer]     46 |    if (!ctx) throw new Error("useGradeLevels must be used within a GradeLevelsProvider");
+[WebServer]        |                    ^
+[WebServer]     47 |    return ctx;
+[WebServer]     48 |  }
+[WebServer]  > useGradeLevels src/features/profiles/admin/pages/subjects/AddSubjectPage.loading-view.tsx:64:96
+[WebServer]  > useAddSubjectPageState src/features/profiles/admin/pages/subjects/AddSubjectPage.loading-view.tsx:641:15
+[WebServer]  > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:19
+[WebServer]  > renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:21
+[WebServer]  > updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:18
+[WebServer]  > beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:17
+[WebServer]  > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+[WebServer]  > performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:21
+[WebServer]  > workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:40
+[WebServer] 
+
+[WebServer] 10:02:37 AM [vite] (client) [console.warn] An error occurred in the <AddSubjectPageComposition> component.
+[WebServer] 
+[WebServer] Consider adding an error boundary to your tree to customize error handling behavior.
+[WebServer] Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+[WebServer] 
+  1) tests\add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Add New Subject', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Add New Subject', exact: true }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: 'Add New Subject', exact: true })
+
+
+      13 | }
+      14 | for(const width of [375,1280])for(const dark of [false,true])test(`add subject ${width} ${dark?'dark':'light'} keeps known form real without data spinners`,async({page})=>{
+    > 15 |  await page.setViewportSize({width,height:1100});const release=await fixture(page,dark);await page.goto('/admin/subjects/new');await expect(page.getByRole('heading',{name:'Add New Subject',exact:true})).toBeVisible();await expect(page.getByText('Subject Name',{exact:true})).toBeVisible();await expect(page.locator('[data-sk-region="subject-form-prerequisites"]')).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);await expect(page.locator('main [data-sk-primitive]')).toHaveCount(0);
+         |                                                                                                                                                                                                            ^
+      16 |  expect(await page.locator('main [role=status]').evaluate(element=>{const style=getComputedStyle(element);return {width:style.width,height:style.height,clip:style.clipPath};})).toEqual({width:'1px',height:'1px',clip:'inset(50%)'});
+      17 |  const boxes=()=>page.locator('main h1, main input, main select').evaluateAll(elements=>elements.map(element=>{const r=element.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height};}));const before=await boxes();fs.mkdirSync('loading-screenshots',{recursive:true});const prefix=`loading-screenshots/admin-add-subject-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});release();await expect(page.locator('main select')).toBeEnabled();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);expect(await boxes()).toEqual(before);await page.screenshot({path:prefix+'-loaded.png',fullPage:true});
+      18 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\add-subject-loading.spec.ts:15:204
+
+    Error Context: test-results\add-subject-loading-add-su-13dd7--real-without-data-spinners\error-context.md
+
+
+
+(node:20484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[2/594] tests\add-subject-loading.spec.ts:14:62 › add subject 375 dark keeps known form real without data spinners
+
+[WebServer] 10:02:44 AM [vite] (client) [Unhandled error] Error: useGradeLevels must be used within a GradeLevelsProvider
+[WebServer]  > useGradeLevels src/features/profiles/admin/pages/subjects/context/gradeLevelsContext.tsx:46:18
+[WebServer]     44 |  export function useGradeLevels() {
+[WebServer]     45 |    const ctx = useContext(GradeLevelsContext);
+[WebServer]     46 |    if (!ctx) throw new Error("useGradeLevels must be used within a GradeLevelsProvider");
+[WebServer]        |                    ^
+[WebServer]     47 |    return ctx;
+[WebServer]     48 |  }
+[WebServer]  > useGradeLevels src/features/profiles/admin/pages/subjects/AddSubjectPage.loading-view.tsx:64:96
+[WebServer]  > useAddSubjectPageState src/features/profiles/admin/pages/subjects/AddSubjectPage.loading-view.tsx:641:15
+[WebServer]  > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:19
+[WebServer]  > renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:21
+
+[WebServer]  > updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:18
+[WebServer]  > beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:17
+[WebServer]  > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+[WebServer]  > performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:21
+[WebServer]  > workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:40
+[WebServer] 
+[WebServer] 10:02:44 AM [vite] (client) [console.warn] An error occurred in the <AddSubjectPageComposition> component.
+[WebServer] 
+[WebServer] Consider adding an error boundary to your tree to customize error handling behavior.
+[WebServer] Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+[WebServer] 
+  2) tests\add-subject-loading.spec.ts:14:62 › add subject 375 dark keeps known form real without data spinners 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Add New Subject', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Add New Subject', exact: true }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: 'Add New Subject', exact: true })
+
+
+      13 | }
+      14 | for(const width of [375,1280])for(const dark of [false,true])test(`add subject ${width} ${dark?'dark':'light'} keeps known form real without data spinners`,async({page})=>{
+    > 15 |  await page.setViewportSize({width,height:1100});const release=await fixture(page,dark);await page.goto('/admin/subjects/new');await expect(page.getByRole('heading',{name:'Add New Subject',exact:true})).toBeVisible();await expect(page.getByText('Subject Name',{exact:true})).toBeVisible();await expect(page.locator('[data-sk-region="subject-form-prerequisites"]')).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);await expect(page.locator('main [data-sk-primitive]')).toHaveCount(0);
+         |                                                                                                                                                                                                            ^
+      16 |  expect(await page.locator('main [role=status]').evaluate(element=>{const style=getComputedStyle(element);return {width:style.width,height:style.height,clip:style.clipPath};})).toEqual({width:'1px',height:'1px',clip:'inset(50%)'});
+      17 |  const boxes=()=>page.locator('main h1, main input, main select').evaluateAll(elements=>elements.map(element=>{const r=element.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height};}));const before=await boxes();fs.mkdirSync('loading-screenshots',{recursive:true});const prefix=`loading-screenshots/admin-add-subject-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});release();await expect(page.locator('main select')).toBeEnabled();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);expect(await boxes()).toEqual(before);await page.screenshot({path:prefix+'-loaded.png',fullPage:true});
+      18 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\add-subject-loading.spec.ts:15:204
+
+    Error Context: test-results\add-subject-loading-add-su-2acc6--real-without-data-spinners\error-context.md
+
+
+
+(node:22952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[3/594] tests\add-subject-loading.spec.ts:14:62 › add subject 1280 light keeps known form real without data spinners
+
+[WebServer] 10:02:50 AM [vite] (client) [Unhandled error] Error: useGradeLevels must be used within a GradeLevelsProvider
+[WebServer]  > useGradeLevels src/features/profiles/admin/pages/subjects/context/gradeLevelsContext.tsx:46:18
+[WebServer]     44 |  export function useGradeLevels() {
+[WebServer]     45 |    const ctx = useContext(GradeLevelsContext);
+[WebServer]     46 |    if (!ctx) throw new Error("useGradeLevels must be used within a GradeLevelsProvider");
+[WebServer]        |                    ^
+[WebServer]     47 |    return ctx;
+[WebServer]     48 |  }
+[WebServer]  > useGradeLevels src/features/profiles/admin/pages/subjects/AddSubjectPage.loading-view.tsx:64:96
+[WebServer]  > useAddSubjectPageState src/features/profiles/admin/pages/subjects/AddSubjectPage.loading-view.tsx:641:15
+[WebServer]  > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:19
+[WebServer]  > renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:21
+[WebServer]  > updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:18
+[WebServer]  > beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:17
+[WebServer]  > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+[WebServer]  > performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:21
+[WebServer]  > workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:40
+[WebServer] 
+[WebServer] 10:02:50 AM [vite] (client) [console.warn] An error occurred in the <AddSubjectPageComposition> component.
+[WebServer] 
+[WebServer] Consider adding an error boundary to your tree to customize error handling behavior.
+[WebServer] Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+[WebServer] 
+
+  3) tests\add-subject-loading.spec.ts:14:62 › add subject 1280 light keeps known form real without data spinners 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Add New Subject', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Add New Subject', exact: true }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: 'Add New Subject', exact: true })
+
+
+      13 | }
+      14 | for(const width of [375,1280])for(const dark of [false,true])test(`add subject ${width} ${dark?'dark':'light'} keeps known form real without data spinners`,async({page})=>{
+    > 15 |  await page.setViewportSize({width,height:1100});const release=await fixture(page,dark);await page.goto('/admin/subjects/new');await expect(page.getByRole('heading',{name:'Add New Subject',exact:true})).toBeVisible();await expect(page.getByText('Subject Name',{exact:true})).toBeVisible();await expect(page.locator('[data-sk-region="subject-form-prerequisites"]')).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);await expect(page.locator('main [data-sk-primitive]')).toHaveCount(0);
+         |                                                                                                                                                                                                            ^
+      16 |  expect(await page.locator('main [role=status]').evaluate(element=>{const style=getComputedStyle(element);return {width:style.width,height:style.height,clip:style.clipPath};})).toEqual({width:'1px',height:'1px',clip:'inset(50%)'});
+      17 |  const boxes=()=>page.locator('main h1, main input, main select').evaluateAll(elements=>elements.map(element=>{const r=element.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height};}));const before=await boxes();fs.mkdirSync('loading-screenshots',{recursive:true});const prefix=`loading-screenshots/admin-add-subject-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});release();await expect(page.locator('main select')).toBeEnabled();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);expect(await boxes()).toEqual(before);await page.screenshot({path:prefix+'-loaded.png',fullPage:true});
+      18 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\add-subject-loading.spec.ts:15:204
+
+    Error Context: test-results\add-subject-loading-add-su-d4ec1--real-without-data-spinners\error-context.md
+
+
+(node:24740) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[4/594] tests\add-subject-loading.spec.ts:14:62 › add subject 1280 dark keeps known form real without data spinners

@@ -1,4 +1,8 @@
-import { useEffect, useState } from "react";
+import { SkeletonText } from "@shared/components/SkeletonLoading";
+import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
+import { skeletonRows } from "@shared/loading/reservations";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { useSnapshotTheme } from "../context/SnapshotThemeContext";
 import type {
   ChartDomainKey,
@@ -10,10 +14,10 @@ import type {
 import type { DetailStudent } from "../../GlobalTypes/types";
 
 const DOMAIN_META: Record<ChartDomainKey, { label: string; color: string }> = {
-  cognitive: { label: "Cognitive", color: "#2563EB" },
-  emotional: { label: "Emotional", color: "#7C3AED" },
-  behavioral: { label: "Behavioral", color: "#B45309" },
-  social: { label: "Social", color: "#0D9488" },
+  cognitive: { label: "Cognitive", color: "var(--chart-cognitive)" },
+  emotional: { label: "Emotional", color: "var(--chart-emotional)" },
+  behavioral: { label: "Behavioral", color: "var(--chart-behavioral)" },
+  social: { label: "Social", color: "var(--chart-social)" },
 };
 
 const BANDS = [
@@ -78,7 +82,7 @@ function RatingBadge({ score }: { score: number | null }) {
   if (score === null) return null;
   const rating = evaluationFor(score);
   return (
-    <span className="shrink-0 rounded-full px-2.5 py-1 text-xs font-bold" style={{ color: rating.color, backgroundColor: `${rating.color}18` }}>
+    <span className="shrink-0 rounded-full px-2.5 py-1 text-xs font-bold" style={{ color: rating.color, backgroundColor: `color-mix(in srgb, ${rating.color} 9.41%, transparent)` }}>
       {rating.remark}
     </span>
   );
@@ -86,6 +90,7 @@ function RatingBadge({ score }: { score: number | null }) {
 
 export interface WholeChildSnapshotProps extends WholeChildSnapshotData {
   student?: DetailStudent;
+  loading?: boolean; viewKey?: string;
   termKey?: string | number;
   history?: HistoryEntry[];
   subjects?: SubjectHolisticSnapshot[];
@@ -96,6 +101,7 @@ export interface WholeChildSnapshotProps extends WholeChildSnapshotData {
 }
 
 export function WholeChildSnapshot({
+  loading = false, viewKey = "parent-weekly",
   termKey,
   history = [],
   subjects = [],
@@ -110,6 +116,7 @@ export function WholeChildSnapshot({
 
   useEffect(() => setSelected("current"), [termKey]);
 
+  const shownSubjects = loading ? Array.from({length:skeletonRows(viewKey)},(_,id)=>({subjectSectionId:id,subjectName:"",current:{domainAverages:{cognitive:null,emotional:null,behavioral:null,social:null},evaluationCount:0,lastEvaluation:null}})) : subjects;
   const previousEntry = history[0] ?? null;
   const isCurrent = selected === "current";
   const displayedAverages = isCurrent ? domainAverages : previousEntry?.domainAverages ?? domainAverages;
@@ -134,11 +141,11 @@ export function WholeChildSnapshot({
           {previousEntry && (
             <div className={`qed-segmented-control flex items-center gap-0 rounded-lg p-0 ${darkMode ? "bg-white/5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]" : "bg-gray-50 shadow-[inset_0_0_0_1px_#e5e7eb]"}`}>
               <button type="button" onClick={() => setSelected("current")} aria-pressed={isCurrent}
-                className={`rounded-lg px-3 text-xs font-bold ${isCurrent ? "bg-[#6B0000] text-white" : textMuted}`}>
+                className={`rounded-lg px-3 text-xs font-bold ${isCurrent ? "bg-maroon text-white" : textMuted}`}>
                 Latest
               </button>
               <button type="button" onClick={() => setSelected("previous")} aria-pressed={!isCurrent}
-                className={`rounded-lg px-3 text-xs font-bold ${!isCurrent ? "bg-[#6B0000] text-white" : textMuted}`}>
+                className={`rounded-lg px-3 text-xs font-bold ${!isCurrent ? "bg-maroon text-white" : textMuted}`}>
                 Previous{previousEntry.date ?? previousEntry.label ? ` · ${previousEntry.date ?? previousEntry.label}` : ""}
               </button>
             </div>
@@ -150,12 +157,12 @@ export function WholeChildSnapshot({
         <div className="grid gap-4 lg:grid-cols-[minmax(190px,0.72fr)_minmax(0,1.28fr)]">
           <div className={`flex min-h-[210px] flex-col items-center justify-center rounded-xl2 border px-4 py-5 text-center ${darkMode ? "border-[#374151] bg-[#111827]" : "border-gray-200 bg-gray-50"}`}>
             <p className={`text-xs font-semibold uppercase tracking-wide ${textMuted}`}>Overall holistic rating</p>
-            {overallScore === null ? (
+            {loading ? <p className="mt-4 text-3xl font-bold"><SkeletonParagraph field={viewKey+":overall"} typical={2} width="10ch" /></p> : overallScore === null ? (
               <p className={`mt-4 text-sm font-medium ${textMuted}`}>No ratings yet</p>
             ) : (
               <>
                 {overallRating && (
-                  <p className="mt-4 text-3xl font-bold text-[#6B0000]">
+                  <p className="mt-4 text-3xl font-bold text-brand-ink">
                     {overallRating.remark}
                   </p>
                 )}
@@ -171,12 +178,12 @@ export function WholeChildSnapshot({
                 <article key={domain} className={`flex min-w-0 flex-col gap-2 rounded-xl2 border p-3 ${panelBorder} ${darkMode ? "bg-[#111827]" : "bg-white"}`}>
                   <div className="flex items-center justify-between gap-2">
                     <span className="truncate text-xs font-semibold" style={{ color: DOMAIN_META[domain].color }}>{DOMAIN_META[domain].label}</span>
-                    <RatingBadge score={value} />
+                    {loading ? <SkeletonText width="7ch" /> : <RatingBadge score={value} />}
                   </div>
-                  {value === null ? (
+                  {loading ? <p className={`text-xs leading-relaxed ${textMuted}`}><SkeletonParagraph field={viewKey+":"+domain} typical={2} width="100%" /></p> : value === null ? (
                     <p className={`text-xs ${textMuted}`}>No rating yet</p>
                   ) : (
-                    <p className={`text-xs leading-relaxed ${textMuted}`}>{interpretationFor(domain, value)}</p>
+                    <p className={`text-xs leading-relaxed ${textMuted}`}><span data-sk-field={viewKey+":"+domain}>{interpretationFor(domain, value)}</span></p>
                   )}
                 </article>
               );
@@ -184,7 +191,7 @@ export function WholeChildSnapshot({
           </div>
         </div>
 
-        {subjects.length > 0 && (
+        {shownSubjects.length > 0 && (
           <div className={`mt-6 border-t pt-5 ${panelBorder}`}>
             <div className="mb-3">
               <h3 className={`text-sm font-bold ${textPrimary}`}>Holistic by Subject</h3>
@@ -198,18 +205,18 @@ export function WholeChildSnapshot({
                   <span key={domain} className={`text-xs font-bold uppercase tracking-wide ${textMuted}`}>{DOMAIN_META[domain].label}</span>
                 ))}
               </div>
-              {subjects.map((subject, index) => {
+              {shownSubjects.map((subject, index) => {
                 const score = averageDomains(subject.current.domainAverages);
                 const overallRating = score === null ? null : evaluationFor(score);
                 return (
                   <article
                     key={subject.subjectSectionId}
-                    className={`grid grid-cols-2 items-center gap-x-4 gap-y-3 px-4 py-4 md:grid-cols-[minmax(0,1.4fr)_minmax(110px,0.8fr)_repeat(4,minmax(90px,1fr))] md:gap-3 ${index < subjects.length - 1 ? `border-b ${panelBorder}` : ""}`}
+                    className={`grid grid-cols-2 items-center gap-x-4 gap-y-3 px-4 py-4 md:grid-cols-[minmax(0,1.4fr)_minmax(110px,0.8fr)_repeat(4,minmax(90px,1fr))] md:gap-3 ${index < shownSubjects.length - 1 ? `border-b ${panelBorder}` : ""}`}
                   >
                     <div className="col-span-2 min-w-0 md:col-span-1">
-                      <h4 className={`break-words text-sm font-semibold leading-snug ${textPrimary}`}>{subject.subjectName}</h4>
+                      <h4 className={`break-words text-sm font-semibold leading-snug ${textPrimary}`}>{loading ? <SkeletonParagraph field={viewKey+":subject:"+subject.subjectSectionId} typical={2} width="100%" /> : <span data-sk-field={viewKey+":subject:"+subject.subjectSectionId}>{subject.subjectName}</span>}</h4>
                       <p className={`mt-1 text-xs ${textMuted}`}>
-                        {subject.current.evaluationCount > 0
+                        {loading ? <SkeletonText width="15ch" /> : subject.current.evaluationCount > 0
                           ? `${subject.current.evaluationCount} ratings${subject.current.lastEvaluation ? ` · ${subject.current.lastEvaluation}` : ""}`
                           : "No ratings recorded yet"}
                       </p>
@@ -217,10 +224,10 @@ export function WholeChildSnapshot({
 
                     <div className="min-w-0 text-center">
                       <p className={`mb-1 text-xs font-bold uppercase tracking-wide text-gray-500 md:hidden`}>Overall</p>
-                      {score === null ? (
+                      {loading ? <SkeletonText width="9ch" /> : score === null ? (
                         <span className={`text-sm ${textMuted}`}>—</span>
                       ) : (
-                        <p className="text-sm font-bold text-[#6B0000]">{overallRating?.remark}</p>
+                        <p className="text-sm font-bold text-brand-ink">{overallRating?.remark}</p>
                       )}
                     </div>
 
@@ -231,8 +238,8 @@ export function WholeChildSnapshot({
                         return (
                           <div key={domain} className="min-w-0">
                             <p className={`mb-1 text-xs font-bold uppercase tracking-wide text-gray-500 md:hidden`}>{DOMAIN_META[domain].label}</p>
-                            <p className="text-xs font-semibold tabular-nums" style={{ color: rating ? "#6B0000" : "#9CA3AF" }}>
-                              {value === null ? "—" : rating?.remark}
+                            <p className="text-xs font-semibold tabular-nums" style={{ color: rating ? "var(--color-maroon)" : "#9CA3AF" }}>
+                              {loading ? <SkeletonParagraph field={viewKey+":rating:"+subject.subjectSectionId+":"+domain} typical={2} width="100%" /> : value === null ? "—" : rating?.remark}
                             </p>
                           </div>
                         );

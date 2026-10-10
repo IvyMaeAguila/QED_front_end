@@ -1,0 +1,208 @@
+[WebServer] (node:34404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:28832) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 79 tests using 1 worker
+
+(node:30384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\admin-loading.spec.ts:38:196 › /admin 375px light: real shell and loading composition (7.5s)
+  ok  2 tests\admin-loading.spec.ts:38:196 › /admin 375px dark: real shell and loading composition (3.3s)
+  ok  3 tests\admin-loading.spec.ts:38:196 › /admin 1280px light: real shell and loading composition (3.5s)
+  ok  4 tests\admin-loading.spec.ts:38:196 › /admin 1280px dark: real shell and loading composition (3.7s)
+  ok  5 tests\admin-loading.spec.ts:38:196 › /admin/classes 375px light: real shell and loading composition (2.6s)
+  ok  6 tests\admin-loading.spec.ts:38:196 › /admin/classes 375px dark: real shell and loading composition (2.6s)
+  ok  7 tests\admin-loading.spec.ts:38:196 › /admin/classes 1280px light: real shell and loading composition (3.1s)
+  ok  8 tests\admin-loading.spec.ts:38:196 › /admin/classes 1280px dark: real shell and loading composition (3.2s)
+  ok  9 tests\admin-loading.spec.ts:38:196 › /admin/users 375px light: real shell and loading composition (2.9s)
+  ok 10 tests\admin-loading.spec.ts:38:196 › /admin/users 375px dark: real shell and loading composition (2.7s)
+  ok 11 tests\admin-loading.spec.ts:38:196 › /admin/users 1280px light: real shell and loading composition (3.0s)
+  ok 12 tests\admin-loading.spec.ts:38:196 › /admin/users 1280px dark: real shell and loading composition (2.7s)
+  ok 13 tests\admin-loading.spec.ts:38:196 › /admin/students 375px light: real shell and loading composition (2.6s)
+  ok 14 tests\admin-loading.spec.ts:38:196 › /admin/students 375px dark: real shell and loading composition (2.8s)
+  ok 15 tests\admin-loading.spec.ts:38:196 › /admin/students 1280px light: real shell and loading composition (3.2s)
+  ok 16 tests\admin-loading.spec.ts:38:196 › /admin/students 1280px dark: real shell and loading composition (2.6s)
+  ok 17 tests\admin-loading.spec.ts:38:196 › /admin/academic-year 375px light: real shell and loading composition (2.5s)
+  ok 18 tests\admin-loading.spec.ts:38:196 › /admin/academic-year 375px dark: real shell and loading composition (2.5s)
+  ok 19 tests\admin-loading.spec.ts:38:196 › /admin/academic-year 1280px light: real shell and loading composition (2.7s)
+  ok 20 tests\admin-loading.spec.ts:38:196 › /admin/academic-year 1280px dark: real shell and loading composition (2.6s)
+  ok 21 tests\admin-loading.spec.ts:38:196 › /admin/subjects 375px light: real shell and loading composition (2.5s)
+  ok 22 tests\admin-loading.spec.ts:38:196 › /admin/subjects 375px dark: real shell and loading composition (2.5s)
+  ok 23 tests\admin-loading.spec.ts:38:196 › /admin/subjects 1280px light: real shell and loading composition (2.6s)
+  ok 24 tests\admin-loading.spec.ts:38:196 › /admin/subjects 1280px dark: real shell and loading composition (3.3s)
+  ok 25 tests\admin-loading.spec.ts:59:48 › users directory AUTO-COLUMN classification is supported by measured fixtures (1.5s)
+  ok 26 tests\admin-loading.spec.ts:59:48 › students directory AUTO-COLUMN classification is supported by measured fixtures (1.5s)
+  ok 27 tests\admin-loading.spec.ts:73:2 › academic term auto-column classification requires observed variation (1.5s)
+  ok 28 tests\auto-columns.spec.ts:9:32 › auto columns: 0 rows, one swap, stable shell and cached repeat (2.6s)
+  ok 29 tests\auto-columns.spec.ts:9:32 › auto columns: 1 rows, one swap, stable shell and cached repeat (2.8s)
+  ok 30 tests\auto-columns.spec.ts:9:32 › auto columns: 9 rows, one swap, stable shell and cached repeat (2.8s)
+  ok 31 tests\auto-columns.spec.ts:44:1 › auto-column classification requires observed data-dependent widths (655ms)
+  ok 32 tests\directory-loading.spec.ts:29:70 › /principal/teachers 375px light: real controls and screenshots (2.6s)
+  ok 33 tests\directory-loading.spec.ts:29:70 › /principal/teachers 375px dark: real controls and screenshots (2.6s)
+  ok 34 tests\directory-loading.spec.ts:29:70 › /principal/teachers 1280px light: real controls and screenshots (2.6s)
+  ok 35 tests\directory-loading.spec.ts:29:70 › /principal/teachers 1280px dark: real controls and screenshots (2.5s)
+  ok 36 tests\directory-loading.spec.ts:29:70 › /parent/enrolled-children 375px light: real controls and screenshots (2.5s)
+  ok 37 tests\directory-loading.spec.ts:29:70 › /parent/enrolled-children 375px dark: real controls and screenshots (2.5s)
+  ok 38 tests\directory-loading.spec.ts:29:70 › /parent/enrolled-children 1280px light: real controls and screenshots (2.7s)
+  ok 39 tests\directory-loading.spec.ts:29:70 › /parent/enrolled-children 1280px dark: real controls and screenshots (2.6s)
+  ok 40 tests\directory-loading.spec.ts:48:1 › principal directory auto-column classification requires observed variation (1.4s)
+  ok 41 tests\loading.spec.ts:7:1 › 60ms never reveals a skeleton (3.2s)
+  ok 42 tests\loading.spec.ts:11:1 › 320ms reveals after 200ms and reserves at least 400ms (1.2s)
+  ok 43 tests\loading.spec.ts:20:1 › 1500ms begins showing content within 150ms of data (2.2s)
+  ok 44 tests\loading.spec.ts:24:1 › fixed region retains height and has zero CLS (1.7s)
+  ok 45 tests\loading.spec.ts:30:3 › variable list, data size 0: one swap, stable surroundings (1.9s)
+  ok 46 tests\loading.spec.ts:30:3 › variable list, data size 2: one swap, stable surroundings (1.9s)
+  ok 47 tests\loading.spec.ts:30:3 › variable list, data size 9: one swap, stable surroundings (1.9s)
+  ok 48 tests\loading.spec.ts:30:3 › variable text, data size 1: one swap, stable surroundings (2.0s)
+  ok 49 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.0s)
+  ok 50 tests\loading.spec.ts:30:3 › variable text, data size 24: one swap, stable surroundings (1.9s)
+  ok 51 tests\loading.spec.ts:49:1 › animation properties, shimmer duration and shared easing (1.2s)
+  ok 52 tests\loading.spec.ts:59:1 › different mount times share shimmer phase (1.2s)
+  ok 53 tests\loading.spec.ts:64:30 › 5 items use exact stagger policy (1.2s)
+  ok 54 tests\loading.spec.ts:64:30 › 12 items use exact stagger policy (1.2s)
+  ok 55 tests\loading.spec.ts:68:1 › reduced motion has no shimmer or fade wait (1.4s)
+  ok 56 tests\loading.spec.ts:76:1 › aria busy, hidden reservation, delayed status and complete cleanup (1.9s)
+  ok 57 tests\loading.spec.ts:85:1 › error removes skeleton and retry reloads (2.7s)
+  ok 58 tests\loading.spec.ts:92:1 › negative control catches wrong fixed height and CLS (2.2s)
+  ok 59 tests\loading.spec.ts:97:1 › negative control catches unsynchronized shimmer (1.2s)
+  ok 60 tests\loading.spec.ts:102:1 › skeleton CSS uses tokens for every color (24ms)
+  ok 61 tests\loading.spec.ts:107:40 › light: neutral contrast on every surface (405ms)
+  ok 62 tests\loading.spec.ts:107:40 › dark: neutral contrast on every surface (304ms)
+  ok 63 tests\loading.spec.ts:116:1 › text line metrics and adjacent widths (341ms)
+  x  64 tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition (35ms)
+(node:10012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 65 tests\teacher-dashboard.spec.ts:28:68 › teacher dashboard 375px light: real route, stable stat geometry and screenshots (2.7s)
+  ok 66 tests\teacher-dashboard.spec.ts:28:68 › teacher dashboard 375px dark: real route, stable stat geometry and screenshots (2.6s)
+  ok 67 tests\teacher-dashboard.spec.ts:28:68 › teacher dashboard 1280px light: real route, stable stat geometry and screenshots (3.3s)
+  ok 68 tests\teacher-dashboard.spec.ts:28:68 › teacher dashboard 1280px dark: real route, stable stat geometry and screenshots (2.8s)
+  ok 69 tests\teacher-dashboard.spec.ts:56:1 › classification rejects fixed regions whose loaded height depends on data size (2.1s)
+  ok 70 tests\teacher-dashboard.spec.ts:70:88 › teacher wrapping name classification: 3 characters (767ms)
+  ok 71 tests\teacher-dashboard.spec.ts:70:88 › teacher wrapping name classification: 15 characters (820ms)
+  ok 72 tests\teacher-dashboard.spec.ts:70:88 › teacher wrapping name classification: 200 characters (1.1s)
+  ok 73 tests\teacher-subjects.spec.ts:25:68 › teacher subjects 375px light: real shell, card geometry and screenshots (2.6s)
+  ok 74 tests\teacher-subjects.spec.ts:25:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (2.6s)
+  ok 75 tests\teacher-subjects.spec.ts:25:68 › teacher subjects 1280px light: real shell, card geometry and screenshots (2.7s)
+  ok 76 tests\teacher-subjects.spec.ts:25:68 › teacher subjects 1280px dark: real shell, card geometry and screenshots (2.6s)
+  ok 77 tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 0 rows, stable actions and filters (1.9s)
+  ok 78 tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 1 rows, stable actions and filters (1.9s)
+  ok 79 tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 9 rows, stable actions and filters (1.9s)
+
+
+  1) tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition 
+
+    Error: Routes still requiring migration and real-route verification:
+    /
+    /login
+    /admin/students/new
+    /admin/students/:studentId/edit
+    /admin/users/new
+    /admin/users/:role/:userId
+    /admin/users/:role/:userId/edit
+    /admin/classes/new
+    /admin/classes/:classId
+    /admin/classes/:classId/edit
+    /admin/subjects/new
+    /admin/subjects/:subjectId
+    /admin/calendar
+    /admin/help
+    /principal
+    /principal/students
+    /principal/students/class/:classId
+    /principal/students/grade/:gradeId
+    /principal/teachers/:teacherId
+    /principal/reports
+    /principal/holistic-performance-analytics
+    /principal/gradebooks
+    /principal/gradebooks/:grade
+    /principal/calendar
+    /principal/help
+    /teacher/attendance
+    /teacher/attendance/records
+    /teacher/subjects/:subjectId
+    /teacher/subjects/:subjectId/records
+    /teacher/subjects/:subjectSectionId/students
+    /teacher/grades
+    /teacher/holistic
+    /teacher/holistic/:studentId
+    /teacher/holistic/domain-trends
+    /teacher/students/:studentId
+    /teacher/advisory
+    /teacher/calendar
+    /teacher/help
+    /parent
+    /parent/students/:studentId
+    /parent/students/:studentId/topics/:topicId/support
+    /parent/students/:studentId/topics/:topicId/courseware
+    /parent/students/:studentId/topics/:topicId/quiz
+    /parent/calendar
+    /parent/help
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 47
+
+    - Array []
+    + Array [
+    +   "/",
+    +   "/login",
+    +   "/admin/students/new",
+    +   "/admin/students/:studentId/edit",
+    +   "/admin/users/new",
+    +   "/admin/users/:role/:userId",
+    +   "/admin/users/:role/:userId/edit",
+    +   "/admin/classes/new",
+    +   "/admin/classes/:classId",
+    +   "/admin/classes/:classId/edit",
+    +   "/admin/subjects/new",
+    +   "/admin/subjects/:subjectId",
+    +   "/admin/calendar",
+    +   "/admin/help",
+    +   "/principal",
+    +   "/principal/students",
+    +   "/principal/students/class/:classId",
+    +   "/principal/students/grade/:gradeId",
+    +   "/principal/teachers/:teacherId",
+    +   "/principal/reports",
+    +   "/principal/holistic-performance-analytics",
+    +   "/principal/gradebooks",
+    +   "/principal/gradebooks/:grade",
+    +   "/principal/calendar",
+    +   "/principal/help",
+    +   "/teacher/attendance",
+    +   "/teacher/attendance/records",
+    +   "/teacher/subjects/:subjectId",
+    +   "/teacher/subjects/:subjectId/records",
+    +   "/teacher/subjects/:subjectSectionId/students",
+    +   "/teacher/grades",
+    +   "/teacher/holistic",
+    +   "/teacher/holistic/:studentId",
+    +   "/teacher/holistic/domain-trends",
+    +   "/teacher/students/:studentId",
+    +   "/teacher/advisory",
+    +   "/teacher/calendar",
+    +   "/teacher/help",
+    +   "/parent",
+    +   "/parent/students/:studentId",
+    +   "/parent/students/:studentId/topics/:topicId/support",
+    +   "/parent/students/:studentId/topics/:topicId/courseware",
+    +   "/parent/students/:studentId/topics/:topicId/quiz",
+    +   "/parent/calendar",
+    +   "/parent/help",
+    + ]
+
+      32 |   expect(routes.length).toBeGreaterThan(0);
+      33 |   const uncovered = routes.filter(route => !(route in routeSkeletons));
+    > 34 |   expect(uncovered, `Routes still requiring migration and real-route verification:\n${uncovered.join("\n")}`).toEqual([]);
+         |                                                                                                               ^
+      35 | });
+      36 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\route-coverage.spec.ts:34:111
+
+    Error Context: test-results\route-coverage-every-real--4a050-its-own-loading-composition\error-context.md
+
+  1 failed
+    tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition ─
+  78 passed (3.1m)

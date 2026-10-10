@@ -37,7 +37,7 @@ export function EditAcademicYearModal({
   const inputClasses = `w-full h-10 px-3 rounded-lg text-sm font-semibold border outline-none transition-colors ${
     darkMode
       ? "bg-[#0B1120] border-[#374151] text-white placeholder:text-[#6B7280]"
-      : "bg-white border-[#E5E7EB] text-[#111827] placeholder:text-[#9CA3AF]"
+      : "bg-white border-border-subtle text-[#111827] placeholder:text-[#9CA3AF]"
   }`;
   const labelClasses = `block text-xs font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 
@@ -120,7 +120,7 @@ export function EditAcademicYearModal({
             className={`qed-type-button h-10 px-4 rounded-lg border transition-colors ${
               darkMode
                 ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-                : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+                : "border-border-subtle text-[#374151] hover:bg-brand-light"
             }`}
           >
             Cancel

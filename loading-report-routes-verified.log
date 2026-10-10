@@ -1,0 +1,37 @@
+
+[WebServer] (node:10480) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:27116) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 23 tests using 1 worker
+
+(node:33704) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/23] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 375 light: headers, legend and controls stay real
+[2/23] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 375 dark: headers, legend and controls stay real
+[3/23] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 1280 light: headers, legend and controls stay real
+[4/23] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 1280 dark: headers, legend and controls stay real
+[5/23] tests\holistic-analytics-loading.spec.ts:41:1 › holistic metric name and detail bars have measurable widths
+[6/23] tests\holistic-analytics-loading.spec.ts:53:32 › holistic analytics 0 returned rows preserve empty, short and wrapping results
+[7/23] tests\holistic-analytics-loading.spec.ts:53:32 › holistic analytics 1 returned rows preserve empty, short and wrapping results
+[8/23] tests\holistic-analytics-loading.spec.ts:53:32 › holistic analytics 9 returned rows preserve empty, short and wrapping results
+[9/23] tests\holistic-analytics-loading.spec.ts:67:1 › holistic analytics errors clear all shapes and retry options and scores
+[10/23] tests\holistic-analytics-loading.spec.ts:80:35 › holistic analytics light: actual card and heatmap surfaces retain shimmer pixels
+[11/23] tests\holistic-analytics-loading.spec.ts:80:35 › holistic analytics dark: actual card and heatmap surfaces retain shimmer pixels
+[12/23] tests\subject-analytics-loading.spec.ts:21:68 › subject analytics 375 light: real ranking frames and controls
+[13/23] tests\subject-analytics-loading.spec.ts:21:68 › subject analytics 375 dark: real ranking frames and controls
+[14/23] tests\subject-analytics-loading.spec.ts:21:68 › subject analytics 1280 light: real ranking frames and controls
+[15/23] tests\subject-analytics-loading.spec.ts:21:68 › subject analytics 1280 dark: real ranking frames and controls
+[16/23] tests\subject-analytics-loading.spec.ts:43:35 › subject priority light: track placeholder fits its actual surface
+[17/23] tests\subject-analytics-loading.spec.ts:43:35 › subject priority dark: track placeholder fits its actual surface
+[18/23] tests\subject-analytics-loading.spec.ts:53:32 › subject analytics 0 subjects preserve the real empty, short and full ranking states
+[19/23] tests\subject-analytics-loading.spec.ts:53:32 › subject analytics 1 subjects preserve the real empty, short and full ranking states
+[20/23] tests\subject-analytics-loading.spec.ts:53:32 › subject analytics 9 subjects preserve the real empty, short and full ranking states
+[21/23] tests\subject-analytics-loading.spec.ts:67:1 › subject analytics failure removes placeholders and retries all report requests
+[22/23] tests\subject-analytics-loading.spec.ts:80:35 › subject analytics fast term refetch preserves the old ranking
+[23/23] tests\subject-analytics-loading.spec.ts:80:35 › subject analytics slow term refetch preserves the old ranking
+  23 passed (56.8s)

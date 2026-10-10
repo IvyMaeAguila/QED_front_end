@@ -1,4 +1,8 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { SkeletonText, SkeletonAvatar, SkeletonControl } from "@shared/components/SkeletonLoading";
+import { skeletonRows, rememberRows, rememberColumns, useColumnReservation, lastKnownCount } from "@shared/loading/reservations";
+import { useMemo, useRef, useState, type CSSProperties } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import {
   CheckCircle2,
   ClipboardList,
@@ -25,16 +29,18 @@ import { AddItemModal } from "./AddItemModal";
 import { TopicManagerModal } from "./TopicManagerModal";
 import { ConfirmDialog } from "./ConfirmDialog";
 
-const ACCENT = "#6B0000";
+const ACCENT = "var(--color-maroon)";
 
 const SCORE_LEGEND = [
   { label: "90% and up", color: "#157F3B" },
-  { label: "80-89%", color: "#1D70D6" },
+  { label: "80-89%", color: "var(--semantic-success)" },
   { label: "75-79%", color: "#B45309" },
-  { label: "Below 75%", color: "#C2255C" },
+  { label: "Below 75%", color: "var(--semantic-error)" },
 ];
 
 interface AssessmentTabProps {
+  loading?: boolean;
+  templateLoading?: boolean;
   subjectSectionId: string;
   subjectName: string;
   tab: AssessmentTabKey;
@@ -63,14 +69,16 @@ interface AssessmentTabProps {
 }
 
 const scoreStyle = (percent: number | null) => {
-  if (percent === null) return { color: "#6B7280", background: "#F3F4F6" };
+  if (percent === null) return { color: "#6B7280", background: "var(--surface-page)" };
   if (percent >= 90) return { color: "#157F3B", background: "#EAF8EF" };
-  if (percent >= 80) return { color: "#1D70D6", background: "#EAF2FF" };
+  if (percent >= 80) return { color: "var(--semantic-success)", background: "color-mix(in srgb, var(--semantic-success) 8%, white)" };
   if (percent >= 75) return { color: "#B45309", background: "#FFF4DB" };
-  return { color: "#C2255C", background: "#FCE7F1" };
+  return { color: "var(--semantic-error)", background: "color-mix(in srgb, var(--semantic-error) 8%, white)" };
 };
 
 export function AssessmentTab({
+  loading = false,
+  templateLoading = false,
   subjectSectionId,
   subjectName,
   tab,
@@ -91,6 +99,7 @@ export function AssessmentTab({
   templateDomains = [],
   examTypes,
 }: AssessmentTabProps) {
+  const view = `subject-${subjectSectionId}-${tab}`;
   const isWrittenWorks = tab === "writtenWorks";
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -144,13 +153,7 @@ export function AssessmentTab({
     return g === "F" || g === "FEMALE";
   }
 
-  const grouped = useMemo(() => {
-    const female = filtered.filter((s) => isFemale(s));
-    const male = filtered.filter((s) => !isFemale(s));
-    return { male, female };
-  }, [filtered]);
-
-  const isDirty = useMemo(() => {
+const isDirty = useMemo(() => {
     for (const student of roster) {
       for (const item of tabItems) {
         const draftValue = draftScores[student.id]?.[item.id] ?? null;
@@ -223,12 +226,12 @@ export function AssessmentTab({
 
   const selectedItem = tabItems.find((i) => i.id === selectedItemId) ?? null;
 
-  const columnCount = 1 + Math.max(tabItems.length, 1);
+
 
   const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
-  const stickyCell = darkMode ? "bg-[#2A1A18]" : "bg-white";
+  const stickyCell = darkMode ? "bg-panel-dark" : "bg-white";
   const groupBand = `px-4 py-1.5 text-xs font-black uppercase tracking-wider ${
-    darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
+    darkMode ? "bg-white/10" : "bg-brand-light"
   } ${textPrimary}`;
   const toolButton = `flex h-7 items-center gap-1 rounded-md border px-2.5 text-xs font-extrabold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
     darkMode
@@ -236,27 +239,34 @@ export function AssessmentTab({
       : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
   }`;
 
-  function renderStudentRow(student: GenderedStudent) {
+  const tableRoot = useRef<HTMLDivElement>(null);
+  const rowCount = skeletonRows(view, undefined, 44);
+  const pendingRoster: GenderedStudent[] = Array.from({ length: rowCount }, (_, index) => ({ id: `pending-${index}`, name: "", gender: index < Math.ceil(rowCount / 2) ? "M" : "F" }));
+  const pendingItems: GradeItem[] = Array.from({ length: lastKnownCount(`${view}-items`, 1) }, (_, index) => ({ id: `pending-item-${index}`, tab, date: "2026-01-01", activityName: "", topic: "", format: "", maxItems: 0, gradingPeriodId: null }));
+  const columnLabels = [{ label: "Student", typical: "Student full name" }, ...(loading ? pendingItems : tabItems).map(() => ({ label: "", typical: "Assessment topic" }))];
+  const columnWidths = useColumnReservation(view, columnLabels, loading);
+  function renderStudentRow(student: GenderedStudent, pending = false, visibleItems = tabItems) {
     return (
       <tr
         key={student.id}
+        data-sk-region="assessment-student-row" data-sk-variable=""
         className={`border-t ${darkMode ? "border-white/10" : "border-black/10"}`}
       >
         <td className={`sticky left-0 z-10 px-4 py-2 ${stickyCell}`}>
           <div className="flex min-w-0 items-center gap-2.5">
-            <StudentAvatar gender={student.gender} name={student.name} />
+            <span data-sk-region="student-avatar" className="inline-flex h-7 w-7 shrink-0">{pending ? <SkeletonAvatar className="h-7 w-7" /> : <StudentAvatar gender={student.gender} name={student.name} />}</span>
             <span className={`truncate text-xs font-bold ${textPrimary}`}>
-              {student.name}
+              {pending ? <SkeletonText className={Number(student.id.split("-").at(-1)) % 2 === 0 ? "w-[14ch]" : "w-[11ch]"} /> : student.name}
             </span>
           </div>
         </td>
-        {tabItems.map((item) => {
+        {visibleItems.map((item) => {
           const value = draftScores[student.id]?.[item.id] ?? null;
           const percent = value !== null ? (value / item.maxItems) * 100 : null;
           const style = scoreStyle(percent);
           return (
             <td key={item.id} className="px-3 py-2 text-center">
-              <input
+              {pending ? <SkeletonControl className="h-7 w-14 rounded-lg mx-auto" /> : <input
                 type="number"
                 min={0}
                 max={item.maxItems}
@@ -281,20 +291,141 @@ export function AssessmentTab({
                   {
                     backgroundColor:
                       darkMode && value !== null
-                        ? `${style.color}25`
+                        ? `color-mix(in srgb, ${style.color} 14.51%, transparent)`
                         : darkMode
                           ? "#ffffff10"
                           : style.background,
                     color: value !== null ? style.color : "#9CA3AF",
-                    "--tw-ring-color": `${ACCENT}55`,
+                    "--tw-ring-color": `color-mix(in srgb, ${ACCENT} 33.33%, transparent)`,
                   } as CSSProperties
                 }
-              />
+              />}
             </td>
           );
         })}
       </tr>
     );
+  }
+
+  function renderTable(pending: boolean) {
+    const visibleRoster = pending ? pendingRoster : filtered;
+    const grouped = { male: visibleRoster.filter(student => !isFemale(student)), female: visibleRoster.filter(isFemale) };
+    const tabItems = pending ? pendingItems : items.filter(item => item.tab === tab && !roster.some(student => typeof scores[student.id]?.[item.id] === "number"));
+    const columnCount = 1 + Math.max(tabItems.length, 1);
+      return (!pending && filtered.length === 0 ? (
+          <p className={`px-4 py-5 text-center text-xs font-medium ${textMuted}`}>
+            No students found matching "{search}".
+          </p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table data-sk-region="assessment-table" className="teacher-user-table w-full min-w-max text-sm">
+              {pending && <colgroup>{columnWidths.map((width, index) => <col key={index} style={{ width }} />)}</colgroup>}
+              <thead>
+                <tr className={darkMode ? "bg-white/5" : "bg-brand-light"}>
+                  <th
+                    className={`sticky left-0 z-10 min-w-56 px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${
+                      darkMode ? "bg-panel-dark" : "bg-brand-light"
+                    } ${textMuted}`}
+                  >
+                    Student
+                  </th>
+                  {tabItems.length === 0 ? (
+                    <th
+                      className={`px-4 py-2 text-left text-xs font-bold ${textMuted}`}
+                    >
+                      No items yet — tap Add Item
+                    </th>
+                  ) : (
+                    tabItems.map((item) => {
+                      const isSelected = item.id === selectedItemId;
+                      return (
+                        <th key={item.id} className="min-w-32 px-1.5 py-1.5 align-top">
+                          <button
+                            disabled={pending} onClick={() =>
+                              setSelectedItemId(isSelected ? null : item.id)
+                            }
+                            role="radio"
+                            aria-checked={isSelected}
+                            aria-label={pending ? undefined : `Select ${item.activityName} on ${formatDisplayDate(item.date)} to enable delete`}
+                            className={`w-full rounded-lg border px-2 py-1.5 text-center transition-colors focus:outline-none focus-visible:ring-2 ${
+                              isSelected
+                                ? darkMode
+                                  ? "border-[#F87171] bg-[#F87171]/10"
+                                  : "border-[#DC2626] bg-[#FEF2F2]"
+                                : darkMode
+                                  ? "border-white/10 hover:bg-white/5"
+                                  : "border-black/10 hover:bg-black/5"
+                            }`}
+                            style={
+                              { "--tw-ring-color": `color-mix(in srgb, ${ACCENT} 33.33%, transparent)` } as CSSProperties
+                            }
+                          >
+                            <div className="relative flex min-h-4 items-center justify-center">
+                              <p
+                                className={`text-xs font-black leading-none ${textPrimary}`}
+                              >
+                                {pending ? <SkeletonText className="w-[8ch]" /> : formatDisplayDate(item.date)}
+                              </p>
+                              <span
+                                className={`absolute right-0 shrink-0 rounded-full bg-[#DC2626] px-1.5 py-0.5 text-xs font-black uppercase tracking-wide text-white transition-opacity ${
+                                  isSelected
+                                    ? "opacity-100"
+                                    : "pointer-events-none opacity-0"
+                                }`}
+                              >
+                                Selected
+                              </span>
+                            </div>
+
+                            {!isWrittenWorks && (
+                              <p
+                                className={`mt-1 truncate text-xs font-semibold leading-none ${textMuted}`}
+                                title={item.activityName}
+                              >
+                                {pending ? <SkeletonText className="w-[12ch]" /> : <>{item.activityName} · {item.maxItems} pts</>}
+                              </p>
+                            )}
+
+                            <p
+                              className="mt-1 truncate text-xs font-bold leading-none"
+                              style={{ color: "var(--brand-ink)" }}
+                              title={item.topic}
+                            >
+                              {pending ? <SkeletonText className="w-[10ch]" /> : <>{item.topic}{isWrittenWorks ? ` · ${item.maxItems} pts` : ""}</>}
+                            </p>
+                          </button>
+                        </th>
+                      );
+                    })
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {grouped.male.length > 0 && (
+                  <>
+                    <tr>
+                      <td colSpan={columnCount} className={groupBand}>
+                        Male
+                      </td>
+                    </tr>
+                    {grouped.male.map((student) => renderStudentRow(student, pending, tabItems))}
+                  </>
+                )}
+
+                {grouped.female.length > 0 && (
+                  <>
+                    <tr>
+                      <td colSpan={columnCount} className={groupBand}>
+                        Female
+                      </td>
+                    </tr>
+                    {grouped.female.map((student) => renderStudentRow(student, pending, tabItems))}
+                  </>
+                )}
+              </tbody>
+            </table>
+          </div>
+        ));
   }
 
   return (
@@ -338,20 +469,20 @@ export function AssessmentTab({
 
           {tab !== "exams" && (
             <button
-              onClick={() => setTopicManagerOpen(true)}
+              disabled={loading} onClick={() => setTopicManagerOpen(true)}
               className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-extrabold transition-colors ${
                 darkMode
                   ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
                   : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
               }`}
             >
-              <Tag size={12} style={{ color: ACCENT }} />
+              <Tag size={12} style={{ color: "var(--brand-ink)" }} />
               Topics
             </button>
           )}
           <button
-            onClick={onOpenRecords}
-            className={`flex h-8 items-center gap-1.5 rounded-lg border bg-[#800000] px-3 text-xs font-extrabold text-white transition-colors hover:bg-[#650000] ${
+            disabled={loading} onClick={onOpenRecords}
+            className={`flex h-8 items-center gap-1.5 rounded-lg border bg-maroon px-3 text-xs font-extrabold text-white transition-colors hover:bg-maroon-light ${
               darkMode ? "border-white/10" : "border-black/10"
             }`}
           >
@@ -370,14 +501,13 @@ export function AssessmentTab({
             <p
               className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textPrimary}`}
             >
-              <ClipboardList size={13} style={{ color: ACCENT }} />
+              <ClipboardList size={13} style={{ color: "var(--brand-ink)" }} />
               Score Sheet
             </p>
             <p className={`truncate text-xs font-medium ${textMuted}`}>
-              · {tabItems.length} item{tabItems.length === 1 ? "" : "s"} ·{" "}
-              {filtered.length} student{filtered.length === 1 ? "" : "s"}
+              <LoadingRegion as="span" loading={loading} name="assessment-metadata" skeleton={<SkeletonText className="w-[20ch]" />}>{<>· {tabItems.length} item{tabItems.length === 1 ? "" : "s"} · {filtered.length} student{filtered.length === 1 ? "" : "s"}</>}</LoadingRegion>
               {isDirty && (
-                <span className="ml-1 font-extrabold" style={{ color: ACCENT }}>
+                <span className="ml-1 font-extrabold" style={{ color: "var(--brand-ink)" }}>
                   · Unsaved changes
                 </span>
               )}
@@ -385,18 +515,18 @@ export function AssessmentTab({
           </div>
 
           <div role="group" aria-label="Item actions" className="flex items-center gap-2">
-            <button onClick={handleSave} disabled={saving} className={toolButton}>
+            <button onClick={handleSave} disabled={saving || loading} className={toolButton}>
               {savedFlash ? (
                 <CheckCircle2 size={12} className="text-emerald-500" />
               ) : (
-                <Save size={12} style={{ color: ACCENT }} />
+                <Save size={12} style={{ color: "var(--brand-ink)" }} />
               )}
               {saving ? "Saving..." : savedFlash ? "Saved" : "Save"}
             </button>
 
             <button
               onClick={() => selectedItem && setConfirmingDelete(true)}
-              disabled={!selectedItem}
+              disabled={!selectedItem || loading}
               aria-label={
                 selectedItem
                   ? `Delete ${selectedItem.activityName}`
@@ -419,7 +549,7 @@ export function AssessmentTab({
 
             <button
               onClick={() => setModalOpen(true)}
-              disabled={tabItems.length > 0}
+              disabled={loading || templateLoading || tabItems.length > 0}
               aria-label={
                 tabItems.length > 0
                   ? "Finish scoring the current item before adding a new one"
@@ -432,126 +562,13 @@ export function AssessmentTab({
               }
               className={toolButton}
             >
-              <Plus size={12} style={{ color: ACCENT }} />
+              <Plus size={12} style={{ color: "var(--brand-ink)" }} />
               Add Item
             </button>
           </div>
         </div>
 
-        {filtered.length === 0 ? (
-          <p className={`px-4 py-5 text-center text-xs font-medium ${textMuted}`}>
-            No students found matching "{search}".
-          </p>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="teacher-user-table w-full min-w-max text-sm">
-              <thead>
-                <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
-                  <th
-                    className={`sticky left-0 z-10 min-w-56 px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${
-                      darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
-                    } ${textMuted}`}
-                  >
-                    Student
-                  </th>
-                  {tabItems.length === 0 ? (
-                    <th
-                      className={`px-4 py-2 text-left text-xs font-bold ${textMuted}`}
-                    >
-                      No items yet — tap Add Item
-                    </th>
-                  ) : (
-                    tabItems.map((item) => {
-                      const isSelected = item.id === selectedItemId;
-                      return (
-                        <th key={item.id} className="min-w-32 px-1.5 py-1.5 align-top">
-                          <button
-                            onClick={() =>
-                              setSelectedItemId(isSelected ? null : item.id)
-                            }
-                            role="radio"
-                            aria-checked={isSelected}
-                            aria-label={`Select ${item.activityName} on ${formatDisplayDate(item.date)} to enable delete`}
-                            className={`w-full rounded-lg border px-2 py-1.5 text-center transition-colors focus:outline-none focus-visible:ring-2 ${
-                              isSelected
-                                ? darkMode
-                                  ? "border-[#F87171] bg-[#F87171]/10"
-                                  : "border-[#DC2626] bg-[#FEF2F2]"
-                                : darkMode
-                                  ? "border-white/10 hover:bg-white/5"
-                                  : "border-black/10 hover:bg-black/5"
-                            }`}
-                            style={
-                              { "--tw-ring-color": `${ACCENT}55` } as CSSProperties
-                            }
-                          >
-                            <div className="relative flex min-h-4 items-center justify-center">
-                              <p
-                                className={`text-xs font-black leading-none ${textPrimary}`}
-                              >
-                                {formatDisplayDate(item.date)}
-                              </p>
-                              <span
-                                className={`absolute right-0 shrink-0 rounded-full bg-[#DC2626] px-1.5 py-0.5 text-xs font-black uppercase tracking-wide text-white transition-opacity ${
-                                  isSelected
-                                    ? "opacity-100"
-                                    : "pointer-events-none opacity-0"
-                                }`}
-                              >
-                                Selected
-                              </span>
-                            </div>
-
-                            {!isWrittenWorks && (
-                              <p
-                                className={`mt-1 truncate text-xs font-semibold leading-none ${textMuted}`}
-                                title={item.activityName}
-                              >
-                                {item.activityName} · {item.maxItems} pts
-                              </p>
-                            )}
-
-                            <p
-                              className="mt-1 truncate text-xs font-bold leading-none"
-                              style={{ color: ACCENT }}
-                              title={item.topic}
-                            >
-                              {item.topic}
-                              {isWrittenWorks ? ` · ${item.maxItems} pts` : ""}
-                            </p>
-                          </button>
-                        </th>
-                      );
-                    })
-                  )}
-                </tr>
-              </thead>
-              <tbody>
-                {grouped.male.length > 0 && (
-                  <>
-                    <tr>
-                      <td colSpan={columnCount} className={groupBand}>
-                        Male
-                      </td>
-                    </tr>
-                    {grouped.male.map((student) => renderStudentRow(student))}
-                  </>
-                )}
-
-                {grouped.female.length > 0 && (
-                  <>
-                    <tr>
-                      <td colSpan={columnCount} className={groupBand}>
-                        Female
-                      </td>
-                    </tr>
-                    {grouped.female.map((student) => renderStudentRow(student))}
-                  </>
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <div ref={tableRoot}><LoadingRegion loading={loading} variable autoColumns name="assessment-roster" retainPrevious hasContent={filtered.length > 0} skeleton={null} frame={renderTable} onSettled={() => { rememberRows(view, filtered.length); rememberColumns(view, tableRoot.current?.querySelector("table") ?? null); rememberRows(`${view}-items`, tabItems.length); }}>{null}</LoadingRegion></div>
 
         {modalOpen && (
           <AddItemModal

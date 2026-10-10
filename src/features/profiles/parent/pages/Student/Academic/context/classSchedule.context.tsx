@@ -1,16 +1,12 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { ScheduleItem } from "../types/types";
 import { fetchClassSchedule } from "../service/classSchedule.service";
 
 interface ClassScheduleContextValue {
   items: ScheduleItem[];
   loading: boolean;
+  retry: () => void;
   error: string | null;
 }
 
@@ -28,6 +24,7 @@ export function ClassScheduleProvider({ studentId, children }: ClassScheduleProv
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     let isMounted = true;
 
@@ -51,10 +48,10 @@ export function ClassScheduleProvider({ studentId, children }: ClassScheduleProv
     return () => {
       isMounted = false;
     };
-  }, [studentId]);
+  }, [studentId, attempt]);
 
   return (
-    <ClassScheduleContext.Provider value={{ items, loading, error }}>
+    <ClassScheduleContext.Provider value={{ items, loading, error, retry: () => setAttempt(n => n + 1) }}>
       {children}
     </ClassScheduleContext.Provider>
   );

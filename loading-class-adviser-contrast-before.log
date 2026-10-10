@@ -1,0 +1,41 @@
+[WebServer] (node:37440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:22124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\class-form-loading.spec.ts:20:32 › class adviser light disabled control surface pixels (4.3s)
+(node:4176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 tests\class-form-loading.spec.ts:20:32 › class adviser dark disabled control surface pixels (1.9s)
+
+
+  1) tests\class-form-loading.spec.ts:20:32 › class adviser light disabled control surface pixels ──
+
+    Error: class-adviser-light: shine/surface contrast
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 1.03
+    Received:    1.026749786213373
+
+       at design-pixels.ts:32
+
+      30 |   expect(ratio(base), `${name}: base/surface contrast`).toBeGreaterThanOrEqual(1.1);
+      31 |   expect(ratio(base), `${name}: base/surface contrast`).toBeLessThanOrEqual(2);
+    > 32 |   expect(ratio(shine), `${name}: shine/surface contrast`).toBeGreaterThanOrEqual(1.03);
+         |                                                           ^
+      33 | }
+      34 |
+      35 | /** Compare rendered shape pixels with its own blank and static-base references. */
+        at checkRenderedContrast (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-pixels.ts:32:59)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\class-form-loading.spec.ts:20:498
+
+    Error Context: test-results\class-form-loading-class-a-55778-bled-control-surface-pixels\error-context.md
+
+  1 failed
+    tests\class-form-loading.spec.ts:20:32 › class adviser light disabled control surface pixels ───
+  1 passed (10.3s)

@@ -1,0 +1,54 @@
+{
+  "regions": [
+    {
+      "selector": "[data-sk-region=\"grade-sheet-stat-Total Students\"]",
+      "box": {
+        "x": 37,
+        "y": 259,
+        "width": 117,
+        "height": 20
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"grade-sheet-stat-Male\"]",
+      "box": {
+        "x": 208,
+        "y": 259,
+        "width": 37.25,
+        "height": 20
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"grade-sheet-stat-Female\"]",
+      "box": {
+        "x": 38,
+        "y": 327,
+        "width": 52.28125,
+        "height": 20
+      }
+    }
+  ],
+  "loadedBoxes": [
+    {
+      "x": 37,
+      "y": 241,
+      "width": 117,
+      "height": 20
+    },
+    {
+      "x": 208,
+      "y": 241,
+      "width": 37.25,
+      "height": 20
+    },
+    {
+      "x": 38,
+      "y": 309,
+      "width": 52.28125,
+      "height": 20
+    }
+  ],
+  "shapePixels": 547,
+  "outsidePixels": 0,
+  "outsideRatio": 0
+}

@@ -1,6 +1,8 @@
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { PendingLine } from "../../../../../principal/pages/dashboard/components/PrincipalChartLoading";
 import { useMemo } from "react";
 import {
-  CartesianGrid,
+  CartesianGrid, Customized,
   Line,
   LineChart,
   ResponsiveContainer,
@@ -14,7 +16,7 @@ import type { DetailStudent } from "../../GlobalTypes/types";
 import { useProgressReport } from "../../ProgressReport/context/ProgressReportContext"; // adjust path as needed
 import { TERM_LABELS, TERMS } from "../../ProgressReport/types/types";
 
-const ACCENT = "#6B0000";
+const ACCENT = "var(--color-maroon)";
 const CHART_FLOOR = 70;
 
 interface SubjectGrade {
@@ -62,7 +64,7 @@ function CustomTooltip({ active, payload, studentName }: any) {
       </div>
       <div className="mt-3 flex items-center justify-between border-t border-black/6 pt-2 text-xs">
         <span className="font-semibold text-[#1A1A1A]">Average</span>
-        <span className="font-bold tabular-nums" style={{ color: ACCENT }}>
+        <span className="font-bold tabular-nums" style={{ color: "var(--brand-ink)" }}>
           {row.average.toFixed(1)}%
         </span>
       </div>
@@ -81,7 +83,7 @@ export default function TermAverageTrendChart({
 }: TermAverageTrendChartProps) {
   const { darkMode, panelBg, panelBorder, textMuted } = theme;
 
-  const { data, loading, error } = useProgressReport();
+  const { data, loading, error, refetch } = useProgressReport();
   const studentName = student.fullName;
 
   // Derive the chart's { term, average, plotAverage, subjects[] } points from
@@ -129,17 +131,8 @@ export default function TermAverageTrendChart({
 
        <div className="flex flex-1 min-h-0 flex-col px-4 pb-6 pt-5 sm:px-6">
   <div className="w-full flex-1 min-h-0">
-          {loading ? (
-            <div
-              className={`flex h-full items-center justify-center text-sm ${textMuted}`}
-            >
-              Loading term data…
-            </div>
-          ) : error ? (
-            <div className="flex h-full items-center justify-center text-sm text-red-500">
-              {error}
-            </div>
-          ) : termPoints.length === 0 ? (
+          <LoadingRegion name="parent-term-plot" className="h-full" loading={loading} error={error} retry={refetch} skeleton={null} frame={(pending) => (
+          !pending && termPoints.length === 0 ? (
             <div
               className={`flex h-full items-center justify-center text-sm ${textMuted}`}
             >
@@ -148,7 +141,7 @@ export default function TermAverageTrendChart({
           ) : (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
-                data={termPoints}
+                data={pending ? TERMS.map(term=>({term:TERM_LABELS[term],plotAverage:85})) : termPoints}
                 margin={{ top: 8, right: 24, bottom: 0, left: 8 }}
               >
                 <CartesianGrid
@@ -180,6 +173,7 @@ export default function TermAverageTrendChart({
                   width={44}
                   tickFormatter={(v) => `${v}%`}
                 />
+                {pending && <Customized component={PendingLine} />}
                 <Tooltip
                   content={<CustomTooltip studentName={studentName} />}
                   cursor={{
@@ -192,11 +186,11 @@ export default function TermAverageTrendChart({
                   name="Average"
                   dataKey="plotAverage"
                   type="monotone"
-                  stroke={ACCENT}
+                  stroke={pending ? "transparent" : "var(--chart-primary)"}
                   strokeWidth={2.5}
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  dot={{
+                  dot={pending ? false : {
                     r: 4,
                     strokeWidth: 2,
                     stroke: darkMode ? "#15181C" : "#FFFFFF",
@@ -209,12 +203,12 @@ export default function TermAverageTrendChart({
                     fill: ACCENT,
                   }}
                   connectNulls
-                  isAnimationActive
+                  isAnimationActive={false}
                   animationDuration={450}
                 />
               </LineChart>
             </ResponsiveContainer>
-          )}
+          ))}>{null}</LoadingRegion>
         </div>
       </div>
     </div>

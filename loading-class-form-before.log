@@ -1,0 +1,39 @@
+[WebServer] (node:6616) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:27200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\class-form-loading.spec.ts:11:62 › class edit 375 light keeps original fields and schedule controls (7.5s)
+
+
+  1) tests\class-form-loading.spec.ts:11:62 › class edit 375 light keeps original fields and schedule controls 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Edit Class', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Edit Class', exact: true }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: 'Edit Class', exact: true })
+
+
+      10 | }
+      11 | for(const width of [375,1280])for(const dark of [false,true])test(`class edit ${width} ${dark?'dark':'light'} keeps original fields and schedule controls`,async({page})=>{
+    > 12 |  await page.setViewportSize({width,height:1100});const release=await fixture(page,dark);await page.goto('/admin/classes/1/edit');await expect(page.getByRole('heading',{name:'Edit Class',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Add Period',exact:true})).toBeVisible();await expect(page.locator('[data-sk-region="class-form-room"]')).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);await expect(page.getByText(/No class found/)).toHaveCount(0);
+         |                                                                                                                                                                                                         ^
+      13 |  const verify=await captureFixedOverlay(page,`admin-class-edit-${width}-${dark?'dark':'light'}`,['gradeLevelId','section','room'].map(field=>`[data-sk-region="class-form-${field}"]`));fs.mkdirSync('loading-screenshots',{recursive:true});const prefix=`loading-screenshots/admin-class-edit-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});release();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);await expect(page.getByPlaceholder('NEL 101')).toHaveValue('101');await expect(page.locator('[data-sk-region="class-form-period"]')).toHaveCount(1);await verify();await page.screenshot({path:prefix+'-loaded.png',fullPage:true});
+      14 | });
+      15 | for(const count of [0,1,8])test(`class edit retains ${count} actual schedule periods`,async({page})=>{const release=await fixture(page,false,count);await page.goto('/admin/classes/1/edit');await expect(page.getByRole('heading',{name:'Edit Class',exact:true})).toBeVisible();release();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);await expect(page.locator('[data-sk-region="class-form-period"]')).toHaveCount(count);if(!count)await expect(page.getByText('No periods added yet.',{exact:true})).toBeVisible();});
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\class-form-loading.spec.ts:12:201
+
+    Error Context: test-results\class-form-loading-class-e-61acc-ields-and-schedule-controls\error-context.md
+
+  1 failed
+    tests\class-form-loading.spec.ts:11:62 › class edit 375 light keeps original fields and schedule controls 

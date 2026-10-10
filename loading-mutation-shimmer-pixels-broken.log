@@ -1,0 +1,40 @@
+[WebServer] (node:21540) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:25768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:10944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\design-contract.spec.ts:15:40 › light: pixel area survives all four shimmer phases on every surface
+  1) tests\design-contract.spec.ts:15:40 › light: pixel area survives all four shimmer phases on every surface 
+
+    Error: light-page: hard interior sweep edge
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 8
+    Received:    14
+
+       at design-pixels.ts:70
+
+      68 |       maximumJump = Math.max(maximumJump, jump);
+      69 |     }
+    > 70 |     expect(maximumJump, `${name}: hard interior sweep edge`).toBeLessThanOrEqual(8);
+         |                                                              ^
+      71 |   }
+      72 | }
+      73 |
+        at checkShimmerPixels (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-pixels.ts:70:62)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-contract.spec.ts:17:82
+
+    Error Context: test-results\design-contract-light-pixe-82e97-mer-phases-on-every-surface\error-context.md
+
+
+  1 failed
+    tests\design-contract.spec.ts:15:40 › light: pixel area survives all four shimmer phases on every surface 

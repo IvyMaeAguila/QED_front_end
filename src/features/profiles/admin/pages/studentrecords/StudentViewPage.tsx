@@ -1,4 +1,5 @@
-import { useNavigate, useParams, useOutletContext } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import { ArrowLeft, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useStudents } from "./context/StudentsContext";
@@ -24,7 +25,7 @@ export function StudentViewPage() {
         <button
           onClick={() => navigate("/admin/students")}
           className="mt-4 h-9 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2"
-          style={{ background: "#8B0D0D" }}
+          style={{ background: "var(--color-maroon)" }}
         >
           <ArrowLeft size={14} />
           Back to Student Records
@@ -43,7 +44,7 @@ export function StudentViewPage() {
 
   return (
     <section className={`rounded-xl border shadow-sm overflow-hidden ${panelBg} ${panelBorder}`}>
-      <div className="bg-[#8B0D0D] px-5 py-4 flex items-center gap-3">
+      <div className="bg-maroon px-5 py-4 flex items-center gap-3">
         <button
           onClick={() => navigate("/admin/students")}
           className="system-back-button system-back-button--inverse w-8 h-8 rounded-lg flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors shrink-0"
@@ -69,8 +70,8 @@ export function StudentViewPage() {
         <div className="flex gap-3 mt-8">
           <button
             onClick={() => navigate(`/admin/students/${student.id}/edit`)}
-            className="h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 transition-colors hover:bg-[#6B0000]"
-            style={{ background: "#8B0D0D" }}
+            className="h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 transition-colors hover:bg-maroon-light"
+            style={{ background: "var(--color-maroon)" }}
           >
             <Pencil size={14} />
             Edit Student

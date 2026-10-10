@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { ReactNode } from "react";
 import type { SchoolClass } from "../types/Class";
 import { fetchClasses, deleteClassApi, type ClassRecord } from "../services/classes.service";
@@ -57,6 +58,7 @@ export function ClassesProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let active = true;
     setLoading(true);
+    setError(null);
     fetchClasses()
       .then((data) => {
         if (active) setClasses(data.map(mapRecordToSchoolClass));

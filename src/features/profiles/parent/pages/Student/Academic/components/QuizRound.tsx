@@ -1,3 +1,6 @@
+import { SkeletonText, SkeletonControl } from "@shared/components/SkeletonLoading";
+import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
+import { lastKnownCount, skeletonRows } from "@shared/loading/reservations";
 import { CheckCircle2, RefreshCcw, XCircle } from "lucide-react";
 import type { Difficulty, QuizQuestion } from "../service/petQuiz.service";
 import { ProgressDots } from "./QuizWidgets";
@@ -10,6 +13,8 @@ import {
 } from "./QuizShared";
 
 interface QuizRoundProps {
+  loading?: boolean;
+  viewKey?: string;
   questions: QuizQuestion[];
   currentIndex: number;
   /** true = correct, false = wrong, null = not answered yet (one per question). */
@@ -24,6 +29,8 @@ interface QuizRoundProps {
 }
 
 export default function QuizRound({
+  loading = false,
+  viewKey = "quiz",
   questions,
   currentIndex,
   results,
@@ -44,11 +51,11 @@ export default function QuizRound({
           Practice round — just the ones you missed
         </p>
       )}
-      <ProgressDots total={questions.length} currentIndex={currentIndex} results={results} />
+      {loading ? <div className="flex flex-wrap justify-center gap-1.5">{Array.from({length:Math.min(lastKnownCount(`${viewKey}:questions`,3),skeletonRows(viewKey))},(_,i)=><SkeletonControl key={i} className="h-2.5 w-2.5 rounded-full" />)}</div> : <ProgressDots total={questions.length} currentIndex={currentIndex} results={results} />}
       <p className="text-xs text-center text-gray-500">
-        Question {currentIndex + 1} of {questions.length} · {difficulty}
+        Question {currentIndex + 1} of {loading ? <SkeletonText width="2ch" className="inline-block" /> : questions.length} · {difficulty}
       </p>
-      <p className="text-lg font-bold text-center">{question.question_text}</p>
+      <p data-sk-variable="" data-sk-field={`${viewKey}:question`} className="text-lg font-bold text-center">{loading ? <SkeletonParagraph field={`${viewKey}:question`} typical={3} width="100%" /> : question?.question_text}</p>
 
       <div className="flex flex-col gap-2.5">
         {choiceOrder.map((choice, slot) => {
@@ -70,14 +77,14 @@ export default function QuizRound({
           return (
             <button
               key={choice}
-              disabled={isAnswering}
+              disabled={loading || isAnswering}
               onClick={() => onAnswer(choice)}
               className={`flex items-center gap-3 px-3 py-3 text-sm text-left font-medium transition-all disabled:cursor-not-allowed active:scale-[0.97] ${className}`}
             >
               <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white ${colors.badge}`}>
                 {label}
               </span>
-              {question[key]}
+              <span data-sk-variable="" data-sk-field={`${viewKey}:choice:${slot}`} className="min-w-0">{loading ? <SkeletonParagraph field={`${viewKey}:choice:${slot}`} typical={2} width={`${18 - slot * 2}ch`} /> : question?.[key]}</span>
               {feedback && choice === feedback.correctAnswer && (
                 <CheckCircle2 size={20} className="ml-auto text-emerald-600" />
               )}

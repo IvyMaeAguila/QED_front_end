@@ -1,0 +1,272 @@
+
+[WebServer] (node:29572) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30084) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 594 tests using 1 worker
+
+
+(node:33376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/594] tests\add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners
+[2/594] tests\add-subject-loading.spec.ts:14:62 › add subject 375 dark keeps known form real without data spinners
+[3/594] tests\add-subject-loading.spec.ts:14:62 › add subject 1280 light keeps known form real without data spinners
+[4/594] tests\add-subject-loading.spec.ts:14:62 › add subject 1280 dark keeps known form real without data spinners
+[5/594] tests\add-subject-loading.spec.ts:19:46 › add subject year failure exposes retry and preserves local input
+[6/594] tests\add-subject-loading.spec.ts:19:46 › add subject grade failure exposes retry and preserves local input
+[7/594] tests\add-subject-loading.spec.ts:19:46 › add subject catalog failure exposes retry and preserves local input
+
+[WebServer] 10:09:18 AM [vite] (client) [console.error] Failed to load assessment types: Error: Failed to fetch assessment types: 500
+[WebServer]     at getAssessmentTypes (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subject.service.ts:76:9)
+[WebServer]     at async http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/context/SubjectsCatalogContext.tsx:40:17
+[WebServer] 10:09:18 AM [vite] (client) [console.error] Failed to load assessment types: Error: Failed to fetch assessment types: 500
+[WebServer]     at getAssessmentTypes (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subject.service.ts:76:9)
+[WebServer]     at async http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/context/SubjectsCatalogContext.tsx:40:17
+
+[8/594] tests\add-subject-loading.spec.ts:22:1 › non-graded subject retains its original endpoint and creation payload
+[9/594] tests\admin-class-view.spec.ts:28:68 › class details 375 light: real actions, tabs and weekday headings
+[10/594] tests\admin-class-view.spec.ts:28:68 › class details 375 dark: real actions, tabs and weekday headings
+[11/594] tests\admin-class-view.spec.ts:28:68 › class details 1280 light: real actions, tabs and weekday headings
+[12/594] tests\admin-class-view.spec.ts:28:68 › class details 1280 dark: real actions, tabs and weekday headings
+[13/594] tests\admin-class-view.spec.ts:56:32 › class schedule 0 returned time slots retains original content
+[14/594] tests\admin-class-view.spec.ts:56:32 › class schedule 1 returned time slots retains original content
+[15/594] tests\admin-class-view.spec.ts:56:32 › class schedule 9 returned time slots retains original content
+[16/594] tests\admin-class-view.spec.ts:65:1 › class details error removes every reservation immediately and retries context loads
+
+[WebServer] 10:09:37 AM [vite] (client) [console.error] Error: Class temporarily unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+
+[WebServer] 10:09:37 AM [vite] (client) [console.error] Error: Class temporarily unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+[17/594] tests\admin-class-view.spec.ts:80:1 › class schedule auto-column classification observes native content width changes
+[18/594] tests\admin-class-view.spec.ts:93:1 › class roster auto-column classification observes native content width changes
+[19/594] tests\admin-class-view.spec.ts:107:35 › class schedule light: time cell shimmer fits its real tinted surface
+[20/594] tests\admin-class-view.spec.ts:107:35 › class schedule dark: time cell shimmer fits its real tinted surface
+[21/594] tests\admin-loading.spec.ts:38:196 › /admin 375px light: real shell and loading composition
+[22/594] tests\admin-loading.spec.ts:38:196 › /admin 375px dark: real shell and loading composition
+[23/594] tests\admin-loading.spec.ts:38:196 › /admin 1280px light: real shell and loading composition
+  1) tests\admin-loading.spec.ts:38:196 › /admin 1280px light: real shell and loading composition ──
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    Expected: null
+    Received: {"height": 21, "width": 440.984375, "x": 285, "y": 298}
+
+      50 |   await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      51 |   release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 52 |   expect(await page.getByRole("heading", { name: title, exact: true }).boundingBox()).toEqual(before);
+         |                                                                                       ^
+      53 |   await expect(page.getByRole("alert")).toHaveCount(0);
+      54 |   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      55 |   expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-loading.spec.ts:52:87
+
+    Error Context: test-results\admin-loading--admin-1280p-558ff-ell-and-loading-composition\error-context.md
+
+
+(node:7748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[24/594] tests\admin-loading.spec.ts:38:196 › /admin 1280px dark: real shell and loading composition
+  2) tests\admin-loading.spec.ts:38:196 › /admin 1280px dark: real shell and loading composition ───
+
+    Error: page.evaluate: Execution context was destroyed, most likely because of a navigation
+
+      54 |   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      55 |   expect(errors).toEqual([]);
+    > 56 |   expect(await page.evaluate(() => document.getAnimations().filter(animation => animation.effect!.getTiming().iterations === Infinity).length)).toBe(0);
+         |                     ^
+      57 | });
+      58 |
+      59 | for (const directory of ["users", "students"]) test(`${directory} directory AUTO-COLUMN classification is supported by measured fixtures`, async ({ page }) => {
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-loading.spec.ts:56:21
+
+    Error Context: test-results\admin-loading--admin-1280p-f12aa-ell-and-loading-composition\error-context.md
+
+
+
+(node:29860) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[25/594] tests\admin-loading.spec.ts:38:196 › /admin/classes 375px light: real shell and loading composition
+  3) tests\admin-loading.spec.ts:38:196 › /admin/classes 375px light: real shell and loading composition 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    Expected: null
+    Received: {"height": 24, "width": 187.65625, "x": 16, "y": 115}
+
+      50 |   await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      51 |   release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 52 |   expect(await page.getByRole("heading", { name: title, exact: true }).boundingBox()).toEqual(before);
+         |                                                                                       ^
+      53 |   await expect(page.getByRole("alert")).toHaveCount(0);
+      54 |   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      55 |   expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-loading.spec.ts:52:87
+
+    Error Context: test-results\admin-loading--admin-class-25cca-ell-and-loading-composition\error-context.md
+
+
+
+(node:7296) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[26/594] tests\admin-loading.spec.ts:38:196 › /admin/classes 375px dark: real shell and loading composition
+  4) tests\admin-loading.spec.ts:38:196 › /admin/classes 375px dark: real shell and loading composition 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    Expected: null
+    Received: {"height": 24, "width": 187.65625, "x": 16, "y": 115}
+
+      50 |   await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      51 |   release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 52 |   expect(await page.getByRole("heading", { name: title, exact: true }).boundingBox()).toEqual(before);
+         |                                                                                       ^
+      53 |   await expect(page.getByRole("alert")).toHaveCount(0);
+      54 |   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      55 |   expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-loading.spec.ts:52:87
+
+    Error Context: test-results\admin-loading--admin-class-1e261-ell-and-loading-composition\error-context.md
+
+
+
+(node:32268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[27/594] tests\admin-loading.spec.ts:38:196 › /admin/classes 1280px light: real shell and loading composition
+  5) tests\admin-loading.spec.ts:38:196 › /admin/classes 1280px light: real shell and loading composition 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    Expected: null
+    Received: {"height": 26.390625, "width": 206.421875, "x": 264, "y": 121}
+
+      50 |   await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      51 |   release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 52 |   expect(await page.getByRole("heading", { name: title, exact: true }).boundingBox()).toEqual(before);
+         |                                                                                       ^
+      53 |   await expect(page.getByRole("alert")).toHaveCount(0);
+      54 |   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      55 |   expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-loading.spec.ts:52:87
+
+    Error Context: test-results\admin-loading--admin-class-e5803-ell-and-loading-composition\error-context.md
+
+
+(node:35440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[28/594] tests\admin-loading.spec.ts:38:196 › /admin/classes 1280px dark: real shell and loading composition
+  6) tests\admin-loading.spec.ts:38:196 › /admin/classes 1280px dark: real shell and loading composition 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    Expected: null
+    Received: {"height": 26.390625, "width": 206.421875, "x": 264, "y": 121}
+
+      50 |   await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      51 |   release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 52 |   expect(await page.getByRole("heading", { name: title, exact: true }).boundingBox()).toEqual(before);
+         |                                                                                       ^
+      53 |   await expect(page.getByRole("alert")).toHaveCount(0);
+      54 |   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      55 |   expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-loading.spec.ts:52:87
+
+    Error Context: test-results\admin-loading--admin-class-89e89-ell-and-loading-composition\error-context.md
+
+
+
+(node:22228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[29/594] tests\admin-loading.spec.ts:38:196 › /admin/users 375px light: real shell and loading composition
+  7) tests\admin-loading.spec.ts:38:196 › /admin/users 375px light: real shell and loading composition 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    Expected: null
+    Received: {"height": 24, "width": 165.0625, "x": 16, "y": 115}
+
+      50 |   await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      51 |   release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 52 |   expect(await page.getByRole("heading", { name: title, exact: true }).boundingBox()).toEqual(before);
+         |                                                                                       ^
+      53 |   await expect(page.getByRole("alert")).toHaveCount(0);
+      54 |   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      55 |   expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-loading.spec.ts:52:87
+
+    Error Context: test-results\admin-loading--admin-users-a72e9-ell-and-loading-composition\error-context.md
+
+
+
+(node:4268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[30/594] tests\admin-loading.spec.ts:38:196 › /admin/users 375px dark: real shell and loading composition
+  8) tests\admin-loading.spec.ts:38:196 › /admin/users 375px dark: real shell and loading composition 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    Expected: null
+    Received: {"height": 24, "width": 165.0625, "x": 16, "y": 115}
+
+      50 |   await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      51 |   release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 52 |   expect(await page.getByRole("heading", { name: title, exact: true }).boundingBox()).toEqual(before);
+         |                                                                                       ^
+      53 |   await expect(page.getByRole("alert")).toHaveCount(0);
+      54 |   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      55 |   expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-loading.spec.ts:52:87
+
+    Error Context: test-results\admin-loading--admin-users-1f2a9-ell-and-loading-composition\error-context.md
+
+
+
+(node:35692) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[31/594] tests\admin-loading.spec.ts:38:196 › /admin/users 1280px light: real shell and loading composition
+[32/594] tests\admin-loading.spec.ts:38:196 › /admin/users 1280px dark: real shell and loading composition
+[33/594] tests\admin-loading.spec.ts:38:196 › /admin/students 375px light: real shell and loading composition
+[34/594] tests\admin-loading.spec.ts:38:196 › /admin/students 375px dark: real shell and loading composition
+[35/594] tests\admin-loading.spec.ts:38:196 › /admin/students 1280px light: real shell and loading composition
+[36/594] tests\admin-loading.spec.ts:38:196 › /admin/students 1280px dark: real shell and loading composition
+[37/594] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 375px light: real shell and loading composition
+[38/594] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 375px dark: real shell and loading composition
+[39/594] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 1280px light: real shell and loading composition
+[40/594] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 1280px dark: real shell and loading composition
+[41/594] tests\admin-loading.spec.ts:38:196 › /admin/subjects 375px light: real shell and loading composition
+[42/594] tests\admin-loading.spec.ts:38:196 › /admin/subjects 375px dark: real shell and loading composition
+[43/594] tests\admin-loading.spec.ts:38:196 › /admin/subjects 1280px light: real shell and loading composition
+[44/594] tests\admin-loading.spec.ts:38:196 › /admin/subjects 1280px dark: real shell and loading composition
+[45/594] tests\admin-loading.spec.ts:59:48 › users directory AUTO-COLUMN classification is supported by measured fixtures
+[46/594] tests\admin-loading.spec.ts:59:48 › students directory AUTO-COLUMN classification is supported by measured fixtures
+[47/594] tests\admin-loading.spec.ts:73:2 › academic term auto-column classification requires observed variation
+[48/594] tests\advisory-roster.spec.ts:17:68 › advisory roster 375 light: real labels, actions and table
+[49/594] tests\advisory-roster.spec.ts:17:68 › advisory roster 375 dark: real labels, actions and table
+[50/594] tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 light: real labels, actions and table
+[51/594] tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 dark: real labels, actions and table
+[52/594] tests\advisory-roster.spec.ts:36:1 › student directory classification observes native columns across short/long names
+[53/594] tests\attendance-records-loading.spec.ts:14:62 › attendance records 375 light keeps date headers and view controls real
+[54/594] tests\attendance-records-loading.spec.ts:14:62 › attendance records 375 dark keeps date headers and view controls real
+[55/594] tests\attendance-records-loading.spec.ts:14:62 › attendance records 1280 light keeps date headers and view controls real
+[56/594] tests\attendance-records-loading.spec.ts:14:62 › attendance records 1280 dark keeps date headers and view controls real
+[57/594] tests\attendance-records-loading.spec.ts:18:62 › attendance summary 375 light keeps labels and calendar dates real
+[58/594] tests\attendance-records-loading.spec.ts:18:62 › attendance summary 375 dark keeps labels and calendar dates real
+[59/594] tests\attendance-records-loading.spec.ts:18:62 › attendance summary 1280 light keeps labels and calendar dates real
+[60/594] tests\attendance-records-loading.spec.ts:18:62 › attendance summary 1280 dark keeps labels and calendar dates real
+[61/594] tests\attendance-records-loading.spec.ts:21:28 › attendance records preserves 0 actual roster rows
+[62/594] tests\attendance-records-loading.spec.ts:21:28 › attendance records preserves 1 actual roster rows

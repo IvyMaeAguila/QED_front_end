@@ -1,0 +1,170 @@
+
+[WebServer] (node:32652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:10064) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 7 tests using 1 worker
+
+
+(node:6984) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/7] tests\bootstrap-loading.spec.ts:30:1 › bootstrap 60ms never shows the brand loader or status
+  1) tests\bootstrap-loading.spec.ts:30:1 › bootstrap 60ms never shows the brand loader or status ──
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      31 |   const { releaseData } = await bootstrap(page, true);
+      32 |   await expect(page.getByRole("heading", { name: /Good .*, Marie Dela Cruz!/ })).toBeVisible();
+    > 33 |   expect(await page.evaluate(() => (window as unknown as { bootstrapFrames: { visible: boolean; status: number }[] }).bootstrapFrames.some(x => x.visible || x.status))).toBe(false);
+         |                                                                                                                                                                          ^
+      34 |   await expect(page.locator('[data-bootstrap-loader], .qed-wrap')).toHaveCount(0);
+      35 |   releaseData();
+      36 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bootstrap-loading.spec.ts:33:170
+
+    Error Context: test-results\bootstrap-loading-bootstra-8e2ef--the-brand-loader-or-status\error-context.md
+
+
+
+(node:35876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[2/7] tests\bootstrap-loading.spec.ts:37:1 › revealed bootstrap animates only the real logo opacity, never rotation
+  2) tests\bootstrap-loading.spec.ts:37:1 › revealed bootstrap animates only the real logo opacity, never rotation 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 7
+
+    - Array []
+    + Array [
+    +   "top",
+    +   "transform",
+    +   "right",
+    +   "bottom",
+    +   "left",
+    + ]
+
+      41 |   expect(frames.length).toBeGreaterThan(0);
+      42 |   for (const frame of frames) {
+    > 43 |     expect(Object.keys(frame).filter(key => !["offset", "computedOffset", "easing", "composite", "opacity"].includes(key))).toEqual([]);
+         |                                                                                                                             ^
+      44 |   }
+      45 |   await expect(page.locator('[data-bootstrap-loader] img')).toHaveAttribute("src", /QED_Logo/);
+      46 |   release(); releaseData();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bootstrap-loading.spec.ts:43:125
+
+    Error Context: test-results\bootstrap-loading-revealed-58055-logo-opacity-never-rotation\error-context.md
+
+
+
+(node:7056) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[3/7] tests\bootstrap-loading.spec.ts:48:1 › bootstrap reduced motion has no running animation
+[4/7] tests\bootstrap-loading.spec.ts:55:1 › bootstrap busy and status follow reveal, minimum duration, and DOM cleanup
+  3) tests\bootstrap-loading.spec.ts:55:1 › bootstrap busy and status follow reveal, minimum duration, and DOM cleanup 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('[data-sk-region="auth-bootstrap"], .qed-fill')
+    Expected: "true"
+    Received: ""
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('[data-sk-region="auth-bootstrap"], .qed-fill') with timeout 5000ms
+      - waiting for locator('[data-sk-region="auth-bootstrap"], .qed-fill')
+        14 × locator resolved to <div class="qed-fill">…</div>
+           - unexpected value "null"
+
+
+      56 |   const { release, releaseData } = await bootstrap(page);
+      57 |   const root = page.locator('[data-sk-region="auth-bootstrap"], .qed-fill');
+    > 58 |   await expect(root).toHaveAttribute("aria-busy", "true");
+         |                      ^
+      59 |   await expect(root.getByRole("status")).toHaveText("Loading…");
+      60 |   release();
+      61 |   await expect(page.getByRole("heading", { name: /Good .*, Marie Dela Cruz!/ })).toBeVisible();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bootstrap-loading.spec.ts:58:22
+
+    Error Context: test-results\bootstrap-loading-bootstra-b3c52-um-duration-and-DOM-cleanup\error-context.md
+
+
+
+(node:21072) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[5/7] tests\bootstrap-loading.spec.ts:71:1 › protected components and page requests never render before auth resolves
+[6/7] tests\bootstrap-loading.spec.ts:79:34 › lazy route 375: registered composition inside real shell with stable surroundings
+  4) tests\bootstrap-loading.spec.ts:79:34 › lazy route 375: registered composition inside real shell with stable surroundings 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('[data-route-skeleton="/teacher"]')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-route-skeleton="/teacher"]') with timeout 5000ms
+      - waiting for locator('[data-route-skeleton="/teacher"]')
+
+
+      84 |   await page.route("**/src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.tsx", async route => { await chunk; await route.continue(); });
+      85 |   await page.goto("/teacher", { waitUntil: "domcontentloaded" });
+    > 86 |   await expect(page.locator('[data-route-skeleton="/teacher"]')).toBeVisible();
+         |                                                                  ^
+      87 |   await expect(page.getByRole("heading", { name: /Good .*, Marie Dela Cruz!/ })).toBeVisible();
+      88 |   await expect(page.locator('[data-sk-chart="ring"]')).toBeAttached();
+      89 |   await expect(page.locator(".qed-wrap, .qed-spinner, [data-bootstrap-loader]")).toHaveCount(0);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bootstrap-loading.spec.ts:86:66
+
+    Error Context: test-results\bootstrap-loading-lazy-rou-5f557-ll-with-stable-surroundings\error-context.md
+
+
+
+(node:13064) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[7/7] tests\bootstrap-loading.spec.ts:79:34 › lazy route 1280: registered composition inside real shell with stable surroundings
+  5) tests\bootstrap-loading.spec.ts:79:34 › lazy route 1280: registered composition inside real shell with stable surroundings 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('[data-route-skeleton="/teacher"]')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-route-skeleton="/teacher"]') with timeout 5000ms
+      - waiting for locator('[data-route-skeleton="/teacher"]')
+
+
+      84 |   await page.route("**/src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.tsx", async route => { await chunk; await route.continue(); });
+      85 |   await page.goto("/teacher", { waitUntil: "domcontentloaded" });
+    > 86 |   await expect(page.locator('[data-route-skeleton="/teacher"]')).toBeVisible();
+         |                                                                  ^
+      87 |   await expect(page.getByRole("heading", { name: /Good .*, Marie Dela Cruz!/ })).toBeVisible();
+      88 |   await expect(page.locator('[data-sk-chart="ring"]')).toBeAttached();
+      89 |   await expect(page.locator(".qed-wrap, .qed-spinner, [data-bootstrap-loader]")).toHaveCount(0);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bootstrap-loading.spec.ts:86:66
+
+    Error Context: test-results\bootstrap-loading-lazy-rou-a7886-ll-with-stable-surroundings\error-context.md
+
+
+  5 failed
+    tests\bootstrap-loading.spec.ts:30:1 › bootstrap 60ms never shows the brand loader or status ───
+    tests\bootstrap-loading.spec.ts:37:1 › revealed bootstrap animates only the real logo opacity, never rotation 
+    tests\bootstrap-loading.spec.ts:55:1 › bootstrap busy and status follow reveal, minimum duration, and DOM cleanup 
+    tests\bootstrap-loading.spec.ts:79:34 › lazy route 375: registered composition inside real shell with stable surroundings 
+    tests\bootstrap-loading.spec.ts:79:34 › lazy route 1280: registered composition inside real shell with stable surroundings 
+  2 passed (49.8s)

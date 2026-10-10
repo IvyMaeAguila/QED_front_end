@@ -1,3 +1,5 @@
+import { SkeletonControl } from "@shared/components/SkeletonLoading";
+import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 import { Book, Brain, Check, Lock, Puzzle, Rocket, type LucideIcon } from "lucide-react";
 import type { Difficulty, InterventionState, LevelStatus } from "../service/petQuiz.service";
 import { DIFFICULTY_ORDER, LEVEL_META } from "./QuizShared";
@@ -30,7 +32,7 @@ const ROAD: RoadStop[] = [
 const NODE_COLORS: Record<Difficulty, { face: string; edge: string; halo: string; bubble: string }> = {
   Easy: { face: "bg-emerald-400", edge: "bg-emerald-600", halo: "border-emerald-300", bubble: "bg-emerald-500" },
   Medium: { face: "bg-amber-400", edge: "bg-amber-600", halo: "border-amber-300", bubble: "bg-amber-500" },
-  Hard: { face: "bg-rose-400", edge: "bg-rose-600", halo: "border-rose-300", bubble: "bg-rose-500" },
+  Hard: { face: "bg-rose-400", edge: "bg-rose-600", halo: "border-rose-300", bubble: "bg-rose-600" },
 };
 
 // ---------- stops ----------
@@ -43,14 +45,14 @@ function StoryNode({ onClick }: { onClick: () => void }) {
         type="button"
         onClick={onClick}
         aria-label="Replay the story"
-        className="group relative block rounded-full outline-none focus-visible:ring-4 focus-visible:ring-purple-300"
+        className="group relative block rounded-full outline-none focus-visible:ring-4 focus-visible:ring-maroon/20"
         style={{ width: NODE, height: NODE }}
       >
         {/* the coin's edge (its thickness) */}
-        <span className="absolute inset-x-0 bottom-0 h-18 rounded-full bg-purple-700" />
+        <span className="absolute inset-x-0 bottom-0 h-18 rounded-full bg-maroon" />
 
         {/* the coin's face */}
-        <span className="absolute inset-x-0 top-0 flex h-18 items-center justify-center rounded-full bg-purple-400 ring-[6px] ring-white/30 transition-transform group-active:translate-y-1.5">
+        <span className="absolute inset-x-0 top-0 flex h-18 items-center justify-center rounded-full bg-maroon ring-[6px] ring-white/30 transition-transform group-active:translate-y-1.5">
           <Book size={32} className="text-white" />
         </span>
       </button>
@@ -64,11 +66,13 @@ function StoryNode({ onClick }: { onClick: () => void }) {
 
 function LevelNode({
   difficulty,
+  loading,
   status,
   isCurrent,
   onClick,
 }: {
   difficulty: Difficulty;
+  loading?: boolean;
   status: LevelStatus;
   isCurrent: boolean;
   onClick: () => void;
@@ -92,9 +96,9 @@ function LevelNode({
 
       <button
         type="button"
-        disabled={locked}
+        disabled={loading || locked}
         onClick={onClick}
-        aria-label={`${difficulty} level, ${status}`}
+        aria-label={loading ? `${difficulty} level` : `${difficulty} level, ${status}`}
         className="group relative block rounded-full outline-none focus-visible:ring-4 focus-visible:ring-rose-300 disabled:cursor-not-allowed"
         style={{ width: NODE, height: NODE }}
       >
@@ -109,7 +113,7 @@ function LevelNode({
             locked ? "bg-gray-200" : `${c.face} group-active:translate-y-1.5`
           }`}
         >
-          {locked ? <Lock size={30} className="text-gray-400" /> : <Icon size={34} className="text-white" />}
+          {loading ? <SkeletonControl className="h-[34px] w-[34px]" /> : locked ? <Lock size={30} className="text-gray-400" /> : <Icon size={34} className="text-white" />}
         </span>
 
         {completed && (
@@ -132,6 +136,7 @@ function LevelNode({
 
 function BonusNode({
   icon: Icon,
+  loading,
   label,
   locked,
   done,
@@ -139,6 +144,7 @@ function BonusNode({
   onClick,
 }: {
   icon: LucideIcon;
+  loading?: boolean;
   label: string;
   locked: boolean;
   done: boolean;
@@ -149,9 +155,9 @@ function BonusNode({
     <div className="relative flex flex-col items-center">
       {isCurrent && (
         <div className="pointer-events-none absolute -top-12 left-1/2 z-10 -translate-x-1/2">
-          <div className="rm-float relative whitespace-nowrap rounded-2xl bg-indigo-500 px-3 py-1.5 text-xs font-black text-white shadow-md">
+          <div className="rm-float relative whitespace-nowrap rounded-2xl bg-maroon px-3 py-1.5 text-xs font-black text-white shadow-md">
             Play bonus
-            <span className="absolute -bottom-1 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 bg-indigo-500" />
+            <span className="absolute -bottom-1 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 bg-maroon" />
           </div>
         </div>
       )}
@@ -160,17 +166,17 @@ function BonusNode({
         type="button"
         disabled={locked}
         onClick={onClick}
-        aria-label={`${label} bonus round, ${locked ? "locked" : done ? "completed" : "available"}`}
-        className="group relative block rounded-full outline-none focus-visible:ring-4 focus-visible:ring-indigo-300 disabled:cursor-not-allowed"
+        aria-label={loading ? `${label} bonus round` : `${label} bonus round, ${locked ? "locked" : done ? "completed" : "available"}`}
+        className="group relative block rounded-full outline-none focus-visible:ring-4 focus-visible:ring-maroon/20 disabled:cursor-not-allowed"
         style={{ width: NODE, height: NODE }}
       >
-        {isCurrent && <span className="rm-pulse absolute -inset-2 rounded-full border-4 border-indigo-300" />}
+        {isCurrent && <span className="rm-pulse absolute -inset-2 rounded-full border-4 border-maroon-light" />}
 
-        <span className={`absolute inset-x-0 bottom-0 h-18 rounded-full ${locked ? "bg-gray-300" : "bg-indigo-700"}`} />
+        <span className={`absolute inset-x-0 bottom-0 h-18 rounded-full ${locked ? "bg-gray-300" : "bg-maroon"}`} />
 
         <span
           className={`absolute inset-x-0 top-0 flex h-18 items-center justify-center rounded-full ring-[6px] ring-white/30 transition-transform ${
-            locked ? "bg-gray-200" : "bg-indigo-400 group-active:translate-y-1.5"
+            locked ? "bg-gray-200" : "bg-maroon group-active:translate-y-1.5"
           }`}
         >
           {locked ? <Lock size={30} className="text-gray-400" /> : <Icon size={34} className="text-white" />}
@@ -211,7 +217,7 @@ function SoonNode({ icon: Icon }: { icon: LucideIcon }) {
 }
 
 // ---------- end button ----------
-function EndButton({ unlocked, onClick }: { unlocked: boolean; onClick: () => void }) {
+function EndButton({ unlocked, onClick, loading }: { unlocked: boolean; onClick: () => void; loading?: boolean }) {
   return (
     <div className="flex w-full flex-col items-center gap-2">
       <button
@@ -220,15 +226,15 @@ function EndButton({ unlocked, onClick }: { unlocked: boolean; onClick: () => vo
         onClick={onClick}
         className={`flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-4 text-base font-black transition-transform disabled:cursor-not-allowed ${
           unlocked
-            ? "bg-linear-to-b from-indigo-500 to-indigo-800 text-white shadow-[0_5px_0_0_#312e81] active:translate-y-0.75 active:shadow-[0_1px_0_0_#312e81]"
+            ? "bg-maroon text-white shadow-[0_5px_0_0_var(--brand-primary)] active:translate-y-0.75 active:shadow-[0_1px_0_0_var(--brand-primary)]"
             : "bg-gray-200 text-gray-400 shadow-[0_5px_0_0_#d1d5db]"
         }`}
       >
-        {unlocked ? <Rocket size={20} /> : <Lock size={20} />}
+        {loading ? <SkeletonControl className="h-5 w-5" /> : unlocked ? <Rocket size={20} /> : <Lock size={20} />}
         End Intervention
       </button>
       <p className="text-center text-xs font-semibold text-gray-500">
-        {unlocked
+        {loading ? <SkeletonParagraph field="quiz-end-availability" typical={2} width="100%" /> : unlocked
           ? "Your friend has enough energy to continue the journey!"
           : "Finish Easy, Medium, Hard, Matching and Memory to unlock"}
       </p>
@@ -239,6 +245,7 @@ function EndButton({ unlocked, onClick }: { unlocked: boolean; onClick: () => vo
 // ---------- main ----------
 export default function LevelSelect({
   levels,
+  loading = false,
   error,
   bonusDone = {},
   onSelect,
@@ -247,6 +254,7 @@ export default function LevelSelect({
   onShowStory,
 }: {
   levels: InterventionState["levels"];
+  loading?: boolean;
   error: string | null;
   /** Which bonus rounds the student has finished. */
   bonusDone?: Partial<Record<BonusGame, boolean>>;
@@ -261,14 +269,14 @@ export default function LevelSelect({
   const statusOf = (d: Difficulty): LevelStatus => levels?.[d.toLowerCase() as LevelKey] ?? "locked";
 
   // The stop to play next: the first level that is unlocked but not completed.
-  const currentDifficulty = DIFFICULTY_ORDER.find((d) => statusOf(d) === "available") ?? null;
+  const currentDifficulty = loading ? null : DIFFICULTY_ORDER.find((d) => statusOf(d) === "available") ?? null;
   const allDone = DIFFICULTY_ORDER.every((d) => statusOf(d) === "completed");
 
   // The End button requires EVERYTHING: all 3 levels AND both bonus games.
   const allStepsDone = allDone && !!bonusDone.match && !!bonusDone.memory;
 
   // The bonus stop to highlight: the first one not played yet (only once every level is done).
-  const currentBonus = allDone
+  const currentBonus = !loading && allDone
     ? ROAD.find((s): s is Extract<RoadStop, { kind: "bonus" }> => s.kind === "bonus" && !bonusDone[s.game])?.game ?? null
     : null;
 
@@ -282,8 +290,8 @@ export default function LevelSelect({
   return (
     <div className="flex w-full max-w-sm flex-col items-center gap-4">
       {/* banner */}
-      <div className="w-full rounded-3xl bg-linear-to-b from-rose-500 to-rose-700 px-5 py-4 text-left shadow-[0_5px_0_0_#881337]">
-        <p className="text-xs font-bold uppercase tracking-wide text-rose-100">Recharge Road</p>
+      <div className="w-full rounded-3xl bg-maroon px-5 py-4 text-left shadow-[0_5px_0_0_var(--brand-primary)]">
+        <p className="text-xs font-bold uppercase tracking-wide text-white/85">Recharge Road</p>
         <p className="text-lg font-extrabold text-white">Choose your challenge!</p>
       </div>
 
@@ -340,6 +348,7 @@ export default function LevelSelect({
               <StoryNode onClick={onShowStory!} />
             ) : stop.kind === "level" ? (
               <LevelNode
+                loading={loading}
                 difficulty={stop.difficulty}
                 status={statusOf(stop.difficulty)}
                 isCurrent={stop.difficulty === currentDifficulty}
@@ -347,6 +356,7 @@ export default function LevelSelect({
               />
             ) : stop.kind === "bonus" ? (
               <BonusNode
+                loading={loading}
                 icon={stop.icon}
                 label={stop.label}
                 locked={!allDone}
@@ -362,7 +372,7 @@ export default function LevelSelect({
       </div>
 
       {/* end of the road */}
-      <EndButton unlocked={allStepsDone} onClick={onEnd} />
+      <EndButton loading={loading} unlocked={allStepsDone} onClick={onEnd} />
 
       <style>{`
         @keyframes rmFloat {

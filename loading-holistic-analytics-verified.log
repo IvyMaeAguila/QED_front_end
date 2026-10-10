@@ -1,0 +1,23 @@
+
+[WebServer] (node:40640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14488) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 9 tests using 1 worker
+
+
+(node:4352) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/9] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 375 light: headers, legend and controls stay real
+[2/9] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 375 dark: headers, legend and controls stay real
+[3/9] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 1280 light: headers, legend and controls stay real
+[4/9] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 1280 dark: headers, legend and controls stay real
+[5/9] tests\holistic-analytics-loading.spec.ts:39:1 › holistic metric name and detail bars have measurable widths
+[6/9] tests\holistic-analytics-loading.spec.ts:51:32 › holistic analytics 0 returned rows preserve empty, short and wrapping results
+[7/9] tests\holistic-analytics-loading.spec.ts:51:32 › holistic analytics 1 returned rows preserve empty, short and wrapping results
+[8/9] tests\holistic-analytics-loading.spec.ts:51:32 › holistic analytics 9 returned rows preserve empty, short and wrapping results
+[9/9] tests\holistic-analytics-loading.spec.ts:65:1 › holistic analytics errors clear all shapes and retry options and scores
+  9 passed (21.2s)

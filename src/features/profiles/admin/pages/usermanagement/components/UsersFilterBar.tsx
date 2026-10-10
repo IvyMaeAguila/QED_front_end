@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { createPortal } from "react-dom";
 import { ChevronDown, Check } from "lucide-react";
 
@@ -55,7 +56,7 @@ export function Dropdown<T extends string>({
         className={`h-8 min-w-32 px-3 rounded-lg border text-xs font-bold flex items-center justify-between gap-2 transition-colors ${
           darkMode
             ? "bg-[#0B1120] border-[#374151] text-white hover:bg-[#111827]"
-            : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] hover:bg-[#F1F5F9]"
+            : "bg-brand-light border-border-subtle text-[#111827] hover:bg-brand-light"
         }`}
       >
         <span className="truncate">{value}</span>
@@ -69,7 +70,7 @@ export function Dropdown<T extends string>({
             role="listbox"
             style={{ position: "fixed", top: pos.top, left: pos.left, zIndex: 9999 }}
             className={`w-44 rounded-xl border p-1 shadow-lg ${
-              darkMode ? "bg-[#111827] border-[#374151]" : "bg-white border-[#E5E7EB]"
+              darkMode ? "bg-[#111827] border-[#374151]" : "bg-white border-border-subtle"
             }`}
           >
             {options.map((option) => (
@@ -82,11 +83,11 @@ export function Dropdown<T extends string>({
                   setOpen(false);
                 }}
                 className={`w-full px-3 py-2 rounded-lg text-left text-xs font-semibold flex items-center justify-between transition-colors ${
-                  darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#374151] hover:bg-[#F6F7FB]"
+                  darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#374151] hover:bg-brand-light"
                 }`}
               >
                 {option}
-                {value === option && <Check size={14} className="text-[#8B0D0D]" />}
+                {value === option && <Check size={14} className="text-brand-ink" />}
               </button>
             ))}
           </div>,

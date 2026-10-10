@@ -1,0 +1,30 @@
+
+[WebServer] (node:19600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 16 tests using 1 worker
+
+(node:36984) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/16] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 375 light: headers, legend and controls stay real
+[2/16] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 375 dark: headers, legend and controls stay real
+[3/16] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 1280 light: headers, legend and controls stay real
+[4/16] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 1280 dark: headers, legend and controls stay real
+[5/16] tests\holistic-analytics-loading.spec.ts:41:1 › holistic metric name and detail bars have measurable widths
+[6/16] tests\holistic-analytics-loading.spec.ts:53:32 › holistic analytics 0 returned rows preserve empty, short and wrapping results
+[7/16] tests\holistic-analytics-loading.spec.ts:53:32 › holistic analytics 1 returned rows preserve empty, short and wrapping results
+[8/16] tests\holistic-analytics-loading.spec.ts:53:32 › holistic analytics 9 returned rows preserve empty, short and wrapping results
+[9/16] tests\holistic-analytics-loading.spec.ts:67:1 › holistic analytics errors clear all shapes and retry options and scores
+[10/16] tests\holistic-analytics-loading.spec.ts:80:35 › holistic analytics light: actual card and heatmap surfaces retain shimmer pixels
+[11/16] tests\holistic-analytics-loading.spec.ts:80:35 › holistic analytics dark: actual card and heatmap surfaces retain shimmer pixels
+[12/16] tests\overlay-contract.spec.ts:6:73 › fixed overlay 375 light: shared field keeps its matching box
+[13/16] tests\overlay-contract.spec.ts:6:73 › fixed overlay 375 dark: shared field keeps its matching box
+[14/16] tests\overlay-contract.spec.ts:6:73 › fixed overlay 1280 light: shared field keeps its matching box
+[15/16] tests\overlay-contract.spec.ts:6:73 › fixed overlay 1280 dark: shared field keeps its matching box
+[16/16] tests\overlay-contract.spec.ts:15:1 › fixed overlay rejects a shape extending outside its matching loaded field
+  16 passed (48.3s)

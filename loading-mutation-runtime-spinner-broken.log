@@ -1,0 +1,60 @@
+[WebServer] (node:32276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:15792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:38512) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\design-contract.spec.ts:20:68 › teacher 375 light: static content and spinner guard
+  1) tests\design-contract.spec.ts:20:68 › teacher 375 light: static content and spinner guard ─────
+
+    Error: data-loading spinner/text outside preserved actions
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 18
+
+    - Array []
+    + Array [
+    +   "<span class=\"animate-spin\">Loading...</span>",
+    +   "<span class=\"animate-spin\">Loading...</span>",
+    +   "<span class=\"animate-spin\">Loading...</span>",
+    +   "<span class=\"animate-spin\">Loading...</span>",
+    +   "<span class=\"animate-spin\">Loading...</span>",
+    +   "<span class=\"animate-spin\">Loading...</span>",
+    +   "<span class=\"animate-spin\">Loading...</span>",
+    +   "<span class=\"animate-spin\">Loading...</span>",
+    +   "<span class=\"animate-spin\">Loading...</span>",
+    +   "<span class=\"animate-spin\">Loading...</span>",
+    +   "<span class=\"animate-spin\">Loading...</span>",
+    +   "<span class=\"animate-spin\">Loading...</span>",
+    +   "<span class=\"animate-spin\">Loading...</span>",
+    +   "<span class=\"animate-spin\">Loading...</span>",
+    +   "<span class=\"animate-spin\">Loading...</span>",
+    +   "<span class=\"animate-spin\">Loading...</span>",
+    + ]
+
+       at design-pixels.ts:91
+
+      89 |     return [...patterns, ...loadingText].map(element => element.outerHTML.slice(0, 240));
+      90 |   });
+    > 91 |   expect(failures, "data-loading spinner/text outside preserved actions").toEqual([]);
+         |                                                                           ^
+      92 | }
+      93 |
+      94 | /** Fixed shapes are compared within the same real region. Its origin can move once
+        at assertNoDataSpinner (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-pixels.ts:91:75)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-contract.spec.ts:26:3
+
+    Error Context: test-results\design-contract-teacher-37-0b5fa-c-content-and-spinner-guard\error-context.md
+
+
+  1 failed
+    tests\design-contract.spec.ts:20:68 › teacher 375 light: static content and spinner guard ──────

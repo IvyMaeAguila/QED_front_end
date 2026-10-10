@@ -1,0 +1,90 @@
+[WebServer] (node:7340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:29440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:9388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\design-contract.spec.ts:6:1 › skeleton CSS has token-only colors
+  1) tests\design-contract.spec.ts:6:1 › skeleton CSS has token-only colors ────────────────────────
+
+    Error: expect(received).not.toMatch(expected)
+
+    Expected pattern: not /#[\da-f]{3,8}\b|\b(?:rgb|hsl|oklch|lab)a?\(/i
+    Received string:      "/* Colors and behavior values are owned by the central theme in style.css. */
+    @layer components {
+    .sk-primitive { display: block; position: relative; overflow: hidden; background: var(--sk-base); border-radius: var(--sk-radius); }
+    .sk-text { height: 1lh; clip-path: inset(var(--sk-text-inset) 0 round var(--sk-radius-text)); border-radius: var(--sk-radius-text); }
+    .sk-avatar { aspect-ratio: 1; border-radius: var(--sk-radius-avatar); }
+    .sk-image { aspect-ratio: var(--sk-image-ratio); border-radius: inherit; }
+    .sk-control { border-radius: var(--sk-radius-control); }
+    .sk-sweep { position: absolute; inset: 0; background: linear-gradient(90deg, var(--sk-transparent), var(--sk-shine), var(--sk-transparent)); animation: sk-sweep var(--sk-shimmer) linear infinite; }
+    @keyframes sk-sweep { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+    :dir(rtl) > .sk-sweep { animation-direction: reverse; }
+    .sk-region { display: grid; position: relative; min-width: 0; }
+    span.sk-region { display: inline-grid; vertical-align: top; }
+    .sk-region > .sk-layer { grid-area: 1 / 1; min-width: 0; }
+    .sk-frame { grid-area: 1 / 1; min-width: 0; }
+    .sk-frame[data-sk-reserved] [data-sk-primitive] { visibility: hidden; }
+    .sk-table-region[data-sk-phase=\"waiting\"] thead [data-sk-primitive] { visibility: hidden; }
+    .sk-ring { mask-image: radial-gradient(closest-side, var(--sk-transparent) 75%, var(--sk-mask) 75% 93%, var(--sk-transparent) 93%); }
+    .sk-layer[data-sk-reserved]:not(.sk-frame) { visibility: hidden; }
+    .sk-layer[data-sk-outgoing] { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    .sk-content { min-width: 0; }
+    .sk-table-region { display: block; }
+    .sk-table-region table { position: relative; }
+    .sk-table-region tbody[data-sk-outgoing] { display: table; width: 100%; }
+    .sk-table-region table[data-sk-outgoing] thead { visibility: hidden; }
+    .sk-status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+    @media (prefers-reduced-motion: reduce) {
+      .sk-sweep { animation: none; }
+      .sk-region, .sk-region * { transition-duration: 0.01ms !important; animation-duration: 0.01ms; }
+    }
+    }
+    .qed-bootstrap-brand {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+    }
+    .qed-bootstrap-logo {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      animation: qed-bootstrap-fade var(--sk-shimmer) var(--sk-ease) infinite alternate;
+    }
+    @keyframes qed-bootstrap-fade {
+      from { opacity: .65; }
+      to { opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .qed-bootstrap-brand, .qed-bootstrap-logo {
+        animation: none !important;
+        transition: none !important;
+        opacity: 1;
+      }
+    }
+    
+    .sk-primitive { background: #abcdef; }
+    "
+
+       6 | test("skeleton CSS has token-only colors", () => {
+       7 |   const css = fs.readFileSync("src/shared/loading/skeleton.css", "utf8");
+    >  8 |   expect(css).not.toMatch(/#[\da-f]{3,8}\b|\b(?:rgb|hsl|oklch|lab)a?\(/i);
+         |                   ^
+       9 |   for (const declaration of css.matchAll(/(?:background|color|border-color)\s*:\s*([^;}]+)/g)) expect(declaration[1]).toMatch(/var\(--sk-/);
+      10 |   const primitive = fs.readFileSync("src/shared/components/SkeletonLoading.tsx", "utf8");
+      11 |   expect(primitive, "the active primitive must use the audited token stylesheet").toContain("sk-primitive");
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-contract.spec.ts:8:19
+
+    Error Context: test-results\design-contract-skeleton-CSS-has-token-only-colors\error-context.md
+
+
+  1 failed
+    tests\design-contract.spec.ts:6:1 › skeleton CSS has token-only colors ─────────────────────────

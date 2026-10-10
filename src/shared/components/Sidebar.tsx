@@ -48,13 +48,11 @@ export function Sidebar({
 
   return (
     <aside
-      className={`absolute lg:relative inset-y-0 left-0 z-30 ${collapsed ? "w-60 lg:w-[4.5rem]" : "w-60"} max-w-[85vw] h-full flex flex-col text-white rounded-tr-none rounded-br-[28px] lg:rounded-none shadow-[8px_0_30px_-12px_rgba(0,0,0,0.35)] transition-[width,transform] duration-300 ${APPLE_EASE} ${
-        darkMode ? "bg-[#1A1110]" : "bg-[#4A0000]"
-      } ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
+      className={`qed-sidebar-glass absolute lg:relative inset-y-0 left-0 z-30 ${collapsed ? "w-60 lg:w-[4.5rem]" : "w-60"} max-w-[85vw] h-full flex flex-col text-white rounded-tr-none rounded-br-[28px] lg:rounded-none shadow-[8px_0_30px_-12px_rgba(0,0,0,0.35)] transition-[width,transform] duration-300 ${APPLE_EASE} ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
     >
-      {/* Thick Metallic Gold Right Border Accent with rounded-br-[28px] */}
+      {/* Original thin metallic gold edge; its shape follows the mobile panel. */}
       <div className="absolute top-0 bottom-0 right-0 w-0.75 pointer-events-none rounded-br-[28px] overflow-hidden z-20">
-        <div className="absolute inset-0 bg-linear-to-b from-[#F6E073] via-[#F9E37A] to-[#B78C1A] shadow-[0_0_10px_rgba(249,227,122,0.4)] opacity-95" />
+        <div className="qed-sidebar-metallic-edge absolute inset-0 opacity-95" />
       </div>
 
       <div className={`relative p-6 flex items-center gap-3 ${collapsed ? "lg:justify-center lg:gap-1 lg:px-2 lg:pb-2 lg:pt-4" : ""}`}>
@@ -112,7 +110,7 @@ export function Sidebar({
               className={`sidebar-nav-item ${isActive ? "qed-type-nav-item-active" : "qed-type-nav-item"} group flex items-center justify-between ${collapsed ? "lg:justify-center lg:px-0" : "px-3.5"} py-2.5 rounded-2xl text-sm transition-all duration-300 ${APPLE_EASE} active:scale-[0.97] ${
                 isActive
                   ? "bg-white/10 text-white shadow-[0_8px_20px_rgba(0,0,0,0.18),inset_0_1px_1px_rgba(255,255,255,0.35),inset_0_-1px_1px_rgba(0,0,0,0.25)] backdrop-blur-xl translate-x-1 border border-white/15"
-                  : "text-white/55 hover:bg-white/5 hover:text-white hover:translate-x-1 border border-transparent"
+                  : "text-white/80 hover:bg-white/5 hover:text-white hover:translate-x-1 border border-transparent"
       }`}
             >
               <div className="flex items-center gap-3 min-w-0">
@@ -146,7 +144,7 @@ export function Sidebar({
           onClick={onClose}
           title={collapsed ? helpItem.label : undefined}
           aria-label={collapsed ? helpItem.label : undefined}
-          className={`sidebar-nav-item qed-type-nav-item flex w-full items-center ${collapsed ? "lg:justify-center lg:px-0" : "gap-3 px-3"} text-left text-sm text-white/55 hover:text-white hover:bg-white/10 py-2.5 rounded-2xl cursor-pointer transition-all duration-300 ${APPLE_EASE} hover:translate-x-1 active:scale-[0.97]`}
+          className={`sidebar-nav-item qed-type-nav-item flex w-full items-center ${collapsed ? "lg:justify-center lg:px-0" : "gap-3 px-3"} text-left text-sm text-white/80 hover:text-white hover:bg-white/10 py-2.5 rounded-2xl cursor-pointer transition-all duration-300 ${APPLE_EASE} hover:translate-x-1 active:scale-[0.97]`}
         >
           <HelpCircle size={16} className="shrink-0" /> <span className={collapsed ? "lg:hidden" : ""}>{helpItem.label}</span>
         </Link>
@@ -156,7 +154,7 @@ export function Sidebar({
           onClick={onLogout}
           title={collapsed ? "Log Out" : undefined}
           aria-label={collapsed ? "Log Out" : undefined}
-          className={`sidebar-nav-item qed-type-nav-item flex w-full items-center ${collapsed ? "lg:justify-center lg:px-0" : "gap-3 px-3"} text-sm text-white/55 hover:text-white hover:bg-white/10 py-2.5 rounded-2xl cursor-pointer transition-all duration-300 ${APPLE_EASE} hover:translate-x-1 active:scale-[0.97]`}
+          className={`sidebar-nav-item qed-type-nav-item flex w-full items-center ${collapsed ? "lg:justify-center lg:px-0" : "gap-3 px-3"} text-sm text-white/80 hover:text-white hover:bg-white/10 py-2.5 rounded-2xl cursor-pointer transition-all duration-300 ${APPLE_EASE} hover:translate-x-1 active:scale-[0.97]`}
         >
           <LogOut size={16} className="shrink-0" /> <span className={collapsed ? "lg:hidden" : ""}>Log Out</span>
         </button>

@@ -1,11 +1,6 @@
 // AttendanceOverviewContext.tsx
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-} from "react";
+import { createContext, useContext, useState, useCallback } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { ReactNode } from "react";
 import AttendanceService from "../service/attendance.service"; // adjust path as needed
 import type { MonthlyAttendance } from "../service/attendance.service"; // adjust path as needed
@@ -25,6 +20,7 @@ interface AttendanceOverviewContextValue {
   monthOptions: MonthOption[];
   monthsLoading: boolean;
   monthsError: string | null;
+  retryMonths: () => void;
 }
 
 const AttendanceOverviewContext = createContext<
@@ -48,7 +44,7 @@ export function AttendanceOverviewProvider({
   children,
 }: AttendanceOverviewProviderProps) {
   const [monthOptions, setMonthOptions] = useState<MonthOption[]>([]);
-  const [monthsLoading, setMonthsLoading] = useState(false);
+  const [monthsLoading, setMonthsLoading] = useState(true);
   const [monthsError, setMonthsError] = useState<string | null>(null);
 
   const [year, setYear] = useState("");
@@ -57,6 +53,7 @@ export function AttendanceOverviewProvider({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [attempt,setAttempt] = useState(0);
   // Tumatawag dito tuwing mag-mo-mount ang Provider (bawat pagpasok sa page),
   // pero dahil may in-memory cache na ang SchoolYearService, kapag pangalawang
   // beses na, agad na babalik ang result — walang network call, walang loading flicker.
@@ -95,7 +92,7 @@ export function AttendanceOverviewProvider({
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [attempt]);
 
   // Ganito rin sa attendance data mismo — may cache na sa AttendanceService,
   // kaya kapag bumalik ka sa parehong student+month, agad na ang display.
@@ -138,6 +135,7 @@ export function AttendanceOverviewProvider({
         monthOptions,
         monthsLoading,
         monthsError,
+        retryMonths: () => setAttempt(n=>n+1),
       }}
     >
       {children}

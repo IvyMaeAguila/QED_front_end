@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import {
   Radio,
   Rocket,
@@ -21,6 +22,7 @@ import petHungry from "./assets/pet-hungry.png";
 import petHappy from "./assets/pet-happy.png";
 
 interface EDJourneyIntroProps {
+  loading?: boolean;
   onContinue: () => void;
   intervention: InterventionState;
   petName?: string;
@@ -42,7 +44,7 @@ const DIFFICULTY_ORDER: Difficulty[] = ["Easy", "Medium", "Hard"];
 const LEVEL_META: Record<Difficulty, { icon: typeof Sprout; color: string }> = {
   Easy: { icon: Sprout, color: "bg-emerald-500" },
   Medium: { icon: Zap, color: "bg-amber-500" },
-  Hard: { icon: Flame, color: "bg-rose-500" },
+  Hard: { icon: Flame, color: "bg-maroon" },
 };
 
 const buildScenes = (name: string): Scene[] => [
@@ -167,7 +169,7 @@ function PetAvatar({
 function SignalPing() {
   return (
     <div className="pointer-events-none absolute right-0 top-2 flex h-8 w-8 items-center justify-center">
-      <span className="ej-ping absolute h-8 w-8 rounded-full bg-rose-400/40" />
+      <span className="ej-ping absolute h-8 w-8 rounded-full bg-maroon-light/30" />
       <Radio size={16} className="relative text-rose-500" />
     </div>
   );
@@ -264,6 +266,7 @@ function LevelPath({ levels }: { levels: InterventionState["levels"] }) {
 // -------------------- Main --------------------
 export default function EDJourneyIntro({
   onContinue,
+  loading = false,
   intervention,
   petName = "ED",
 }: EDJourneyIntroProps) {
@@ -306,12 +309,12 @@ export default function EDJourneyIntro({
       {/* ================= SKY + PET ================= */}
       <div
         className="relative"
-        style={{ background: "linear-gradient(to bottom, #bfe3ff 0%, #d9f0ff 70%, #eaf9e8 100%)" }}
+        style={{ background: "var(--brand-light)" }}
       >
         {/* sun */}
         <div
           className="pointer-events-none absolute right-5 top-14 h-16 w-16 rounded-full"
-          style={{ background: "radial-gradient(circle, #fff3b0 0%, rgba(255,243,176,0) 70%)" }}
+          style={{ background: "#fff3b0" }}
         />
         {/* clouds */}
         <div className="ej-cloud pointer-events-none absolute left-6 top-16 h-8 w-16 rounded-full bg-white/70 blur-[2px]" />
@@ -337,7 +340,7 @@ export default function EDJourneyIntro({
               <span
                 key={i}
                 className={`h-1.5 rounded-full transition-all ${
-                  i === currentScene ? "w-4 bg-rose-500" : i < currentScene ? "w-1.5 bg-rose-400/70" : "w-1.5 bg-white/80"
+                  i === currentScene ? "w-4 bg-maroon" : i < currentScene ? "w-1.5 bg-maroon-light/70" : "w-1.5 bg-white/80"
                 }`}
               />
             ))}
@@ -349,7 +352,7 @@ export default function EDJourneyIntro({
           <div
             className="pointer-events-none absolute inset-x-0 bottom-0 h-20"
             style={{
-              background: "linear-gradient(to bottom, #d7f2c9 0%, #b9e8a4 100%)",
+              background: "var(--brand-light)",
               borderTopLeftRadius: "60% 100%",
               borderTopRightRadius: "60% 100%",
             }}
@@ -362,7 +365,7 @@ export default function EDJourneyIntro({
           <div className="pointer-events-none absolute inset-x-0 bottom-2 z-1 flex justify-center">
             <div
               className="ej-shadow h-5 w-[58%] rounded-full"
-              style={{ background: "radial-gradient(ellipse at center, rgba(0,0,0,0.18), transparent 70%)" }}
+              style={{ background: "rgba(0,0,0,0.12)" }}
             />
           </div>
 
@@ -387,17 +390,17 @@ export default function EDJourneyIntro({
       {/* ================= GRASS: dialogue + info + button ================= */}
       <div
         className="relative flex flex-col gap-3 px-5 pb-6 pt-5"
-        style={{ background: "linear-gradient(to bottom, #b9e8a4 0%, #a6dd8b 100%)" }}
+        style={{ background: "var(--brand-light)" }}
       >
         {/* dialogue box, replays per scene */}
         <div key={currentScene} className="flex flex-col gap-3">
           <div className="relative">
-            <span className="absolute -top-3 left-5 z-10 rounded-full bg-rose-500 px-3 py-0.5 text-xs font-black uppercase tracking-wide text-white shadow">
+            <span className="absolute -top-3 left-5 z-10 rounded-full bg-maroon px-3 py-0.5 text-xs font-black uppercase tracking-wide text-white shadow">
               {petName}
             </span>
-            <div className="relative rounded-3xl border-[3px] border-sky-200 bg-white px-4 pb-3.5 pt-5 text-left shadow-[0_5px_0_0_#bae6fd]">
+            <div className="relative rounded-3xl border-[3px] border-border-subtle bg-white px-4 pb-3.5 pt-5 text-left shadow-[0_5px_0_0_var(--border-subtle)]">
               <div className="absolute -top-2.75 left-1/2 -translate-x-1/2" aria-hidden="true">
-                <div className="h-4 w-4 rotate-45 border-l-[3px] border-t-[3px] border-sky-200 bg-white" />
+                <div className="h-4 w-4 rotate-45 border-l-[3px] border-t-[3px] border-border-subtle bg-white" />
               </div>
               <div className="flex flex-col gap-2">
                 {scene.lines.map((line, i) => (
@@ -434,7 +437,8 @@ export default function EDJourneyIntro({
 
         <button
           onClick={handleNext}
-          className="ej-rise group relative mt-1 flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-linear-to-b from-rose-500 to-red-700 py-3 text-sm font-black text-white shadow-[0_5px_0_0_#7f1d1d,0_10px_24px_-8px_rgba(244,63,94,0.7)] transition-transform active:translate-y-0.75 active:shadow-[0_1px_0_0_#7f1d1d]"
+          disabled={loading}
+          className="ej-rise group relative mt-1 flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-maroon py-3 text-sm font-black text-white shadow-[0_5px_0_0_var(--brand-primary),0_10px_24px_-8px_rgba(0,0,0,0.15)] transition-transform active:translate-y-0.75 active:shadow-[0_1px_0_0_var(--brand-primary)]"
           style={{ animationDelay: "0.1s" }}
         >
           <span className="ej-shine pointer-events-none absolute inset-0" />
@@ -451,7 +455,7 @@ export default function EDJourneyIntro({
         @keyframes ejLineIn { 0% { opacity: 0; transform: translateY(6px); } 100% { opacity: 1; transform: translateY(0); } }
         .ej-line-in { animation: ejLineIn 0.4s ease-out backwards; }
         @keyframes ejShine { 0% { transform: translateX(-120%) skewX(-20deg); } 100% { transform: translateX(220%) skewX(-20deg); } }
-        .ej-shine { background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%); animation: ejShine 2.6s ease-in-out 1.6s infinite; }
+        .ej-shine { background: rgba(255,255,255,0.15); animation: ejShine 2.6s ease-in-out 1.6s infinite; }
 
         @keyframes ejBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
         .ej-bob { animation: ejBob 3s ease-in-out infinite; }

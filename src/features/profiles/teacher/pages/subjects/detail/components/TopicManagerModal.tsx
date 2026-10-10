@@ -1,9 +1,10 @@
-import { useEffect, useState, type CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { Plus, Tag } from "lucide-react";
 import { ModalBody, ModalFrame, ModalHeader } from "@shared/components/modal";
 import { createTopic, fetchTopics, type Topic } from "../../services/subjectGrading.service";
 
-const ACCENT = "#6B0000";
+const ACCENT = "var(--color-maroon)";
 
 interface TopicManagerModalProps {
   subjectSectionId: string;
@@ -72,7 +73,7 @@ export function TopicManagerModal({
           subtitle="Group assessments by what they cover"
           titleClassName={textPrimary}
           subtitleClassName={textMuted}
-          leading={<Tag size={16} style={{ color: ACCENT }} />}
+          leading={<Tag size={16} style={{ color: "var(--brand-ink)" }} />}
           onClose={onClose}
           closeDarkMode={darkMode}
           className="items-center"
@@ -89,12 +90,12 @@ export function TopicManagerModal({
               }}
               placeholder="e.g. Fractions, Photosynthesis"
               className={`h-10 flex-1 rounded-lg border px-3 outline-none transition focus:ring-2 ${panelBg} ${panelBorder} ${textPrimary}`}
-              style={{ "--tw-ring-color": `${ACCENT}55` } as CSSProperties}
+              style={{ "--tw-ring-color": `color-mix(in srgb, ${ACCENT} 33.33%, transparent)` } as CSSProperties}
             />
             <button
               onClick={handleAdd}
               disabled={saving || !newTopicName.trim()}
-              className="flex h-10 shrink-0 items-center gap-1.5 rounded-lg bg-[#800000] px-4 qed-type-button text-white transition-colors hover:bg-[#650000] disabled:opacity-40"
+              className="flex h-10 shrink-0 items-center gap-1.5 rounded-lg bg-maroon px-4 qed-type-button text-white transition-colors hover:bg-maroon-light disabled:opacity-40"
             >
               <Plus size={12} />
               Add
@@ -119,7 +120,7 @@ export function TopicManagerModal({
                 >
                   <span
                     className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md"
-                    style={{ backgroundColor: darkMode ? `${ACCENT}25` : "#F8EDEE", color: ACCENT }}
+                    style={{ backgroundColor: darkMode ? `color-mix(in srgb, ${ACCENT} 14.51%, transparent)` : "var(--brand-soft)", color: "var(--brand-ink)" }}
                   >
                     <Tag size={12} />
                   </span>

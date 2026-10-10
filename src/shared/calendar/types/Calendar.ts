@@ -1,6 +1,6 @@
 export type Role = "ADMIN" | "PRINCIPAL" | "TEACHER" | "PARENT";
 
-export const ACCENT = "#8B0D0D";
+export const ACCENT = "var(--color-maroon)";
 
 export interface CalendarTheme {
   darkMode: boolean;

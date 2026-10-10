@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { School, Plus, Trash2, Pencil, Check, X } from "lucide-react";
 import { ACCENT, GRADE_LEVELS, type GradeLevel, type Subject, type SubjectsTheme } from "../types/types";
 import { useSections } from "../context/SectionsContext";
@@ -43,8 +44,8 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
 
   const inputClasses = `w-full h-10 px-3 rounded-lg border text-sm font-semibold outline-none transition-colors ${
     darkMode
-      ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]"
-      : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
+      ? "bg-[#0B1120] border-[#374151] text-white focus:border-maroon-light"
+      : "bg-brand-light border-border-subtle text-[#111827] focus:border-maroon-light"
   }`;
   const labelClasses = `block text-xs font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 
@@ -154,7 +155,7 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
 
       <div>
         <p className={labelClasses}>{gradeLevel} Sections</p>
-        <div className={`rounded-[12px] border divide-y ${darkMode ? "border-[#374151] divide-[#374151]" : "border-[#E5E7EB] divide-[#E5E7EB]"}`}>
+        <div className={`rounded-[12px] border divide-y ${darkMode ? "border-[#374151] divide-[#374151]" : "border-border-subtle divide-[#E5E7EB]"}`}>
           {gradeSections.length === 0 ? (
             <p className={`text-xs font-semibold px-3 py-3 ${textMuted}`}>No sections yet for this grade.</p>
           ) : (
@@ -192,7 +193,7 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
                       <button
                         onClick={cancelEdit}
                         className={`w-7 h-7 shrink-0 rounded-lg flex items-center justify-center ${
-                          darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#374151] hover:bg-[#F6F7FB]"
+                          darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#374151] hover:bg-brand-light"
                         }`}
                         aria-label="Cancel"
                       >
@@ -213,7 +214,7 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
                         onClick={() => startEdit(section.id, section.name)}
                         title="Edit section"
                         className={`w-7 h-7 rounded-lg flex items-center justify-center transition-colors ${
-                          darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#374151] hover:bg-[#F6F7FB]"
+                          darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#374151] hover:bg-brand-light"
                         }`}
                       >
                         <Pencil size={14} />
@@ -254,7 +255,7 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
           className={`w-full h-10 rounded-lg text-xs font-bold border transition-colors ${
             darkMode
               ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-              : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+              : "border-border-subtle text-[#374151] hover:bg-brand-light"
           }`}
         >
           Done

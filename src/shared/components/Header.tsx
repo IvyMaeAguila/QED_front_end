@@ -15,15 +15,18 @@ export function Header({
   showNotifications = false,
 }: HeaderProps) {
   const { darkMode, toggleDarkMode } = useSettings();
-  const institutionText = darkMode ? "text-[#E7D8CF]" : "text-[#6B0000]";
+  const institutionText = darkMode ? "text-brand-light" : "text-brand-ink";
 
   return (
     <header
       className={`shrink-0 z-20 border-b font-sans transition-colors ${
-        darkMode ? "bg-[#271916] border-[#543632]" : "bg-white border-[#E5E7EB]"
+        darkMode ? "bg-raised-dark border-border-dark" : "bg-white border-border-subtle"
       }`}
     >
-      <div className={`flex min-h-8 items-center justify-center gap-2 px-3 py-1 text-xs font-semibold tracking-wide text-white/90 sm:px-6 sm:text-xs ${darkMode ? "bg-[#1A1110]" : "bg-[#4A0000]"}`}>
+      <div
+        className="flex min-h-8 items-center justify-center gap-2 px-3 py-1 text-xs font-semibold tracking-wide text-white/90 sm:px-6 sm:text-xs"
+        style={{ backgroundColor: "var(--sidebar-maroon)" }}
+      >
         <img src={eucLogo} alt="" aria-hidden="true" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
         <span className="max-w-full text-center leading-tight">MSEUF-CI</span>
       </div>
@@ -31,7 +34,7 @@ export function Header({
       <div className="relative flex min-h-16 items-center justify-between gap-1 px-2 py-2 sm:gap-2 sm:px-6 sm:py-0">
         <button
           onClick={onMenuClick}
-          className="absolute left-3 top-3.5 z-30 shrink-0 rounded-lg bg-[#6B0000] p-2 text-white lg:hidden"
+          className="absolute left-3 top-3.5 z-30 shrink-0 rounded-lg bg-maroon p-2 text-white lg:hidden"
           aria-label="Open menu"
         >
           <Menu size={17} />
@@ -57,7 +60,7 @@ export function Header({
             className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors ${
               darkMode
                 ? "text-amber-300 hover:bg-white/10"
-                : "text-[#6B0000] hover:bg-[#F3F4F6]"
+                : "text-brand-ink hover:bg-surface"
             }`}
           >
             {darkMode ? <Sun size={18} /> : <Moon size={18} />}

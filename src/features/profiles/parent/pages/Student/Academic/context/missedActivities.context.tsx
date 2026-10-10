@@ -1,10 +1,12 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { MissedActivity } from "../types/types";
 import MissedActivitiesService from "../service/missedActivities.service";
 
 interface MissedActivitiesContextValue {
   activities: MissedActivity[];
   loading: boolean;
+  retry: () => void;
   error: string | null;
 }
 
@@ -22,6 +24,7 @@ export function MissedActivitiesProvider({ studentId, children }: MissedActiviti
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     let isMounted = true;
 
@@ -45,10 +48,10 @@ export function MissedActivitiesProvider({ studentId, children }: MissedActiviti
     return () => {
       isMounted = false;
     };
-  }, [studentId]);
+  }, [studentId, attempt]);
 
   return (
-    <MissedActivitiesContext.Provider value={{ activities, loading, error }}>
+    <MissedActivitiesContext.Provider value={{ activities, loading, error, retry: () => setAttempt(n => n + 1) }}>
       {children}
     </MissedActivitiesContext.Provider>
   );

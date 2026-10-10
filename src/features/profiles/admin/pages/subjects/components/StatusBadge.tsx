@@ -1,3 +1,4 @@
+import { SkeletonText } from "@shared/components/SkeletonLoading";
 import type { SchoolYearStatus, TermStatus } from "../types/academicyear";
 
 type Status = SchoolYearStatus | TermStatus;
@@ -17,18 +18,19 @@ const STATUS_STYLES_DARK: Record<Status, { bg: string; text: string }> = {
 };
 
 interface StatusBadgeProps {
+  loading?: boolean;
   status: Status;
   darkMode: boolean;
 }
 
-export function StatusBadge({ status, darkMode }: StatusBadgeProps) {
+export function StatusBadge({ status, darkMode, loading = false }: StatusBadgeProps) {
   const style = darkMode ? STATUS_STYLES_DARK[status] : STATUS_STYLES[status];
 
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${style.bg} ${style.text}`}
+      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${style.bg} ${style.text}`} data-sk-region="statusbadge-span-field-1"
     >
-      {status}
+      {loading ? <SkeletonText width="6ch" /> : status}
     </span>
   );
 }

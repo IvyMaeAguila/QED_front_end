@@ -1,0 +1,69 @@
+{
+  "regions": [
+    {
+      "selector": "[data-sk-region=\"report-metric-value-0\"]",
+      "box": {
+        "x": 33,
+        "y": 355,
+        "width": 131.5,
+        "height": 28
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"report-metric-value-1\"]",
+      "box": {
+        "x": 210.5,
+        "y": 354,
+        "width": 131.5,
+        "height": 28
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"report-metric-value-2\"]",
+      "box": {
+        "x": 33,
+        "y": 467,
+        "width": 131.5,
+        "height": 28
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"report-metric-value-3\"]",
+      "box": {
+        "x": 210.5,
+        "y": 467,
+        "width": 131.5,
+        "height": 28
+      }
+    }
+  ],
+  "loadedBoxes": [
+    {
+      "x": 33,
+      "y": 355,
+      "width": 131.5,
+      "height": 28
+    },
+    {
+      "x": 210.5,
+      "y": 354,
+      "width": 131.5,
+      "height": 28
+    },
+    {
+      "x": 33,
+      "y": 467,
+      "width": 131.5,
+      "height": 28
+    },
+    {
+      "x": 210.5,
+      "y": 467,
+      "width": 131.5,
+      "height": 28
+    }
+  ],
+  "shapePixels": 3650,
+  "outsidePixels": 0,
+  "outsideRatio": 0
+}

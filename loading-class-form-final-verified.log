@@ -1,0 +1,57 @@
+[WebServer] (node:10176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:10988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 22 tests using 1 worker
+
+(node:33720) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\class-form-loading.spec.ts:11:62 › class edit 375 light keeps original fields and schedule controls (4.5s)
+  ok  2 tests\class-form-loading.spec.ts:11:62 › class edit 375 dark keeps original fields and schedule controls (2.0s)
+  ok  3 tests\class-form-loading.spec.ts:11:62 › class edit 1280 light keeps original fields and schedule controls (1.9s)
+  ok  4 tests\class-form-loading.spec.ts:11:62 › class edit 1280 dark keeps original fields and schedule controls (2.1s)
+  ok  5 tests\class-form-loading.spec.ts:15:28 › class edit retains 0 actual schedule periods (762ms)
+  ok  6 tests\class-form-loading.spec.ts:15:28 › class edit retains 1 actual schedule periods (721ms)
+  ok  7 tests\class-form-loading.spec.ts:15:28 › class edit retains 8 actual schedule periods (922ms)
+[WebServer] 9:53:11 AM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+[WebServer] 9:53:11 AM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+  ok  8 tests\class-form-loading.spec.ts:16:85 › class form retries record failure (1.2s)
+[WebServer] 9:53:12 AM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchGradeLevels (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:20:15)
+[WebServer] 9:53:12 AM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchGradeLevels (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:20:15)
+  ok  9 tests\class-form-loading.spec.ts:16:85 › class form retries gradeLevels failure (1.2s)
+[WebServer] 9:53:13 AM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchAllTeachers (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:43:15)
+[WebServer] 9:53:13 AM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchAllTeachers (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:43:15)
+  ok 10 tests\class-form-loading.spec.ts:16:85 › class form retries teacher/all failure (1.3s)
+[WebServer] 9:53:15 AM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchSectionsByGrade (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:30:15)
+  ok 11 tests\class-form-loading.spec.ts:16:85 › class form retries sections failure (1.3s)
+[WebServer] 9:53:16 AM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchSubjectsByGrade (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:48:15)
+  ok 12 tests\class-form-loading.spec.ts:16:85 › class form retries getSubByGrade failure (1.2s)
+  ok 13 tests\class-form-loading.spec.ts:17:62 › class new 375 light preserves known empty values (1.3s)
+  ok 14 tests\class-form-loading.spec.ts:17:62 › class new 375 dark preserves known empty values (841ms)
+  ok 15 tests\class-form-loading.spec.ts:17:62 › class new 1280 light preserves known empty values (998ms)
+  ok 16 tests\class-form-loading.spec.ts:17:62 › class new 1280 dark preserves known empty values (949ms)
+  ok 17 tests\class-form-loading.spec.ts:18:1 › class edit saves the original mapped schedule payload (1.2s)
+  ok 18 tests\class-form-loading.spec.ts:19:32 › class form light input surface pixels (1.9s)
+  ok 19 tests\class-form-loading.spec.ts:19:32 › class form dark input surface pixels (1.9s)
+  ok 20 tests\class-form-loading.spec.ts:20:32 › class adviser light disabled control surface pixels (1.9s)
+  ok 21 tests\class-form-loading.spec.ts:20:32 › class adviser dark disabled control surface pixels (2.1s)
+  ok 22 tests\class-form-loading.spec.ts:21:1 › class form keeps the known Updating prefix real before record data arrives (691ms)
+
+  22 passed (36.5s)

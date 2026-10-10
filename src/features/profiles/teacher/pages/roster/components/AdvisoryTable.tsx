@@ -5,6 +5,10 @@ import { type RosterStudent } from "../../subjects/detail/data";
 type GenderFilter = "All" | "M" | "F";
 
 interface AdvisoryTableProps {
+  loading?: boolean;
+  error?: unknown;
+  retry?: () => void;
+  view?: string;
   darkMode: boolean;
   panelBg: string;
   panelBorder: string;
@@ -20,6 +24,7 @@ interface AdvisoryTableProps {
 }
 
 export function AdvisoryTable({
+  loading = false, error, retry, view,
   darkMode, panelBg, panelBorder, textPrimary, textMuted, roster, search,
   setSearch, genderFilter, setGenderFilter, onRowDoubleClick,
 }: AdvisoryTableProps) {
@@ -49,6 +54,7 @@ export function AdvisoryTable({
         </select>
       </div>
       <StudentDirectoryTable
+        loading={loading} error={error} retry={retry} view={view}
         students={roster.map((student) => ({ id: student.id, name: student.name, gender: student.gender }))}
         panelBg={panelBg}
         panelBorder={panelBorder}

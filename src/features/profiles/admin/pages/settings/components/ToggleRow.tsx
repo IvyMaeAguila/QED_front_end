@@ -11,7 +11,7 @@ export function ToggleRow({ icon: Icon, label, checked, onChange, darkMode }: To
     <button
       onClick={onChange}
       className={`w-full h-10 px-3 rounded-xl border flex items-center justify-between transition-colors ${
-        darkMode ? "border-[#374151] hover:bg-white/5" : "border-[#E5E7EB] hover:bg-[#F6F7FB]"
+        darkMode ? "border-[#374151] hover:bg-white/5" : "border-border-subtle hover:bg-brand-light"
       }`}
     >
       <span
@@ -21,7 +21,7 @@ export function ToggleRow({ icon: Icon, label, checked, onChange, darkMode }: To
         {label}
       </span>
       <span
-        className={`w-9 h-5 rounded-full relative transition-colors ${checked ? "bg-[#6B0000]" : "bg-[#D1D5DB]"}`}
+        className={`w-9 h-5 rounded-full relative transition-colors ${checked ? "bg-maroon" : "bg-[#D1D5DB]"}`}
       >
         <span
           className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${

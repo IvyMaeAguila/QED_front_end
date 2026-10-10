@@ -1,0 +1,114 @@
+{
+  "regions": [
+    {
+      "selector": "[data-sk-region=\"user-form-lastName\"]",
+      "box": {
+        "x": 314,
+        "y": 275.390625,
+        "width": 376,
+        "height": 40
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"user-form-firstName\"]",
+      "box": {
+        "x": 706,
+        "y": 275.390625,
+        "width": 376,
+        "height": 40
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"user-form-middleName\"]",
+      "box": {
+        "x": 314,
+        "y": 357.390625,
+        "width": 128,
+        "height": 40
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"user-form-gender\"]",
+      "box": {
+        "x": 314,
+        "y": 439.390625,
+        "width": 320,
+        "height": 40
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"user-form-email\"]",
+      "box": {
+        "x": 314,
+        "y": 521.390625,
+        "width": 512,
+        "height": 40
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"user-form-contactNumber\"]",
+      "box": {
+        "x": 314,
+        "y": 603.390625,
+        "width": 328,
+        "height": 40
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"user-form-status\"]",
+      "box": {
+        "x": 658,
+        "y": 603.390625,
+        "width": 328,
+        "height": 40
+      }
+    }
+  ],
+  "loadedBoxes": [
+    {
+      "x": 314,
+      "y": 275.390625,
+      "width": 376,
+      "height": 40
+    },
+    {
+      "x": 706,
+      "y": 275.390625,
+      "width": 376,
+      "height": 40
+    },
+    {
+      "x": 314,
+      "y": 357.390625,
+      "width": 128,
+      "height": 40
+    },
+    {
+      "x": 314,
+      "y": 439.390625,
+      "width": 320,
+      "height": 40
+    },
+    {
+      "x": 314,
+      "y": 521.390625,
+      "width": 512,
+      "height": 40
+    },
+    {
+      "x": 314,
+      "y": 603.390625,
+      "width": 328,
+      "height": 40
+    },
+    {
+      "x": 658,
+      "y": 603.390625,
+      "width": 328,
+      "height": 40
+    }
+  ],
+  "shapePixels": 6462,
+  "outsidePixels": 0,
+  "outsideRatio": 0
+}

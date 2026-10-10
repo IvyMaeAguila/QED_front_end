@@ -1,0 +1,42 @@
+[WebServer] (node:10108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:912) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:32216) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\static-routes.spec.ts:25:141 › ADMIN help 375 light: known page remains real
+  1) tests\static-routes.spec.ts:25:141 › ADMIN help 375 light: known page remains real ────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Frequently asked questions', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Frequently asked questions', exact: true }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: 'Frequently asked questions', exact: true })
+
+
+      28 |   await page.goto(`/${role.toLowerCase()}/help`);
+      29 |   await expect(page.getByRole("heading", { name: "Help & Support", exact: true })).toBeVisible();
+    > 30 |   await expect(page.getByRole("heading", { name: "Frequently asked questions", exact: true })).toBeVisible();
+         |                                                                                                ^
+      31 |   await expect(page.locator("[data-sk-primitive]")).toHaveCount(0);
+      32 |   await assertNoDataSpinner(page);
+      33 |   const region = page.locator('[data-sk-region="help-content"]');
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\static-routes.spec.ts:30:96
+
+    Error Context: test-results\static-routes-ADMIN-help-375-light-known-page-remains-real\error-context.md
+
+
+  1 failed
+    tests\static-routes.spec.ts:25:141 › ADMIN help 375 light: known page remains real ─────────────

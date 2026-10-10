@@ -1,0 +1,16 @@
+{
+  "sharedCompositions": 46,
+  "routeCount": 55,
+  "logicAndEffectsUnchanged": true,
+  "issues": [],
+  "protectedFiles": [
+    {
+      "file": "src/config/api.config.ts",
+      "unchanged": true
+    },
+    {
+      "file": "src/features/profiles/teacher/pages/subjects/services/subjectGradeTemplate.service.ts",
+      "unchanged": true
+    }
+  ]
+}

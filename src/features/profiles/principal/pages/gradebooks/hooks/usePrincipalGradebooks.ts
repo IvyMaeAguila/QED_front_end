@@ -1,18 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { GradeLevelSummary } from "../data/types";
 import {
   fetchGradeLevelSummaries,
   fetchSchoolYear,
+  getCachedGradeLevelSummaries,
 } from "../services/gradebooks.service";
 
+let lastSchoolYear = "";
+
 export function usePrincipalGradebooks() {
-  const [gradeLevels, setGradeLevels] = useState<GradeLevelSummary[]>([]);
-  const [schoolYear, setSchoolYear] = useState("");
+  const [gradeLevels, setGradeLevels] = useState<GradeLevelSummary[]>(() => getCachedGradeLevelSummaries() ?? []);
+  const [schoolYear, setSchoolYear] = useState(lastSchoolYear);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
+    setLoading(true);
+    setError(null);
 
     Promise.all([
       fetchGradeLevelSummaries(controller.signal),
@@ -21,6 +28,7 @@ export function usePrincipalGradebooks() {
       .then(([levels, year]) => {
         if (controller.signal.aborted) return;
         setGradeLevels(levels);
+        lastSchoolYear = year;
         setSchoolYear(year);
       })
       .catch((err) => {
@@ -32,7 +40,7 @@ export function usePrincipalGradebooks() {
       });
 
     return () => controller.abort();
-  }, []);
+  }, [attempt]);
 
-  return { gradeLevels, schoolYear, loading, error };
+  return { gradeLevels, schoolYear, loading, error, retry: () => setAttempt(value => value + 1) };
 }

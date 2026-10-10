@@ -19,7 +19,7 @@ export function LogoutConfirmModal({ darkMode, onCancel, onConfirm }: LogoutConf
       icon={<LogOut size={20} aria-hidden="true" />}
       darkMode={darkMode}
       zIndexClass="z-[120]"
-      panelClassName="rounded-[12px] border-t-4 border-t-[#800000] shadow-2xl"
+      panelClassName="rounded-[12px] border-t-4 border-t-maroon shadow-2xl"
       footerClassName="justify-stretch"
     />
   );

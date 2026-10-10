@@ -1,0 +1,43 @@
+
+[WebServer] (node:40024) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:29596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 29 tests using 1 worker
+
+(node:29436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/29] tests\loading.spec.ts:7:1 › 60ms never reveals a skeleton
+[2/29] tests\loading.spec.ts:11:1 › 320ms reveals after 200ms and reserves at least 400ms
+[3/29] tests\loading.spec.ts:20:1 › 1500ms begins showing content within 150ms of data
+[4/29] tests\loading.spec.ts:24:1 › fixed region retains height and has zero CLS
+[5/29] tests\loading.spec.ts:30:3 › variable list, data size 0: one swap, stable surroundings
+[6/29] tests\loading.spec.ts:30:3 › variable list, data size 2: one swap, stable surroundings
+[7/29] tests\loading.spec.ts:30:3 › variable list, data size 9: one swap, stable surroundings
+[8/29] tests\loading.spec.ts:30:3 › variable text, data size 1: one swap, stable surroundings
+[9/29] tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings
+[10/29] tests\loading.spec.ts:30:3 › variable text, data size 24: one swap, stable surroundings
+[11/29] tests\loading.spec.ts:49:1 › animation properties, shimmer duration and shared easing
+[12/29] tests\loading.spec.ts:59:1 › different mount times share shimmer phase
+[13/29] tests\loading.spec.ts:64:30 › 5 items use exact stagger policy
+[14/29] tests\loading.spec.ts:64:30 › 12 items use exact stagger policy
+[15/29] tests\loading.spec.ts:68:1 › reduced motion has no shimmer or fade wait
+[16/29] tests\loading.spec.ts:76:1 › aria busy, hidden reservation, delayed status and complete cleanup
+[17/29] tests\loading.spec.ts:85:1 › error removes skeleton and retry reloads
+[18/29] tests\loading.spec.ts:92:1 › negative control catches wrong fixed height and CLS
+[19/29] tests\loading.spec.ts:97:1 › negative control catches unsynchronized shimmer
+[20/29] tests\loading.spec.ts:102:1 › skeleton CSS uses tokens for every color
+[21/29] tests\loading.spec.ts:107:40 › light: neutral contrast on every surface
+[22/29] tests\loading.spec.ts:107:40 › dark: neutral contrast on every surface
+[23/29] tests\loading.spec.ts:116:1 › text line metrics and adjacent widths
+[24/29] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 375 light: real shell and existing cards
+[25/29] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 375 dark: real shell and existing cards
+[26/29] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 1280 light: real shell and existing cards
+[27/29] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 1280 dark: real shell and existing cards
+[28/29] tests\principal-gradebooks.spec.ts:40:1 › repeat gradebook visit displays cached cards and school year immediately
+[29/29] tests\removed-loading-guard.spec.ts:9:1 › removed splash and duplicate advisory skeleton cannot be reintroduced
+  29 passed (46.6s)

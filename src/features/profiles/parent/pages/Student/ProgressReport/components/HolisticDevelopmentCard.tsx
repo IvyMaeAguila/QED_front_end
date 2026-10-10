@@ -1,3 +1,6 @@
+import { SkeletonText } from "@shared/components/SkeletonLoading";
+import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
+import { PendingRadar } from "../../../../../principal/pages/dashboard/components/PrincipalChartLoading";
 import { useState } from "react";
 import type { AdminThemeContext } from "../../../../../admin/pages/AdminLayout";
 import {
@@ -24,6 +27,7 @@ import type { DetailStudent } from "../../GlobalTypes/types";
 
 interface HolisticDevelopmentCardProps {
   assessment: HolisticAssessmentEntry | undefined;
+  loading?: boolean;
   selectedTerm: TermFilter;
   theme: AdminThemeContext;
   student: DetailStudent;
@@ -34,12 +38,12 @@ type DomainEntry = HolisticAssessmentEntry["domains"][number];
 
 // Per-domain color + icon, echoing the radial language of the spider chart.
 const DOMAIN_META: Record<string, { color: string; icon: LucideIcon }> = {
-  cognitive: { color: "#4779B8", icon: Brain },
-  emotional: { color: "#BB5660", icon: Heart },
-  social: { color: "#468273", icon: UsersRound },
-  behavioral: { color: "#A77622", icon: ListChecks },
+  cognitive: { color: "var(--chart-cognitive)", icon: Brain },
+  emotional: { color: "var(--chart-emotional)", icon: Heart },
+  social: { color: "var(--chart-social)", icon: UsersRound },
+  behavioral: { color: "var(--chart-behavioral)", icon: ListChecks },
 };
-const DEFAULT_DOMAIN_META = { color: "#8B0D0D", icon: Sparkle };
+const DEFAULT_DOMAIN_META = { color: "var(--brand-ink)", icon: Sparkle };
 
 function getDomainMeta(key: string) {
   return DOMAIN_META[key] ?? DEFAULT_DOMAIN_META;
@@ -83,6 +87,7 @@ function makeRadarDot(domains: DomainEntry[], darkMode: boolean) {
 }
 
 export function HolisticDevelopmentCard({
+  loading = false,
   assessment,
   selectedTerm,
   theme,
@@ -91,7 +96,7 @@ export function HolisticDevelopmentCard({
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
-  const domains = assessment?.domains ?? [];
+  const domains: DomainEntry[] = loading ? Object.keys(DOMAIN_META).map(key=>({key:key as DomainEntry["key"],label:key[0].toUpperCase()+key.slice(1),score:3,maxScore:5,subtitle:""})) : assessment?.domains ?? [];
 
   // "OVERALL" is only populated by the context once T1–T3 are all
   // released, so an empty `domains` here while selectedTerm is "OVERALL"
@@ -128,7 +133,7 @@ export function HolisticDevelopmentCard({
         <div className="flex items-center gap-2">
           <span
             className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full"
-            style={{ backgroundColor: `${meta.color}18`, color: meta.color }}
+            style={{ backgroundColor: `color-mix(in srgb, ${meta.color} 9.41%, transparent)`, color: meta.color }}
           >
             <Icon size={14} />
           </span>
@@ -136,10 +141,10 @@ export function HolisticDevelopmentCard({
         </div>
 
         <p className="mt-2.5 text-base font-black leading-tight" style={{ color: band.color }}>
-          {band.remark}
+          {loading ? <SkeletonParagraph field={"parent-report-band:"+d.key} typical={2} width="100%" /> : <span data-sk-field={"parent-report-band:"+d.key}>{band.remark}</span>}
         </p>
         <p className={`text-xs font-bold ${textMuted}`}>
-          {d.score.toFixed(1)} / {d.maxScore.toFixed(1)}
+          {loading ? <SkeletonText width="9ch" /> : <>{d.score.toFixed(1)} / {d.maxScore.toFixed(1)}</>}
         </p>
       </div>
     );
@@ -195,32 +200,26 @@ export function HolisticDevelopmentCard({
               <div className="relative mx-auto w-full max-w-[360px]">
                 <div
                   className="pointer-events-none absolute inset-0 m-auto h-40 w-40 rounded-full opacity-25 blur-3xl"
-            style={{ background: "radial-gradient(circle, #EDF4FC 0%, #4779B8 55%, transparent 75%)" }}
+            style={{ background: "var(--brand-soft)" }}
                 />
                 <ResponsiveContainer width="100%" height={260}>
                   <RadarChart data={radarData} outerRadius={88} margin={{ top: 24, right: 34, bottom: 24, left: 34 }}>
-                    <defs>
-                      <radialGradient id="holisticRadarFill" cx="50%" cy="50%" r="65%">
-                        <stop offset="0%" stopColor="#4779B8" stopOpacity={0.20} />
-                        <stop offset="100%" stopColor="#4779B8" stopOpacity={0.08} />
-                      </radialGradient>
-                    </defs>
                     <PolarGrid stroke={gridStroke} strokeDasharray="3 4" />
                     <PolarAngleAxis dataKey="domain" tick={{ fill: axisColor, fontSize: 11, fontWeight: 700 }} />
                     <PolarRadiusAxis domain={[0, 5]} tick={false} axisLine={false} tickCount={6} />
-                    <Radar
+                    <Radar isAnimationActive={false} shape={loading ? <PendingRadar /> : undefined}
                       dataKey="score"
-                      stroke="#4779B8"
-                      fill="url(#holisticRadarFill)"
+                      stroke="var(--chart-primary)"
+                      fill="var(--chart-primary)" fillOpacity={0.2}
                       strokeWidth={2}
-                      dot={makeRadarDot(domains, darkMode)}
+                      dot={loading ? false : makeRadarDot(domains, darkMode)}
                     />
                   </RadarChart>
                 </ResponsiveContainer>
                 {overallScore && (
                   <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                     <div className={`flex h-16 w-16 flex-col items-center justify-center rounded-full shadow-sm ${darkMode ? "bg-[#1A1A1A]" : "bg-white"}`}>
-                      <span className={`text-lg font-black leading-none tabular-nums ${textPrimary}`}>{overallScore}</span>
+                      <span className={`text-lg font-black leading-none tabular-nums ${textPrimary}`}>{loading ? <SkeletonText width="3ch" /> : overallScore}</span>
                       <span className={`mt-1 text-xs font-bold uppercase tracking-wider ${textMuted}`}>Overall</span>
                     </div>
                   </div>

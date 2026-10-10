@@ -45,7 +45,7 @@ export function ProgressDots({
 
 export function ConfettiBurst() {
   const [pieces] = useState(() => {
-    const colors = ["bg-amber-400", "bg-emerald-400", "bg-sky-400", "bg-rose-400", "bg-violet-400"];
+    const colors = ["bg-maroon", "bg-maroon-light", "bg-gray-400", "bg-brand-light", "bg-gray-600"];
     return Array.from({ length: 12 }).map((_, i) => ({
       left: 8 + Math.random() * 84,
       delay: Math.random() * 0.2,

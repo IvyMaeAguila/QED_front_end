@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { RosterStudent } from "../subjects/detail/data";
 import {
   ATTENDANCE_CYCLE,
@@ -9,9 +10,13 @@ import {
   type GradingPeriod,
 } from "../subjects/detail/types/Grading";
 import { fetchAdvisoryAttendance, saveAdvisoryAttendance } from "./services/attendance.service.ts";
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { LoadingFormValue } from "@shared/loading/LoadingFormValue";
+import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
+import { SkeletonText } from "@shared/components/SkeletonLoading";
+import { rememberRows, skeletonRows } from "@shared/loading/reservations";
 import { StudentAttendanceSummaryModal } from "./StudentAttendanceSummaryModal";
 
-const ACCENT = "#6B0000";
 const WEEKDAY_LABELS = ["SN", "M", "T", "W", "TTH", "F", "ST"];
 const STUDENT_COLUMN_WIDTH = 180;
 const DAY_COLUMN_WIDTH = 28;
@@ -28,6 +33,7 @@ interface AttendanceCalendarSectionProps {
   textPrimary: string;
   textMuted: string;
   editable?: boolean;
+  prerequisitesLoading?: boolean;
 }
 
 function toISODate(d: Date): string {
@@ -86,7 +92,9 @@ export function AttendanceCalendarSection({
   textPrimary,
   textMuted,
   editable = true,
+  prerequisitesLoading = false,
 }: AttendanceCalendarSectionProps) {
+  const [attempt, setAttempt] = useState(0);
   const [attendance, setAttendance] = useState<AttendanceMap>({});
   const [loading, setLoading] = useState(true);
   const [attendanceError, setAttendanceError] = useState<string | null>(null);
@@ -106,6 +114,7 @@ export function AttendanceCalendarSection({
   );
 
   useEffect(() => {
+    if (prerequisitesLoading) return;
     let cancelled = false;
     setLoading(true);
     setAttendanceError(null);
@@ -117,7 +126,7 @@ export function AttendanceCalendarSection({
       })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [sectionId, selectedTermId]);
+  }, [sectionId, selectedTermId, attempt, prerequisitesLoading]);
 
   useEffect(() => {
     if (term) setViewDate(defaultViewDate(term));
@@ -202,17 +211,17 @@ export function AttendanceCalendarSection({
   }
 
   const cardClasses = `overflow-hidden rounded-[12px] border shadow-sm ${panelBg} ${panelBorder}`;
-  const stickyRightBg = darkMode ? "bg-[#2A1A18]" : "bg-white";
+  const stickyRightBg = darkMode ? "bg-panel-dark" : "bg-white";
   // Student name + one column per day + Present/School Days + Summary link.
   const columnCount = 3 + days.length;
 
-  function renderStudentRow(student: RosterStudent, index: number) {
+  function renderStudentRow(student: RosterStudent, index: number, pending: boolean) {
     const { present, total } = termSummary[student.id] ?? { present: 0, total: 0 };
     const rowStripe = index % 2 === 1 ? (darkMode ? "bg-white/[0.015]" : "bg-black/[0.012]") : "";
     return (
-      <tr key={student.id} className={`border-t ${panelBorder} ${rowStripe}`}>
-        <td className={`sticky left-0 z-10 px-3 py-2 ${darkMode ? "bg-[#2A1A18]" : "bg-white"}`}>
-          <span title={student.name} className={`block truncate text-xs font-semibold ${textPrimary}`}>{student.name}</span>
+      <tr data-sk-region="attendance-record-row" key={student.id} className={`border-t ${panelBorder} ${rowStripe}`}>
+        <td className={`sticky left-0 z-10 px-3 py-2 ${darkMode ? "bg-panel-dark" : "bg-white"}`}>
+          <span title={student.name} className={`block truncate text-xs font-semibold ${textPrimary}`}>{pending && prerequisitesLoading ? <SkeletonText width={index % 2 ? "12ch" : "16ch"} /> : student.name}</span>
         </td>
         {days.map(({ iso, dayOfWeek }) => {
           const status = attendance[student.id]?.[iso] ?? null;
@@ -222,11 +231,11 @@ export function AttendanceCalendarSection({
           const inTerm = term ? iso >= term.startDate && iso <= term.endDate : false;
           const canMarkNewToday = iso === todayISO && canMarkToday && term?.id === activeTerm?.id;
           const canEditExistingPast = Boolean(status && iso < todayISO);
-          const clickable = editable && inTerm && (canMarkNewToday || canEditExistingPast);
+          const clickable = !pending && editable && inTerm && (canMarkNewToday || canEditExistingPast);
           return (
             <td
               key={iso}
-              className={`p-0 text-center ${isToday ? (darkMode ? "bg-[#800000]/10" : "bg-[#800000]/[0.035]") : ""}`}
+              data-sk-region="attendance-status-cell" className={`p-0 text-center ${isToday ? (darkMode ? "bg-maroon/10" : "bg-maroon/[0.035]") : ""}`}
             >
               <button
                 onClick={() => clickable && cycle(student.id, iso)}
@@ -237,31 +246,32 @@ export function AttendanceCalendarSection({
                     ? `${formatDisplayDate(iso)} — outside ${term?.label ?? ""}`
                     : `${formatDisplayDate(iso)} — only saved past marks or today's attendance during an open term can be edited`}
                 className={`inline-flex h-6 w-6 items-center justify-center rounded-md text-xs font-extrabold tabular-nums transition-colors ${
-                  clickable ? "hover:scale-105 cursor-pointer" : "cursor-not-allowed opacity-25"
-                } ${isWeekend && !status ? "opacity-60" : ""}`}
+                  pending ? "cursor-not-allowed" : clickable ? "hover:scale-105 cursor-pointer" : "cursor-not-allowed opacity-25"
+                } ${!pending && isWeekend && !status ? "opacity-60" : ""}`}
                 style={
-                  meta
-                    ? { backgroundColor: darkMode ? `${meta.color}25` : meta.bg, color: meta.color }
-                    : { backgroundColor: darkMode ? "#ffffff10" : "#F3F4F6", color: "#9CA3AF" }
+                  pending ? { backgroundColor: "var(--sk-transparent)" } : meta
+                    ? { backgroundColor: darkMode ? `color-mix(in srgb, ${meta.color} 14.51%, transparent)` : meta.bg, color: meta.color }
+                    : { backgroundColor: darkMode ? "#ffffff10" : "var(--surface-page)", color: "#9CA3AF" }
                 }
               >
-                {status ?? "·"}
+                {pending ? <SkeletonText width="1ch" /> : status ?? "·"}
               </button>
             </td>
           );
         })}
-        <td className={`sticky right-[76px] z-10 border-l px-1 py-2 text-center ${panelBorder} ${stickyRightBg}`}>
-          <span className="text-xs font-extrabold tabular-nums" style={{ color: ACCENT }}>
-            {present}/{total}
+        <td data-sk-region="attendance-present-cell" className={`sticky right-[76px] z-10 border-l px-1 py-2 text-center ${panelBorder} ${stickyRightBg}`}>
+          <span className="text-xs font-extrabold tabular-nums" style={{ color: "var(--brand-ink)" }}>
+            {pending ? <SkeletonText width="4ch" className="inline-block align-top" /> : `${present}/${total}`}
           </span>
         </td>
         <td className={`sticky right-0 z-10 border-l px-1 py-2 text-center ${panelBorder} ${stickyRightBg}`}>
           <button
+            disabled={pending}
             onClick={() => setSummaryStudent(student)}
             className={`inline-flex min-h-7 items-center justify-center rounded-lg px-2 text-xs font-bold transition-colors ${
-              darkMode ? "hover:bg-white/10" : "hover:bg-[#F6F7FB]"
+              darkMode ? "hover:bg-white/10" : "hover:bg-brand-light"
             }`}
-            style={{ color: ACCENT }}
+            style={{ color: "var(--brand-ink)" }}
           >
             View 
           </button>
@@ -270,7 +280,107 @@ export function AttendanceCalendarSection({
     );
   }
 
-  if (!term) {
+  const view = `attendance-records-${sectionId}-${selectedTermId}`;
+  const renderTable = (pending: boolean) => {
+    const rows: RosterStudent[] = pending && prerequisitesLoading ? Array.from({length: skeletonRows(view, undefined, 44)}, (_, index) => ({id: `pending-${index}`, name: "", gender: index % 2 ? "F" : "M"})) : roster;
+    const groups = prerequisitesLoading && pending ? { male: rows.filter(student => student.gender === "M"), female: rows.filter(student => student.gender === "F") } : groupedRoster;
+    return (        <div className="overflow-auto">
+          <table
+            data-sk-region="attendance-native-table" className="w-full table-fixed text-sm"
+            style={{ minWidth: `${STUDENT_COLUMN_WIDTH + days.length * DAY_COLUMN_WIDTH + TERM_COLUMN_WIDTH + SUMMARY_COLUMN_WIDTH}px` }}
+          >
+            <colgroup>
+              <col style={{ width: STUDENT_COLUMN_WIDTH }} />
+              {days.map(({ iso }) => <col key={iso} style={{ width: DAY_COLUMN_WIDTH }} />)}
+              <col style={{ width: TERM_COLUMN_WIDTH }} />
+              <col style={{ width: SUMMARY_COLUMN_WIDTH }} />
+            </colgroup>
+            <thead data-sk-region="attendance-records-header">
+              <tr className={darkMode ? "bg-white/3" : "bg-brand-light"}>
+                <th
+                  className={`sticky left-0 z-20 px-3 py-3 text-left text-xs font-extrabold uppercase tracking-wider ${
+                    darkMode ? "bg-panel-dark" : "bg-brand-light"
+                  } ${textMuted}`}
+                >
+                  Student
+                </th>
+                {days.map(({ date, iso, dayOfWeek }) => {
+                  const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+                  const inTerm = Boolean(term && iso >= term.startDate && iso <= term.endDate);
+                  const isToday = iso === todayISO;
+                  return (
+                    <th
+                      key={iso}
+                      aria-current={isToday ? "date" : undefined}
+                      className={`px-0 py-2.5 ${isToday ? (darkMode ? "bg-maroon/20" : "bg-maroon/[0.06]") : isWeekend ? (darkMode ? "bg-white/[0.02]" : "bg-black/[0.02]") : ""}`}
+                    >
+                      <div className="flex flex-col items-center gap-0.5">
+                        <span className={`qed-attendance-weekday uppercase ${isToday ? "text-brand-ink" : `${isWeekend || !inTerm ? "opacity-40" : ""} ${textMuted}`}`}>
+                          {WEEKDAY_LABELS[dayOfWeek]}
+                        </span>
+                        <span className={`text-xs font-extrabold tabular-nums ${isToday ? "text-brand-ink" : `${isWeekend || !inTerm ? "opacity-40" : ""} ${textPrimary}`}`}>
+                          {date.getDate()}
+                        </span>
+                      </div>
+                    </th>
+                  );
+                })}
+                <th
+                  className={`sticky right-[76px] z-20 border-l px-2 py-3 text-center text-xs font-extrabold uppercase tracking-wide ${panelBorder} ${
+                    darkMode ? "bg-panel-dark" : "bg-brand-light"
+                  } ${textMuted}`}
+                >
+                  Present / School Days
+                  <br />
+                  <span className="normal-case font-semibold">({prerequisitesLoading ? <SkeletonParagraph field="attendance-record-term-label" typical={2} width="100%" /> : term?.label})</span>
+                </th>
+                <th
+                  className={`sticky right-0 z-20 border-l px-1 py-3 text-center text-xs font-extrabold uppercase tracking-wide ${panelBorder} ${
+                    darkMode ? "bg-panel-dark" : "bg-brand-light"
+                  } ${textMuted}`}
+                >
+                  Summary
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {groups.male.length > 0 && (
+                <>
+                  <tr>
+                    <td className={`sticky left-0 z-20 border-t px-3 py-1.5 text-left text-xs font-bold uppercase tracking-wider ${panelBorder} ${darkMode ? "bg-white/10" : "bg-brand-light"} ${textPrimary}`}>
+                      Male
+                    </td>
+                    <td colSpan={columnCount - 1} className={`border-t ${panelBorder} ${darkMode ? "bg-white/10" : "bg-brand-light"}`} />
+                  </tr>
+                  {groups.male.map((student, index) => renderStudentRow(student, index, pending))}
+                </>
+              )}
+
+              {groups.female.length > 0 && (
+                <>
+                  <tr>
+                    <td className={`sticky left-0 z-20 border-t px-3 py-1.5 text-left text-xs font-bold uppercase tracking-wider ${panelBorder} ${darkMode ? "bg-white/10" : "bg-brand-light"} ${textPrimary}`}>
+                      Female
+                    </td>
+                    <td colSpan={columnCount - 1} className={`border-t ${panelBorder} ${darkMode ? "bg-white/10" : "bg-brand-light"}`} />
+                  </tr>
+                  {groups.female.map((student, index) => renderStudentRow(student, index, pending))}
+                </>
+              )}
+
+              {rows.length === 0 && (
+                <tr>
+                  <td colSpan={columnCount} className={`px-5 py-12 text-center text-sm font-semibold ${textMuted}`}>
+                    No students enrolled yet.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>);
+  };
+
+  if (!term && !prerequisitesLoading) {
     return (
       <div className={`${cardClasses} px-5 py-16 text-center`}>
         <p className={`font-bold ${textPrimary}`}>No terms set up yet</p>
@@ -284,16 +394,16 @@ export function AttendanceCalendarSection({
       <div className={`flex flex-col gap-4 border-b px-5 py-5 sm:flex-row sm:items-center sm:justify-between ${panelBorder}`}>
         <div className="flex items-start gap-3">
           <div>
-            <h2 className={`font-extrabold ${textPrimary}`}>Attendance Records</h2>
+            <h2 data-sk-static="" className={`font-extrabold ${textPrimary}`}>Attendance Records</h2>
             <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
-              {roster.length} student{roster.length === 1 ? "" : "s"}
+              {prerequisitesLoading ? <SkeletonText width="1ch" className="inline-block align-top" /> : roster.length} student{roster.length === 1 ? "" : "s"}
               {editable ? " · click a cell to edit" : ""}
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <select
+          <LoadingFormValue loading={prerequisitesLoading} intrinsic name="attendance-records-term" width="7ch"><select
             value={selectedTermId}
             onChange={(e) => setSelectedTermId(e.target.value)}
             className={`h-9 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
@@ -304,7 +414,7 @@ export function AttendanceCalendarSection({
                 {t.label}
               </option>
             ))}
-          </select>
+          </select></LoadingFormValue>
 
           <div className={`flex h-9 items-center gap-1 rounded-lg border px-1 ${panelBorder}`}>
             <button
@@ -312,7 +422,7 @@ export function AttendanceCalendarSection({
               disabled={!canGoPrev}
               aria-label="Previous month"
               className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors disabled:opacity-30 ${
-                darkMode ? "hover:bg-white/10" : "hover:bg-[#F6F7FB]"
+                darkMode ? "hover:bg-white/10" : "hover:bg-brand-light"
               } ${textMuted}`}
             >
               <ChevronLeft size={16} />
@@ -323,7 +433,7 @@ export function AttendanceCalendarSection({
               disabled={!canGoNext}
               aria-label="Next month"
               className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors disabled:opacity-30 ${
-                darkMode ? "hover:bg-white/10" : "hover:bg-[#F6F7FB]"
+                darkMode ? "hover:bg-white/10" : "hover:bg-brand-light"
               } ${textMuted}`}
             >
               <ChevronRight size={16} />
@@ -332,11 +442,11 @@ export function AttendanceCalendarSection({
         </div>
       </div>
 
-      {editable && !canMarkToday && (
+      <LoadingRegion loading={prerequisitesLoading} name="attendance-records-term-notice" variable skeleton={<div className={`border-b px-5 py-2.5 text-xs font-medium ${panelBorder} ${textMuted}`}><SkeletonParagraph field="attendance-records-term-notice" typical={3} width="100%" /></div>}>{editable && !canMarkToday && (
         <div className={`border-b px-5 py-2.5 text-xs font-medium ${panelBorder} ${textMuted}`}>
           Today is outside an open term, so new attendance cannot be entered. Previously saved attendance remains editable.
         </div>
-      )}
+      )}</LoadingRegion>
 
       <div className={`flex flex-wrap gap-3 border-b px-5 py-3 ${panelBorder}`}>
         {(Object.keys(ATTENDANCE_META) as (keyof typeof ATTENDANCE_META)[]).map((key) => {
@@ -350,109 +460,7 @@ export function AttendanceCalendarSection({
         })}
       </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center gap-2 px-5 py-16">
-          <Loader2 size={16} className={`animate-spin ${textMuted}`} />
-          <p className={`text-sm font-semibold ${textMuted}`}>Loading attendance...</p>
-        </div>
-      ) : attendanceError ? (
-        <p className="px-5 py-10 text-center text-sm font-semibold text-red-500" role="alert">{attendanceError}</p>
-      ) : (
-        <div className="overflow-auto">
-          <table
-            className="w-full table-fixed text-sm"
-            style={{ minWidth: `${STUDENT_COLUMN_WIDTH + days.length * DAY_COLUMN_WIDTH + TERM_COLUMN_WIDTH + SUMMARY_COLUMN_WIDTH}px` }}
-          >
-            <colgroup>
-              <col style={{ width: STUDENT_COLUMN_WIDTH }} />
-              {days.map(({ iso }) => <col key={iso} style={{ width: DAY_COLUMN_WIDTH }} />)}
-              <col style={{ width: TERM_COLUMN_WIDTH }} />
-              <col style={{ width: SUMMARY_COLUMN_WIDTH }} />
-            </colgroup>
-            <thead>
-              <tr className={darkMode ? "bg-white/3" : "bg-[#F8FAFC]"}>
-                <th
-                  className={`sticky left-0 z-20 px-3 py-3 text-left text-xs font-extrabold uppercase tracking-wider ${
-                    darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
-                  } ${textMuted}`}
-                >
-                  Student
-                </th>
-                {days.map(({ date, iso, dayOfWeek }) => {
-                  const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-                  const inTerm = iso >= term.startDate && iso <= term.endDate;
-                  const isToday = iso === todayISO;
-                  return (
-                    <th
-                      key={iso}
-                      aria-current={isToday ? "date" : undefined}
-                      className={`px-0 py-2.5 ${isToday ? (darkMode ? "bg-[#800000]/20" : "bg-[#800000]/[0.06]") : isWeekend ? (darkMode ? "bg-white/[0.02]" : "bg-black/[0.02]") : ""}`}
-                    >
-                      <div className="flex flex-col items-center gap-0.5">
-                        <span className={`qed-attendance-weekday uppercase ${isToday ? "text-[#800000]" : `${isWeekend || !inTerm ? "opacity-40" : ""} ${textMuted}`}`}>
-                          {WEEKDAY_LABELS[dayOfWeek]}
-                        </span>
-                        <span className={`text-xs font-extrabold tabular-nums ${isToday ? "text-[#800000]" : `${isWeekend || !inTerm ? "opacity-40" : ""} ${textPrimary}`}`}>
-                          {date.getDate()}
-                        </span>
-                      </div>
-                    </th>
-                  );
-                })}
-                <th
-                  className={`sticky right-[76px] z-20 border-l px-2 py-3 text-center text-xs font-extrabold uppercase tracking-wide ${panelBorder} ${
-                    darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
-                  } ${textMuted}`}
-                >
-                  Present / School Days
-                  <br />
-                  <span className="normal-case font-semibold">({term.label})</span>
-                </th>
-                <th
-                  className={`sticky right-0 z-20 border-l px-1 py-3 text-center text-xs font-extrabold uppercase tracking-wide ${panelBorder} ${
-                    darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
-                  } ${textMuted}`}
-                >
-                  Summary
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {groupedRoster.male.length > 0 && (
-                <>
-                  <tr>
-                    <td className={`sticky left-0 z-20 border-t px-3 py-1.5 text-left text-xs font-bold uppercase tracking-wider ${panelBorder} ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"} ${textPrimary}`}>
-                      Male
-                    </td>
-                    <td colSpan={columnCount - 1} className={`border-t ${panelBorder} ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"}`} />
-                  </tr>
-                  {groupedRoster.male.map((student, index) => renderStudentRow(student, index))}
-                </>
-              )}
-
-              {groupedRoster.female.length > 0 && (
-                <>
-                  <tr>
-                    <td className={`sticky left-0 z-20 border-t px-3 py-1.5 text-left text-xs font-bold uppercase tracking-wider ${panelBorder} ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"} ${textPrimary}`}>
-                      Female
-                    </td>
-                    <td colSpan={columnCount - 1} className={`border-t ${panelBorder} ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"}`} />
-                  </tr>
-                  {groupedRoster.female.map((student, index) => renderStudentRow(student, index))}
-                </>
-              )}
-
-              {roster.length === 0 && (
-                <tr>
-                  <td colSpan={columnCount} className={`px-5 py-12 text-center text-sm font-semibold ${textMuted}`}>
-                    No students enrolled yet.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <LoadingRegion loading={prerequisitesLoading || loading} error={attendanceError} retry={() => setAttempt(value => value + 1)} name="attendance-records-table" variable skeleton={null} frame={renderTable} retainPrevious hasContent={roster.length > 0} onSettled={() => rememberRows(view, roster.length)}>{null}</LoadingRegion>
 
       {summaryStudent && (
         <StudentAttendanceSummaryModal
@@ -471,3 +479,4 @@ export function AttendanceCalendarSection({
     </section>
   );
 }
+

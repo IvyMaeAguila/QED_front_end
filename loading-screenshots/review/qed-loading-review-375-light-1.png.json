@@ -1,0 +1,14 @@
+{
+  "leftToRight": [
+    "admin",
+    "admin-academic-year",
+    "admin-add-subject",
+    "admin-calendar",
+    "admin-class-details",
+    "admin-class-edit",
+    "admin-class-new",
+    "admin-classes"
+  ],
+  "top": "skeleton",
+  "bottom": "loaded"
+}

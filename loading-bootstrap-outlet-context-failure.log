@@ -1,0 +1,298 @@
+
+[WebServer] (node:35612) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:29180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 7 tests using 1 worker
+
+
+(node:27412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/7] tests\bootstrap-loading.spec.ts:30:1 › bootstrap 60ms never shows the brand loader or status
+
+
+[WebServer] 9:32:19 AM [vite] (client) [Unhandled error] TypeError: Cannot destructure property 'darkMode' of 'useOutletContext(...)' as it is null.
+[WebServer]  > darkMode src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.loading-view.tsx:27:2
+[WebServer]     25 |  
+[WebServer]     26 |  function useTeacherDashboardHomeState() {
+[WebServer]     27 |    const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
+[WebServer]        |    ^
+[WebServer]     28 |      useOutletContext<AdminThemeContext>();
+[WebServer]     29 |    const navigate = useNavigate();
+[WebServer]  > useTeacherDashboardHomeState src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.loading-view.tsx:90:15
+[WebServer]  > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:19
+[WebServer]  > renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:21
+[WebServer]  > updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:18
+[WebServer]  > beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:17
+[WebServer]  > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+[WebServer]  > performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:21
+[WebServer]  > workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:40
+[WebServer]  > renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:10
+[WebServer] 
+[WebServer] 9:32:19 AM [vite] (client) [console.warn] An error occurred in the <TeacherDashboardHomeComposition> component.
+[WebServer] 
+[WebServer] Consider adding an error boundary to your tree to customize error handling behavior.
+[WebServer] Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+[WebServer] 
+  1) tests\bootstrap-loading.spec.ts:30:1 › bootstrap 60ms never shows the brand loader or status ──
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /Good .*, Marie Dela Cruz!/ })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: /Good .*, Marie Dela Cruz!/ }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: /Good .*, Marie Dela Cruz!/ })
+
+
+      30 | test("bootstrap 60ms never shows the brand loader or status", async ({ page }) => {
+      31 |   const { releaseData } = await bootstrap(page, true);
+    > 32 |   await expect(page.getByRole("heading", { name: /Good .*, Marie Dela Cruz!/ })).toBeVisible();
+         |                                                                                  ^
+      33 |   expect(await page.evaluate(() => (window as unknown as { bootstrapFrames: { visible: boolean; status: number }[] }).bootstrapFrames.some(x => x.visible || x.status))).toBe(false);
+      34 |   await expect(page.locator('[data-bootstrap-loader], .qed-wrap')).toHaveCount(0);
+      35 |   releaseData();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bootstrap-loading.spec.ts:32:82
+
+    Error Context: test-results\bootstrap-loading-bootstra-8e2ef--the-brand-loader-or-status\error-context.md
+
+
+
+(node:39996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[2/7] tests\bootstrap-loading.spec.ts:37:1 › revealed bootstrap animates only the real logo opacity, never rotation
+[3/7] tests\bootstrap-loading.spec.ts:48:1 › bootstrap reduced motion has no running animation
+[4/7] tests\bootstrap-loading.spec.ts:55:1 › bootstrap busy and status follow reveal, minimum duration, and DOM cleanup
+
+[WebServer] 9:32:28 AM [vite] (client) [Unhandled error] TypeError: Cannot destructure property 'darkMode' of 'useOutletContext(...)' as it is null.
+[WebServer]  > darkMode src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.loading-view.tsx:27:2
+[WebServer]     25 |  
+[WebServer]     26 |  function useTeacherDashboardHomeState() {
+[WebServer]     27 |    const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
+[WebServer]        |    ^
+[WebServer]     28 |      useOutletContext<AdminThemeContext>();
+[WebServer]     29 |    const navigate = useNavigate();
+[WebServer]  > useTeacherDashboardHomeState src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.loading-view.tsx:90:15
+[WebServer]  > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:19
+[WebServer]  > renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:21
+[WebServer]  > updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:18
+[WebServer]  > beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:17
+[WebServer]  > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+[WebServer]  > performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:21
+[WebServer]  > workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:40
+[WebServer]  > renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:10
+[WebServer] 
+
+[WebServer] 9:32:28 AM [vite] (client) [console.warn] An error occurred in the <TeacherDashboardHomeComposition> component.
+[WebServer] 
+[WebServer] Consider adding an error boundary to your tree to customize error handling behavior.
+[WebServer] Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+[WebServer] 
+  2) tests\bootstrap-loading.spec.ts:55:1 › bootstrap busy and status follow reveal, minimum duration, and DOM cleanup 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /Good .*, Marie Dela Cruz!/ })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: /Good .*, Marie Dela Cruz!/ }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: /Good .*, Marie Dela Cruz!/ })
+
+
+      59 |   await expect(root.getByRole("status")).toHaveText("Loading…");
+      60 |   release();
+    > 61 |   await expect(page.getByRole("heading", { name: /Good .*, Marie Dela Cruz!/ })).toBeVisible();
+         |                                                                                  ^
+      62 |   const evidence = await page.evaluate(() => (window as unknown as { bootstrapFrames: { time: number; busy: string; visible: boolean; status: number }[] }).bootstrapFrames);
+      63 |   const visible = evidence.find(x => x.visible)!;
+      64 |   const done = evidence.find(x => x.busy === "false")!;
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bootstrap-loading.spec.ts:61:82
+
+    Error Context: test-results\bootstrap-loading-bootstra-b3c52-um-duration-and-DOM-cleanup\error-context.md
+
+
+
+(node:27948) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[5/7] tests\bootstrap-loading.spec.ts:71:1 › protected components and page requests never render before auth resolves
+
+[WebServer] 9:32:34 AM [vite] (client) [Unhandled error] TypeError: Cannot destructure property 'darkMode' of 'useOutletContext(...)' as it is null.
+[WebServer]  > darkMode src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.loading-view.tsx:27:2
+[WebServer]     25 |  
+[WebServer]     26 |  function useTeacherDashboardHomeState() {
+[WebServer]     27 |    const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
+[WebServer]        |    ^
+[WebServer]     28 |      useOutletContext<AdminThemeContext>();
+[WebServer]     29 |    const navigate = useNavigate();
+[WebServer]  > useTeacherDashboardHomeState src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.loading-view.tsx:90:15
+[WebServer]  > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:19
+[WebServer]  > renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:21
+[WebServer]  > updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:18
+[WebServer]  > beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:17
+[WebServer]  > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+[WebServer]  > performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:21
+[WebServer]  > workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:40
+[WebServer]  > renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:10
+[WebServer] 
+[WebServer] 9:32:34 AM [vite] (client) [console.warn] An error occurred in the <TeacherDashboardHomeComposition> component.
+[WebServer] 
+[WebServer] Consider adding an error boundary to your tree to customize error handling behavior.
+[WebServer] Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+[WebServer] 
+
+  3) tests\bootstrap-loading.spec.ts:71:1 › protected components and page requests never render before auth resolves 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.qed-account-ui')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('.qed-account-ui') with timeout 5000ms
+      - waiting for locator('.qed-account-ui')
+
+
+      75 |   expect(requests).toEqual([]);
+      76 |   release(); releaseData();
+    > 77 |   await expect(page.locator(".qed-account-ui")).toBeVisible();
+         |                                                 ^
+      78 | });
+      79 | for (const width of [375, 1280]) test(`lazy route ${width}: registered composition inside real shell with stable surroundings`, async ({ page }) => {
+      80 |   await page.setViewportSize({ width, height: 1000 });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bootstrap-loading.spec.ts:77:49
+
+    Error Context: test-results\bootstrap-loading-protecte-7de89-render-before-auth-resolves\error-context.md
+
+
+
+
+(node:14516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[6/7] tests\bootstrap-loading.spec.ts:79:34 › lazy route 375: registered composition inside real shell with stable surroundings
+
+[WebServer] 9:32:41 AM [vite] (client) [Unhandled error] TypeError: Cannot destructure property 'darkMode' of 'useOutletContext(...)' as it is null.
+[WebServer]  > darkMode src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.loading-view.tsx:27:2
+[WebServer]     25 |  
+[WebServer]     26 |  function useTeacherDashboardHomeState() {
+[WebServer]     27 |    const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
+[WebServer]        |    ^
+[WebServer]     28 |      useOutletContext<AdminThemeContext>();
+[WebServer]     29 |    const navigate = useNavigate();
+[WebServer]  > useTeacherDashboardHomeState src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.loading-view.tsx:90:15
+[WebServer]  > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:19
+[WebServer]  > renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:21
+[WebServer]  > updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:18
+[WebServer]  > beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:17
+[WebServer]  > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+[WebServer]  > performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:21
+[WebServer]  > workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:40
+[WebServer]  > renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:10
+[WebServer] 
+[WebServer] 9:32:41 AM [vite] (client) [console.warn] An error occurred in the <TeacherDashboardHomeComposition> component.
+[WebServer] 
+[WebServer] Consider adding an error boundary to your tree to customize error handling behavior.
+[WebServer] Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+[WebServer] 
+
+  4) tests\bootstrap-loading.spec.ts:79:34 › lazy route 375: registered composition inside real shell with stable surroundings 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('[data-route-skeleton="/teacher"]')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-route-skeleton="/teacher"]') with timeout 5000ms
+      - waiting for locator('[data-route-skeleton="/teacher"]')
+
+
+      84 |   await page.route("**/src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.tsx", async route => { await chunk; await route.continue(); });
+      85 |   await page.goto("/teacher", { waitUntil: "domcontentloaded" });
+    > 86 |   await expect(page.locator('[data-route-skeleton="/teacher"]')).toBeVisible();
+         |                                                                  ^
+      87 |   await expect(page.getByRole("heading", { name: /Good .*, Marie Dela Cruz!/ })).toBeVisible();
+      88 |   await expect(page.locator('[data-sk-chart="ring"]')).toBeAttached();
+      89 |   await expect(page.locator(".qed-wrap, .qed-spinner, [data-bootstrap-loader]")).toHaveCount(0);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bootstrap-loading.spec.ts:86:66
+
+    Error Context: test-results\bootstrap-loading-lazy-rou-5f557-ll-with-stable-surroundings\error-context.md
+
+
+
+(node:23356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[7/7] tests\bootstrap-loading.spec.ts:79:34 › lazy route 1280: registered composition inside real shell with stable surroundings
+
+[WebServer] 9:32:47 AM [vite] (client) [Unhandled error] TypeError: Cannot destructure property 'darkMode' of 'useOutletContext(...)' as it is null.
+[WebServer]  > darkMode src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.loading-view.tsx:27:2
+[WebServer]     25 |  
+[WebServer]     26 |  function useTeacherDashboardHomeState() {
+[WebServer]     27 |    const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
+[WebServer]        |    ^
+[WebServer]     28 |      useOutletContext<AdminThemeContext>();
+[WebServer]     29 |    const navigate = useNavigate();
+[WebServer]  > useTeacherDashboardHomeState src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.loading-view.tsx:90:15
+[WebServer]  > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:19
+[WebServer]  > renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:21
+[WebServer]  > updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:18
+[WebServer]  > beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:17
+[WebServer]  > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+[WebServer]  > performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:21
+[WebServer]  > workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:40
+[WebServer]  > renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:10
+[WebServer] 
+
+[WebServer] 9:32:47 AM [vite] (client) [console.warn] An error occurred in the <TeacherDashboardHomeComposition> component.
+[WebServer] 
+[WebServer] Consider adding an error boundary to your tree to customize error handling behavior.
+[WebServer] Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+[WebServer] 
+  5) tests\bootstrap-loading.spec.ts:79:34 › lazy route 1280: registered composition inside real shell with stable surroundings 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('[data-route-skeleton="/teacher"]')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-route-skeleton="/teacher"]') with timeout 5000ms
+      - waiting for locator('[data-route-skeleton="/teacher"]')
+
+
+      84 |   await page.route("**/src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.tsx", async route => { await chunk; await route.continue(); });
+      85 |   await page.goto("/teacher", { waitUntil: "domcontentloaded" });
+    > 86 |   await expect(page.locator('[data-route-skeleton="/teacher"]')).toBeVisible();
+         |                                                                  ^
+      87 |   await expect(page.getByRole("heading", { name: /Good .*, Marie Dela Cruz!/ })).toBeVisible();
+      88 |   await expect(page.locator('[data-sk-chart="ring"]')).toBeAttached();
+      89 |   await expect(page.locator(".qed-wrap, .qed-spinner, [data-bootstrap-loader]")).toHaveCount(0);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bootstrap-loading.spec.ts:86:66
+
+    Error Context: test-results\bootstrap-loading-lazy-rou-a7886-ll-with-stable-surroundings\error-context.md
+
+
+  5 failed
+    tests\bootstrap-loading.spec.ts:30:1 › bootstrap 60ms never shows the brand loader or status ───
+    tests\bootstrap-loading.spec.ts:55:1 › bootstrap busy and status follow reveal, minimum duration, and DOM cleanup 
+    tests\bootstrap-loading.spec.ts:71:1 › protected components and page requests never render before auth resolves 
+    tests\bootstrap-loading.spec.ts:79:34 › lazy route 375: registered composition inside real shell with stable surroundings 
+    tests\bootstrap-loading.spec.ts:79:34 › lazy route 1280: registered composition inside real shell with stable surroundings 
+  2 passed (55.9s)

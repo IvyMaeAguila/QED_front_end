@@ -1,0 +1,167 @@
+
+[WebServer] (node:35792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21892) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 111 tests using 1 worker
+
+(node:10420) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/111] tests\attendance-records-loading.spec.ts:14:62 › attendance records 375 light keeps date headers and view controls real
+[2/111] tests\attendance-records-loading.spec.ts:14:62 › attendance records 375 dark keeps date headers and view controls real
+[3/111] tests\attendance-records-loading.spec.ts:14:62 › attendance records 1280 light keeps date headers and view controls real
+[4/111] tests\attendance-records-loading.spec.ts:14:62 › attendance records 1280 dark keeps date headers and view controls real
+[5/111] tests\attendance-records-loading.spec.ts:18:62 › attendance summary 375 light keeps labels and calendar dates real
+[6/111] tests\attendance-records-loading.spec.ts:18:62 › attendance summary 375 dark keeps labels and calendar dates real
+[7/111] tests\attendance-records-loading.spec.ts:18:62 › attendance summary 1280 light keeps labels and calendar dates real
+[8/111] tests\attendance-records-loading.spec.ts:18:62 › attendance summary 1280 dark keeps labels and calendar dates real
+[9/111] tests\attendance-records-loading.spec.ts:21:28 › attendance records preserves 0 actual roster rows
+[10/111] tests\attendance-records-loading.spec.ts:21:28 › attendance records preserves 1 actual roster rows
+[11/111] tests\attendance-records-loading.spec.ts:21:28 › attendance records preserves 9 actual roster rows
+[12/111] tests\attendance-records-loading.spec.ts:22:39 › attendance Month request error clears all shapes and retries
+[WebServer] 8:42:56 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+[WebServer] 8:42:56 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+[13/111] tests\attendance-records-loading.spec.ts:22:39 › attendance Summary request error clears all shapes and retries
+
+[WebServer] 8:42:59 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+[WebServer] 8:42:59 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+[WebServer] 8:42:59 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+
+[WebServer] 8:42:59 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+
+[14/111] tests\attendance-records-loading.spec.ts:23:1 › attendance advisory error has a real retry
+
+[WebServer] 8:43:00 PM [vite] (client) [console.error] Failed to load advisory sections: Error: Failed to fetch advisory sections (500)
+[WebServer]     at fetchAdvisorySections (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:15:21)
+[15/111] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+[16/111] tests\attendance-records-loading.spec.ts:24:32 › attendance term slow refetch preserves rows
+[17/111] tests\attendance-records-loading.spec.ts:25:1 › attendance marking keeps the original cycle and save payload
+[18/111] tests\attendance-records-loading.spec.ts:26:32 › attendance light summary numeric surfaces retain contrast
+[19/111] tests\attendance-records-loading.spec.ts:26:32 › attendance dark summary numeric surfaces retain contrast
+[20/111] tests\attendance-records-loading.spec.ts:29:1 › attendance native fixed columns do not vary across roster names or counts
+[21/111] tests\domain-trends-loading.spec.ts:15:62 › domain trends 375 light keeps domains and chart shell real
+[22/111] tests\domain-trends-loading.spec.ts:15:62 › domain trends 375 dark keeps domains and chart shell real
+[23/111] tests\domain-trends-loading.spec.ts:15:62 › domain trends 1280 light keeps domains and chart shell real
+[24/111] tests\domain-trends-loading.spec.ts:15:62 › domain trends 1280 dark keeps domains and chart shell real
+[25/111] tests\domain-trends-loading.spec.ts:19:28 › domain trends preserves 0 actual weeks and empty state
+[26/111] tests\domain-trends-loading.spec.ts:19:28 › domain trends preserves 1 actual weeks and empty state
+[27/111] tests\domain-trends-loading.spec.ts:19:28 › domain trends preserves 9 actual weeks and empty state
+[28/111] tests\domain-trends-loading.spec.ts:20:51 › domain trends retries terms failure and clears placeholders
+[29/111] tests\domain-trends-loading.spec.ts:20:51 › domain trends retries advisories failure and clears placeholders
+
+[WebServer] 8:43:38 PM [vite] (client) [console.error] Failed to load advisory sections: Error: Failed to fetch advisory sections (500)
+[WebServer]     at fetchAdvisorySections (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:15:21)
+[30/111] tests\domain-trends-loading.spec.ts:20:51 › domain trends retries trends failure and clears placeholders
+[31/111] tests\domain-trends-loading.spec.ts:21:32 › domain trends light neutral score and colored composite contrast
+[32/111] tests\domain-trends-loading.spec.ts:21:32 › domain trends dark neutral score and colored composite contrast
+[33/111] tests\domain-trends-loading.spec.ts:22:1 › domain chart placeholder preserves the line-chart silhouette
+[34/111] tests\domain-trends-loading.spec.ts:23:1 › domain subject selection and legend toggles keep their existing behavior
+[35/111] tests\domain-trends-loading.spec.ts:24:1 › domain trends no-advisory result settles to its existing empty state
+[36/111] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[37/111] tests\domain-trends-loading.spec.ts:26:32 › domain trends slow term refetch preserves previous data
+[38/111] tests\domain-trends-loading.spec.ts:32:32 › domain trends light line shimmer retains its entire silhouette
+[39/111] tests\domain-trends-loading.spec.ts:32:32 › domain trends dark line shimmer retains its entire silhouette
+[40/111] tests\domain-trends-loading.spec.ts:33:28 › domain trends 1 subject tabs preserve native wrapping
+[41/111] tests\domain-trends-loading.spec.ts:33:28 › domain trends 2 subject tabs preserve native wrapping
+[42/111] tests\domain-trends-loading.spec.ts:33:28 › domain trends 9 subject tabs preserve native wrapping
+[43/111] tests\holistic-overview-loading.spec.ts:12:62 › holistic overview 375 light keeps roster headers and filters real
+[44/111] tests\holistic-overview-loading.spec.ts:12:62 › holistic overview 375 dark keeps roster headers and filters real
+[45/111] tests\holistic-overview-loading.spec.ts:12:62 › holistic overview 1280 light keeps roster headers and filters real
+[46/111] tests\holistic-overview-loading.spec.ts:12:62 › holistic overview 1280 dark keeps roster headers and filters real
+[47/111] tests\holistic-overview-loading.spec.ts:13:28 › holistic overview preserves 0 returned students
+[48/111] tests\holistic-overview-loading.spec.ts:13:28 › holistic overview preserves 1 returned students
+[49/111] tests\holistic-overview-loading.spec.ts:13:28 › holistic overview preserves 9 returned students
+[50/111] tests\holistic-overview-loading.spec.ts:14:53 › holistic overview retries terms errors without losing search
+[51/111] tests\holistic-overview-loading.spec.ts:14:53 › holistic overview retries advisories errors without losing search
+
+[WebServer] 8:44:25 PM [vite] (client) [console.error] Failed to load advisory sections: Error: Failed to fetch advisory sections (500)
+[WebServer]     at fetchAdvisorySections (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:15:21)
+[52/111] tests\holistic-overview-loading.spec.ts:14:53 › holistic overview retries overview errors without losing search
+[53/111] tests\holistic-overview-loading.spec.ts:15:1 › holistic overview native columns vary with actual student and trend labels
+[54/111] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[55/111] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview slow refetch preserves rows
+[56/111] tests\holistic-overview-loading.spec.ts:17:32 › holistic overview light actual table surface contrast
+[57/111] tests\holistic-overview-loading.spec.ts:17:32 › holistic overview dark actual table surface contrast
+[58/111] tests\holistic-overview-loading.spec.ts:18:1 › holistic overview local search and level filters preserve their calculations
+[59/111] tests\holistic-overview-loading.spec.ts:19:1 › holistic overview repeat term skeleton uses cached native widths
+[60/111] tests\principal-grade-sheet-loading.spec.ts:14:62 › grade sheet 375 light keeps known controls and headers real
+[61/111] tests\principal-grade-sheet-loading.spec.ts:14:62 › grade sheet 375 dark keeps known controls and headers real
+[62/111] tests\principal-grade-sheet-loading.spec.ts:14:62 › grade sheet 1280 light keeps known controls and headers real
+[63/111] tests\principal-grade-sheet-loading.spec.ts:14:62 › grade sheet 1280 dark keeps known controls and headers real
+[64/111] tests\principal-grade-sheet-loading.spec.ts:18:28 › grade sheet preserves 0 actual student rows
+[65/111] tests\principal-grade-sheet-loading.spec.ts:18:28 › grade sheet preserves 1 actual student rows
+[66/111] tests\principal-grade-sheet-loading.spec.ts:18:28 › grade sheet preserves 9 actual student rows
+[67/111] tests\principal-grade-sheet-loading.spec.ts:19:44 › grade sheet retries period errors
+[68/111] tests\principal-grade-sheet-loading.spec.ts:19:44 › grade sheet retries book errors
+[69/111] tests\principal-grade-sheet-loading.spec.ts:19:44 › grade sheet retries year errors
+[70/111] tests\principal-grade-sheet-loading.spec.ts:20:1 › default term lookup keeps the grade sheet shell visible and then selects the server default
+[71/111] tests\principal-grade-sheet-loading.spec.ts:21:1 › unsubmitted term keeps the original unavailable modal and selected term
+[72/111] tests\principal-grade-sheet-loading.spec.ts:22:1 › grade sheet native columns vary with actual returned content
+[73/111] tests\principal-grade-sheet-loading.spec.ts:23:32 › grade sheet light actual table surface pixels
+[74/111] tests\principal-grade-sheet-loading.spec.ts:23:32 › grade sheet dark actual table surface pixels
+[75/111] tests\principal-grade-sheet-loading.spec.ts:24:1 › grade sheet repeat view reuses measured native columns and slow refetch retains rows
+[76/111] tests\principal-grade-sheet-loading.spec.ts:29:32 › grade sheet light term value has a measurable placeholder
+[77/111] tests\principal-grade-sheet-loading.spec.ts:29:32 › grade sheet dark term value has a measurable placeholder
+[78/111] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+[79/111] tests\principal-grade-sheet-loading.spec.ts:38:1 › intrinsic term selector stays variable and its loaded width follows actual labels
+[80/111] tests\teacher-grades-loading.spec.ts:7:62 › teacher grades 375 light keeps real headers and controls
+[81/111] tests\teacher-grades-loading.spec.ts:7:62 › teacher grades 375 dark keeps real headers and controls
+[82/111] tests\teacher-grades-loading.spec.ts:7:62 › teacher grades 1280 light keeps real headers and controls
+[83/111] tests\teacher-grades-loading.spec.ts:7:62 › teacher grades 1280 dark keeps real headers and controls
+[84/111] tests\teacher-grades-loading.spec.ts:8:28 › teacher grades preserves 0 actual students
+[85/111] tests\teacher-grades-loading.spec.ts:8:28 › teacher grades preserves 1 actual students
+[86/111] tests\teacher-grades-loading.spec.ts:8:28 › teacher grades preserves 9 actual students
+[87/111] tests\teacher-grades-loading.spec.ts:9:52 › teacher grades retries terms
+[88/111] tests\teacher-grades-loading.spec.ts:9:52 › teacher grades retries sections
+[89/111] tests\teacher-grades-loading.spec.ts:9:52 › teacher grades retries gradebook
+
+[WebServer] 8:45:48 PM [vite] (client) [console.error] Failed to load advisory gradebook: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:14:38)
+[WebServer]     at async fetchAdvisoryGradebook (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:29:15)
+[90/111] tests\teacher-grades-loading.spec.ts:10:1 › teacher grades preserves visibility and history tabs
+[91/111] tests\teacher-grades-loading.spec.ts:12:1 › teacher grades and visibility have valid native table markup
+[92/111] tests\teacher-grades-loading.spec.ts:13:1 › teacher grades native automatic columns vary across real content
+[93/111] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+[94/111] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades slow term refetch preserves old rows
+[95/111] tests\teacher-grades-loading.spec.ts:15:54 › teacher grades retries visibility independently
+
+[WebServer] 8:46:03 PM [vite] (client) [console.error] Failed to load grade visibility: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:14:38)
+[WebServer]     at async fetchGradeVisibility (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:60:15)
+[WebServer] 8:46:03 PM [vite] (client) [console.error] Failed to load grade visibility: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:14:38)
+[WebServer]     at async fetchGradeVisibility (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:60:15)
+
+[96/111] tests\teacher-grades-loading.spec.ts:15:54 › teacher grades retries logs independently
+[97/111] tests\teacher-grades-loading.spec.ts:15:54 › teacher grades retries submission independently
+[98/111] tests\teacher-grades-loading.spec.ts:17:1 › teacher grades pending class summary never reports an unfetched zero roster
+[99/111] tests\teacher-grades-loading.spec.ts:18:1 › teacher grades repeated term reserves cached native widths within two pixels
+[100/111] tests\teacher-grades-loading.spec.ts:20:1 › teacher visibility native automatic columns vary across real content
+[101/111] tests\teacher-grades-loading.spec.ts:21:122 › teacher grades Parent Visibility 375 light known controls remain during prerequisite loads
+[102/111] tests\teacher-grades-loading.spec.ts:21:122 › teacher grades Submission History 375 light known controls remain during prerequisite loads
+[103/111] tests\teacher-grades-loading.spec.ts:21:122 › teacher grades Parent Visibility 375 dark known controls remain during prerequisite loads
+[104/111] tests\teacher-grades-loading.spec.ts:21:122 › teacher grades Submission History 375 dark known controls remain during prerequisite loads
+[105/111] tests\teacher-grades-loading.spec.ts:21:122 › teacher grades Parent Visibility 1280 light known controls remain during prerequisite loads
+[106/111] tests\teacher-grades-loading.spec.ts:21:122 › teacher grades Submission History 1280 light known controls remain during prerequisite loads
+[107/111] tests\teacher-grades-loading.spec.ts:21:122 › teacher grades Parent Visibility 1280 dark known controls remain during prerequisite loads
+[108/111] tests\teacher-grades-loading.spec.ts:21:122 › teacher grades Submission History 1280 dark known controls remain during prerequisite loads
+[109/111] tests\teacher-grades-loading.spec.ts:22:1 › teacher visibility retries a prerequisite error without an indefinite skeleton
+[110/111] tests\teacher-grades-loading.spec.ts:23:1 › teacher submission history surfaces a term prerequisite error and retries
+[111/111] tests\teacher-grades-loading.spec.ts:24:1 › teacher gradebook failure removes dependent placeholders immediately
+
+[WebServer] 8:46:42 PM [vite] (client) [console.error] Failed to load advisory gradebook: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:14:38)
+[WebServer]     at async fetchAdvisoryGradebook (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:29:15)
+  111 passed (4.5m)

@@ -1,0 +1,67 @@
+
+[WebServer] (node:27872) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 34 tests using 1 worker
+
+(node:39992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/34] tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 375 light known snapshot shell remains real
+[2/34] tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 375 dark known snapshot shell remains real
+[3/34] tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 1280 light known snapshot shell remains real
+[4/34] tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 1280 dark known snapshot shell remains real
+[5/34] tests\holistic-profile-loading.spec.ts:12:28 › holistic profile preserves 0 actual subject cards
+[6/34] tests\holistic-profile-loading.spec.ts:12:28 › holistic profile preserves 1 actual subject cards
+[7/34] tests\holistic-profile-loading.spec.ts:12:28 › holistic profile preserves 9 actual subject cards
+[8/34] tests\holistic-profile-loading.spec.ts:13:49 › holistic profile retries student errors
+[9/34] tests\holistic-profile-loading.spec.ts:13:49 › holistic profile retries profile errors
+[10/34] tests\holistic-profile-loading.spec.ts:13:49 › holistic profile retries terms errors
+[11/34] tests\holistic-profile-loading.spec.ts:14:1 › holistic profile empty evaluations settle into the original empty state
+[12/34] tests\holistic-profile-loading.spec.ts:15:1 › holistic profile subject cards and selector preserve recommendations
+[13/34] tests\holistic-profile-loading.spec.ts:16:32 › holistic profile light card text retains actual contrast
+[14/34] tests\holistic-profile-loading.spec.ts:16:32 › holistic profile dark card text retains actual contrast
+[15/34] tests\holistic-profile-loading.spec.ts:17:1 › holistic profile retains gauge and sparkline shapes
+[16/34] tests\holistic-profile-loading.spec.ts:19:1 › holistic profile pending selector has valid native option markup
+[17/34] tests\principal-dashboard-loading.spec.ts:6:62 › principal dashboard 375 light keeps known shell
+[18/34] tests\principal-dashboard-loading.spec.ts:6:62 › principal dashboard 375 dark keeps known shell
+[19/34] tests\principal-dashboard-loading.spec.ts:6:62 › principal dashboard 1280 light keeps known shell
+[20/34] tests\principal-dashboard-loading.spec.ts:6:62 › principal dashboard 1280 dark keeps known shell
+[21/34] tests\principal-dashboard-loading.spec.ts:7:28 › principal dashboard preserves 0 actual grades
+[22/34] tests\principal-dashboard-loading.spec.ts:7:28 › principal dashboard preserves 1 actual grades
+[23/34] tests\principal-dashboard-loading.spec.ts:7:28 › principal dashboard preserves 9 actual grades
+[24/34] tests\principal-dashboard-loading.spec.ts:8:40 › principal dashboard retries dashboard
+[25/34] tests\principal-dashboard-loading.spec.ts:8:40 › principal dashboard retries year
+[26/34] tests\principal-dashboard-loading.spec.ts:9:1 › principal dashboard ranking controls preserve loaded behavior
+[27/34] tests\principal-dashboard-loading.spec.ts:11:32 › principal dashboard light spotlight contrast and pixel shape
+[28/34] tests\principal-dashboard-loading.spec.ts:11:32 › principal dashboard dark spotlight contrast and pixel shape
+[29/34] tests\principal-dashboard-loading.spec.ts:12:1 › principal dashboard charts retain bar line and radar shapes
+[30/34] tests\principal-dashboard-loading.spec.ts:14:62 › principal dashboard 375 light lower sections retain known labels and geometry
+[31/34] tests\principal-dashboard-loading.spec.ts:14:62 › principal dashboard 375 dark lower sections retain known labels and geometry
+[32/34] tests\principal-dashboard-loading.spec.ts:14:62 › principal dashboard 1280 light lower sections retain known labels and geometry
+[33/34] tests\principal-dashboard-loading.spec.ts:14:62 › principal dashboard 1280 dark lower sections retain known labels and geometry
+[34/34] tests\principal-dashboard-loading.spec.ts:16:1 › principal dashboard pending rankings mask fetched names grades and scores
+  1) tests\principal-dashboard-loading.spec.ts:16:1 › principal dashboard pending rankings mask fetched names grades and scores 
+
+    Error: expect(received).not.toContain(expected) // indexOf
+
+    Expected substring: not "0%"
+    Received string:        "0%"
+
+      14 | for(const width of [375,1280])for(const dark of [false,true])test(`principal dashboard ${width} ${dark?'dark':'light'} lower sections retain known labels and geometry`,async({page})=>{await page.setViewportSize({width,height:1100});const release=await fixture(page,dark);await page.goto('/principal');await expect(page.locator('[data-sk-region="principal-dashboard-data"]')).toHaveAttribute('data-sk-phase','revealed');const prefix=`loading-screenshots/principal-dashboard-lower-${width}-${dark?'dark':'light'}`;for(const title of ['Subject Performance','Holistic Development Overview','Academic Performance Overview']){const heading=page.getByRole('heading',{name:title,exact:true});await heading.scrollIntoViewIfNeeded();await expect(heading).toBeVisible();await page.screenshot({path:prefix+'-'+title.replaceAll(' ','-')+'-skeleton.png'});}const ranks=page.locator('[data-sk-region="principal-ranking-row"]');await expect(ranks.first().locator('.h-16.w-16')).toBeAttached();const pendingSize=await ranks.first().locator('.h-16.w-16').boundingBox();expect(pendingSize?.width).toBe(64);expect(pendingSize?.height).toBe(64);release();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);for(const title of ['Subject Performance','Holistic Development Overview','Academic Performance Overview']){const heading=page.getByRole('heading',{name:title,exact:true});await heading.scrollIntoViewIfNeeded();await page.screenshot({path:prefix+'-'+title.replaceAll(' ','-')+'-loaded.png'});}});
+      15 |
+    > 16 | test('principal dashboard pending rankings mask fetched names grades and scores',async({page})=>{await fixture(page);await page.goto('/principal');await expect(page.locator('[data-sk-region="principal-dashboard-data"]')).toHaveAttribute('data-sk-phase','revealed');for(const row of await page.locator('[data-sk-region="principal-ranking-row"]').all()){await expect(row.locator('[data-sk-primitive]')).toHaveCount(7);expect(await row.innerText()).not.toContain('0%');await expect(row.locator('.flex-1.min-w-0 [data-sk-primitive]')).toHaveCount(3);}});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ^
+      17 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\principal-dashboard-loading.spec.ts:16:451
+
+    Error Context: test-results\principal-dashboard-loadin-86531-hed-names-grades-and-scores\error-context.md
+
+
+  1 failed
+    tests\principal-dashboard-loading.spec.ts:16:1 › principal dashboard pending rankings mask fetched names grades and scores 
+  33 passed (1.5m)

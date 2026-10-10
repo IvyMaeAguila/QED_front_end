@@ -1,0 +1,39 @@
+[WebServer] (node:24368) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25244) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:38532) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 375 light keeps known challenges (9.1s)
+
+
+  1) tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 375 light keeps known challenges ──────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Choose your challenge!', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Choose your challenge!', { exact: true }) with timeout 5000ms
+      - waiting for getByText('Choose your challenge!', { exact: true })
+
+
+      4 | import {assertNoDataSpinner,checkRenderedContrast,checkShimmerPixels} from './design-pixels';
+      5 | async function fixture(page:Page,dark=false,seen=true,count=3){const context=await mockDirectory(page,'PARENT',dark);context();await page.addInitScript(seen=>{if(seen)localStorage.setItem('ed-intro-seen:1:1','1');else localStorage.removeItem('ed-intro-seen:1:1');},seen);let finish!:()=>void;let gate=new Promise<void>(r=>finish=r);let failed='';const state={levels:{easy:'available',medium:'locked',hard:'locked'},bonus:{match:false,memory:false},hungerFilled:0,hungerTotal:5,interventionCompleted:false};await page.route('**/api/pet/**',async r=>{await gate;const path=new URL(r.request().url()).pathname;const kind=path.includes('/intervention/')?'state':path.includes('/bonus/')?'bonus':'quiz';await r.fulfill({status:failed===kind?500:200,json:kind==='state'?state:kind==='bonus'?{match:Array.from({length:count},(_,i)=>({id:i,left:'Word '+i,right:'Meaning '+i})),memory:Array.from({length:count},(_,i)=>({id:i,a:'A'+i,b:'B'+i}))}:{practiceSetId:1,title:'Numbers',difficulty:'Easy',gradeLevel:'Grade 1',questions:Array.from({length:count},(_,i)=>({id:i,question_text:'Which number comes next?',choice_a:'One',choice_b:'Two',choice_c:'Three',choice_d:'Four',order_index:i}))}});});return Object.assign(()=>finish(),{hold:()=>gate=new Promise<void>(r=>finish=r),fail:(kind:string)=>failed=kind,recover:()=>failed=''});}
+    > 6 | for(const width of [375,1280])for(const dark of [false,true])test(`pet quiz road ${width} ${dark?'dark':'light'} keeps known challenges`,async({page})=>{await page.setViewportSize({width,height:1100});const release=await fixture(page,dark);await page.goto('/parent/students/1/topics/1/quiz');await expect(page.getByText('Choose your challenge!',{exact:true})).toBeVisible();await expect(page.getByText('Easy',{exact:true})).toBeVisible();const region=page.locator('[data-sk-region="pet-quiz-content"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);fs.mkdirSync('loading-screenshots',{recursive:true});const prefix=`loading-screenshots/parent-pet-quiz-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});release();await expect(region).toHaveAttribute('data-sk-phase','settled');await expect(page.locator('[data-sk-primitive]')).toHaveCount(0);await expect(page.getByRole('button',{name:'Easy level, available',exact:true})).toBeEnabled();await page.screenshot({path:prefix+'-loaded.png',fullPage:true});});
+        |                                                                                                                                                                                                                                                                                                                                                                         ^
+      7 | test('pet intro keeps its known story visible while access loads',async({page})=>{const release=await fixture(page,false,false);await page.goto('/parent/students/1/topics/1/quiz');await expect(page.getByText("ED's Story",{exact:true})).toBeVisible();await expect(page.locator('[data-sk-region="pet-quiz-content"]')).toHaveAttribute('aria-busy','true');release();await expect(page.locator('[data-sk-region="pet-quiz-content"]')).toHaveAttribute('data-sk-phase','settled');});
+      8 | test('pet quiz state error clears shapes and retries',async({page})=>{const release=await fixture(page);release.fail('state');await page.goto('/parent/students/1/topics/1/quiz');release();await expect(page.getByRole('alert')).toBeVisible();await expect(page.locator('[data-sk-primitive]')).toHaveCount(0);release.recover();await page.getByRole('button',{name:'Retry',exact:true}).click();await expect(page.getByRole('button',{name:'Easy level, available',exact:true})).toBeEnabled();await expect(page.getByRole('alert')).toHaveCount(0);});
+      9 | for(const width of [375,1280])for(const dark of [false,true])test(`pet quiz question ${width} ${dark?'dark':'light'} reserves real choices`,async({page})=>{await page.setViewportSize({width,height:1100});const release=await fixture(page,dark);await page.goto('/parent/students/1/topics/1/quiz');release();const region=page.locator('[data-sk-region="pet-quiz-content"]');await expect(region).toHaveAttribute('data-sk-phase','settled');release.hold();await page.getByRole('button',{name:'Easy level, available',exact:true}).click();await expect(region).toHaveAttribute('data-sk-phase','revealed');for(const letter of ['A','B','C','D'])await expect(region.getByText(letter,{exact:true})).toBeVisible();await assertNoDataSpinner(page);const prefix=`loading-screenshots/parent-pet-quiz-question-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});release();await expect(region).toHaveAttribute('data-sk-phase','settled');await expect(page.getByText('Which number comes next?',{exact:true})).toBeVisible();await page.screenshot({path:prefix+'-loaded.png',fullPage:true});});
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\pet-quiz-loading.spec.ts:6:361
+
+    Error Context: test-results\pet-quiz-loading-pet-quiz--42e75-ight-keeps-known-challenges\error-context.md
+
+  1 failed
+    tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 375 light keeps known challenges ───────────

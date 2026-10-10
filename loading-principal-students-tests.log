@@ -1,0 +1,270 @@
+[WebServer] (node:39792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:29420) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 25 tests using 1 worker
+
+(node:432) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\directory-loading.spec.ts:32:70 › /principal/teachers 375px light: real controls and screenshots (6.9s)
+  ok  2 tests\directory-loading.spec.ts:32:70 › /principal/teachers 375px dark: real controls and screenshots (2.6s)
+  ok  3 tests\directory-loading.spec.ts:32:70 › /principal/teachers 1280px light: real controls and screenshots (2.7s)
+  ok  4 tests\directory-loading.spec.ts:32:70 › /principal/teachers 1280px dark: real controls and screenshots (2.7s)
+  ok  5 tests\directory-loading.spec.ts:32:70 › /principal/teachers/1 375px light: real controls and screenshots (2.4s)
+  ok  6 tests\directory-loading.spec.ts:32:70 › /principal/teachers/1 375px dark: real controls and screenshots (2.6s)
+  ok  7 tests\directory-loading.spec.ts:32:70 › /principal/teachers/1 1280px light: real controls and screenshots (2.9s)
+  ok  8 tests\directory-loading.spec.ts:32:70 › /principal/teachers/1 1280px dark: real controls and screenshots (2.7s)
+  ok  9 tests\directory-loading.spec.ts:32:70 › /principal/students 375px light: real controls and screenshots (2.6s)
+  ok 10 tests\directory-loading.spec.ts:32:70 › /principal/students 375px dark: real controls and screenshots (2.6s)
+  ok 11 tests\directory-loading.spec.ts:32:70 › /principal/students 1280px light: real controls and screenshots (3.3s)
+  ok 12 tests\directory-loading.spec.ts:32:70 › /principal/students 1280px dark: real controls and screenshots (2.8s)
+  x  13 tests\directory-loading.spec.ts:32:70 › /principal/students/class/1 375px light: real controls and screenshots (3.1s)
+(node:34444) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  14 tests\directory-loading.spec.ts:32:70 › /principal/students/class/1 375px dark: real controls and screenshots (2.6s)
+(node:40192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  15 tests\directory-loading.spec.ts:32:70 › /principal/students/class/1 1280px light: real controls and screenshots (3.3s)
+(node:28692) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  16 tests\directory-loading.spec.ts:32:70 › /principal/students/class/1 1280px dark: real controls and screenshots (3.4s)
+(node:38824) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  17 tests\directory-loading.spec.ts:32:70 › /principal/students/grade/1 375px light: real controls and screenshots (3.1s)
+(node:19200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  18 tests\directory-loading.spec.ts:32:70 › /principal/students/grade/1 375px dark: real controls and screenshots (3.1s)
+(node:16356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  19 tests\directory-loading.spec.ts:32:70 › /principal/students/grade/1 1280px light: real controls and screenshots (3.1s)
+(node:40788) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  20 tests\directory-loading.spec.ts:32:70 › /principal/students/grade/1 1280px dark: real controls and screenshots (3.2s)
+(node:16064) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 21 tests\directory-loading.spec.ts:32:70 › /parent/enrolled-children 375px light: real controls and screenshots (2.7s)
+  ok 22 tests\directory-loading.spec.ts:32:70 › /parent/enrolled-children 375px dark: real controls and screenshots (2.6s)
+  ok 23 tests\directory-loading.spec.ts:32:70 › /parent/enrolled-children 1280px light: real controls and screenshots (2.9s)
+  ok 24 tests\directory-loading.spec.ts:32:70 › /parent/enrolled-children 1280px dark: real controls and screenshots (2.9s)
+  ok 25 tests\directory-loading.spec.ts:53:1 › principal directory auto-column classification requires observed variation (1.6s)
+
+
+  1) tests\directory-loading.spec.ts:32:70 › /principal/students/class/1 375px light: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 16,
+    -   "y": 156.5,
+    +   "y": 138,
+      }
+
+      45 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      46 |     release(); await expect(page.locator("[data-sk-layer]")).toHaveCount(0);
+    > 47 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      48 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      49 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      50 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:47:40
+
+    Error Context: test-results\directory-loading--princip-7d3f8-al-controls-and-screenshots\error-context.md
+
+  2) tests\directory-loading.spec.ts:32:70 › /principal/students/class/1 375px dark: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 16,
+    -   "y": 156.5,
+    +   "y": 138,
+      }
+
+      45 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      46 |     release(); await expect(page.locator("[data-sk-layer]")).toHaveCount(0);
+    > 47 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      48 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      49 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      50 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:47:40
+
+    Error Context: test-results\directory-loading--princip-d0265-al-controls-and-screenshots\error-context.md
+
+  3) tests\directory-loading.spec.ts:32:70 › /principal/students/class/1 1280px light: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 264,
+    -   "y": 163.6875,
+    +   "y": 134.6875,
+      }
+
+      45 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      46 |     release(); await expect(page.locator("[data-sk-layer]")).toHaveCount(0);
+    > 47 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      48 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      49 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      50 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:47:40
+
+    Error Context: test-results\directory-loading--princip-8c9de-al-controls-and-screenshots\error-context.md
+
+  4) tests\directory-loading.spec.ts:32:70 › /principal/students/class/1 1280px dark: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 264,
+    -   "y": 163.6875,
+    +   "y": 134.6875,
+      }
+
+      45 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      46 |     release(); await expect(page.locator("[data-sk-layer]")).toHaveCount(0);
+    > 47 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      48 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      49 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      50 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:47:40
+
+    Error Context: test-results\directory-loading--princip-e5507-al-controls-and-screenshots\error-context.md
+
+  5) tests\directory-loading.spec.ts:32:70 › /principal/students/grade/1 375px light: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 16,
+    -   "y": 156.5,
+    +   "y": 138,
+      }
+
+      45 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      46 |     release(); await expect(page.locator("[data-sk-layer]")).toHaveCount(0);
+    > 47 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      48 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      49 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      50 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:47:40
+
+    Error Context: test-results\directory-loading--princip-8672d-al-controls-and-screenshots\error-context.md
+
+  6) tests\directory-loading.spec.ts:32:70 › /principal/students/grade/1 375px dark: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 16,
+    -   "y": 156.5,
+    +   "y": 138,
+      }
+
+      45 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      46 |     release(); await expect(page.locator("[data-sk-layer]")).toHaveCount(0);
+    > 47 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      48 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      49 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      50 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:47:40
+
+    Error Context: test-results\directory-loading--princip-a600b-al-controls-and-screenshots\error-context.md
+
+  7) tests\directory-loading.spec.ts:32:70 › /principal/students/grade/1 1280px light: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 264,
+    -   "y": 163.6875,
+    +   "y": 134.6875,
+      }
+
+      45 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      46 |     release(); await expect(page.locator("[data-sk-layer]")).toHaveCount(0);
+    > 47 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      48 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      49 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      50 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:47:40
+
+    Error Context: test-results\directory-loading--princip-ac098-al-controls-and-screenshots\error-context.md
+
+  8) tests\directory-loading.spec.ts:32:70 › /principal/students/grade/1 1280px dark: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 264,
+    -   "y": 163.6875,
+    +   "y": 134.6875,
+      }
+
+      45 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      46 |     release(); await expect(page.locator("[data-sk-layer]")).toHaveCount(0);
+    > 47 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      48 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      49 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      50 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:47:40
+
+    Error Context: test-results\directory-loading--princip-05ed5-al-controls-and-screenshots\error-context.md
+
+  8 failed
+    tests\directory-loading.spec.ts:32:70 › /principal/students/class/1 375px light: real controls and screenshots 
+    tests\directory-loading.spec.ts:32:70 › /principal/students/class/1 375px dark: real controls and screenshots 
+    tests\directory-loading.spec.ts:32:70 › /principal/students/class/1 1280px light: real controls and screenshots 
+    tests\directory-loading.spec.ts:32:70 › /principal/students/class/1 1280px dark: real controls and screenshots 
+    tests\directory-loading.spec.ts:32:70 › /principal/students/grade/1 375px light: real controls and screenshots 
+    tests\directory-loading.spec.ts:32:70 › /principal/students/grade/1 375px dark: real controls and screenshots 
+    tests\directory-loading.spec.ts:32:70 › /principal/students/grade/1 1280px light: real controls and screenshots 
+    tests\directory-loading.spec.ts:32:70 › /principal/students/grade/1 1280px dark: real controls and screenshots 
+  17 passed (1.5m)

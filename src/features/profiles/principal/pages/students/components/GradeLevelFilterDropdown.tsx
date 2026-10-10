@@ -21,7 +21,7 @@ export function GradeLevelFilterDropdown({
         aria-label={label}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`qed-filter-control appearance-none rounded-lg border pl-3 pr-8 font-semibold outline-none transition-colors focus:border-[#800020] ${
+        className={`qed-filter-control appearance-none rounded-lg border pl-3 pr-8 font-semibold outline-none transition-colors focus:border-maroon-light ${
           darkMode
             ? "border-white/10 bg-white/5 text-white"
             : "border-gray-200 bg-white text-gray-900"

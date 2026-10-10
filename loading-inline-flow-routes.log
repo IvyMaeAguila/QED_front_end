@@ -1,0 +1,48 @@
+
+[WebServer] (node:13592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:31880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 34 tests using 1 worker
+
+(node:29456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/34] tests\directory-loading.spec.ts:7:70 › /principal/teachers 375px light: real controls and screenshots
+[2/34] tests\directory-loading.spec.ts:7:70 › /principal/teachers 375px dark: real controls and screenshots
+[3/34] tests\directory-loading.spec.ts:7:70 › /principal/teachers 1280px light: real controls and screenshots
+[4/34] tests\directory-loading.spec.ts:7:70 › /principal/teachers 1280px dark: real controls and screenshots
+[5/34] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 375px light: real controls and screenshots
+[6/34] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 375px dark: real controls and screenshots
+[7/34] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 1280px light: real controls and screenshots
+[8/34] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 1280px dark: real controls and screenshots
+[9/34] tests\directory-loading.spec.ts:7:70 › /principal/students 375px light: real controls and screenshots
+[10/34] tests\directory-loading.spec.ts:7:70 › /principal/students 375px dark: real controls and screenshots
+[11/34] tests\directory-loading.spec.ts:7:70 › /principal/students 1280px light: real controls and screenshots
+[12/34] tests\directory-loading.spec.ts:7:70 › /principal/students 1280px dark: real controls and screenshots
+[13/34] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 375px light: real controls and screenshots
+[14/34] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 375px dark: real controls and screenshots
+[15/34] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 1280px light: real controls and screenshots
+[16/34] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 1280px dark: real controls and screenshots
+[17/34] tests\directory-loading.spec.ts:7:70 › /parent 375px light: real controls and screenshots
+[18/34] tests\directory-loading.spec.ts:7:70 › /parent 375px dark: real controls and screenshots
+[19/34] tests\directory-loading.spec.ts:7:70 › /parent 1280px light: real controls and screenshots
+[20/34] tests\directory-loading.spec.ts:7:70 › /parent 1280px dark: real controls and screenshots
+[21/34] tests\directory-loading.spec.ts:29:1 › principal directory auto-column classification requires observed variation
+[22/34] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 375 light: real shell and existing cards
+[23/34] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 375 dark: real shell and existing cards
+[24/34] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 1280 light: real shell and existing cards
+[25/34] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 1280 dark: real shell and existing cards
+[26/34] tests\principal-gradebooks.spec.ts:40:1 › repeat gradebook visit displays cached cards and school year immediately
+[27/34] tests\principal-gradebooks.spec.ts:56:1 › inline school year preserves the original paragraph flow
+[28/34] tests\teacher-subjects.spec.ts:25:68 › teacher subjects 375px light: real shell, card geometry and screenshots
+[29/34] tests\teacher-subjects.spec.ts:25:68 › teacher subjects 375px dark: real shell, card geometry and screenshots
+[30/34] tests\teacher-subjects.spec.ts:25:68 › teacher subjects 1280px light: real shell, card geometry and screenshots
+[31/34] tests\teacher-subjects.spec.ts:25:68 › teacher subjects 1280px dark: real shell, card geometry and screenshots
+[32/34] tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 0 rows, stable actions and filters
+[33/34] tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 1 rows, stable actions and filters
+[34/34] tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 9 rows, stable actions and filters
+  34 passed (1.1m)

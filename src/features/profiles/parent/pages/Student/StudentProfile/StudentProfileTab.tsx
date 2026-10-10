@@ -1,3 +1,4 @@
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
 // StudentProfileTab.tsx
 // Location: Student/StudentProfile/StudentProfileTab.tsx
 
@@ -33,38 +34,22 @@ export function StudentProfileTab({ student, theme }: StudentProfileTabProps) {
 
 function StudentProfileTabContent({ theme }: { theme: AdminThemeContext }) {
   const { darkMode, panelBorder } = theme;
-  const { profile, isLoading, error, saveProfile } = useStudentProfile();
+  const { profile, isLoading, error, refetch, saveProfile } = useStudentProfile();
 
-  if (!profile) {
-    if (isLoading) {
-      return (
-        <div className={`rounded-2xl border p-6 text-sm font-medium ${panelBorder} ${darkMode ? "text-white/60" : "text-slate-500"}`}>
-          Loading student profile...
-        </div>
-      );
-    }
-    return null;
-  }
+  if (!profile) return null;
 
   return (
     <div className="flex flex-col gap-5">
-      {error && (
-        <div
-          className={`rounded-xl border px-4 py-3 text-sm font-medium ${
-            darkMode ? "border-red-500/30 bg-red-500/10 text-red-300" : "border-red-200 bg-red-50 text-red-700"
-          }`}
-        >
-          {error}
-        </div>
-      )}
-
+      <LoadingRegion name="parent-student-profile" loading={isLoading} error={error} retry={refetch} variable skeleton={null} frame={(pending) => (
       <ProfileHeaderCard
+        loading={pending}
         student={profile}
         personalInformation={profile.personalInformation}
         darkMode={darkMode}
         panelBorder={panelBorder}
         onSave={(updates) => saveProfile(updates)}
       />
+      )}>{null}</LoadingRegion>
     </div>
   );
 }

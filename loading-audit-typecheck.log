@@ -1,0 +1,2 @@
+src/features/profiles/parent/pages/dashboard/components/StudentCard.tsx(224,47): error TS2367: This comparison appears to be unintentional because the types '"list"' and '"grid"' have no overlap.
+src/features/profiles/teacher/pages/dashboard/components/WeeklySchedule.tsx(3,10): error TS6133: 'rememberRows' is declared but its value is never read.

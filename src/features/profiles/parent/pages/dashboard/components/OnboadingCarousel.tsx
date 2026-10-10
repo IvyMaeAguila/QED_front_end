@@ -1,5 +1,6 @@
 // OnboardingCarousel.tsx
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { MoreHorizontal } from "lucide-react";
 import MockupFrame, { type HighlightTarget } from "./MockUpFrame";
 

@@ -1,0 +1,533 @@
+
+[WebServer] (node:7588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:31856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 15 tests using 1 worker
+
+(node:24276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/15] tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 375 light known snapshot shell remains real
+[WebServer] 1:54:53 PM [vite] (client) [console.error] In HTML, <span> cannot be a child of <option>.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <Outlet context={{darkMode:false, ...}}>
+[WebServer]       <RenderedRoute match={{params:{...}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]         <StudentHolisticProfilePage>
+[WebServer]           <div className="space-y-6 ...">
+[WebServer]             <div>
+[WebServer]             <LoadingRegion loading={true} error={null} retry={function retry} name="holistic-p..." variable={true} ...>
+[WebServer]               <div ref={function t27} className={"sk-region "} data-sk-region="holistic-p..." aria-busy={true} ...>
+[WebServer]                 <div className="sk-frame" data-sk-frame="" data-sk-reserved="" data-sk-outgoing={undefined} ...>
+[WebServer]                   <div className="space-y-6">
+[WebServer]                     <HolisticProfileIdentity>
+
+[WebServer]                     <section className="overflow-h...">
+[WebServer]                       <div className="flex flex-...">
+[WebServer]                         <div>
+[WebServer]                         <select data-sk-variable="" disabled={true} value="all" onChange={function onChange} ...>
+[WebServer]                           <option>
+[WebServer] >                         <option value="pending-0">
+[WebServer]                             <SkeletonText width="16ch">
+[WebServer]                               <Skeleton width="16ch" kind="text">
+[WebServer] >                               <span
+[WebServer] >                                 aria-hidden="true"
+[WebServer] >                                 data-sk-primitive="text"
+[WebServer] >                                 className="sk-primitive sk-text"
+[WebServer] >                                 style={{width:"16ch",aspectRatio:undefined}}
+[WebServer] >                               >
+[WebServer]                           ...
+[WebServer]                       ...
+[WebServer]                     ...
+[WebServer] 
+[WebServer] 1:54:53 PM [vite] (client) [console.error] <option> cannot contain a nested <span>.
+[WebServer] See this log for the ancestor stack trace.
+
+[2/15] tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 375 dark known snapshot shell remains real
+
+[WebServer] 1:54:55 PM [vite] (client) [console.error] In HTML, <span> cannot be a child of <option>.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <Outlet context={{darkMode:true, ...}}>
+[WebServer]       <RenderedRoute match={{params:{...}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]         <StudentHolisticProfilePage>
+[WebServer]           <div className="space-y-6 ...">
+[WebServer]             <div>
+[WebServer]             <LoadingRegion loading={true} error={null} retry={function retry} name="holistic-p..." variable={true} ...>
+[WebServer]               <div ref={function t27} className={"sk-region "} data-sk-region="holistic-p..." aria-busy={true} ...>
+[WebServer]                 <div className="sk-frame" data-sk-frame="" data-sk-reserved="" data-sk-outgoing={undefined} ...>
+[WebServer]                   <div className="space-y-6">
+[WebServer]                     <HolisticProfileIdentity>
+[WebServer]                     <section className="overflow-h...">
+[WebServer]                       <div className="flex flex-...">
+[WebServer]                         <div>
+[WebServer]                         <select data-sk-variable="" disabled={true} value="all" onChange={function onChange} ...>
+[WebServer]                           <option>
+[WebServer] >                         <option value="pending-0">
+[WebServer]                             <SkeletonText width="16ch">
+[WebServer]                               <Skeleton width="16ch" kind="text">
+[WebServer] >                               <span
+[WebServer] >                                 aria-hidden="true"
+[WebServer] >                                 data-sk-primitive="text"
+[WebServer] >                                 className="sk-primitive sk-text"
+[WebServer] >                                 style={{width:"16ch",aspectRatio:undefined}}
+[WebServer] >                               >
+[WebServer]                           ...
+[WebServer]                       ...
+[WebServer]                     ...
+[WebServer] 
+
+[WebServer] 1:54:55 PM [vite] (client) [console.error] <option> cannot contain a nested <span>.
+[WebServer] See this log for the ancestor stack trace.
+[3/15] tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 1280 light known snapshot shell remains real
+[WebServer] 1:54:58 PM [vite] (client) [console.error] In HTML, <span> cannot be a child of <option>.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <Outlet context={{darkMode:false, ...}}>
+[WebServer]       <RenderedRoute match={{params:{...}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]         <StudentHolisticProfilePage>
+[WebServer]           <div className="space-y-6 ...">
+[WebServer]             <div>
+[WebServer]             <LoadingRegion loading={true} error={null} retry={function retry} name="holistic-p..." variable={true} ...>
+[WebServer]               <div ref={function t27} className={"sk-region "} data-sk-region="holistic-p..." aria-busy={true} ...>
+[WebServer]                 <div className="sk-frame" data-sk-frame="" data-sk-reserved="" data-sk-outgoing={undefined} ...>
+[WebServer]                   <div className="space-y-6">
+[WebServer]                     <HolisticProfileIdentity>
+
+[WebServer]                     <section className="overflow-h...">
+[WebServer]                       <div className="flex flex-...">
+[WebServer]                         <div>
+[WebServer]                         <select data-sk-variable="" disabled={true} value="all" onChange={function onChange} ...>
+[WebServer]                           <option>
+[WebServer] >                         <option value="pending-0">
+[WebServer]                             <SkeletonText width="16ch">
+[WebServer]                               <Skeleton width="16ch" kind="text">
+[WebServer] >                               <span
+[WebServer] >                                 aria-hidden="true"
+[WebServer] >                                 data-sk-primitive="text"
+[WebServer] >                                 className="sk-primitive sk-text"
+[WebServer] >                                 style={{width:"16ch",aspectRatio:undefined}}
+[WebServer] >                               >
+[WebServer]                           ...
+[WebServer]                       ...
+[WebServer]                     ...
+[WebServer] 
+[WebServer] 1:54:58 PM [vite] (client) [console.error] <option> cannot contain a nested <span>.
+[WebServer] See this log for the ancestor stack trace.
+
+[4/15] tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 1280 dark known snapshot shell remains real
+
+[WebServer] 1:55:01 PM [vite] (client) [console.error] In HTML, <span> cannot be a child of <option>.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <Outlet context={{darkMode:true, ...}}>
+[WebServer]       <RenderedRoute match={{params:{...}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]         <StudentHolisticProfilePage>
+[WebServer]           <div className="space-y-6 ...">
+[WebServer]             <div>
+[WebServer]             <LoadingRegion loading={true} error={null} retry={function retry} name="holistic-p..." variable={true} ...>
+[WebServer]               <div ref={function t27} className={"sk-region "} data-sk-region="holistic-p..." aria-busy={true} ...>
+[WebServer]                 <div className="sk-frame" data-sk-frame="" data-sk-reserved="" data-sk-outgoing={undefined} ...>
+[WebServer]                   <div className="space-y-6">
+[WebServer]                     <HolisticProfileIdentity>
+[WebServer]                     <section className="overflow-h...">
+[WebServer]                       <div className="flex flex-...">
+[WebServer]                         <div>
+[WebServer]                         <select data-sk-variable="" disabled={true} value="all" onChange={function onChange} ...>
+[WebServer]                           <option>
+[WebServer] >                         <option value="pending-0">
+[WebServer]                             <SkeletonText width="16ch">
+[WebServer]                               <Skeleton width="16ch" kind="text">
+[WebServer] >                               <span
+[WebServer] >                                 aria-hidden="true"
+[WebServer] >                                 data-sk-primitive="text"
+[WebServer] >                                 className="sk-primitive sk-text"
+[WebServer] >                                 style={{width:"16ch",aspectRatio:undefined}}
+[WebServer] >                               >
+[WebServer]                           ...
+[WebServer]                       ...
+[WebServer]                     ...
+[WebServer] 
+[WebServer] 1:55:01 PM [vite] (client) [console.error] <option> cannot contain a nested <span>.
+[WebServer] See this log for the ancestor stack trace.
+
+[5/15] tests\holistic-profile-loading.spec.ts:12:28 › holistic profile preserves 0 actual subject cards
+[6/15] tests\holistic-profile-loading.spec.ts:12:28 › holistic profile preserves 1 actual subject cards
+
+[WebServer] 1:55:05 PM [vite] (client) [console.error] In HTML, <span> cannot be a child of <option>.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <Outlet context={{darkMode:false, ...}}>
+[WebServer]       <RenderedRoute match={{params:{...}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]         <StudentHolisticProfilePage>
+[WebServer]           <div className="space-y-6 ...">
+[WebServer]             <div>
+[WebServer]             <LoadingRegion loading={true} error={null} retry={function retry} name="holistic-p..." variable={true} ...>
+[WebServer]               <div ref={function t27} className={"sk-region "} data-sk-region="holistic-p..." aria-busy={true} ...>
+[WebServer]                 <div className="sk-frame" data-sk-frame="" data-sk-reserved="" data-sk-outgoing={undefined} ...>
+[WebServer]                   <div className="space-y-6">
+[WebServer]                     <HolisticProfileIdentity>
+[WebServer]                     <section className="overflow-h...">
+[WebServer]                       <div className="flex flex-...">
+[WebServer]                         <div>
+[WebServer]                         <select data-sk-variable="" disabled={true} value="all" onChange={function onChange} ...>
+[WebServer]                           <option>
+[WebServer] >                         <option value="pending-0">
+[WebServer]                             <SkeletonText width="16ch">
+[WebServer]                               <Skeleton width="16ch" kind="text">
+[WebServer] >                               <span
+[WebServer] >                                 aria-hidden="true"
+[WebServer] >                                 data-sk-primitive="text"
+[WebServer] >                                 className="sk-primitive sk-text"
+[WebServer] >                                 style={{width:"16ch",aspectRatio:undefined}}
+[WebServer] >                               >
+[WebServer]                           ...
+[WebServer]                       ...
+[WebServer]                     ...
+[WebServer] 
+[WebServer] 1:55:05 PM [vite] (client) [console.error] <option> cannot contain a nested <span>.
+[WebServer] See this log for the ancestor stack trace.
+
+[7/15] tests\holistic-profile-loading.spec.ts:12:28 › holistic profile preserves 9 actual subject cards
+[WebServer] 1:55:06 PM [vite] (client) [console.error] In HTML, <span> cannot be a child of <option>.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <Outlet context={{darkMode:false, ...}}>
+[WebServer]       <RenderedRoute match={{params:{...}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]         <StudentHolisticProfilePage>
+[WebServer]           <div className="space-y-6 ...">
+[WebServer]             <div>
+[WebServer]             <LoadingRegion loading={true} error={null} retry={function retry} name="holistic-p..." variable={true} ...>
+[WebServer]               <div ref={function t27} className={"sk-region "} data-sk-region="holistic-p..." aria-busy={true} ...>
+[WebServer]                 <div className="sk-frame" data-sk-frame="" data-sk-reserved="" data-sk-outgoing={undefined} ...>
+[WebServer]                   <div className="space-y-6">
+[WebServer]                     <HolisticProfileIdentity>
+
+[WebServer]                     <section className="overflow-h...">
+[WebServer]                       <div className="flex flex-...">
+[WebServer]                         <div>
+[WebServer]                         <select data-sk-variable="" disabled={true} value="all" onChange={function onChange} ...>
+[WebServer]                           <option>
+[WebServer] >                         <option value="pending-0">
+[WebServer]                             <SkeletonText width="16ch">
+[WebServer]                               <Skeleton width="16ch" kind="text">
+[WebServer] >                               <span
+[WebServer] >                                 aria-hidden="true"
+[WebServer] >                                 data-sk-primitive="text"
+[WebServer] >                                 className="sk-primitive sk-text"
+[WebServer] >                                 style={{width:"16ch",aspectRatio:undefined}}
+[WebServer] >                               >
+[WebServer]                           ...
+[WebServer]                       ...
+[WebServer]                     ...
+[WebServer] 
+[WebServer] 1:55:06 PM [vite] (client) [console.error] <option> cannot contain a nested <span>.
+[WebServer] See this log for the ancestor stack trace.
+
+[8/15] tests\holistic-profile-loading.spec.ts:13:49 › holistic profile retries student errors
+
+[WebServer] 1:55:08 PM [vite] (client) [console.error] In HTML, <span> cannot be a child of <option>.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <Outlet context={{darkMode:false, ...}}>
+[WebServer]       <RenderedRoute match={{params:{...}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]         <StudentHolisticProfilePage>
+[WebServer]           <div className="space-y-6 ...">
+[WebServer]             <div>
+[WebServer]             <LoadingRegion loading={true} error={null} retry={function retry} name="holistic-p..." variable={true} ...>
+[WebServer]               <div ref={function t27} className={"sk-region "} data-sk-region="holistic-p..." aria-busy={true} ...>
+[WebServer]                 <div className="sk-frame" data-sk-frame="" data-sk-reserved="" data-sk-outgoing={undefined} ...>
+[WebServer]                   <div className="space-y-6">
+[WebServer]                     <HolisticProfileIdentity>
+[WebServer]                     <section className="overflow-h...">
+[WebServer]                       <div className="flex flex-...">
+[WebServer]                         <div>
+[WebServer]                         <select data-sk-variable="" disabled={true} value="all" onChange={function onChange} ...>
+[WebServer]                           <option>
+[WebServer] >                         <option value="pending-0">
+[WebServer]                             <SkeletonText width="16ch">
+[WebServer]                               <Skeleton width="16ch" kind="text">
+[WebServer] >                               <span
+[WebServer] >                                 aria-hidden="true"
+[WebServer] >                                 data-sk-primitive="text"
+[WebServer] >                                 className="sk-primitive sk-text"
+[WebServer] >                                 style={{width:"16ch",aspectRatio:undefined}}
+[WebServer] >                               >
+[WebServer]                           ...
+[WebServer]                       ...
+[WebServer]                     ...
+
+[WebServer] 
+[WebServer] 1:55:08 PM [vite] (client) [console.error] <option> cannot contain a nested <span>.
+[WebServer] See this log for the ancestor stack trace.
+[9/15] tests\holistic-profile-loading.spec.ts:13:49 › holistic profile retries profile errors
+
+[WebServer] 1:55:09 PM [vite] (client) [console.error] In HTML, <span> cannot be a child of <option>.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <Outlet context={{darkMode:false, ...}}>
+[WebServer]       <RenderedRoute match={{params:{...}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]         <StudentHolisticProfilePage>
+[WebServer]           <div className="space-y-6 ...">
+[WebServer]             <div>
+[WebServer]             <LoadingRegion loading={true} error={null} retry={function retry} name="holistic-p..." variable={true} ...>
+[WebServer]               <div ref={function t27} className={"sk-region "} data-sk-region="holistic-p..." aria-busy={true} ...>
+[WebServer]                 <div className="sk-frame" data-sk-frame="" data-sk-reserved="" data-sk-outgoing={undefined} ...>
+[WebServer]                   <div className="space-y-6">
+[WebServer]                     <HolisticProfileIdentity>
+[WebServer]                     <section className="overflow-h...">
+[WebServer]                       <div className="flex flex-...">
+[WebServer]                         <div>
+[WebServer]                         <select data-sk-variable="" disabled={true} value="all" onChange={function onChange} ...>
+[WebServer]                           <option>
+[WebServer] >                         <option value="pending-0">
+[WebServer]                             <SkeletonText width="16ch">
+[WebServer]                               <Skeleton width="16ch" kind="text">
+[WebServer] >                               <span
+[WebServer] >                                 aria-hidden="true"
+[WebServer] >                                 data-sk-primitive="text"
+[WebServer] >                                 className="sk-primitive sk-text"
+[WebServer] >                                 style={{width:"16ch",aspectRatio:undefined}}
+[WebServer] >                               >
+[WebServer]                           ...
+[WebServer]                       ...
+[WebServer]                     ...
+[WebServer] 
+[WebServer] 1:55:09 PM [vite] (client) [console.error] <option> cannot contain a nested <span>.
+[WebServer] See this log for the ancestor stack trace.
+
+[10/15] tests\holistic-profile-loading.spec.ts:13:49 › holistic profile retries terms errors
+
+[WebServer] 1:55:11 PM [vite] (client) [console.error] In HTML, <span> cannot be a child of <option>.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <Outlet context={{darkMode:false, ...}}>
+[WebServer]       <RenderedRoute match={{params:{...}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]         <StudentHolisticProfilePage>
+[WebServer]           <div className="space-y-6 ...">
+[WebServer]             <div>
+[WebServer]             <LoadingRegion loading={true} error={null} retry={function retry} name="holistic-p..." variable={true} ...>
+[WebServer]               <div ref={function t27} className={"sk-region "} data-sk-region="holistic-p..." aria-busy={true} ...>
+[WebServer]                 <div className="sk-frame" data-sk-frame="" data-sk-reserved="" data-sk-outgoing={undefined} ...>
+[WebServer]                   <div className="space-y-6">
+[WebServer]                     <HolisticProfileIdentity>
+[WebServer]                     <section className="overflow-h...">
+[WebServer]                       <div className="flex flex-...">
+[WebServer]                         <div>
+[WebServer]                         <select data-sk-variable="" disabled={true} value="all" onChange={function onChange} ...>
+[WebServer]                           <option>
+[WebServer] >                         <option value="pending-0">
+[WebServer]                             <SkeletonText width="16ch">
+[WebServer]                               <Skeleton width="16ch" kind="text">
+[WebServer] >                               <span
+[WebServer] >                                 aria-hidden="true"
+[WebServer] >                                 data-sk-primitive="text"
+[WebServer] >                                 className="sk-primitive sk-text"
+[WebServer] >                                 style={{width:"16ch",aspectRatio:undefined}}
+[WebServer] >                               >
+[WebServer]                           ...
+[WebServer]                       ...
+[WebServer]                     ...
+[WebServer] 
+[WebServer] 1:55:11 PM [vite] (client) [console.error] <option> cannot contain a nested <span>.
+[WebServer] See this log for the ancestor stack trace.
+
+[11/15] tests\holistic-profile-loading.spec.ts:14:1 › holistic profile empty evaluations settle into the original empty state
+[WebServer] 1:55:13 PM [vite] (client) [console.error] In HTML, <span> cannot be a child of <option>.
+
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <Outlet context={{darkMode:false, ...}}>
+[WebServer]       <RenderedRoute match={{params:{...}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]         <StudentHolisticProfilePage>
+[WebServer]           <div className="space-y-6 ...">
+[WebServer]             <div>
+[WebServer]             <LoadingRegion loading={true} error={null} retry={function retry} name="holistic-p..." variable={true} ...>
+[WebServer]               <div ref={function t27} className={"sk-region "} data-sk-region="holistic-p..." aria-busy={true} ...>
+[WebServer]                 <div className="sk-frame" data-sk-frame="" data-sk-reserved="" data-sk-outgoing={undefined} ...>
+[WebServer]                   <div className="space-y-6">
+[WebServer]                     <HolisticProfileIdentity>
+[WebServer]                     <section className="overflow-h...">
+[WebServer]                       <div className="flex flex-...">
+[WebServer]                         <div>
+[WebServer]                         <select data-sk-variable="" disabled={true} value="all" onChange={function onChange} ...>
+[WebServer]                           <option>
+[WebServer] >                         <option value="pending-0">
+[WebServer]                             <SkeletonText width="16ch">
+[WebServer]                               <Skeleton width="16ch" kind="text">
+[WebServer] >                               <span
+[WebServer] >                                 aria-hidden="true"
+[WebServer] >                                 data-sk-primitive="text"
+[WebServer] >                                 className="sk-primitive sk-text"
+[WebServer] >                                 style={{width:"16ch",aspectRatio:undefined}}
+[WebServer] >                               >
+[WebServer]                           ...
+[WebServer]                       ...
+[WebServer]                     ...
+[WebServer] 
+[WebServer] 1:55:13 PM [vite] (client) [console.error] <option> cannot contain a nested <span>.
+[WebServer] See this log for the ancestor stack trace.
+
+[12/15] tests\holistic-profile-loading.spec.ts:15:1 › holistic profile subject cards and selector preserve recommendations
+
+[WebServer] 1:55:14 PM [vite] (client) [console.error] In HTML, <span> cannot be a child of <option>.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <Outlet context={{darkMode:false, ...}}>
+[WebServer]       <RenderedRoute match={{params:{...}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]         <StudentHolisticProfilePage>
+[WebServer]           <div className="space-y-6 ...">
+[WebServer]             <div>
+[WebServer]             <LoadingRegion loading={true} error={null} retry={function retry} name="holistic-p..." variable={true} ...>
+[WebServer]               <div ref={function t27} className={"sk-region "} data-sk-region="holistic-p..." aria-busy={true} ...>
+[WebServer]                 <div className="sk-frame" data-sk-frame="" data-sk-reserved="" data-sk-outgoing={undefined} ...>
+[WebServer]                   <div className="space-y-6">
+[WebServer]                     <HolisticProfileIdentity>
+[WebServer]                     <section className="overflow-h...">
+[WebServer]                       <div className="flex flex-...">
+[WebServer]                         <div>
+[WebServer]                         <select data-sk-variable="" disabled={true} value="all" onChange={function onChange} ...>
+[WebServer]                           <option>
+[WebServer] >                         <option value="pending-0">
+[WebServer]                             <SkeletonText width="16ch">
+[WebServer]                               <Skeleton width="16ch" kind="text">
+[WebServer] >                               <span
+[WebServer] >                                 aria-hidden="true"
+[WebServer] >                                 data-sk-primitive="text"
+[WebServer] >                                 className="sk-primitive sk-text"
+[WebServer] >                                 style={{width:"16ch",aspectRatio:undefined}}
+[WebServer] >                               >
+[WebServer]                           ...
+[WebServer]                       ...
+[WebServer]                     ...
+[WebServer] 
+[WebServer] 1:55:14 PM [vite] (client) [console.error] <option> cannot contain a nested <span>.
+[WebServer] See this log for the ancestor stack trace.
+
+[13/15] tests\holistic-profile-loading.spec.ts:16:32 › holistic profile light card text retains actual contrast
+
+[WebServer] 1:55:16 PM [vite] (client) [console.error] In HTML, <span> cannot be a child of <option>.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <Outlet context={{darkMode:false, ...}}>
+[WebServer]       <RenderedRoute match={{params:{...}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]         <StudentHolisticProfilePage>
+[WebServer]           <div className="space-y-6 ...">
+[WebServer]             <div>
+[WebServer]             <LoadingRegion loading={true} error={null} retry={function retry} name="holistic-p..." variable={true} ...>
+[WebServer]               <div ref={function t27} className={"sk-region "} data-sk-region="holistic-p..." aria-busy={true} ...>
+[WebServer]                 <div className="sk-frame" data-sk-frame="" data-sk-reserved="" data-sk-outgoing={undefined} ...>
+[WebServer]                   <div className="space-y-6">
+[WebServer]                     <HolisticProfileIdentity>
+[WebServer]                     <section className="overflow-h...">
+[WebServer]                       <div className="flex flex-...">
+[WebServer]                         <div>
+[WebServer]                         <select data-sk-variable="" disabled={true} value="all" onChange={function onChange} ...>
+[WebServer]                           <option>
+[WebServer] >                         <option value="pending-0">
+[WebServer]                             <SkeletonText width="16ch">
+[WebServer]                               <Skeleton width="16ch" kind="text">
+[WebServer] >                               <span
+[WebServer] >                                 aria-hidden="true"
+[WebServer] >                                 data-sk-primitive="text"
+[WebServer] >                                 className="sk-primitive sk-text"
+[WebServer] >                                 style={{width:"16ch",aspectRatio:undefined}}
+[WebServer] >                               >
+[WebServer]                           ...
+[WebServer]                       ...
+[WebServer]                     ...
+[WebServer] 
+[WebServer] 1:55:16 PM [vite] (client) [console.error] <option> cannot contain a nested <span>.
+[WebServer] See this log for the ancestor stack trace.
+
+[14/15] tests\holistic-profile-loading.spec.ts:16:32 › holistic profile dark card text retains actual contrast
+
+[WebServer] 1:55:19 PM [vite] (client) [console.error] In HTML, <span> cannot be a child of <option>.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <Outlet context={{darkMode:true, ...}}>
+[WebServer]       <RenderedRoute match={{params:{...}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]         <StudentHolisticProfilePage>
+[WebServer]           <div className="space-y-6 ...">
+[WebServer]             <div>
+[WebServer]             <LoadingRegion loading={true} error={null} retry={function retry} name="holistic-p..." variable={true} ...>
+[WebServer]               <div ref={function t27} className={"sk-region "} data-sk-region="holistic-p..." aria-busy={true} ...>
+[WebServer]                 <div className="sk-frame" data-sk-frame="" data-sk-reserved="" data-sk-outgoing={undefined} ...>
+[WebServer]                   <div className="space-y-6">
+[WebServer]                     <HolisticProfileIdentity>
+[WebServer]                     <section className="overflow-h...">
+[WebServer]                       <div className="flex flex-...">
+[WebServer]                         <div>
+[WebServer]                         <select data-sk-variable="" disabled={true} value="all" onChange={function onChange} ...>
+[WebServer]                           <option>
+[WebServer] >                         <option value="pending-0">
+[WebServer]                             <SkeletonText width="16ch">
+[WebServer]                               <Skeleton width="16ch" kind="text">
+[WebServer] >                               <span
+[WebServer] >                                 aria-hidden="true"
+[WebServer] >                                 data-sk-primitive="text"
+[WebServer] >                                 className="sk-primitive sk-text"
+[WebServer] >                                 style={{width:"16ch",aspectRatio:undefined}}
+[WebServer] >                               >
+[WebServer]                           ...
+[WebServer]                       ...
+[WebServer]                     ...
+[WebServer] 
+[WebServer] 1:55:19 PM [vite] (client) [console.error] <option> cannot contain a nested <span>.
+[WebServer] See this log for the ancestor stack trace.
+
+[15/15] tests\holistic-profile-loading.spec.ts:17:1 › holistic profile retains gauge and sparkline shapes
+[WebServer] 1:55:21 PM [vite] (client) [console.error] In HTML, <span> cannot be a child of <option>.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <Outlet context={{darkMode:false, ...}}>
+[WebServer]       <RenderedRoute match={{params:{...}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]         <StudentHolisticProfilePage>
+[WebServer]           <div className="space-y-6 ...">
+[WebServer]             <div>
+[WebServer]             <LoadingRegion loading={true} error={null} retry={function retry} name="holistic-p..." variable={true} ...>
+[WebServer]               <div ref={function t27} className={"sk-region "} data-sk-region="holistic-p..." aria-busy={true} ...>
+[WebServer]                 <div className="sk-frame" data-sk-frame="" data-sk-reserved="" data-sk-outgoing={undefined} ...>
+[WebServer]                   <div className="space-y-6">
+[WebServer]                     <HolisticProfileIdentity>
+
+[WebServer]                     <section className="overflow-h...">
+[WebServer]                       <div className="flex flex-...">
+[WebServer]                         <div>
+[WebServer]                         <select data-sk-variable="" disabled={true} value="all" onChange={function onChange} ...>
+[WebServer]                           <option>
+[WebServer] >                         <option value="pending-0">
+[WebServer]                             <SkeletonText width="16ch">
+[WebServer]                               <Skeleton width="16ch" kind="text">
+[WebServer] >                               <span
+[WebServer] >                                 aria-hidden="true"
+[WebServer] >                                 data-sk-primitive="text"
+[WebServer] >                                 className="sk-primitive sk-text"
+[WebServer] >                                 style={{width:"16ch",aspectRatio:undefined}}
+[WebServer] >                               >
+[WebServer]                           ...
+[WebServer]                       ...
+[WebServer]                     ...
+[WebServer] 
+[WebServer] 1:55:21 PM [vite] (client) [console.error] <option> cannot contain a nested <span>.
+[WebServer] See this log for the ancestor stack trace.
+
+  15 passed (43.9s)

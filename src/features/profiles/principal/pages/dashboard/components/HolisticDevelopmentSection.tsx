@@ -1,3 +1,6 @@
+import { Skeleton, SkeletonText } from "@shared/components/SkeletonLoading";
+import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
+import { PendingRadar } from "./PrincipalChartLoading";
 import { Sparkles, Brain, Heart, ListChecks, UsersRound, type LucideIcon } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -11,10 +14,10 @@ import { SectionCard } from "../../../../shared/components/DashboardUI";
 import type { HolisticDomain, HolisticDomainName, HolisticRubric } from "../data/types";
 
 const HOLISTIC_DOMAIN_PRESENTATION: Record<HolisticDomainName, { icon: LucideIcon; color: string; tint: string }> = {
-  Cognitive: { icon: Brain, color: "#4779B8", tint: "#EDF4FC" },
-  Emotional: { icon: Heart, color: "#BB5660", tint: "#FCEFF0" },
-  Behavioral: { icon: ListChecks, color: "#A77622", tint: "#FBF5E8" },
-  Social: { icon: UsersRound, color: "#468273", tint: "#EDF7F3" },
+  Cognitive: { icon: Brain, color: "var(--chart-cognitive)", tint: "color-mix(in srgb, var(--chart-cognitive) 8%, white)" },
+  Emotional: { icon: Heart, color: "var(--chart-emotional)", tint: "color-mix(in srgb, var(--chart-emotional) 8%, white)" },
+  Behavioral: { icon: ListChecks, color: "var(--chart-behavioral)", tint: "color-mix(in srgb, var(--chart-behavioral) 8%, white)" },
+  Social: { icon: UsersRound, color: "var(--chart-social)", tint: "color-mix(in srgb, var(--chart-social) 8%, white)" },
 };
 
 function getRubricText(rubric: HolisticRubric, domain: HolisticDomainName, score: number): string {
@@ -23,6 +26,7 @@ function getRubricText(rubric: HolisticRubric, domain: HolisticDomainName, score
 }
 
 interface HolisticDevelopmentSectionProps {
+  loading?: boolean;
   domains: HolisticDomain[];
   rubric: HolisticRubric;
   panelBg: string;
@@ -44,6 +48,7 @@ export function HolisticDevelopmentSection({
   darkMode,
   gridStroke,
   axisColor,
+  loading = false,
 }: HolisticDevelopmentSectionProps) {
   const overallScore = domains.length
     ? (domains.reduce((sum, d) => sum + d.score, 0) / domains.length).toFixed(1)
@@ -56,28 +61,22 @@ export function HolisticDevelopmentSection({
           {domains.length > 0 ? <>
           <ResponsiveContainer width="100%" height={340}>
             <RadarChart data={domains} outerRadius={130}>
-              <defs>
-                <radialGradient id="holisticFill" cx="50%" cy="50%" r="70%">
-                  <stop offset="0%" stopColor="#4779B8" stopOpacity={0.12} />
-                  <stop offset="100%" stopColor="#4779B8" stopOpacity={0.04} />
-                </radialGradient>
-              </defs>
               <PolarGrid stroke={gridStroke} strokeDasharray="3 4" />
               <PolarAngleAxis dataKey="domain" tick={{ fill: axisColor, fontSize: 12, fontWeight: 700 }} />
               <PolarRadiusAxis domain={[0, 5]} tick={false} axisLine={false} tickCount={6} />
-              <Radar
+              <Radar isAnimationActive={!loading} shape={loading ? <PendingRadar /> : undefined}
                 dataKey="score"
-                stroke="#4779B8"
-                fill="url(#holisticFill)"
+                stroke="var(--chart-primary)"
+                fill="var(--chart-primary)" fillOpacity={0.12}
                 strokeWidth={2.5}
-                dot={{ r: 4, fill: "#4779B8", stroke: "#fff", strokeWidth: 2 }}
+                dot={{ r: 4, fill: "var(--chart-primary)", stroke: "#fff", strokeWidth: 2 }}
                 activeDot={{ r: 6 }}
               />
             </RadarChart>
           </ResponsiveContainer>
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className={`flex flex-col items-center justify-center h-20 w-20 rounded-full shadow-card ${darkMode ? "bg-[#1A1A1A]" : "bg-white"}`}>
-              <span className={`text-xl font-black tabular-nums leading-none ${textPrimary}`}>{overallScore}</span>
+              <span className={`text-xl font-black tabular-nums leading-none ${textPrimary}`}>{loading ? <SkeletonText width="3ch" /> : overallScore}</span>
               <span className={`mt-1 text-xs font-medium ${textMuted}`}>Overall</span>
             </div>
           </div>
@@ -111,13 +110,13 @@ export function HolisticDevelopmentSection({
                       className="shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums leading-none"
                       style={{ backgroundColor: darkMode ? `color-mix(in srgb, ${color} 20%, transparent)` : tint, color }}
                     >
-                      {d.score.toFixed(1)}
+                      {loading ? <SkeletonText width="3ch" className="inline-block align-top" /> : d.score.toFixed(1)}
                       <span className="opacity-60">/5</span>
                     </span>
                   </div>
-                  <p className={`mt-1 text-sm font-medium leading-snug ${textPrimary}`}>{rubricText}</p>
+                  <p data-sk-region={`principal-rubric-${d.domain}`} data-sk-variable="" data-sk-field={`principal-rubric-${d.domain}`} className={`mt-1 text-sm font-medium leading-snug ${textPrimary}`}>{loading ? <SkeletonParagraph field={`principal-rubric-${d.domain}`} typical={2} width="100%" /> : rubricText}</p>
                   <div className="mt-2.5 h-1 overflow-hidden rounded-full" style={{ backgroundColor: darkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.055)" }}>
-                    <div className="h-full rounded-full" style={{ width: `${(d.score / 5) * 100}%`, backgroundColor: color, opacity: 0.88 }} />
+                    {loading ? <Skeleton className="h-full w-full rounded-full" /> : <div className="h-full rounded-full" style={{ width: `${(d.score / 5) * 100}%`, backgroundColor: color, opacity: 0.88 }} />}
                   </div>
                 </div>
               </div>

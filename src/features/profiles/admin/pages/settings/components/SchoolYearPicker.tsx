@@ -2,7 +2,7 @@
 // import { Check } from "lucide-react";
 // import { buildSchoolYearOptions, isValidSchoolYearFormat, normalizeSchoolYear } from "../types/Settings";
 
-// const ACCENT = "#6B0000";
+// const ACCENT = "var(--color-maroon)";
 
 // interface SchoolYearPickerProps {
 //   value: string;
@@ -28,8 +28,8 @@
 //   const mutedText = darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]";
 //   const inputClasses = `flex-1 h-9 px-2.5 rounded-lg border text-xs font-semibold outline-none transition-colors ${
 //     darkMode
-//       ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#6B0000]"
-//       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#6B0000]"
+//       ? "bg-[#0B1120] border-[#374151] text-white focus:border-maroon-light"
+//       : "bg-brand-light border-border-subtle text-[#111827] focus:border-maroon-light"
 //   }`;
 
 //   return (
@@ -46,7 +46,7 @@
 //                   ? "text-white"
 //                   : darkMode
 //                   ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-//                   : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+//                   : "border-border-subtle text-[#374151] hover:bg-brand-light"
 //               }`}
 //               style={selected ? { background: ACCENT, borderColor: ACCENT } : undefined}
 //             >

@@ -1,6 +1,7 @@
 // src/features/holistic/context/HolisticAverageContext.tsx
 
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { StudentNarrativeSnapshot } from "../types/holisticAverageType";
 import type { StudentDomainKey } from "../types/holisticAverageType";
 import {
@@ -13,6 +14,7 @@ interface StudentNarrativeSnapshotContextValue {
   snapshot: StudentNarrativeSnapshot | null;
   loading: boolean;
   error: string | null;
+  retry: () => void;
 }
 
 const StudentNarrativeSnapshotContext =
@@ -96,13 +98,14 @@ export function StudentNarrativeSnapshotProvider({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [attempt,setAttempt] = useState(0);
   useEffect(() => {
     let cancelled = false;
 
     async function load(force = false) {
-      if (!force) setLoading(true);
+      if (!force) { setLoading(true); setError(null); }
       try {
-        const allTerms = await fetchStudentHolisticTermAverages(studentId, { force });
+        const allTerms = await fetchStudentHolisticTermAverages(studentId, { force: force || attempt > 0 });
 
         if (cancelled) return;
 
@@ -112,7 +115,7 @@ export function StudentNarrativeSnapshotProvider({
           setError(null);
         } else {
           setSnapshot(null);
-          setError("No snapshot found for this student/term.");
+          setError(null);
         }
       } catch (err) {
         if (!cancelled) {
@@ -140,10 +143,10 @@ export function StudentNarrativeSnapshotProvider({
       window.clearInterval(refreshTimer);
       document.removeEventListener("visibilitychange", refreshWhenVisible);
     };
-  }, [studentId]);
+  }, [studentId, attempt]);
 
   const value = useMemo(
-    () => ({ snapshot, loading, error }),
+    () => ({ snapshot, loading, error, retry: () => setAttempt(n=>n+1) }),
     [snapshot, loading, error]
   );
 

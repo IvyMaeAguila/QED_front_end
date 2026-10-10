@@ -1,5 +1,8 @@
 // SubjectsSection.tsx
-import { Outlet, useOutletContext } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import { Suspense } from "react";
+import { RouteSkeleton } from "@shared/loading/RouteSkeleton";
+import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import { GradeLevelsProvider } from "./context/gradeLevelsContext";
 import { SubjectsCatalogProvider } from "./context/SubjectsCatalogContext";
 import { SectionsProvider } from "./context/SectionsContext";
@@ -14,7 +17,9 @@ export function SubjectsSection() {
       <SubjectsCatalogProvider>
         <SectionsProvider>
           <SubjectSectionsProvider>
-            <Outlet context={theme} />
+            <Suspense fallback={<RouteSkeleton outletContext={theme} />}>
+              <Outlet context={theme} />
+            </Suspense>
           </SubjectSectionsProvider>
         </SectionsProvider>
       </SubjectsCatalogProvider>

@@ -1,0 +1,43 @@
+
+[WebServer] (node:26880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:27156) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:31300) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\admin-class-view.spec.ts:60:1 › class details error removes every reservation immediately and retries context loads
+
+[WebServer] 11:46:40 PM [vite] (client) [console.error] Error: Class temporarily unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+
+[WebServer] 11:46:40 PM [vite] (client) [console.error] Error: Class temporarily unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+  1) tests\admin-class-view.spec.ts:60:1 › class details error removes every reservation immediately and retries context loads 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 2
+
+      65 |   release();
+      66 |   await expect(page.getByRole("alert")).toBeVisible();
+    > 67 |   expect(await page.locator("[data-sk-primitive]").count()).toBe(0);
+         |                                                             ^
+      68 |   const before = release.requests(); release.recover();
+      69 |   await page.getByRole("button", { name: "Retry", exact: true }).click();
+      70 |   await expect(page.getByRole("heading", { name: "Ana Cruz", exact: true })).toBeVisible();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-class-view.spec.ts:67:61
+
+    Error Context: test-results\admin-class-view-class-det-fea50-y-and-retries-context-loads\error-context.md
+
+
+  1 failed
+    tests\admin-class-view.spec.ts:60:1 › class details error removes every reservation immediately and retries context loads 

@@ -1,0 +1,3 @@
+src/features/profiles/parent/pages/Student/ChildDetailPage.tsx(81,34): error TS2304: Cannot find name 'detailStudent'.
+src/features/profiles/parent/pages/Student/ChildDetailPage.tsx(82,317): error TS2322: Type '{ theme: AdminThemeContext; student: DetailStudent; loading: boolean; }' is not assignable to type 'IntrinsicAttributes & ProgressReportTabProps'.
+  Property 'loading' does not exist on type 'IntrinsicAttributes & ProgressReportTabProps'.

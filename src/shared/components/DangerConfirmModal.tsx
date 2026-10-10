@@ -114,8 +114,8 @@ export function DangerConfirmModal({
               placeholder={confirmPhrase}
               className={`w-full h-10 px-3 rounded-xl text-sm font-semibold border outline-none transition-colors disabled:opacity-50 ${
                 darkMode
-                  ? "bg-transparent border-[#374151] text-[#E5E7EB] focus:border-[#6B7280]"
-                  : "bg-white border-[#E5E7EB] text-[#111827] focus:border-[#9CA3AF]"
+                  ? "bg-transparent border-[#374151] text-border-border-subtle focus:border-[#6B7280]"
+                  : "bg-white border-border-subtle text-[#111827] focus:border-[#9CA3AF]"
               }`}
             />
           </div>

@@ -63,7 +63,7 @@ export function ConfirmationModal({
   allowBackdropCloseWhileLoading = false,
 }: ConfirmationModalProps) {
   const destructive = variant === "danger";
-  const iconTone = destructive || variant === "warning" ? "bg-[#FEE2E2] text-[#B91C1C]" : "bg-[#F8EDEE] text-[#800000]";
+  const iconTone = destructive || variant === "warning" ? "bg-[#FEE2E2] text-[#B91C1C]" : "bg-brand-soft text-brand-ink";
 
   return (
     <ModalFrame
@@ -90,12 +90,12 @@ export function ConfirmationModal({
         className="gap-4 border-b-0 px-6 pb-3 pt-6"
       />
       {children && <ModalBody className={bodyClassName}>{children}</ModalBody>}
-      <ModalFooter className={`border-t-0 pt-0 ${footerClassName} ${darkMode ? "border-[#374151]" : "border-[#E5E7EB]"}`}>
+      <ModalFooter className={`border-t-0 pt-0 ${footerClassName} ${darkMode ? "border-[#374151]" : "border-border-subtle"}`}>
         <button
           type="button"
           onClick={onClose}
           disabled={loading || cancelDisabled}
-          className={`h-10 rounded-lg border px-4 qed-type-button disabled:opacity-50 ${darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/5" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F8FAFC]"} ${cancelButtonClassName}`}
+          className={`h-10 rounded-lg border px-4 qed-type-button disabled:opacity-50 ${darkMode ? "border-[#374151] text-[#D1D5DB] hover:bg-white/5" : "border-border-subtle text-[#374151] hover:bg-brand-light"} ${cancelButtonClassName}`}
         >
           {cancelLabel}
         </button>
@@ -103,7 +103,7 @@ export function ConfirmationModal({
           type="button"
           onClick={onConfirm}
           disabled={disabled || loading}
-          className={`inline-flex h-10 items-center justify-center gap-2 rounded-lg px-4 qed-type-button text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 ${destructive ? "bg-[#B91C1C]" : "bg-[#800000]"} ${confirmButtonClassName}`}
+          className={`inline-flex h-10 items-center justify-center gap-2 rounded-lg px-4 qed-type-button text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 ${destructive ? "bg-[#B91C1C]" : "bg-maroon"} ${confirmButtonClassName}`}
         >
           {confirmLeading}
           {loading ? loadingLabel : confirmLabel}

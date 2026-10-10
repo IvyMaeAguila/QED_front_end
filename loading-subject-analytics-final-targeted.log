@@ -1,0 +1,28 @@
+
+[WebServer] (node:26324) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 14 tests using 1 worker
+
+(node:16320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/14] tests\subject-analytics-loading.spec.ts:21:68 › subject analytics 375 light: real ranking frames and controls
+[2/14] tests\subject-analytics-loading.spec.ts:21:68 › subject analytics 375 dark: real ranking frames and controls
+[3/14] tests\subject-analytics-loading.spec.ts:21:68 › subject analytics 1280 light: real ranking frames and controls
+[4/14] tests\subject-analytics-loading.spec.ts:21:68 › subject analytics 1280 dark: real ranking frames and controls
+[5/14] tests\subject-analytics-loading.spec.ts:43:35 › subject priority light: track placeholder fits its actual surface
+[6/14] tests\subject-analytics-loading.spec.ts:43:35 › subject priority dark: track placeholder fits its actual surface
+[7/14] tests\subject-analytics-loading.spec.ts:53:32 › subject analytics 0 subjects preserve the real empty, short and full ranking states
+[8/14] tests\subject-analytics-loading.spec.ts:53:32 › subject analytics 1 subjects preserve the real empty, short and full ranking states
+[9/14] tests\subject-analytics-loading.spec.ts:53:32 › subject analytics 9 subjects preserve the real empty, short and full ranking states
+[10/14] tests\subject-analytics-loading.spec.ts:67:1 › subject analytics failure removes placeholders and retries all report requests
+[11/14] tests\subject-analytics-loading.spec.ts:80:35 › subject analytics fast term refetch preserves the old ranking
+[12/14] tests\subject-analytics-loading.spec.ts:80:35 › subject analytics slow term refetch preserves the old ranking
+[13/14] tests\subject-analytics-loading.spec.ts:112:35 › subject analytics light: native chart bars and priority text use scoped neutral pixels
+[14/14] tests\subject-analytics-loading.spec.ts:112:35 › subject analytics dark: native chart bars and priority text use scoped neutral pixels
+  14 passed (38.0s)

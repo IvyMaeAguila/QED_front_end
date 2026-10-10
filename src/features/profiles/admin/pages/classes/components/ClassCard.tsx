@@ -3,13 +3,16 @@ import { GraduationCap, MoreVertical, Pencil, Trash2, ArrowRight } from "lucide-
 import type { SchoolClass } from "../types/Class";
 import { formatClassName, formatTimeRange } from "../types/Class";
 
+import { SkeletonText } from "@shared/components/SkeletonLoading";
+
 const PALETTE = {
-  gradientFrom: "#550000",
-  gradientTo: "#9D0000",
-  white: "#F2F4F7",
+  gradientFrom: "var(--color-maroon)",
+  gradientTo: "var(--brand-secondary)",
+  white: "var(--brand-light)",
 };
 
 interface ClassCardProps {
+  loading?: boolean;
   schoolClass: SchoolClass;
   adviserName: string;
   room: string;
@@ -25,6 +28,7 @@ interface ClassCardProps {
 }
 
 export function ClassCard({
+  loading = false,
   schoolClass,
   adviserName,
   room,
@@ -51,25 +55,25 @@ export function ClassCard({
   const gradeSource = rawGrade != null ? String(rawGrade) : className;
   const gradeLevel = gradeSource.match(/\d+/)?.[0] ?? className.match(/\d+/)?.[0] ?? gradeSource.charAt(0).toUpperCase();
 
-  const dividerColor = darkMode ? "rgba(255,255,255,0.12)" : "rgba(85,0,0,0.15)";
+  const dividerColor = darkMode ? "rgba(255,255,255,0.12)" : "color-mix(in srgb, var(--brand-primary) 15%, transparent)";
 
   const Row = ({ label, value }: { label: string; value: string }) => (
     <div className="flex items-baseline justify-between gap-4 text-xs">
       <span className={`shrink-0 ${textMuted}`}>{label}</span>
-      <span className={`font-medium text-right truncate ${textPrimary}`} title={value}>
-        {value}
+      <span className={`font-medium text-right truncate ${textPrimary}`} title={value} data-sk-region="classcard-span-field-1">
+        {loading ? <SkeletonText width="10ch" /> : value}
       </span>
     </div>
   );
 
   return (
     <div
-      onDoubleClick={onView}
+      onDoubleClick={loading ? undefined : onView}
       className={`relative flex min-h-68 rounded-2xl border transition-shadow select-none ${panelBorder} ${panelBg}`}
       style={{
         boxShadow: darkMode
           ? "0 10px 24px -8px rgba(0,0,0,0.55), 0 2px 4px rgba(0,0,0,0.3)"
-          : "0 12px 26px -10px rgba(85,0,0,0.28), 0 2px 6px rgba(0,0,0,0.06)",
+          : "0 12px 26px -10px color-mix(in srgb, var(--brand-primary) 28%, transparent), 0 2px 6px rgba(0,0,0,0.06)",
       }}
     >
       {/* Left: content */}
@@ -78,7 +82,7 @@ export function ClassCard({
           <span
             className="w-11 h-11 rounded-full flex items-center justify-center shrink-0"
             style={{
-              border: `1.5px solid ${darkMode ? PALETTE.white + "88" : PALETTE.gradientFrom}`,
+              border: `1.5px solid ${darkMode ? `color-mix(in srgb, ${PALETTE.white} 53.33%, transparent)` : PALETTE.gradientFrom}`,
               color: darkMode ? PALETTE.white : PALETTE.gradientFrom,
             }}
           >
@@ -87,9 +91,10 @@ export function ClassCard({
 
           <div className="relative shrink-0" onDoubleClick={(e) => e.stopPropagation()}>
             <button
+              disabled={loading}
               onClick={() => setMenuOpen((v) => !v)}
               className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-                darkMode ? "text-white/70 hover:bg-white/10" : "text-[#550000]/70 hover:bg-[#550000]/10"
+                darkMode ? "text-white/70 hover:bg-white/10" : "text-brand-ink/70 hover:bg-maroon-light/10"
               }`}
               aria-label="More options"
             >
@@ -109,7 +114,7 @@ export function ClassCard({
                   }}
                   className={`w-full text-left px-3 py-2 text-xs font-bold flex items-center gap-2 ${
                     darkMode ? "text-[#D8B978] hover:bg-white/5" : "text-[#7A1420] hover:bg-[#FBF4E4]"
-                  }`}
+                  }`} data-sk-region="classcard-edit-class" data-sk-static=""
                 >
                   <Pencil size={13} />
                   Edit Class
@@ -119,7 +124,7 @@ export function ClassCard({
                     setMenuOpen(false);
                     onDelete();
                   }}
-                  className="w-full text-left px-3 py-2 text-xs font-bold text-[#E08585] hover:bg-white/5 flex items-center gap-2"
+                  className="w-full text-left px-3 py-2 text-xs font-bold text-[#E08585] hover:bg-white/5 flex items-center gap-2" data-sk-region="classcard-delete-class" data-sk-static=""
                 >
                   <Trash2 size={13} />
                   Delete Class
@@ -130,11 +135,11 @@ export function ClassCard({
         </div>
 
         {/* Title + divider (subject card lettering) */}
-        <h3 className={`qed-type-card-title mt-4 leading-snug truncate ${textPrimary}`} title={className}>
-          {className}
+        <h3 className={`qed-type-card-title mt-4 leading-snug truncate ${textPrimary}`} title={className} data-sk-region="classcard-h3-field-2">
+          {loading ? <SkeletonText width="68%" /> : className}
         </h3>
         <div className="mt-2 h-px w-full" style={{ background: dividerColor }} />
-        <p className={`qed-type-metadata mt-2 ${textMuted}`}>{studentCount} students</p>
+        <p className={`qed-type-metadata mt-2 ${textMuted}`} data-sk-region="classcard-p-field-3">{loading ? <SkeletonText width="6ch" /> : <>{studentCount} students</>}</p>
 
         {/* Details */}
         <div className="mt-auto pt-4 space-y-2.5">
@@ -148,15 +153,15 @@ export function ClassCard({
       <div
         className="absolute -top-px -right-px -bottom-px w-14 flex flex-col rounded-r-2xl overflow-hidden"
         style={{
-          background: `linear-gradient(180deg, ${PALETTE.gradientFrom} 0%, ${PALETTE.gradientTo} 100%)`,
+          background: "var(--color-maroon)",
           boxShadow: "inset 2px 0 4px rgba(0,0,0,0.18)",
         }}
       >
         <div
           className="h-14 shrink-0 flex items-center justify-center text-2xl font-bold leading-none"
-          style={{ background: "rgba(0,0,0,0.22)", color: PALETTE.white }}
+          style={{ background: "rgba(0,0,0,0.22)", color: PALETTE.white }} data-sk-region="classcard-div-field-4"
         >
-          {gradeLevel}
+          {loading ? <SkeletonText className="sk-surface-brand" width="1ch" /> : gradeLevel}
         </div>
         <div
           className="flex-1 flex flex-col items-center justify-center gap-1.5 py-4 text-lg font-extrabold leading-none tracking-normal"

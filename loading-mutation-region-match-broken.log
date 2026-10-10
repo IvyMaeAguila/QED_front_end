@@ -1,0 +1,42 @@
+[WebServer] (node:18592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:38888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:18900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\teacher-subject-loading.spec.ts:23:66 › teacher subject 375 light keeps real score sheet and controls
+  1) tests\teacher-subject-loading.spec.ts:23:66 › teacher subject 375 light keeps real score sheet and controls 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: locator('[data-sk-region="assessment-roster"]')
+    Expected: "revealed"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" locator('[data-sk-region="assessment-roster"]') with timeout 5000ms
+      - waiting for locator('[data-sk-region="assessment-roster"]')
+
+
+      28 |   await expect(page.getByText('90% and up',{exact:true})).toBeVisible();
+      29 |   await expect(page.getByRole('columnheader',{name:'Student',exact:true})).toBeVisible();
+    > 30 |   await expect(page.locator('[data-sk-region="assessment-roster"]')).toHaveAttribute('data-sk-phase','revealed');
+         |                                                                      ^
+      31 |   await assertNoDataSpinner(page);
+      32 |   fs.mkdirSync('loading-screenshots',{recursive:true}); const prefix=`loading-screenshots/teacher-subject-${width}-${dark ? 'dark' : 'light'}`;
+      33 |   await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\teacher-subject-loading.spec.ts:30:70
+
+    Error Context: test-results\teacher-subject-loading-te-16f1f-al-score-sheet-and-controls\error-context.md
+
+
+  1 failed
+    tests\teacher-subject-loading.spec.ts:23:66 › teacher subject 375 light keeps real score sheet and controls 

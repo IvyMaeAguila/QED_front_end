@@ -1,0 +1,34 @@
+[WebServer] (node:34228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:37280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:29928) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\overlay-contract.spec.ts:15:1 › fixed overlay rejects a shape extending outside its matching loaded field
+  1) tests\overlay-contract.spec.ts:15:1 › fixed overlay rejects a shape extending outside its matching loaded field 
+
+    Error: expect(received).toContain(expected) // indexOf
+
+    Expected substring: "fixed shape pixels outside the matching loaded box"
+    Received string:    ""
+
+      21 |   let failure = "";
+      22 |   try { await verify(); } catch (error) { failure = String(error); }
+    > 23 |   expect(failure).toContain("fixed shape pixels outside the matching loaded box");
+         |                   ^
+      24 | });
+      25 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\overlay-contract.spec.ts:23:19
+
+    Error Context: test-results\overlay-contract-fixed-ove-be6df-e-its-matching-loaded-field\error-context.md
+
+
+  1 failed
+    tests\overlay-contract.spec.ts:15:1 › fixed overlay rejects a shape extending outside its matching loaded field 

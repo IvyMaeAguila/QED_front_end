@@ -22,10 +22,10 @@ export const LEVEL_META: Record<Difficulty, { icon: typeof Sprout; color: string
 export const CHOICE_LABELS: Choice[] = ["A", "B", "C", "D"];
 
 export const CHOICE_COLORS: Record<Choice, { badge: string; idle: string }> = {
-  A: { badge: "bg-rose-500", idle: "border-rose-200 hover:border-rose-400 hover:bg-rose-50" },
-  B: { badge: "bg-sky-500", idle: "border-sky-200 hover:border-sky-400 hover:bg-sky-50" },
-  C: { badge: "bg-amber-500", idle: "border-amber-200 hover:border-amber-400 hover:bg-amber-50" },
-  D: { badge: "bg-violet-500", idle: "border-violet-200 hover:border-violet-400 hover:bg-violet-50" },
+  A: { badge: "bg-maroon", idle: "border-border-subtle hover:border-maroon-light hover:bg-brand-soft" },
+  B: { badge: "bg-maroon", idle: "border-border-subtle hover:border-maroon-light hover:bg-brand-soft" },
+  C: { badge: "bg-maroon", idle: "border-border-subtle hover:border-maroon-light hover:bg-brand-soft" },
+  D: { badge: "bg-maroon", idle: "border-border-subtle hover:border-maroon-light hover:bg-brand-soft" },
 };
 
 export const CORRECT_MESSAGES = [

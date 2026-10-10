@@ -1,0 +1,700 @@
+
+[WebServer] (node:18108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:15460) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 11 tests using 1 worker
+
+(node:14032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/11] tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 375 light keeps real headers and controls
+
+[WebServer] 2:13:55 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <table>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <main className="relative f...">
+[WebServer]       <Outlet context={{darkMode:false, ...}}>
+[WebServer]         <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]           <GradesPage>
+[WebServer]             <div className="w-full min...">
+[WebServer]               <div className="w-full spa...">
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <section className="relative z..." aria-label="Advisory c...">
+[WebServer]                   <div>
+[WebServer]                   <div className="overflow-x...">
+[WebServer]                     <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                       <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} ...>
+[WebServer]                         <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                           <div className="relative">
+[WebServer] >                           <table ref={{current:null}} className="teacher-user-table w-full min-w-max text-sm">
+[WebServer]                               <colgroup>
+[WebServer] >                             {"                    "}
+[WebServer]                               ...
+[WebServer]                               ...
+[WebServer] 
+[WebServer] 2:13:55 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <tbody>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]       <GradesPage>
+[WebServer]         <div className="w-full min...">
+[WebServer]           <div className="w-full spa...">
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <section className="relative z..." aria-label="Advisory c...">
+[WebServer]               <div>
+[WebServer]               <div className="overflow-x...">
+[WebServer]                 <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+
+[WebServer]                   <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} variable={true} ...>
+[WebServer]                     <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                       <div className="relative">
+[WebServer]                         <table ref={{current:null}} className="teacher-us...">
+[WebServer]                           <colgroup>
+[WebServer]                           <thead>
+[WebServer] >                         <tbody
+[WebServer] >                           inert={true}
+[WebServer] >                           className={"sk-layer "}
+[WebServer] >                           data-sk-frame={undefined}
+[WebServer] >                           data-sk-layer=""
+[WebServer] >                           aria-hidden={true}
+[WebServer] >                           data-sk-reserved=""
+[WebServer] >                           data-sk-outgoing={undefined}
+[WebServer] >                         >
+[WebServer] >                           {"                      "}
+[WebServer]                             ...
+[WebServer] 
+[2/11] tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 375 dark keeps real headers and controls
+
+[WebServer] 2:13:58 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <table>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <main className="relative f...">
+[WebServer]       <Outlet context={{darkMode:true, ...}}>
+[WebServer]         <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]           <GradesPage>
+[WebServer]             <div className="w-full min...">
+[WebServer]               <div className="w-full spa...">
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <section className="relative z..." aria-label="Advisory c...">
+[WebServer]                   <div>
+[WebServer]                   <div className="overflow-x...">
+[WebServer]                     <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                       <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} ...>
+[WebServer]                         <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                           <div className="relative">
+[WebServer] >                           <table ref={{current:null}} className="teacher-user-table w-full min-w-max text-sm">
+[WebServer]                               <colgroup>
+[WebServer] >                             {"                    "}
+[WebServer]                               ...
+[WebServer]                               ...
+[WebServer] 
+[WebServer] 2:13:58 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <tbody>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]       <GradesPage>
+[WebServer]         <div className="w-full min...">
+[WebServer]           <div className="w-full spa...">
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <section className="relative z..." aria-label="Advisory c...">
+[WebServer]               <div>
+[WebServer]               <div className="overflow-x...">
+[WebServer]                 <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                   <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} variable={true} ...>
+[WebServer]                     <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                       <div className="relative">
+[WebServer]                         <table ref={{current:null}} className="teacher-us...">
+[WebServer]                           <colgroup>
+[WebServer]                           <thead>
+[WebServer] >                         <tbody
+[WebServer] >                           inert={true}
+[WebServer] >                           className={"sk-layer "}
+[WebServer] >                           data-sk-frame={undefined}
+[WebServer] >                           data-sk-layer=""
+[WebServer] >                           aria-hidden={true}
+[WebServer] >                           data-sk-reserved=""
+[WebServer] >                           data-sk-outgoing={undefined}
+[WebServer] >                         >
+[WebServer] >                           {"                      "}
+[WebServer]                             ...
+[WebServer] 
+[3/11] tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 1280 light keeps real headers and controls
+
+[WebServer] 2:14:00 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <table>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <main className="relative f...">
+[WebServer]       <Outlet context={{darkMode:false, ...}}>
+[WebServer]         <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]           <GradesPage>
+[WebServer]             <div className="w-full min...">
+[WebServer]               <div className="w-full spa...">
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <section className="relative z..." aria-label="Advisory c...">
+[WebServer]                   <div>
+[WebServer]                   <div className="overflow-x...">
+[WebServer]                     <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                       <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} ...>
+[WebServer]                         <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                           <div className="relative">
+[WebServer] >                           <table ref={{current:null}} className="teacher-user-table w-full min-w-max text-sm">
+[WebServer]                               <colgroup>
+[WebServer] >                             {"                    "}
+[WebServer]                               ...
+[WebServer]                               ...
+[WebServer] 
+
+[WebServer] 2:14:00 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <tbody>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]       <GradesPage>
+[WebServer]         <div className="w-full min...">
+[WebServer]           <div className="w-full spa...">
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <section className="relative z..." aria-label="Advisory c...">
+[WebServer]               <div>
+[WebServer]               <div className="overflow-x...">
+[WebServer]                 <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                   <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} variable={true} ...>
+[WebServer]                     <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                       <div className="relative">
+[WebServer]                         <table ref={{current:null}} className="teacher-us...">
+[WebServer]                           <colgroup>
+[WebServer]                           <thead>
+[WebServer] >                         <tbody
+[WebServer] >                           inert={true}
+[WebServer] >                           className={"sk-layer "}
+[WebServer] >                           data-sk-frame={undefined}
+[WebServer] >                           data-sk-layer=""
+[WebServer] >                           aria-hidden={true}
+[WebServer] >                           data-sk-reserved=""
+[WebServer] >                           data-sk-outgoing={undefined}
+[WebServer] >                         >
+[WebServer] >                           {"                      "}
+[WebServer]                             ...
+[WebServer] 
+[4/11] tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 1280 dark keeps real headers and controls
+[WebServer] 2:14:02 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <table>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <main className="relative f...">
+[WebServer]       <Outlet context={{darkMode:true, ...}}>
+[WebServer]         <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]           <GradesPage>
+[WebServer]             <div className="w-full min...">
+[WebServer]               <div className="w-full spa...">
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <section className="relative z..." aria-label="Advisory c...">
+[WebServer]                   <div>
+[WebServer]                   <div className="overflow-x...">
+[WebServer]                     <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                       <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} ...>
+[WebServer]                         <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                           <div className="relative">
+[WebServer] >                           <table ref={{current:null}} className="teacher-user-table w-full min-w-max text-sm">
+[WebServer]                               <colgroup>
+[WebServer] >                             {"                    "}
+[WebServer]                               ...
+[WebServer]                               ...
+[WebServer] 
+
+[WebServer] 2:14:02 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <tbody>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]       <GradesPage>
+[WebServer]         <div className="w-full min...">
+[WebServer]           <div className="w-full spa...">
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <section className="relative z..." aria-label="Advisory c...">
+[WebServer]               <div>
+[WebServer]               <div className="overflow-x...">
+[WebServer]                 <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                   <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} variable={true} ...>
+[WebServer]                     <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                       <div className="relative">
+[WebServer]                         <table ref={{current:null}} className="teacher-us...">
+[WebServer]                           <colgroup>
+[WebServer]                           <thead>
+[WebServer] >                         <tbody
+[WebServer] >                           inert={true}
+[WebServer] >                           className={"sk-layer "}
+[WebServer] >                           data-sk-frame={undefined}
+[WebServer] >                           data-sk-layer=""
+[WebServer] >                           aria-hidden={true}
+[WebServer] >                           data-sk-reserved=""
+[WebServer] >                           data-sk-outgoing={undefined}
+[WebServer] >                         >
+[WebServer] >                           {"                      "}
+[WebServer]                             ...
+[WebServer] 
+[5/11] tests\teacher-grades-loading.spec.ts:7:28 › teacher grades preserves 0 actual students
+
+[WebServer] 2:14:04 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <table>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <main className="relative f...">
+[WebServer]       <Outlet context={{darkMode:false, ...}}>
+[WebServer]         <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]           <GradesPage>
+[WebServer]             <div className="w-full min...">
+[WebServer]               <div className="w-full spa...">
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <section className="relative z..." aria-label="Advisory c...">
+[WebServer]                   <div>
+[WebServer]                   <div className="overflow-x...">
+[WebServer]                     <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                       <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} ...>
+[WebServer]                         <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                           <div className="relative">
+[WebServer] >                           <table ref={{current:null}} className="teacher-user-table w-full min-w-max text-sm">
+[WebServer]                               <colgroup>
+[WebServer] >                             {"                    "}
+[WebServer]                               ...
+[WebServer]                               ...
+[WebServer] 
+
+[WebServer] 2:14:04 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <tbody>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]       <GradesPage>
+[WebServer]         <div className="w-full min...">
+[WebServer]           <div className="w-full spa...">
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <section className="relative z..." aria-label="Advisory c...">
+[WebServer]               <div>
+[WebServer]               <div className="overflow-x...">
+[WebServer]                 <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                   <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} variable={true} ...>
+[WebServer]                     <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                       <div className="relative">
+[WebServer]                         <table ref={{current:null}} className="teacher-us...">
+[WebServer]                           <colgroup>
+[WebServer]                           <thead>
+[WebServer] >                         <tbody
+[WebServer] >                           inert={true}
+[WebServer] >                           className={"sk-layer "}
+[WebServer] >                           data-sk-frame={undefined}
+[WebServer] >                           data-sk-layer=""
+[WebServer] >                           aria-hidden={true}
+[WebServer] >                           data-sk-reserved=""
+[WebServer] >                           data-sk-outgoing={undefined}
+[WebServer] >                         >
+[WebServer] >                           {"                      "}
+[WebServer]                             ...
+[WebServer] 
+[6/11] tests\teacher-grades-loading.spec.ts:7:28 › teacher grades preserves 1 actual students
+
+[WebServer] 2:14:05 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <table>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <main className="relative f...">
+[WebServer]       <Outlet context={{darkMode:false, ...}}>
+[WebServer]         <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]           <GradesPage>
+[WebServer]             <div className="w-full min...">
+[WebServer]               <div className="w-full spa...">
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <section className="relative z..." aria-label="Advisory c...">
+[WebServer]                   <div>
+[WebServer]                   <div className="overflow-x...">
+[WebServer]                     <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                       <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} ...>
+[WebServer]                         <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                           <div className="relative">
+[WebServer] >                           <table ref={{current:null}} className="teacher-user-table w-full min-w-max text-sm">
+[WebServer]                               <colgroup>
+[WebServer] >                             {"                    "}
+[WebServer]                               ...
+[WebServer]                               ...
+[WebServer] 
+
+[WebServer] 2:14:05 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <tbody>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]       <GradesPage>
+[WebServer]         <div className="w-full min...">
+[WebServer]           <div className="w-full spa...">
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <section className="relative z..." aria-label="Advisory c...">
+[WebServer]               <div>
+[WebServer]               <div className="overflow-x...">
+[WebServer]                 <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                   <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} variable={true} ...>
+[WebServer]                     <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                       <div className="relative">
+[WebServer]                         <table ref={{current:null}} className="teacher-us...">
+[WebServer]                           <colgroup>
+[WebServer]                           <thead>
+[WebServer] >                         <tbody
+[WebServer] >                           inert={true}
+[WebServer] >                           className={"sk-layer "}
+[WebServer] >                           data-sk-frame={undefined}
+[WebServer] >                           data-sk-layer=""
+[WebServer] >                           aria-hidden={true}
+[WebServer] >                           data-sk-reserved=""
+[WebServer] >                           data-sk-outgoing={undefined}
+[WebServer] >                         >
+[WebServer] >                           {"                      "}
+[WebServer]                             ...
+[WebServer] 
+[7/11] tests\teacher-grades-loading.spec.ts:7:28 › teacher grades preserves 9 actual students
+
+[WebServer] 2:14:06 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <table>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <main className="relative f...">
+[WebServer]       <Outlet context={{darkMode:false, ...}}>
+[WebServer]         <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]           <GradesPage>
+[WebServer]             <div className="w-full min...">
+[WebServer]               <div className="w-full spa...">
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <section className="relative z..." aria-label="Advisory c...">
+[WebServer]                   <div>
+[WebServer]                   <div className="overflow-x...">
+[WebServer]                     <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                       <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} ...>
+[WebServer]                         <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                           <div className="relative">
+[WebServer] >                           <table ref={{current:null}} className="teacher-user-table w-full min-w-max text-sm">
+[WebServer]                               <colgroup>
+[WebServer] >                             {"                    "}
+[WebServer]                               ...
+[WebServer]                               ...
+[WebServer] 
+
+[WebServer] 2:14:06 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <tbody>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]       <GradesPage>
+[WebServer]         <div className="w-full min...">
+[WebServer]           <div className="w-full spa...">
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <section className="relative z..." aria-label="Advisory c...">
+[WebServer]               <div>
+[WebServer]               <div className="overflow-x...">
+[WebServer]                 <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                   <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} variable={true} ...>
+[WebServer]                     <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                       <div className="relative">
+[WebServer]                         <table ref={{current:null}} className="teacher-us...">
+[WebServer]                           <colgroup>
+[WebServer]                           <thead>
+[WebServer] >                         <tbody
+[WebServer] >                           inert={true}
+[WebServer] >                           className={"sk-layer "}
+[WebServer] >                           data-sk-frame={undefined}
+[WebServer] >                           data-sk-layer=""
+[WebServer] >                           aria-hidden={true}
+[WebServer] >                           data-sk-reserved=""
+[WebServer] >                           data-sk-outgoing={undefined}
+[WebServer] >                         >
+[WebServer] >                           {"                      "}
+[WebServer]                             ...
+[WebServer] 
+[8/11] tests\teacher-grades-loading.spec.ts:8:52 › teacher grades retries terms
+
+[WebServer] 2:14:08 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <table>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <main className="relative f...">
+[WebServer]       <Outlet context={{darkMode:false, ...}}>
+[WebServer]         <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]           <GradesPage>
+[WebServer]             <div className="w-full min...">
+[WebServer]               <div className="w-full spa...">
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <section className="relative z..." aria-label="Advisory c...">
+[WebServer]                   <div>
+[WebServer]                   <div className="overflow-x...">
+[WebServer]                     <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                       <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} ...>
+[WebServer]                         <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                           <div className="relative">
+[WebServer] >                           <table ref={{current:null}} className="teacher-user-table w-full min-w-max text-sm">
+[WebServer]                               <colgroup>
+[WebServer] >                             {"                    "}
+[WebServer]                               ...
+[WebServer]                               ...
+[WebServer] 
+[WebServer] 2:14:08 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <tbody>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]       <GradesPage>
+[WebServer]         <div className="w-full min...">
+[WebServer]           <div className="w-full spa...">
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <section className="relative z..." aria-label="Advisory c...">
+[WebServer]               <div>
+[WebServer]               <div className="overflow-x...">
+[WebServer]                 <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+
+[WebServer]                   <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} variable={true} ...>
+[WebServer]                     <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                       <div className="relative">
+[WebServer]                         <table ref={{current:null}} className="teacher-us...">
+[WebServer]                           <colgroup>
+[WebServer]                           <thead>
+[WebServer] >                         <tbody
+[WebServer] >                           inert={true}
+[WebServer] >                           className={"sk-layer "}
+[WebServer] >                           data-sk-frame={undefined}
+[WebServer] >                           data-sk-layer=""
+[WebServer] >                           aria-hidden={true}
+[WebServer] >                           data-sk-reserved=""
+[WebServer] >                           data-sk-outgoing={undefined}
+[WebServer] >                         >
+[WebServer] >                           {"                      "}
+[WebServer]                             ...
+[WebServer] 
+[9/11] tests\teacher-grades-loading.spec.ts:8:52 › teacher grades retries sections
+[WebServer] 2:14:09 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <table>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <main className="relative f...">
+[WebServer]       <Outlet context={{darkMode:false, ...}}>
+[WebServer]         <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]           <GradesPage>
+[WebServer]             <div className="w-full min...">
+[WebServer]               <div className="w-full spa...">
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <section className="relative z..." aria-label="Advisory c...">
+[WebServer]                   <div>
+[WebServer]                   <div className="overflow-x...">
+[WebServer]                     <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                       <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} ...>
+[WebServer]                         <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                           <div className="relative">
+[WebServer] >                           <table ref={{current:null}} className="teacher-user-table w-full min-w-max text-sm">
+[WebServer]                               <colgroup>
+[WebServer] >                             {"                    "}
+[WebServer]                               ...
+[WebServer]                               ...
+[WebServer] 
+[WebServer] 2:14:09 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <tbody>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]       <GradesPage>
+[WebServer]         <div className="w-full min...">
+[WebServer]           <div className="w-full spa...">
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <section className="relative z..." aria-label="Advisory c...">
+[WebServer]               <div>
+[WebServer]               <div className="overflow-x...">
+[WebServer]                 <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+
+[WebServer]                   <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} variable={true} ...>
+[WebServer]                     <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                       <div className="relative">
+[WebServer]                         <table ref={{current:null}} className="teacher-us...">
+[WebServer]                           <colgroup>
+[WebServer]                           <thead>
+[WebServer] >                         <tbody
+[WebServer] >                           inert={true}
+[WebServer] >                           className={"sk-layer "}
+[WebServer] >                           data-sk-frame={undefined}
+[WebServer] >                           data-sk-layer=""
+[WebServer] >                           aria-hidden={true}
+[WebServer] >                           data-sk-reserved=""
+[WebServer] >                           data-sk-outgoing={undefined}
+[WebServer] >                         >
+[WebServer] >                           {"                      "}
+[WebServer]                             ...
+[WebServer] 
+[10/11] tests\teacher-grades-loading.spec.ts:8:52 › teacher grades retries gradebook
+[WebServer] 2:14:11 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <table>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <main className="relative f...">
+[WebServer]       <Outlet context={{darkMode:false, ...}}>
+[WebServer]         <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]           <GradesPage>
+[WebServer]             <div className="w-full min...">
+[WebServer]               <div className="w-full spa...">
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <section className="relative z..." aria-label="Advisory c...">
+[WebServer]                   <div>
+[WebServer]                   <div className="overflow-x...">
+[WebServer]                     <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                       <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} ...>
+[WebServer]                         <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                           <div className="relative">
+[WebServer] >                           <table ref={{current:null}} className="teacher-user-table w-full min-w-max text-sm">
+[WebServer]                               <colgroup>
+[WebServer] >                             {"                    "}
+[WebServer]                               ...
+[WebServer]                               ...
+[WebServer] 
+[WebServer] 2:14:11 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <tbody>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]       <GradesPage>
+[WebServer]         <div className="w-full min...">
+[WebServer]           <div className="w-full spa...">
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <section className="relative z..." aria-label="Advisory c...">
+[WebServer]               <div>
+[WebServer]               <div className="overflow-x...">
+[WebServer]                 <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+
+[WebServer]                   <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} variable={true} ...>
+[WebServer]                     <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                       <div className="relative">
+[WebServer]                         <table ref={{current:null}} className="teacher-us...">
+[WebServer]                           <colgroup>
+[WebServer]                           <thead>
+[WebServer] >                         <tbody
+[WebServer] >                           inert={true}
+[WebServer] >                           className={"sk-layer "}
+[WebServer] >                           data-sk-frame={undefined}
+[WebServer] >                           data-sk-layer=""
+[WebServer] >                           aria-hidden={true}
+[WebServer] >                           data-sk-reserved=""
+[WebServer] >                           data-sk-outgoing={undefined}
+[WebServer] >                         >
+[WebServer] >                           {"                      "}
+[WebServer]                             ...
+[WebServer] 
+[WebServer] 2:14:12 PM [vite] (client) [console.error] Failed to load advisory gradebook: Error: Records unavailable
+
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:14:38)
+[WebServer]     at async fetchAdvisoryGradebook (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:29:15)
+[11/11] tests\teacher-grades-loading.spec.ts:9:1 › teacher grades preserves visibility and history tabs
+
+[WebServer] 2:14:13 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <table>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <main className="relative f...">
+[WebServer]       <Outlet context={{darkMode:false, ...}}>
+[WebServer]         <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]           <GradesPage>
+[WebServer]             <div className="w-full min...">
+[WebServer]               <div className="w-full spa...">
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <div>
+[WebServer]                 <section className="relative z..." aria-label="Advisory c...">
+[WebServer]                   <div>
+[WebServer]                   <div className="overflow-x...">
+[WebServer]                     <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                       <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} ...>
+[WebServer]                         <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                           <div className="relative">
+[WebServer] >                           <table ref={{current:null}} className="teacher-user-table w-full min-w-max text-sm">
+[WebServer]                               <colgroup>
+[WebServer] >                             {"                    "}
+[WebServer]                               ...
+[WebServer]                               ...
+[WebServer] 
+[WebServer] 2:14:13 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <tbody>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]       <GradesPage>
+[WebServer]         <div className="w-full min...">
+[WebServer]           <div className="w-full spa...">
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <div>
+[WebServer]             <section className="relative z..." aria-label="Advisory c...">
+[WebServer]               <div>
+[WebServer]               <div className="overflow-x...">
+[WebServer]                 <LoadingTable view="teacher-gr..." loading={true} error={null} retry={function retry} columns={[...]} ...>
+[WebServer]                   <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} variable={true} ...>
+[WebServer]                     <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." aria-busy={true} ...>
+[WebServer]                       <div className="relative">
+[WebServer]                         <table ref={{current:null}} className="teacher-us...">
+[WebServer]                           <colgroup>
+[WebServer]                           <thead>
+[WebServer] >                         <tbody
+[WebServer] >                           inert={true}
+[WebServer] >                           className={"sk-layer "}
+[WebServer] >                           data-sk-frame={undefined}
+[WebServer] >                           data-sk-layer=""
+[WebServer] >                           aria-hidden={true}
+[WebServer] >                           data-sk-reserved=""
+[WebServer] >                           data-sk-outgoing={undefined}
+[WebServer] >                         >
+[WebServer] >                           {"                      "}
+[WebServer]                             ...
+[WebServer] 
+  11 passed (32.7s)

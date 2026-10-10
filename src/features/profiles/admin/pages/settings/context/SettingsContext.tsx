@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useLayoutEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useLayoutEffect, useState, type ReactNode } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { type Language, type SettingsState } from "../types/Settings";
 
 interface SettingsContextValue extends SettingsState {

@@ -1,7 +1,11 @@
 import type { ReactNode } from "react";
+import { SkeletonText } from "@shared/components/SkeletonLoading";
 
 interface SubjectAssignmentCardProps {
-  schoolYear: string;
+  loading?: boolean;
+  schoolYearLoading?: boolean;
+  statusLoading?: boolean;
+  schoolYear: ReactNode;
   status: string;
   title: string;
   subtitle?: string;
@@ -19,6 +23,9 @@ interface SubjectAssignmentCardProps {
 
 /** Shared maroon header and inset information panel used by subject cards. */
 export function SubjectAssignmentCard({
+  loading = false,
+  schoolYearLoading = loading,
+  statusLoading = loading,
   schoolYear,
   status,
   title,
@@ -36,10 +43,10 @@ export function SubjectAssignmentCard({
 }: SubjectAssignmentCardProps) {
   const normalizedStatus = status.toLowerCase();
   const isPending = normalizedStatus === "pending";
-  const statusColor = isPending ? "#6B7280" : ["active", "submitted"].includes(normalizedStatus) ? "#800020" : "#6B7280";
+  const statusColor = isPending ? "#6B7280" : ["active", "submitted"].includes(normalizedStatus) ? "var(--semantic-success)" : "#6B7280";
   const surface = darkMode ? panelBg : "bg-white";
-  const maroon = isPending ? (darkMode ? "#4B5563" : "#9CA3AF") : darkMode ? "#5A1A1F" : "#800020";
-  const cardBg = darkMode ? "#2A1A18" : "#ffffff";
+  const maroon = isPending ? (darkMode ? "#4B5563" : "#9CA3AF") : darkMode ? "var(--color-maroon)" : "var(--color-maroon)";
+  const cardBg = darkMode ? "var(--surface-card-dark)" : "#ffffff";
 
   return (
     <article
@@ -68,22 +75,22 @@ export function SubjectAssignmentCard({
           aria-hidden="true"
         />
 
-        <div className="relative z-10">
+        <div className="relative z-10" data-sk-region="subjectassignmentcard-div-field-1">
         <div className={`qed-type-metadata flex items-center gap-1.5 ${textMuted}`}>
-          <span>{schoolYear}</span>
+          <span data-sk-region="subjectassignmentcard-span-field-2">{schoolYearLoading ? <SkeletonText width="9ch" /> : schoolYear}</span>
           <span aria-hidden="true">·</span>
-          <span className="qed-type-badge" style={{ color: statusColor }}>{status}</span>
+          <span className="qed-type-badge" style={{ color: statusColor }} data-sk-region="subjectassignmentcard-span-field-3">{statusLoading ? <SkeletonText width="6ch" /> : status}</span>
         </div>
-        <h3 className={`qed-type-card-title mt-1 truncate pr-14 leading-snug ${textPrimary}`} title={title}>{title}</h3>
-        {subtitle && <p className={`qed-type-metadata mt-0.5 truncate pr-14 ${textMuted}`} title={subtitle}>{subtitle}</p>}
-        {detail && <p className={`qed-type-metadata mt-0.5 truncate pr-14 ${textMuted}`} title={detail}>{detail}</p>}
+        <h3 className={`qed-type-card-title mt-1 truncate pr-14 leading-snug ${textPrimary}`} title={title} data-sk-region="subjectassignmentcard-h3-field-4">{loading ? <SkeletonText width="68%"/> : title}</h3>
+        {subtitle && <p className={`qed-type-metadata mt-0.5 truncate pr-14 ${textMuted}`} title={subtitle} data-sk-region="subjectassignmentcard-p-field-5">{loading ? <SkeletonText width="55%"/> : subtitle}</p>}
+        {detail && <p className={`qed-type-metadata mt-0.5 truncate pr-14 ${textMuted}`} title={detail} data-sk-region="subjectassignmentcard-p-field-6">{loading ? <SkeletonText width="42%"/> : detail}</p>}
         </div>
 
         <div className={`mt-auto mb-3 border-t ${darkMode ? "border-white/10" : "border-gray-200"}`} aria-hidden="true" />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" data-sk-region="subjectassignmentcard-div-field-7">
         {showStudentCount && (
-            <span className={`qed-type-badge shrink-0 rounded-full px-2.5 py-1 ${isPending ? "bg-gray-100 text-gray-600" : darkMode ? "bg-white/10 text-white/80" : "bg-[#F5E9EA] text-[#800020]"}`}>
-            {studentCount} student{studentCount === 1 ? "" : "s"}
+            <span className={`qed-type-badge shrink-0 rounded-full px-2.5 py-1 ${isPending ? "bg-gray-100 text-gray-600" : darkMode ? "bg-white/10 text-white/80" : "bg-brand-soft text-brand-ink"}`} data-sk-region="subjectassignmentcard-span-field-8">
+            {loading ? <SkeletonText width="3ch"/> : <>{studentCount} student{studentCount === 1 ? "" : "s"}</>}
           </span>
         )}
         <div className="ml-auto flex shrink-0 items-center justify-end gap-1.5 sm:gap-2">

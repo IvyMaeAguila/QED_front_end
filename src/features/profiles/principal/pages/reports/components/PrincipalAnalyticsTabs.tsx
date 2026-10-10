@@ -21,8 +21,8 @@ export function PrincipalAnalyticsTabs({ textMuted }: PrincipalAnalyticsTabsProp
           to={tab.to}
           className={({ isActive }) => `flex h-8 items-center justify-center gap-1.5 rounded-lg px-2.5 text-xs transition-colors ${
             isActive
-              ? "bg-[#880000] font-bold text-white shadow-sm"
-              : `font-medium ${textMuted} hover:bg-[#880000] hover:text-white`
+              ? "bg-maroon-light font-bold text-white shadow-sm"
+              : `font-medium ${textMuted} hover:bg-maroon-light hover:text-white`
           }`}
         >
           <tab.Icon size={13} />

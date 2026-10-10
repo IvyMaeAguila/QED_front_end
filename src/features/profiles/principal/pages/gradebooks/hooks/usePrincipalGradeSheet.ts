@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import {
   fetchPrincipalGradebook,
   fetchSchoolYear,
@@ -14,10 +15,13 @@ interface UsePrincipalGradeSheetResult {
   loading: boolean;
   error: string | null;
   notFound: boolean;
+  ready: boolean;
+  retry: () => void;
 }
 
 export function usePrincipalGradeSheet(
   params: PrincipalGradebookParams,
+  enabled = true,
 ): UsePrincipalGradeSheetResult {
   const { gradeLevelId, gradingPeriodId, sectionId } = params;
 
@@ -28,8 +32,11 @@ export function usePrincipalGradeSheet(
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [notFound, setNotFound] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
+    if (!enabled) return;
     const controller = new AbortController();
     setLoading(true);
     setError(null);
@@ -52,6 +59,7 @@ export function usePrincipalGradeSheet(
         setSubjects(gradebook.subjects);
         setSectionName(gradebook.sectionName);
         setSchoolYear(year);
+        setReady(true);
       })
       .catch((err) => {
         if (controller.signal.aborted) return;
@@ -63,7 +71,7 @@ export function usePrincipalGradeSheet(
       });
 
     return () => controller.abort();
-  }, [gradeLevelId, gradingPeriodId, sectionId]);
+  }, [gradeLevelId, gradingPeriodId, sectionId, enabled, attempt]);
 
-  return { students, subjects, schoolYear, sectionName, loading, error, notFound };
+  return { students, subjects, schoolYear, sectionName, loading, error, notFound, ready, retry: () => setAttempt(value => value + 1) };
 }

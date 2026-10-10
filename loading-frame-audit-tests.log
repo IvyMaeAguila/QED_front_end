@@ -1,0 +1,70 @@
+
+[WebServer] (node:37252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:22896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 56 tests using 1 worker
+
+
+(node:38120) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/56] tests\directory-loading.spec.ts:7:70 › /principal/teachers 375px light: real controls and screenshots
+[2/56] tests\directory-loading.spec.ts:7:70 › /principal/teachers 375px dark: real controls and screenshots
+[3/56] tests\directory-loading.spec.ts:7:70 › /principal/teachers 1280px light: real controls and screenshots
+[4/56] tests\directory-loading.spec.ts:7:70 › /principal/teachers 1280px dark: real controls and screenshots
+[5/56] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 375px light: real controls and screenshots
+[6/56] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 375px dark: real controls and screenshots
+[7/56] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 1280px light: real controls and screenshots
+[8/56] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 1280px dark: real controls and screenshots
+[9/56] tests\directory-loading.spec.ts:7:70 › /principal/students 375px light: real controls and screenshots
+[10/56] tests\directory-loading.spec.ts:7:70 › /principal/students 375px dark: real controls and screenshots
+[11/56] tests\directory-loading.spec.ts:7:70 › /principal/students 1280px light: real controls and screenshots
+[12/56] tests\directory-loading.spec.ts:7:70 › /principal/students 1280px dark: real controls and screenshots
+[13/56] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 375px light: real controls and screenshots
+[14/56] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 375px dark: real controls and screenshots
+[15/56] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 1280px light: real controls and screenshots
+[16/56] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 1280px dark: real controls and screenshots
+[17/56] tests\directory-loading.spec.ts:7:70 › /parent 375px light: real controls and screenshots
+[18/56] tests\directory-loading.spec.ts:7:70 › /parent 375px dark: real controls and screenshots
+[19/56] tests\directory-loading.spec.ts:7:70 › /parent 1280px light: real controls and screenshots
+[20/56] tests\directory-loading.spec.ts:7:70 › /parent 1280px dark: real controls and screenshots
+[21/56] tests\directory-loading.spec.ts:29:1 › principal directory auto-column classification requires observed variation
+[22/56] tests\finishing-contract.spec.ts:6:1 › session identity and fixed attendance labels are real before dashboard fetch
+[23/56] tests\finishing-contract.spec.ts:15:1 › attendance skeleton retains the real ring chart shape
+[24/56] tests\finishing-contract.spec.ts:25:1 › table refetch keeps old rows until delay then dims without a spinner
+[25/56] tests\finishing-contract.spec.ts:44:40 › light: shine is distinct from every surface
+[26/56] tests\finishing-contract.spec.ts:44:40 › dark: shine is distinct from every surface
+[27/56] tests\loading.spec.ts:7:1 › 60ms never reveals a skeleton
+[28/56] tests\loading.spec.ts:11:1 › 320ms reveals after 200ms and reserves at least 400ms
+[29/56] tests\loading.spec.ts:20:1 › 1500ms begins showing content within 150ms of data
+[30/56] tests\loading.spec.ts:24:1 › fixed region retains height and has zero CLS
+[31/56] tests\loading.spec.ts:30:3 › variable list, data size 0: one swap, stable surroundings
+[32/56] tests\loading.spec.ts:30:3 › variable list, data size 2: one swap, stable surroundings
+[33/56] tests\loading.spec.ts:30:3 › variable list, data size 9: one swap, stable surroundings
+[34/56] tests\loading.spec.ts:30:3 › variable text, data size 1: one swap, stable surroundings
+[35/56] tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings
+[36/56] tests\loading.spec.ts:30:3 › variable text, data size 24: one swap, stable surroundings
+[37/56] tests\loading.spec.ts:49:1 › animation properties, shimmer duration and shared easing
+[38/56] tests\loading.spec.ts:59:1 › different mount times share shimmer phase
+[39/56] tests\loading.spec.ts:64:30 › 5 items use exact stagger policy
+[40/56] tests\loading.spec.ts:64:30 › 12 items use exact stagger policy
+[41/56] tests\loading.spec.ts:68:1 › reduced motion has no shimmer or fade wait
+[42/56] tests\loading.spec.ts:76:1 › aria busy, hidden reservation, delayed status and complete cleanup
+[43/56] tests\loading.spec.ts:85:1 › error removes skeleton and retry reloads
+[44/56] tests\loading.spec.ts:92:1 › negative control catches wrong fixed height and CLS
+[45/56] tests\loading.spec.ts:97:1 › negative control catches unsynchronized shimmer
+[46/56] tests\loading.spec.ts:102:1 › skeleton CSS uses tokens for every color
+[47/56] tests\loading.spec.ts:107:40 › light: neutral contrast on every surface
+[48/56] tests\loading.spec.ts:107:40 › dark: neutral contrast on every surface
+[49/56] tests\loading.spec.ts:116:1 › text line metrics and adjacent widths
+[50/56] tests\teacher-subjects.spec.ts:25:68 › teacher subjects 375px light: real shell, card geometry and screenshots
+[51/56] tests\teacher-subjects.spec.ts:25:68 › teacher subjects 375px dark: real shell, card geometry and screenshots
+[52/56] tests\teacher-subjects.spec.ts:25:68 › teacher subjects 1280px light: real shell, card geometry and screenshots
+[53/56] tests\teacher-subjects.spec.ts:25:68 › teacher subjects 1280px dark: real shell, card geometry and screenshots
+[54/56] tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 0 rows, stable actions and filters
+[55/56] tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 1 rows, stable actions and filters
+[56/56] tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 9 rows, stable actions and filters
+  56 passed (1.9m)

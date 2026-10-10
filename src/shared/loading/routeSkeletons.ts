@@ -1,0 +1,517 @@
+/** Register the real page's loading composition; never register a generic page.
+ * The coverage test reads the router independently, so adding a route requires
+ * an entry here as well as real-route geometry/fixture verification.
+ */
+export const routeSkeletons = {
+  "/teacher/holistic": {
+    component: "HolisticOverviewPage",
+    skeleton: "HolisticOverviewPageComposition",
+    load: () => import("../../features/profiles/teacher/pages/holistic/HolisticOverviewPage").then(module => ({ default: module.HolisticOverviewPage })),
+    regions: [
+      { name: "holistic roster", classification: "AUTO-COLUMN", reason: "Original native widths vary with student names, evaluation remarks and trend labels; rows/groups also depend on returned data", count: "Section/term/filter/search column and row caches then header/typical metrics and viewport" },
+      { name: "student avatar", classification: "FIXED-SIZE", reason: "Existing 28px avatar independent of returned identity", count: "One per roster row" },
+      { name: "term control", classification: "FIXED-SIZE", reason: "Original responsive full-width 28px selector shell", count: "One unknown selected term value" },
+      { name: "advisory labels and numeric filter metadata", classification: "VARIABLE", reason: "Optional advisory count, native label widths and inline numeric count widths can change surrounding wrapping", count: "Cached advisory count then typical two; numeric leaves only" },
+    ],
+  },
+  "/teacher/attendance/records": {
+    component: "TeacherAttendanceRecordsPage",
+    skeleton: "TeacherAttendanceRecordsPageComposition",
+    load: () => import("../../features/profiles/teacher/pages/attendance/TeacherAttendanceRecordsPage").then(module => ({ default: module.TeacherAttendanceRecordsPage })),
+    regions: [
+      { name: "section description and advisory tabs", classification: "VARIABLE", reason: "Fetched section text can wrap, and optional advisory labels determine native button widths", count: "Cached lines then typical two; cached advisory count then typical two" },
+      { name: "roster and absence lists", classification: "VARIABLE", reason: "Returned student/absence counts and optional groups vary", count: "Cached section/term/month counts then viewport with original row metrics" },
+      { name: "attendance table columns", classification: "FIXED-SIZE", reason: "Original 180px student, 28px day, 112px term and 76px summary column definitions are preserved and tested across names/counts", count: "Actual client-side month day count" },
+      { name: "term selector and notice", classification: "VARIABLE", reason: "Fetched native option labels determine selector width; optional term availability notice can wrap", count: "Cached native width then typical seven characters; typical three notice lines" },
+      { name: "monthly numeric summaries", classification: "FIXED-SIZE", reason: "Original four numeric value blocks stay single-line in existing stat tiles", count: "Four static labels" },
+      { name: "monthly date cells", classification: "VARIABLE", reason: "Original min-height calendar cells can grow when optional status chips wrap", count: "Client dates real; cached status line counts then typical two" },
+    ],
+  },
+  "/teacher/holistic/domain-trends": {
+    component: "HolisticDomainTrendsPage",
+    skeleton: "HolisticDomainTrendsPageComposition",
+    load: () => import("../../features/profiles/teacher/pages/holistic/HolisticDomainTrendsPage").then(module => ({ default: module.HolisticDomainTrendsPage })),
+    regions: [
+      { name: "advisory and subject tabs", classification: "VARIABLE", reason: "Fetched item counts and native button widths depend on returned labels", count: "Last known counts per section/term; typical two" },
+      { name: "term control", classification: "FIXED-SIZE", reason: "Original responsive full-width, 32px native selector shell", count: "One selected value" },
+      { name: "domain score leaves", classification: "FIXED-SIZE", reason: "Original single-line, one-decimal rubric scores with fixed font metrics", count: "Four known domains" },
+      { name: "composite, rubric labels, deltas and explanations", classification: "VARIABLE", reason: "Optional values and wrapping computed narrative/interpretation text change content height", count: "Field line caches then typical three; optional labels skeleton normally" },
+      { name: "weekly progression plot", classification: "FIXED-SIZE", reason: "Existing h-80 plot dimensions; date ticks are fetched, Y axis and legend are known", count: "Four line silhouettes; cached week count then typical three ticks" },
+      { name: "results body", classification: "VARIABLE", reason: "No advisory/no weeks can replace the original sections with an empty state", count: "Original shared section renderer" },
+    ],
+  },
+  "/principal/gradebooks/:grade": {
+    component: "PrincipalGradeSheetPage",
+    skeleton: "PrincipalGradeSheetPageComposition",
+    load: () => import("../../features/profiles/principal/pages/gradebooks/PrincipalGradeSheetPage").then(module => ({ default: module.PrincipalGradeSheetPage })),
+    regions: [
+      { name: "section and school-year fields", classification: "VARIABLE", reason: "Fetched section and year text may wrap or be absent", count: "Cached field lines then typical two/one" },
+      { name: "summary values", classification: "FIXED-SIZE", reason: "Single-line numeric leaves in the original three stat cells", count: "Three known labels" },
+      { name: "term selector", classification: "VARIABLE", reason: "Original native selector width follows returned term labels; loaded width variation is tested", count: "Cached native width then typical five characters; pending reservation only" },
+      { name: "grouped grade sheet", classification: "AUTO-COLUMN", reason: "Native columns vary with subject headers and student names; returned subjects, gender groups and students also affect height", count: "View-specific column/count caches then header/typical metrics and viewport" },
+      { name: "student avatars", classification: "FIXED-SIZE", reason: "Original 28px circular avatars independent of identity", count: "One per returned row" },
+    ],
+  },
+  "/admin/classes/new": {
+    component: "ClassFormPage",
+    skeleton: "ClassFormPageComposition",
+    load: () => import("../../features/profiles/admin/pages/classes/ClassFormPage").then(module => ({ default: module.ClassFormPage })),
+    regions: [
+      { name: "class creation fields", classification: "FIXED-SIZE", reason: "Original single-line native controls and adviser combobox; empty local values are known before fetch", count: "Existing workflow fields" },
+      { name: "schedule periods and review", classification: "VARIABLE", reason: "User-added period count and review text vary; the existing schedule row renderer is shared", count: "Actual local period count" },
+    ],
+  },
+  "/admin/classes/:classId/edit": {
+    component: "ClassFormPage",
+    skeleton: "ClassFormPageComposition",
+    load: () => import("../../features/profiles/admin/pages/classes/ClassFormPage").then(module => ({ default: module.ClassFormPage })),
+    regions: [
+      { name: "class description", classification: "VARIABLE", reason: "Fetched grade/section text can wrap; the known Updating prefix remains real", count: "Cached field lines then typical two" },
+      { name: "class identity controls", classification: "FIXED-SIZE", reason: "Existing single-line inputs/selects and adviser combobox dimensions are independent of returned values", count: "Four original identity controls" },
+      { name: "schedule periods", classification: "VARIABLE", reason: "Returned period count may be zero or exceed the reservation", count: "Per-class count cache then viewport, using existing approximately 200px rows" },
+      { name: "period controls", classification: "FIXED-SIZE", reason: "Original native time fields, selects, teacher combobox and weekday controls retain their dimensions", count: "Same controls in each shared period renderer" },
+    ],
+  },
+  "/admin/subjects/new": {
+    component: "AddSubjectPage",
+    skeleton: "AddSubjectPageComposition",
+    load: () => import("../../features/profiles/admin/pages/subjects/AddSubjectPage").then(module => ({ default: module.AddSubjectPage })),
+    regions: [
+      { name: "subject creation fields", classification: "FIXED-SIZE", reason: "Initial fields are known local values in existing native controls; fetched school year and assessment IDs are not displayed, so no invented skeleton is rendered", count: "Original workflow controls" },
+      { name: "prerequisite errors", classification: "VARIABLE", reason: "Optional school-year, grade-choice or assessment-catalog errors may wrap; retry uses the shared engine", count: "Only actual failures" },
+      { name: "template preview and review", classification: "VARIABLE", reason: "User-selected file preview and entered text vary in length; upload/action progress is preserved", count: "Original parsed template fields" },
+    ],
+  },
+  "/admin/students/new": {
+    component: "StudentFormPage",
+    skeleton: "StudentFormPageComposition",
+    load: () => import("../../features/profiles/admin/pages/studentrecords/StudentFormPage").then(module => ({ default: module.StudentFormPage })),
+    regions: [
+      { name: "student inputs and placement controls", classification: "FIXED-SIZE", reason: "Existing native single-line inputs/selects retain their geometry across short and long values; empty new-student values are known immediately", count: "Existing six identity fields and two placement controls" },
+      { name: "placement errors and review values", classification: "VARIABLE", reason: "Optional request errors and wrapping review text depend on returned or entered content", count: "Existing workflow fields; errors appear only on failure" },
+    ],
+  },
+  "/admin/students/:studentId/edit": {
+    component: "StudentFormPage",
+    skeleton: "StudentFormPageComposition",
+    load: () => import("../../features/profiles/admin/pages/studentrecords/StudentFormPage").then(module => ({ default: module.StudentFormPage })),
+    regions: [
+      { name: "student identity values", classification: "FIXED-SIZE", reason: "Original single-line native inputs/select retain their dimensions across short and long fetched values", count: "Six existing identity fields" },
+      { name: "record subtitle", classification: "VARIABLE", reason: "Returned external student number may wrap in the existing description; database route ID cannot substitute for it", count: "One inline value in the existing sentence" },
+      { name: "placement choices", classification: "FIXED-SIZE", reason: "Existing native select controls have data-independent geometry", count: "Two existing selects; only unknown selected values are skeletonized" },
+    ],
+  },
+  "/admin/users/new": {
+    component: "UserFormPage",
+    skeleton: "UserFormPageComposition",
+    load: () => import("../../features/profiles/admin/pages/usermanagement/UserFormPage").then(module => ({ default: module.UserFormPage })),
+    regions: [
+      { name: "account form controls", classification: "FIXED-SIZE", reason: "Existing single-line input/select controls retain their own height and grid width independent of fetched values", count: "Real field shells; placeholders only for edited account values, route-known role remains real" },
+      { name: "optional active-principal warning", classification: "VARIABLE", reason: "Presence and wrapping warning text depend on returned accounts", count: "Cached field lines then typical three; one collapse if absent" },
+      { name: "title, labels, workflow, actions and new-account input", classification: "STATIC", reason: "Bundled definitions, route ID/role and locally entered values", count: "Real immediately; account data seeds edit values once without resetting dirty input" },
+    ],
+  },
+  "/admin/users/:role/:userId/edit": {
+    component: "UserFormPage",
+    skeleton: "UserFormPageComposition",
+    load: () => import("../../features/profiles/admin/pages/usermanagement/UserFormPage").then(module => ({ default: module.UserFormPage })),
+    regions: [
+      { name: "account form controls", classification: "FIXED-SIZE", reason: "Existing single-line input/select controls retain their own height and grid width independent of fetched values", count: "Real field shells; placeholders only for edited account values, route-known role remains real" },
+      { name: "optional active-principal warning", classification: "VARIABLE", reason: "Presence and wrapping warning text depend on returned accounts", count: "Cached field lines then typical three; one collapse if absent" },
+      { name: "title, labels, workflow, actions and new-account input", classification: "STATIC", reason: "Bundled definitions, route ID/role and locally entered values", count: "Real immediately; account data seeds edit values once without resetting dirty input" },
+    ],
+  },
+
+  "/teacher/subjects/:subjectId": {
+    component: "SubjectDetailPage",
+    skeleton: "SubjectDetailPageComposition",
+    load: () => import("../../features/profiles/teacher/pages/subjects/detail/SubjectDetailPage").then(module => ({ default: module.SubjectDetailPage })),
+    regions: [
+      { name: "subject identity", classification: "VARIABLE", reason: "Fetched subject title can wrap", count: "Cached line count, otherwise two; client school year remains real" },
+      { name: "working assessment and holistic tables", classification: "AUTO-COLUMN", reason: "Native column widths measurably change across short and long returned student names", count: "Cached row/item counts then viewport rows and one typical working item; measured pending widths before header/typical metrics" },
+      { name: "student avatars and score controls", classification: "FIXED-SIZE", reason: "Existing 28px avatars and 56 by 28px numeric controls", count: "One avatar and existing score controls per reserved row" },
+      { name: "tabs, search, legends, actions, rating numbers and domain headers", classification: "STATIC", reason: "Bundled labels and locally known controls", count: "Real immediately; mutation controls wait for their data" },
+    ],
+  },
+  "/principal/reports": {
+    component: "AnalyticsPage",
+    skeleton: "AnalyticsPageComposition",
+    load: () => import("../../features/profiles/principal/pages/reports/AnalyticsPage").then(module => ({ default: module.AnalyticsPage })),
+    regions: [
+      { name: "report highlights", classification: "FIXED-SIZE", reason: "Existing single-line truncated values and details in four static metric cards", count: "Four real metric cards, placeholders only for fetched values/details" },
+      { name: "whole-school bar ranking and leaders", classification: "VARIABLE", reason: "Subject count determines plot height, optional leaders and wrapping metadata", count: "Per-term count cache capped to viewport; native bar chart with neutral bar/axis-label primitives" },
+      { name: "per-grade ranking and optional podium", classification: "VARIABLE", reason: "Returned rank count and wrapping grade metadata; original top-three/full-list behavior", count: "Per-term/filter count cache then viewport; loaded list never capped" },
+      { name: "priority focus", classification: "VARIABLE", reason: "Empty results, returned subject count and wrapping score metadata", count: "Cached count capped to existing maximum three priorities" },
+      { name: "tabs, headings, selected term and grade controls", classification: "STATIC", reason: "Bundled titles and locally selected values known before requests", count: "Real immediately; fetched filter options join on success" },
+    ],
+  },
+  "/teacher/students/:studentId": {
+    component: "StudentDetailPage",
+    skeleton: "StudentDetailPageComposition",
+    load: () => import("../components/StudentDetailPage").then(module => ({ default: module.StudentDetailPage })),
+    regions: [
+      { name: "student identity and personal/guardian fields", classification: "VARIABLE", reason: "Names, addresses, optional fields and class labels wrap", count: "Cached field line counts, otherwise two; short dates/enums one" },
+      { name: "initials avatar", classification: "FIXED-SIZE", reason: "Existing 80px rounded-square wrapper", count: "One initials leaf in the real avatar surface" },
+      { name: "academic schedule", classification: "AUTO-COLUMN", reason: "Native Subject and Assigned Teacher widths measurably change with returned text", count: "Cached count capped to viewport; measured widths then header/typical metrics" },
+      { name: "metrics, baseline holistic chart, labels and actions", classification: "STATIC", reason: "Metrics and baseline chart are bundled constants", count: "Real immediately, including status and performance row enums" },
+    ],
+  },
+  "/admin/users/:role/:userId": {
+    component: "UserViewPage",
+    skeleton: "UserViewPageComposition",
+    load: () => import("../../features/profiles/admin/pages/usermanagement/UserViewPage").then(module => ({ default: module.UserViewPage })),
+    regions: [
+      { name: "account identity and fields", classification: "VARIABLE", reason: "Fetched names, email and contact fields can wrap; unknown height remains variable", count: "Cached field lines, otherwise two for names/email, one for short dates/enums" },
+      { name: "field labels, role and account actions", classification: "STATIC", reason: "Labels and route role are known; actions retain existing layout and wait for data", count: "Real immediately" },
+      { name: "teacher profile", classification: "VARIABLE", reason: "Reuses the teacher profile composition, gated on user-to-teacher ID mapping", count: "Same shared profile/schedule/roster caches and classifications" },
+    ],
+  },
+  "/admin/classes/:classId": {
+    component: "ClassViewPage",
+    skeleton: "ClassViewPageComposition",
+    load: () => import("../../features/profiles/admin/pages/classes/ClassViewPage").then(module => ({ default: module.ClassViewPage })),
+    regions: [
+      { name: "class and adviser identity, optional contacts", classification: "VARIABLE", reason: "Names and class labels wrap; contact fields may be absent", count: "Cached field lines, otherwise two; original contact layout" },
+      { name: "profile avatar and stats", classification: "FIXED-SIZE", reason: "Existing responsive circular avatar and single-line truncated stat cells", count: "One avatar and three stats" },
+      { name: "class schedule", classification: "AUTO-COLUMN", reason: "Native schedule column widths measurably vary with subject and teacher text", count: "Time-slot count cache capped to viewport; measured column cache then header/typical metrics" },
+      { name: "student directory", classification: "AUTO-COLUMN", reason: "Long student names measurably expand the native Student column", count: "Class/search/filter count and measured column caches then viewport/typical metrics" },
+      { name: "page title, actions, tabs and weekday labels", classification: "STATIC", reason: "Bundled controls and weekday meanings", count: "Real immediately" },
+    ],
+  },
+  "/admin/subjects/:subjectId": {
+    component: "AdminSubjectDetailPage",
+    skeleton: "AdminSubjectDetailPageComposition",
+    load: () => import("../../features/profiles/admin/pages/subjects/AdminSubjectDetailPage").then(module => ({ default: module.AdminSubjectDetailPage })),
+    regions: [
+      { name: "subject template metadata and weight summary", classification: "VARIABLE", reason: "Current template is optional; intrinsic filename width and summary wrapping depend on returned values", count: "Existing one-line truncated filename; existing summary typography and field layout" },
+      { name: "template instructions and upload controls", classification: "STATIC", reason: "Upload instructions, icon and drop target are bundled; replacement label depends on template presence", count: "Real immediately; only the conditional button label is a placeholder" },
+      { name: "upload button", classification: "FIXED-SIZE", reason: "Existing full-width control with single-line label", count: "One, disabled until metadata is ready" },
+    ],
+  },
+  "/parent/students/:studentId/topics/:topicId/support": {
+    component: "TopicSupportChoice",
+    skeleton: "TopicSupportChoiceComposition",
+    load: () => import("../../features/profiles/parent/pages/Student/Academic/TopicSupportChoice"),
+    regions: [{ name: "topic-support-content", classification: "STATIC", reason: "Quest choices, illustrations and instructions are bundled; route IDs only construct navigation targets", count: "Real immediately" }],
+  },
+  "/parent/students/:studentId/topics/:topicId/courseware": {
+    component: "CoursewareView",
+    skeleton: "CoursewareViewComposition",
+    load: () => import("../../features/profiles/parent/pages/Student/Academic/CoursewareView"),
+    regions: [
+      { name: "lesson title and markdown body", classification: "VARIABLE", reason: "Generated titles, markdown headings/bullets/paragraphs, optional warnings and line counts depend on content", count: "Cached document structure and field line counts; otherwise viewport paragraphs with typical three lines" },
+      { name: "video collection", classification: "VARIABLE", reason: "Returned deduplicated video count and title wrapping; player only appears on user selection", count: "Cached count capped to viewport, otherwise typical viewport count" },
+      { name: "video image aspect", classification: "FIXED-SIZE", reason: "Existing aspect-video wrapper independent of fetched content", count: "One per video" },
+      { name: "quest banner instructions and steps", classification: "STATIC", reason: "Lesson instructions and step meanings are bundled locally", count: "Real immediately, including during resource generation" },
+    ],
+  },
+  "/teacher/attendance": {
+    component: "TeacherAttendancePage",
+    skeleton: "TeacherAttendancePageComposition",
+    load: () => import("../../features/profiles/teacher/pages/attendance/TeacherAttendancePage").then(module => ({ default: module.TeacherAttendancePage })),
+    regions: [
+      { name: "advisory identity and optional closed-term notice", classification: "VARIABLE", reason: "Fetched section name wraps and closed-term notice may be absent", count: "Cached field lines, otherwise two for section and three for notice" },
+      { name: "attendance roster", classification: "AUTO-COLUMN", reason: "Long-name fixture measurably changes the native Student column; existing No and Status widths are retained", count: "Per-class/search row count cache, then viewport; measured pixel-width cache then header/typical metrics" },
+      { name: "student avatar", classification: "FIXED-SIZE", reason: "Existing 28px circular avatar", count: "One per student" },
+      { name: "date, actions, column and gender labels, status legend", classification: "STATIC", reason: "Client date and fixed controls/enum labels are known before both sequential requests", count: "Real immediately" },
+    ],
+  },
+  "/principal/gradebooks": {
+    component: "PrincipalGradebooksPage",
+    skeleton: "PrincipalGradebooksPageComposition",
+    load: () => import("../../features/profiles/principal/pages/gradebooks/PrincipalGradebooksPage").then(module => ({ default: module.PrincipalGradebooksPage })),
+    regions: [
+      { name: "school year", classification: "VARIABLE", reason: "Fetched label may wrap; cached school year renders immediately", count: "Single date label; existing typography" },
+      { name: "gradebook collection", classification: "VARIABLE", reason: "Returned grade/section count and optional grouping headings", count: "Filtered/grouped view count cache then viewport; existing service cache shown immediately" },
+      { name: "assignment card shell", classification: "FIXED-SIZE", reason: "Existing shared 218px card shell with truncated single-line leaves", count: "One per returned section" },
+    ],
+  },
+  "/teacher/advisory": {
+    component: "AdvisoryRosterPage",
+    skeleton: "AdvisoryRosterPageComposition",
+    load: () => import("../../features/profiles/teacher/pages/roster/AdvisoryRosterPage").then(module => ({ default: module.AdvisoryRosterPage })),
+    regions: [
+      { name: "advisory section and count summary", classification: "VARIABLE", reason: "Fetched section text can wrap and section tabs are optional", count: "Cached field lines, otherwise typical two; real title/export/search/filter" },
+      { name: "student directory", classification: "AUTO-COLUMN", reason: "Long-name fixture measurably expands native Student column by 1040px; existing overflow is preserved", count: "Route/query/filter count cache then viewport; loaded pixel-width cache then header/typical metrics" },
+      { name: "student avatar", classification: "FIXED-SIZE", reason: "Existing 32px circular avatar", count: "One per student" },
+    ],
+  },
+  "/teacher/subjects/:subjectSectionId/students": {
+    component: "SubjectClassListPage",
+    skeleton: "SubjectClassListPageComposition",
+    load: () => import("../../features/profiles/teacher/pages/subjects/SubjectClassListPage").then(module => ({ default: module.SubjectClassListPage })),
+    regions: [
+      { name: "subject identity and summary", classification: "VARIABLE", reason: "Fetched subject/section names and summary text may wrap", count: "Per-field cached lines, otherwise two for subject and section" },
+      { name: "subject-class-roster", classification: "AUTO-COLUMN", reason: "Native column widths measurably vary across short/long student names and IDs", count: "Per-subject/search row count cache then viewport; column cache then header/typical metrics" },
+      { name: "student avatar", classification: "FIXED-SIZE", reason: "Existing 28px circular student avatar", count: "One per student row" },
+    ],
+  },
+  "/": {
+    component: "LandingPage",
+    skeleton: "LandingPageComposition",
+    load: () => import("../../features/Landing/LandingPage"),
+    regions: [{ name: "landing-content", classification: "STATIC", reason: "All sections and illustrative preview data are bundled locally; no page data request", count: "Real immediately" }],
+  },
+  "/login": {
+    component: "LoginPanel",
+    skeleton: "LoginPanelComposition",
+    load: () => import("../../features/auth/LoginPanel").then(module => ({ default: module.LoginPanel })),
+    regions: [{ name: "login-content", classification: "STATIC", reason: "Form controls and institutional branding are known; login is a preserved user-triggered action", count: "Real immediately" }],
+  },
+  "/admin/help": {
+    component: "HelpSupportPage",
+    skeleton: "HelpSupportPageComposition",
+    load: () => import("../../features/profiles/admin/pages/help/HelpSupportPage").then(module => ({ default: module.HelpSupportPage })),
+    regions: [{ name: "help-content", classification: "STATIC", reason: "Role-specific FAQ, support contacts and resource copy are bundled locally", count: "Real immediately" }],
+  },
+  "/principal/help": {
+    component: "HelpSupportPage",
+    skeleton: "HelpSupportPageComposition",
+    load: () => import("../../features/profiles/admin/pages/help/HelpSupportPage").then(module => ({ default: module.HelpSupportPage })),
+    regions: [{ name: "help-content", classification: "STATIC", reason: "Role-specific FAQ, support contacts and resource copy are bundled locally", count: "Real immediately" }],
+  },
+  "/teacher/help": {
+    component: "HelpSupportPage",
+    skeleton: "HelpSupportPageComposition",
+    load: () => import("../../features/profiles/admin/pages/help/HelpSupportPage").then(module => ({ default: module.HelpSupportPage })),
+    regions: [{ name: "help-content", classification: "STATIC", reason: "Role-specific FAQ, support contacts and resource copy are bundled locally", count: "Real immediately" }],
+  },
+  "/parent/help": {
+    component: "HelpSupportPage",
+    skeleton: "HelpSupportPageComposition",
+    load: () => import("../../features/profiles/admin/pages/help/HelpSupportPage").then(module => ({ default: module.HelpSupportPage })),
+    regions: [{ name: "help-content", classification: "STATIC", reason: "Role-specific FAQ, support contacts and resource copy are bundled locally", count: "Real immediately" }],
+  },
+  "/parent": {
+    component: "ParentDashboardHome",
+    skeleton: "ParentDashboardHomeComposition",
+    load: () => import("../../features/profiles/parent/pages/dashboard/ParentDashboardHome"),
+    regions: [
+      { name: "session greeting and calendar date", classification: "STATIC", reason: "Auth identity and client-side date are known before dashboard requests", count: "Real immediately" },
+      { name: "student cards", classification: "VARIABLE", reason: "Returned count, optional adviser and wrapping section statistics", count: "Grid/list view count cache capped to viewport" },
+      { name: "attendance updates", classification: "VARIABLE", reason: "Returned count, optional times and wrapping messages", count: "View count and per-message line cache; otherwise typical three lines" },
+      { name: "school events", classification: "VARIABLE", reason: "Returned activity/holiday count and optional metadata", count: "Per-kind count cache then viewport" },
+      { name: "optional linking guide and stretched date card", classification: "VARIABLE", reason: "Guide presence depends on linked children; existing grid stretches adjacent date surface", count: "Preserve existing conditional layout; known guide content real" },
+    ],
+  },
+  "/principal/students": {
+    component: "PrincipalStudentsPage",
+    skeleton: "PrincipalStudentsPageComposition",
+    load: () => import("../../features/profiles/principal/pages/students/PrincipalStudentsPage").then(module => ({ default: module.PrincipalStudentsPage })),
+    regions: [{ name: "grade overview", classification: "VARIABLE", reason: "Returned grade/section count and optional section filter", count: "Per-search/grade/section count cache then viewport" }],
+  },
+  "/admin/calendar": {
+    component: "CalendarPage",
+    skeleton: "CalendarPageComposition",
+    load: () => import("../calendar/CalendarPage").then(module => ({ default: module.CalendarPage })),
+    regions: [{ name: "event collections", classification: "VARIABLE", reason: "Returned dates, group headings and event count", count: "Selected-day / expanded view count cache then viewport; month grid and controls real" }],
+  },
+  "/principal/calendar": {
+    component: "CalendarPage",
+    skeleton: "CalendarPageComposition",
+    load: () => import("../calendar/CalendarPage").then(module => ({ default: module.CalendarPage })),
+    regions: [{ name: "event collections", classification: "VARIABLE", reason: "Returned dates, group headings and event count", count: "Selected-day / expanded view count cache then viewport; month grid and controls real" }],
+  },
+  "/teacher/calendar": {
+    component: "CalendarPageView",
+    skeleton: "CalendarPageViewComposition",
+    load: () => import("../calendar/CalendarPageView").then(module => ({ default: module.CalendarPageView })),
+    regions: [{ name: "event collections", classification: "VARIABLE", reason: "Returned dates, group headings and event count", count: "Selected-day / expanded view count cache then viewport; month grid and controls real" }],
+  },
+  "/parent/calendar": {
+    component: "CalendarPageView",
+    skeleton: "CalendarPageViewComposition",
+    load: () => import("../calendar/CalendarPageView").then(module => ({ default: module.CalendarPageView })),
+    regions: [{ name: "event collections", classification: "VARIABLE", reason: "Returned dates, group headings and event count", count: "Selected-day / expanded view count cache then viewport; month grid and controls real" }],
+  },
+  "/principal/teachers/:teacherId": {
+    component: "TeacherSchedulePage",
+    skeleton: "TeacherSchedulePageComposition",
+    load: () => import("../../features/profiles/principal/pages/teachers/TeacherSchedulePage").then(module => ({ default: module.TeacherSchedulePage })),
+    regions: [
+      { name: "profile identity", classification: "VARIABLE", reason: "Returned names and school year subtitle can wrap", count: "Last known field line count, otherwise two lines" },
+      { name: "profile avatar", classification: "FIXED-SIZE", reason: "Existing responsive circular avatar dimensions", count: "One" },
+      { name: "profile statistics", classification: "FIXED-SIZE", reason: "Existing single-line truncated values", count: "Three" },
+      { name: "daily schedule and section rosters", classification: "VARIABLE", reason: "Returned day, section and student counts plus wrapping room metadata", count: "Per-teacher view count cache capped to viewport" },
+    ],
+  },
+  "/admin/academic-year": {
+    component: "AcademicYearPage",
+    skeleton: "AcademicYearPageComposition",
+    load: () => import("../../features/profiles/admin/pages/subjects/AcademicYearPage").then(module => ({ default: module.AcademicYearPage })),
+    regions: [
+      { name: "academic year fields", classification: "VARIABLE", reason: "Optional dates and returned labels may wrap", count: "Four fields; typical one line for year/date/enum values" },
+      { name: "unconfigured terms notice", classification: "VARIABLE", reason: "Optional notice is absent for configured terms and wraps when present", count: "Typical two lines; shrink when absent" },
+      { name: "term table", classification: "AUTO-COLUMN", reason: "Measured native column widths vary with returned term names", count: "Active-year view cache then viewport; column cache then header/typical metrics" },
+    ],
+  },
+  "/admin/subjects": {
+    component: "ManageSubjectsPage",
+    skeleton: "ManageSubjectsPageComposition",
+    load: () => import("../../features/profiles/admin/pages/subjects/ManageSubjectsPage").then(module => ({ default: module.ManageSubjectsPage })),
+    regions: [
+      { name: "subject groups and assignments", classification: "VARIABLE", reason: "Returned group/card count and optional group headers", count: "Grade/section/search/teacher/status/grouping view cache then viewport" },
+      { name: "assignment shell", classification: "FIXED-SIZE", reason: "Existing 218px shell with single-line truncated leaves; no new constraints added", count: "One per assignment" },
+    ],
+  },
+  "/admin/students": {
+    component: "StudentRecordsPage",
+    skeleton: "StudentRecordsPageComposition",
+    load: () => import("../../features/profiles/admin/pages/studentrecords/StudentRecordsPage").then(module => ({ default: module.StudentRecordsPage })),
+    regions: [
+      { name: "desktop student records", classification: "AUTO-COLUMN", reason: "Measured native column widths vary across student identity and section fixtures", count: "Grade/gender/search view; cached count then viewport" },
+      { name: "mobile student records", classification: "VARIABLE", reason: "Returned count and optional grade/section metadata", count: "Cached count then viewport" },
+      { name: "student avatars", classification: "FIXED-SIZE", reason: "Existing 28px circular image independent of student data", count: "One per record" },
+    ],
+  },
+  "/principal/teachers": {
+    component: "PrincipalTeachersPage",
+    skeleton: "PrincipalTeachersPageComposition",
+    load: () => import("../../features/profiles/principal/pages/teachers/PrincipalTeachersPage").then(module => ({ default: module.PrincipalTeachersPage })),
+    regions: [{ name: "teacher directory", classification: "AUTO-COLUMN", reason: "Measured native columns vary with teacher names and advisory assignments; optional room chips and rows affect height", count: "Search/advisory/gender view; column cache then typical metrics; row cache then viewport" }],
+  },
+  "/parent/enrolled-children": {
+    component: "EnrolledChildrenPage",
+    skeleton: "EnrolledChildrenPageComposition",
+    load: () => import("../../features/profiles/parent/pages/EnrollledStudent/EnrolledChildrenPage").then(module => ({ default: module.EnrolledChildrenPage })),
+    regions: [{ name: "linked students", classification: "VARIABLE", reason: "Returned student count and optional collection footer", count: "Cached child count then viewport" }],
+  },
+  "/admin": {
+    component: "AdminDashboardHome",
+    skeleton: "AdminDashboardHomeComposition",
+    load: () => import("../../features/profiles/admin/pages/dashboard/AdminDashboardHome").then(module => ({ default: module.AdminDashboardHome })),
+    regions: [
+      { name: "counts", classification: "FIXED-SIZE", reason: "Single-line numeric values in existing stat tiles", count: "Four static tiles" },
+      { name: "login plot", classification: "FIXED-SIZE", reason: "Existing h-52 plot independent of returned series", count: "Cache then viewport for placeholder bars" },
+      { name: "login summaries", classification: "VARIABLE", reason: "Returned labels and period names may wrap", count: "Three summaries, typical two lines" },
+      { name: "audit rows", classification: "AUTO-COLUMN", reason: "Native automatic column layout changes with actor, action and endpoint content", count: "Page size 20 capped to viewport and six rows; column widths cached per filtered view" },
+    ],
+  },
+  "/admin/classes": {
+    component: "ClassesPage",
+    skeleton: "ClassesPageComposition",
+    load: () => import("../../features/profiles/admin/pages/classes/ClassPage").then(module => ({ default: module.ClassesPage })),
+    regions: [{ name: "class collection", classification: "VARIABLE", reason: "Returned class count and optional metadata", count: "Cache per grade/search view then viewport" }],
+  },
+  "/admin/users": {
+    component: "UserManagementPage",
+    skeleton: "UserManagementPageComposition",
+    load: () => import("../../features/profiles/admin/pages/usermanagement/UserManagementPage").then(module => ({ default: module.UserManagementPage })),
+    regions: [
+      { name: "desktop accounts", classification: "AUTO-COLUMN", reason: "Native automatic columns vary across short and long names/email fixtures", count: "Cache per role/status/search view then viewport" },
+      { name: "mobile accounts", classification: "VARIABLE", reason: "Returned account count and wrapping names/emails", count: "Cache per role/status/search view then viewport; typical two lines for wrapping fields" },
+    ],
+  },
+  "/teacher/subjects": {
+    component: "SubjectsPage",
+    skeleton: "SubjectsPageComposition",
+    load: () => import("../../features/profiles/teacher/pages/subjects/SubjectPage").then(module => ({ default: module.SubjectsPage })),
+    regions: [
+      { name: "subject collection", classification: "VARIABLE", reason: "Returned item count, group headings and optional sections", count: "Last known filtered view count, capped to viewport; otherwise 3–6" },
+      { name: "assignment card shell", classification: "FIXED-SIZE", reason: "Existing 218px shell and responsive grid width", count: "One shell per returned item" },
+    ],
+  },
+  "/teacher": {
+    component: "TeacherDashboardHome",
+    skeleton: "TeacherDashboardHomeComposition",
+    load: () => import("../../features/profiles/teacher/pages/dashboard/TeacherDashboardHome").then(module => ({ default: module.TeacherDashboardHome })),
+    regions: [
+      { name: "welcome", classification: "VARIABLE", reason: "Session-known name remains real and can wrap; the original card centers its content", count: "Real session identity; no invented name placeholder" },
+      { name: "stat tiles", classification: "FIXED-SIZE", reason: "Static labels and single-line numeric values; grid owns tile width", count: "Three static tiles" },
+      { name: "attendance body", classification: "VARIABLE", reason: "Empty/no-advisory state can replace the distribution", count: "Three static statuses when data exists" },
+      { name: "attendance plot", classification: "FIXED-SIZE", reason: "Existing 192/208px dimensions independent of counts", count: "One plot within the variable body" },
+      { name: "weekly timetable", classification: "VARIABLE", reason: "Empty results, out-of-hours sessions and optional details", count: "Last known session count, capped to viewport; otherwise 3–6" },
+      { name: "activities", classification: "VARIABLE", reason: "Returned event count and optional metadata", count: "Last known count, capped to viewport; otherwise 3–6" },
+      { name: "holidays", classification: "VARIABLE", reason: "Returned event count and optional metadata", count: "Last known count, capped to viewport; otherwise 3–6" },
+    ],
+  },
+  "/teacher/holistic/:studentId": {
+    component: "StudentHolisticProfilePage",
+    skeleton: "StudentHolisticProfilePageComposition",
+    load: () => import("../../features/profiles/teacher/pages/holistic/StudentHolisticProfilePage").then(module => ({ default: module.StudentHolisticProfilePage })),
+    regions: [
+      { name: "student identity", classification: "VARIABLE", reason: "Fetched optional identity and grade/section fields; cached identity renders immediately", count: "Typical identity fields; no new truncation" },
+      { name: "initials", classification: "FIXED-SIZE", reason: "Existing 56px rounded initials block", count: "One" },
+      { name: "domain interpretations and gauges", classification: "VARIABLE", reason: "Wrapping interpretation text, optional no-evaluation state, marker positions depend on scores", count: "Four known domains; cached paragraph line counts then three lines" },
+      { name: "subject breakdown", classification: "VARIABLE", reason: "Returned subject count, wrapping names and optional trends/recommendations", count: "Student/term view cache then two typical cards" },
+    ],
+  },
+  "/principal": {
+    component: "PrincipalDashboardHome",
+    skeleton: "PrincipalDashboardHomeComposition",
+    load: () => import("../../features/profiles/principal/pages/dashboard/PrincipalDashboardHome").then(module => ({ default: module.PrincipalDashboardHome })),
+    regions: [
+      { name: "welcome and school year", classification: "VARIABLE", reason: "Session name and client date are known; fetched term/year labels may wrap", count: "One label each" },
+      { name: "KPI values", classification: "FIXED-SIZE", reason: "Existing block numeric lines; static tile labels remain real", count: "Five existing tiles" },
+      { name: "attendance and academic plots", classification: "FIXED-SIZE", reason: "Original Recharts plot heights 220/240px independent of returned data", count: "Grade-count cache then three capped to viewport; three typical term points" },
+      { name: "subject performance and rankings", classification: "VARIABLE", reason: "Returned count and wrapping fetched subject/grade labels", count: "View count cache then three capped to viewport" },
+      { name: "holistic radar and rubric", classification: "VARIABLE", reason: "Empty-state height differs; interpretation paragraphs depend on score", count: "Four known domain labels; cached lines then two typical lines" },
+    ],
+  },
+  "/teacher/grades": {
+    component: "GradesPage",
+    skeleton: "GradesPageComposition",
+    load: () => import("../../features/profiles/teacher/pages/grades/GradePage").then(module => ({ default: module.GradesPage })),
+    regions: [
+      { name: "gradebook and visibility tables", classification: "AUTO-COLUMN", reason: "Measured native widths change across actual student/subject content fixtures; original min widths and overflow remain", count: "Class/term/filter/search view cache then viewport; header/typical column metrics then cached pixel widths" },
+      { name: "student avatars", classification: "FIXED-SIZE", reason: "Original 28px circular avatars in both table renderers", count: "One per student" },
+      { name: "class metadata, status and filters", classification: "VARIABLE", reason: "Fetched class/term text, optional section filter, timestamp and completeness badge", count: "Known cached values real; unknown wrapping class name two typical lines" },
+      { name: "submission history", classification: "VARIABLE", reason: "Returned count, optional submitter and wrapping labels", count: "Cached view count then viewport" },
+    ],
+  },
+
+  "/principal/students/class/:classId": {
+    component: "ClassListPage",
+    skeleton: "ClassListPageComposition",
+    load: () => import("../../features/profiles/principal/pages/students/ClassListPage").then(module => ({ default: module.ClassListPage })),
+    regions: [{ name: "class header and roster", classification: "VARIABLE", reason: "Wrapping fetched grade/adviser/room text and returned roster count; existing centered Back is variable-aligned with fixed dimensions", count: "Cached header lines then two/three; cached roster count then viewport" }, { name: "roster columns", classification: "AUTO-COLUMN", reason: "Shared StudentDirectoryTable native columns vary with student names", count: "View column cache then header and typical metrics" }],
+  },
+  "/principal/students/grade/:gradeId": {
+    component: "ClassListPage",
+    skeleton: "ClassListPageComposition",
+    load: () => import("../../features/profiles/principal/pages/students/ClassListPage").then(module => ({ default: module.ClassListPage })),
+    regions: [{ name: "grade header and roster", classification: "VARIABLE", reason: "Optional fetched section/adviser/room fields and returned roster count; existing Back alignment follows variable header once", count: "Cached header lines then two/three; cached roster count then viewport" }, { name: "roster columns", classification: "AUTO-COLUMN", reason: "Shared StudentDirectoryTable native columns vary with names", count: "View column cache then header and typical metrics" }],
+  },
+  "/principal/holistic-performance-analytics": {
+    component: "HolisticPerformanceAnalyticsPage",
+    skeleton: "HolisticPerformanceAnalyticsPageComposition",
+    load: () => import("../../features/profiles/principal/pages/reports/HolisticPerformanceAnalyticsPage").then(module => ({ default: module.HolisticPerformanceAnalyticsPage })),
+    regions: [{ name: "metric values", classification: "FIXED-SIZE", reason: "Original single-line metric value blocks independent of returned scores", count: "Four known domain metrics" }, { name: "heatmap and metric details", classification: "VARIABLE", reason: "Returned row count and wrapping labels/detail text", count: "Cached view rows then viewport; cached paragraph lines then typical two" }],
+  },
+
+  "/teacher/subjects/:subjectId/records": {
+    component: "SubjectRecordsPage",
+    skeleton: "SubjectRecordsPageComposition",
+    load: () => import("../../features/profiles/teacher/pages/subjects/detail/SubjectRecordsPage").then(module => ({ default: module.SubjectRecordsPage })),
+    regions: [{ name: "assessment and weekly records", classification: "AUTO-COLUMN", reason: "Native leaf columns vary with long learner names; original multi-level header spans and column minimums retained", count: "Column pixel cache by subject/term/month then actual header and typical content; known roster rendered immediately" }, { name: "optional groups and descriptors", classification: "VARIABLE", reason: "Configured template groups, recorded weeks, optional warnings and wrapping descriptors determine layout", count: "Cached line counts then two; known client month supplies typical weekly structure" }],
+  },
+
+  "/parent/students/:studentId": {
+    component: "ChildDetailPage",
+    skeleton: "ChildDetailPageComposition",
+    load: () => import("../../features/profiles/parent/pages/Student/ChildDetailPage"),
+    regions: [
+      {name:"identity and profile fields",classification:"VARIABLE",reason:"Linked identity and optional birth/address/LRN fields wrap or may be absent; cached linked identity and school year remain real",count:"Cached field lines then two; address two"},
+      {name:"profile avatar",classification:"FIXED-SIZE",reason:"Original responsive 144px/160px circular avatar; unknown gender image is masked, known class and identity remain real",count:"One avatar; pixel contrast and fixed overlay checked in both themes and widths"},
+      {name:"attendance ring",classification:"FIXED-SIZE",reason:"Existing 168px square chart independent of returned counts",count:"One ring and three known semantic status rows"},
+      {name:"term line plot",classification:"FIXED-SIZE",reason:"Existing plot fills its original 420px-minimum panel; known term labels and 70–100 axis",count:"Three known terms"},
+      {name:"academic and holistic lists",classification:"VARIABLE",reason:"Returned activity, concern, schedule, subject counts and wrapping interpretations change height",count:"View count cache then viewport; cached paragraph lines then two/three"},
+      {name:"report tables",classification:"AUTO-COLUMN",reason:"Native learning area/month widths were observed to vary across short and wrapping-content fixtures",count:"Native header/typical metrics then cached pixel widths; repeat visit within 2px"},
+      {name:"term average ring",classification:"FIXED-SIZE",reason:"Original 140px SVG chart viewport",count:"One ring"},
+    ],
+  },
+  "/parent/students/:studentId/topics/:topicId/quiz": {
+    component:"PetQuizPage",
+    skeleton: "PetQuizPageComposition",
+    load: () => import("../../features/profiles/parent/pages/Student/Academic/PetQuizPage"),
+    regions:[
+      {name:"challenge nodes",classification:"FIXED-SIZE",reason:"Original 84px controls keep their dimensions while unknown access icons load",count:"Three known difficulty nodes and two known bonus nodes"},
+      {name:"question and matching text",classification:"VARIABLE",reason:"Returned question, choice, and pair text wraps; questions and pair counts vary",count:"Cached question/pair counts then three capped to viewport; question three lines and choices/pairs two"},
+      {name:"memory cards",classification:"VARIABLE",reason:"Returned deck count changes grid height; each existing aspect-square face remains fixed for its column",count:"Cached pair count then three capped to viewport"},
+    ],
+  },
+} as const;
+
+
+
+

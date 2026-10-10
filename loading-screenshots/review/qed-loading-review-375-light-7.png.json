@@ -1,0 +1,14 @@
+{
+  "leftToRight": [
+    "principal-teachers",
+    "principal-teachers-1",
+    "subject-template",
+    "teacher-advisory-roster",
+    "teacher-attendance",
+    "teacher-calendar",
+    "teacher-dashboard",
+    "teacher-grades"
+  ],
+  "top": "skeleton",
+  "bottom": "loaded"
+}

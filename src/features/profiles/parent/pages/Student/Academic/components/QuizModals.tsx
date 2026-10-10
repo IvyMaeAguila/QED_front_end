@@ -7,13 +7,13 @@ import { ModalCloseButton, ModalFrame } from "@shared/components/modal";
 
 // ---------- shared bits ----------
 const PRIMARY_BTN =
-  "w-full rounded-2xl bg-gradient-to-b from-rose-500 to-rose-700 px-4 py-3.5 text-base font-black text-white " +
-  "shadow-[0_5px_0_0_#881337] transition-transform active:translate-y-[3px] active:shadow-[0_1px_0_0_#881337] " +
+  "w-full rounded-2xl bg-maroon px-4 py-3.5 text-base font-black text-white " +
+  "shadow-[0_5px_0_0_var(--brand-primary)] transition-transform active:translate-y-[3px] active:shadow-[0_1px_0_0_var(--brand-primary)] " +
   "disabled:cursor-not-allowed disabled:opacity-70";
 
 const SECONDARY_BTN =
-  "w-full rounded-2xl border-2 border-rose-100 bg-white px-4 py-3 text-sm font-extrabold text-rose-700 " +
-  "transition-transform hover:bg-rose-50 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70";
+  "w-full rounded-2xl border-2 border-border-subtle bg-white px-4 py-3 text-sm font-extrabold text-brand-ink " +
+  "transition-transform hover:bg-brand-soft active:scale-95 disabled:cursor-not-allowed disabled:opacity-70";
 
 /** The same "coin" look as the stops on the level road. */
 function Coin({ face, edge, children }: { face: string; edge: string; children: ReactNode }) {
@@ -72,15 +72,15 @@ export function EndInterventionConfirm({
   isEnding?: boolean;
 }) {
   return (
-    <ModalFrame shellVariant="specialized" onClose={onCancel} size="sm" labelledBy="end-intervention-title" className="qm-pop max-w-sm overflow-visible border-0 rounded-3xl bg-white px-5 pb-5 pt-14 text-center shadow-[0_6px_0_0_#fecdd3]">
+    <ModalFrame shellVariant="specialized" onClose={onCancel} size="sm" labelledBy="end-intervention-title" className="qm-pop max-w-sm overflow-visible border-0 rounded-3xl bg-white px-5 pb-5 pt-14 text-center shadow-card">
         {/* the coin sits half outside the top of the card */}
         <div className="absolute -top-11 left-1/2 -translate-x-1/2">
-          <Coin face="bg-rose-400" edge="bg-rose-600">
+          <Coin face="bg-maroon-light" edge="bg-maroon">
             <Rocket size={38} className="text-white" />
           </Coin>
         </div>
 
-        <p id="end-intervention-title" className="text-xl font-black text-rose-900">
+        <p id="end-intervention-title" className="text-xl font-black text-brand-ink">
           Send ED on his way?
         </p>
 
@@ -117,11 +117,11 @@ const CHECK_COLOR: Record<Difficulty, string> = {
 
 export function AccomplishmentModal({ onContinue }: { onContinue: () => void }) {
   return (
-    <ModalFrame shellVariant="specialized" onClose={onContinue} size="sm" labelledBy="accomplishment-title" className="qm-pop max-w-sm overflow-visible border-0 rounded-3xl bg-linear-to-b from-amber-200 to-amber-300 px-5 pb-6 pt-14 text-center shadow-[0_8px_0_0_#b45309] ring-4 ring-white/60">
+    <ModalFrame shellVariant="specialized" onClose={onContinue} size="sm" labelledBy="accomplishment-title" className="qm-pop max-w-sm overflow-visible border-0 rounded-3xl bg-amber-200 px-5 pb-6 pt-14 text-center shadow-[0_8px_0_0_#b45309] ring-4 ring-white/60">
         <ModalCloseButton
           onClose={onContinue}
           inverse
-          className="absolute -right-2 -top-2 z-10 rounded-full bg-rose-600 text-white shadow-md ring-4 ring-white hover:bg-rose-700 hover:text-white active:scale-90"
+          className="absolute -right-2 -top-2 z-10 rounded-full bg-maroon text-white shadow-md ring-4 ring-white hover:bg-maroon-light hover:text-white active:scale-90"
         />
 
         {/* little twinkles around the trophy */}

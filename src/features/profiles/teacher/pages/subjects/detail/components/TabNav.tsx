@@ -31,8 +31,8 @@ export function TabNav({ active, onChange, darkMode, textMuted }: TabNavProps) {
             data-active={isActive}
             className={`qed-tab-control flex-1 flex items-center justify-center gap-2 h-11 rounded-lg text-sm transition-all ${
               isActive
-                ? `font-bold text-white bg-[#880000] shadow-sm`
-                : `font-medium ${textMuted} hover:bg-[#880000] hover:text-white`
+                ? `font-bold text-white bg-maroon-light shadow-sm`
+                : `font-medium ${textMuted} hover:bg-maroon-light hover:text-white`
             }`}
           >
             <tab.icon size={16} />

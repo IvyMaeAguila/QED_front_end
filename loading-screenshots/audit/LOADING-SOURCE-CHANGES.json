@@ -1,0 +1,618 @@
+[
+  {
+    "file": "src/shared/loading/LoadingRegion.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/dashboard/components/DailyUpdateCard.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/teachers/components/ScheduleByDay.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/StudentProfile/context/StudentProfileContext.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/shared/components/QedLoader.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/gradebooks/components/GradeSheetSummary.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/gradebooks/hooks/usePrincipalGradebooks.ts",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/gradebooks/PrincipalGradebooksPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/teachers/hooks/useTeacherSchedule.ts",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/roster/components/AdvisoryHeader.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/classes/context/ClassesContext.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/subjects/components/TermsTable.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/shared/components/ProfileOverviewCard.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/subjects/detail/SubjectRecordsPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/holistic/HolisticDomainTrendsPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/shared/components/FilterDropdown.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/subjects/context/SubjectsCatalogContext.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/subjects/ManageSubjectsPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Academic/components/MissedActivities.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/teachers/components/TeacherClassListHeader.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/gradebooks/components/GradebooksHeader.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/subjects/components/EditSubjectModal.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/shared/calendar/CalendarPageView.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/gradebooks/hooks/usePrincipalGradeSheet.ts",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/attendance/components/AdvisorySectionTabs.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Academic/context/missedActivities.context.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/gradebooks/PrincipalGradeSheetPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/holistic/HolisticOverviewPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/dashboard/ParentDashboardHome.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Overview/context/HolisticAverageContext.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/reports/components/PriorityFocus.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Overview/components/PerformanceAnalytics.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/ProgressReport/components/PeriodicRatingCard.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/attendance/TeacherAttendancePage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/classes/ClassViewPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/shared/calendar/CalendarPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/gradebooks/components/GradeSheetHeader.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Academic/components/ClassSchedule.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Academic/components/MemoryGame.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/usermanagement/components/UsersTable.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Overview/components/HolisticAverage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/holistic/StudentHolisticProfilePage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/gradebooks/components/GradeLevelCards.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/subjects/AcademicYearPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/dashboard/components/Statcards.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/reports/components/ReportMetricCards.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/attendance/AttendanceMonthSummarySection.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Overview/components/AttendanceOverview.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/classes/ClassPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/dashboard/components/EventsCard.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/subjects/detail/SubjectDetailPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/attendance/AttendanceCalendarSection.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/PageComponents/StudentInfoTable.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/subjects/detail/components/HolisticTab.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/shared/components/StudentDirectoryTable.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/reports/components/PerGradeRanking.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/subjects/SubjectPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/reports/AnalyticsPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/reports/components/WholeElementaryRanking.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/dashboard/components/TodaysAttendanceSection.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/dashboard/components/HolisticDevelopmentSection.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/shared/calendar/components/ActivitiesCard.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/reports/components/LeadingSubjectsPanel.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/shared/calendar/components/HolidaysCard.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/StudentProfile/StudentProfileTab.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/subjects/components/SubjectGradeTemplateSection.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Overview/useStudentDetail.ts",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Academic/components/QuizLoading.tsx",
+    "status": "deleted"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/dashboard/components/StatCards.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/studentrecords/StudentFormPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/reports/hooks/useHolisticAnalytics.ts",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/dashboard/components/AcademicPerformanceSection.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/students/PrincipalStudentsPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/shared/components/SubjectAssignmentCard.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Holistic/components/weeklyReport.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Academic/components/InterventionSupport.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/ProgressReport/components/AttendanceRecordCard.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/students/components/GradeLevelCard.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/usermanagement/UserViewPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Overview/context/AttendanceOverviewContext.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/dashboard/components/WelcomeBanner.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/dashboard/components/WelcomeBanner.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/dashboard/components/LoginFrequency.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/ChildDetailPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/subjects/SubjectClassListPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/subjects/AdminSubjectDetailPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/ProgressReport/components/HolisticDevelopmentCard.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/attendance/TeacherAttendanceRecordsPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/studentrecords/components/Studentstable.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/dashboard/components/DashboardStatus.tsx",
+    "status": "deleted"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/teachers/components/TeacherClassRosters.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Academic/PetQuizPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Academic/TopicSupportChoice.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/students/ClassListPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/subjects/AddSubjectPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/classes/components/ClassCard.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/shared/loading/routeSkeletons.ts",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/auth/LoginPanel.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/EnrollledStudent/Components/EnrolledChildrenLists.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/ProgressReport/ProgessReportTab.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Academic/context/classSchedule.context.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/shared/components/DashboardUI.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/roster/AdvisoryRosterPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/roster/components/AdvisoryTable.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/routes/AppRouter.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/StudentProfile/components/ProfileHeaderCard.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/roster/components/AdvisorySkeleton.tsx",
+    "status": "deleted"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/subjects/detail/HolisticRecordsPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Academic/components/QuizRound.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/routes/ProtectedRoute.tsx",
+    "status": "deleted"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/subjects/detail/components/AssessmentTab.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Academic/components/MatchGame.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/attendance/services/useSelectedAdvisorySection.service.ts",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/usermanagement/UserFormPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/shared/loading/reservations.ts",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/gradebooks/components/DashboardStatus.tsx",
+    "status": "deleted"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/gradebooks/components/StudentGroupTable.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/shared/loading/skeleton.css",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/dashboard/components/StudentCard.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/style.css",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/shared/loading/LoadingTable.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/subjects/components/StatusBadge.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/dashboard/components/StudentsSection.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/reports/HolisticPerformanceAnalyticsPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/grades/ParentVisibilitySection.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Holistic/HoisticWeeklyReportTab.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/dashboard/components/AuditLogs.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/Landing/LandingPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/reports/components/HolisticHeatmap.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/reports/hooks/useSubjectAnalytics.ts",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Academic/components/LevelSelect.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/dashboard/components/OverviewCards.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/grades/GradePage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/help/HelpSupportPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/teachers/TeacherSchedulePage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/shared/loading/SkeletonParagraph.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/dashboard/components/SubjectPerformanceSection.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/classes/context/TeachersContext.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/shared/components/StudentHeroProfileBanner.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/classes/ClassFormPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/dashboard/components/WeeklySchedule.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/subjects/context/gradeLevelsContext.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/dashboard/components/TodayAttendance.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Academic/CoursewareView.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/shared/components/StudentDetailPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/subjects/detail/AssessmentRecordsPage.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/teachers/components/TeacherDirectoryTable.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/teacher/pages/dashboard/components/UpcomingEvents.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/Academic/components/EDJourneyIntro.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/gradebooks/components/GradeSheetTable.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/parent/pages/Student/ProgressReport/components/QuarterlyAverageCard.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/admin/pages/subjects/components/AcademicYearCard.tsx",
+    "status": "changed since latest-spec snapshot"
+  },
+  {
+    "file": "src/features/profiles/principal/pages/dashboard/PrincipalDashboardHome.tsx",
+    "status": "changed since latest-spec snapshot"
+  }
+]

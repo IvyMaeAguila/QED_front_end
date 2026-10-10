@@ -1,0 +1,19 @@
+[WebServer] (node:38988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:22988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:40052) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\directory-loading.spec.ts:34:70 › /parent/enrolled-children 375px light: real controls and screenshots (5.0s)
+  ok 2 tests\directory-loading.spec.ts:34:70 › /parent/enrolled-children 375px dark: real controls and screenshots (2.4s)
+  ok 3 tests\directory-loading.spec.ts:34:70 › /parent/enrolled-children 1280px light: real controls and screenshots (2.3s)
+  ok 4 tests\directory-loading.spec.ts:34:70 › /parent/enrolled-children 1280px dark: real controls and screenshots (2.4s)
+  ok 5 tests\directory-loading.spec.ts:34:70 › /parent 375px light: real controls and screenshots (2.3s)
+  ok 6 tests\directory-loading.spec.ts:34:70 › /parent 375px dark: real controls and screenshots (2.4s)
+  ok 7 tests\directory-loading.spec.ts:34:70 › /parent 1280px light: real controls and screenshots (2.4s)
+  ok 8 tests\directory-loading.spec.ts:34:70 › /parent 1280px dark: real controls and screenshots (2.5s)
+
+  8 passed (25.3s)

@@ -1,4 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { useState, useMemo } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { Pencil, Loader2, AlertCircle, Plus, Trash2 } from "lucide-react";
 import { useTeachers } from "../../classes/context/TeachersContext";
 import { formatTeacherName } from "../../classes/types/Teacher";
@@ -66,7 +68,9 @@ export function EditSubjectModal({
   // Official DepEd .xlsx grade template — separate from the manual weight
   // rows above; once uploaded, becomes the source of truth for this subject.
   const [activeTemplate, setActiveTemplate] = useState<ActiveGradeTemplate | null>(null);
-  const [loadingTemplate, setLoadingTemplate] = useState(false);
+  const [loadingTemplate, setLoadingTemplate] = useState(Boolean(Number(subject.subjectId ?? subject.id)));
+  const [templateError, setTemplateError] = useState<string | null>(null);
+  const [templateAttempt, setTemplateAttempt] = useState(0);
   const [schoolYears, setSchoolYears] = useState<SchoolYearRow[]>([]);
 
   useEffect(() => {
@@ -88,16 +92,20 @@ export function EditSubjectModal({
   useEffect(() => {
     const numericSubjectId = Number(subject.subjectId ?? subject.id);
     if (!numericSubjectId || isNaN(numericSubjectId)) return;
-
+    let active = true;
     setLoadingTemplate(true);
+    setTemplateError(null);
     getActiveGradeTemplate(numericSubjectId)
-      .then(setActiveTemplate)
+      .then((template) => { if (active) setActiveTemplate(template); })
       .catch((err) => {
+        if (!active) return;
         console.error("Failed to load active grade template:", err);
         setActiveTemplate(null);
+        setTemplateError(err instanceof Error ? err.message : "Failed to load active grade template.");
       })
-      .finally(() => setLoadingTemplate(false));
-  }, [subject.subjectId, subject.id]);
+      .finally(() => { if (active) setLoadingTemplate(false); });
+    return () => { active = false; };
+  }, [subject.subjectId, subject.id, templateAttempt]);
 
   // A saved template is authoritative for a graded subject. Keep the legacy
   // manual weight rows in sync so the normal Save Changes validation and API
@@ -175,8 +183,8 @@ export function EditSubjectModal({
 
   const inputClasses = `w-full h-10 px-3 rounded-lg border text-sm font-semibold outline-none transition-colors ${
     darkMode
-      ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]"
-      : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
+      ? "bg-[#0B1120] border-[#374151] text-white focus:border-maroon-light"
+      : "bg-brand-light border-border-subtle text-[#111827] focus:border-maroon-light"
   }`;
   const disabledInputClasses = `${inputClasses} opacity-60 cursor-not-allowed`;
   const labelClasses = `block text-xs font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
@@ -329,7 +337,7 @@ export function EditSubjectModal({
           className={`rounded-[12px] border p-3 space-y-2.5 ${
             darkMode
               ? "border-[#374151] bg-[#0B1120]/60"
-              : "border-[#E5E7EB] bg-[#F8FAFC]"
+              : "border-border-subtle bg-brand-light"
           }`}
         >
           <div className="flex items-center justify-between">
@@ -433,7 +441,7 @@ export function EditSubjectModal({
                   className={`h-10 w-10 shrink-0 rounded-lg border inline-flex items-center justify-center transition-colors disabled:opacity-50 ${
                     darkMode
                       ? "border-[#374151] text-[#F87171] hover:bg-white/10"
-                      : "border-[#E5E7EB] text-[#B91C1C] hover:bg-[#FEF2F2]"
+                      : "border-border-subtle text-[#B91C1C] hover:bg-[#FEF2F2]"
                   }`}
                 >
                   <Trash2 size={14} />
@@ -460,19 +468,15 @@ export function EditSubjectModal({
 
       {isGraded && (
       <div className="space-y-4">
-        {loadingTemplate ? (
-          <div className={`flex items-center gap-2 text-xs font-semibold ${textMuted}`}>
-            <Loader2 size={14} className="animate-spin" />
-            Checking for an official grade template…
-          </div>
-        ) : (
+        <LoadingRegion name="edit-subject-template" loading={loadingTemplate} error={templateError} retry={() => setTemplateAttempt(attempt => attempt + 1)} variable skeleton={null} frame={(pending) => (
           <SubjectGradeTemplateSection
+            loading={pending}
             subjectId={Number(subject.subjectId ?? subject.id)}
             darkMode={darkMode}
             activeTemplate={activeTemplate}
             onTemplateUpdated={setActiveTemplate}
           />
-        )}
+        )}>{null}</LoadingRegion>
       </div>
       )}
 
@@ -483,7 +487,7 @@ export function EditSubjectModal({
           className={`h-10 w-full rounded-lg border px-5 text-xs font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto ${
             darkMode
               ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-              : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+              : "border-border-subtle text-[#374151] hover:bg-brand-light"
           }`}
         >
           Cancel

@@ -1,0 +1,69 @@
+{
+  "regions": [
+    {
+      "selector": "[data-sk-region=\"profile-avatar\"]",
+      "box": {
+        "x": 151.5,
+        "y": 284,
+        "width": 72,
+        "height": 72
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"profile-stat-Advisory\"]",
+      "box": {
+        "x": 45,
+        "y": 549,
+        "width": 285,
+        "height": 16
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"profile-stat-Room\"]",
+      "box": {
+        "x": 45,
+        "y": 598,
+        "width": 285,
+        "height": 16
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"profile-stat-Total subjects\"]",
+      "box": {
+        "x": 45,
+        "y": 647,
+        "width": 285,
+        "height": 16
+      }
+    }
+  ],
+  "loadedBoxes": [
+    {
+      "x": 151.5,
+      "y": 263,
+      "width": 72,
+      "height": 72
+    },
+    {
+      "x": 45,
+      "y": 468,
+      "width": 285,
+      "height": 16
+    },
+    {
+      "x": 45,
+      "y": 517,
+      "width": 285,
+      "height": 16
+    },
+    {
+      "x": 45,
+      "y": 566,
+      "width": 285,
+      "height": 16
+    }
+  ],
+  "shapePixels": 5365,
+  "outsidePixels": 0,
+  "outsideRatio": 0
+}

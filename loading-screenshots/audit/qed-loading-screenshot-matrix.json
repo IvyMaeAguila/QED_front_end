@@ -1,0 +1,270 @@
+[
+  {
+    "prefix": "admin",
+    "missing": []
+  },
+  {
+    "prefix": "admin-academic-year",
+    "missing": []
+  },
+  {
+    "prefix": "admin-add-subject",
+    "missing": []
+  },
+  {
+    "prefix": "admin-calendar",
+    "missing": []
+  },
+  {
+    "prefix": "admin-class-details",
+    "missing": []
+  },
+  {
+    "prefix": "admin-class-edit",
+    "missing": []
+  },
+  {
+    "prefix": "admin-class-new",
+    "missing": []
+  },
+  {
+    "prefix": "admin-classes",
+    "missing": []
+  },
+  {
+    "prefix": "admin-help",
+    "missing": []
+  },
+  {
+    "prefix": "admin-student-edit",
+    "missing": []
+  },
+  {
+    "prefix": "admin-student-new",
+    "missing": []
+  },
+  {
+    "prefix": "admin-students",
+    "missing": []
+  },
+  {
+    "prefix": "admin-subjects",
+    "missing": []
+  },
+  {
+    "prefix": "admin-user-details",
+    "missing": []
+  },
+  {
+    "prefix": "admin-user-edit",
+    "missing": []
+  },
+  {
+    "prefix": "admin-user-new",
+    "missing": []
+  },
+  {
+    "prefix": "admin-users",
+    "missing": []
+  },
+  {
+    "prefix": "attendance-records",
+    "missing": []
+  },
+  {
+    "prefix": "attendance-summary",
+    "missing": []
+  },
+  {
+    "prefix": "courseware",
+    "missing": []
+  },
+  {
+    "prefix": "domain-trends",
+    "missing": []
+  },
+  {
+    "prefix": "holistic-overview",
+    "missing": []
+  },
+  {
+    "prefix": "holistic-profile",
+    "missing": []
+  },
+  {
+    "prefix": "landing",
+    "missing": []
+  },
+  {
+    "prefix": "login",
+    "missing": []
+  },
+  {
+    "prefix": "parent",
+    "missing": []
+  },
+  {
+    "prefix": "parent-calendar",
+    "missing": []
+  },
+  {
+    "prefix": "parent-detail-academic",
+    "missing": []
+  },
+  {
+    "prefix": "parent-detail-holistic",
+    "missing": []
+  },
+  {
+    "prefix": "parent-detail-overview",
+    "missing": []
+  },
+  {
+    "prefix": "parent-detail-progressReport",
+    "missing": []
+  },
+  {
+    "prefix": "parent-detail-studentProfile",
+    "missing": []
+  },
+  {
+    "prefix": "parent-enrolled-children",
+    "missing": []
+  },
+  {
+    "prefix": "parent-help",
+    "missing": []
+  },
+  {
+    "prefix": "parent-pet-quiz",
+    "missing": []
+  },
+  {
+    "prefix": "parent-pet-quiz-Match",
+    "missing": []
+  },
+  {
+    "prefix": "parent-pet-quiz-Memory",
+    "missing": []
+  },
+  {
+    "prefix": "parent-pet-quiz-question",
+    "missing": []
+  },
+  {
+    "prefix": "principal-calendar",
+    "missing": []
+  },
+  {
+    "prefix": "principal-dashboard",
+    "missing": []
+  },
+  {
+    "prefix": "principal-grade-sheet",
+    "missing": []
+  },
+  {
+    "prefix": "principal-gradebooks",
+    "missing": []
+  },
+  {
+    "prefix": "principal-help",
+    "missing": []
+  },
+  {
+    "prefix": "principal-holistic-analytics",
+    "missing": []
+  },
+  {
+    "prefix": "principal-students",
+    "missing": []
+  },
+  {
+    "prefix": "principal-students-class-1",
+    "missing": []
+  },
+  {
+    "prefix": "principal-students-grade-1",
+    "missing": []
+  },
+  {
+    "prefix": "principal-subject-analytics",
+    "missing": []
+  },
+  {
+    "prefix": "principal-teachers",
+    "missing": []
+  },
+  {
+    "prefix": "principal-teachers-1",
+    "missing": []
+  },
+  {
+    "prefix": "subject-template",
+    "missing": []
+  },
+  {
+    "prefix": "teacher-advisory-roster",
+    "missing": []
+  },
+  {
+    "prefix": "teacher-attendance",
+    "missing": []
+  },
+  {
+    "prefix": "teacher-calendar",
+    "missing": []
+  },
+  {
+    "prefix": "teacher-dashboard",
+    "missing": []
+  },
+  {
+    "prefix": "teacher-grades",
+    "missing": []
+  },
+  {
+    "prefix": "teacher-grades-Parent-Visibility",
+    "missing": []
+  },
+  {
+    "prefix": "teacher-grades-Submission-History",
+    "missing": []
+  },
+  {
+    "prefix": "teacher-help",
+    "missing": []
+  },
+  {
+    "prefix": "teacher-student-details",
+    "missing": []
+  },
+  {
+    "prefix": "teacher-subject",
+    "missing": []
+  },
+  {
+    "prefix": "teacher-subject-class-list",
+    "missing": []
+  },
+  {
+    "prefix": "teacher-subject-holistic",
+    "missing": []
+  },
+  {
+    "prefix": "teacher-subject-holistic-records",
+    "missing": []
+  },
+  {
+    "prefix": "teacher-subject-records",
+    "missing": []
+  },
+  {
+    "prefix": "teacher-subjects",
+    "missing": []
+  },
+  {
+    "prefix": "topic-support",
+    "missing": []
+  }
+]

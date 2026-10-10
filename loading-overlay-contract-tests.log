@@ -1,0 +1,53 @@
+
+[WebServer] (node:18324) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:40364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+
+(node:33992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/5] tests\overlay-contract.spec.ts:4:73 › fixed overlay 375 light: shared field keeps its matching box
+  1) tests\overlay-contract.spec.ts:4:73 › fixed overlay 375 light: shared field keeps its matching box 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.sk-region')
+    Expected: "revealed"
+    Received: "settled"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.sk-region') with timeout 5000ms
+      - waiting for locator('.sk-region')
+        14 × locator resolved to <div aria-busy="false" class="sk-region " data-sk-phase="settled" data-sk-region="field-_r_0_">…</div>
+           - unexpected value "settled"
+
+
+       5 |   await page.setViewportSize({ width, height: 1000 });
+       6 |   await page.goto(`/loading-harness.html?latency=2200&theme=${theme}`);
+    >  7 |   await expect(page.locator('.sk-region')).toHaveAttribute("data-sk-phase", "revealed");
+         |                                            ^
+       8 |   const verify = await captureFixedOverlay(page, `harness-${width}-${theme}`, ['[data-match="number"]']);
+       9 |   await expect(page.locator('.sk-region')).toHaveAttribute("data-sk-phase", "settled");
+      10 |   await verify();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\overlay-contract.spec.ts:7:44
+
+    Error Context: test-results\overlay-contract-fixed-ove-f00f2-ield-keeps-its-matching-box\error-context.md
+
+
+(node:38376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[2/5] tests\overlay-contract.spec.ts:4:73 › fixed overlay 375 dark: shared field keeps its matching box
+[3/5] tests\overlay-contract.spec.ts:4:73 › fixed overlay 1280 light: shared field keeps its matching box
+[4/5] tests\overlay-contract.spec.ts:4:73 › fixed overlay 1280 dark: shared field keeps its matching box
+[5/5] tests\overlay-contract.spec.ts:13:1 › fixed overlay rejects a shape extending outside its matching loaded field
+  1 failed
+    tests\overlay-contract.spec.ts:4:73 › fixed overlay 375 light: shared field keeps its matching box 
+  4 passed (31.5s)

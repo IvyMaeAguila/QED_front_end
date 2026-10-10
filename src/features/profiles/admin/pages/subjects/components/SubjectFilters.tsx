@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { Search, ChevronDown, Check } from "lucide-react";
 import { useTeachers } from "../../classes/context/TeachersContext";
 import { formatTeacherName } from "../../classes/types/Teacher";
@@ -54,7 +55,7 @@ function Dropdown({
         className={`qed-filter-control min-w-32 px-3 rounded-lg border font-bold flex items-center justify-between gap-2 transition-colors ${
           darkMode
             ? "bg-[#0B1120] border-[#374151] text-white hover:bg-[#111827]"
-            : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] hover:bg-[#F1F5F9]"
+            : "bg-brand-light border-border-subtle text-[#111827] hover:bg-brand-light"
         }`}
       >
         <span className="truncate max-w-36">{current}</span>
@@ -70,7 +71,7 @@ function Dropdown({
           className={`absolute right-0 top-9 z-30 w-52 max-h-64 overflow-y-auto rounded-xl border p-1 shadow-lg ${
             darkMode
               ? "bg-[#111827] border-[#374151]"
-              : "bg-white border-[#E5E7EB]"
+              : "bg-white border-border-subtle"
           }`}
         >
           {options.map((option) => (
@@ -85,12 +86,12 @@ function Dropdown({
               className={`w-full px-3 py-2 rounded-lg text-left text-xs font-semibold flex items-center justify-between gap-2 transition-colors ${
                 darkMode
                   ? "text-[#D1D5DB] hover:bg-white/10"
-                  : "text-[#374151] hover:bg-[#F6F7FB]"
+                  : "text-[#374151] hover:bg-brand-light"
               }`}
             >
               <span className="truncate">{option.label}</span>
               {value === option.value && (
-                <Check size={14} className="text-[#8B0D0D] shrink-0" />
+                <Check size={14} className="text-brand-ink shrink-0" />
               )}
             </button>
           ))}
@@ -223,7 +224,7 @@ export function SubjectFilters({
               aria-pressed={groupBySection === opt.value}
               className={`qed-filter-control px-3 rounded-lg font-semibold transition-colors ${
                 groupBySection === opt.value
-                  ? "bg-[#800000] text-white"
+                  ? "bg-maroon text-white"
                   : darkMode
                     ? "text-gray-400 hover:text-white"
                     : "text-gray-500 hover:text-gray-700"

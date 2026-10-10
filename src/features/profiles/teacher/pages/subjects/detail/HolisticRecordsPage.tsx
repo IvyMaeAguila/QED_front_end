@@ -1,4 +1,9 @@
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { LoadingFormValue } from "@shared/loading/LoadingFormValue";
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { SkeletonControl } from "@shared/components/SkeletonLoading";
+import { rememberColumns, useColumnReservation } from "@shared/loading/reservations";
+import { Fragment, useMemo, useRef, useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { Check, Pencil, Sparkles } from "lucide-react";
 import { StudentAvatar } from "@shared/components/StudentAvatar";
 import type { RosterStudent } from "./data";
@@ -15,7 +20,7 @@ import {
 
 type GenderedStudent = RosterStudent & { gender?: "M" | "F" };
 
-const ACCENT = "#6B0000";
+const ACCENT = "var(--color-maroon)";
 
 const EMPTY_TREND: StudentWeeklyHolisticRecord["trend"] = {
   weeksCount: 0,
@@ -156,6 +161,9 @@ export function HolisticRecordsSection({
   textPrimary,
   textMuted,
 }: HolisticRecordsSectionProps) {
+  const [attempt, setAttempt] = useState(0);
+  const [periodError, setPeriodError] = useState<string | null>(null);
+  const table = useRef<HTMLTableElement>(null);
   const [weeklyData, setWeeklyData] = useState<HolisticWeeklyMap>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -171,11 +179,12 @@ export function HolisticRecordsSection({
   const [periodsLoaded, setPeriodsLoaded] = useState(false);
 
   useEffect(() => {
-    fetchGradingPeriodsGlobal()
-      .then(setGradingPeriods)
-      .catch((err) => console.error("Failed to load grading periods:", err))
-      .finally(() => setPeriodsLoaded(true));
-  }, []);
+    let cancelled = false; setPeriodsLoaded(false); setPeriodError(null);
+    fetchGradingPeriodsGlobal().then(value => { if (!cancelled) setGradingPeriods(value); })
+      .catch(err => { if (!cancelled) setPeriodError(err instanceof Error ? err.message : "Couldn't load grading periods."); })
+      .finally(() => { if (!cancelled) setPeriodsLoaded(true); });
+    return () => { cancelled = true; };
+  }, [attempt]);
 
   // Resolve which period is "active" for this view: an explicit
   // gradingPeriodId wins, then a matching termNumber, then whichever period
@@ -214,7 +223,7 @@ export function HolisticRecordsSection({
       .finally(() => {
         if (latestRequestId.current === requestId) setLoading(false);
       });
-  }, [subjectSectionId, resolvedTermNumber]);
+  }, [subjectSectionId, resolvedTermNumber, attempt]);
 
   function handleCellChange(studentId: string, axis: HolisticAxisKey, weekStartDate: string, raw: string) {
     const trimmed = raw.trim();
@@ -300,15 +309,15 @@ export function HolisticRecordsSection({
 
   const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
   const cellInputClasses = `h-7 w-10 rounded-lg border text-center text-xs font-black tabular-nums outline-none ${panelBorder} ${
-    darkMode ? "bg-[#2A1A18] text-white" : "bg-white text-[#111827]"
+    darkMode ? "bg-panel-dark text-white" : "bg-white text-[#111827]"
   }`;
-  const stickyCell = darkMode ? "bg-[#2A1A18]" : "bg-white";
+  const stickyCell = darkMode ? "bg-panel-dark" : "bg-white";
   const groupBand = `px-4 py-1.5 text-xs font-black uppercase tracking-wider ${
-    darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
+    darkMode ? "bg-white/10" : "bg-brand-light"
   } ${textPrimary}`;
   const domainCount = HOLISTIC_COLUMNS.length;
 
-  function renderStudentRow(student: GenderedStudent, weekStartDates: string[]) {
+  function renderStudentRow(student: GenderedStudent, weekStartDates: string[], pending: boolean) {
     const record = weeklyData[student.id];
     const weekByDate = new Map(record?.weeks.map((w) => [w.weekStartDate, w]) ?? []);
 
@@ -328,7 +337,7 @@ export function HolisticRecordsSection({
               const level = value !== null ? HOLISTIC_LEVELS.find((l) => l.value === value) : undefined;
               return (
                 <td key={`${week}-${column.key}`} className={`border px-1.5 py-2 text-center ${panelBorder}`}>
-                  {isEditing ? (
+                  {pending ? <SkeletonControl className="mx-auto h-7 w-7 rounded-lg" /> : isEditing ? (
                     <input
                       type="number"
                       min={1}
@@ -359,86 +368,24 @@ export function HolisticRecordsSection({
     );
   }
 
-  return (
-    <section className={cardClasses} aria-label="Weekly holistic ratings">
-      <div
-        className={`flex flex-col gap-4 border-b px-5 py-5 sm:flex-row sm:items-center sm:justify-between ${panelBorder}`}
-      >
-        <div>
-          <h2 className={`flex items-center gap-1.5 font-extrabold ${textPrimary}`}>
-            <Sparkles size={15} style={{ color: ACCENT }} />
-            Weekly Holistic Ratings
-          </h2>
-          <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
-            {isEditing ? "Changes save as you type" : `${roster.length} student${roster.length === 1 ? "" : "s"}`}
-            {activePeriod && (
-              <>
-                {" "}
-                · {activePeriod.termLabel}
-                {/* schoolYearId is the raw DB id (e.g. a UUID), not a
-                    "2025-2026"-style label. Swap this for a real label field
-                    (e.g. activePeriod.schoolYearLabel) once one exists on
-                    the GradingPeriod type / API response. */}
-                {activePeriod.schoolYearId ? ` · SY ${activePeriod.schoolYearId}` : ""}
-              </>
-            )}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2.5">
-          {displayGroup && (
-            <select
-              value={displayGroup.key}
-              onChange={(e) => setSelectedMonthKey(e.target.value)}
-              className={`h-10 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
-              aria-label="Month"
-            >
-              {availableMonthKeys.map((key) => (
-                <option key={key} value={key}>
-                  {formatMonthLabel(key)}
-                </option>
-              ))}
-            </select>
-          )}
-          <button
-            onClick={() => setIsEditing((v) => !v)}
-            className={`flex h-10 items-center gap-1.5 rounded-xl border px-3 text-xs font-extrabold transition-colors ${
-              isEditing
-                ? "border-transparent text-white"
-                : darkMode
-                  ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
-                  : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
-            }`}
-            style={isEditing ? { background: ACCENT } : undefined}
-          >
-            {isEditing ? <Check size={13} /> : <Pencil size={13} style={{ color: ACCENT }} />}
-            {isEditing ? "Done" : "Edit"}
-          </button>
-        </div>
-      </div>
-
-      {loading ? (
-        <p className={`px-5 py-16 text-center text-sm font-semibold ${textMuted}`}>Loading records…</p>
-      ) : error ? (
-        <p className="px-5 py-16 text-center text-sm font-bold text-[#DC2626]">{error}</p>
-      ) : roster.length === 0 ? (
-        <p className={`px-5 py-16 text-center text-sm font-semibold ${textMuted}`}>No students enrolled yet.</p>
-      ) : !displayGroup ? (
-        <p className={`px-5 py-16 text-center text-sm font-semibold ${textMuted}`}>Loading records…</p>
-      ) : (
-        (() => {
-          const group = displayGroup;
+  const view = `subject-holistic-records:${subjectSectionId}:${resolvedTermNumber ?? "pending"}:${selectedMonthKey ?? currentMonthKey()}`;
+  const reservedWeeks = displayGroup?.weekStartDates ?? mondaysInMonth(currentMonthKey());
+  const columnWidths = useColumnReservation(view, [{label:"Learner's Name",typical:"Maria Alexandra Delos Santos"}, ...reservedWeeks.flatMap(() => HOLISTIC_COLUMNS.map(column => ({label:column.label,typical:"5"})))], loading || !periodsLoaded);
+  function renderWeeklyTable(pending: boolean) {
+    if (!roster.length) return <p className={`px-5 py-16 text-center text-sm font-semibold ${textMuted}`}>No students enrolled yet.</p>; 
+          const group = displayGroup ?? { key: currentMonthKey(), label: formatMonthLabel(currentMonthKey()), weekStartDates: mondaysInMonth(currentMonthKey()) };
           const columnCount = 1 + group.weekStartDates.length * domainCount;
           return (
             <div className="overflow-x-auto">
-              <table className="teacher-user-table w-full min-w-max border-collapse text-xs">
+              <table ref={table} className="teacher-user-table w-full min-w-max border-collapse text-xs">
+                {pending && <colgroup>{columnWidths.map((width,index) => <col key={index} style={{width}} />)}</colgroup>}
                 <thead>
                   {/* Row 1: Week N, spanning that week's domain columns */}
-                  <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
+                  <tr className={darkMode ? "bg-white/5" : "bg-brand-light"}>
                     <th
                       rowSpan={3}
                       className={`sticky left-0 z-10 min-w-56 border px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${
-                        darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
+                        darkMode ? "bg-panel-dark" : "bg-brand-light"
                       } ${panelBorder} ${textMuted}`}
                     >
                       Learner's Name
@@ -454,7 +401,7 @@ export function HolisticRecordsSection({
                     ))}
                   </tr>
                   {/* Row 2: the date range for that week */}
-                  <tr className={darkMode ? "bg-white/5" : "bg-[#FAFBFC]"}>
+                  <tr className={darkMode ? "bg-white/5" : "bg-brand-light"}>
                     {group.weekStartDates.map((week) => (
                       <th
                         key={week}
@@ -466,7 +413,7 @@ export function HolisticRecordsSection({
                     ))}
                   </tr>
                   {/* Row 3: the domain sub-columns, repeated per week */}
-                  <tr className={darkMode ? "bg-white/5" : "bg-[#FAFBFC]"}>
+                  <tr className={darkMode ? "bg-white/5" : "bg-brand-light"}>
                     {group.weekStartDates.map((week) => (
                       <Fragment key={week}>
                         {HOLISTIC_COLUMNS.map((column) => (
@@ -489,7 +436,7 @@ export function HolisticRecordsSection({
                           Male
                         </td>
                       </tr>
-                      {grouped.male.map((student) => renderStudentRow(student, group.weekStartDates))}
+                      {grouped.male.map((student) => renderStudentRow(student, group.weekStartDates, pending))}
                     </>
                   )}
 
@@ -500,15 +447,76 @@ export function HolisticRecordsSection({
                           Female
                         </td>
                       </tr>
-                      {grouped.female.map((student) => renderStudentRow(student, group.weekStartDates))}
+                      {grouped.female.map((student) => renderStudentRow(student, group.weekStartDates, pending))}
                     </>
                   )}
                 </tbody>
               </table>
             </div>
           );
-        })()
-      )}
+ }
+
+  return (
+    <section className={cardClasses} aria-label="Weekly holistic ratings">
+      <div
+        className={`flex flex-col gap-4 border-b px-5 py-5 sm:flex-row sm:items-center sm:justify-between ${panelBorder}`}
+      >
+        <div>
+          <h2 className={`flex items-center gap-1.5 font-extrabold ${textPrimary}`}>
+            <Sparkles size={15} style={{ color: "var(--brand-ink)" }} />
+            Weekly Holistic Ratings
+          </h2>
+          <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+            {isEditing ? "Changes save as you type" : `${roster.length} student${roster.length === 1 ? "" : "s"}`}
+            {activePeriod && (
+              <>
+                {" "}
+                · {activePeriod.termLabel}
+                {/* schoolYearId is the raw DB id (e.g. a UUID), not a
+                    "2025-2026"-style label. Swap this for a real label field
+                    (e.g. activePeriod.schoolYearLabel) once one exists on
+                    the GradingPeriod type / API response. */}
+                {activePeriod.schoolYearId ? ` · SY ${activePeriod.schoolYearId}` : ""}
+              </>
+            )}
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2.5">
+          {(displayGroup || (loading || !periodsLoaded)) && (
+            <LoadingFormValue name="subject-holistic-month" loading={(loading || !periodsLoaded) && !displayGroup} width="16ch" intrinsic><select
+              value={displayGroup?.key ?? ""}
+              disabled={(loading || !periodsLoaded)}
+              onChange={(e) => setSelectedMonthKey(e.target.value)}
+              className={`h-10 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
+              aria-label="Month"
+            >
+              {!displayGroup && <option value="" hidden />}
+              {availableMonthKeys.map((key) => (
+                <option key={key} value={key}>
+                  {formatMonthLabel(key)}
+                </option>
+              ))}
+            </select></LoadingFormValue>
+          )}
+          <button
+            onClick={() => setIsEditing((v) => !v)}
+            className={`flex h-10 items-center gap-1.5 rounded-xl border px-3 text-xs font-extrabold transition-colors ${
+              isEditing
+                ? "border-transparent text-white"
+                : darkMode
+                  ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
+                  : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
+            }`}
+            style={isEditing ? { background: ACCENT } : undefined}
+          >
+            {isEditing ? <Check size={13} /> : <Pencil size={13} style={{ color: "var(--brand-ink)" }} />}
+            {isEditing ? "Done" : "Edit"}
+          </button>
+        </div>
+      </div>
+
+      <LoadingRegion name="subject-holistic-records" loading={loading || !periodsLoaded} error={error || periodError} retry={() => setAttempt(value => value + 1)} variable autoColumns skeleton={null} frame={renderWeeklyTable} retainPrevious hasContent={Object.keys(weeklyData).length > 0} onSettled={() => rememberColumns(view, table.current)}>{null}</LoadingRegion>
     </section>
   );
 }

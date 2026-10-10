@@ -1,0 +1,238 @@
+
+[WebServer] (node:40888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:28564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 30 tests using 2 workers
+
+(node:27560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+
+(node:39604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[2/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+[3/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[4/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+  1) tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders 
+
+    Error: the fast refetch must actually issue its API request
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+       at fixtures\refetch.ts:32
+
+      30 |   return async () => {
+      31 |     const durations = await page.evaluate(() => (window as unknown as { skFetchDurations: number[] }).skFetchDurations);
+    > 32 |     expect(durations.length, "the fast refetch must actually issue its API request").toBeGreaterThan(0);
+         |                                                                                      ^
+      33 |     for (const duration of durations) expect(duration, "fast fixture elapsed time in the browser").toBeLessThan(200);
+      34 |   };
+      35 | }
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\fixtures\refetch.ts:32:86
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\principal-grade-sheet-loading.spec.ts:36:553
+
+    Error Context: test-results\principal-grade-sheet-load-e1625-ims-or-reveals-placeholders\error-context.md
+
+
+
+(node:24352) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+(node:40076) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[5/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+[6/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+[7/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+
+(node:18332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[8/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[9/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+[10/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+  2) tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders 
+
+    Error: expect(received).toContain(expected) // indexOf
+
+    Expected value: "waiting"
+    Received array: []
+
+      34 |  const release=await fixture(page,false,3,false,true);await page.goto(url);release();const region=page.locator('[data-sk-region="principal-grade-sheet-table"]');await expect(region).toHaveAttribute('data-sk-phase','settled');
+      35 |  await region.evaluate(element=>{const phases:string[]=[];(window as unknown as {gradeSheetPhases:string[]}).gradeSheetPhases=phases;new MutationObserver(()=>{phases.push(element.getAttribute('data-sk-phase')??'');}).observe(element,{attributes:true,attributeFilter:['data-sk-phase']});});
+    > 36 |  const verifyFast=await measureFastRefetch(page,'gradesheets/');release.holdBook(true);await page.getByRole('combobox',{name:'Select grading term',exact:true}).selectOption('2');await expect(region).toHaveAttribute('data-sk-phase','settled');const phases=await page.evaluate(()=>(window as unknown as {gradeSheetPhases:string[]}).gradeSheetPhases);expect(phases).toContain('waiting');expect(phases).not.toContain('dimmed');expect(phases).not.toContain('revealed');await expect(page.locator('[data-sk-region="grade-sheet-student-row"]')).toHaveCount(3);await verifyFast();await assertNoDataSpinner(page);
+         |                                                                                                                                                                                                                                                                                                                                                                            ^
+      37 | });
+      38 | test('intrinsic term selector stays variable and its loaded width follows actual labels',async({page})=>{
+      39 |  const widths:number[]=[];for(const label of ['Term 1','First academic grading period']){const release=await fixture(page,false,3,false,false,label);await page.goto(url);const region=page.locator('[data-sk-region="grade-sheet-term"]');await expect(region).toHaveAttribute('data-sk-variable','');release();await expect(region).toHaveAttribute('data-sk-phase','settled');const select=page.getByRole('combobox',{name:'Select grading term',exact:true});widths.push((await select.boundingBox())!.width);expect(await select.evaluate(element=>(element as HTMLElement).style.minWidth)).toBe('');await page.unroute('**/api/**');await page.unroute('**/api/gradesheets/**');await page.unroute('**/api/academic-year/getAcademicYear');}expect(widths[1]-widths[0]).toBeGreaterThan(10);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\principal-grade-sheet-loading.spec.ts:36:364
+
+    Error Context: test-results\principal-grade-sheet-load-e1625-ims-or-reveals-placeholders-repeat1\error-context.md
+
+
+
+(node:27044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[11/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+(node:2564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[12/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[13/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[14/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+[15/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+  3) tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders 
+
+    Error: the fast refetch must actually issue its API request
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+       at fixtures\refetch.ts:32
+
+      30 |   return async () => {
+      31 |     const durations = await page.evaluate(() => (window as unknown as { skFetchDurations: number[] }).skFetchDurations);
+    > 32 |     expect(durations.length, "the fast refetch must actually issue its API request").toBeGreaterThan(0);
+         |                                                                                      ^
+      33 |     for (const duration of durations) expect(duration, "fast fixture elapsed time in the browser").toBeLessThan(200);
+      34 |   };
+      35 | }
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\fixtures\refetch.ts:32:86
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\principal-grade-sheet-loading.spec.ts:36:553
+
+    Error Context: test-results\principal-grade-sheet-load-e1625-ims-or-reveals-placeholders-repeat2\error-context.md
+
+
+(node:14280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[16/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+(node:5188) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[17/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[18/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[19/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+[20/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+  4) tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders 
+
+    Error: the fast refetch must actually issue its API request
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+       at fixtures\refetch.ts:32
+
+      30 |   return async () => {
+      31 |     const durations = await page.evaluate(() => (window as unknown as { skFetchDurations: number[] }).skFetchDurations);
+    > 32 |     expect(durations.length, "the fast refetch must actually issue its API request").toBeGreaterThan(0);
+         |                                                                                      ^
+      33 |     for (const duration of durations) expect(duration, "fast fixture elapsed time in the browser").toBeLessThan(200);
+      34 |   };
+      35 | }
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\fixtures\refetch.ts:32:86
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\principal-grade-sheet-loading.spec.ts:36:553
+
+    Error Context: test-results\principal-grade-sheet-load-e1625-ims-or-reveals-placeholders-repeat3\error-context.md
+
+
+(node:28848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[21/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+
+(node:33332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[22/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[23/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[24/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+[25/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+  5) tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders 
+
+    Error: the fast refetch must actually issue its API request
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+       at fixtures\refetch.ts:32
+
+      30 |   return async () => {
+      31 |     const durations = await page.evaluate(() => (window as unknown as { skFetchDurations: number[] }).skFetchDurations);
+    > 32 |     expect(durations.length, "the fast refetch must actually issue its API request").toBeGreaterThan(0);
+         |                                                                                      ^
+      33 |     for (const duration of durations) expect(duration, "fast fixture elapsed time in the browser").toBeLessThan(200);
+      34 |   };
+      35 | }
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\fixtures\refetch.ts:32:86
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\principal-grade-sheet-loading.spec.ts:36:553
+
+    Error Context: test-results\principal-grade-sheet-load-e1625-ims-or-reveals-placeholders-repeat4\error-context.md
+
+
+
+(node:1648) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[26/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+
+(node:40168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[27/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[28/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[29/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+[30/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+  6) tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders 
+
+    Error: the fast refetch must actually issue its API request
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+       at fixtures\refetch.ts:32
+
+      30 |   return async () => {
+      31 |     const durations = await page.evaluate(() => (window as unknown as { skFetchDurations: number[] }).skFetchDurations);
+    > 32 |     expect(durations.length, "the fast refetch must actually issue its API request").toBeGreaterThan(0);
+         |                                                                                      ^
+      33 |     for (const duration of durations) expect(duration, "fast fixture elapsed time in the browser").toBeLessThan(200);
+      34 |   };
+      35 | }
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\fixtures\refetch.ts:32:86
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\principal-grade-sheet-loading.spec.ts:36:553
+
+    Error Context: test-results\principal-grade-sheet-load-e1625-ims-or-reveals-placeholders-repeat5\error-context.md
+
+
+  6 failed
+    tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders 
+    tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders 
+    tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders 
+    tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders 
+    tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders 
+    tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders 
+  24 passed (46.8s)

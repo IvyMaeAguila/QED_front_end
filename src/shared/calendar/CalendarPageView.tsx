@@ -1,50 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
-import { useOutletContext } from "react-router-dom";
-import { CalendarRange, CalendarHeart } from "lucide-react";
-import { MonthGrid } from "./components/MonthGrid";
-import { ActivitiesCard, ActivityGroupList } from "./components/ActivitiesCard";
-import { HolidaysCard, HolidayGroupList } from "./components/HolidaysCard";
-import { ExpandedListModal } from "./components/ExpandedListModal";
-import type { AdminThemeContext } from "../../features/profiles/admin/pages/AdminLayout";
-import {
-  type CalendarActivity,
-  type CalendarHoliday,
-  type Role,
-} from "./types/Calendar";
-import {
-  fetchCalendarActivities,
-  fetchAllCalendarActivities,
-  fetchCalendarHolidays,
-  fetchAllCalendarHolidays,
-} from "./services/calendar.service";
+import { useEffect } from "react";
+import { CalendarPageViewComposition,type CalendarPageViewEffectScope,type CalendarPageViewRouteProps } from "./CalendarPageView.loading-view";
+export * from "./CalendarPageView.loading-view";
 
-interface CalendarPageProps {
-  viewerRole?: Role;
-}
-
-type ExpandTarget = "activity" | "holiday" | null;
-
-export function CalendarPageView({}: CalendarPageProps) {
-  const theme = useOutletContext<AdminThemeContext>();
-  if (!theme) return null;
-
-  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
-
-  const [activities, setActivities] = useState<CalendarActivity[]>([]);
-  const [holidays, setHolidays] = useState<CalendarHoliday[]>([]);
-  const [allActivities, setAllActivities] = useState<CalendarActivity[]>([]);
-  const [allHolidays, setAllHolidays] = useState<CalendarHoliday[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const [viewDate, setViewDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
-  const [expandTarget, setExpandTarget] = useState<ExpandTarget>(null);
-
-  useEffect(() => {
+function CalendarPageViewDataEffects({ scope }: { scope: CalendarPageViewEffectScope }) {
+ const { setLoading, setError, fetchCalendarActivities, fetchCalendarHolidays, fetchAllCalendarActivities, fetchAllCalendarHolidays, setActivities, setHolidays, setAllActivities, setAllHolidays, attempt } = scope;
+ useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    setError(null);
     Promise.all([
       fetchCalendarActivities(),
       fetchCalendarHolidays(),
@@ -70,119 +33,10 @@ export function CalendarPageView({}: CalendarPageProps) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [attempt]);
+ return null;
+}
 
-  const eventDatesISO = useMemo(() => {
-    const dates = new Set<string>();
-    for (const a of activities) dates.add(a.date);
-    for (const h of holidays) dates.add(h.date);
-    return dates;
-  }, [activities, holidays]);
-
-  function shiftMonth(delta: number) {
-    const nextMonth = new Date(viewDate.getFullYear(), viewDate.getMonth() + delta, 1);
-    setViewDate(nextMonth);
-    setSelectedDate(nextMonth);
-  }
-
-  return (
-    <div className="space-y-6 pb-12">
-      <div>
-        <h1 className={`qed-type-page-title ${textPrimary}`}>
-          Calendar
-        </h1>
-        <p className={`qed-type-page-description mt-1 ${textMuted}`}>
-          View your schedule and upcoming events.
-        </p>
-      </div>
-
-      {error && <p className="text-sm font-semibold text-[#B91C1C]">{error}</p>}
-
-      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.75fr)_minmax(16rem,0.75fr)]">
-        <MonthGrid
-          viewDate={viewDate}
-          selectedDate={selectedDate}
-          onSelectDate={setSelectedDate}
-          onPrevMonth={() => shiftMonth(-1)}
-          onNextMonth={() => shiftMonth(1)}
-          eventDatesISO={eventDatesISO}
-          darkMode={darkMode}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-        />
-
-        <div className="space-y-4">
-          <ActivitiesCard
-            activities={activities}
-            viewDate={viewDate}
-            selectedDate={selectedDate}
-            onExpand={() => setExpandTarget("activity")}
-            darkMode={darkMode}
-            panelBg={panelBg}
-            panelBorder={panelBorder}
-            textPrimary={textPrimary}
-            textMuted={textMuted}
-          />
-
-          <HolidaysCard
-            holidays={holidays}
-            viewDate={viewDate}
-            selectedDate={selectedDate}
-            onExpand={() => setExpandTarget("holiday")}
-            darkMode={darkMode}
-            panelBg={panelBg}
-            panelBorder={panelBorder}
-            textPrimary={textPrimary}
-            textMuted={textMuted}
-          />
-        </div>
-      </div>
-
-      {loading && (
-        <p className={`text-sm font-semibold ${textMuted}`}>
-          Loading calendar…
-        </p>
-      )}
-
-      {expandTarget === "activity" && (
-        <ExpandedListModal
-          title="All Activities"
-          icon={<CalendarRange size={15} />}
-          onClose={() => setExpandTarget(null)}
-          darkMode={darkMode}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-        >
-          <ActivityGroupList
-            activities={allActivities}
-            darkMode={darkMode}
-            textMuted={textMuted}
-          />
-        </ExpandedListModal>
-      )}
-
-      {expandTarget === "holiday" && (
-        <ExpandedListModal
-          title="All Holidays"
-          icon={<CalendarHeart size={15} />}
-          onClose={() => setExpandTarget(null)}
-          darkMode={darkMode}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-        >
-          <HolidayGroupList
-            holidays={allHolidays}
-            darkMode={darkMode}
-            textMuted={textMuted}
-          />
-        </ExpandedListModal>
-      )}
-    </div>
-  );
+export function CalendarPageView(props: CalendarPageViewRouteProps) {
+ return <CalendarPageViewComposition {...props} effects={scope => <CalendarPageViewDataEffects scope={scope}/>} />;
 }

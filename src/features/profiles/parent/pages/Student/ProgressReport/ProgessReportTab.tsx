@@ -11,9 +11,10 @@ import type { DetailStudent } from "../GlobalTypes/types";
 interface ProgressReportTabProps {
   theme: AdminThemeContext;
   student: DetailStudent;
+  loading?: boolean;
 }
 
-export function ProgressReportContent({ theme, student }: ProgressReportTabProps) {
+export function ProgressReportContent({ theme, student, loading = false }: ProgressReportTabProps) {
   const {
     data,
     selectedTerm,
@@ -44,14 +45,14 @@ export function ProgressReportContent({ theme, student }: ProgressReportTabProps
       </div>
 
       <div className="flex flex-col gap-4 lg:flex-row">
-        <PeriodicRatingCard
+        <PeriodicRatingCard loading={loading}
           rows={data.periodicRatings}
           termAverages={data.termAverages}
           theme={theme}
           student={student}
         />
 
-        <TermAverageCard
+        <TermAverageCard loading={loading}
           entries={data.termAverages}
           selectedTerm={selectedTerm}
           theme={theme}
@@ -59,14 +60,14 @@ export function ProgressReportContent({ theme, student }: ProgressReportTabProps
         />
       </div>
 
-      <HolisticDevelopmentCard
+      <HolisticDevelopmentCard loading={loading}
         assessment={currentHolisticAssessment}
         selectedTerm={selectedTerm}
         theme={theme}
         student={student}
       />
 
-      <AttendanceRecordCard
+      <AttendanceRecordCard loading={loading}
         record={currentAttendance}
         theme={theme}
         student={student}
@@ -78,6 +79,6 @@ export function ProgressReportContent({ theme, student }: ProgressReportTabProps
   );
 }
 
-export default function ProgressReportTab({ theme, student }: ProgressReportTabProps) {
-  return <ProgressReportContent theme={theme} student={student} />;
+export default function ProgressReportTab({ theme, student, loading = false }: ProgressReportTabProps) {
+  return <ProgressReportContent theme={theme} student={student} loading={loading} />;
 }

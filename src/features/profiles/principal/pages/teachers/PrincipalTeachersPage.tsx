@@ -1,35 +1,6 @@
-import { useOutletContext, useNavigate } from "react-router-dom";
-import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
-import { useTeachersDirectory } from "./hooks/useTeachersDirectory";
-import { TeacherDirectoryTable } from "./components/TeacherDirectoryTable";
+import { PrincipalTeachersPageComposition } from "./PrincipalTeachersPage.loading-view";
+export * from "./PrincipalTeachersPage.loading-view";
 
 export function PrincipalTeachersPage() {
-  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
-  const navigate = useNavigate();
-  const { teachers, schoolYear, loading } = useTeachersDirectory();
-
-  return (
-    <div className="flex flex-col gap-8 font-sans">
-      <div>
-        <h1 className={`qed-type-page-title ${textPrimary}`}>Teachers</h1>
-        <p className={`qed-type-page-description mt-2 ${textMuted}`}>
-          Teacher list and advisory assignments &middot; School Year {schoolYear}
-        </p>
-      </div>
-
-      {loading ? (
-        <p className={`text-sm ${textMuted}`}>Loading teachers…</p>
-      ) : (
-        <TeacherDirectoryTable
-          teachers={teachers}
-          onSelectTeacher={(teacherId) => navigate(`/principal/teachers/${encodeURIComponent(teacherId)}`)}
-          panelBg={panelBg}
-          panelBorder={panelBorder}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-          darkMode={darkMode}
-        />
-      )}
-    </div>
-  );
+ return <PrincipalTeachersPageComposition/>;
 }

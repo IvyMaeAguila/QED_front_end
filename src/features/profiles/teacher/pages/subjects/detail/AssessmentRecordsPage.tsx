@@ -1,4 +1,9 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { SkeletonText } from "@shared/components/SkeletonLoading";
+import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
+import { rememberColumns, useColumnReservation } from "@shared/loading/reservations";
+import { Children, cloneElement, isValidElement, Fragment, useMemo, useRef, useState, type ReactNode, type ReactElement } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { StudentAvatar } from "@shared/components/StudentAvatar";
 import { AlertTriangle, CheckCircle2, Download, Send, X } from "lucide-react";
 import { ConfirmationModal } from "@shared/components/ConfirmationModal";
@@ -17,7 +22,6 @@ import { submitGrades } from "../services/subjectGrading.service";
 import { downloadGradeRecordExport } from "../services/subjectGradeTemplate.service";
 import type { GradeTemplateStructure, TemplateDomain, TemplateExamComponent, TemplateExaminations } from "../../../../shared/grading/gradeTemplate.types";
 
-const ACCENT = "#6B0000";
 const INCOMPLETE_COLOR = "#CA8A04";
 
 function MissingScoreDot({ missingIn }: { missingIn: string[] }) {
@@ -74,7 +78,8 @@ interface AssessmentRecordsSectionProps {
   // absent, the exams group falls back to the original pooled behavior —
   // this keeps subjects without a template working exactly as before
   // (the "grandfathered" rollout behavior).
-  weights: { ww: number; pt: number; exam: number; examSubWeights?: { st1: number; st2: number; te: number }; examinations?: TemplateExaminations; templateStructure?: GradeTemplateStructure };
+  weights: { ww: number; pt: number; exam: number; examSubWeights?: { st1: number; st2: number; te: number }; examinations?: TemplateExaminations; templateStructure?: GradeTemplateStructure } | null;
+  loading?: boolean;
   term: string;
   isEditing: boolean;
   onScoreChange: (studentId: string, itemId: string, maxItems: number, rawValue: string) => void;
@@ -351,7 +356,8 @@ export function AssessmentRecordsSection({
   roster,
   items,
   scores,
-  weights,
+  weights: resolvedWeights,
+  loading = false,
   term,
   isEditing,
   onScoreChange,
@@ -363,9 +369,13 @@ export function AssessmentRecordsSection({
   isOwnAdvisory = false,
   adviserName,
 }: AssessmentRecordsSectionProps) {
+  // Zero values are layout sentinels only while rules are unknown; never grade with them.
+  const weights = resolvedWeights ?? { ww: 0, pt: 0, exam: 0 };
+  const view = `subject-records:${subjectSectionId}:${term}`;
+  const table = useRef<HTMLTableElement>(null);
   const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
   const cellInputClasses = `w-14 rounded-md border px-1 py-0.5 text-center text-xs font-bold outline-none ${panelBorder} ${
-    darkMode ? "bg-[#2A1A18] text-white" : "bg-white text-[#111827]"
+    darkMode ? "bg-panel-dark text-white" : "bg-white text-[#111827]"
   }`;
 
   const examinations: TemplateExaminations = weights.examinations
@@ -376,7 +386,7 @@ export function AssessmentRecordsSection({
         { key: "ST2", label: "ST2", weightPercent: weights.examSubWeights.st2 },
         { key: "TE", label: "TE", weightPercent: weights.examSubWeights.te },
       ] }
-      : weights.exam > 0
+      : loading || weights.exam > 0
         ? { enabled: true, categoryWeightPercent: weights.exam, components: [{ key: "ALL", label: "Examinations", weightPercent: 100 }] }
         : { enabled: false, categoryWeightPercent: 0, components: [] });
 
@@ -413,11 +423,11 @@ export function AssessmentRecordsSection({
     const ptLayout = makeGroupColumns("performanceTask", ptItems, ptDomains);
     const examLayout = makeGroupColumns("exams", examItems, undefined, examinations);
     const groups: ComponentColumnGroup[] = [];
-    if (weights.ww > 0) groups.push({ key: "writtenWorks", label: "Written / Oral Works", weightLabel: `${weights.ww}%`, weight: weights.ww, items: wwItems, domains: wwDomains, ...wwLayout });
-    if (weights.pt > 0) groups.push({ key: "performanceTask", label: "Product / Performance Tasks", weightLabel: `${weights.pt}%`, weight: weights.pt, items: ptItems, domains: ptDomains, ...ptLayout });
-    if (examinations.enabled && weights.exam > 0) groups.push({ key: "exams", label: "Examinations", weightLabel: `${weights.exam}%`, weight: weights.exam, items: examItems, ...examLayout });
+    if (loading || weights.ww > 0) groups.push({ key: "writtenWorks", label: "Written / Oral Works", weightLabel: `${weights.ww}%`, weight: weights.ww, items: wwItems, domains: wwDomains, ...wwLayout });
+    if (loading || weights.pt > 0) groups.push({ key: "performanceTask", label: "Product / Performance Tasks", weightLabel: `${weights.pt}%`, weight: weights.pt, items: ptItems, domains: ptDomains, ...ptLayout });
+    if (loading || (examinations.enabled && weights.exam > 0)) groups.push({ key: "exams", label: "Examinations", weightLabel: `${weights.exam}%`, weight: weights.exam, items: examItems, ...examLayout });
     return groups;
-  }, [items, term, weights, examinations]);
+  }, [items, term, weights, examinations, loading]);
 
   const grouped = useMemo(() => {
     const male = roster.filter((s) => s.gender !== "F");
@@ -519,7 +529,7 @@ export function AssessmentRecordsSection({
     : group.columns.length + 3 * (group.domainGroups?.length || 1);
   const columnCount = 1 + groups.reduce((sum, group) => sum + groupColumnSpan(group), 0) + 3;
 
-  function renderStudentRow(student: GenderedStudent, index: number) {
+  function renderStudentRow(student: GenderedStudent, index: number, pending: boolean) {
     let anyGroupIncomplete = false;
     const missingIn: string[] = [];
 
@@ -609,7 +619,7 @@ export function AssessmentRecordsSection({
                     )}
                   </td>
                 ))}
-                <td className="px-2 py-2.5 text-center text-xs font-black tabular-nums" style={{ color: ACCENT }}>
+                <td className="px-2 py-2.5 text-center text-xs font-black tabular-nums" style={{ color: "var(--brand-ink)" }}>
                   {totals.totalItems ? totals.total : "—"}
                 </td>
                 <td className="px-2 py-2.5 text-center text-xs font-bold tabular-nums">
@@ -640,7 +650,7 @@ export function AssessmentRecordsSection({
                   )}
                 </td>
               ))}
-              <td className="px-2 py-2.5 text-center text-xs font-black tabular-nums" style={{ color: ACCENT }}>
+              <td className="px-2 py-2.5 text-center text-xs font-black tabular-nums" style={{ color: "var(--brand-ink)" }}>
                 {!result.hasAnyItems ? "—" : result.total}
               </td>
               <td className="px-2 py-2.5 text-center text-xs font-bold tabular-nums">
@@ -662,58 +672,77 @@ export function AssessmentRecordsSection({
       : weights.templateStructure?.descriptorTable.find((row) => row.numericalGrade === termGrade)?.descriptor ?? null;
 
     return (
-      <tr key={student.id} className={`border-t ${panelBorder} ${index % 2 ? (darkMode ? "bg-white/1.5" : "bg-black/[0.012]") : ""}`}>
-        <td className={`sticky left-0 z-20 min-w-60 border-r px-4 py-2.5 text-sm font-bold shadow-[2px_0_4px_rgba(15,23,42,0.05)] ${darkMode ? "bg-[#2A1A18]" : index % 2 ? "bg-[#FCFCFD]" : "bg-white"} ${panelBorder} ${textPrimary}`}>
+      <tr key={student.id} data-sk-region="subject-record-student" className={`border-t ${panelBorder} ${index % 2 ? (darkMode ? "bg-white/1.5" : "bg-black/[0.012]") : ""}`}>
+        <td className={`sticky left-0 z-20 min-w-60 border-r px-4 py-2.5 text-sm font-bold shadow-[2px_0_4px_rgba(15,23,42,0.05)] ${darkMode ? "bg-panel-dark" : index % 2 ? "bg-[#FCFCFD]" : "bg-white"} ${panelBorder} ${textPrimary}`}>
           <span className="inline-flex items-center gap-1.5">
             <StudentAvatar gender={student.gender} name={student.name} />
             {student.name}
-            {anyGroupIncomplete && <MissingScoreDot missingIn={missingIn} />}
+            {!pending && anyGroupIncomplete && <MissingScoreDot missingIn={missingIn} />}
           </span>
         </td>
-        {groupCells}
-        <td className="px-3 py-2.5 text-center text-sm font-black tabular-nums" style={{ color: ACCENT }}>
-          {initialGrade !== null ? initialGrade.toFixed(2) : "—"}
+        {pending ? maskCells(groupCells) : groupCells}
+        <td className="px-3 py-2.5 text-center text-sm font-black tabular-nums" style={{ color: "var(--brand-ink)" }}>
+          {pending ? <SkeletonText width="5ch" className="mx-auto" /> : initialGrade !== null ? initialGrade.toFixed(2) : "—"}
         </td>
-        <td className="px-3 py-2.5 text-center text-sm font-black tabular-nums" style={{ color: ACCENT }}>
-          {termGrade ?? "—"}
+        <td className="px-3 py-2.5 text-center text-sm font-black tabular-nums" style={{ color: "var(--brand-ink)" }}>
+          {pending ? <SkeletonText width="3ch" className="mx-auto" /> : termGrade ?? "—"}
         </td>
         <td className="px-3 py-2.5 text-center text-sm font-semibold">
-          {descriptor ?? "—"}
+          {pending ? <SkeletonParagraph field={`${view}:descriptor:${student.id}`} typical={2} width="100%" /> : descriptor ?? "—"}
         </td>
       </tr>
     );
   }
 
-  return (
-    <section className={cardClasses} aria-label={title}>
-      <div className={`flex items-center justify-between gap-3 border-b px-4 py-2 ${panelBorder}`}>
-        <span className={`text-xs font-semibold ${textMuted}`}>Export this term's assessment records using the official DepEd template configured for this subject.</span>
-        <button type="button" onClick={() => void exportClassRecord()} className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold ${panelBorder} ${textPrimary}`}>
-          <Download size={13} /> Export DepEd Class Record
-        </button>
-      </div>
-      {groups.some((group) => (group.capacityOverflow ?? 0) > 0) && (
-        <div role="status" className="border-b border-amber-200 bg-amber-50 px-4 py-3 text-xs font-semibold text-amber-900">
-          {groups.filter((group) => (group.capacityOverflow ?? 0) > 0)
-            .map((group) => `${group.label}: ${group.capacityOverflow} assessment${group.capacityOverflow === 1 ? "" : "s"} exceed the assigned template's mapped slots`)
-            .join(". ")}. Export is blocked until an appropriately mapped template is assigned; no assessments are hidden.
-        </div>
-      )}
-      <div className="max-h-[68vh] overflow-auto">
-        <table className="teacher-user-table w-full min-w-max border-collapse text-xs">
+  const columnWidths = useColumnReservation(view, [
+    { label: "Learners' Names", typical: "Maria Alexandra Delos Santos" },
+    ...groups.flatMap(group => Array.from({length: groupColumnSpan(group)}, (_, i) => ({label: String(i+1),typical:"100.00"}))),
+    {label:"Initial Grade",typical:"100.00"},{label:"Term Grade",typical:"100"},{label:"Descriptor",typical:"Very Satisfactory"},
+  ], loading);
+  function maskCells(nodes: ReactNode): ReactNode {
+    return Children.map(nodes, (node, index) => {
+      if (!isValidElement(node)) return node;
+      const element = node as ReactElement<{children?: ReactNode}>;
+      return cloneElement(element, undefined, element.type === "td" || element.type === "th"
+        ? <SkeletonText width={index % 2 ? "64%" : "92%"} className="mx-auto" />
+        : maskCells(element.props.children));
+    });
+  }
+  const hpsCells = groups.map((group) => <Fragment key={group.key}>
+                {group.key === "exams" && group.examComponents ? <>
+                  {group.examComponents.flatMap(({ columns }) => columns.map((column) => <th key={`${column.id}-hps`} className={`min-w-14 border px-2 py-2 text-center font-bold ${panelBorder} ${textMuted}`}>{column.maxItems ?? "—"}</th>))}
+                  {group.examComponents.filter((entry) => entry.showWeightedScore).map(({ component }) => <th key={`${component.key}-weight`} className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder} ${textMuted}`} style={{ color: "var(--brand-ink)" }}>{component.weightPercent}%</th>)}
+                  {group.examOutputs?.percentageScore && <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: "var(--brand-ink)" }}>100.00</th>}
+                  {group.examOutputs?.weightedScore && <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: "var(--brand-ink)" }}>{group.weight}%</th>}
+                </> : group.domainGroups?.length ? group.domainGroups.map((domain) => {
+                  const highest = domain.items.reduce((sum, item) => sum + item.maxItems, 0);
+                  return <Fragment key={domain.id}>
+                    {domain.columns.map((column) => <th key={column.id} className={`min-w-14 border px-2 py-2 text-center font-bold ${panelBorder} ${textMuted}`}>{column.maxItems ?? "—"}</th>)}
+                    <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: "var(--brand-ink)" }}>{highest || "—"}</th><th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: "var(--brand-ink)" }}>100.00</th><th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: "var(--brand-ink)" }}>{domain.weightPercent}%</th>
+                  </Fragment>;
+                }) : <>
+                  {group.columns.map((column) => <th key={column.id} className={`min-w-14 border px-2 py-2 text-center font-bold ${panelBorder} ${textMuted}`}>{column.maxItems ?? "—"}</th>)}
+                  <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: "var(--brand-ink)" }}>{group.items.reduce((sum, item) => sum + item.maxItems, 0) || "—"}</th>
+                  <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: "var(--brand-ink)" }}>{group.items.length || weights.templateStructure ? "100.00" : "—"}</th>
+                  <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: "var(--brand-ink)" }}>{group.items.length || weights.templateStructure ? group.weightLabel : "—"}</th>
+                </>}
+              </Fragment>);
+  function renderRecordsTable(pending: boolean) { return (<div className="max-h-[68vh] overflow-auto">
+        <table ref={table} className="teacher-user-table w-full min-w-max border-collapse text-xs">
+          {pending && <colgroup>{columnWidths.map((width, index) => <col key={index} style={{ width }} />)}</colgroup>}
           <thead className={`sticky top-0 z-30 ${darkMode ? "bg-[#241311]" : "bg-white"}`}>
-            <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
-              <th rowSpan={3} className={`sticky left-0 z-50 w-60 min-w-60 border px-3 py-3 text-left text-sm font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.08)] ${darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"} ${panelBorder} ${textPrimary}`}>
+            <tr className={darkMode ? "bg-white/5" : "bg-brand-light"}>
+              <th rowSpan={3} className={`sticky left-0 z-50 w-60 min-w-60 border px-3 py-3 text-left text-sm font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.08)] ${darkMode ? "bg-panel-dark" : "bg-brand-light"} ${panelBorder} ${textPrimary}`}>
                 Learners' Names
               </th>
               {groups.map((group) => <th key={group.key} colSpan={groupColumnSpan(group)} className={`border px-2 py-3 text-center text-xs font-black uppercase ${panelBorder} ${textPrimary}`}>
-                {group.label} ({group.weightLabel})
+                {group.label} ({pending ? <SkeletonText width="3ch" className="inline-block" /> : group.weightLabel})
               </th>)}
               <th rowSpan={3} className={`min-w-24 border px-3 py-3 text-center text-xs font-black uppercase ${panelBorder} ${textPrimary}`}>Initial<br />Grade</th>
               <th rowSpan={3} className={`min-w-24 border px-3 py-3 text-center text-xs font-black uppercase ${panelBorder} ${textPrimary}`}>Term<br />Grade</th>
               <th rowSpan={3} className={`min-w-32 border px-3 py-3 text-center text-xs font-black uppercase ${panelBorder} ${textPrimary}`}>Descriptor</th>
             </tr>
-            <tr className={darkMode ? "bg-white/3" : "bg-[#FAFBFC]"}>
+            <tr className={darkMode ? "bg-white/3" : "bg-brand-light"}>
               {groups.map((group) => <Fragment key={group.key}>
                 {group.key === "exams" && group.examComponents ? <>
                   {group.examComponents.flatMap(({ component, columns }) => columns.map((column) => <th key={column.id} rowSpan={2} title={column.item ? `${column.item.activityName} · ${formatShortDate(column.item.date)}` : `${component.label} examination input`} className={`min-w-14 border px-2 py-2 text-center text-xs font-black uppercase ${panelBorder} ${textMuted}`}>{component.key.toUpperCase() === "ALL" ? column.label : component.label}</th>))}
@@ -730,7 +759,7 @@ export function AssessmentRecordsSection({
                 </>}
               </Fragment>)}
             </tr>
-            <tr className={darkMode ? "bg-white/3" : "bg-[#FAFBFC]"}>
+            <tr className={darkMode ? "bg-white/3" : "bg-brand-light"}>
               {groups.map((group) => <Fragment key={group.key}>
                 {group.key === "exams" && group.examComponents ? null : group.domainGroups?.length ? group.domainGroups.map((domain) => <Fragment key={domain.id}>
                   {domain.columns.map((column) => <th key={column.id} title={column.item ? `${column.item.activityName} · ${formatShortDate(column.item.date)}` : "Empty template slot"} className={`min-w-14 border px-2 py-2 text-center font-bold ${panelBorder} ${textMuted}`}>{column.label}</th>)}
@@ -739,26 +768,8 @@ export function AssessmentRecordsSection({
               </Fragment>)}
             </tr>
             <tr className={darkMode ? "bg-white/2" : "bg-white"}>
-              <th className={`sticky left-0 z-50 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.08)] ${darkMode ? "bg-[#2A1A18]" : "bg-white"} ${panelBorder} ${textMuted}`}>HPS</th>
-              {groups.map((group) => <Fragment key={group.key}>
-                {group.key === "exams" && group.examComponents ? <>
-                  {group.examComponents.flatMap(({ columns }) => columns.map((column) => <th key={`${column.id}-hps`} className={`min-w-14 border px-2 py-2 text-center font-bold ${panelBorder} ${textMuted}`}>{column.maxItems ?? "—"}</th>))}
-                  {group.examComponents.filter((entry) => entry.showWeightedScore).map(({ component }) => <th key={`${component.key}-weight`} className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder} ${textMuted}`} style={{ color: ACCENT }}>{component.weightPercent}%</th>)}
-                  {group.examOutputs?.percentageScore && <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>100.00</th>}
-                  {group.examOutputs?.weightedScore && <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>{group.weight}%</th>}
-                </> : group.domainGroups?.length ? group.domainGroups.map((domain) => {
-                  const highest = domain.items.reduce((sum, item) => sum + item.maxItems, 0);
-                  return <Fragment key={domain.id}>
-                    {domain.columns.map((column) => <th key={column.id} className={`min-w-14 border px-2 py-2 text-center font-bold ${panelBorder} ${textMuted}`}>{column.maxItems ?? "—"}</th>)}
-                    <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>{highest || "—"}</th><th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>100.00</th><th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>{domain.weightPercent}%</th>
-                  </Fragment>;
-                }) : <>
-                  {group.columns.map((column) => <th key={column.id} className={`min-w-14 border px-2 py-2 text-center font-bold ${panelBorder} ${textMuted}`}>{column.maxItems ?? "—"}</th>)}
-                  <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>{group.items.reduce((sum, item) => sum + item.maxItems, 0) || "—"}</th>
-                  <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>{group.items.length || weights.templateStructure ? "100.00" : "—"}</th>
-                  <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: ACCENT }}>{group.items.length || weights.templateStructure ? group.weightLabel : "—"}</th>
-                </>}
-              </Fragment>)}
+              <th className={`sticky left-0 z-50 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.08)] ${darkMode ? "bg-panel-dark" : "bg-white"} ${panelBorder} ${textMuted}`}>HPS</th>
+              {pending ? maskCells(hpsCells) : hpsCells}
               <th className={`min-w-24 border px-2 py-2 ${panelBorder}`} aria-label="No HPS for Initial Grade" />
               <th className={`min-w-24 border px-2 py-2 ${panelBorder}`} aria-label="No HPS for Term Grade" />
               <th className={`min-w-32 border px-2 py-2 ${panelBorder}`} aria-label="No HPS for Descriptor" />
@@ -768,19 +779,19 @@ export function AssessmentRecordsSection({
             {grouped.male.length > 0 && (
               <>
                 <tr>
-                  <td className={`sticky left-0 z-20 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.05)] ${panelBorder} ${darkMode ? "bg-[#34201D]" : "bg-[#F1F2F4]"} ${textPrimary}`}>Male</td>
-                  <td colSpan={columnCount - 1} className={`border px-3 py-2 ${panelBorder} ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"}`} />
+                  <td className={`sticky left-0 z-20 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.05)] ${panelBorder} ${darkMode ? "bg-[#34201D]" : "bg-brand-light"} ${textPrimary}`}>Male</td>
+                  <td colSpan={columnCount - 1} className={`border px-3 py-2 ${panelBorder} ${darkMode ? "bg-white/10" : "bg-brand-light"}`} />
                 </tr>
-                {grouped.male.map((student, index) => renderStudentRow(student, index))}
+                {grouped.male.map((student, index) => renderStudentRow(student, index, pending))}
               </>
             )}
             {grouped.female.length > 0 && (
               <>
                 <tr>
-                  <td className={`sticky left-0 z-20 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.05)] ${panelBorder} ${darkMode ? "bg-[#34201D]" : "bg-[#F1F2F4]"} ${textPrimary}`}>Female</td>
-                  <td colSpan={columnCount - 1} className={`border px-3 py-2 ${panelBorder} ${darkMode ? "bg-white/10" : "bg-[#F1F2F4]"}`} />
+                  <td className={`sticky left-0 z-20 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.05)] ${panelBorder} ${darkMode ? "bg-[#34201D]" : "bg-brand-light"} ${textPrimary}`}>Female</td>
+                  <td colSpan={columnCount - 1} className={`border px-3 py-2 ${panelBorder} ${darkMode ? "bg-white/10" : "bg-brand-light"}`} />
                 </tr>
-                {grouped.female.map((student, index) => renderStudentRow(student, index))}
+                {grouped.female.map((student, index) => renderStudentRow(student, index, pending))}
               </>
             )}
             {roster.length === 0 && (
@@ -792,8 +803,25 @@ export function AssessmentRecordsSection({
             )}
           </tbody>
         </table>
+      </div>); }
+
+  return (
+    <section className={cardClasses} aria-label={title}>
+      <div className={`flex items-center justify-between gap-3 border-b px-4 py-2 ${panelBorder}`}>
+        <span className={`text-xs font-semibold ${textMuted}`}>Export this term's assessment records using the official DepEd template configured for this subject.</span>
+        <button type="button" onClick={() => void exportClassRecord()} disabled={loading} className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold ${panelBorder} ${textPrimary}`}>
+          <Download size={13} /> Export DepEd Class Record
+        </button>
       </div>
-      {groups.every((g) => g.items.length === 0) && (
+      {groups.some((group) => (group.capacityOverflow ?? 0) > 0) && (
+        <div role="status" className="border-b border-amber-200 bg-amber-50 px-4 py-3 text-xs font-semibold text-amber-900">
+          {groups.filter((group) => (group.capacityOverflow ?? 0) > 0)
+            .map((group) => `${group.label}: ${group.capacityOverflow} assessment${group.capacityOverflow === 1 ? "" : "s"} exceed the assigned template's mapped slots`)
+            .join(". ")}. Export is blocked until an appropriately mapped template is assigned; no assessments are hidden.
+        </div>
+      )}
+      <LoadingRegion name="subject-assessment-records" loading={loading} variable autoColumns skeleton={null} frame={renderRecordsTable} retainPrevious hasContent={!!resolvedWeights && roster.length > 0} onSettled={() => rememberColumns(view, table.current)}>{null}</LoadingRegion>
+      {!loading && groups.every((g) => g.items.length === 0) && (
         <p className={`px-5 py-6 text-center text-sm font-semibold ${textMuted}`}>
           {weights.templateStructure
             ? "The uploaded template columns are ready. Add assessment items from the subject assessment page to enable score entry for this term."
@@ -802,7 +830,7 @@ export function AssessmentRecordsSection({
       )}
 
       {!isOwnAdvisory && (
-        <div className={`flex flex-wrap items-center justify-between gap-3 border-t px-4 py-3 ${panelBorder} ${darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}`}>
+        <div className={`flex flex-wrap items-center justify-between gap-3 border-t px-4 py-3 ${panelBorder} ${darkMode ? "bg-white/5" : "bg-brand-light"}`}>
           <div className="flex flex-wrap items-center gap-3">
             {justSubmitted && (
               <span className="inline-flex items-center gap-1 text-xs font-bold" style={{ color: "#16A34A" }}>
@@ -814,9 +842,9 @@ export function AssessmentRecordsSection({
           <button
             type="button"
             onClick={handleSubmitClick}
-            disabled={isSubmitting}
+            disabled={isSubmitting || loading}
             title={isSubmitting ? "Submitting…" : "Submit Grades"}
-            className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-maroon-gradient px-4 text-xs font-bold uppercase tracking-wide text-white shadow-primary transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-maroon px-4 text-xs font-bold uppercase tracking-wide text-white shadow-primary transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Send className="h-3.5 w-3.5" />
             {isSubmitting ? "Submitting…" : "Submit Grades"}
@@ -844,13 +872,13 @@ export function AssessmentRecordsSection({
           allowBackdropCloseWhileLoading
           disabled={isSubmitting}
           size="lg"
-          panelClassName={`max-h-[85vh] rounded-2xl shadow-xl ${panelBorder} ${darkMode ? "bg-[#2A1A18]" : "bg-white"}`}
+          panelClassName={`max-h-[85vh] rounded-2xl shadow-xl ${panelBorder} ${darkMode ? "bg-panel-dark" : "bg-white"}`}
           titleClassName={`uppercase ${textPrimary}`}
           descriptionClassName={textMuted}
           bodyClassName="space-y-3 px-5 pb-4 pt-0"
           footerClassName={`border-t px-5 py-4 ${panelBorder}`}
           cancelButtonClassName={`h-9 rounded-xl uppercase tracking-wide ${panelBorder} ${textPrimary}`}
-          confirmButtonClassName="h-9 rounded-xl bg-maroon-gradient uppercase tracking-wide shadow-primary"
+          confirmButtonClassName="h-9 rounded-xl bg-maroon uppercase tracking-wide shadow-primary"
           confirmLeading={<Send className="h-3.5 w-3.5" />}
         >
           <>
@@ -868,17 +896,17 @@ export function AssessmentRecordsSection({
                   {gradePreviews.map((preview) => (
                     <tr key={preview.id} className={`border-b ${panelBorder}`}>
                       <td className={`py-2 font-bold ${textPrimary}`}>{preview.name}</td>
-                      <td className="py-2 text-center font-bold tabular-nums" style={{ color: ACCENT }}>
+                      <td className="py-2 text-center font-bold tabular-nums" style={{ color: "var(--brand-ink)" }}>
                         {preview.previewGrade.toFixed(2)}
                       </td>
-                      <td className="py-2 text-center font-black tabular-nums" style={{ color: ACCENT }}>
+                      <td className="py-2 text-center font-black tabular-nums" style={{ color: "var(--brand-ink)" }}>
                         {preview.termGrade ?? "—"}
                       </td>
                       <td className="py-2 text-center">
                         <span
                           className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-black uppercase"
                           style={{
-                            backgroundColor: preview.remarks === "PASSED" ? "#DCFCE7" : preview.remarks === "FAILED" ? "#FEE2E2" : "#E5E7EB",
+                            backgroundColor: preview.remarks === "PASSED" ? "#DCFCE7" : preview.remarks === "FAILED" ? "#FEE2E2" : "var(--border-subtle)",
                             color: preview.remarks === "PASSED" ? "#16A34A" : preview.remarks === "FAILED" ? "#DC2626" : "#6B7280",
                           }}
                         >
@@ -924,3 +952,4 @@ export function AssessmentRecordsSection({
     </section>
   );
 }
+

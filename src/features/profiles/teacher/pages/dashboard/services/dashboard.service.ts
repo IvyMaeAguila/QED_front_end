@@ -8,8 +8,6 @@ const BASE_URL = `${API_CONFIG.baseURL}/api/teacherDashboard`;
 
 export interface DashboardSummary {
   name: string;
-  classesToday: number;
-  pendingGrades: number;
 }
 
 export interface TeacherStats {
@@ -19,6 +17,8 @@ export interface TeacherStats {
 }
 
 export interface AttendanceSummary {
+  recordedCount?: number;
+  hasAdvisory?: boolean;
   present: number;
   absent: number;
   late: number;
@@ -32,6 +32,16 @@ export interface AgendaItem {
   startTime: string; 
   endTime: string;
   timeLabel: string; 
+}
+
+export interface WeeklyScheduleItem extends AgendaItem {
+  dayOfWeek: string;
+}
+
+export async function fetchWeeklySchedule(): Promise<WeeklyScheduleItem[]> {
+  const res = await fetch(`${BASE_URL}/schedule`, { credentials: "include" });
+  const data = await handleJsonResponse(res);
+  return data.data;
 }
 
 // Shape returned by the backend before we split the date into day/month

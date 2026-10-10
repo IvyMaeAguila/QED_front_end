@@ -1,0 +1,35 @@
+[WebServer] (node:11660) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:39996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:8232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\auto-columns.spec.ts:9:32 › auto columns: 1 rows, one swap, stable shell and cached repeat
+  1) tests\auto-columns.spec.ts:9:32 › auto columns: 1 rows, one swap, stable shell and cached repeat 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2
+    Received:    128.1875
+
+      33 |   await expect(region).toHaveAttribute("data-sk-phase", "revealed");
+      34 |   const repeated = await widths(page);
+    > 35 |   for (let i = 0; i < loaded.length; i++) expect(Math.abs(repeated[i].width - loaded[i].width)).toBeLessThanOrEqual(2);
+         |                                                                                                 ^
+      36 |   const properties = await region.evaluate(element => [...element.querySelectorAll("*")].map(child => parseFloat(getComputedStyle(child).transitionDuration) > 0 ? getComputedStyle(child).transitionProperty : "none"));
+      37 |   expect(properties.every(property => !/(^|,\s*)(width|height|left|top|all)(,|$)/.test(property))).toBe(true);
+      38 |   const animated = await page.evaluate(() => document.getAnimations().flatMap(animation => animation.effect!.getKeyframes().flatMap(frame => Object.keys(frame))));
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\auto-columns.spec.ts:35:97
+
+    Error Context: test-results\auto-columns-auto-columns--b9489-ble-shell-and-cached-repeat\error-context.md
+
+
+  1 failed
+    tests\auto-columns.spec.ts:9:32 › auto columns: 1 rows, one swap, stable shell and cached repeat 

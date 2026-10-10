@@ -1,0 +1,4 @@
+src/features/profiles/parent/pages/Student/Academic/components/InterventionSupport.tsx(101,10): error TS1005: ')' expected.
+src/features/profiles/parent/pages/Student/Academic/components/MissedActivities.tsx(126,8): error TS1005: ')' expected.
+src/features/profiles/parent/pages/Student/Overview/components/HolisticAverage.tsx(243,10): error TS1005: ')' expected.
+src/features/profiles/parent/pages/Student/Overview/components/PerformanceAnalytics.tsx(211,12): error TS1005: ')' expected.

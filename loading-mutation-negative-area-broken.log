@@ -1,0 +1,37 @@
+[WebServer] (node:23148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:31392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:15524) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\design-contract.spec.ts:35:1 › negative control: shine blending into the surface is caught by the pixel guard
+  1) tests\design-contract.spec.ts:35:1 › negative control: shine blending into the surface is caught by the pixel guard 
+
+    Error: guard must reject the washed-out area itself
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected substring: "visible area"
+    Received string:    ""
+
+      42 |   let failure = "";
+      43 |   try { await checkShimmerPixels(shape, "negative-blended-shine"); } catch (error) { failure = String(error); }
+    > 44 |   expect(failure, "guard must reject the washed-out area itself").toContain("visible area");
+         |                                                                   ^
+      45 | });
+      46 |
+      47 | test("negative control: a hard shimmer edge is caught independently of visible area", async ({ page }) => {
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-contract.spec.ts:44:67
+
+    Error Context: test-results\design-contract-negative-c-b9410-s-caught-by-the-pixel-guard\error-context.md
+
+
+  1 failed
+    tests\design-contract.spec.ts:35:1 › negative control: shine blending into the surface is caught by the pixel guard 

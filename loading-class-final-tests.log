@@ -1,0 +1,33 @@
+
+[WebServer] (node:2824) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 11 tests using 1 worker
+
+(node:15504) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/11] tests\admin-class-view.spec.ts:28:68 › class details 375 light: real actions, tabs and weekday headings
+[2/11] tests\admin-class-view.spec.ts:28:68 › class details 375 dark: real actions, tabs and weekday headings
+[3/11] tests\admin-class-view.spec.ts:28:68 › class details 1280 light: real actions, tabs and weekday headings
+[4/11] tests\admin-class-view.spec.ts:28:68 › class details 1280 dark: real actions, tabs and weekday headings
+[5/11] tests\admin-class-view.spec.ts:51:32 › class schedule 0 returned time slots retains original content
+[6/11] tests\admin-class-view.spec.ts:51:32 › class schedule 1 returned time slots retains original content
+[7/11] tests\admin-class-view.spec.ts:51:32 › class schedule 9 returned time slots retains original content
+[8/11] tests\admin-class-view.spec.ts:60:1 › class details error removes every reservation immediately and retries context loads
+[WebServer] 11:47:34 PM [vite] (client) [console.error] Error: Class temporarily unavailable
+
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+[WebServer] 11:47:34 PM [vite] (client) [console.error] Error: Class temporarily unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+
+[9/11] tests\admin-class-view.spec.ts:75:1 › class schedule auto-column classification observes native content width changes
+[10/11] tests\admin-class-view.spec.ts:88:35 › class schedule light: time cell shimmer fits its real tinted surface
+[11/11] tests\admin-class-view.spec.ts:88:35 › class schedule dark: time cell shimmer fits its real tinted surface
+  11 passed (25.3s)

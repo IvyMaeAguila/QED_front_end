@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { Apple, ArrowRight, CheckCircle2, Flag, Lightbulb, Sparkles, Star } from "lucide-react";
 import { CHOICE_COLORS, type Choice } from "./QuizShared";
 
@@ -100,7 +101,7 @@ export default function PetSpeechBubble({
             <Sparkles
               size={14}
               aria-hidden="true"
-              className="pb-twinkle pointer-events-none absolute -bottom-1 -right-3 text-sky-400"
+              className="pb-twinkle pointer-events-none absolute -bottom-1 -right-3 text-brand-ink"
               style={{ animationDelay: "1s" }}
             />
           </>
@@ -143,17 +144,17 @@ export default function PetSpeechBubble({
 
         {isCorrect && (
           <p
-            className="pb-chip mt-3 inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-3 py-1 text-xs font-bold text-rose-600"
+            className="pb-chip mt-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700"
             style={{ animationDelay: "1s" }}
           >
-            <Apple size={14} className="pb-swing fill-rose-500" style={{ animationDelay: "1.3s" }} />
+            <Apple size={14} className="pb-swing fill-emerald-600" style={{ animationDelay: "1.3s" }} />
             Yum! Energy meter +1
           </p>
         )}
 
         <button
           onClick={onNext}
-          className="pb-cta mt-4 flex w-full items-center justify-center gap-1.5 rounded-2xl bg-rose-800 px-4 py-3 text-sm font-bold text-white shadow-[0_4px_0_0_#881337] hover:bg-rose-900 active:shadow-none active:brightness-90"
+          className="pb-cta mt-4 flex w-full items-center justify-center gap-1.5 rounded-2xl bg-maroon px-4 py-3 text-sm font-bold text-white shadow-[0_4px_0_0_var(--brand-primary)] hover:bg-maroon-light active:shadow-none active:brightness-90"
         >
           {isLast ? (
             <>

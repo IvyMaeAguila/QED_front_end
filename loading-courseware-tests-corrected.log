@@ -1,0 +1,30 @@
+
+[WebServer] (node:34296) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 8 tests using 1 worker
+
+(node:30952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/8] tests\courseware-loading.spec.ts:21:68 › courseware 375 light: real learning frame before fetched leaves
+[2/8] tests\courseware-loading.spec.ts:21:68 › courseware 375 dark: real learning frame before fetched leaves
+[3/8] tests\courseware-loading.spec.ts:21:68 › courseware 1280 light: real learning frame before fetched leaves
+[4/8] tests\courseware-loading.spec.ts:21:68 › courseware 1280 dark: real learning frame before fetched leaves
+[5/8] tests\courseware-loading.spec.ts:44:32 › courseware 0 resources preserves empty/short/long content
+[6/8] tests\courseware-loading.spec.ts:44:32 › courseware 1 resources preserves empty/short/long content
+[7/8] tests\courseware-loading.spec.ts:44:32 › courseware 9 resources preserves empty/short/long content
+[8/8] tests\courseware-loading.spec.ts:55:1 › courseware error ends reservation and retries the same request
+[WebServer] 11:20:30 PM [vite] (client) [console.error] Failed to load courseware: Error: Unavailable
+
+[WebServer]     at getCourseware (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/courseware.service.ts:11:9)
+[WebServer]     at async load (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/CoursewareView.tsx:204:20)
+[WebServer] 11:20:30 PM [vite] (client) [console.error] Failed to load courseware: Error: Unavailable
+[WebServer]     at getCourseware (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/courseware.service.ts:11:9)
+[WebServer]     at async load (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/CoursewareView.tsx:204:20)
+
+  8 passed (17.8s)

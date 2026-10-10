@@ -42,10 +42,10 @@ export default function ProgressReportUnavailableModal({
           closeDarkMode={darkMode}
           leading={<span
           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
-            darkMode ? "bg-white/10" : "bg-[#8B0D0D]/10"
+            darkMode ? "bg-white/10" : "bg-maroon/10"
           }`}
         >
-          <Lock size={18} className={darkMode ? textPrimary : "text-[#8B0D0D]"} />
+          <Lock size={18} className={darkMode ? textPrimary : "text-brand-ink"} />
         </span>}
           className="items-center border-b border-surface px-6 py-5"
         />
@@ -65,7 +65,7 @@ export default function ProgressReportUnavailableModal({
         <button
           type="button"
           onClick={onClose}
-          className="w-full rounded-lg bg-[#8B0D0D] px-3 py-2 qed-type-button text-white hover:opacity-90"
+          className="w-full rounded-lg bg-maroon px-3 py-2 qed-type-button text-white hover:opacity-90"
         >
           Got it
         </button>

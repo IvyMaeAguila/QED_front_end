@@ -1,3 +1,5 @@
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
 
 interface StudentInfoTableProps {
@@ -9,9 +11,10 @@ interface StudentInfoTableProps {
     schoolYear: string;
   };
   theme: AdminThemeContext;
+  loading?: boolean;
 }
 
-export default function StudentInfoTable({ student, theme }: StudentInfoTableProps) {
+export default function StudentInfoTable({ student, theme, loading = false }: StudentInfoTableProps) {
   const { panelBg, panelBorder, textPrimary, textMuted } = theme;
 
   const fields = [
@@ -31,7 +34,7 @@ export default function StudentInfoTable({ student, theme }: StudentInfoTablePro
             <p className={`text-xs font-semibold uppercase tracking-wide ${textMuted}`}>
               {field.label}
             </p>
-            <p className={`mt-1 text-sm font-bold ${textPrimary}`}>{field.value}</p>
+            <p className={`mt-1 text-sm font-bold ${textPrimary}`}><LoadingRegion as="span" name={`parent-identity-${index}`} loading={loading && index < 3} variable skeleton={<SkeletonParagraph field={`parent-identity-${index}`} typical={2} width="100%" />}><span data-sk-field={`parent-identity-${index}`}>{field.value}</span></LoadingRegion></p>
           </div>
 
           {index < fields.length - 1 && (

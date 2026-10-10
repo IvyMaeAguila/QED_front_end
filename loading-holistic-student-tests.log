@@ -1,0 +1,28 @@
+
+[WebServer] (node:40300) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:28340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 14 tests using 1 worker
+
+(node:37340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/14] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 375 light: headers, legend and controls stay real
+[2/14] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 375 dark: headers, legend and controls stay real
+[3/14] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 1280 light: headers, legend and controls stay real
+[4/14] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 1280 dark: headers, legend and controls stay real
+[5/14] tests\student-details-loading.spec.ts:25:68 › student details 375 light: real labels, baseline chart and controls
+[6/14] tests\student-details-loading.spec.ts:25:68 › student details 375 dark: real labels, baseline chart and controls
+[7/14] tests\student-details-loading.spec.ts:25:68 › student details 1280 light: real labels, baseline chart and controls
+[8/14] tests\student-details-loading.spec.ts:25:68 › student details 1280 dark: real labels, baseline chart and controls
+[9/14] tests\student-details-loading.spec.ts:42:32 › student details 0 scheduled subjects preserve native rows and known status
+[10/14] tests\student-details-loading.spec.ts:42:32 › student details 1 scheduled subjects preserve native rows and known status
+[11/14] tests\student-details-loading.spec.ts:42:32 › student details 9 scheduled subjects preserve native rows and known status
+[12/14] tests\student-details-loading.spec.ts:52:1 › student details failure removes all placeholders and retries the original context request
+[13/14] tests\student-details-loading.spec.ts:64:1 › student details not-found state waits for the student request
+[14/14] tests\student-details-loading.spec.ts:72:1 › student performance AUTO-COLUMN classification requires native width variation
+  14 passed (33.1s)

@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { Calendar, Tag, Plus, ListChecks } from "lucide-react";
 import { ModalBody, ModalFooter, ModalFrame, ModalHeader } from "@shared/components/modal";
 import {
@@ -139,7 +140,7 @@ export function AddItemModal({
   }
 
   const fieldRow = `flex h-10 w-full items-center gap-2.5 rounded-lg border px-3 outline-none transition-colors ${
-    darkMode ? "border-white/10 bg-white/5" : "border-black/10 bg-[#F8FAFC]"
+    darkMode ? "border-white/10 bg-white/5" : "border-black/10 bg-brand-light"
   }`;
   const inputBare = `flex-1 bg-transparent outline-none ${
     darkMode ? "text-white placeholder:text-[#6B7280]" : "text-[#111827] placeholder:text-[#9CA3AF]"
@@ -211,7 +212,7 @@ export function AddItemModal({
                 <button
                   onClick={handleCreateTopicInline}
                   disabled={creatingTopic || !newTopicName.trim()}
-                  className="shrink-0 rounded-md bg-[#800000] px-2 py-1 qed-type-button text-white transition-colors hover:bg-[#650000] disabled:opacity-40"
+                  className="shrink-0 rounded-md bg-maroon px-2 py-1 qed-type-button text-white transition-colors hover:bg-maroon-light disabled:opacity-40"
                 >
                   Save
                 </button>
@@ -275,7 +276,7 @@ export function AddItemModal({
           <button
             onClick={handleConfirm}
             disabled={submitting}
-            className="flex h-10 w-full items-center justify-center rounded-lg bg-[#800000] qed-type-button text-white transition-colors hover:bg-[#650000] disabled:opacity-60"
+            className="flex h-10 w-full items-center justify-center rounded-lg bg-maroon qed-type-button text-white transition-colors hover:bg-maroon-light disabled:opacity-60"
           >
             {submitting ? "Saving..." : isEdit ? "Save Changes" : "Confirm"}
           </button>

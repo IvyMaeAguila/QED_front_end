@@ -11,6 +11,8 @@
 import type { LucideIcon } from "lucide-react";
 import { useId } from "react";
 import { TrendingUp, TrendingDown, Minus, ChevronDown, ArrowLeft } from "lucide-react";
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { SkeletonAvatar, SkeletonText } from "@shared/components/SkeletonLoading";
 
 export type Trend = "up" | "down" | "flat";
 export type CardVariant = "spotlight" | "primary" | "alert" | "gold";
@@ -176,14 +178,14 @@ export function ProgressBar({ value, darkMode }: { value: number; darkMode: bool
       className="h-1.5 rounded-full overflow-hidden"
       style={{ backgroundColor: darkMode ? "var(--color-maroon-soft-dark)" : "var(--color-maroon-soft)" }}
     >
-      <div className="h-full rounded-full bg-maroon" style={{ width: `${value}%` }} />
+      <div className="h-full rounded-full bg-maroon-light" style={{ width: `${value}%` }} />
     </div>
   );
 }
 
 // ---------------------------------------------------------------------------
 // OverviewCard — the KPI tile used across dashboard pages. "spotlight" is
-// the one-per-page headline gradient card; primary/gold/alert are the
+// the one-per-page headline card; primary/gold/alert are the
 // bordered, theme-aware neutral cards with a tinted icon chip.
 // For lighter-weight stats (detail/profile pages, 2-4 short facts), use
 // MiniStatRow/MiniStat below instead — OverviewCard is meant to carry
@@ -191,7 +193,7 @@ export function ProgressBar({ value, darkMode }: { value: number; darkMode: bool
 // ---------------------------------------------------------------------------
 const ICON_VARIANT_STYLE: Record<Exclude<CardVariant, "spotlight">, (darkMode: boolean) => { shape: Shape; bg: string; icon: string }> = {
   primary: () => ({ shape: "square", bg: "var(--color-maroon)", icon: "#FFFFFF" }),
-  gold: () => ({ shape: "circle", bg: "var(--color-gold)", icon: "#FFFFFF" }),
+  gold: () => ({ shape: "circle", bg: "var(--brand-soft)", icon: "var(--brand-secondary)" }),
   alert: (darkMode) => ({
     shape: "square",
     bg: darkMode ? "var(--color-red-soft-dark)" : "var(--color-red-soft)",
@@ -200,6 +202,8 @@ const ICON_VARIANT_STYLE: Record<Exclude<CardVariant, "spotlight">, (darkMode: b
 };
 
 export function OverviewCard({
+  loading = false,
+  region,
   label,
   value,
   sub,
@@ -214,9 +218,11 @@ export function OverviewCard({
   darkMode,
   compact = false,
 }: {
+  loading?: boolean;
+  region?: string;
   label: string;
-  value: string;
-  sub: string;
+  value: React.ReactNode;
+  sub: React.ReactNode;
   icon: LucideIcon;
   trend?: Trend;
   variant: CardVariant;
@@ -235,8 +241,8 @@ export function OverviewCard({
   if (variant === "spotlight") {
     return (
       <div
-        className={`flex flex-col ${cardFrame} ${compact ? "text-white shadow-primary" : "text-white bg-maroon-gradient-vertical shadow-primary"}`}
-        style={compact ? { background: "linear-gradient(180deg, #550000 0%, #BB0000 100%)" } : undefined}
+        className={`sk-surface-brand flex flex-col ${cardFrame} ${compact ? "text-white shadow-primary" : "text-white bg-maroon shadow-primary"}`}
+        style={compact ? { background: "var(--color-maroon)" } : undefined}
       >
         {showIcon && (
           <div className={`flex items-center ${compact ? "h-6 justify-end" : showIcon ? "justify-between" : "justify-end"}`}>
@@ -245,10 +251,10 @@ export function OverviewCard({
         )}
         <div className="flex flex-1 flex-col">
           <p className="qed-type-kpi-label uppercase tracking-widest text-white/75">{label}</p>
-          <p className="qed-type-kpi mt-1.5 leading-none tracking-tight text-white">{value}</p>
+          <p data-sk-region={region} className="qed-type-kpi mt-1.5 leading-none tracking-tight text-white">{value}</p>
           <div className="mt-auto flex min-h-6 items-center justify-between gap-2 pt-1.5">
             <p className="qed-type-metadata text-white/70">{sub}</p>
-            {trend && <TrendChip trend={trend} darkMode={darkMode} />}
+            {trend && (loading ? <SkeletonAvatar className="h-6 w-6" /> : <TrendChip trend={trend} darkMode={darkMode} />)}
           </div>
         </div>
       </div>
@@ -269,10 +275,10 @@ export function OverviewCard({
       )}
       <div className="flex flex-1 flex-col">
         <p className={`qed-type-kpi-label uppercase tracking-widest ${textMuted}`}>{label}</p>
-        <p className={`qed-type-kpi mt-1.5 leading-none tracking-tight ${textPrimary}`}>{value}</p>
+        <p data-sk-region={region} className={`qed-type-kpi mt-1.5 leading-none tracking-tight ${textPrimary}`}>{value}</p>
         <div className="mt-auto flex min-h-6 items-center justify-between gap-2 pt-1.5">
           <p className={`qed-type-metadata ${textMuted}`}>{sub}</p>
-          {trend && <TrendChip trend={trend} darkMode={darkMode} />}
+          {trend && (loading ? <SkeletonAvatar className="h-6 w-6" /> : <TrendChip trend={trend} darkMode={darkMode} />)}
         </div>
       </div>
     </div>
@@ -367,6 +373,8 @@ export function MiniStat({
   textMuted,
   darkMode,
   isFirst,
+  loading,
+  region,
 }: {
   label: string;
   value: string;
@@ -375,6 +383,8 @@ export function MiniStat({
   textMuted: string;
   darkMode: boolean;
   isFirst?: boolean;
+  loading?: boolean;
+  region?: string;
 }) {
   return (
     <div
@@ -386,15 +396,15 @@ export function MiniStat({
           className="inline-flex items-center justify-center h-8 w-8 rounded-lg shrink-0"
           style={{
             backgroundColor: darkMode ? "var(--color-maroon-soft-dark)" : "var(--color-maroon-soft)",
-            color: "var(--color-maroon)",
+            color: "var(--brand-ink)",
           }}
         >
           <Icon className="h-4 w-4" strokeWidth={2.5} />
         </span>
       )}
       <div className="min-w-0">
-        <p className={`text-xs font-bold uppercase tracking-widest ${textMuted}`}>{label}</p>
-        <p className={`text-sm font-bold truncate ${textPrimary}`}>{value}</p>
+        <p className={`text-xs font-bold uppercase tracking-widest ${textMuted}`} data-sk-static="">{label}</p>
+        <p className={`text-sm font-bold truncate ${textPrimary}`} data-sk-region={region}>{loading === undefined ? value : <LoadingRegion as="span" loading={loading} skeleton={<SkeletonText width="2ch" />}>{value}</LoadingRegion>}</p>
       </div>
     </div>
   );
@@ -425,7 +435,6 @@ export function FolderCard({
   darkMode: boolean;
   onClick?: () => void;
 }) {
-  const gradientId = useId();
 
   return (
     <div
@@ -442,16 +451,10 @@ export function FolderCard({
       {/* folder silhouette — rounded rect body with a shallow inward dip
           in the middle of the top edge, forming the pocket opening */}
       <svg viewBox="0 0 200 200" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
-        <defs>
-          <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" style={{ stopColor: "var(--color-maroon-light)" }} />
-            <stop offset="100%" style={{ stopColor: "var(--color-maroon-dark)" }} />
-          </linearGradient>
-        </defs>
         <path
           d="M36 50 L72 50 Q82 50 88 60 Q94 70 100 70 Q106 70 112 60 Q118 50 128 50 L164 50
              Q182 50 182 68 L182 172 Q182 190 164 190 L36 190 Q18 190 18 172 L18 68 Q18 50 36 50 Z"
-          fill={`url(#${gradientId})`}
+          fill="var(--color-maroon)"
         />
       </svg>
 
@@ -475,7 +478,7 @@ export function FolderCard({
 // used for the subject ranking list (and reusable anywhere else a small
 // "position + label" chip is needed).
 // ---------------------------------------------------------------------------
-export function RankBadge({ rank, darkMode }: { rank: number; darkMode: boolean }) {
+export function RankBadge({ rank, darkMode, loading = false }: { rank: number; darkMode: boolean; loading?: boolean }) {
   const color =
     rank === 1
       ? "var(--color-gold)"
@@ -493,17 +496,17 @@ export function RankBadge({ rank, darkMode }: { rank: number; darkMode: boolean 
       style={{ backgroundColor: darkMode ? "#1A1A1A" : "#FFFFFF" }}
     >
       <span className="text-xl font-black leading-none tabular-nums" style={{ color }}>
-        {rank}
+        {loading ? <SkeletonText width="2ch" /> : rank}
       </span>
       <span className="text-xs font-bold uppercase tracking-wider mt-1" style={{ color }}>
-        {rank <= 3 ? "RANK" : `${rank}th`}
+        {loading ? <SkeletonText width="4ch" /> : rank <= 3 ? "RANK" : `${rank}th`}
       </span>
     </div>
   );
 }
 
 // ---------------------------------------------------------------------------
-// HeroActionCard — a full-bleed maroon-gradient panel (icon chip, title,
+// HeroActionCard — a full-bleed maroon panel (icon chip, title,
 // subtitle, stat line, optional grade badge) sitting above a plain white
 // action strip with an outlined button. Use for a grid of cards that each
 // lead to one detail view (a subject, a grade, a class) where the
@@ -537,8 +540,8 @@ export function HeroActionCard({
 }) {
   return (
     <div className="rounded-3xl overflow-hidden flex flex-col shadow-panel">
-      {/* Gradient hero */}
-      <div className="bg-maroon-gradient-vertical p-6 flex flex-col gap-6 text-white relative">
+      {/* Solid maroon hero */}
+      <div className="bg-maroon p-6 flex flex-col gap-6 text-white relative">
         <div className="flex items-start justify-between">
           <div className="w-12 h-12 rounded-2xl border border-white/30 flex items-center justify-center bg-white/10">
             <Icon className="h-5.5 w-5.5 text-white" strokeWidth={2} />

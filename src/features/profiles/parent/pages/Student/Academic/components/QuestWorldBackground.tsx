@@ -4,13 +4,12 @@ interface QuestWorldBackgroundProps {
 
 /** Decorative, responsive landscape used behind the Study Quest and quiz screens. */
 export default function QuestWorldBackground({ darkMode = false }: QuestWorldBackgroundProps) {
-  const skyTop = darkMode ? "#203B56" : "#43B5EA";
-  const skyBottom = darkMode ? "#A5C5CB" : "#D9F4FB";
+  const skyTop = darkMode ? "var(--surface-page-dark)" : "var(--brand-light)";
   const cloud = darkMode ? "#D2E2E2" : "#FFFFFF";
-  const hillFar = darkMode ? "#6B8C61" : "#A9D98E";
-  const hillNear = darkMode ? "#385E43" : "#78C95B";
-  const hillFront = darkMode ? "#294F3C" : "#69BB4D";
-  const water = darkMode ? "#4A9EA1" : "#53C5D2";
+  const hillFar = darkMode ? "var(--surface-raised-dark)" : "#E0E0E0";
+  const hillNear = darkMode ? "var(--surface-card-dark)" : "#D5D5D5";
+  const hillFront = darkMode ? "var(--surface-page-dark)" : "#CACACA";
+  const water = darkMode ? "var(--surface-raised-dark)" : "var(--brand-soft)";
 
   return (
     <svg
@@ -21,26 +20,13 @@ export default function QuestWorldBackground({ darkMode = false }: QuestWorldBac
       className="pointer-events-none absolute inset-0 -z-10 h-full w-full"
     >
       <defs>
-        <linearGradient id="quest-sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={skyTop} />
-          <stop offset="0.7" stopColor={skyBottom} />
-          <stop offset="1" stopColor={darkMode ? "#C0D4C4" : "#F4F7D9"} />
-        </linearGradient>
-        <linearGradient id="quest-grass" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={hillFar} />
-          <stop offset="1" stopColor={hillNear} />
-        </linearGradient>
-        <radialGradient id="quest-sun">
-          <stop offset="0" stopColor="#FFF4A8" stopOpacity="0.95" />
-          <stop offset="1" stopColor="#FFE58A" stopOpacity="0" />
-        </radialGradient>
         <filter id="quest-cloud-shadow" x="-20%" y="-30%" width="140%" height="170%">
-          <feDropShadow dx="0" dy="8" stdDeviation="9" floodColor="#267CA2" floodOpacity={darkMode ? "0.1" : "0.14"} />
+          <feDropShadow dx="0" dy="8" stdDeviation="9" floodColor="var(--brand-primary)" floodOpacity={darkMode ? "0.1" : "0.14"} />
         </filter>
       </defs>
 
-      <rect width="1440" height="900" fill="url(#quest-sky)" />
-      <circle cx="1160" cy="175" r="112" fill="url(#quest-sun)" />
+      <rect width="1440" height="900" fill={skyTop} />
+      <circle cx="1160" cy="175" r="112" fill="#FFF4A8" opacity="0.4" />
       <circle cx="1160" cy="175" r="40" fill="#FFE27C" opacity="0.88" />
 
       <g fill={cloud} opacity={darkMode ? "0.62" : "0.9"} filter="url(#quest-cloud-shadow)">
@@ -58,7 +44,7 @@ export default function QuestWorldBackground({ darkMode = false }: QuestWorldBac
       </g>
 
       <path d="M0 645c120-58 236-45 350 5 112-77 244-66 354 9 126-75 260-62 372 7 122-65 243-54 364 6v228H0Z" fill={hillFar} />
-      <path d="M0 718c140-77 260-56 388 16 132-96 278-73 406 6 125-85 268-68 390 11 95-59 178-59 256-16v165H0Z" fill="url(#quest-grass)" />
+      <path d="M0 718c140-77 260-56 388 16 132-96 278-73 406 6 125-85 268-68 390 11 95-59 178-59 256-16v165H0Z" fill={hillNear} />
       <path d="M0 795c177-79 330-47 472 24 145-75 270-45 407 21 175-91 361-48 561 12v83H0Z" fill={hillFront} />
 
       <path d="M1600 525C1515 526 1485 568 1410 598c-101 40-106 51-87 82 19 32 9 53-57 88-62 33-114 70-176 132h510Z" fill={water} opacity="0.95" />

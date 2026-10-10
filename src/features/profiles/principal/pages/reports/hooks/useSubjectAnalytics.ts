@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { Term, RankedSubject } from "../data/types";
 import { getTermOptions, getGradeOptions, getSubjectRanking } from "../services/reports.service";
 import { aggregateWholeElementary, filterAndRankByGrade, getLowestPerforming } from "../utils/ranking";
@@ -15,6 +16,7 @@ interface UseSubjectAnalyticsResult {
   lowestPerforming: ReturnType<typeof getLowestPerforming>;
   loading: boolean;
   error: Error | null;
+  retry: () => void;
 }
 
 export function useSubjectAnalytics(): UseSubjectAnalyticsResult {
@@ -24,20 +26,24 @@ export function useSubjectAnalytics(): UseSubjectAnalyticsResult {
   const [gradeOptions, setGradeOptions] = useState<string[]>([]);
   const [rawRanking, setRawRanking] = useState<RankedSubject[]>([]);
   const [loading, setLoading] = useState(true);
+  const [attempt, setAttempt] = useState(0);
+  const [optionsLoading, setOptionsLoading] = useState(true);
+  const [optionsError, setOptionsError] = useState<Error | null>(null);
   const [error, setError] = useState<Error | null>(null);
 
   // Filter options load once.
   useEffect(() => {
     let cancelled = false;
+    setOptionsLoading(true); setOptionsError(null);
     Promise.all([getTermOptions(), getGradeOptions()]).then(([terms, grades]) => {
       if (cancelled) return;
       setTermOptions(terms);
       setGradeOptions(grades);
-    });
+    }).catch((error: unknown) => { if (!cancelled) setOptionsError(error instanceof Error ? error : new Error("Failed to load report filters")); }).finally(() => { if (!cancelled) setOptionsLoading(false); });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [attempt]);
 
   // Ranking data refetches whenever the term changes.
   useEffect(() => {
@@ -61,7 +67,7 @@ export function useSubjectAnalytics(): UseSubjectAnalyticsResult {
     return () => {
       cancelled = true;
     };
-  }, [term]);
+  }, [term, attempt]);
 
   const wholeElementaryRanking = useMemo(() => aggregateWholeElementary(rawRanking), [rawRanking]);
   const filteredRanking = useMemo(() => filterAndRankByGrade(rawRanking, gradeFilter), [rawRanking, gradeFilter]);
@@ -77,7 +83,8 @@ export function useSubjectAnalytics(): UseSubjectAnalyticsResult {
     wholeElementaryRanking,
     filteredRanking,
     lowestPerforming,
-    loading,
-    error,
+    loading: loading || optionsLoading,
+    error: error || optionsError,
+    retry: () => setAttempt(value => value + 1),
   };
 }

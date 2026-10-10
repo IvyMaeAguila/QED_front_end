@@ -1,0 +1,27 @@
+
+[WebServer] (node:17260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:11904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 13 tests using 1 worker
+
+(node:18332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/13] tests\principal-dashboard-loading.spec.ts:6:62 › principal dashboard 375 light keeps known shell
+[2/13] tests\principal-dashboard-loading.spec.ts:6:62 › principal dashboard 375 dark keeps known shell
+[3/13] tests\principal-dashboard-loading.spec.ts:6:62 › principal dashboard 1280 light keeps known shell
+[4/13] tests\principal-dashboard-loading.spec.ts:6:62 › principal dashboard 1280 dark keeps known shell
+[5/13] tests\principal-dashboard-loading.spec.ts:7:28 › principal dashboard preserves 0 actual grades
+[6/13] tests\principal-dashboard-loading.spec.ts:7:28 › principal dashboard preserves 1 actual grades
+[7/13] tests\principal-dashboard-loading.spec.ts:7:28 › principal dashboard preserves 9 actual grades
+[8/13] tests\principal-dashboard-loading.spec.ts:8:40 › principal dashboard retries dashboard
+[9/13] tests\principal-dashboard-loading.spec.ts:8:40 › principal dashboard retries year
+[10/13] tests\principal-dashboard-loading.spec.ts:9:1 › principal dashboard ranking controls preserve loaded behavior
+[11/13] tests\principal-dashboard-loading.spec.ts:11:32 › principal dashboard light spotlight contrast and pixel shape
+[12/13] tests\principal-dashboard-loading.spec.ts:11:32 › principal dashboard dark spotlight contrast and pixel shape
+[13/13] tests\principal-dashboard-loading.spec.ts:12:1 › principal dashboard charts retain bar line and radar shapes
+  13 passed (45.3s)

@@ -1,0 +1,77 @@
+[WebServer] (node:21612) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25184) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:33740) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Class click diagnostics: []
+  x  1 tests\admin-class-view.spec.ts:37:68 › class details 375 light: real actions, tabs and weekday headings (11.2s)
+(node:3520) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 tests\admin-class-view.spec.ts:37:68 › class details 375 dark: real actions, tabs and weekday headings (3.7s)
+  ok 3 tests\admin-class-view.spec.ts:37:68 › class details 1280 light: real actions, tabs and weekday headings (4.4s)
+Class click diagnostics: []
+  x  4 tests\admin-class-view.spec.ts:37:68 › class details 1280 dark: real actions, tabs and weekday headings (8.0s)
+
+
+  1) tests\admin-class-view.spec.ts:37:68 › class details 375 light: real actions, tabs and weekday headings 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByPlaceholder('Search student...')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByPlaceholder('Search student...') with timeout 5000ms
+      - waiting for getByPlaceholder('Search student...')
+
+
+      56 |   await verifyOverlay();
+      57 |   await page.getByRole("tab", { name: /Class list/ }).click();
+    > 58 |   await expect(page.getByPlaceholder("Search student...")).toBeVisible();
+         |                                                            ^
+      59 |   await expect(page.locator('[data-sk-region="student-directory-row"]')).toHaveCount(3);
+      60 | });
+      61 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-class-view.spec.ts:58:60
+
+    Error Context: test-results\admin-class-view-class-det-a71f0-s-tabs-and-weekday-headings\error-context.md
+
+  2) tests\admin-class-view.spec.ts:37:68 › class details 1280 dark: real actions, tabs and weekday headings 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('[data-sk-region="student-directory-row"]')
+    Expected: 3
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('[data-sk-region="student-directory-row"]') with timeout 5000ms
+      - waiting for locator('[data-sk-region="student-directory-row"]')
+        - waiting for "http://127.0.0.1:5187/admin/classes/1" navigation to finish...
+        - navigated to "http://127.0.0.1:5187/admin/classes/1"
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      57 |   await page.getByRole("tab", { name: /Class list/ }).click();
+      58 |   await expect(page.getByPlaceholder("Search student...")).toBeVisible();
+    > 59 |   await expect(page.locator('[data-sk-region="student-directory-row"]')).toHaveCount(3);
+         |                                                                          ^
+      60 | });
+      61 |
+      62 | for (const count of [0, 1, 9]) test(`class schedule ${count} returned time slots retains original content`, async ({ page }) => {
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-class-view.spec.ts:59:74
+
+    Error Context: test-results\admin-class-view-class-det-8e070-s-tabs-and-weekday-headings\error-context.md
+
+  2 failed
+    tests\admin-class-view.spec.ts:37:68 › class details 375 light: real actions, tabs and weekday headings 
+    tests\admin-class-view.spec.ts:37:68 › class details 1280 dark: real actions, tabs and weekday headings 
+  2 passed (31.4s)

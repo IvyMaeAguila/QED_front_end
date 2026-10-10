@@ -26,7 +26,7 @@
 //   const valuePath = valuePoints.map((p) => `${p.x},${p.y}`).join(" ");
 //   const ringFractions = [0.33, 0.66, 1];
 //   const gridColor = darkMode ? "#334155" : "#E2E8F0";
-//   const labelColor = darkMode ? "#94A3B8" : "#6B0000";
+//   const labelColor = darkMode ? "#94A3B8" : "var(--color-maroon)";
 
 //   return (
 //     <div className="flex flex-col items-center">
@@ -49,9 +49,9 @@
 //         })}
 //         <polygon
 //           points={valuePath}
-//           fill={hasAnyScore ? "#6B0000" : "#94A3B8"}
+//           fill={hasAnyScore ? "var(--color-maroon)" : "#94A3B8"}
 //           fillOpacity={hasAnyScore ? 0.35 : 0.25}
-//           stroke={hasAnyScore ? "#6B0000" : "#94A3B8"}
+//           stroke={hasAnyScore ? "var(--color-maroon)" : "#94A3B8"}
 //           strokeWidth={2}
 //           strokeDasharray={hasAnyScore ? undefined : "4 3"}
 //         />

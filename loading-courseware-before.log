@@ -1,0 +1,42 @@
+
+[WebServer] (node:2564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:7620) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:38512) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/1] tests\courseware-loading.spec.ts:20:68 › courseware 1280 light: real learning frame before fetched leaves
+  1) tests\courseware-loading.spec.ts:20:68 › courseware 1280 light: real learning frame before fetched leaves 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Your learning quest', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Your learning quest', { exact: true }) with timeout 5000ms
+      - waiting for getByText('Your learning quest', { exact: true })
+
+
+      22 |   const fixture = await coursewareFixture(page, dark);
+      23 |   await page.goto("/parent/students/1/topics/1/courseware");
+    > 24 |   await expect(page.getByText("Your learning quest", { exact: true })).toBeVisible();
+         |                                                                        ^
+      25 |   await expect(page.getByText("Explore the lesson", { exact: true })).toBeVisible();
+      26 |   await expect(page.getByText("Follow the lesson, then watch a video to complete your learning path.", { exact: true })).toBeVisible();
+      27 |   const region = page.locator('[data-sk-region="learning-resources"]');
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\courseware-loading.spec.ts:24:72
+
+    Error Context: test-results\courseware-loading-coursew-c4b0b-frame-before-fetched-leaves\error-context.md
+
+
+  1 failed
+    tests\courseware-loading.spec.ts:20:68 › courseware 1280 light: real learning frame before fetched leaves 

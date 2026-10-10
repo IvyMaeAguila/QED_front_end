@@ -98,6 +98,9 @@ export async function downloadGradeRecordExport(subjectSectionId: string, gradin
     try { const json = await res.json(); message = json.message ?? message; } catch { /* keep fallback */ }
     throw new Error(message);
   }
+  if (!(res.headers.get("content-type") ?? "").includes("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+    throw new Error("The server did not return an Excel workbook. Please try again or contact the administrator.");
+  }
   const disposition = res.headers.get("content-disposition") ?? "";
   const fileName = disposition.match(/filename="?([^";]+)"?/i)?.[1] ?? `QED-TERM-${gradingPeriodId}.xlsx`;
   return { buffer: await res.arrayBuffer(), fileName };

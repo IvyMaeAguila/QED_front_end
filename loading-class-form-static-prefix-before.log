@@ -1,0 +1,37 @@
+[WebServer] (node:9408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:31652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:37768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\class-form-loading.spec.ts:21:1 › class form keeps the known Updating prefix real before record data arrives (7.8s)
+
+
+  1) tests\class-form-loading.spec.ts:21:1 › class form keeps the known Updating prefix real before record data arrives 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Updating', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Updating', { exact: true }) with timeout 5000ms
+      - waiting for getByText('Updating', { exact: true })
+
+
+      19 | for(const dark of [false,true])test(`class form ${dark?'dark':'light'} input surface pixels`,async({page})=>{await fixture(page,dark);await page.goto('/admin/classes/1/edit');await expect(page.locator('[data-sk-region="class-form-room"]')).toHaveAttribute('data-sk-phase','revealed');const shape=page.locator('[data-sk-region="class-form-room"] [data-sk-primitive]');await checkRenderedContrast(shape,`class-form-${dark?'dark':'light'}`);await checkShimmerPixels(shape,`class-form-${dark?'dark':'light'}`);});
+      20 | for(const dark of [false,true])test(`class adviser ${dark?'dark':'light'} disabled control surface pixels`,async({page})=>{await fixture(page,dark);await page.goto('/admin/classes/1/edit');await expect(page.locator('[data-sk-region="class-form-room"]')).toHaveAttribute('data-sk-phase','revealed');const shape=page.locator('[data-sk-region="class-adviser-value"] [data-sk-primitive]').first().or(page.getByRole('combobox',{name:'Class adviser',exact:true}).locator('[data-sk-primitive]')).first();await checkRenderedContrast(shape,`class-adviser-${dark?'dark':'light'}`);await checkShimmerPixels(shape,`class-adviser-${dark?'dark':'light'}`);});
+    > 21 | test('class form keeps the known Updating prefix real before record data arrives',async({page})=>{await fixture(page,false);await page.goto('/admin/classes/1/edit');await expect(page.getByText('Updating',{exact:true})).toBeVisible();});
+         |                                                                                                                                                                                                                            ^
+      22 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\class-form-loading.spec.ts:21:220
+
+    Error Context: test-results\class-form-loading-class-f-a4efd--before-record-data-arrives\error-context.md
+
+  1 failed
+    tests\class-form-loading.spec.ts:21:1 › class form keeps the known Updating prefix real before record data arrives 

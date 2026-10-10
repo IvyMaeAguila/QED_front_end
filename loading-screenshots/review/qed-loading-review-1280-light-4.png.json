@@ -1,0 +1,14 @@
+{
+  "leftToRight": [
+    "login",
+    "parent",
+    "parent-calendar",
+    "parent-detail-academic",
+    "parent-detail-holistic",
+    "parent-detail-overview",
+    "parent-detail-progressReport",
+    "parent-detail-studentProfile"
+  ],
+  "top": "skeleton",
+  "bottom": "loaded"
+}

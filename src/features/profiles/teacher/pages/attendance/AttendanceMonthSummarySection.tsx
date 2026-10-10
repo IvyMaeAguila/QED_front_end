@@ -1,15 +1,21 @@
-import { useEffect, useMemo, useState } from "react";
-import { CalendarCheck, CalendarDays, Loader2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
+import { CalendarCheck, CalendarDays } from "lucide-react";
 import type { RosterStudent } from "../subjects/detail/data.ts";
 import {
   ATTENDANCE_META,
   type AttendanceMap,
   type GradingPeriod,
 } from "../subjects/detail/types/Grading.ts";
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
+import { SkeletonText } from "@shared/components/SkeletonLoading";
+import { rememberRows, skeletonRows } from "@shared/loading/reservations";
 import { fetchAdvisoryAttendance } from "./services/attendance.service.ts";
 
 interface AttendanceMonthSummarySectionProps {
   sectionId: string;
+  prerequisitesLoading?: boolean;
   roster: RosterStudent[];
   terms: GradingPeriod[];
   darkMode: boolean;
@@ -72,6 +78,7 @@ function allDatesInMonth(monthKeyStr: string): string[] {
 
 export function AttendanceMonthSummarySection({
   sectionId,
+  prerequisitesLoading = false,
   roster,
   terms,
   darkMode,
@@ -80,6 +87,7 @@ export function AttendanceMonthSummarySection({
   textPrimary,
   textMuted,
 }: AttendanceMonthSummarySectionProps) {
+  const [attempt, setAttempt] = useState(0);
   const [attendance, setAttendance] = useState<AttendanceMap>({});
   const [loading, setLoading] = useState(true);
   const [attendanceError, setAttendanceError] = useState<string | null>(null);
@@ -98,6 +106,7 @@ export function AttendanceMonthSummarySection({
   }, [months]);
 
   useEffect(() => {
+    if (prerequisitesLoading) return;
     let cancelled = false;
     setLoading(true);
     setAttendanceError(null);
@@ -109,7 +118,7 @@ export function AttendanceMonthSummarySection({
       })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [sectionId]);
+  }, [sectionId, attempt, prerequisitesLoading]);
 
   const cardClasses = `overflow-hidden rounded-[12px] border shadow-sm ${panelBg} ${panelBorder}`;
 
@@ -167,55 +176,10 @@ export function AttendanceMonthSummarySection({
     return [...cells, ...Array.from({ length: trailing }, () => null)];
   }, [monthDates]);
 
-  if (months.length === 0) {
-    return (
-      <div className={`${cardClasses} px-5 py-16 text-center`}>
-        <p className={`font-bold ${textPrimary}`}>No terms set up yet</p>
-        <p className={`mt-1 text-sm ${textMuted}`}>
-          Add a grading period before viewing a monthly summary.
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <section className={cardClasses} aria-label="Monthly attendance summary">
-      <div
-        className={`flex flex-col gap-4 border-b px-5 py-5 sm:flex-row sm:items-center sm:justify-between ${panelBorder}`}
-      >
-        <div>
-          <h2 className={`font-extrabold ${textPrimary}`}>Monthly Summary</h2>
-          <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
-            {roster.length} student{roster.length === 1 ? "" : "s"}
-          </p>
-        </div>
-
-        <select
-          value={selectedMonth}
-          onChange={(e) => setSelectedMonth(e.target.value)}
-          style={{ borderRadius: "8px" }}
-          className={`h-10 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
-          aria-label="Month"
-        >
-          {months.map((key) => (
-            <option key={key} value={key}>
-              {monthLabel(key)}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {loading ? (
-        <div className="flex items-center justify-center gap-2 px-5 py-16">
-          <Loader2 size={16} className={`animate-spin ${textMuted}`} />
-          <p className={`text-sm font-semibold ${textMuted}`}>
-            Loading attendance...
-          </p>
-        </div>
-      ) : attendanceError ? (
-        <p className="px-5 py-10 text-center text-sm font-semibold text-red-500" role="alert">{attendanceError}</p>
-      ) : (
-        <div className="space-y-5 p-5">
+  const view = `attendance-month-${sectionId}-${selectedMonth}`;
+  const renderSummary = (pending: boolean) => {
+    const rows = pending ? Array.from({length: skeletonRows(view, undefined, 80)}, () => ({iso: "", students: [{id: "pending", name: "", gender: "M" as const}]})) : absencesByDate;
+    return (        <div className="space-y-5 p-5">
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {[
               { label: "School days", value: schoolDays, color: "#7A0022", icon: CalendarCheck },
@@ -227,7 +191,7 @@ export function AttendanceMonthSummarySection({
                 {metric.icon ? <metric.icon size={20} className="shrink-0" style={{ color: metric.color }} /> : <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: metric.color }} />}
                 <div className="min-w-0">
                   <p className={`truncate text-xs font-bold uppercase tracking-wide ${textMuted}`}>{metric.label}</p>
-                  <p className={`text-xl font-extrabold tabular-nums leading-tight ${textPrimary}`}>{metric.value}</p>
+                  <p data-sk-region={`attendance-summary-value-${metric.label}`} className={`text-xl font-extrabold tabular-nums leading-tight ${textPrimary}`}>{pending ? <SkeletonText width={metric.label === "Late / Excused" ? "5ch" : "2ch"} /> : metric.value}</p>
                 </div>
               </div>
             ))}
@@ -257,11 +221,11 @@ export function AttendanceMonthSummarySection({
                 const isToday = iso === toISODate(new Date());
                 const date = parseISO(iso);
                 return (
-                  <div key={iso} className={`min-h-20 border-b border-r p-1.5 sm:min-h-24 sm:p-2 ${panelBorder} ${darkMode ? "bg-[#1A1110]" : "bg-white"}`}>
-                    <span className={`inline-flex h-6 min-w-6 items-center justify-center rounded-full px-1 text-xs font-bold tabular-nums ${isToday ? "bg-[#800000] text-white" : isMarked ? textPrimary : textMuted}`}>{date.getDate()}</span>
-                    {isMarked && (
-                      <div className="mt-1.5 flex flex-wrap gap-1">
-                        {(["P", "A", "L", "E"] as const).map((status) => {
+                  <div key={iso} className={`min-h-20 border-b border-r p-1.5 sm:min-h-24 sm:p-2 ${panelBorder} ${darkMode ? "bg-page-dark" : "bg-white"}`}>
+                    <span className={`inline-flex h-6 min-w-6 items-center justify-center rounded-full px-1 text-xs font-bold tabular-nums ${isToday ? "bg-maroon text-white" : isMarked ? textPrimary : textMuted}`}>{date.getDate()}</span>
+                    {(pending || isMarked) && (
+                      <div data-sk-region={`attendance-summary-day-${iso}`} data-sk-variable="" data-sk-field={`attendance-summary-day-${iso}`} className="mt-1.5 flex flex-wrap gap-1">
+                        {pending ? <span className="block w-full text-xs"><SkeletonParagraph field={`attendance-summary-day-${iso}`} width="100%" typical={2} /></span> : (["P", "A", "L", "E"] as const).map((status) => {
                           const count = status === "P" ? summary.present : status === "A" ? summary.absent : status === "L" ? summary.late : summary.excused;
                           if (!count) return null;
                           return <span key={status} title={`${count} ${ATTENDANCE_META[status].label.toLowerCase()}`} className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-xs font-bold tabular-nums" style={{ color: ATTENDANCE_META[status].color, backgroundColor: `${ATTENDANCE_META[status].color}${darkMode ? "24" : "12"}` }}>{status} {count}</span>;
@@ -278,22 +242,22 @@ export function AttendanceMonthSummarySection({
           <div className={`overflow-hidden rounded-xl border ${panelBorder}`}>
             <div className={`flex items-center justify-between gap-3 border-b px-4 py-3 ${panelBorder} ${darkMode ? "bg-white/5" : "bg-[#FAFAF9]"}`}>
               <h3 className={`text-sm font-bold ${textPrimary}`}>Absences this month</h3>
-              <span className={`text-xs font-semibold ${textMuted}`}>{absences} absent {absences === 1 ? "record" : "records"}</span>
+              <span className={`text-xs font-semibold ${textMuted}`}>{pending ? <SkeletonText width="2ch" className="inline-block align-top" /> : absences} absent {absences === 1 ? "record" : "records"}</span>
             </div>
-            {absencesByDate.length > 0 ? (
+            {rows.length > 0 ? (
               <ul className={`divide-y ${darkMode ? "divide-white/10" : "divide-black/10"}`}>
-                {absencesByDate.map(({ iso, students }) => (
-                  <li key={iso} className="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-start sm:justify-between">
+                {rows.map(({ iso, students }, index) => (
+                  <li data-sk-region="attendance-absence-row" data-sk-variable="" key={iso || index} className="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                       <p className={`text-xs font-bold uppercase tracking-wide ${textMuted}`}>
-                        {parseISO(iso).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+                        {pending ? <SkeletonText width={index % 2 ? "12ch" : "15ch"} /> : parseISO(iso).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
                       </p>
                       <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
-                        {students.map((student) => <li key={student.id} className={`text-sm font-semibold ${textPrimary}`}>{student.name}</li>)}
+                        {students.map((student) => <li key={student.id} className={`text-sm font-semibold ${textPrimary}`}>{pending ? <SkeletonParagraph field="attendance-absence-name" typical={2} width="18ch" /> : student.name}</li>)}
                       </ul>
                     </div>
                     <span className="w-fit shrink-0 rounded-full px-2 py-1 text-xs font-bold" style={{ color: ATTENDANCE_META.A.color, backgroundColor: `${ATTENDANCE_META.A.color}${darkMode ? "22" : "14"}` }}>
-                      {students.length} absent
+                      {pending ? <SkeletonText width="1ch" className="inline-block align-top" /> : students.length} absent
                     </span>
                   </li>
                 ))}
@@ -303,11 +267,53 @@ export function AttendanceMonthSummarySection({
             )}
             <div className={`flex items-center justify-between border-t px-4 py-2.5 ${panelBorder} ${darkMode ? "bg-white/5" : "bg-[#FAFAF9]"}`}>
               <span className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>Total absent</span>
-              <span className="text-sm font-extrabold tabular-nums" style={{ color: ATTENDANCE_META.A.color }}>{absences}</span>
+              <span className="text-sm font-extrabold tabular-nums" style={{ color: ATTENDANCE_META.A.color }}>{pending ? <SkeletonText width="2ch" /> : absences}</span>
             </div>
           </div>
+        </div>);
+  };
+
+  if (months.length === 0 && !prerequisitesLoading) {
+    return (
+      <div className={`${cardClasses} px-5 py-16 text-center`}>
+        <p className={`font-bold ${textPrimary}`}>No terms set up yet</p>
+        <p className={`mt-1 text-sm ${textMuted}`}>
+          Add a grading period before viewing a monthly summary.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <section className={cardClasses} aria-label="Monthly attendance summary">
+      <div
+        className={`flex flex-col gap-4 border-b px-5 py-5 sm:flex-row sm:items-center sm:justify-between ${panelBorder}`}
+      >
+        <div>
+          <h2 className={`font-extrabold ${textPrimary}`}>Monthly Summary</h2>
+          <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
+            {prerequisitesLoading ? <SkeletonText width="1ch" className="inline-block align-top" /> : roster.length} student{roster.length === 1 ? "" : "s"}
+          </p>
         </div>
-      )}
+
+        <select
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(e.target.value)}
+          style={{ borderRadius: "8px" }}
+          className={`h-10 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
+          aria-label="Month"
+        >
+          {prerequisitesLoading && <option value={selectedMonth}>{monthLabel(selectedMonth)}</option>}
+          {months.map((key) => (
+            <option key={key} value={key}>
+              {monthLabel(key)}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <LoadingRegion loading={prerequisitesLoading || loading} error={attendanceError} retry={() => setAttempt(value => value + 1)} name="attendance-month-summary" variable skeleton={null} frame={renderSummary} retainPrevious hasContent={Object.keys(attendance).length > 0} onSettled={() => rememberRows(view, absencesByDate.length)}>{null}</LoadingRegion>
+
     </section>
   );
 }

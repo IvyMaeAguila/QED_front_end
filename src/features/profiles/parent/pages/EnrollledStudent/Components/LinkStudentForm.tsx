@@ -1,4 +1,5 @@
-import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { Check, Hash, User } from "lucide-react";
 import type { LinkStudentInput } from "../../dashboard/types/student";
 

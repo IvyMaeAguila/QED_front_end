@@ -1,6 +1,11 @@
-import { useEffect, useState } from "react";
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { SkeletonControl } from "@shared/components/SkeletonLoading";
+import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
+import { skeletonRows, rememberRows } from "@shared/loading/reservations";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { useNavigate } from "react-router-dom";
-import { AlertTriangle, CheckCircle2, ChevronRight, Loader2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, ChevronRight } from "lucide-react";
 import type { InterventionFlag } from "../types/types";
 import type { AdminThemeContext } from "../../../../../admin/pages/AdminLayout";
 import SectionHeader from "../../../ui/SectionHeader";
@@ -21,6 +26,8 @@ export default function InterventionSupport({
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  const [attempt,setAttempt] = useState(0);
+  const view = `parent-intervention:${student.id}`;
   useEffect(() => {
     let isMounted = true;
 
@@ -42,7 +49,7 @@ export default function InterventionSupport({
     return () => {
       isMounted = false;
     };
-  }, [student.id]);
+  }, [student.id, attempt]);
 
   const { darkMode, panelBg, panelBorder } = theme;
 
@@ -54,14 +61,6 @@ export default function InterventionSupport({
   const warnIcon = darkMode ? "text-red-400" : "text-red-600";
   const warnText = darkMode ? "text-red-400" : "text-red-700";
   const warnHoverBg = darkMode ? "hover:bg-red-900/30" : "hover:bg-red-100";
-
-  const errBg = darkMode ? "bg-yellow-900/20" : "bg-yellow-50";
-  const errIcon = darkMode ? "text-yellow-400" : "text-yellow-600";
-  const errText = darkMode ? "text-yellow-400" : "text-yellow-700";
-
-  const loadingBg = darkMode ? "bg-gray-800/40" : "bg-gray-50";
-  const loadingIcon = darkMode ? "text-gray-400" : "text-gray-500";
-  const loadingText = darkMode ? "text-gray-400" : "text-gray-600";
 
   function handleFlagClick(flag: InterventionFlag) {
     navigate(`/parent/students/${student.id}/topics/${flag.topicId}/support`);
@@ -77,19 +76,8 @@ export default function InterventionSupport({
       />
 
       <div className="p-5 flex flex-col gap-2">
-        {loading ? (
-          <div className={`flex items-center gap-2 rounded-lg px-3 py-2.5 ${loadingBg}`}>
-            <Loader2 size={16} className={`shrink-0 animate-spin ${loadingIcon}`} />
-            <p className={`text-xs font-medium ${loadingText}`}>
-              Checking for intervention concerns...
-            </p>
-          </div>
-        ) : error ? (
-          <div className={`flex items-center gap-2 rounded-lg px-3 py-2.5 ${errBg}`}>
-            <AlertTriangle size={16} className={`shrink-0 ${errIcon}`} />
-            <p className={`text-xs font-medium ${errText}`}>{error}</p>
-          </div>
-        ) : flags.length === 0 ? (
+        <LoadingRegion name="parent-intervention" loading={loading} error={error} retry={() => setAttempt(n=>n+1)} variable retainPrevious hasContent={flags.length > 0} skeleton={null} onSettled={() => rememberRows(view,flags.length)} frame={(pending) => (
+        !pending && flags.length === 0 ? (
           <div className={`flex items-center gap-2 rounded-lg px-3 py-2.5 ${okBg}`}>
             <CheckCircle2 size={16} className={`shrink-0 ${okIcon}`} />
             <p className={`text-xs font-medium ${okText}`}>
@@ -98,19 +86,20 @@ export default function InterventionSupport({
             </p>
           </div>
         ) : (
-          flags.map((f) => (
+          (pending ? Array.from({length:skeletonRows(view)},(_,i)=>({id:String(i),topicId:0,concern:"",severity:"low" as const})) : flags).map((f) => (
             <button
               key={f.id}
+              disabled={pending}
               type="button"
               onClick={() => handleFlagClick(f)}
-              className={`flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left transition-colors ${warnBg} ${warnHoverBg} cursor-pointer`}
+              className={`flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left transition-colors ${pending ? (darkMode ? "bg-white/5" : "bg-gray-50") : `${warnBg} ${warnHoverBg}`} cursor-pointer`}
             >
-              <AlertTriangle size={16} className={`shrink-0 ${warnIcon}`} />
-              <p className={`flex-1 text-xs font-medium ${warnText}`}>{f.concern}</p>
+              {pending ? <SkeletonControl className="h-4 w-4 shrink-0" /> : <AlertTriangle size={16} className={`shrink-0 ${warnIcon}`} />}
+              <p className={`flex-1 text-xs font-medium ${warnText}`}>{pending ? <SkeletonParagraph field={view+":"+f.id} typical={3} width="100%" /> : <span data-sk-field={view+":"+f.id}>{f.concern}</span>}</p>
               <ChevronRight size={16} className={`shrink-0 ${warnIcon}`} />
             </button>
           ))
-        )}
+        ))}>{null}</LoadingRegion>
       </div>
     </div>
   );

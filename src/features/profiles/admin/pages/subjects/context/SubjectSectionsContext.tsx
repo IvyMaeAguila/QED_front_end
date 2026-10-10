@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useRef, type ReactNode } from "react";
 import { GRADE_LEVEL_IDS, GRADE_LEVEL_BY_ID, type Subject, type GradeLevel } from "../types/types";
 import { fetchSubjectSectionsByGrade, type SubjectSectionByGradeRow } from "../services/subject.service";
 import { canonicalAssessmentTypeName } from "../types/assessmentTypes";
@@ -6,6 +6,7 @@ import { canonicalAssessmentTypeName } from "../types/assessmentTypes";
 interface SubjectSectionsContextValue {
   subjects: Subject[];
   loading: boolean;
+  error: string | null;
   getSubjectsForGrade: (grade: GradeLevel) => Subject[];
   loadSubjectsForGrade: (grade: GradeLevel) => Promise<void>;
   addLocalSubject: (subject: Subject) => void;
@@ -41,10 +42,13 @@ function mapRow(row: SubjectSectionByGradeRow): Subject {
 
 export function SubjectSectionsProvider({ children }: { children: ReactNode }) {
   const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const requests = useRef(0);
 
   const loadSubjectsForGrade = useCallback(async (grade: GradeLevel) => {
-    setLoading(true);
+    requests.current += 1;
+    setLoading(true); setError(null);
     try {
       const gradeId = GRADE_LEVEL_IDS[grade];
       const rows = await fetchSubjectSectionsByGrade(String(gradeId));
@@ -53,8 +57,10 @@ export function SubjectSectionsProvider({ children }: { children: ReactNode }) {
       setSubjects((prev) => [...prev.filter((s) => s.gradeLevel !== grade), ...mapped]);
     } catch (err) {
       console.error("Failed to load subjects for grade:", err);
+      setError(err instanceof Error ? err.message : "Failed to load subjects.");
     } finally {
-      setLoading(false);
+      requests.current -= 1;
+      setLoading(requests.current > 0);
     }
   }, []);
 
@@ -72,7 +78,7 @@ export function SubjectSectionsProvider({ children }: { children: ReactNode }) {
 
   return (
     <SubjectSectionsContext.Provider
-      value={{ subjects, loading, getSubjectsForGrade, loadSubjectsForGrade, addLocalSubject, updateLocalSubject }}
+      value={{ subjects, loading, error, getSubjectsForGrade, loadSubjectsForGrade, addLocalSubject, updateLocalSubject }}
     >
       {children}
     </SubjectSectionsContext.Provider>

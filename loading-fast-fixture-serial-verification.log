@@ -1,0 +1,64 @@
+
+[WebServer] (node:12296) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36796) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 30 tests using 1 worker
+
+
+(node:5584) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+[2/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[3/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[4/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+[5/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+
+(node:30908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[6/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+[7/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[8/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[9/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+[10/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+
+(node:11092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[11/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+[12/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[13/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[14/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+[15/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+
+(node:15564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[16/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+[17/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[18/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[19/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+[20/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+
+(node:13120) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[21/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+[22/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[23/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[24/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+[25/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+
+(node:34544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[26/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+[27/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[28/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[29/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+[30/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+  30 passed (1.3m)

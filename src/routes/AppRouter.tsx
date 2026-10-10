@@ -7,6 +7,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useAuth } from "../features/auth/context/authContext";
+import { routeSkeletons } from "../shared/loading/routeSkeletons";
 
 import { AdminLayout } from "../features/profiles/admin/pages/AdminLayout";
 
@@ -24,7 +25,9 @@ import { ParentSection } from "./ParentSection";
 import { PrincipalSection } from "./PrincipalSection";
 
 
-import { QedSplash, QedLoader } from "../shared/components/QedLoader";
+import { QedBootstrapLoader } from "../shared/loading/QedBootstrapLoader";
+import { RouteSkeleton } from "../shared/loading/RouteSkeleton";
+import { SubjectsSection } from "../features/profiles/admin/pages/subjects/SubjectSection";
 
 function DebugRoute() {
   const location = useLocation();
@@ -32,63 +35,58 @@ function DebugRoute() {
   return null;
 }
 
-const AdminDashboardHome = lazy(() => import("../features/profiles/admin/pages/dashboard/AdminDashboardHome").then((module) => ({ default: module.AdminDashboardHome })));
-const StudentRecordsPage = lazy(() => import("../features/profiles/admin/pages/studentrecords/StudentRecordsPage").then((module) => ({ default: module.StudentRecordsPage })));
-const StudentFormPage = lazy(() => import("../features/profiles/admin/pages/studentrecords/StudentFormPage").then((module) => ({ default: module.StudentFormPage })));
-const UserManagementPage = lazy(() => import("../features/profiles/admin/pages/usermanagement/UserManagementPage").then((module) => ({ default: module.UserManagementPage })));
-const UserFormPage = lazy(() => import("../features/profiles/admin/pages/usermanagement/UserFormPage").then((module) => ({ default: module.UserFormPage })));
-const UserViewPage = lazy(() => import("../features/profiles/admin/pages/usermanagement/UserViewPage").then((module) => ({ default: module.UserViewPage })));
-const ClassesPage = lazy(() => import("../features/profiles/admin/pages/classes/ClassPage").then((module) => ({ default: module.ClassesPage })));
-const ClassFormPage = lazy(() => import("../features/profiles/admin/pages/classes/ClassFormPage").then((module) => ({ default: module.ClassFormPage })));
-const ClassViewPage = lazy(() => import("../features/profiles/admin/pages/classes/ClassViewPage").then((module) => ({ default: module.ClassViewPage })));
-const LandingPage = lazy(() => import("../features/Landing/LandingPage"));
-const LoginPanel = lazy(() => import("../features/auth/LoginPanel").then((module) => ({ default: module.LoginPanel })));
-const StudentDetailPage = lazy(() => import("../shared/components/StudentDetailPage").then((module) => ({ default: module.StudentDetailPage })));
-const ManageSubjectsPage = lazy(() => import("../features/profiles/admin/pages/subjects/ManageSubjectsPage").then((module) => ({ default: module.ManageSubjectsPage })));
-const CalendarPage = lazy(() => import("../shared/calendar/CalendarPage").then((module) => ({ default: module.CalendarPage })));
-const HelpSupportPage = lazy(() => import("../features/profiles/admin/pages/help/HelpSupportPage").then((module) => ({ default: module.HelpSupportPage })));
-const TeacherDashboardHome = lazy(() => import("../features/profiles/teacher/pages/dashboard/TeacherDashboardHome").then((module) => ({ default: module.TeacherDashboardHome })));
-const AdvisoryRosterPage = lazy(() => import("../features/profiles/teacher/pages/roster/AdvisoryRosterPage").then((module) => ({ default: module.AdvisoryRosterPage })));
-const GradesPage = lazy(() => import("../features/profiles/teacher/pages/grades/GradePage").then((module) => ({ default: module.GradesPage })));
-const SubjectsPage = lazy(() => import("../features/profiles/teacher/pages/subjects/SubjectPage").then((module) => ({ default: module.SubjectsPage })));
-const ParentDashboardHome = lazy(() => import("../features/profiles/parent/pages/dashboard/ParentDashboardHome"));
-const EnrolledChildrenPage = lazy(() => import("../features/profiles/parent/pages/EnrollledStudent/EnrolledChildrenPage").then((module) => ({ default: module.EnrolledChildrenPage })));
-const ChildDetailPage = lazy(() => import("../features/profiles/parent/pages/Student/ChildDetailPage"));
-const TopicSupportChoice = lazy(() => import("../features/profiles/parent/pages/Student/Academic/TopicSupportChoice"));
-const CoursewareView = lazy(() => import("../features/profiles/parent/pages/Student/Academic/CoursewareView"));
-const CalendarPageView = lazy(() => import("../shared/calendar/CalendarPageView").then((module) => ({ default: module.CalendarPageView })));
-const SubjectDetailPage = lazy(() => import("../features/profiles/teacher/pages/subjects/detail/SubjectDetailPage").then((module) => ({ default: module.SubjectDetailPage })));
-const SubjectRecordsPage = lazy(() => import("../features/profiles/teacher/pages/subjects/detail/SubjectRecordsPage").then((module) => ({ default: module.SubjectRecordsPage })));
-const HolisticOverviewPage = lazy(() => import("../features/profiles/teacher/pages/holistic/HolisticOverviewPage").then((module) => ({ default: module.HolisticOverviewPage })));
-const StudentHolisticProfilePage = lazy(() => import("../features/profiles/teacher/pages/holistic/StudentHolisticProfilePage").then((module) => ({ default: module.StudentHolisticProfilePage })));
-const HolisticDomainTrendsPage = lazy(() => import("../features/profiles/teacher/pages/holistic/HolisticDomainTrendsPage").then((module) => ({ default: module.HolisticDomainTrendsPage })));
-const SubjectClassListPage = lazy(() => import("../features/profiles/teacher/pages/subjects/SubjectClassListPage").then((module) => ({ default: module.SubjectClassListPage })));
-const AcademicYearPage = lazy(() => import("../features/profiles/admin/pages/subjects/AcademicYearPage").then((module) => ({ default: module.AcademicYearPage })));
-const PrincipalDashboardHome = lazy(() => import("../features/profiles/principal/pages/dashboard/PrincipalDashboardHome").then((module) => ({ default: module.PrincipalDashboardHome })));
-const PrincipalStudentsPage = lazy(() => import("../features/profiles/principal/pages/students/PrincipalStudentsPage").then((module) => ({ default: module.PrincipalStudentsPage })));
-const ClassListPage = lazy(() => import("../features/profiles/principal/pages/students/ClassListPage").then((module) => ({ default: module.ClassListPage })));
-const PrincipalTeachersPage = lazy(() => import("../features/profiles/principal/pages/teachers/PrincipalTeachersPage").then((module) => ({ default: module.PrincipalTeachersPage })));
-const TeacherSchedulePage = lazy(() => import("../features/profiles/principal/pages/teachers/TeacherSchedulePage").then((module) => ({ default: module.TeacherSchedulePage })));
-const AnalyticsPage = lazy(() => import("../features/profiles/principal/pages/reports/AnalyticsPage").then((module) => ({ default: module.AnalyticsPage })));
-const PrincipalGradebooksPage = lazy(() => import("../features/profiles/principal/pages/gradebooks/PrincipalGradebooksPage").then((module) => ({ default: module.PrincipalGradebooksPage })));
-const PrincipalGradeSheetPage = lazy(() => import("../features/profiles/principal/pages/gradebooks/PrincipalGradeSheetPage").then((module) => ({ default: module.PrincipalGradeSheetPage })));
-const HolisticPerformanceAnalyticsPage = lazy(() => import("../features/profiles/principal/pages/reports/HolisticPerformanceAnalyticsPage").then((module) => ({ default: module.HolisticPerformanceAnalyticsPage })));
-const TeacherAttendancePage = lazy(() => import("../features/profiles/teacher/pages/attendance/TeacherAttendancePage").then((module) => ({ default: module.TeacherAttendancePage })));
-const TeacherAttendanceRecordsPage = lazy(() => import("../features/profiles/teacher/pages/attendance/TeacherAttendanceRecordsPage").then((module) => ({ default: module.TeacherAttendanceRecordsPage })));
-const PetQuizPage = lazy(() => import("../features/profiles/parent/pages/Student/Academic/PetQuizPage"));
-const AddSubjectPage = lazy(() => import("../features/profiles/admin/pages/subjects/AddSubjectPage").then((module) => ({ default: module.AddSubjectPage })));
-const SubjectsSection = lazy(() => import("../features/profiles/admin/pages/subjects/SubjectSection").then((module) => ({ default: module.SubjectsSection })));
-const AdminSubjectDetailPage = lazy(() => import("../features/profiles/admin/pages/subjects/AdminSubjectDetailPage").then((module) => ({ default: module.AdminSubjectDetailPage })));
+const AdminDashboardHome = lazy(routeSkeletons["/admin"].load);
+const StudentRecordsPage = lazy(routeSkeletons["/admin/students"].load);
+const StudentFormPage = lazy(routeSkeletons["/admin/students/:studentId/edit"].load);
+const UserManagementPage = lazy(routeSkeletons["/admin/users"].load);
+const UserFormPage = lazy(routeSkeletons["/admin/users/:role/:userId/edit"].load);
+const UserViewPage = lazy(routeSkeletons["/admin/users/:role/:userId"].load);
+const ClassesPage = lazy(routeSkeletons["/admin/classes"].load);
+const ClassFormPage = lazy(routeSkeletons["/admin/classes/:classId/edit"].load);
+const ClassViewPage = lazy(routeSkeletons["/admin/classes/:classId"].load);
+const LandingPage = lazy(routeSkeletons["/"].load);
+const LoginPanel = lazy(routeSkeletons["/login"].load);
+const StudentDetailPage = lazy(routeSkeletons["/teacher/students/:studentId"].load);
+const ManageSubjectsPage = lazy(routeSkeletons["/admin/subjects"].load);
+const CalendarPage = lazy(routeSkeletons["/admin/calendar"].load);
+const HelpSupportPage = lazy(routeSkeletons["/admin/help"].load);
+const TeacherDashboardHome = lazy(routeSkeletons["/teacher"].load);
+const AdvisoryRosterPage = lazy(routeSkeletons["/teacher/advisory"].load);
+const GradesPage = lazy(routeSkeletons["/teacher/grades"].load);
+const SubjectsPage = lazy(routeSkeletons["/teacher/subjects"].load);
+const ParentDashboardHome = lazy(routeSkeletons["/parent"].load);
+const EnrolledChildrenPage = lazy(routeSkeletons["/parent/enrolled-children"].load);
+const ChildDetailPage = lazy(routeSkeletons["/parent/students/:studentId"].load);
+const TopicSupportChoice = lazy(routeSkeletons["/parent/students/:studentId/topics/:topicId/support"].load);
+const CoursewareView = lazy(routeSkeletons["/parent/students/:studentId/topics/:topicId/courseware"].load);
+const CalendarPageView = lazy(routeSkeletons["/teacher/calendar"].load);
+const SubjectDetailPage = lazy(routeSkeletons["/teacher/subjects/:subjectId"].load);
+const SubjectRecordsPage = lazy(routeSkeletons["/teacher/subjects/:subjectId/records"].load);
+const HolisticOverviewPage = lazy(routeSkeletons["/teacher/holistic"].load);
+const StudentHolisticProfilePage = lazy(routeSkeletons["/teacher/holistic/:studentId"].load);
+const HolisticDomainTrendsPage = lazy(routeSkeletons["/teacher/holistic/domain-trends"].load);
+const SubjectClassListPage = lazy(routeSkeletons["/teacher/subjects/:subjectSectionId/students"].load);
+const AcademicYearPage = lazy(routeSkeletons["/admin/academic-year"].load);
+const PrincipalDashboardHome = lazy(routeSkeletons["/principal"].load);
+const PrincipalStudentsPage = lazy(routeSkeletons["/principal/students"].load);
+const ClassListPage = lazy(routeSkeletons["/principal/students/class/:classId"].load);
+const PrincipalTeachersPage = lazy(routeSkeletons["/principal/teachers"].load);
+const TeacherSchedulePage = lazy(routeSkeletons["/principal/teachers/:teacherId"].load);
+const AnalyticsPage = lazy(routeSkeletons["/principal/reports"].load);
+const PrincipalGradebooksPage = lazy(routeSkeletons["/principal/gradebooks"].load);
+const PrincipalGradeSheetPage = lazy(routeSkeletons["/principal/gradebooks/:grade"].load);
+const HolisticPerformanceAnalyticsPage = lazy(routeSkeletons["/principal/holistic-performance-analytics"].load);
+const TeacherAttendancePage = lazy(routeSkeletons["/teacher/attendance"].load);
+const TeacherAttendanceRecordsPage = lazy(routeSkeletons["/teacher/attendance/records"].load);
+const PetQuizPage = lazy(routeSkeletons["/parent/students/:studentId/topics/:topicId/quiz"].load);
+const AddSubjectPage = lazy(routeSkeletons["/admin/subjects/new"].load);
+const AdminSubjectDetailPage = lazy(routeSkeletons["/admin/subjects/:subjectId"].load);
 
 type Role = "ADMIN" | "PRINCIPAL" | "TEACHER" | "PARENT";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
-  if (isLoading) return <QedLoader fill />;
-  if (!user) return <Navigate to="/login" replace />;
-  return (
-    <>{children}</>
-  );
+  return <QedBootstrapLoader loading={isLoading}>{user ? children : <Navigate to="/login" replace />}</QedBootstrapLoader>;
 }
 
 function RoleRoute({
@@ -143,16 +141,12 @@ function AdminSection() {
 }
 
 export function AppRouter() {
-  const { isLoading } = useAuth();
-
   return (
     <>
-      <QedSplash loading={isLoading} />
       <DebugRoute />
-      <Suspense fallback={<QedLoader fill />}>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<Suspense fallback={<RouteSkeleton />}><LandingPage /></Suspense>} />
+        <Route path="/login" element={<Suspense fallback={<RouteSkeleton />}><LoginPage /></Suspense>} />
 
         {/* ADMIN */}
         <Route
@@ -294,8 +288,13 @@ export function AppRouter() {
           <Route path="calendar" element={<CalendarPageView />} />
           <Route path="help" element={<HelpSupportPage audience="PARENT" />} />
         </Route>
-      </Routes>
-      </Suspense>
-    </>
+      </Routes></>
   );
 }
+
+
+
+
+
+
+

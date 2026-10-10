@@ -1,0 +1,6 @@
+src/shared/components/StudentDirectoryTable.tsx(53,85): error TS2304: Cannot find name 'view'.
+src/shared/components/StudentDirectoryTable.tsx(87,89): error TS2304: Cannot find name 'loading'.
+src/shared/components/StudentDirectoryTable.tsx(90,29): error TS2304: Cannot find name 'view'.
+src/shared/components/StudentDirectoryTable.tsx(90,44): error TS2304: Cannot find name 'loading'.
+src/shared/components/StudentDirectoryTable.tsx(90,60): error TS2552: Cannot find name 'error'. Did you mean 'Error'?
+src/shared/components/StudentDirectoryTable.tsx(90,74): error TS2304: Cannot find name 'retry'.

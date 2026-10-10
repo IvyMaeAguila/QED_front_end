@@ -1,0 +1,39 @@
+[WebServer] (node:12548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16520) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:31596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 375 light known snapshot shell remains real (9.5s)
+
+
+  1) tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 375 light known snapshot shell remains real 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Whole-Child Snapshot', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Whole-Child Snapshot', exact: true }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: 'Whole-Child Snapshot', exact: true })
+
+
+       9 |  await page.route('**/api/teacherHolistic/profile/1?*',async route=>{await gate;await route.fulfill({status:failed==='profile'?500:200,json:failed==='profile'?{success:false,message:'Profile unavailable'}:{success:true,data:{studentId:'1',studentName:long?'Maria Alexandra Isabella '.repeat(8)+'Cruz':'Ana Cruz',isAdvisory:true,overall:{domainAverages:domains,evaluationCount:evaluations,lastEvaluation:evaluations?'2026-10-09':null},highestRiskLevel:'NONE',subjects:Array.from({length:count},(_,i)=>({subjectSectionId:String(i+1),subjectName:long?'Mathematics and quantitative reasoning '.repeat(3):i?'Reading':'Mathematics',domainAverages:domains,evaluationCount:evaluations,lastEvaluation:evaluations?'2026-10-09':null,riskLevel:'NONE',risks:[],recommendations:[{domain:'cognitive',message:long?'Continue providing opportunities to practice concepts with guidance. '.repeat(8):'Provide practice opportunities.',priority:'Medium'}],weeksCount:3,weeklyScores:evaluations?[{score:3.1},{score:3.9},{score:4.2}]:[],pastAverage:3.1,recentAverage:3.9,currentWeekAverage:3.9,trend:'Improving'}))}}});});
+      10 |  return Object.assign(()=>{context();finish();},{fail:(kind:string)=>{failed=kind;},recover:()=>{failed='';}});}
+    > 11 | for(const width of [375,1280])for(const dark of [false,true])test(`holistic profile ${width} ${dark?'dark':'light'} known snapshot shell remains real`,async({page})=>{await page.setViewportSize({width,height:1100});const release=await fixture(page,dark);await page.goto(url);await expect(page.getByRole('heading',{name:'Holistic Development Profile',exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Whole-Child Snapshot',exact:true})).toBeVisible();await expect(page.getByRole('combobox',{name:'Filter holistic profile by subject',exact:true})).toHaveValue('all');await expect(page.getByText('Cognitive',{exact:true})).toBeVisible();await expect(page.getByText('Per-Subject Breakdown',{exact:true})).toBeVisible();await expect(page.locator('[data-sk-region="holistic-profile-data"]')).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);const verify=await captureFixedOverlay(page,`holistic-profile-${width}-${dark?'dark':'light'}`,['[data-sk-region="holistic-profile-initials"]']);fs.mkdirSync('loading-screenshots',{recursive:true});const prefix=`loading-screenshots/holistic-profile-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});release();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);await expect(page.getByRole('heading',{name:'Ana Cruz',exact:true})).toBeVisible();await expect(page.locator('[data-sk-region="holistic-profile-subject"]')).toHaveCount(2);await verify();await page.screenshot({path:prefix+'-loaded.png',fullPage:true});});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ^
+      12 | for(const count of [0,1,9])test(`holistic profile preserves ${count} actual subject cards`,async({page})=>{const release=await fixture(page,false,count,count===9);await page.goto(url);release();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);await expect(page.locator('[data-sk-region="holistic-profile-subject"]')).toHaveCount(count);});
+      13 | for(const kind of ['student','profile','terms'])test(`holistic profile retries ${kind} errors`,async({page})=>{const release=await fixture(page,false);release.fail(kind);await page.goto(kind==='terms'?url.replace('?term=1',''):url);release();await expect(page.getByRole('alert')).toBeVisible();await expect(page.locator('[data-sk-primitive]')).toHaveCount(0);release.recover();await page.getByRole('button',{name:'Retry',exact:true}).click();await expect(page.getByRole('alert')).toHaveCount(0);await expect(page.getByRole('heading',{name:'Ana Cruz',exact:true})).toBeVisible();});
+      14 | test('holistic profile empty evaluations settle into the original empty state',async({page})=>{const release=await fixture(page,false,1,false,0);await page.goto(url);release();await expect(page.getByText('No evaluations recorded yet.',{exact:true})).toBeVisible();await expect(page.locator('[data-sk-primitive],[role=status]')).toHaveCount(0);});
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\holistic-profile-loading.spec.ts:11:460
+
+    Error Context: test-results\holistic-profile-loading-h-db843-snapshot-shell-remains-real\error-context.md
+
+  1 failed
+    tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 375 light known snapshot shell remains real 

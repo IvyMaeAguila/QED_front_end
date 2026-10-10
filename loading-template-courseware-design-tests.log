@@ -1,0 +1,47 @@
+
+[WebServer] (node:34220) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:19896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 25 tests using 1 worker
+
+
+(node:14112) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/25] tests\courseware-loading.spec.ts:21:68 › courseware 375 light: real learning frame before fetched leaves
+[2/25] tests\courseware-loading.spec.ts:21:68 › courseware 375 dark: real learning frame before fetched leaves
+[3/25] tests\courseware-loading.spec.ts:21:68 › courseware 1280 light: real learning frame before fetched leaves
+[4/25] tests\courseware-loading.spec.ts:21:68 › courseware 1280 dark: real learning frame before fetched leaves
+[5/25] tests\courseware-loading.spec.ts:44:32 › courseware 0 resources preserves empty/short/long content
+[6/25] tests\courseware-loading.spec.ts:44:32 › courseware 1 resources preserves empty/short/long content
+[7/25] tests\courseware-loading.spec.ts:44:32 › courseware 9 resources preserves empty/short/long content
+[8/25] tests\courseware-loading.spec.ts:55:1 › courseware error ends reservation and retries the same request
+
+[WebServer] 11:33:56 PM [vite] (client) [console.error] Failed to load courseware: Error: Unavailable
+[WebServer]     at getCourseware (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/courseware.service.ts:11:9)
+[WebServer]     at async load (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/CoursewareView.tsx:204:20)
+[WebServer] 11:33:56 PM [vite] (client) [console.error] Failed to load courseware: Error: Unavailable
+
+[WebServer]     at getCourseware (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/courseware.service.ts:11:9)
+[WebServer]     at async load (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/CoursewareView.tsx:204:20)
+[9/25] tests\courseware-loading.spec.ts:69:35 › courseware light: actual hero and thumbnail surfaces keep visible shimmer
+[10/25] tests\courseware-loading.spec.ts:69:35 › courseware dark: actual hero and thumbnail surfaces keep visible shimmer
+[11/25] tests\design-contract.spec.ts:6:1 › skeleton CSS has token-only colors
+[12/25] tests\design-contract.spec.ts:12:40 › light: pixel area survives all four shimmer phases on every surface
+[13/25] tests\design-contract.spec.ts:12:40 › dark: pixel area survives all four shimmer phases on every surface
+[14/25] tests\design-contract.spec.ts:17:68 › teacher 375 light: static content and spinner guard
+[15/25] tests\design-contract.spec.ts:17:68 › teacher 375 dark: static content and spinner guard
+[16/25] tests\design-contract.spec.ts:17:68 › teacher 1280 light: static content and spinner guard
+[17/25] tests\design-contract.spec.ts:17:68 › teacher 1280 dark: static content and spinner guard
+[18/25] tests\design-contract.spec.ts:32:1 › negative control: shine blending into the surface is caught by the pixel guard
+[19/25] tests\design-contract.spec.ts:44:1 › negative control: a hard shimmer edge is caught independently of visible area
+[20/25] tests\subject-template-loading.spec.ts:21:68 › subject template 375 light: upload frame is real before fetched metadata
+[21/25] tests\subject-template-loading.spec.ts:21:68 › subject template 375 dark: upload frame is real before fetched metadata
+[22/25] tests\subject-template-loading.spec.ts:21:68 › subject template 1280 light: upload frame is real before fetched metadata
+[23/25] tests\subject-template-loading.spec.ts:21:68 › subject template 1280 dark: upload frame is real before fetched metadata
+[24/25] tests\subject-template-loading.spec.ts:40:1 › subject template absent result keeps original upload operation
+[25/25] tests\subject-template-loading.spec.ts:52:1 › subject template error clears skeleton and retries existing service
+  25 passed (41.4s)

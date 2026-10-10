@@ -1,0 +1,374 @@
+[WebServer] (node:40732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:39864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:17964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SHELL DIAGNOSTIC {
+  geometry: [
+    {
+      tag: 'SECTION',
+      width: 1176,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 433.25,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'SELECT',
+      width: 123,
+      font: '500 14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'SELECT',
+      width: 133,
+      font: '500 14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 147,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 147,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    }
+  ],
+  after: [
+    {
+      tag: 'SECTION',
+      width: 1176,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 433.25,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'SELECT',
+      width: 123,
+      font: '500 14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'SELECT',
+      width: 133,
+      font: '500 14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 147,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 147,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    }
+  ]
+}
+SHIFT DIAGNOSTIC {
+  shifts: [ { value: 0.02833020562065972, time: 1180.6000000238419 } ],
+  events: [
+    { phase: 'waiting', time: 538.6000000238419, height: 338 },
+    { phase: 'revealed', time: 751.9000000357628, height: 338 },
+    { phase: 'swapping', time: 1169.199999988079, height: 64 },
+    { phase: 'settled', time: 1382, height: 64 }
+  ]
+}
+WIDTH DIAGNOSTIC {
+  loaded: [
+    { x: 25, width: 183.046875 },
+    { x: 208.046875, width: 164.5 },
+    { x: 372.546875, width: 207.140625 },
+    { x: 579.6875, width: 421.15625 },
+    { x: 1000.84375, width: 198.15625 }
+  ],
+  repeated: [
+    { x: 25, width: 183.046875 },
+    { x: 208.046875, width: 164.5 },
+    { x: 372.546875, width: 207.140625 },
+    { x: 579.6875, width: 421.15625 },
+    { x: 1000.84375, width: 198.15625 }
+  ],
+  cols: [
+    'width: 15.5917%;',
+    'width: 14.0119%;',
+    'width: 17.644%;',
+    'width: 35.8736%;',
+    'width: 16.8787%;'
+  ]
+}
+  x  1 tests\auto-columns.spec.ts:9:32 › auto columns: 0 rows, one swap, stable shell and cached repeat (2.2s)
+(node:32456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SHELL DIAGNOSTIC {
+  geometry: [
+    {
+      tag: 'SECTION',
+      width: 1176,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 433.25,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'SELECT',
+      width: 123,
+      font: '500 14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'SELECT',
+      width: 133,
+      font: '500 14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 147,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 147,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    }
+  ],
+  after: [
+    {
+      tag: 'SECTION',
+      width: 1176,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 433.25,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'SELECT',
+      width: 123,
+      font: '500 14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'SELECT',
+      width: 133,
+      font: '500 14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 147,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 147,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    }
+  ]
+}
+SHIFT DIAGNOSTIC {
+  shifts: [ { value: 0.02644334920247396, time: 800.6000000238419 } ],
+  events: [
+    { phase: 'waiting', time: 171.69999998807907, height: 338 },
+    { phase: 'revealed', time: 382.19999998807907, height: 338 },
+    { phase: 'swapping', time: 795.8000000119209, height: 83 },
+    { phase: 'settled', time: 1019.1999999880791, height: 83 }
+  ]
+}
+WIDTH DIAGNOSTIC {
+  loaded: [
+    { x: 25, width: 173.328125 },
+    { x: 198.328125, width: 338.0625 },
+    { x: 536.390625, width: 263 },
+    { x: 799.390625, width: 313.203125 },
+    { x: 1112.59375, width: 86.40625 }
+  ],
+  repeated: [
+    { x: 25, width: 173.328125 },
+    { x: 198.328125, width: 338.0625 },
+    { x: 536.390625, width: 263 },
+    { x: 799.390625, width: 313.203125 },
+    { x: 1112.59375, width: 86.40625 }
+  ],
+  cols: [
+    'width: 14.7639%;',
+    'width: 28.7958%;',
+    'width: 22.402%;',
+    'width: 26.6783%;',
+    'width: 7.35999%;'
+  ]
+}
+  x  2 tests\auto-columns.spec.ts:9:32 › auto columns: 1 rows, one swap, stable shell and cached repeat (1.8s)
+(node:22816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SHELL DIAGNOSTIC {
+  geometry: [
+    {
+      tag: 'SECTION',
+      width: 1176,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 433.25,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'SELECT',
+      width: 123,
+      font: '500 14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'SELECT',
+      width: 133,
+      font: '500 14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 147,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 147,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    }
+  ],
+  after: [
+    {
+      tag: 'SECTION',
+      width: 1176,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 433.25,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'SELECT',
+      width: 123,
+      font: '500 14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'SELECT',
+      width: 133,
+      font: '500 14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 147,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    },
+    {
+      tag: 'INPUT',
+      width: 147,
+      font: '14px / 21px Inter, ui-sans-serif, system-ui, sans-serif'
+    }
+  ]
+}
+SHIFT DIAGNOSTIC {
+  shifts: [ { value: 0.022931219482421876, time: 798.6999999880791 } ],
+  events: [
+    { phase: 'waiting', time: 161.19999998807907, height: 338 },
+    { phase: 'revealed', time: 384, height: 338 },
+    { phase: 'swapping', time: 797.1000000238419, height: 491 },
+    { phase: 'settled', time: 1007.3999999761581, height: 491 }
+  ]
+}
+WIDTH DIAGNOSTIC {
+  loaded: [
+    { x: 25, width: 173.328125 },
+    { x: 198.328125, width: 338.0625 },
+    { x: 536.390625, width: 263 },
+    { x: 799.390625, width: 313.203125 },
+    { x: 1112.59375, width: 86.40625 }
+  ],
+  repeated: [
+    { x: 25, width: 173.328125 },
+    { x: 198.328125, width: 338.0625 },
+    { x: 536.390625, width: 263 },
+    { x: 799.390625, width: 313.203125 },
+    { x: 1112.59375, width: 86.40625 }
+  ],
+  cols: [
+    'width: 14.7639%;',
+    'width: 28.7958%;',
+    'width: 22.402%;',
+    'width: 26.6783%;',
+    'width: 7.35999%;'
+  ]
+}
+  x  3 tests\auto-columns.spec.ts:9:32 › auto columns: 9 rows, one swap, stable shell and cached repeat (1.8s)
+(node:37696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 tests\auto-columns.spec.ts:48:1 › auto-column classification requires observed data-dependent widths (494ms)
+
+
+  1) tests\auto-columns.spec.ts:9:32 › auto columns: 0 rows, one swap, stable shell and cached repeat 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      39 |   for (let i = 0; i < loaded.length; i++) expect(Math.abs(repeated[i].width - loaded[i].width)).toBeLessThanOrEqual(2);
+      40 |   const properties = await region.evaluate(element => [...element.querySelectorAll("*")].map(child => getComputedStyle(child).transitionProperty));
+    > 41 |   expect(properties.every(property => !/(^|,\s*)(width|height|left|top|all)(,|$)/.test(property))).toBe(true);
+         |                                                                                                    ^
+      42 |   const animated = await page.evaluate(() => document.getAnimations().flatMap(animation => animation.effect!.getKeyframes().flatMap(frame => Object.keys(frame))));
+      43 |   expect(animated.every(property => ["opacity", "transform", "offset", "computedOffset", "easing", "composite"].includes(property))).toBe(true);
+      44 |   release(); await expect(region).toHaveAttribute("data-sk-phase", "settled");
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\auto-columns.spec.ts:41:100
+
+    Error Context: test-results\auto-columns-auto-columns--356ed-ble-shell-and-cached-repeat\error-context.md
+
+  2) tests\auto-columns.spec.ts:9:32 › auto columns: 1 rows, one swap, stable shell and cached repeat 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      39 |   for (let i = 0; i < loaded.length; i++) expect(Math.abs(repeated[i].width - loaded[i].width)).toBeLessThanOrEqual(2);
+      40 |   const properties = await region.evaluate(element => [...element.querySelectorAll("*")].map(child => getComputedStyle(child).transitionProperty));
+    > 41 |   expect(properties.every(property => !/(^|,\s*)(width|height|left|top|all)(,|$)/.test(property))).toBe(true);
+         |                                                                                                    ^
+      42 |   const animated = await page.evaluate(() => document.getAnimations().flatMap(animation => animation.effect!.getKeyframes().flatMap(frame => Object.keys(frame))));
+      43 |   expect(animated.every(property => ["opacity", "transform", "offset", "computedOffset", "easing", "composite"].includes(property))).toBe(true);
+      44 |   release(); await expect(region).toHaveAttribute("data-sk-phase", "settled");
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\auto-columns.spec.ts:41:100
+
+    Error Context: test-results\auto-columns-auto-columns--b9489-ble-shell-and-cached-repeat\error-context.md
+
+  3) tests\auto-columns.spec.ts:9:32 › auto columns: 9 rows, one swap, stable shell and cached repeat 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      39 |   for (let i = 0; i < loaded.length; i++) expect(Math.abs(repeated[i].width - loaded[i].width)).toBeLessThanOrEqual(2);
+      40 |   const properties = await region.evaluate(element => [...element.querySelectorAll("*")].map(child => getComputedStyle(child).transitionProperty));
+    > 41 |   expect(properties.every(property => !/(^|,\s*)(width|height|left|top|all)(,|$)/.test(property))).toBe(true);
+         |                                                                                                    ^
+      42 |   const animated = await page.evaluate(() => document.getAnimations().flatMap(animation => animation.effect!.getKeyframes().flatMap(frame => Object.keys(frame))));
+      43 |   expect(animated.every(property => ["opacity", "transform", "offset", "computedOffset", "easing", "composite"].includes(property))).toBe(true);
+      44 |   release(); await expect(region).toHaveAttribute("data-sk-phase", "settled");
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\auto-columns.spec.ts:41:100
+
+    Error Context: test-results\auto-columns-auto-columns--81f78-ble-shell-and-cached-repeat\error-context.md
+
+  3 failed
+    tests\auto-columns.spec.ts:9:32 › auto columns: 0 rows, one swap, stable shell and cached repeat 
+    tests\auto-columns.spec.ts:9:32 › auto columns: 1 rows, one swap, stable shell and cached repeat 
+    tests\auto-columns.spec.ts:9:32 › auto columns: 9 rows, one swap, stable shell and cached repeat 
+  1 passed (11.7s)

@@ -1,3 +1,7 @@
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
+import { SkeletonText } from "@shared/components/SkeletonLoading";
+import { rememberRows, skeletonRows } from "@shared/loading/reservations";
 import { useState } from "react";
 import { Brain, Heart, Activity, Users, MousePointerClick, CornerDownRight, type LucideIcon } from "lucide-react";
 import type { DomainKey, HeatmapRow } from "../data/types";
@@ -72,6 +76,8 @@ function interpretScore(domain: DomainKey, value: number | null): string | null 
 }
 
 interface HolisticHeatmapProps {
+  loading?: boolean;
+  view?: string;
   rows: HeatmapRow[];
   rowHeader: string; 
   panelBorder: string;
@@ -80,7 +86,7 @@ interface HolisticHeatmapProps {
   darkMode: boolean;
 }
 
-export function HolisticHeatmap({ rows, rowHeader, panelBorder, textPrimary, textMuted, darkMode }: HolisticHeatmapProps) {
+export function HolisticHeatmap({ rows, loading = false, view = "holistic-heatmap", rowHeader, panelBorder, textPrimary, textMuted, darkMode }: HolisticHeatmapProps) {
   const [hovered, setHovered] = useState<{ row: string; domain: DomainKey } | null>(null);
   const domainKeys = Object.keys(DOMAIN_META) as DomainKey[];
 
@@ -92,11 +98,7 @@ export function HolisticHeatmap({ rows, rowHeader, panelBorder, textPrimary, tex
   const hoveredInterpretation = hovered ? interpretScore(hovered.domain, hoveredValue) : null;
   const hoveredBand = hovered && hoveredValue !== null && hoveredValue !== undefined ? bandFor(hoveredValue) : null;
 
-  return (
-    <div className="flex flex-col gap-4">
-      {/* Grid */}
-      <div className={`overflow-hidden rounded-2xl border ${panelBorder}`}>
-        <div className="grid" style={{ gridTemplateColumns: `140px repeat(${domainKeys.length}, 1fr)` }}>
+  const renderGrid = (pending: boolean) => (        <div className="grid" style={{ gridTemplateColumns: `140px repeat(${domainKeys.length}, 1fr)` }}>
           {/* header row */}
           <div className={`flex items-center px-4 py-3 text-xs font-bold uppercase tracking-wider border-b border-r ${hairline} ${darkMode ? "bg-white/[0.04]" : "bg-[#F4F5F7]"} ${textMuted}`}>{rowHeader}</div>
           {domainKeys.map((key) => (
@@ -106,10 +108,12 @@ export function HolisticHeatmap({ rows, rowHeader, panelBorder, textPrimary, tex
           ))}
 
           {/* data rows */}
-          {rows.map((row) => (
+          {(pending ? Array.from({ length: skeletonRows(view, undefined, 64) }, (_, index) => ({ label: `pending-${index}`, scores: { cognitive: null, emotional: null, behavioral: null, social: null } } satisfies HeatmapRow)) : rows).map((row, index) => (
             <RowCells
               key={row.label}
               row={row}
+              pending={pending}
+              fieldKey={`${view}:row-${index}`}
               domainKeys={domainKeys}
               hovered={hovered}
               setHovered={setHovered}
@@ -119,7 +123,13 @@ export function HolisticHeatmap({ rows, rowHeader, panelBorder, textPrimary, tex
               textMuted={textMuted}
             />
           ))}
-        </div>
+        </div>);
+
+  return (
+    <div className="flex flex-col gap-4">
+      {/* Grid */}
+      <div className={`overflow-hidden rounded-2xl border ${panelBorder}`}>
+        <LoadingRegion name="holistic-heatmap-grid" loading={loading} variable retainPrevious hasContent={rows.length > 0} skeleton={null} frame={renderGrid} onSettled={() => rememberRows(view, rows.length)}>{renderGrid(false)}</LoadingRegion>
       </div>
 
       {/* Legend */}
@@ -144,13 +154,13 @@ export function HolisticHeatmap({ rows, rowHeader, panelBorder, textPrimary, tex
                 </span>
               )}
             </p>
-            <p className="mt-0.5 flex items-center gap-1.5 text-sm font-bold" style={{ color: "#6B0000" }}>
+            <p className="mt-0.5 flex items-center gap-1.5 text-sm font-bold" style={{ color: "var(--brand-ink)" }}>
               <CornerDownRight className="h-4 w-4 shrink-0" strokeWidth={3} />
               {hoveredInterpretation ?? "No data recorded yet for this cell."}
             </p>
           </div>
         ) : (
-          <p className={`flex items-center gap-1.5 text-xs font-medium ${textMuted}`}>
+          <p className={`flex items-center gap-1.5 text-xs font-medium ${textMuted}`} data-sk-region="holisticheatmap-hover-over-or-focus-a-score-to-see-its-meanin" data-sk-static="">
             <MousePointerClick className="h-3.5 w-3.5 shrink-0" strokeWidth={2.25} />
             Hover over or focus a score to see its meaning.
           </p>
@@ -162,6 +172,8 @@ export function HolisticHeatmap({ rows, rowHeader, panelBorder, textPrimary, tex
 
 function RowCells({
   row,
+  pending,
+  fieldKey,
   domainKeys,
   hovered,
   setHovered,
@@ -171,6 +183,8 @@ function RowCells({
   textMuted,
 }: {
   row: HeatmapRow;
+  pending: boolean;
+  fieldKey: string;
   domainKeys: DomainKey[];
   hovered: { row: string; domain: DomainKey } | null;
   setHovered: (v: { row: string; domain: DomainKey } | null) => void;
@@ -182,7 +196,7 @@ function RowCells({
   return (
     <>
       <div className={`flex items-center px-4 py-3 text-xs font-semibold border-r border-b ${hairline} ${textPrimary}`} style={{ backgroundColor: cellBg }}>
-        {row.label}
+        <span data-sk-field={`${fieldKey}:label`} data-sk-region="holistic-heatmap-row-label" data-sk-variable="">{pending ? <SkeletonParagraph field={`${fieldKey}:label`} /> : row.label}</span>
       </div>
       {domainKeys.map((key) => {
         const value = row.scores[key];
@@ -191,6 +205,9 @@ function RowCells({
           <button
             key={key}
             type="button"
+            disabled={pending}
+            data-sk-region={`holistic-heatmap-score-${key}`}
+            data-sk-variable=""
             onMouseEnter={() => setHovered({ row: row.label, domain: key })}
             onMouseLeave={() => setHovered(null)}
             onFocus={() => setHovered({ row: row.label, domain: key })}
@@ -202,10 +219,10 @@ function RowCells({
                 ? cellBg
                 : `${bandFor(value).color}${Math.round(opacityFor(value) * 255).toString(16).padStart(2, "0")}`,
               color: "#1A1A1A",
-              boxShadow: isHovered ? "inset 0 0 0 2px #6B0000" : undefined,
+              boxShadow: isHovered ? "inset 0 0 0 2px var(--brand-secondary)" : undefined,
             }}
           >
-            {value === null ? <span className={`text-xs font-medium ${textMuted}`}>&mdash;</span> : value.toFixed(1)}
+            {pending ? <SkeletonText width="3ch" /> : value === null ? <span className={`text-xs font-medium ${textMuted}`} data-sk-region="holisticheatmap--mdash-" data-sk-static="">&mdash;</span> : value.toFixed(1)}
           </button>
         );
       })}

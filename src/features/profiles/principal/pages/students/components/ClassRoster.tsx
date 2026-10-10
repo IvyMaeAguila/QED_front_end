@@ -4,6 +4,10 @@ import { StudentDirectory } from "@shared/components/StudentDirectory";
 
 interface ClassRosterProps {
   roster: Student[];
+  loading?: boolean;
+  error?: unknown;
+  retry?: () => void;
+  view?: string;
   panelBg: string;
   panelBorder: string;
   textPrimary: string;
@@ -24,3 +28,4 @@ export function ClassRoster({ roster, ...theme }: ClassRosterProps) {
     />
   );
 }
+

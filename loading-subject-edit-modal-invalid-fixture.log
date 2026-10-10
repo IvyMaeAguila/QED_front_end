@@ -1,0 +1,238 @@
+
+[WebServer] (node:26588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:6044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 4 tests using 1 worker
+
+(node:28464) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/4] tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 375 light settles errors and retries
+
+
+[WebServer] 7:17:32 PM [vite] (client) [Unhandled error] TypeError: schoolYears.map is not a function or its return value is not iterable
+[WebServer]  > map src/features/profiles/admin/pages/subjects/components/EditSubjectModal.tsx:308:60
+[WebServer]     306 |            <label className={labelClasses}>School Year</label>
+[WebServer]     307 |            <select value={schoolYear} onChange={(e) => setSchoolYear(e.target.value)} disabled={saving} className={sav...
+[WebServer]     308 |              {[...new Set([subject.schoolYear, ...schoolYears.map((year) => year.school_year)])].filter(Boolean).map((...
+[WebServer]         |                                                              ^
+[WebServer]     309 |                <option key={year} value={year}>{year}</option>
+[WebServer]     310 |              ))}
+[WebServer]  > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:19
+[WebServer]  > renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:21
+[WebServer]  > updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:18
+[WebServer]  > beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:17
+[WebServer]  > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+[WebServer]  > performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:21
+[WebServer]  > workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:40
+[WebServer]  > renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:10
+[WebServer]  > performWorkOnRoot node_modules/react-dom/cjs/react-dom-client.development.js:16583:34
+[WebServer] 
+[WebServer] 7:17:32 PM [vite] (client) [console.warn] An error occurred in the <EditSubjectModal> component.
+[WebServer] 
+[WebServer] Consider adding an error boundary to your tree to customize error handling behavior.
+[WebServer] Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+[WebServer] 
+  1) tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 375 light settles errors and retries 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: locator('[data-sk-region="edit-subject-template"]')
+    Expected: "revealed"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" locator('[data-sk-region="edit-subject-template"]') with timeout 5000ms
+      - waiting for locator('[data-sk-region="edit-subject-template"]')
+
+
+      13 |   await page.route('**/getActiveGradeTemplate/*',async route=>{requests++;await gate;await route.fulfill({status:failed?500:200,json:failed?{success:false,message:'Template unavailable'}:{success:true,data:null}});});
+      14 |   await page.goto('/admin/subjects');await page.getByRole('button',{name:'Edit',exact:true}).first().click();
+    > 15 |   const region=page.locator('[data-sk-region="edit-subject-template"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+         |                                                                                              ^
+      16 |   finish();await expect(region.getByRole('alert')).toBeVisible();await expect(region.locator('[data-sk-primitive]')).toHaveCount(0);
+      17 |   failed=false;await region.getByRole('button',{name:'Retry',exact:true}).click();await expect(region).toHaveAttribute('data-sk-phase','settled');await expect(region.getByRole('alert')).toHaveCount(0);expect(requests).toBe(2);
+      18 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\subject-edit-modal-loading.spec.ts:15:94
+
+    Error Context: test-results\subject-edit-modal-loading-e8108--settles-errors-and-retries\error-context.md
+
+
+
+(node:18252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[2/4] tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 375 dark settles errors and retries
+
+[WebServer] 7:17:39 PM [vite] (client) [Unhandled error] TypeError: schoolYears.map is not a function or its return value is not iterable
+[WebServer]  > map src/features/profiles/admin/pages/subjects/components/EditSubjectModal.tsx:308:60
+[WebServer]     306 |            <label className={labelClasses}>School Year</label>
+[WebServer]     307 |            <select value={schoolYear} onChange={(e) => setSchoolYear(e.target.value)} disabled={saving} className={sav...
+[WebServer]     308 |              {[...new Set([subject.schoolYear, ...schoolYears.map((year) => year.school_year)])].filter(Boolean).map((...
+[WebServer]         |                                                              ^
+[WebServer]     309 |                <option key={year} value={year}>{year}</option>
+[WebServer]     310 |              ))}
+[WebServer]  > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:19
+
+[WebServer]  > renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:21
+[WebServer]  > updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:18
+[WebServer]  > beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:17
+[WebServer]  > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+[WebServer]  > performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:21
+[WebServer]  > workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:40
+[WebServer]  > renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:10
+[WebServer]  > performWorkOnRoot node_modules/react-dom/cjs/react-dom-client.development.js:16583:34
+[WebServer] 
+[WebServer] 7:17:39 PM [vite] (client) [console.warn] An error occurred in the <EditSubjectModal> component.
+[WebServer] 
+[WebServer] Consider adding an error boundary to your tree to customize error handling behavior.
+[WebServer] Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+[WebServer] 
+  2) tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 375 dark settles errors and retries 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: locator('[data-sk-region="edit-subject-template"]')
+    Expected: "revealed"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" locator('[data-sk-region="edit-subject-template"]') with timeout 5000ms
+      - waiting for locator('[data-sk-region="edit-subject-template"]')
+
+
+      13 |   await page.route('**/getActiveGradeTemplate/*',async route=>{requests++;await gate;await route.fulfill({status:failed?500:200,json:failed?{success:false,message:'Template unavailable'}:{success:true,data:null}});});
+      14 |   await page.goto('/admin/subjects');await page.getByRole('button',{name:'Edit',exact:true}).first().click();
+    > 15 |   const region=page.locator('[data-sk-region="edit-subject-template"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+         |                                                                                              ^
+      16 |   finish();await expect(region.getByRole('alert')).toBeVisible();await expect(region.locator('[data-sk-primitive]')).toHaveCount(0);
+      17 |   failed=false;await region.getByRole('button',{name:'Retry',exact:true}).click();await expect(region).toHaveAttribute('data-sk-phase','settled');await expect(region.getByRole('alert')).toHaveCount(0);expect(requests).toBe(2);
+      18 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\subject-edit-modal-loading.spec.ts:15:94
+
+    Error Context: test-results\subject-edit-modal-loading-2c5cb--settles-errors-and-retries\error-context.md
+
+
+(node:4972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[3/4] tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 1280 light settles errors and retries
+
+[WebServer] 7:17:46 PM [vite] (client) [Unhandled error] TypeError: schoolYears.map is not a function or its return value is not iterable
+[WebServer]  > map src/features/profiles/admin/pages/subjects/components/EditSubjectModal.tsx:308:60
+[WebServer]     306 |            <label className={labelClasses}>School Year</label>
+[WebServer]     307 |            <select value={schoolYear} onChange={(e) => setSchoolYear(e.target.value)} disabled={saving} className={sav...
+[WebServer]     308 |              {[...new Set([subject.schoolYear, ...schoolYears.map((year) => year.school_year)])].filter(Boolean).map((...
+[WebServer]         |                                                              ^
+[WebServer]     309 |                <option key={year} value={year}>{year}</option>
+[WebServer]     310 |              ))}
+[WebServer]  > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:19
+[WebServer]  > renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:21
+[WebServer]  > updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:18
+[WebServer]  > beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:17
+[WebServer]  > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+[WebServer]  > performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:21
+[WebServer]  > workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:40
+[WebServer]  > renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:10
+[WebServer]  > performWorkOnRoot node_modules/react-dom/cjs/react-dom-client.development.js:16583:34
+[WebServer] 
+[WebServer] 7:17:46 PM [vite] (client) [console.warn] An error occurred in the <EditSubjectModal> component.
+[WebServer] 
+[WebServer] Consider adding an error boundary to your tree to customize error handling behavior.
+[WebServer] Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+[WebServer] 
+
+  3) tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 1280 light settles errors and retries 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: locator('[data-sk-region="edit-subject-template"]')
+    Expected: "revealed"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" locator('[data-sk-region="edit-subject-template"]') with timeout 5000ms
+      - waiting for locator('[data-sk-region="edit-subject-template"]')
+
+
+      13 |   await page.route('**/getActiveGradeTemplate/*',async route=>{requests++;await gate;await route.fulfill({status:failed?500:200,json:failed?{success:false,message:'Template unavailable'}:{success:true,data:null}});});
+      14 |   await page.goto('/admin/subjects');await page.getByRole('button',{name:'Edit',exact:true}).first().click();
+    > 15 |   const region=page.locator('[data-sk-region="edit-subject-template"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+         |                                                                                              ^
+      16 |   finish();await expect(region.getByRole('alert')).toBeVisible();await expect(region.locator('[data-sk-primitive]')).toHaveCount(0);
+      17 |   failed=false;await region.getByRole('button',{name:'Retry',exact:true}).click();await expect(region).toHaveAttribute('data-sk-phase','settled');await expect(region.getByRole('alert')).toHaveCount(0);expect(requests).toBe(2);
+      18 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\subject-edit-modal-loading.spec.ts:15:94
+
+    Error Context: test-results\subject-edit-modal-loading-510ca--settles-errors-and-retries\error-context.md
+
+
+
+(node:33388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[4/4] tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 1280 dark settles errors and retries
+
+[WebServer] 7:17:53 PM [vite] (client) [Unhandled error] TypeError: schoolYears.map is not a function or its return value is not iterable
+[WebServer]  > map src/features/profiles/admin/pages/subjects/components/EditSubjectModal.tsx:308:60
+[WebServer]     306 |            <label className={labelClasses}>School Year</label>
+[WebServer]     307 |            <select value={schoolYear} onChange={(e) => setSchoolYear(e.target.value)} disabled={saving} className={sav...
+[WebServer]     308 |              {[...new Set([subject.schoolYear, ...schoolYears.map((year) => year.school_year)])].filter(Boolean).map((...
+[WebServer]         |                                                              ^
+[WebServer]     309 |                <option key={year} value={year}>{year}</option>
+[WebServer]     310 |              ))}
+[WebServer]  > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:19
+[WebServer]  > renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:21
+[WebServer]  > updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:18
+[WebServer]  > beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:17
+[WebServer]  > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+[WebServer]  > performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:21
+[WebServer]  > workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:40
+[WebServer]  > renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:10
+[WebServer]  > performWorkOnRoot node_modules/react-dom/cjs/react-dom-client.development.js:16583:34
+[WebServer] 
+
+[WebServer] 7:17:53 PM [vite] (client) [console.warn] An error occurred in the <EditSubjectModal> component.
+[WebServer] 
+[WebServer] Consider adding an error boundary to your tree to customize error handling behavior.
+[WebServer] Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+[WebServer] 
+  4) tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 1280 dark settles errors and retries 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: locator('[data-sk-region="edit-subject-template"]')
+    Expected: "revealed"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" locator('[data-sk-region="edit-subject-template"]') with timeout 5000ms
+      - waiting for locator('[data-sk-region="edit-subject-template"]')
+
+
+      13 |   await page.route('**/getActiveGradeTemplate/*',async route=>{requests++;await gate;await route.fulfill({status:failed?500:200,json:failed?{success:false,message:'Template unavailable'}:{success:true,data:null}});});
+      14 |   await page.goto('/admin/subjects');await page.getByRole('button',{name:'Edit',exact:true}).first().click();
+    > 15 |   const region=page.locator('[data-sk-region="edit-subject-template"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+         |                                                                                              ^
+      16 |   finish();await expect(region.getByRole('alert')).toBeVisible();await expect(region.locator('[data-sk-primitive]')).toHaveCount(0);
+      17 |   failed=false;await region.getByRole('button',{name:'Retry',exact:true}).click();await expect(region).toHaveAttribute('data-sk-phase','settled');await expect(region.getByRole('alert')).toHaveCount(0);expect(requests).toBe(2);
+      18 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\subject-edit-modal-loading.spec.ts:15:94
+
+    Error Context: test-results\subject-edit-modal-loading-78dba--settles-errors-and-retries\error-context.md
+
+
+  4 failed
+    tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 375 light settles errors and retries 
+    tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 375 dark settles errors and retries 
+    tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 1280 light settles errors and retries 
+    tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 1280 dark settles errors and retries 

@@ -1,0 +1,61 @@
+
+[WebServer] (node:22916) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26224) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 19 tests using 1 worker
+
+(node:28296) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/19] tests\student-form-loading.spec.ts:11:62 › student edit 375 light keeps actual fields while the record loads
+[2/19] tests\student-form-loading.spec.ts:11:62 › student edit 375 dark keeps actual fields while the record loads
+[3/19] tests\student-form-loading.spec.ts:11:62 › student edit 1280 light keeps actual fields while the record loads
+[4/19] tests\student-form-loading.spec.ts:11:62 › student edit 1280 dark keeps actual fields while the record loads
+[5/19] tests\student-form-loading.spec.ts:21:1 › student edit error clears all shapes and retries the record request
+[6/19] tests\student-form-loading.spec.ts:25:1 › student not found is rendered only after a completed empty response
+[7/19] tests\student-form-loading.spec.ts:28:62 › student new 375 light keeps known input and workflow real
+[8/19] tests\student-form-loading.spec.ts:28:62 › student new 375 dark keeps known input and workflow real
+[9/19] tests\student-form-loading.spec.ts:28:62 › student new 1280 light keeps known input and workflow real
+[10/19] tests\student-form-loading.spec.ts:28:62 › student new 1280 dark keeps known input and workflow real
+[11/19] tests\student-form-loading.spec.ts:32:1 › placement errors are retryable without losing edited student fields
+
+[WebServer] 7:19:49 PM [vite] (client) [console.error] Error in gradeService: Error: Failed to fetch grade levels: Internal Server Error
+[WebServer]     at fetchGradeLevels (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/services/grade-section.service.ts:7:10)
+[WebServer]     at async loadGrades (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/StudentFormPage.tsx:99:18)
+[WebServer] 7:19:49 PM [vite] (client) [console.error] Error in gradeService: Error: Failed to fetch grade levels: Internal Server Error
+[WebServer]     at fetchGradeLevels (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/services/grade-section.service.ts:7:10)
+
+[WebServer]     at async loadGrades (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/StudentFormPage.tsx:99:18)
+
+[WebServer] 7:19:49 PM [vite] (client) [console.error] Error in sectionService: Error: Failed to fetch sections: Internal Server Error
+[WebServer]     at fetchSectionByGrade (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/services/grade-section.service.ts:21:10)
+[WebServer]     at async loadSections (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/StudentFormPage.tsx:128:18)
+[WebServer] 7:19:49 PM [vite] (client) [console.error] Failed loading sections: Error: Failed to fetch sections: Internal Server Error
+[WebServer]     at fetchSectionByGrade (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/services/grade-section.service.ts:21:10)
+[WebServer]     at async loadSections (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/StudentFormPage.tsx:128:18)
+
+[12/19] tests\student-form-loading.spec.ts:35:1 › student edit retains the existing update endpoint and payload
+[13/19] tests\student-form-loading.spec.ts:47:32 › student input light contrast and shimmer pixels
+[14/19] tests\student-form-loading.spec.ts:47:32 › student input dark contrast and shimmer pixels
+[15/19] tests\student-form-loading.spec.ts:50:1 › single-line form controls remain fixed across short and long student values
+[16/19] tests\subject-edit-modal-loading.spec.ts:6:62 › edit subject template 375 light settles errors and retries
+
+[WebServer] 7:19:59 PM [vite] (client) [console.error] Failed to load active grade template: Error: Template unavailable
+[WebServer]     at getActiveGradeTemplate (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subjectGradeTemplate.service.ts:25:9)
+[17/19] tests\subject-edit-modal-loading.spec.ts:6:62 › edit subject template 375 dark settles errors and retries
+
+[WebServer] 7:20:00 PM [vite] (client) [console.error] Failed to load active grade template: Error: Template unavailable
+[WebServer]     at getActiveGradeTemplate (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subjectGradeTemplate.service.ts:25:9)
+[18/19] tests\subject-edit-modal-loading.spec.ts:6:62 › edit subject template 1280 light settles errors and retries
+
+[WebServer] 7:20:02 PM [vite] (client) [console.error] Failed to load active grade template: Error: Template unavailable
+[WebServer]     at getActiveGradeTemplate (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subjectGradeTemplate.service.ts:25:9)
+[19/19] tests\subject-edit-modal-loading.spec.ts:6:62 › edit subject template 1280 dark settles errors and retries
+
+[WebServer] 7:20:03 PM [vite] (client) [console.error] Failed to load active grade template: Error: Template unavailable
+[WebServer]     at getActiveGradeTemplate (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subjectGradeTemplate.service.ts:25:9)
+  19 passed (35.4s)

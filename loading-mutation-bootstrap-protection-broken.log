@@ -1,0 +1,44 @@
+[WebServer] (node:4244) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:34692) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:4688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\bootstrap-loading.spec.ts:77:1 › protected components and page requests never render before auth resolves
+  1) tests\bootstrap-loading.spec.ts:77:1 › protected components and page requests never render before auth resolves 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.qed-account-ui, main, [data-sk-chart]')
+    Expected: 0
+    Received: 3
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.qed-account-ui, main, [data-sk-chart]') with timeout 5000ms
+      - waiting for locator('.qed-account-ui, main, [data-sk-chart]')
+        14 × locator resolved to 3 elements
+           - unexpected value "3"
+
+
+      78 |   const { release, releaseData, requests } = await bootstrap(page);
+      79 |   await expect(page.locator('[data-bootstrap-loader], .qed-wrap')).toBeVisible();
+    > 80 |   await expect(page.locator(".qed-account-ui, main, [data-sk-chart]")).toHaveCount(0);
+         |                                                                        ^
+      81 |   expect(requests).toEqual([]);
+      82 |   release(); releaseData();
+      83 |   await expect(page.locator(".qed-account-ui")).toBeVisible();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bootstrap-loading.spec.ts:80:72
+
+    Error Context: test-results\bootstrap-loading-protecte-7de89-render-before-auth-resolves\error-context.md
+
+
+  1 failed
+    tests\bootstrap-loading.spec.ts:77:1 › protected components and page requests never render before auth resolves 

@@ -72,7 +72,7 @@ export function ForceChangePasswordModal() {
           boxShadow: "0 24px 64px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.1)",
           animation: "modalIn 0.2s cubic-bezier(0.16,1,0.3,1)",
         }}>
-        <div className="h-1 w-full bg-linear-to-r from-[#550000] to-[#bb0000]" />
+        <div className="h-1 w-full bg-maroon" />
 
         <div className="px-10 pt-10 pb-10 flex flex-col">
           <div className="mb-6 text-center">
@@ -105,9 +105,9 @@ export function ForceChangePasswordModal() {
                   className="w-full pl-12 pr-11 py-3 rounded-xl text-sm text-black bg-[#f7f7f8] border border-transparent outline-none transition-all placeholder:text-[#ccc]"
                   onFocus={(e) => {
                     e.currentTarget.style.background = "#fff";
-                    e.currentTarget.style.borderColor = "rgba(85,0,0,0.35)";
+                    e.currentTarget.style.borderColor = "color-mix(in srgb, var(--brand-primary) 35%, transparent)";
                     e.currentTarget.style.boxShadow =
-                      "0 0 0 3px rgba(85,0,0,0.07)";
+                      "0 0 0 3px color-mix(in srgb, var(--brand-primary) 7%, transparent)";
                   }}
                   onBlur={(e) => {
                     e.currentTarget.style.background = "#f7f7f8";
@@ -145,9 +145,9 @@ export function ForceChangePasswordModal() {
                   className="w-full pl-12 pr-11 py-3 rounded-xl text-sm text-black bg-[#f7f7f8] border border-transparent outline-none transition-all placeholder:text-[#ccc]"
                   onFocus={(e) => {
                     e.currentTarget.style.background = "#fff";
-                    e.currentTarget.style.borderColor = "rgba(85,0,0,0.35)";
+                    e.currentTarget.style.borderColor = "color-mix(in srgb, var(--brand-primary) 35%, transparent)";
                     e.currentTarget.style.boxShadow =
-                      "0 0 0 3px rgba(85,0,0,0.07)";
+                      "0 0 0 3px color-mix(in srgb, var(--brand-primary) 7%, transparent)";
                   }}
                   onBlur={(e) => {
                     e.currentTarget.style.background = "#f7f7f8";
@@ -178,7 +178,7 @@ export function ForceChangePasswordModal() {
                       i < metCount
                         ? allRequirementsMet
                           ? "#16a34a"
-                          : "#bb0000"
+                          : "var(--brand-secondary)"
                         : "#e5e5e5",
                   }}
                 />
@@ -212,8 +212,8 @@ export function ForceChangePasswordModal() {
             disabled={loading || !allRequirementsMet}
             className={`w-full py-3.5 rounded-xl qed-type-button text-white transition-opacity hover:opacity-90 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed ${error ? "mt-3" : "mt-7"}`}
             style={{
-              background: "linear-gradient(135deg, #550000 0%, #bb0000 100%)",
-              boxShadow: "0 4px 16px rgba(85,0,0,0.3)",
+              background: "var(--color-maroon)",
+              boxShadow: "0 4px 16px color-mix(in srgb, var(--brand-primary) 30%, transparent)",
               transition: "opacity 0.15s, transform 0.1s",
             }}
             onClick={handleSubmit}

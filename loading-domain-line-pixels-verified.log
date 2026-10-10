@@ -1,0 +1,39 @@
+[WebServer] (node:26036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:10304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:24804) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\domain-trends-loading.spec.ts:31:32 › domain trends light line shimmer retains its entire silhouette (6.6s)
+  x  2 tests\domain-trends-loading.spec.ts:31:32 › domain trends dark line shimmer retains its entire silhouette (2.1s)
+
+
+  1) tests\domain-trends-loading.spec.ts:31:32 › domain trends dark line shimmer retains its entire silhouette 
+
+    Error: domain-trend-line-dark: hard interior sweep edge
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 8
+    Received:    9
+
+       at design-pixels.ts:70
+
+      68 |       maximumJump = Math.max(maximumJump, jump);
+      69 |     }
+    > 70 |     expect(maximumJump, `${name}: hard interior sweep edge`).toBeLessThanOrEqual(8);
+         |                                                              ^
+      71 |   }
+      72 | }
+      73 |
+        at checkShimmerPixels (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-pixels.ts:70:62)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\domain-trends-loading.spec.ts:31:473
+
+    Error Context: test-results\domain-trends-loading-doma-57829-tains-its-entire-silhouette\error-context.md
+
+  1 failed
+    tests\domain-trends-loading.spec.ts:31:32 › domain trends dark line shimmer retains its entire silhouette 
+  1 passed (12.0s)

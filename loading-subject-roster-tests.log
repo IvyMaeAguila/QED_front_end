@@ -1,0 +1,25 @@
+
+[WebServer] (node:18736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:40180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 11 tests using 1 worker
+
+(node:40280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/11] tests\refetch-contract.spec.ts:33:1 › 60ms refetch never dims or mounts visible skeleton rows
+[2/11] tests\refetch-contract.spec.ts:45:1 › slow refetch dims old rows, then falls back after two seconds without moving surroundings
+[3/11] tests\refetch-contract.spec.ts:66:1 › refetch after empty results uses initial skeleton reservation
+[4/11] tests\subject-class-list.spec.ts:17:68 › subject roster 375 light: real controls, shared table rows and screenshots
+[5/11] tests\subject-class-list.spec.ts:17:68 › subject roster 375 dark: real controls, shared table rows and screenshots
+[6/11] tests\subject-class-list.spec.ts:17:68 › subject roster 1280 light: real controls, shared table rows and screenshots
+[7/11] tests\subject-class-list.spec.ts:17:68 › subject roster 1280 dark: real controls, shared table rows and screenshots
+[8/11] tests\subject-class-list.spec.ts:39:1 › subject roster auto-column classification is supported by native width changes
+[9/11] tests\subject-class-list.spec.ts:52:32 › subject roster 0 results uses the real empty/short/long table
+[10/11] tests\subject-class-list.spec.ts:52:32 › subject roster 1 results uses the real empty/short/long table
+[11/11] tests\subject-class-list.spec.ts:52:32 › subject roster 9 results uses the real empty/short/long table
+  11 passed (23.2s)

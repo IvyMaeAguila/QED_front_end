@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { fetchStudentTermPerformance } from "../service/studentTermPerformance.service";
 import type { Term, SubjectGrade } from "../service/studentTermPerformance.service";
 

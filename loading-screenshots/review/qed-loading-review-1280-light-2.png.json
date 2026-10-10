@@ -1,0 +1,14 @@
+{
+  "leftToRight": [
+    "admin-help",
+    "admin-student-edit",
+    "admin-student-new",
+    "admin-students",
+    "admin-subjects",
+    "admin-user-details",
+    "admin-user-edit",
+    "admin-user-new"
+  ],
+  "top": "skeleton",
+  "bottom": "loaded"
+}

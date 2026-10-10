@@ -1,0 +1,30 @@
+
+[WebServer] (node:35676) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:7952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 16 tests using 1 worker
+
+(node:40200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/16] tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 375 light known snapshot shell remains real
+[2/16] tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 375 dark known snapshot shell remains real
+[3/16] tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 1280 light known snapshot shell remains real
+[4/16] tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 1280 dark known snapshot shell remains real
+[5/16] tests\holistic-profile-loading.spec.ts:12:28 › holistic profile preserves 0 actual subject cards
+[6/16] tests\holistic-profile-loading.spec.ts:12:28 › holistic profile preserves 1 actual subject cards
+[7/16] tests\holistic-profile-loading.spec.ts:12:28 › holistic profile preserves 9 actual subject cards
+[8/16] tests\holistic-profile-loading.spec.ts:13:49 › holistic profile retries student errors
+[9/16] tests\holistic-profile-loading.spec.ts:13:49 › holistic profile retries profile errors
+[10/16] tests\holistic-profile-loading.spec.ts:13:49 › holistic profile retries terms errors
+[11/16] tests\holistic-profile-loading.spec.ts:14:1 › holistic profile empty evaluations settle into the original empty state
+[12/16] tests\holistic-profile-loading.spec.ts:15:1 › holistic profile subject cards and selector preserve recommendations
+[13/16] tests\holistic-profile-loading.spec.ts:16:32 › holistic profile light card text retains actual contrast
+[14/16] tests\holistic-profile-loading.spec.ts:16:32 › holistic profile dark card text retains actual contrast
+[15/16] tests\holistic-profile-loading.spec.ts:17:1 › holistic profile retains gauge and sparkline shapes
+[16/16] tests\holistic-profile-loading.spec.ts:19:1 › holistic profile pending selector has valid native option markup
+  16 passed (45.4s)

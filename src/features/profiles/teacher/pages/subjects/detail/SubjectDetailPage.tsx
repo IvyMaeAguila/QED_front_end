@@ -1,91 +1,25 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
-import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
-import type { RosterStudent } from "./data";
-import type { GradeTemplateStructure } from "../../../../shared/grading/gradeTemplate.types";
+import { useEffect } from "react";
+import { SubjectDetailPageComposition,type SubjectDetailPageEffectScope } from "./SubjectDetailPage.loading-view";
 import type {
-  GradeItem,
-  GradingPeriod,
-  HolisticAxisKey,
-  HolisticMap,
-  ScoreMap,
+GradeItem,
+GradingPeriod,
+HolisticMap,
+ScoreMap
 } from "./types/Grading";
-import { TabNav, type SubjectDetailTab } from "./components/TabNav";
-import { AssessmentTab } from "./components/AssessmentTab";
-import { HolisticTab } from "./components/HolisticTab";
-import { ConfirmDialog } from "./components/ConfirmDialog";
-import {
-  fetchSubjectSectionInfo,
-  fetchItems,
-  addItem as addItemApi,
-  deleteItem,
-  fetchScores,
-  saveScore,
-  fetchHolistic,
-  saveHolistic,
-  fetchGradingPeriods,
-} from "../services/subjectGrading.service";
-import {
-  getCachedSubjectDetail,
-  setCachedSubjectDetail,
-  patchCachedSubjectDetail,
-} from "../services/subjectDetailCache.service";
-import { getEffectiveWeightsSafe } from "../services/subjectGradeTemplate.service";
+export * from "./SubjectDetailPage.loading-view";
 
-function currentSchoolYearLabel(): string {
-  const now = new Date();
-  const year = now.getFullYear();
-  const startYear = now.getMonth() >= 5 ? year : year - 1;
-  return `School Year ${startYear}-${startYear + 1}`;
-}
-
-export function SubjectDetailPage() {
-  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
-    useOutletContext<AdminThemeContext>();
-  const navigate = useNavigate();
-  const { subjectId } = useParams<{ subjectId: string }>();
-
-  const [activeTab, setActiveTab] = useState<SubjectDetailTab>("writtenWorks");
-
-  const [subjectName, setSubjectName] = useState<string>("");
-
-  const [gradeLevel, setGradeLevel] = useState<string>("");
-  const [roster, setRoster] = useState<RosterStudent[]>([]);
-
-  // Whether the logged-in teacher is this section's own adviser (drives
-  // hiding "Submit Grades" on AssessmentRecordsSection), plus that
-  // section's adviser's display name for the confirm-submit copy when
-  // it's false. Both come from the backend via fetchSubjectSectionInfo —
-  // the frontend has no independent way to know this.
-  const [isOwnAdvisory, setIsOwnAdvisory] = useState(false);
-  const [adviserName, setAdviserName] = useState<string | null>(null);
-
-  const [items, setItems] = useState<GradeItem[]>([]);
-  const [scores, setScores] = useState<ScoreMap>({});
-  const [holistic, setHolistic] = useState<HolisticMap>({});
-  const [holisticWeekStartDate, setHolisticWeekStartDate] =
-    useState<string>("");
-  const [holisticTermNumber] = useState(1);
-  const [terms, setTerms] = useState<GradingPeriod[]>([]);
-  const [selectedTerm, setSelectedTerm] = useState<string>("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [templateStructure, setTemplateStructure] = useState<GradeTemplateStructure | undefined>();
-
-  useEffect(() => {
+function SubjectDetailPageDataEffects({ scope }: { scope: SubjectDetailPageEffectScope }) {
+ const { subjectId, setTemplateLoading, getEffectiveWeightsSafe, selectedTerm, setTemplateStructure, hasUnsavedChanges, attempt, getCachedSubjectDetail, setSubjectName, setGradeLevel, setRoster, setItems, setScores, setHolistic, setHolisticWeekStartDate, setTerms, setSelectedTerm, setIsOwnAdvisory, setAdviserName, setLoading, setError, fetchSubjectSectionInfo, fetchGradingPeriods, fetchItems, fetchScores, fetchHolistic, setCachedSubjectDetail } = scope;
+ useEffect(() => {
     if (!subjectId) return;
     let cancelled = false;
+    setTemplateLoading(true);
     getEffectiveWeightsSafe(Number(subjectId), selectedTerm || undefined).then((weights) => {
-      if (!cancelled) setTemplateStructure(weights?.templateStructure);
+      if (!cancelled) { setTemplateStructure(weights?.templateStructure); setTemplateLoading(false); }
     });
     return () => { cancelled = true; };
   }, [subjectId, selectedTerm]);
-
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
-
-  useEffect(() => {
+useEffect(() => {
     if (!hasUnsavedChanges) return;
     const handler = (e: BeforeUnloadEvent) => {
       e.preventDefault();
@@ -94,28 +28,11 @@ export function SubjectDetailPage() {
     window.addEventListener("beforeunload", handler);
     return () => window.removeEventListener("beforeunload", handler);
   }, [hasUnsavedChanges]);
-
-  function guardedNavigate(action: () => void) {
-    if (!hasUnsavedChanges) {
-      action();
-      return;
-    }
-    setPendingAction(() => action);
-  }
-
-  function handleBack() {
-    guardedNavigate(() => navigate(-1));
-  }
-
-  function handleTabChange(next: SubjectDetailTab) {
-    guardedNavigate(() => setActiveTab(next));
-  }
-
-  useEffect(() => {
+useEffect(() => {
     if (!subjectId) return;
     let cancelled = false;
 
-    const cached = getCachedSubjectDetail(subjectId);
+    const cached = attempt === 0 ? getCachedSubjectDetail(subjectId) : undefined;
     if (cached) {
       setSubjectName(cached.subjectName);
       setGradeLevel(cached.gradeLevel);
@@ -158,6 +75,12 @@ export function SubjectDetailPage() {
       if (infoResult.status === "rejected") {
         console.error("Failed to load subject info:", infoResult.reason);
         setError("Failed to load this class. You may not have access to it.");
+        setLoading(false);
+        return;
+      }
+
+      if ([termsResult, itemsResult, scoresResult, holisticResult].some(result => result.status === "rejected")) {
+        setError("Could not load the class records. Please try again.");
         setLoading(false);
         return;
       }
@@ -243,374 +166,10 @@ export function SubjectDetailPage() {
     return () => {
       cancelled = true;
     };
-  }, [subjectId]);
+  }, [subjectId, attempt]);
+ return null;
+}
 
-  async function handleAddItem(item: GradeItem) {
-    if (!subjectId) return;
-    try {
-      const { id } = await addItemApi(subjectId, {
-        tab: item.tab,
-        date: item.date,
-        activityName: item.activityName,
-        topic: item.topic,
-        topicId: item.topicId,
-        format: item.format,
-        examType: item.examType,
-        maxItems: item.maxItems,
-        term: selectedTerm,
-        templateDomainId: item.templateDomainId,
-      });
-      setItems((prev) => {
-        const next = [...prev, { ...item, id, gradingPeriodId: selectedTerm }];
-        patchCachedSubjectDetail(subjectId, { items: next });
-        return next;
-      });
-    } catch (err) {
-      console.error("Failed to add item:", err);
-      throw err instanceof Error ? err : new Error("Could not save the assessment item. Please try again.");
-    }
-  }
-
-  async function handleDeleteItem(itemId: string) {
-    setItems((prev) => {
-      const next = prev.filter((i) => i.id !== itemId);
-      if (subjectId) patchCachedSubjectDetail(subjectId, { items: next });
-      return next;
-    });
-
-    if (!subjectId) return;
-
-    try {
-      await deleteItem(subjectId, itemId);
-    } catch (err) {
-      console.error("Failed to delete item:", err);
-      try {
-        const refreshed = await fetchItems(subjectId, { allPeriods: true });
-        setItems(refreshed);
-        patchCachedSubjectDetail(subjectId, { items: refreshed });
-      } catch (refetchErr) {
-        console.error(
-          "Failed to refresh items after failed delete:",
-          refetchErr,
-        );
-      }
-    }
-  }
-
-  async function handleScoreChange(
-    studentId: string,
-    itemId: string,
-    value: number | null,
-  ) {
-    setScores((prev) => {
-      const next = {
-        ...prev,
-        [studentId]: { ...prev[studentId], [itemId]: value },
-      };
-      if (subjectId) patchCachedSubjectDetail(subjectId, { scores: next });
-      return next;
-    });
-
-    if (!subjectId) return;
-    try {
-      await saveScore(subjectId, studentId, itemId, value);
-    } catch (err) {
-      console.error("Failed to save score:", err);
-    }
-  }
-
-  async function handleHolisticRate(
-    studentId: string,
-    axis: HolisticAxisKey,
-    value: number,
-  ) {
-    setHolistic((prev) => {
-      const next = {
-        ...prev,
-        [studentId]: { ...prev[studentId], [axis]: value },
-      };
-      if (subjectId) patchCachedSubjectDetail(subjectId, { holistic: next });
-      return next;
-    });
-
-    if (!subjectId) return;
-    try {
-      await saveHolistic(subjectId, studentId, axis, value, holisticTermNumber);
-    } catch (err) {
-      console.error("Failed to save holistic rating:", err);
-    }
-  }
-
-  function openRecords() {
-    guardedNavigate(() => {
-      navigate(`/teacher/subjects/${subjectId}/records`, {
-        state: {
-          subjectName,
-          gradeLevel,
-          tab: activeTab,
-          roster,
-          items,
-          scores,
-          holistic,
-          terms,
-          selectedTerm,
-          isOwnAdvisory,
-          adviserName,
-        },
-      });
-    });
-  }
-
-  const shimmer = `relative overflow-hidden rounded-lg ${darkMode ? "bg-white/[0.06]" : "bg-black/[0.06]"}`;
-  const shimmerSweep = (
-    <div
-      className="absolute inset-0 -translate-x-full animate-[shimmer_1.6s_infinite]"
-      style={{
-        background: darkMode
-          ? "linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)"
-          : "linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent)",
-      }}
-    />
-  );
-
-  const Bone = ({ className = "" }: { className?: string }) => (
-    <div className={`${shimmer} ${className}`}>{shimmerSweep}</div>
-  );
-
-  if (loading) {
-    const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
-
-    return (
-      <div className="w-full min-h-full pb-12">
-        <style>{`
-          @keyframes shimmer {
-            100% { transform: translateX(100%); }
-          }
-        `}</style>
-
-        <div className="w-full space-y-6">
-          <div className="flex items-start gap-2.5">
-            <div
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border opacity-30 ${panelBg} ${panelBorder}`}
-            >
-              <ArrowLeft size={18} className={textMuted} />
-            </div>
-            <Bone className="h-9 w-9 rounded-xl shrink-0" />
-            <div className="min-w-0 flex-1">
-              <Bone className="h-4 w-40" />
-              <Bone className="h-3 w-24 mt-2" />
-            </div>
-          </div>
-
-          <div className="flex gap-2">
-            {[0, 1, 2, 3].map((i) => (
-              <Bone key={i} className="h-9 w-28 rounded-lg" />
-            ))}
-          </div>
-
-          <div
-            className={`flex items-center justify-between gap-2.5 rounded-xl border px-3 py-2 ${panelBg} ${panelBorder}`}
-          >
-            <Bone className="h-7 w-24 rounded-lg" />
-            <div className="flex items-center gap-2">
-              <Bone className="h-8 w-32 rounded-lg" />
-              <Bone className="h-8 w-24 rounded-lg" />
-            </div>
-          </div>
-
-          <section className={cardClasses}>
-            <div
-              className={`flex flex-col gap-4 border-b px-5 py-5 sm:flex-row sm:items-center sm:justify-between ${panelBorder}`}
-            >
-              <div className="flex items-start gap-3">
-                <Bone className="h-10 w-10 rounded-xl shrink-0" />
-                <div>
-                  <Bone className="h-4 w-24" />
-                  <Bone className="h-3 w-40 mt-2" />
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Bone className="h-10 w-44 rounded-xl" />
-                <Bone className="h-10 w-10 rounded-xl shrink-0" />
-              </div>
-            </div>
-
-            <div className="overflow-x-auto">
-              <table className="teacher-user-table w-full min-w-max text-sm">
-                <thead>
-                  <tr className={darkMode ? "bg-white/3" : "bg-[#F8FAFC]"}>
-                    <th
-                      className={`sticky left-0 z-10 min-w-60 px-5 py-4 text-left ${darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"}`}
-                    >
-                      <Bone className="h-3 w-16" />
-                    </th>
-                    <th className="min-w-28 px-3 py-4 text-center">
-                      <Bone className="h-3 w-14 mx-auto" />
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[0, 1, 2, 3, 4, 5, 6].map((row) => (
-                    <tr key={row} className={`border-t ${panelBorder}`}>
-                      <td
-                        className={`sticky left-0 z-10 px-5 py-4 ${darkMode ? "bg-[#2A1A18]" : "bg-white"}`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <Bone className="h-9 w-9 rounded-full shrink-0" />
-                          <div className="min-w-0">
-                            <Bone className="h-4 w-32" />
-                            <Bone className="h-3 w-20 mt-1.5" />
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-3 py-4 text-center">
-                        <Bone className="h-7 w-11 rounded-lg mx-auto" />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-        </div>
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="w-full min-h-full pb-12">
-        <div className="w-full space-y-6">
-          <button
-            onClick={() => navigate(-1)}
-            aria-label="Go back"
-            className={`system-back-button flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted} ${
-              darkMode ? "hover:bg-white/10 hover:text-white" : "hover:bg-black/5 hover:text-black"
-            }`}
-          >
-            <ArrowLeft size={18} />
-          </button>
-          <div
-            className={`rounded-2xl border p-8 text-center shadow-card ${panelBg} ${panelBorder}`}
-          >
-            <p className="text-sm font-semibold text-red-500">{error}</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!subjectId) {
-    return (
-      <div className={`w-full min-h-full ${textPrimary}`}>
-        No subject selected.
-      </div>
-    );
-  }
-
-  const holisticLocked = [0, 6].includes(new Date().getDay());
-
-  return (
-    <div className="w-full min-h-full pb-0">
-      <div className="w-full space-y-6">
-        <div className="flex items-start gap-2.5">
-          <button
-            onClick={handleBack}
-            aria-label="Go back"
-            className={`system-back-button flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted} ${
-              darkMode ? "hover:bg-white/10 hover:text-white" : "hover:bg-black/5 hover:text-black"
-            }`}
-          >
-            <ArrowLeft size={18} />
-          </button>
-          <div className="min-w-0">
-            <h1
-              className={`qed-type-page-title ${textPrimary}`}
-            >
-              {subjectName}
-            </h1>
-            <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
-              {currentSchoolYearLabel()}
-            </p>
-          </div>
-        </div>
-
-        <TabNav
-          active={activeTab}
-          onChange={handleTabChange}
-          darkMode={darkMode}
-          textPrimary={textPrimary}
-          textMuted={textMuted}
-        />
-
-        {(activeTab === "writtenWorks" ||
-          activeTab === "performanceTask" ||
-          activeTab === "exams") && (
-          <AssessmentTab
-            subjectSectionId={subjectId}
-            subjectName={subjectName}
-            tab={activeTab}
-            roster={roster}
-            items={items}
-            scores={scores}
-            terms={terms}
-            selectedTerm={selectedTerm}
-            onTermChange={setSelectedTerm}
-            onAddItem={handleAddItem}
-            onDeleteItem={handleDeleteItem}
-            onScoreChange={handleScoreChange}
-            onOpenRecords={openRecords}
-            onDirtyChange={setHasUnsavedChanges}
-            darkMode={darkMode}
-            panelBg={panelBg}
-            panelBorder={panelBorder}
-            textPrimary={textPrimary}
-            textMuted={textMuted}
-            templateDomains={activeTab === "writtenWorks"
-              ? templateStructure?.ww.domains
-              : activeTab === "performanceTask"
-                ? templateStructure?.pt.domains
-                : []}
-            examTypes={templateStructure?.examinations?.enabled
-              ? (templateStructure.examinations.components.some((component) => component.key.toUpperCase() === "ALL")
-                ? ["TE"]
-                : templateStructure.examinations.components.map((component) => component.key as "ST1" | "ST2" | "TE"))
-              : undefined}
-          />
-        )}
-
-        {activeTab === "holistic" && (
-          <HolisticTab
-            roster={roster}
-            ratings={holistic}
-            weekStartDate={holisticWeekStartDate}
-            termNumber={holisticTermNumber}
-            locked={holisticLocked}
-            onRate={handleHolisticRate}
-            onOpenRecords={openRecords}
-            darkMode={darkMode}
-            panelBg={panelBg}
-            panelBorder={panelBorder}
-            textPrimary={textPrimary}
-            textMuted={textMuted}
-          />
-        )}
-
-        {pendingAction && (
-          <ConfirmDialog
-            title="Leave without saving?"
-            message="You have scores that haven't been saved yet. If you leave now, those changes will be lost."
-            confirmLabel="Leave anyway"
-            danger
-            onCancel={() => setPendingAction(null)}
-            onConfirm={() => {
-              const action = pendingAction;
-              setPendingAction(null);
-              action();
-            }}
-            darkMode={darkMode}
-          />
-        )}
-      </div>
-    </div>
-  );
+export function SubjectDetailPage() {
+ return <SubjectDetailPageComposition effects={scope => <SubjectDetailPageDataEffects scope={scope}/>} />;
 }

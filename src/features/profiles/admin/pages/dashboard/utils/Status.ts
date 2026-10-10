@@ -36,6 +36,6 @@ export const trendMap: Record<Trend, TrendInfo> = {
   Improving: { Icon: TrendingUp, color: "#16834A", bg: "#EAF8F0" },
   Consistent: { Icon: Equal, color: "#1D70D6", bg: "#EAF2FF" },
   Stable: { Icon: Minus, color: "#C98A2B", bg: "#FFF4DF" },
-  Emerging: { Icon: Sparkles, color: "#7C3AED", bg: "#F3E8FF" },
-  Declining: { Icon: TrendingDown, color: "#8B0D0D", bg: "#FDECEC" },
+  Emerging: { Icon: Sparkles, color: "var(--semantic-info)", bg: "color-mix(in srgb, var(--semantic-info) 8%, white)" },
+  Declining: { Icon: TrendingDown, color: "var(--semantic-error)", bg: "#FDECEC" },
 };

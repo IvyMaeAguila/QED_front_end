@@ -1,0 +1,44 @@
+[WebServer] (node:22888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:6900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:37404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\finishing-contract.spec.ts:15:1 › attendance skeleton retains the real ring chart shape
+  1) tests\finishing-contract.spec.ts:15:1 › attendance skeleton retains the real ring chart shape ─
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator: locator('[data-sk-chart="ring"]').locator('[data-sk-primitive="block"]')
+    Expected pattern: /radial-gradient/
+    Received string:  "none"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('[data-sk-chart="ring"]').locator('[data-sk-primitive="block"]') with timeout 5000ms
+      - waiting for locator('[data-sk-chart="ring"]').locator('[data-sk-primitive="block"]')
+        14 × locator resolved to <span aria-hidden="true" data-sk-primitive="block" class="sk-primitive sk-block sk-ring h-full w-full rounded-full">…</span>
+           - unexpected value "none"
+
+
+      18 |   const chart = page.locator('[data-sk-chart="ring"]');
+      19 |   await expect(chart).toBeVisible();
+    > 20 |   await expect(chart.locator('[data-sk-primitive="block"]')).toHaveCSS("mask-image", /radial-gradient/);
+         |                                                              ^
+      21 |   release(); await expect(page.locator("[data-sk-layer]")).toHaveCount(0);
+      22 |   await expect(chart.locator("svg circle").first()).toHaveAttribute("fill", "none");
+      23 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\finishing-contract.spec.ts:20:62
+
+    Error Context: test-results\finishing-contract-attenda-7f8b2-s-the-real-ring-chart-shape\error-context.md
+
+
+  1 failed
+    tests\finishing-contract.spec.ts:15:1 › attendance skeleton retains the real ring chart shape ──

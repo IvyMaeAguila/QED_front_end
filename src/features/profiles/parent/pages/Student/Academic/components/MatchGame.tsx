@@ -1,3 +1,5 @@
+import { SkeletonText } from "@shared/components/SkeletonLoading";
+import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Check, PartyPopper } from "lucide-react";
 
@@ -17,11 +19,11 @@ interface Line {
 
 // One colour per connected pair, in the order the student connects them.
 const COLORS = [
-  { card: "border-emerald-400 bg-emerald-50 text-emerald-800", line: "#34d399" },
-  { card: "border-amber-400 bg-amber-50 text-amber-800", line: "#fbbf24" },
-  { card: "border-rose-400 bg-rose-50 text-rose-800", line: "#fb7185" },
-  { card: "border-sky-400 bg-sky-50 text-sky-800", line: "#38bdf8" },
-  { card: "border-violet-400 bg-violet-50 text-violet-800", line: "#a78bfa" },
+  { card: "border-chart-social bg-chart-social/10 text-chart-social", line: "var(--chart-social)" },
+  { card: "border-chart-behavioral bg-chart-behavioral/10 text-chart-behavioral", line: "var(--chart-behavioral)" },
+  { card: "border-chart-emotional bg-chart-emotional/10 text-chart-emotional", line: "var(--chart-emotional)" },
+  { card: "border-chart-cognitive bg-chart-cognitive/10 text-chart-cognitive", line: "var(--chart-cognitive)" },
+  { card: "border-maroon-light bg-maroon-light/10 text-maroon-light", line: "var(--brand-secondary)" },
 ];
 
 function shuffle<T>(items: T[]): T[] {
@@ -34,10 +36,12 @@ function shuffle<T>(items: T[]): T[] {
 }
 
 export default function MatchGame({
+  loading = false,
   title = "Connect the pairs",
   pairs,
   onDone,
 }: {
+  loading?: boolean;
   title?: string;
   pairs: MatchPair[];
   /** Called when the student taps "Done" after connecting everything. */
@@ -110,16 +114,16 @@ export default function MatchGame({
     if (isMatched(id)) return `${base} ${colorOf(id).card} cursor-default`;
     if (wrong && wrong[side] === id) return `${base} mg-shake border-red-400 bg-red-50 text-red-700`;
     if (side === "left" && selected === id)
-      return `${base} border-indigo-500 bg-indigo-100 text-indigo-800 -translate-y-0.5 ring-4 ring-indigo-200`;
+      return `${base} border-maroon-light bg-brand-soft text-brand-ink -translate-y-0.5 ring-4 ring-maroon/20`;
     return `${base} border-gray-200 bg-white text-gray-700 shadow-sm`;
   };
 
   return (
     <div className="flex w-full max-w-sm flex-col items-center gap-4">
-      <div className="w-full rounded-3xl bg-linear-to-b from-indigo-500 to-indigo-800 px-5 py-4 text-left shadow-[0_5px_0_0_#312e81]">
-        <p className="text-xs font-bold uppercase tracking-wide text-indigo-100">Bonus round</p>
+      <div className="w-full rounded-3xl bg-maroon px-5 py-4 text-left shadow-[0_5px_0_0_#312e81]">
+        <p className="text-xs font-bold uppercase tracking-wide text-white/85">Bonus round</p>
         <p className="text-lg font-extrabold text-white">{title}</p>
-        <p className="text-xs font-semibold text-indigo-100">Tap a card, then tap its partner.</p>
+        <p className="text-xs font-semibold text-white/85">Tap a card, then tap its partner.</p>
       </div>
 
       <div ref={boxRef} className="relative grid w-full grid-cols-2 gap-x-12 gap-y-3">
@@ -148,11 +152,12 @@ export default function MatchGame({
               ref={(el) => {
                 leftRefs.current[p.id] = el;
               }}
+              disabled={loading}
               onClick={() => pickLeft(p.id)}
               aria-pressed={selected === p.id}
               className={cardClass(p.id, "left")}
             >
-              {p.left}
+              {loading ? <SkeletonParagraph field={`quiz-match-left:${p.id}`} typical={2} width="100%" /> : <span data-sk-field={`quiz-match-left:${p.id}`}>{p.left}</span>}
               {isMatched(p.id) && <Check size={14} strokeWidth={4} className="ml-1 shrink-0" />}
             </button>
           ))}
@@ -167,10 +172,10 @@ export default function MatchGame({
                 rightRefs.current[id] = el;
               }}
               onClick={() => pickRight(id)}
-              disabled={selected === null && !isMatched(id)}
+              disabled={loading || (selected === null && !isMatched(id))}
               className={`${cardClass(id, "right")} disabled:cursor-not-allowed`}
             >
-              {textOf(id, "right")}
+              {loading ? <SkeletonParagraph field={`quiz-match-right:${id}`} typical={2} width="100%" /> : <span data-sk-field={`quiz-match-right:${id}`}>{textOf(id, "right")}</span>}
               {isMatched(id) && <Check size={14} strokeWidth={4} className="ml-1 shrink-0" />}
             </button>
           ))}
@@ -181,14 +186,14 @@ export default function MatchGame({
         <button
           type="button"
           onClick={() => onDone({ mistakes })}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-linear-to-b from-emerald-400 to-emerald-600 px-4 py-4 text-base font-black text-white shadow-[0_5px_0_0_#047857] active:translate-y-0.75 active:shadow-[0_1px_0_0_#047857]"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-4 py-4 text-base font-black text-white shadow-[0_5px_0_0_#047857] active:translate-y-0.75 active:shadow-[0_1px_0_0_#047857]"
         >
           <PartyPopper size={20} />
           {mistakes === 0 ? "Perfect! Done" : "All connected! Done"}
         </button>
       ) : (
         <p className="text-xs font-semibold text-gray-500">
-          {matched.length} of {pairs.length} connected
+          {matched.length} of {loading ? <SkeletonText width="2ch" className="inline-block" /> : pairs.length} connected
         </p>
       )}
 

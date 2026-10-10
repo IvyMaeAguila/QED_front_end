@@ -1,0 +1,2 @@
+src/features/profiles/parent/pages/Student/ProgressReport/components/AttendanceRecordCard.tsx(3,1): error TS6133: 'SkeletonParagraph' is declared but its value is never read.
+src/features/profiles/parent/pages/Student/ProgressReport/components/AttendanceRecordCard.tsx(36,75): error TS6133: 'index' is declared but its value is never read.

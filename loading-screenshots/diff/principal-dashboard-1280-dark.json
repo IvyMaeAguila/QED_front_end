@@ -1,0 +1,54 @@
+{
+  "regions": [
+    {
+      "selector": "[data-sk-region=\"principal-kpi-total-students\"]",
+      "box": {
+        "x": 280,
+        "y": 393.1875,
+        "width": 150.390625,
+        "height": 32.1875
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"principal-kpi-total-teachers\"]",
+      "box": {
+        "x": 483.390625,
+        "y": 394.1875,
+        "width": 148.40625,
+        "height": 32.1875
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"principal-kpi-needs-intervention\"]",
+      "box": {
+        "x": 1090.59375,
+        "y": 412.375,
+        "width": 148.390625,
+        "height": 32.1875
+      }
+    }
+  ],
+  "loadedBoxes": [
+    {
+      "x": 280,
+      "y": 393.1875,
+      "width": 150.390625,
+      "height": 32.1875
+    },
+    {
+      "x": 483.390625,
+      "y": 394.1875,
+      "width": 148.40625,
+      "height": 32.1875
+    },
+    {
+      "x": 1090.59375,
+      "y": 412.375,
+      "width": 148.390625,
+      "height": 32.1875
+    }
+  ],
+  "shapePixels": 2122,
+  "outsidePixels": 0,
+  "outsideRatio": 0
+}

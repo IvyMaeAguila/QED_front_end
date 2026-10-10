@@ -1,0 +1,41 @@
+[WebServer] (node:35676) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:29560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:23052) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\teacher-subject-loading.spec.ts:103:1 › teacher working table reuses measured pending column widths on repeat load (9.0s)
+
+
+  1) tests\teacher-subject-loading.spec.ts:103:1 › teacher working table reuses measured pending column widths on repeat load 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('[data-sk-region="assessment-roster"]')
+    Expected: "revealed"
+    Received: "settled"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('[data-sk-region="assessment-roster"]') with timeout 5000ms
+      - waiting for locator('[data-sk-region="assessment-roster"]')
+        14 × locator resolved to <div aria-busy="false" class="sk-region " data-sk-variable="" data-sk-auto-columns="" data-sk-phase="settled" data-sk-region="assessment-roster">…</div>
+           - unexpected value "settled"
+
+
+      108 |   await page.evaluate(async()=>{ const url=performance.getEntriesByType('resource').map(entry=>entry.name).find(url=>url.includes('/subjectDetailCache.service.ts')); if (!url) throw new Error('Application cache module was not loaded'); const cache=await import(/* @vite-ignore */ url); cache.invalidateCachedSubjectDetail('1'); if(cache.getCachedSubjectDetail('1')) throw new Error('Cache invalidation failed'); });
+      109 |   release.hold();await page.goBack();
+    > 110 |   await expect(page.locator('[data-sk-region="assessment-roster"]')).toHaveAttribute('data-sk-phase','revealed');
+          |                                                                      ^
+      111 |   const pending=await page.locator('table.teacher-user-table thead th').evaluateAll(cells=>cells.map(cell=>cell.getBoundingClientRect().width));
+      112 |   expect(pending).toHaveLength(widths.length);pending.forEach((value,index)=>expect(Math.abs(value-widths[index])).toBeLessThanOrEqual(2));
+      113 |   release.finish();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\teacher-subject-loading.spec.ts:110:70
+
+    Error Context: test-results\teacher-subject-loading-te-07f20-olumn-widths-on-repeat-load\error-context.md
+
+  1 failed
+    tests\teacher-subject-loading.spec.ts:103:1 › teacher working table reuses measured pending column widths on repeat load 

@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { Term, ViewMode, HeatmapRow } from "../data/types";
 import { getTermOptions, getViewOptions, getHolisticRows } from "../services/reports.service";
 
@@ -12,6 +13,7 @@ interface UseHolisticAnalyticsResult {
   rows: HeatmapRow[];
   loading: boolean;
   error: Error | null;
+  retry: () => void;
 }
 
 export function useHolisticAnalytics(): UseHolisticAnalyticsResult {
@@ -21,19 +23,23 @@ export function useHolisticAnalytics(): UseHolisticAnalyticsResult {
   const [viewOptions, setViewOptions] = useState<ViewMode[]>([]);
   const [rows, setRows] = useState<HeatmapRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [attempt, setAttempt] = useState(0);
+  const [optionsLoading, setOptionsLoading] = useState(true);
+  const [optionsError, setOptionsError] = useState<Error | null>(null);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     let cancelled = false;
+    setOptionsLoading(true); setOptionsError(null);
     Promise.all([getTermOptions(), getViewOptions()]).then(([terms, views]) => {
       if (cancelled) return;
       setTermOptions(terms);
       setViewOptions(views);
-    });
+    }).catch((error: unknown) => { if (!cancelled) setOptionsError(error instanceof Error ? error : new Error("Failed to load report filters")); }).finally(() => { if (!cancelled) setOptionsLoading(false); });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [attempt]);
 
   useEffect(() => {
     let cancelled = false;
@@ -56,7 +62,7 @@ export function useHolisticAnalytics(): UseHolisticAnalyticsResult {
     return () => {
       cancelled = true;
     };
-  }, [term, view]);
+  }, [term, view, attempt]);
 
-  return { term, setTerm, termOptions, view, setView, viewOptions, rows, loading, error };
+  return { term, setTerm, termOptions, view, setView, viewOptions, rows, loading: loading || optionsLoading, error: error || optionsError, retry: () => setAttempt(value => value + 1) };
 }

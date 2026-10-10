@@ -6,7 +6,7 @@ export interface ToastItem {
   type: ToastType;
 }
 
-const ACCENT = "#8B0D0D";
+const ACCENT = "var(--color-maroon)";
 
 interface ToastContainerProps {
   toasts: ToastItem[];
@@ -45,7 +45,7 @@ function ToastCard({
   };
 
   const cardClasses = `min-w-[260px] max-w-sm rounded-xl border shadow-lg px-4 py-3.5 flex items-start gap-3 animate-[toast-in_0.2s_ease-out] ${
-    darkMode ? "bg-[#111827] border-[#374151]" : "bg-white border-[#E5E7EB]"
+    darkMode ? "bg-[#111827] border-[#374151]" : "bg-white border-border-subtle"
   }`;
 
   const iconColor = iconColors[toast.type];
@@ -64,7 +64,7 @@ function ToastCard({
       <button
         onClick={onClose}
         className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 text-xs font-bold transition-colors ${
-          darkMode ? "text-[#9CA3AF] hover:bg-white/10 hover:text-white" : "text-[#9CA3AF] hover:bg-[#F6F7FB] hover:text-[#374151]"
+          darkMode ? "text-[#9CA3AF] hover:bg-white/10 hover:text-white" : "text-[#9CA3AF] hover:bg-brand-light hover:text-[#374151]"
         }`}
         aria-label="Close notification"
       >

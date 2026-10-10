@@ -1,5 +1,6 @@
 // src/components/ProfileMenu.tsx
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { createPortal } from "react-dom";
 import { ChevronDown, Pencil, Check, X, UserRound } from "lucide-react";
 import { useSettings } from "../../../features/profiles/admin/pages/settings/context/SettingsContext";
@@ -14,7 +15,7 @@ import teacherWomanImg from "./avatars/teacher_women.jpg";
 import teacherManImg from "./avatars/teacher_man.jpg";
 import adminHatImg from "./avatars/admin_hat.png";
 
-const ACCENT = "#6B0000";
+const ACCENT = "var(--color-maroon)";
 const APPLE_EASE = "ease-[cubic-bezier(0.32,0.72,0,1)]";
 
 const DEFAULT_AVATARS = {
@@ -81,13 +82,13 @@ export function ProfileMenu() {
   const fields = PROFILE_FIELD_CONFIG[user.role];
   const mutedText = darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]";
   const textPrimary = darkMode ? "text-white" : "text-[#111827]";
-  const borderColor = darkMode ? "border-[#1F2937]" : "border-[#EEF0F3]";
+  const borderColor = darkMode ? "border-[#1F2937]" : "border-border-subtle";
   const labelClasses = `text-xs font-semibold uppercase tracking-wider ${mutedText}`;
   const avatarBorderColor = user.role === "TEACHER" ? getTeacherAvatarBorderColor(user.gender) : "#D1D5DB";
   const inputClasses = `w-full h-10 px-3 rounded-lg border text-sm font-medium outline-none transition-colors ${
     darkMode
       ? "bg-[#0B1120] border-[#2A3441] text-white focus:border-[#8A1F1F]"
-      : "bg-[#FAFBFC] border-[#E3E6EA] text-[#111827] focus:border-[#6B0000]"
+      : "bg-brand-light border-border-subtle text-[#111827] focus:border-maroon-light"
   }`;
 
   function startEdit() {
@@ -152,7 +153,7 @@ export function ProfileMenu() {
       >
         {/* Header */}
         <div className={`relative shrink-0 border-b ${borderColor}`}>
-          <div className="h-28 bg-maroon-gradient-vertical" />
+          <div className="h-28 bg-maroon" />
           <button
             onClick={closeDrawer}
             aria-label="Close"
@@ -181,7 +182,7 @@ export function ProfileMenu() {
             className={`inline-block mt-1.5 text-xs font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
               darkMode
                 ? "bg-white/10 text-white/70"
-                : "bg-[#F3E9E9] text-[#6B0000]"
+                : "bg-[#F3E9E9] text-brand-ink"
             }`}
           >
             {user.role}
@@ -263,7 +264,7 @@ export function ProfileMenu() {
                       >
                         <div
                           className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
-                            darkMode ? "bg-white/5" : "bg-[#F6F7F9]"
+                            darkMode ? "bg-white/5" : "bg-brand-light"
                           }`}
                         >
                           <Icon size={14} className={mutedText} />
@@ -274,7 +275,7 @@ export function ProfileMenu() {
                           </p>
                           <p
                             className={`text-sm font-medium text-right break-words ${
-                              value ? (darkMode ? "text-[#E5E7EB]" : "text-[#1F2937]") : mutedText
+                              value ? (darkMode ? "text-border-border-subtle" : "text-[#1F2937]") : mutedText
                             }`}
                           >
                             {value || "Not provided"}
@@ -300,7 +301,7 @@ export function ProfileMenu() {
                 className={`flex-1 h-10 rounded-lg text-sm font-semibold border transition-colors ${
                   darkMode
                     ? "border-[#2A3441] text-[#D1D5DB] hover:bg-white/5"
-                    : "border-[#E3E6EA] text-[#374151] hover:bg-[#F6F7F9]"
+                    : "border-border-subtle text-[#374151] hover:bg-brand-light"
                 }`}
               >
                 Cancel
@@ -348,8 +349,8 @@ export function ProfileMenu() {
         <div
           className={`w-9 h-9 rounded-full overflow-hidden flex items-center justify-center shrink-0 border-2 transition-all duration-200 ${
             darkMode
-              ? "bg-[#374151] group-hover:ring-[#6B0000]/40"
-              : "bg-[#E5E5E5] group-hover:ring-[#6B0000]/25"
+              ? "bg-[#374151] group-hover:ring-maroon-light/40"
+              : "bg-[#E5E5E5] group-hover:ring-maroon-light/25"
           }`}
           style={{ borderColor: avatarBorderColor }}
         >

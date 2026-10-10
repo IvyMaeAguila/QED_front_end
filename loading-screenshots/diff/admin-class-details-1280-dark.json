@@ -1,0 +1,69 @@
+{
+  "regions": [
+    {
+      "selector": "[data-sk-region=\"profile-avatar\"]",
+      "box": {
+        "x": 720,
+        "y": 324.390625,
+        "width": 80,
+        "height": 80
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"profile-stat-Advisory\"]",
+      "box": {
+        "x": 305,
+        "y": 597.390625,
+        "width": 281,
+        "height": 16
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"profile-stat-Room\"]",
+      "box": {
+        "x": 619,
+        "y": 597.390625,
+        "width": 281,
+        "height": 16
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"profile-stat-Total subjects\"]",
+      "box": {
+        "x": 933,
+        "y": 597.390625,
+        "width": 282,
+        "height": 16
+      }
+    }
+  ],
+  "loadedBoxes": [
+    {
+      "x": 720,
+      "y": 303.390625,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "x": 305,
+      "y": 516.390625,
+      "width": 281,
+      "height": 16
+    },
+    {
+      "x": 619,
+      "y": 516.390625,
+      "width": 281,
+      "height": 16
+    },
+    {
+      "x": 933,
+      "y": 516.390625,
+      "width": 282,
+      "height": 16
+    }
+  ],
+  "shapePixels": 6108,
+  "outsidePixels": 0,
+  "outsideRatio": 0
+}

@@ -1,0 +1,423 @@
+[WebServer] (node:15404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:20136) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 587 tests using 2 workers
+
+
+(node:21244) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+(node:36688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/587] tests\add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners
+[2/587] tests\admin-class-view.spec.ts:28:68 › class details 375 light: real actions, tabs and weekday headings
+[3/587] tests\add-subject-loading.spec.ts:14:62 › add subject 375 dark keeps known form real without data spinners
+[4/587] tests\admin-class-view.spec.ts:28:68 › class details 375 dark: real actions, tabs and weekday headings
+[5/587] tests\add-subject-loading.spec.ts:14:62 › add subject 1280 light keeps known form real without data spinners
+[6/587] tests\admin-class-view.spec.ts:28:68 › class details 1280 light: real actions, tabs and weekday headings
+[7/587] tests\add-subject-loading.spec.ts:14:62 › add subject 1280 dark keeps known form real without data spinners
+[8/587] tests\add-subject-loading.spec.ts:19:46 › add subject year failure exposes retry and preserves local input
+[9/587] tests\admin-class-view.spec.ts:28:68 › class details 1280 dark: real actions, tabs and weekday headings
+[10/587] tests\add-subject-loading.spec.ts:19:46 › add subject grade failure exposes retry and preserves local input
+[11/587] tests\add-subject-loading.spec.ts:19:46 › add subject catalog failure exposes retry and preserves local input
+[12/587] tests\admin-class-view.spec.ts:56:32 › class schedule 0 returned time slots retains original content
+[WebServer] 8:30:01 PM [vite] (client) [console.error] Failed to load assessment types: Error: Failed to fetch assessment types: 500
+
+[WebServer]     at getAssessmentTypes (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subject.service.ts:76:9)
+[WebServer]     at async http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/context/SubjectsCatalogContext.tsx:40:17
+
+[WebServer] 8:30:01 PM [vite] (client) [console.error] Failed to load assessment types: Error: Failed to fetch assessment types: 500
+[WebServer]     at getAssessmentTypes (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subject.service.ts:76:9)
+[WebServer]     at async http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/context/SubjectsCatalogContext.tsx:40:17
+[13/587] tests\add-subject-loading.spec.ts:22:1 › non-graded subject retains its original endpoint and creation payload
+[14/587] tests\admin-class-view.spec.ts:56:32 › class schedule 1 returned time slots retains original content
+[15/587] tests\admin-class-view.spec.ts:56:32 › class schedule 9 returned time slots retains original content
+[16/587] tests\admin-loading.spec.ts:38:196 › /admin 375px light: real shell and loading composition
+[17/587] tests\admin-class-view.spec.ts:65:1 › class details error removes every reservation immediately and retries context loads
+
+[WebServer] 8:30:05 PM [vite] (client) [console.error] Error: Class temporarily unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+[WebServer] 8:30:05 PM [vite] (client) [console.error] Error: Class temporarily unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+
+[18/587] tests\admin-class-view.spec.ts:80:1 › class schedule auto-column classification observes native content width changes
+[19/587] tests\admin-loading.spec.ts:38:196 › /admin 375px dark: real shell and loading composition
+[20/587] tests\admin-class-view.spec.ts:93:1 › class roster auto-column classification observes native content width changes
+[21/587] tests\admin-loading.spec.ts:38:196 › /admin 1280px light: real shell and loading composition
+[22/587] tests\admin-class-view.spec.ts:107:35 › class schedule light: time cell shimmer fits its real tinted surface
+[23/587] tests\admin-loading.spec.ts:38:196 › /admin 1280px dark: real shell and loading composition
+[24/587] tests\admin-class-view.spec.ts:107:35 › class schedule dark: time cell shimmer fits its real tinted surface
+[25/587] tests\admin-loading.spec.ts:38:196 › /admin/classes 375px light: real shell and loading composition
+[26/587] tests\advisory-roster.spec.ts:17:68 › advisory roster 375 light: real labels, actions and table
+[27/587] tests\admin-loading.spec.ts:38:196 › /admin/classes 375px dark: real shell and loading composition
+[28/587] tests\advisory-roster.spec.ts:17:68 › advisory roster 375 dark: real labels, actions and table
+[29/587] tests\admin-loading.spec.ts:38:196 › /admin/classes 1280px light: real shell and loading composition
+[30/587] tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 light: real labels, actions and table
+[31/587] tests\admin-loading.spec.ts:38:196 › /admin/classes 1280px dark: real shell and loading composition
+[32/587] tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 dark: real labels, actions and table
+[33/587] tests\admin-loading.spec.ts:38:196 › /admin/users 375px light: real shell and loading composition
+[34/587] tests\advisory-roster.spec.ts:36:1 › student directory classification observes native columns across short/long names
+[35/587] tests\admin-loading.spec.ts:38:196 › /admin/users 375px dark: real shell and loading composition
+[36/587] tests\attendance-records-loading.spec.ts:13:62 › attendance records 375 light keeps date headers and view controls real
+[37/587] tests\admin-loading.spec.ts:38:196 › /admin/users 1280px light: real shell and loading composition
+[38/587] tests\attendance-records-loading.spec.ts:13:62 › attendance records 375 dark keeps date headers and view controls real
+[39/587] tests\admin-loading.spec.ts:38:196 › /admin/users 1280px dark: real shell and loading composition
+[40/587] tests\admin-loading.spec.ts:38:196 › /admin/students 375px light: real shell and loading composition
+[41/587] tests\attendance-records-loading.spec.ts:13:62 › attendance records 1280 light keeps date headers and view controls real
+[42/587] tests\admin-loading.spec.ts:38:196 › /admin/students 375px dark: real shell and loading composition
+[43/587] tests\attendance-records-loading.spec.ts:13:62 › attendance records 1280 dark keeps date headers and view controls real
+[44/587] tests\admin-loading.spec.ts:38:196 › /admin/students 1280px light: real shell and loading composition
+[45/587] tests\attendance-records-loading.spec.ts:17:62 › attendance summary 375 light keeps labels and calendar dates real
+[46/587] tests\admin-loading.spec.ts:38:196 › /admin/students 1280px dark: real shell and loading composition
+[47/587] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 375px light: real shell and loading composition
+[48/587] tests\attendance-records-loading.spec.ts:17:62 › attendance summary 375 dark keeps labels and calendar dates real
+[49/587] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 375px dark: real shell and loading composition
+[50/587] tests\attendance-records-loading.spec.ts:17:62 › attendance summary 1280 light keeps labels and calendar dates real
+[51/587] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 1280px light: real shell and loading composition
+[52/587] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 1280px dark: real shell and loading composition
+[53/587] tests\attendance-records-loading.spec.ts:17:62 › attendance summary 1280 dark keeps labels and calendar dates real
+[54/587] tests\admin-loading.spec.ts:38:196 › /admin/subjects 375px light: real shell and loading composition
+[55/587] tests\attendance-records-loading.spec.ts:20:28 › attendance records preserves 0 actual roster rows
+[56/587] tests\admin-loading.spec.ts:38:196 › /admin/subjects 375px dark: real shell and loading composition
+[57/587] tests\attendance-records-loading.spec.ts:20:28 › attendance records preserves 1 actual roster rows
+[58/587] tests\admin-loading.spec.ts:38:196 › /admin/subjects 1280px light: real shell and loading composition
+[59/587] tests\attendance-records-loading.spec.ts:20:28 › attendance records preserves 9 actual roster rows
+[60/587] tests\admin-loading.spec.ts:38:196 › /admin/subjects 1280px dark: real shell and loading composition
+[61/587] tests\attendance-records-loading.spec.ts:21:39 › attendance Month request error clears all shapes and retries
+[WebServer] 8:30:53 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+[WebServer] 8:30:53 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+
+[62/587] tests\admin-loading.spec.ts:59:48 › users directory AUTO-COLUMN classification is supported by measured fixtures
+[63/587] tests\attendance-records-loading.spec.ts:21:39 › attendance Summary request error clears all shapes and retries
+
+[WebServer] 8:30:54 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+[WebServer] 8:30:54 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+
+[WebServer] 8:30:54 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+
+[WebServer] 8:30:54 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+
+[64/587] tests\admin-loading.spec.ts:59:48 › students directory AUTO-COLUMN classification is supported by measured fixtures
+[65/587] tests\attendance-records-loading.spec.ts:22:1 › attendance advisory error has a real retry
+
+[WebServer] 8:30:56 PM [vite] (client) [console.error] Failed to load advisory sections: Error: Failed to fetch advisory sections (500)
+[WebServer]     at fetchAdvisorySections (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:15:21)
+[66/587] tests\admin-loading.spec.ts:73:2 › academic term auto-column classification requires observed variation
+[67/587] tests\attendance-records-loading.spec.ts:23:32 › attendance term fast refetch preserves rows
+[68/587] tests\auto-columns.spec.ts:9:32 › auto columns: 0 rows, one swap, stable shell and cached repeat
+[69/587] tests\attendance-records-loading.spec.ts:23:32 › attendance term slow refetch preserves rows
+[70/587] tests\auto-columns.spec.ts:9:32 › auto columns: 1 rows, one swap, stable shell and cached repeat
+[71/587] tests\attendance-records-loading.spec.ts:24:1 › attendance marking keeps the original cycle and save payload
+[72/587] tests\auto-columns.spec.ts:9:32 › auto columns: 9 rows, one swap, stable shell and cached repeat
+[73/587] tests\attendance-records-loading.spec.ts:25:32 › attendance light summary numeric surfaces retain contrast
+[74/587] tests\attendance-records-loading.spec.ts:25:32 › attendance dark summary numeric surfaces retain contrast
+[75/587] tests\auto-columns.spec.ts:44:1 › auto-column classification requires observed data-dependent widths
+[76/587] tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 375px light: real month and shared event rows
+[77/587] tests\attendance-records-loading.spec.ts:28:1 › attendance native fixed columns do not vary across roster names or counts
+[78/587] tests\class-form-loading.spec.ts:11:62 › class edit 375 light keeps original fields and schedule controls
+[79/587] tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 375px dark: real month and shared event rows
+[80/587] tests\class-form-loading.spec.ts:11:62 › class edit 375 dark keeps original fields and schedule controls
+[81/587] tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 1280px light: real month and shared event rows
+[82/587] tests\class-form-loading.spec.ts:11:62 › class edit 1280 light keeps original fields and schedule controls
+[83/587] tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 1280px dark: real month and shared event rows
+[84/587] tests\class-form-loading.spec.ts:11:62 › class edit 1280 dark keeps original fields and schedule controls
+[85/587] tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 375px light: real month and shared event rows
+[86/587] tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 375px dark: real month and shared event rows
+[87/587] tests\class-form-loading.spec.ts:15:28 › class edit retains 0 actual schedule periods
+[88/587] tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 1280px light: real month and shared event rows
+[89/587] tests\class-form-loading.spec.ts:15:28 › class edit retains 1 actual schedule periods
+[90/587] tests\class-form-loading.spec.ts:15:28 › class edit retains 8 actual schedule periods
+[91/587] tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 1280px dark: real month and shared event rows
+[92/587] tests\class-form-loading.spec.ts:16:85 › class form retries record failure
+
+[WebServer] 8:31:26 PM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+
+[WebServer] 8:31:26 PM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+[93/587] tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 375px light: real month and shared event rows
+[94/587] tests\class-form-loading.spec.ts:16:85 › class form retries gradeLevels failure
+[WebServer] 8:31:28 PM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchGradeLevels (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:20:15)
+
+
+[WebServer] 8:31:28 PM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchGradeLevels (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:20:15)
+[95/587] tests\class-form-loading.spec.ts:16:85 › class form retries teacher/all failure
+[96/587] tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 375px dark: real month and shared event rows
+
+[WebServer] 8:31:29 PM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchAllTeachers (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:43:15)
+
+[WebServer] 8:31:29 PM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchAllTeachers (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:43:15)
+[97/587] tests\class-form-loading.spec.ts:16:85 › class form retries sections failure
+
+[WebServer] 8:31:31 PM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchSectionsByGrade (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:30:15)
+[98/587] tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 1280px light: real month and shared event rows
+[99/587] tests\class-form-loading.spec.ts:16:85 › class form retries getSubByGrade failure
+
+[WebServer] 8:31:32 PM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchSubjectsByGrade (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:48:15)
+[100/587] tests\class-form-loading.spec.ts:17:62 › class new 375 light preserves known empty values
+[101/587] tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 1280px dark: real month and shared event rows
+[102/587] tests\class-form-loading.spec.ts:17:62 › class new 375 dark preserves known empty values
+[103/587] tests\class-form-loading.spec.ts:17:62 › class new 1280 light preserves known empty values
+[104/587] tests\calendar-loading.spec.ts:6:70 › PARENT calendar 375px light: real month and shared event rows
+[105/587] tests\class-form-loading.spec.ts:17:62 › class new 1280 dark preserves known empty values
+[106/587] tests\calendar-loading.spec.ts:6:70 › PARENT calendar 375px dark: real month and shared event rows
+[107/587] tests\class-form-loading.spec.ts:18:1 › class edit saves the original mapped schedule payload
+[108/587] tests\class-form-loading.spec.ts:19:32 › class form light input surface pixels
+[109/587] tests\calendar-loading.spec.ts:6:70 › PARENT calendar 1280px light: real month and shared event rows
+[110/587] tests\class-form-loading.spec.ts:19:32 › class form dark input surface pixels
+[111/587] tests\calendar-loading.spec.ts:6:70 › PARENT calendar 1280px dark: real month and shared event rows
+[112/587] tests\courseware-loading.spec.ts:21:68 › courseware 375 light: real learning frame before fetched leaves
+[113/587] tests\class-form-loading.spec.ts:20:32 › class adviser light disabled control surface pixels
+[114/587] tests\courseware-loading.spec.ts:21:68 › courseware 375 dark: real learning frame before fetched leaves
+[115/587] tests\class-form-loading.spec.ts:20:32 › class adviser dark disabled control surface pixels
+[116/587] tests\courseware-loading.spec.ts:21:68 › courseware 1280 light: real learning frame before fetched leaves
+[117/587] tests\class-form-loading.spec.ts:21:1 › class form keeps the known Updating prefix real before record data arrives
+[118/587] tests\courseware-loading.spec.ts:21:68 › courseware 1280 dark: real learning frame before fetched leaves
+[119/587] tests\design-contract.spec.ts:6:1 › skeleton CSS has token-only colors
+[120/587] tests\design-contract.spec.ts:15:40 › light: pixel area survives all four shimmer phases on every surface
+[121/587] tests\courseware-loading.spec.ts:44:32 › courseware 0 resources preserves empty/short/long content
+[122/587] tests\courseware-loading.spec.ts:44:32 › courseware 1 resources preserves empty/short/long content
+[123/587] tests\design-contract.spec.ts:15:40 › dark: pixel area survives all four shimmer phases on every surface
+[124/587] tests\courseware-loading.spec.ts:44:32 › courseware 9 resources preserves empty/short/long content
+[125/587] tests\courseware-loading.spec.ts:55:1 › courseware error ends reservation and retries the same request
+
+[WebServer] 8:31:58 PM [vite] (client) [console.error] Failed to load courseware: Error: Unavailable
+[WebServer]     at getCourseware (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/courseware.service.ts:11:9)
+[WebServer]     at async load (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/CoursewareView.tsx:204:20)
+
+[WebServer] 8:31:58 PM [vite] (client) [console.error] Failed to load courseware: Error: Unavailable
+[WebServer]     at getCourseware (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/courseware.service.ts:11:9)
+[WebServer]     at async load (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/CoursewareView.tsx:204:20)
+[126/587] tests\courseware-loading.spec.ts:69:35 › courseware light: actual hero and thumbnail surfaces keep visible shimmer
+[127/587] tests\design-contract.spec.ts:20:68 › teacher 375 light: static content and spinner guard
+[128/587] tests\courseware-loading.spec.ts:69:35 › courseware dark: actual hero and thumbnail surfaces keep visible shimmer
+[129/587] tests\design-contract.spec.ts:20:68 › teacher 375 dark: static content and spinner guard
+[130/587] tests\design-contract.spec.ts:20:68 › teacher 1280 light: static content and spinner guard
+[131/587] tests\directory-loading.spec.ts:7:70 › /principal/teachers 375px light: real controls and screenshots
+[132/587] tests\design-contract.spec.ts:20:68 › teacher 1280 dark: static content and spinner guard
+[133/587] tests\directory-loading.spec.ts:7:70 › /principal/teachers 375px dark: real controls and screenshots
+[134/587] tests\design-contract.spec.ts:35:1 › negative control: shine blending into the surface is caught by the pixel guard
+[135/587] tests\directory-loading.spec.ts:7:70 › /principal/teachers 1280px light: real controls and screenshots
+[136/587] tests\design-contract.spec.ts:47:1 › negative control: a hard shimmer edge is caught independently of visible area
+[137/587] tests\domain-trends-loading.spec.ts:14:62 › domain trends 375 light keeps domains and chart shell real
+[138/587] tests\directory-loading.spec.ts:7:70 › /principal/teachers 1280px dark: real controls and screenshots
+[139/587] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 375px light: real controls and screenshots
+[140/587] tests\domain-trends-loading.spec.ts:14:62 › domain trends 375 dark keeps domains and chart shell real
+[141/587] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 375px dark: real controls and screenshots
+[142/587] tests\domain-trends-loading.spec.ts:14:62 › domain trends 1280 light keeps domains and chart shell real
+[143/587] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 1280px light: real controls and screenshots
+[144/587] tests\domain-trends-loading.spec.ts:14:62 › domain trends 1280 dark keeps domains and chart shell real
+[145/587] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 1280px dark: real controls and screenshots
+[146/587] tests\directory-loading.spec.ts:7:70 › /principal/students 375px light: real controls and screenshots
+[147/587] tests\domain-trends-loading.spec.ts:18:28 › domain trends preserves 0 actual weeks and empty state
+[148/587] tests\directory-loading.spec.ts:7:70 › /principal/students 375px dark: real controls and screenshots
+[149/587] tests\domain-trends-loading.spec.ts:18:28 › domain trends preserves 1 actual weeks and empty state
+[150/587] tests\domain-trends-loading.spec.ts:18:28 › domain trends preserves 9 actual weeks and empty state
+[151/587] tests\directory-loading.spec.ts:7:70 › /principal/students 1280px light: real controls and screenshots
+[152/587] tests\domain-trends-loading.spec.ts:19:51 › domain trends retries terms failure and clears placeholders
+[153/587] tests\directory-loading.spec.ts:7:70 › /principal/students 1280px dark: real controls and screenshots
+[154/587] tests\domain-trends-loading.spec.ts:19:51 › domain trends retries advisories failure and clears placeholders
+
+[WebServer] 8:32:30 PM [vite] (client) [console.error] Failed to load advisory sections: Error: Failed to fetch advisory sections (500)
+[WebServer]     at fetchAdvisorySections (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:15:21)
+[155/587] tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 375px light: real controls and screenshots
+[156/587] tests\domain-trends-loading.spec.ts:19:51 › domain trends retries trends failure and clears placeholders
+[157/587] tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 375px dark: real controls and screenshots
+[158/587] tests\domain-trends-loading.spec.ts:20:32 › domain trends light neutral score and colored composite contrast
+[159/587] tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 1280px light: real controls and screenshots
+[160/587] tests\domain-trends-loading.spec.ts:20:32 › domain trends dark neutral score and colored composite contrast
+[161/587] tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 1280px dark: real controls and screenshots
+[162/587] tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 375px light: real controls and screenshots
+[163/587] tests\domain-trends-loading.spec.ts:21:1 › domain chart placeholder preserves the line-chart silhouette
+[164/587] tests\domain-trends-loading.spec.ts:22:1 › domain subject selection and legend toggles keep their existing behavior
+[165/587] tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 375px dark: real controls and screenshots
+[166/587] tests\domain-trends-loading.spec.ts:23:1 › domain trends no-advisory result settles to its existing empty state
+[167/587] tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 1280px light: real controls and screenshots
+[168/587] tests\domain-trends-loading.spec.ts:25:32 › domain trends fast term refetch preserves previous data
+[169/587] tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 1280px dark: real controls and screenshots
+[170/587] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 375px light: real controls and screenshots
+  1) tests\domain-trends-loading.spec.ts:25:32 › domain trends fast term refetch preserves previous data 
+
+    Error: expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "dimmed"
+    Received array:     ["waiting", "dimmed", "swapping", "settled"]
+
+      27 |  await region.evaluate(element=>{const phases:string[]=[];(window as unknown as {domainPhases:string[]}).domainPhases=phases;new MutationObserver(()=>phases.push(element.getAttribute('data-sk-phase')??'')).observe(element,{attributes:true,attributeFilter:['data-sk-phase']});});
+      28 |  release.hold();await page.getByRole('combobox',{name:'Select term',exact:true}).selectOption('2');if(slow){await expect(region).toHaveAttribute('data-sk-phase','dimmed');await expect(region.locator('[data-sk-stale]')).toHaveCSS('opacity','0.6');await expect(region.getByText('Based on 3 weeks of ratings recorded so far in this term.',{exact:true})).toBeVisible();await expect(region).toHaveAttribute('data-sk-phase','revealed');release.releaseTrends();}else setTimeout(release.releaseTrends,60);
+    > 29 |  await expect(region).toHaveAttribute('data-sk-phase','settled');expect(await page.getByRole('heading',{name:'Domain Trends',exact:true}).boundingBox()).toEqual(heading);const phases=await page.evaluate(()=>(window as unknown as {domainPhases:string[]}).domainPhases);if(!slow){expect(phases).toContain('waiting');expect(phases).not.toContain('dimmed');expect(phases).not.toContain('revealed');}await assertNoDataSpinner(page);
+         |                                                                                                                                                                                                                                                                                                                                              ^
+      30 | });
+      31 | for(const dark of [false,true])test(`domain trends ${dark?'dark':'light'} line shimmer retains its entire silhouette`,async({page})=>{await fixture(page,dark);await page.goto(url);await expect(page.locator('[data-sk-region="domain-trends-body"]')).toHaveAttribute('data-sk-phase','revealed');await page.locator('[data-sk-line]').evaluateAll(elements => { for (const element of elements) for (const animation of element.getAnimations({subtree:true})) animation.pause(); });await checkShimmerPixels(page.locator('[data-sk-line]').first(),`domain-trend-line-${dark?'dark':'light'}`);});
+      32 | for(const count of [1,2,9])test(`domain trends ${count} subject tabs preserve native wrapping`,async({page})=>{await page.setViewportSize({width:375,height:1100});const release=await fixture(page,false,3,count,count===9,2);await page.goto(url);const tabs=page.locator('[data-sk-region="domain-trend-subject-tabs"]');await expect(tabs).toHaveAttribute('data-sk-phase','waiting');const initial=await tabs.boundingBox();await expect(tabs).toHaveAttribute('data-sk-phase','revealed');expect(await tabs.boundingBox()).toEqual(initial);const before=await page.getByRole('heading',{name:'Domain Trends',exact:true}).boundingBox();release();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);await expect(page.locator('[data-sk-region="domain-trend-subject"]')).toHaveCount(count);expect(await page.getByRole('heading',{name:'Domain Trends',exact:true}).boundingBox()).toEqual(before);if(count===9)expect((await tabs.boundingBox())!.height).toBeGreaterThan(initial!.height);});
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\domain-trends-loading.spec.ts:29:334
+
+    Error Context: test-results\domain-trends-loading-doma-55d8b-tch-preserves-previous-data\error-context.md
+
+
+[171/587] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 375px dark: real controls and screenshots
+
+(node:2684) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[172/587] tests\domain-trends-loading.spec.ts:25:32 › domain trends slow term refetch preserves previous data
+[173/587] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 1280px light: real controls and screenshots
+[174/587] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 1280px dark: real controls and screenshots
+[175/587] tests\domain-trends-loading.spec.ts:31:32 › domain trends light line shimmer retains its entire silhouette
+[176/587] tests\directory-loading.spec.ts:7:70 › /parent 375px light: real controls and screenshots
+[177/587] tests\domain-trends-loading.spec.ts:31:32 › domain trends dark line shimmer retains its entire silhouette
+[178/587] tests\directory-loading.spec.ts:7:70 › /parent 375px dark: real controls and screenshots
+[179/587] tests\domain-trends-loading.spec.ts:32:28 › domain trends 1 subject tabs preserve native wrapping
+[180/587] tests\directory-loading.spec.ts:7:70 › /parent 1280px light: real controls and screenshots
+[181/587] tests\domain-trends-loading.spec.ts:32:28 › domain trends 2 subject tabs preserve native wrapping
+[182/587] tests\directory-loading.spec.ts:7:70 › /parent 1280px dark: real controls and screenshots
+[183/587] tests\domain-trends-loading.spec.ts:32:28 › domain trends 9 subject tabs preserve native wrapping
+[184/587] tests\directory-loading.spec.ts:39:1 › principal directory auto-column classification requires observed variation
+[185/587] tests\finishing-contract.spec.ts:6:1 › session identity and fixed attendance labels are real before dashboard fetch
+[186/587] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 375 light: headers, legend and controls stay real
+[187/587] tests\finishing-contract.spec.ts:15:1 › attendance skeleton retains the real ring chart shape
+[188/587] tests\finishing-contract.spec.ts:25:1 › table refetch keeps old rows until delay then dims without a spinner
+[189/587] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 375 dark: headers, legend and controls stay real
+[190/587] tests\finishing-contract.spec.ts:44:40 › light: shine is distinct from every surface
+[191/587] tests\finishing-contract.spec.ts:44:40 › dark: shine is distinct from every surface
+[192/587] tests\holistic-overview-loading.spec.ts:11:62 › holistic overview 375 light keeps roster headers and filters real
+[193/587] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 1280 light: headers, legend and controls stay real
+[194/587] tests\holistic-overview-loading.spec.ts:11:62 › holistic overview 375 dark keeps roster headers and filters real
+[195/587] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 1280 dark: headers, legend and controls stay real
+[196/587] tests\holistic-overview-loading.spec.ts:11:62 › holistic overview 1280 light keeps roster headers and filters real
+[197/587] tests\holistic-analytics-loading.spec.ts:41:1 › holistic metric name and detail bars have measurable widths
+[198/587] tests\holistic-analytics-loading.spec.ts:53:32 › holistic analytics 0 returned rows preserve empty, short and wrapping results
+[199/587] tests\holistic-overview-loading.spec.ts:11:62 › holistic overview 1280 dark keeps roster headers and filters real
+[200/587] tests\holistic-analytics-loading.spec.ts:53:32 › holistic analytics 1 returned rows preserve empty, short and wrapping results
+[201/587] tests\holistic-analytics-loading.spec.ts:53:32 › holistic analytics 9 returned rows preserve empty, short and wrapping results
+[202/587] tests\holistic-analytics-loading.spec.ts:67:1 › holistic analytics errors clear all shapes and retry options and scores
+[203/587] tests\holistic-overview-loading.spec.ts:12:28 › holistic overview preserves 0 returned students
+[204/587] tests\holistic-analytics-loading.spec.ts:80:35 › holistic analytics light: actual card and heatmap surfaces retain shimmer pixels
+[205/587] tests\holistic-overview-loading.spec.ts:12:28 › holistic overview preserves 1 returned students
+[206/587] tests\holistic-overview-loading.spec.ts:12:28 › holistic overview preserves 9 returned students
+[207/587] tests\holistic-overview-loading.spec.ts:13:53 › holistic overview retries terms errors without losing search
+[208/587] tests\holistic-analytics-loading.spec.ts:80:35 › holistic analytics dark: actual card and heatmap surfaces retain shimmer pixels
+[209/587] tests\holistic-overview-loading.spec.ts:13:53 › holistic overview retries advisories errors without losing search
+
+[WebServer] 8:33:33 PM [vite] (client) [console.error] Failed to load advisory sections: Error: Failed to fetch advisory sections (500)
+[WebServer]     at fetchAdvisorySections (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:15:21)
+[210/587] tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 375 light known snapshot shell remains real
+[211/587] tests\holistic-overview-loading.spec.ts:13:53 › holistic overview retries overview errors without losing search
+[212/587] tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 375 dark known snapshot shell remains real
+[213/587] tests\holistic-overview-loading.spec.ts:14:1 › holistic overview native columns vary with actual student and trend labels
+[214/587] tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 1280 light known snapshot shell remains real
+[215/587] tests\holistic-overview-loading.spec.ts:15:32 › holistic overview fast refetch preserves rows
+[216/587] tests\holistic-overview-loading.spec.ts:15:32 › holistic overview slow refetch preserves rows
+[217/587] tests\holistic-profile-loading.spec.ts:11:62 › holistic profile 1280 dark known snapshot shell remains real
+[218/587] tests\holistic-profile-loading.spec.ts:12:28 › holistic profile preserves 0 actual subject cards
+[219/587] tests\holistic-profile-loading.spec.ts:12:28 › holistic profile preserves 1 actual subject cards
+[220/587] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview light actual table surface contrast
+[221/587] tests\holistic-profile-loading.spec.ts:12:28 › holistic profile preserves 9 actual subject cards
+[222/587] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview dark actual table surface contrast
+[223/587] tests\holistic-profile-loading.spec.ts:13:49 › holistic profile retries student errors
+[224/587] tests\holistic-profile-loading.spec.ts:13:49 › holistic profile retries profile errors
+[225/587] tests\holistic-overview-loading.spec.ts:17:1 › holistic overview local search and level filters preserve their calculations
+[226/587] tests\holistic-profile-loading.spec.ts:13:49 › holistic profile retries terms errors
+[227/587] tests\holistic-overview-loading.spec.ts:18:1 › holistic overview repeat term skeleton uses cached native widths
+[228/587] tests\holistic-profile-loading.spec.ts:14:1 › holistic profile empty evaluations settle into the original empty state
+[229/587] tests\holistic-profile-loading.spec.ts:15:1 › holistic profile subject cards and selector preserve recommendations
+[230/587] tests\holistic-profile-loading.spec.ts:16:32 › holistic profile light card text retains actual contrast
+[231/587] tests\holistic-profile-loading.spec.ts:16:32 › holistic profile dark card text retains actual contrast
+[232/587] tests\loading.spec.ts:7:1 › 60ms never reveals a skeleton
+[233/587] tests\loading.spec.ts:11:1 › 320ms reveals after 200ms and reserves at least 400ms
+[234/587] tests\holistic-profile-loading.spec.ts:17:1 › holistic profile retains gauge and sparkline shapes
+[235/587] tests\loading.spec.ts:20:1 › 1500ms begins showing content within 150ms of data
+[236/587] tests\holistic-profile-loading.spec.ts:19:1 › holistic profile pending selector has valid native option markup
+[237/587] tests\loading.spec.ts:24:1 › fixed region retains height and has zero CLS
+[238/587] tests\overlay-contract.spec.ts:6:73 › fixed overlay 375 light: shared field keeps its matching box
+[239/587] tests\loading.spec.ts:30:3 › variable list, data size 0: one swap, stable surroundings
+[240/587] tests\loading.spec.ts:30:3 › variable list, data size 2: one swap, stable surroundings
+[241/587] tests\overlay-contract.spec.ts:6:73 › fixed overlay 375 dark: shared field keeps its matching box
+[242/587] tests\loading.spec.ts:30:3 › variable list, data size 9: one swap, stable surroundings
+[243/587] tests\overlay-contract.spec.ts:6:73 › fixed overlay 1280 light: shared field keeps its matching box
+[244/587] tests\loading.spec.ts:30:3 › variable text, data size 1: one swap, stable surroundings
+[245/587] tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings
+[246/587] tests\overlay-contract.spec.ts:6:73 › fixed overlay 1280 dark: shared field keeps its matching box
+[247/587] tests\loading.spec.ts:30:3 › variable text, data size 24: one swap, stable surroundings
+[248/587] tests\loading.spec.ts:49:1 › animation properties, shimmer duration and shared easing
+[249/587] tests\overlay-contract.spec.ts:15:1 › fixed overlay rejects a shape extending outside its matching loaded field
+[250/587] tests\loading.spec.ts:59:1 › different mount times share shimmer phase
+[251/587] tests\loading.spec.ts:64:30 › 5 items use exact stagger policy
+[252/587] tests\loading.spec.ts:64:30 › 12 items use exact stagger policy
+[253/587] tests\parent-detail-loading.spec.ts:5:1 › parent detail keeps navigation and identity labels during linked-student fetch
+[254/587] tests\loading.spec.ts:68:1 › reduced motion has no shimmer or fade wait
+[255/587] tests\loading.spec.ts:76:1 › aria busy, hidden reservation, delayed status and complete cleanup
+[256/587] tests\parent-detail-loading.spec.ts:32:62 › parent profile 375 light keeps known class and masks unknown avatar
+[257/587] tests\loading.spec.ts:89:1 › error removes skeleton and retry reloads
+[258/587] tests\parent-detail-loading.spec.ts:32:62 › parent profile 375 dark keeps known class and masks unknown avatar
+[259/587] tests\parent-detail-loading.spec.ts:32:62 › parent profile 1280 light keeps known class and masks unknown avatar
+[260/587] tests\loading.spec.ts:96:1 › negative control catches wrong fixed height and CLS
+[261/587] tests\loading.spec.ts:101:1 › negative control catches unsynchronized shimmer
+[262/587] tests\parent-detail-loading.spec.ts:32:62 › parent profile 1280 dark keeps known class and masks unknown avatar
+[263/587] tests\loading.spec.ts:106:1 › skeleton CSS uses tokens for every color
+[264/587] tests\loading.spec.ts:111:40 › light: neutral contrast on every surface
+[265/587] tests\loading.spec.ts:111:40 › dark: neutral contrast on every surface
+[266/587] tests\loading.spec.ts:120:1 › text line metrics and adjacent widths
+[267/587] tests\parent-detail-loading.spec.ts:41:91 › parent detail overview 375 light preserves real layout
+[268/587] tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 375 light keeps known challenges
+[269/587] tests\parent-detail-loading.spec.ts:41:91 › parent detail overview 375 dark preserves real layout
+[270/587] tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 375 dark keeps known challenges
+[271/587] tests\parent-detail-loading.spec.ts:41:91 › parent detail overview 1280 light preserves real layout
+[272/587] tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 1280 light keeps known challenges
+[273/587] tests\parent-detail-loading.spec.ts:41:91 › parent detail overview 1280 dark preserves real layout
+[274/587] tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 1280 dark keeps known challenges
+[275/587] tests\parent-detail-loading.spec.ts:41:91 › parent detail academic 375 light preserves real layout
+[276/587] tests\pet-quiz-loading.spec.ts:7:1 › pet intro keeps its known story visible while access loads
+[277/587] tests\pet-quiz-loading.spec.ts:8:1 › pet quiz state error clears shapes and retries
+[278/587] tests\parent-detail-loading.spec.ts:41:91 › parent detail academic 375 dark preserves real layout
+
+[WebServer] 8:34:43 PM [vite] (client) [console.error] Failed to load intervention state: Error: Failed to fetch intervention state.
+[WebServer]     at Object.getInterventionState (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/petQuiz.service.ts:20:22)
+[WebServer]     at async init (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/PetQuizPage.tsx:122:19)
+
+[WebServer] 8:34:43 PM [vite] (client) [console.error] Failed to load intervention state: Error: Failed to fetch intervention state.
+[WebServer]     at Object.getInterventionState (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/petQuiz.service.ts:20:22)
+[WebServer]     at async init (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/PetQuizPage.tsx:122:19)
+[279/587] tests\pet-quiz-loading.spec.ts:9:62 › pet quiz question 375 light reserves real choices
+[280/587] tests\parent-detail-loading.spec.ts:41:91 › parent detail academic 1280 light preserves real layout
+[281/587] tests\pet-quiz-loading.spec.ts:9:62 › pet quiz question 375 dark reserves real choices
+[282/587] tests\parent-detail-loading.spec.ts:41:91 › parent detail academic 1280 dark preserves real layout
+[283/587] tests\pet-quiz-loading.spec.ts:9:62 › pet quiz question 1280 light reserves real choices
+[284/587] tests\parent-detail-loading.spec.ts:41:91 › parent detail holistic 375 light preserves real layout
+[285/587] tests\pet-quiz-loading.spec.ts:9:62 › pet quiz question 1280 dark reserves real choices
+[286/587] tests\parent-detail-loading.spec.ts:41:91 › parent detail holistic 375 dark preserves real layout
+[287/587] tests\parent-detail-loading.spec.ts:41:91 › parent detail holistic 1280 light preserves real layout
+[288/587] tests\pet-quiz-loading.spec.ts:11:99 › pet bonus Match 375 light
+[289/587] tests\parent-detail-loading.spec.ts:41:91 › parent detail holistic 1280 dark preserves real layout
+[290/587] tests\pet-quiz-loading.spec.ts:11:99 › pet bonus Match 375 dark
+[291/587] tests\parent-detail-loading.spec.ts:41:91 › parent detail progressReport 375 light preserves real layout
+[292/587] tests\pet-quiz-loading.spec.ts:11:99 › pet bonus Match 1280 light

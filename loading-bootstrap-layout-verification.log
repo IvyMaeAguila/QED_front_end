@@ -1,0 +1,54 @@
+
+[WebServer] (node:15796) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:31096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 15 tests using 1 worker
+
+(node:39080) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/15] tests\bootstrap-loading.spec.ts:32:1 › bootstrap 60ms never shows the brand loader or status
+[2/15] tests\bootstrap-loading.spec.ts:39:1 › revealed bootstrap animates only the real logo opacity, never rotation
+[3/15] tests\bootstrap-loading.spec.ts:50:1 › bootstrap reduced motion has no running animation
+  1) tests\bootstrap-loading.spec.ts:50:1 › bootstrap reduced motion has no running animation ──────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      52 |   const { release, releaseData } = await bootstrap(page);
+      53 |   await expect(page.locator('[data-bootstrap-loader], .qed-wrap')).toBeVisible();
+    > 54 |   expect(await page.evaluate(() => document.getAnimations().filter(a => a.playState === "running").length)).toBe(0);
+         |                                                                                                             ^
+      55 |   release(); releaseData();
+      56 | });
+      57 | test("bootstrap busy and status follow reveal, minimum duration, and DOM cleanup", async ({ page }) => {
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bootstrap-loading.spec.ts:54:109
+
+    Error Context: test-results\bootstrap-loading-bootstra-b86c3-on-has-no-running-animation\error-context.md
+
+
+(node:37072) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[4/15] tests\bootstrap-loading.spec.ts:57:1 › bootstrap busy and status follow reveal, minimum duration, and DOM cleanup
+[5/15] tests\bootstrap-loading.spec.ts:74:1 › protected components and page requests never render before auth resolves
+[6/15] tests\bootstrap-loading.spec.ts:82:34 › lazy route 375: registered composition inside real shell with stable surroundings
+[7/15] tests\bootstrap-loading.spec.ts:82:34 › lazy route 1280: registered composition inside real shell with stable surroundings
+[8/15] tests\parent-detail-loading.spec.ts:41:91 › parent detail overview 375 light preserves real layout
+[9/15] tests\parent-detail-loading.spec.ts:41:91 › parent detail overview 375 dark preserves real layout
+[10/15] tests\parent-detail-loading.spec.ts:41:91 › parent detail overview 1280 light preserves real layout
+[11/15] tests\parent-detail-loading.spec.ts:41:91 › parent detail overview 1280 dark preserves real layout
+[12/15] tests\teacher-dashboard.spec.ts:6:68 › teacher dashboard 375px light: real route, stable stat geometry and screenshots
+[13/15] tests\teacher-dashboard.spec.ts:6:68 › teacher dashboard 375px dark: real route, stable stat geometry and screenshots
+[14/15] tests\teacher-dashboard.spec.ts:6:68 › teacher dashboard 1280px light: real route, stable stat geometry and screenshots
+[15/15] tests\teacher-dashboard.spec.ts:6:68 › teacher dashboard 1280px dark: real route, stable stat geometry and screenshots
+  1 failed
+    tests\bootstrap-loading.spec.ts:50:1 › bootstrap reduced motion has no running animation ───────
+  14 passed (45.0s)

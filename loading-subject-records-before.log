@@ -1,0 +1,39 @@
+[WebServer] (node:33768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:15384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:10408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\subject-records-loading.spec.ts:15:64 › subject records 375 light preserves known roster and headers (9.8s)
+
+
+  1) tests\subject-records-loading.spec.ts:15:64 › subject records 375 light preserves known roster and headers 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('columnheader', { name: 'Learners\' Names', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('columnheader', { name: 'Learners\' Names', exact: true }) with timeout 5000ms
+      - waiting for getByRole('columnheader', { name: 'Learners\' Names', exact: true })
+
+
+      16 |   await page.setViewportSize({width,height:1100});const release=await fixture(page,dark);
+      17 |   await page.goto('/teacher/subjects/1/records');
+    > 18 |   await expect(page.getByRole('columnheader',{name:"Learners' Names",exact:true})).toBeVisible();
+         |                                                                                    ^
+      19 |   await expect(page.getByText('Ana Cruz 0',{exact:true})).toBeVisible();
+      20 |   await expect(page.getByRole('button',{name:'Edit Records',exact:true})).toBeVisible();
+      21 |   const region=page.locator('[data-sk-region="subject-assessment-records"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\subject-records-loading.spec.ts:18:84
+
+    Error Context: test-results\subject-records-loading-su-2cd1d-es-known-roster-and-headers\error-context.md
+
+  1 failed
+    tests\subject-records-loading.spec.ts:15:64 › subject records 375 light preserves known roster and headers 

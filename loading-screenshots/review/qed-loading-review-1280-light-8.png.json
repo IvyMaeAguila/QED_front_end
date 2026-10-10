@@ -1,0 +1,14 @@
+{
+  "leftToRight": [
+    "teacher-grades-Parent-Visibility",
+    "teacher-grades-Submission-History",
+    "teacher-help",
+    "teacher-student-details",
+    "teacher-subject",
+    "teacher-subject-class-list",
+    "teacher-subject-holistic",
+    "teacher-subject-holistic-records"
+  ],
+  "top": "skeleton",
+  "bottom": "loaded"
+}

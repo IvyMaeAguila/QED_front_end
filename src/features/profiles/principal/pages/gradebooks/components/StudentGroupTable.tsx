@@ -1,4 +1,7 @@
-import { Fragment } from "react";
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { SkeletonText, SkeletonAvatar } from "@shared/components/SkeletonLoading";
+import { skeletonRows, lastKnownCount, rememberRows, rememberColumns, useColumnReservation } from "@shared/loading/reservations";
+import { Fragment, useRef } from "react";
 import { Clock } from "lucide-react";
 import { StudentAvatar } from "@shared/components/StudentAvatar";
 import type { Student } from "../data/types";
@@ -12,6 +15,8 @@ interface StudentGroupTableProps {
   textPrimary: string;
   textMuted: string;
   darkMode: boolean;
+  loading?: boolean;
+  view?: string;
 }
 
 export function StudentGroupTable({
@@ -22,23 +27,31 @@ export function StudentGroupTable({
   textPrimary,
   textMuted,
   darkMode,
+  loading = false, view = "principal-grade-sheet",
 }: StudentGroupTableProps) {
-  const columnCount = subjects.length + 2;
+  const tableRef = useRef<HTMLTableElement>(null);
+  const reservedSubjects = Array.from({ length: lastKnownCount(`${view}-subjects`, 3) }, (_, index) => `pending-${index}`);
+  const widths = useColumnReservation(view, [{ label: "Student", typical: "Last name, First name" }, ...(loading ? reservedSubjects : subjects).map(subject => ({ label: loading ? "" : subject, typical: "Subject name" })), { label: "Overall Average", typical: "90.00" }], loading);
   const groupBand = `qed-type-table-group px-4 py-1.5 uppercase ${
-    darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
+    darkMode ? "bg-white/10" : "bg-brand-light"
   } ${textPrimary}`;
 
-  return (
-    <div className="overflow-x-auto">
-      <table className="teacher-user-table w-full min-w-max text-sm">
-        <thead>
+  const renderTable = (pending: boolean) => {
+    const displaySubjects = pending ? reservedSubjects : subjects;
+    const pendingStudents = Array.from({ length: skeletonRows(view, undefined, 44) }, (_, index): Student => ({ studentId: `pending-${index}`, firstName: "", lastName: "", middleInitial: "", gender: index % 2 ? "Female" : "Male", grades: {}, gradeStatuses: {}, ownAdvisorySubjects: {}, overallAverage: null }));
+    const displayGroups = pending ? [{ label: "Male", students: pendingStudents.filter(student => student.gender === "Male") }, { label: "Female", students: pendingStudents.filter(student => student.gender === "Female") }].filter(group => group.students.length) : groups;
+    const columnCount = displaySubjects.length + 2;
+    return (
+      <table ref={tableRef} className="teacher-user-table w-full min-w-max text-sm">
+        {pending && <colgroup>{widths.map((width, index) => <col key={index} style={{ width }} />)}</colgroup>}
+        <thead data-sk-region="grade-sheet-table-header">
           <tr className={`border-b ${panelBorder}`}>
             <th className={`qed-type-table-header sticky left-0 z-10 min-w-56 py-2 pr-4 text-left uppercase tracking-wider ${panelBg} ${textMuted}`}>
               Student
             </th>
-            {subjects.map((subject) => (
+            {displaySubjects.map((subject, index) => (
               <th key={subject} className={`qed-type-table-header min-w-28 whitespace-nowrap px-3 py-2 text-center uppercase tracking-wider ${textMuted}`}>
-                <span>{subject}</span>
+                <span>{pending ? <SkeletonText width={index % 2 ? "13ch" : "10ch"} /> : subject}</span>
               </th>
             ))}
             <th className={`qed-type-table-header min-w-28 py-2 pl-3 text-center uppercase tracking-wider ${textMuted}`}>
@@ -47,36 +60,36 @@ export function StudentGroupTable({
           </tr>
         </thead>
         <tbody>
-          {groups.map((group) => (
+          {displayGroups.map((group) => (
             <Fragment key={group.label}>
               <tr>
                 <td colSpan={columnCount} className={groupBand}>
-                  {group.label} · {group.students.length} students
+                  {group.label} · {pending ? <SkeletonText width="1ch" className="inline-block align-middle" /> : group.students.length} students
                 </td>
               </tr>
               {group.students.map((student) => {
                 const average = student.overallAverage ?? computeAverage(student.grades, subjects);
                 const displayAverage = student.overallAverage ?? (average > 0 ? average : null);
                 return (
-                  <tr key={student.studentId} className={`border-t ${darkMode ? "border-white/10" : "border-black/10"}`}>
+                  <tr key={student.studentId} data-sk-region="grade-sheet-student-row" data-sk-item="" className={`border-t ${darkMode ? "border-white/10" : "border-black/10"}`}>
                     <td className={`sticky left-0 z-10 px-4 py-2 ${darkMode ? "bg-[#111827]" : "bg-white"}`}>
                       <div className="flex min-w-0 items-center gap-2.5">
-                        <StudentAvatar gender={student.gender} name={fullName(student)} />
-                        <span className={`qed-type-table-body truncate ${textPrimary}`}>
-                          {fullName(student)}
+                        <span className="h-7 w-7 shrink-0" data-sk-region="grade-sheet-student-avatar">{pending ? <SkeletonAvatar width={28} /> : <StudentAvatar gender={student.gender} name={fullName(student)} />}</span>
+                        <span data-sk-region="grade-sheet-student-name" className={`qed-type-table-body truncate ${textPrimary}`}>
+                          {pending ? <SkeletonText width={student.gender === "Female" ? "11ch" : "15ch"} /> : fullName(student)}
                         </span>
                       </div>
                     </td>
-                    {subjects.map((subject) => {
+                    {displaySubjects.map((subject, index) => {
                       const status = student.gradeStatuses[subject] ?? (student.grades[subject] === undefined ? "not_submitted" : "submitted");
                       const grade = student.grades[subject];
                       return (
                         <td key={subject} className="px-3 py-2 text-center">
-                          {status === "submitted" ? (
+                          {pending ? <SkeletonText width={index % 2 ? "2ch" : "3ch"} className="qed-type-table-grade mx-auto" /> : status === "submitted" ? (
                             grade == null ? (
                               <span className="qed-type-table-empty-value">—</span>
                             ) : (
-                              <span className="qed-type-table-grade text-[#800000]">{grade}</span>
+                              <span className="qed-type-table-grade text-brand-ink">{grade}</span>
                             )
                           ) : status === "pending" ? (
                             <span className="qed-type-badge inline-flex items-center gap-1 uppercase tracking-wide text-[#B45309]">
@@ -93,10 +106,10 @@ export function StudentGroupTable({
                       );
                     })}
                     <td className="px-3 py-2 text-center">
-                      {displayAverage == null ? (
+                      {pending ? <SkeletonText width="4ch" className="qed-type-table-grade mx-auto" /> : displayAverage == null ? (
                         <span className="qed-type-table-empty-value">—</span>
                       ) : (
-                        <span className="qed-type-table-grade text-[#800000]">{displayAverage}</span>
+                        <span className="qed-type-table-grade text-brand-ink">{displayAverage}</span>
                       )}
                     </td>
                   </tr>
@@ -104,7 +117,7 @@ export function StudentGroupTable({
               })}
             </Fragment>
           ))}
-          {groups.length === 0 && (
+          {displayGroups.length === 0 && (
             <tr>
               <td colSpan={columnCount} className={`py-8 text-center text-xs font-medium ${textMuted}`}>
                 No students found.
@@ -113,6 +126,8 @@ export function StudentGroupTable({
           )}
         </tbody>
       </table>
-    </div>
-  );
+    );
+  };
+  return <div className="overflow-x-auto"><LoadingRegion loading={loading} variable autoColumns name="principal-grade-sheet-table" skeleton={null} frame={renderTable} retainPrevious hasContent={groups.some(group => group.students.length > 0)} onSettled={() => { rememberRows(view, groups.reduce((count, group) => count + group.students.length, 0)); rememberRows(`${view}-subjects`, subjects.length); rememberColumns(view, tableRef.current); }}>{null}</LoadingRegion></div>;
 }
+

@@ -17,6 +17,7 @@ import {
 
 interface SubjectsCatalogContextValue {
   loading: boolean;
+  assessmentError: string | null;
   getSubjectNamesForGrade: (grade: GradeLevel) => string[];
   loadSubjectsForGrade: (grade: GradeLevel) => Promise<void>;
   assessmentTypes: NewAssessmentType[];
@@ -32,6 +33,7 @@ export function SubjectsCatalogProvider({ children }: { children: ReactNode }) {
   const [subjectsByGrade, setSubjectsByGrade] = useState<Record<string, ElemSubjectRow[]>>({});
   const [assessmentTypes, setAssessmentTypes] = useState<NewAssessmentType[]>([]);
   const [loading, setLoading] = useState(false);
+  const [assessmentError, setAssessmentError] = useState<string | null>(null);
 
   const loadSubjectsForGrade = useCallback(async (grade: GradeLevel) => {
     setLoading(true);
@@ -49,6 +51,7 @@ export function SubjectsCatalogProvider({ children }: { children: ReactNode }) {
 
   const loadAssessmentTypes = useCallback(async () => {
     setLoading(true);
+    setAssessmentError(null);
     try {
       let types = (await getAssessmentTypes()).data ?? [];
 
@@ -90,6 +93,7 @@ export function SubjectsCatalogProvider({ children }: { children: ReactNode }) {
       );
     } catch (err) {
       console.error("Failed to load assessment types:", err);
+      setAssessmentError(err instanceof Error ? err.message : "Failed to load assessment types.");
       setAssessmentTypes([]);
     } finally {
       setLoading(false);
@@ -125,6 +129,7 @@ export function SubjectsCatalogProvider({ children }: { children: ReactNode }) {
     <SubjectsCatalogContext.Provider
       value={{
         loading,
+        assessmentError,
         getSubjectNamesForGrade,
         loadSubjectsForGrade,
         assessmentTypes,

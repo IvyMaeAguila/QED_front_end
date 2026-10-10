@@ -1,0 +1,18 @@
+
+[WebServer] (node:13076) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 4 tests using 1 worker
+
+
+(node:23256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/4] tests\user-details-loading.spec.ts:22:68 › user details 375 light: real field labels and actions
+[2/4] tests\user-details-loading.spec.ts:22:68 › user details 375 dark: real field labels and actions
+[3/4] tests\user-details-loading.spec.ts:22:68 › user details 1280 light: real field labels and actions
+[4/4] tests\user-details-loading.spec.ts:22:68 › user details 1280 dark: real field labels and actions
+  4 passed (22.2s)

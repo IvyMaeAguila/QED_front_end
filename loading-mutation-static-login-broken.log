@@ -1,0 +1,42 @@
+[WebServer] (node:17240) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:35132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:40508) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\static-routes.spec.ts:44:105 › /login 375 light: static public page needs no invented skeleton
+  1) tests\static-routes.spec.ts:44:105 › /login 375 light: static public page needs no invented skeleton 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('[data-sk-region="login-content"]')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-sk-region="login-content"]') with timeout 5000ms
+      - waiting for locator('[data-sk-region="login-content"]')
+
+
+      49 |   await page.goto(route);
+      50 |   const region = page.locator(route === "/" ? '[data-sk-region="landing-content"]' : '[data-sk-region="login-content"]');
+    > 51 |   await expect(region).toBeVisible();
+         |                        ^
+      52 |   await expect(page.locator("[data-sk-primitive]")).toHaveCount(0);
+      53 |   await assertNoDataSpinner(page);
+      54 |   if (route === "/login") await expect(page.getByRole("button", { name: "Login", exact: true })).toBeVisible();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\static-routes.spec.ts:51:24
+
+    Error Context: test-results\static-routes--login-375-l-27af8--needs-no-invented-skeleton\error-context.md
+
+
+  1 failed
+    tests\static-routes.spec.ts:44:105 › /login 375 light: static public page needs no invented skeleton 

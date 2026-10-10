@@ -1,0 +1,38 @@
+[WebServer] (node:36516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:35660) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 19 tests using 1 worker
+
+(node:7056) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\subject-records-loading.spec.ts:15:64 › subject records 375 light preserves known roster and headers (7.0s)
+  ok  2 tests\subject-records-loading.spec.ts:15:64 › subject records 375 dark preserves known roster and headers (1.9s)
+  ok  3 tests\subject-records-loading.spec.ts:15:64 › subject records 1280 light preserves known roster and headers (2.0s)
+  ok  4 tests\subject-records-loading.spec.ts:15:64 › subject records 1280 dark preserves known roster and headers (2.0s)
+[WebServer] 2:54:25 PM [vite] (client) [console.error] Failed to load records: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/subjects/services/subjectGrading.service.ts:12:9)
+[WebServer]     at async fetchItems (http://127.0.0.1:5187/src/features/profiles/teacher/pages/subjects/services/subjectGrading.service.ts:49:15)
+[WebServer]     at async Promise.all (index 0)
+  ok  5 tests\subject-records-loading.spec.ts:28:48 › subject records retries items without indefinite shapes (1.3s)
+[WebServer] 2:54:26 PM [vite] (client) [console.error] Failed to load records: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/subjects/services/subjectGrading.service.ts:12:9)
+[WebServer]     at async fetchScores (http://127.0.0.1:5187/src/features/profiles/teacher/pages/subjects/services/subjectGrading.service.ts:67:15)
+[WebServer]     at async Promise.all (index 1)
+  ok  6 tests\subject-records-loading.spec.ts:28:48 › subject records retries scores without indefinite shapes (1.3s)
+  ok  7 tests\subject-records-loading.spec.ts:28:48 › subject records retries weights without indefinite shapes (1.3s)
+  ok  8 tests\subject-records-loading.spec.ts:29:28 › subject records retains 0 known roster rows (1.1s)
+  ok  9 tests\subject-records-loading.spec.ts:29:28 › subject records retains 1 known roster rows (1.2s)
+  ok 10 tests\subject-records-loading.spec.ts:29:28 › subject records retains 9 known roster rows (1.2s)
+  ok 11 tests\subject-records-loading.spec.ts:30:32 › subject records light actual score surface pixels (1.9s)
+  ok 12 tests\subject-records-loading.spec.ts:30:32 › subject records dark actual score surface pixels (1.8s)
+  ok 13 tests\subject-records-loading.spec.ts:31:1 › subject records keeps native table markup valid (2.0s)
+  ok 14 tests\subject-records-loading.spec.ts:34:62 › subject holistic records 375 light keeps known table and domains (1.8s)
+  ok 15 tests\subject-records-loading.spec.ts:34:62 › subject holistic records 375 dark keeps known table and domains (1.8s)
+  ok 16 tests\subject-records-loading.spec.ts:34:62 › subject holistic records 1280 light keeps known table and domains (2.0s)
+  ok 17 tests\subject-records-loading.spec.ts:34:62 › subject holistic records 1280 dark keeps known table and domains (2.0s)
+  ok 18 tests\subject-records-loading.spec.ts:41:1 › subject records auto columns vary with actual learner names (2.4s)
+  ok 19 tests\subject-records-loading.spec.ts:43:1 › subject records repeats cached native leaf columns within 2px (6.7s)
+
+  19 passed (46.5s)

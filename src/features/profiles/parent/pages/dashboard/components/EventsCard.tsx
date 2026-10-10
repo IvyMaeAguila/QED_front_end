@@ -1,4 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { SkeletonText } from "@shared/components/SkeletonLoading";
+import { rememberRows, skeletonRows } from "@shared/loading/reservations";
+import { useMemo, useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { CalendarDays } from "lucide-react";
 import type { SchoolEvent } from "../types/student";
 import {
@@ -38,9 +42,11 @@ function toDayMonth(dateStr: string) {
 
 function EventRow({
   event,
+  loading = false,
   darkMode = false,
 }: {
   event: SchoolEvent;
+  loading?: boolean;
   darkMode?: boolean;
 }) {
   return (
@@ -50,24 +56,24 @@ function EventRow({
       <div
         className={`flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg text-maroon-dark shadow-sm ${darkMode ? "bg-[#111827]" : "bg-white"}`}
       >
-        <span className="text-base font-extrabold leading-none">
-          {event.day}
+        <span className="text-base font-extrabold leading-none" data-sk-region="eventscard-span-field-1">
+          {loading ? <SkeletonText width="2ch" /> : event.day}
         </span>
-        <span className="text-xs font-bold uppercase leading-none">
-          {event.month}
+        <span className="text-xs font-bold uppercase leading-none" data-sk-region="eventscard-span-field-2">
+          {loading ? <SkeletonText width="3ch" /> : event.month}
         </span>
       </div>
-      <div className="min-w-0">
+      <div className="min-w-0" data-sk-region="eventscard-div-field-3">
         <p
-          className={`truncate text-xs font-semibold ${darkMode ? "text-gray-200" : "text-gray-800"}`}
+          className={`truncate text-xs font-semibold ${darkMode ? "text-gray-200" : "text-gray-800"}`} data-sk-region="eventscard-p-field-4"
         >
-          {event.title}
+          {loading ? <SkeletonText width="16ch" /> : event.title}
         </p>
         {event.holidayType && (
           <p
-            className={`truncate text-xs ${darkMode ? "text-gray-500" : "text-gray-500"}`}
+            className={`truncate text-xs ${darkMode ? "text-gray-500" : "text-gray-500"}`} data-sk-region="eventscard-p-field-5"
           >
-            {event.holidayType}
+            {loading ? <SkeletonText width="12ch" /> : event.holidayType}
           </p>
         )}
       </div>
@@ -84,6 +90,7 @@ export default function EventsCard({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
@@ -160,7 +167,7 @@ export default function EventsCard({
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [attempt]);
 
   const activity = useMemo(
     () => events.filter((e) => e.type === "activity"),
@@ -171,68 +178,25 @@ export default function EventsCard({
     [events],
   );
 
+  const renderGroups = (pending: boolean) => <>
+    {([{ type: "activity", label: "Activities", items: activity, empty: "No upcoming activities recorded for this month." }, { type: "holiday", label: "Holidays", items: holiday, empty: "There are no official holidays scheduled for this month." }] as const).map(group => {
+      const rows: SchoolEvent[] = pending ? Array.from({ length: skeletonRows(`parent-events:${group.type}`, undefined, 64) }, (_, index) => ({ id: String(index), day: 0, month: "", title: "", holidayType: "", type: group.type })) : group.items;
+      return <div key={group.type} className={group.type === "activity" ? "mb-3" : undefined}>
+        <p className={`mb-1.5 text-xs font-semibold ${textMuted}`}>{group.label}</p>
+        {rows.length > 0 ? <div className="flex flex-col gap-2">{rows.map(event => <EventRow key={event.id} event={event} loading={pending} darkMode={darkMode} />)}</div> : <p className={`py-1 text-xs ${textMuted}`}>{group.empty}</p>}
+      </div>;
+    })}
+  </>;
   return (
     <div className={`rounded-xl2 p-5 shadow-card ${panelBg}`}>
       <p
-        className={`mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textMuted}`}
+        className={`mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textMuted}`} data-sk-region="eventscard-school-calendar" data-sk-static=""
       >
         <CalendarDays size={14} className="text-maroon-dark" />
         School Calendar
       </p>
 
-      {loading && (
-        <p className={`py-2 text-xs ${textMuted}`}>Loading events…</p>
-      )}
-
-      {!loading && error && (
-        <p className="py-2 text-xs font-semibold text-[#B91C1C]">{error}</p>
-      )}
-
-      {!loading && !error && (
-        <>
-          <div className="mb-3">
-            <p className={`mb-1.5 text-xs font-semibold ${textMuted}`}>
-              Activities
-            </p>
-            {activity.length > 0 ? (
-              <div className="flex flex-col gap-2">
-                {activity.map((event) => (
-                  <EventRow
-                    key={event.id}
-                    event={event}
-                    darkMode={darkMode}
-                  />
-                ))}
-              </div>
-            ) : (
-              <p className={`py-1 text-xs ${textMuted}`}>
-                No upcoming activities recorded for this month.
-              </p>
-            )}
-          </div>
-
-          <div>
-            <p className={`mb-1.5 text-xs font-semibold ${textMuted}`}>
-              Holidays
-            </p>
-            {holiday.length > 0 ? (
-              <div className="flex flex-col gap-2">
-                {holiday.map((event) => (
-                  <EventRow
-                    key={event.id}
-                    event={event}
-                    darkMode={darkMode}
-                  />
-                ))}
-              </div>
-            ) : (
-              <p className={`py-1 text-xs ${textMuted}`}>
-                There are no official holidays scheduled for this month.
-              </p>
-            )}
-          </div>
-        </>
-      )}
+      <LoadingRegion name="parent-school-events" loading={loading} error={error} retry={() => setAttempt(value => value + 1)} variable skeleton={null} frame={renderGroups} onSettled={() => { rememberRows("parent-events:activity", activity.length); rememberRows("parent-events:holiday", holiday.length); }}>{null}</LoadingRegion>
     </div>
   );
 }

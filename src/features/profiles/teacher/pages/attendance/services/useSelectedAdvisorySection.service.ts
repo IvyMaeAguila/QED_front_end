@@ -1,14 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { useSearchParams } from "react-router-dom";
 import { fetchAdvisorySections, type AdvisorySection } from "./attendance.service";
 
 export function useSelectedAdvisorySection() {
   const [sections, setSections] = useState<AdvisorySection[] | null | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     let cancelled = false;
+    setSections(undefined);
+    setError(null);
     fetchAdvisorySections()
       .then((secs) => {
         if (cancelled) return;
@@ -22,7 +26,7 @@ export function useSelectedAdvisorySection() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [attempt]);
 
   const requestedId = searchParams.get("classId");
   const section =
@@ -36,5 +40,5 @@ export function useSelectedAdvisorySection() {
     setSearchParams(next, { replace: true });
   }
 
-  return { sections, section, error, selectSection };
+  return { sections, section, error, selectSection, requestedClassId: requestedId, retry: () => setAttempt(value => value + 1) };
 }

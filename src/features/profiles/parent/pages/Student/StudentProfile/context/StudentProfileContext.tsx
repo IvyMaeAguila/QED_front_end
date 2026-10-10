@@ -1,7 +1,8 @@
 // context/StudentProfileContext.tsx
 // Location: Student/StudentProfile/context/StudentProfileContext.tsx
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { ReactNode } from "react";
 import type { StudentProfileData } from "../types/types";
 import {
@@ -30,7 +31,7 @@ interface StudentProfileProviderProps {
 
 export function StudentProfileProvider({ studentId, initialProfile, children }: StudentProfileProviderProps) {
   const [profile, setProfile] = useState<StudentProfileData | null>(initialProfile ?? null);
-  const [isLoading, setIsLoading] = useState(!initialProfile);
+  const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

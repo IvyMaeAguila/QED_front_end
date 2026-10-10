@@ -1,0 +1,24 @@
+{
+  "regions": [
+    {
+      "selector": "[data-match=\"number\"]",
+      "box": {
+        "x": 45,
+        "y": 128.390625,
+        "width": 1134,
+        "height": 30
+      }
+    }
+  ],
+  "loadedBoxes": [
+    {
+      "x": 45,
+      "y": 128.390625,
+      "width": 1134,
+      "height": 30
+    }
+  ],
+  "shapePixels": 540,
+  "outsidePixels": 0,
+  "outsideRatio": 0
+}

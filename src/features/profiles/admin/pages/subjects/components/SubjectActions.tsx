@@ -18,7 +18,7 @@ export function SubjectActions({
   const secondary = `h-8 px-3 rounded-lg border text-xs font-extrabold flex items-center gap-1.5 shrink-0 transition-colors ${
     darkMode
       ? "bg-[#0B1120] border-[#374151] text-white hover:bg-[#111827]"
-      : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] hover:bg-[#F1F5F9]"
+      : "bg-brand-light border-border-subtle text-[#111827] hover:bg-brand-light"
   }`;
 
   return (
@@ -34,8 +34,8 @@ export function SubjectActions({
       <button
         type="button"
         onClick={onAddSubject}
-        className="h-8 px-3 rounded-lg text-xs font-extrabold text-white flex items-center gap-1.5 shrink-0 transition-colors hover:bg-[#6B0000]"
-        style={{ background: "#8B0D0D" }}
+        className="h-8 px-3 rounded-lg text-xs font-extrabold text-white flex items-center gap-1.5 shrink-0 transition-colors hover:bg-maroon-light"
+        style={{ background: "var(--color-maroon)" }}
       >
         <Plus size={13} />
         Add Subject

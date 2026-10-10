@@ -3,7 +3,8 @@
 // Also owns rankingTerm — the one piece of page-level interactive state
 // (the subject-ranking term dropdown) — since it lives above the section
 // component that renders the dropdown.
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { PrincipalDashboardData, Term } from "../data/types";
 import { getPrincipalDashboardData } from "../services/principalDashboard.service";
 

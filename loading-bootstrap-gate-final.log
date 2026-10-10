@@ -1,0 +1,32 @@
+
+[WebServer] (node:29516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 14 tests using 1 worker
+
+(node:38896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/14] tests\bootstrap-loading.spec.ts:31:1 › bootstrap 60ms never shows the brand loader or status
+[2/14] tests\bootstrap-loading.spec.ts:38:1 › revealed bootstrap animates only the real logo opacity, never rotation
+[3/14] tests\bootstrap-loading.spec.ts:49:1 › bootstrap reduced motion has no running animation
+[4/14] tests\bootstrap-loading.spec.ts:60:1 › bootstrap busy and status follow reveal, minimum duration, and DOM cleanup
+[5/14] tests\bootstrap-loading.spec.ts:76:1 › protected components and page requests never render before auth resolves
+[6/14] tests\bootstrap-loading.spec.ts:84:34 › lazy route 375: registered composition inside real shell with stable surroundings
+[7/14] tests\bootstrap-loading.spec.ts:84:34 › lazy route 1280: registered composition inside real shell with stable surroundings
+
+(node:26876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[8/14] tests\bootstrap-loading.spec.ts:31:1 › bootstrap 60ms never shows the brand loader or status
+[9/14] tests\bootstrap-loading.spec.ts:38:1 › revealed bootstrap animates only the real logo opacity, never rotation
+[10/14] tests\bootstrap-loading.spec.ts:49:1 › bootstrap reduced motion has no running animation
+[11/14] tests\bootstrap-loading.spec.ts:60:1 › bootstrap busy and status follow reveal, minimum duration, and DOM cleanup
+[12/14] tests\bootstrap-loading.spec.ts:76:1 › protected components and page requests never render before auth resolves
+[13/14] tests\bootstrap-loading.spec.ts:84:34 › lazy route 375: registered composition inside real shell with stable surroundings
+[14/14] tests\bootstrap-loading.spec.ts:84:34 › lazy route 1280: registered composition inside real shell with stable surroundings
+  14 passed (36.0s)

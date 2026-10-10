@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { TeacherSummary } from "../data/types";
 import {
   getTeachers,
@@ -7,6 +8,7 @@ import {
 } from "../services/teachers.service";
 
 interface UseTeachersDirectoryResult {
+  retry: () => void;
   teachers: TeacherSummary[];
   schoolYear: string;
   loading: boolean;
@@ -22,6 +24,7 @@ export function useTeachersDirectory(): UseTeachersDirectoryResult {
   const [loading, setLoading] = useState(() => getCachedTeachersList() === null);
   const [error, setError] = useState<Error | null>(null);
 
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     let cancelled = false;
     const cached = getCachedTeachersList();
@@ -52,7 +55,7 @@ export function useTeachersDirectory(): UseTeachersDirectoryResult {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [attempt]);
 
-  return { teachers, schoolYear, loading, error };
+  return { teachers, schoolYear, loading, error, retry: () => setAttempt(value => value + 1) };
 }

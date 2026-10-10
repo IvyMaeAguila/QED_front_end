@@ -1,0 +1,71 @@
+src\routes\ProtectedRoute.tsx:9:  if (isLoading) return <div>Loading...</div>;
+src\routes\AppRouter.tsx:28:import { QedSplash, QedLoader } from "../shared/components/QedLoader";
+src\routes\AppRouter.tsx:88:  if (isLoading) return <QedLoader fill />;
+src\routes\AppRouter.tsx:151:      <QedSplash loading={isLoading} />
+src\routes\AppRouter.tsx:153:      <Suspense fallback={<QedLoader fill />}>
+src\shared\components\QedLoader.tsx:136:export interface QedLoaderProps {
+src\shared\components\QedLoader.tsx:146:export function QedLoader({ size = 60, fill = false }: QedLoaderProps) {
+src\shared\components\QedLoader.tsx:198:export interface QedSplashProps {
+src\shared\components\QedLoader.tsx:210:export function QedSplash({ loading, minDuration = 1200, size }: QedSplashProps) {
+src\shared\components\QedLoader.tsx:246:      <QedLoader size={size} />
+src\shared\components\QedLoader.tsx:251:export default QedLoader;
+src\shared\loading\LoadingRegion.tsx:25:export function LoadingRegion({ as: Tag = "div", loading, error, retry, skeleton, children, label = "Loading…", delay = 200, minDuration = 400, variable = false, className = "", onSettled, layout, layerAs, autoColumns }: ControlledProps) {
+src\features\profiles\teacher\pages\attendance\AttendanceCalendarSection.tsx:2:import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+src\features\profiles\teacher\pages\attendance\AttendanceCalendarSection.tsx:354:          <Loader2 size={16} className={`animate-spin ${textMuted}`} />
+src\features\profiles\teacher\pages\grades\ParentVisibilitySection.tsx:2:import { Eye, EyeOff, Loader2, CheckSquare, Square } from "lucide-react";
+src\features\profiles\teacher\pages\grades\ParentVisibilitySection.tsx:140:            {applying === "show" ? <Loader2 size={12} className="animate-spin" /> : <Eye size={12} />}
+src\features\profiles\teacher\pages\grades\ParentVisibilitySection.tsx:152:            {applying === "hide" ? <Loader2 size={12} className="animate-spin" /> : <EyeOff size={12} />}
+src\features\profiles\teacher\pages\grades\ParentVisibilitySection.tsx:160:          <Loader2 size={18} className={`mx-auto animate-spin ${textMuted}`} />
+src\features\profiles\teacher\pages\subjects\SubjectClassListPage.tsx:3:import { ArrowLeft, Download, Loader2, Search, Users } from "lucide-react";
+src\features\profiles\teacher\pages\subjects\SubjectClassListPage.tsx:185:            <Loader2 size={15} className={`animate-spin ${textMuted}`} />
+src\features\profiles\teacher\pages\attendance\TeacherAttendanceRecordsPage.tsx:3:import { ArrowLeft, Loader2 } from "lucide-react";
+src\features\profiles\teacher\pages\attendance\TeacherAttendanceRecordsPage.tsx:87:            <Loader2 size={15} className={`animate-spin ${textMuted}`} />
+src\features\profiles\teacher\pages\attendance\TeacherAttendanceRecordsPage.tsx:88:            <p className={`text-xs font-semibold ${textMuted}`}>Loading...</p>
+src\features\profiles\teacher\pages\attendance\TeacherAttendancePage.tsx:5:  Loader2,
+src\features\profiles\teacher\pages\attendance\TeacherAttendancePage.tsx:246:            <Loader2 size={15} className={`animate-spin ${textMuted}`} />
+src\features\profiles\teacher\pages\attendance\TeacherAttendancePage.tsx:407:              <Loader2 size={15} className={`animate-spin ${textMuted}`} />
+src\features\profiles\teacher\pages\grades\GradePage.tsx:3:  Download, Send, Loader2, Clock, History,
+src\features\profiles\teacher\pages\grades\GradePage.tsx:323:                    <Loader2 size={12} className="animate-spin" /> Checking records…
+src\features\profiles\teacher\pages\grades\GradePage.tsx:364:                  {submitting ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
+src\features\profiles\teacher\pages\grades\GradePage.tsx:483:                  <Loader2 size={18} className={`mx-auto animate-spin ${textMuted}`} />
+src\features\profiles\teacher\pages\attendance\AttendanceMonthSummarySection.tsx:2:import { CalendarCheck, CalendarDays, Loader2 } from "lucide-react";
+src\features\profiles\teacher\pages\attendance\AttendanceMonthSummarySection.tsx:210:          <Loader2 size={16} className={`animate-spin ${textMuted}`} />
+src\features\profiles\teacher\pages\subjects\detail\SubjectRecordsPage.tsx:12:  Loader2,
+src\features\profiles\teacher\pages\subjects\detail\SubjectRecordsPage.tsx:411:            <Loader2 size={15} className={`animate-spin ${textMuted}`} />
+src\features\profiles\teacher\pages\holistic\StudentHolisticProfilePage.tsx:10:  Loader2,
+src\features\profiles\teacher\pages\holistic\StudentHolisticProfilePage.tsx:314:          <Loader2 size={22} className={`animate-spin ${textMuted}`} />
+src\features\profiles\teacher\pages\holistic\HolisticOverviewPage.tsx:389:            <p className={`px-4 py-16 text-center text-xs font-medium ${textMuted}`}>Loading...</p>
+src\features\profiles\teacher\pages\holistic\HolisticDomainTrendsPage.tsx:414:            <p className={`px-4 py-16 text-center text-xs font-medium ${textMuted}`}>Loading...</p>
+src\features\profiles\admin\pages\classes\ClassFormPage.tsx:85:      ? "Loading…"
+src\features\profiles\admin\pages\classes\ClassFormPage.tsx:517:                  {loadingGradeLevels ? "Loading…" : "Select grade level…"}
+src\features\profiles\admin\pages\classes\ClassFormPage.tsx:546:                      ? "Loading…"
+src\features\profiles\admin\pages\classes\ClassFormPage.tsx:647:                            ? "Loading…"
+src\features\profiles\admin\pages\studentrecords\StudentFormPage.tsx:434:                {loadingGrades && <option value="">Loading...</option>}
+src\features\profiles\admin\pages\studentrecords\StudentFormPage.tsx:472:                {loadingSections && <option value="">Loading...</option>}
+src\features\profiles\admin\pages\subjects\AddSubjectPage.tsx:11:  Loader2,
+src\features\profiles\admin\pages\subjects\AddSubjectPage.tsx:379:                    ? "Loading…"
+src\features\profiles\admin\pages\subjects\AddSubjectPage.tsx:494:                <Loader2 size={26} className="animate-spin text-[#2F6FED]" />
+src\features\profiles\admin\pages\subjects\AddSubjectPage.tsx:626:              {isSubmitting && <Loader2 size={14} className="animate-spin" />}
+src\features\profiles\admin\pages\studentrecords\components\StudentImportExportToolbar.tsx:8:  Loader2,
+src\features\profiles\admin\pages\studentrecords\components\StudentImportExportToolbar.tsx:383:            {isSaving && <Loader2 size={14} className="animate-spin" />}
+src\features\profiles\admin\pages\subjects\components\AssignTeacherModal.tsx:2:import { UserPlus, Sparkles, Loader2, AlertCircle } from "lucide-react";
+src\features\profiles\admin\pages\subjects\components\AssignTeacherModal.tsx:115:          {saving ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
+src\features\profiles\admin\pages\subjects\components\SubjectGradeTemplateSection.tsx:2:import { FileSpreadsheet, Upload, CheckCircle, AlertTriangle, Loader2 } from "lucide-react";
+src\features\profiles\admin\pages\subjects\components\SubjectGradeTemplateSection.tsx:118:          <Loader2 size={22} className="animate-spin text-[#2F6FED]" />
+src\features\profiles\admin\pages\subjects\components\AddSubjectModal.tsx:2:// import { BookOpen, Loader2, Plus, Trash2, Pencil } from "lucide-react";
+src\features\profiles\admin\pages\subjects\components\AddSubjectModal.tsx:343://                 ? "Loading…"
+src\features\profiles\admin\pages\subjects\components\AddSubjectModal.tsx:531://                                             <Loader2
+src\features\profiles\admin\pages\subjects\components\AddSubjectModal.tsx:533://                                               className="animate-spin"
+src\features\profiles\admin\pages\subjects\components\AddSubjectModal.tsx:710://             {saving && <Loader2 size={14} className="animate-spin" />}
+src\features\profiles\admin\pages\subjects\AdminSubjectDetailPage.tsx:3:import { ArrowLeft, Loader2 } from "lucide-react";
+src\features\profiles\admin\pages\subjects\AdminSubjectDetailPage.tsx:75:              <Loader2 size={16} className="animate-spin" />
+src\features\profiles\parent\pages\Student\Academic\components\MissedActivities.tsx:2:import { CheckCircle2, Loader2, AlertCircle } from "lucide-react";
+src\features\profiles\parent\pages\Student\Academic\components\MissedActivities.tsx:78:          <Loader2 size={18} className={`animate-spin ${emptyIcon}`} />
+src\features\profiles\admin\pages\subjects\components\EditSubjectModal.tsx:2:import { Pencil, Loader2, AlertCircle, Plus, Trash2 } from "lucide-react";
+src\features\profiles\admin\pages\subjects\components\EditSubjectModal.tsx:465:            <Loader2 size={14} className="animate-spin" />
+src\features\profiles\admin\pages\subjects\components\EditSubjectModal.tsx:501:          {saving && <Loader2 size={14} className="animate-spin" />}
+src\features\profiles\parent\pages\Student\Academic\components\InterventionSupport.tsx:3:import { AlertTriangle, CheckCircle2, ChevronRight, Loader2 } from "lucide-react";
+src\features\profiles\parent\pages\Student\Academic\components\InterventionSupport.tsx:82:            <Loader2 size={16} className={`shrink-0 animate-spin ${loadingIcon}`} />
+src\features\profiles\principal\pages\gradebooks\components\DashboardStatus.tsx:12:      <p className={`text-sm ${textMuted}`}>{error ? error : loading ? "Loading…" : null}</p>
+src\features\profiles\parent\pages\Student\Overview\components\HolisticAverage.tsx:130:            Loading…
+src\features\profiles\parent\pages\Student\Overview\components\AttendanceOverview.tsx:171:              {monthsLoading && <option>Loading...</option>}

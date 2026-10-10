@@ -1,0 +1,187 @@
+node:assert:883
+    throw err;
+    ^
+
+AssertionError [ERR_ASSERTION]: Removed loader guard rejects the original principal dashboard import
+    at [stdin]:1:68
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:446:12
+    at [stdin]-wrapper:6:24
+    at runScriptInContext (node:internal/process/execution:444:60)
+    at evalFunction (node:internal/process/execution:279:30)
+    at evalTypeScript (node:internal/process/execution:291:3)
+    at node:internal/main/eval_stdin:53:5
+    at Socket.<anonymous> (node:internal/process/execution:201:5)
+    at Socket.emit (node:events:531:35) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'import { useOutletContext } from "react-router-dom";\r\n' +
+    'import { GraduationCap } from "lucide-react";\r\n' +
+    'import { useAuth } from "../../../../auth/context/authContext";\r\n' +
+    'import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";\r\n' +
+    'import { usePrincipalDashboardData } from "./hooks/usePrincipalDashboardData";\r\n' +
+    'import {\r\n' +
+    '  DashboardSkeleton,\r\n' +
+    '  DashboardError,\r\n' +
+    '} from "./components/DashboardStatus";\r\n' +
+    'import { OverviewCards } from "./components/OverviewCards";\r\n' +
+    'import { TodaysAttendanceSection } from "./components/TodaysAttendanceSection";\r\n' +
+    'import { SubjectPerformanceSection } from "./components/SubjectPerformanceSection";\r\n' +
+    'import { HolisticDevelopmentSection } from "./components/HolisticDevelopmentSection";\r\n' +
+    'import { AcademicPerformanceSection } from "./components/AcademicPerformanceSection";\r\n' +
+    'import { fetchActiveAcademicYear } from "./services/principalDashboard.service";\r\n' +
+    'import { FullRankingModal } from "./components/FullRankingModal";\r\n' +
+    'import { useEffect, useState } from "react";\r\n' +
+    'import type { AcademicYear } from "../../../admin/pages/subjects/types/academicyear";\r\n' +
+    '\r\n' +
+    'export function PrincipalDashboardHome() {\r\n' +
+    '  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =\r\n' +
+    '    useOutletContext<AdminThemeContext>();\r\n' +
+    '  const { user } = useAuth();\r\n' +
+    '  const { data, loading, error, rankingTerm, setRankingTerm } =\r\n' +
+    '    usePrincipalDashboardData();\r\n' +
+    '\r\n' +
+    '  const [academicYear, setAcademicYear] = useState<AcademicYear | null>(null);\r\n' +
+    '  const [showFullRanking, setShowFullRanking] = useState(false);\r\n' +
+    '\r\n' +
+    '  const today = new Date();\r\n' +
+    '  const dateStr = today.toLocaleDateString("en-US", {\r\n' +
+    '    weekday: "long",\r\n' +
+    '    month: "long",\r\n' +
+    '    day: "numeric",\r\n' +
+    '    year: "numeric",\r\n' +
+    '  });\r\n' +
+    '  const gridStroke = darkMode\r\n' +
+    '    ? "var(--color-grid-line-dark)"\r\n' +
+    '    : "var(--color-grid-line)";\r\n' +
+    '  const axisColor = darkMode ? "var(--color-axis-dark)" : "var(--color-axis)";\r\n' +
+    '\r\n' +
+    '  useEffect(() => {\r\n' +
+    '    fetchActiveAcademicYear()\r\n' +
+    '      .then((data) => {\r\n' +
+    '        setAcademicYear(data);\r\n' +
+    '      })\r\n' +
+    '      .catch((err) => console.error(err.message));\r\n' +
+    '  }, []);\r\n' +
+    '\r\n' +
+    '  // Early returns muna bago i-access ang anumang property ng `data` —\r\n' +
+    '  // dito pa lang alam ni TypeScript na hindi na null ang `data` sa ibaba.\r\n' +
+    '  if (loading) return <DashboardSkeleton textMuted={textMuted} darkMode={darkMode} />;\r\n' +
+    '  if (error) return <DashboardError error={error} textMuted={textMuted} />;\r\n' +
+    '  if (!data) return <DashboardError error={new Error("No dashboard data available.")} textMuted={textMuted} />;\r\n' +
+    '\r\n' +
+    '  const fullRanking = data.subjectRankingByTerm[rankingTerm] ?? [];\r\n' +
+    '  const top5Ranking = fullRanking.slice(0, 5);\r\n' +
+    '  return (\r\n' +
+    '    <div className="mx-auto flex w-full max-w-[1360px] flex-col gap-4 font-sans sm:gap-5 xl:gap-6">\r\n' +
+    '      {/* Header */}\r\n' +
+    '      <div\r\n' +
+    '        className="relative flex min-h-44 flex-col justify-center overflow-hidden rounded-[12px] p-5 text-white sm:min-h-52 sm:p-6 xl:p-8"\r\n' +
+    '        style={{\r\n' +
+    '          background: "var(--color-maroon)",\r\n' +
+    '          boxShadow: "0 12px 32px color-mix(in srgb, var(--brand-primary) 20%, transparent)",\r\n' +
+    '        }}\r\n' +
+    '      >\r\n' +
+    '        <GraduationCap\r\n' +
+    '          size={210}\r\n' +
+    '          strokeWidth={1}\r\n' +
+    '          className="pointer-events-none absolute -bottom-12 -right-6 rotate-15 text-white/[0.07]"\r\n' +
+    '        />\r\n' +
+    '        <div className="relative">\r\n' +
+    '          <span className="qed-type-badge mb-3 inline-flex items-center rounded-full border border-white/10 bg-white/10 px-3 py-1 uppercase tracking-widest text-white/80 sm:mb-4">\r\n' +
+    '            {dateStr}\r\n' +
+    '          </span>\r\n' +
+    '          <h1 className="qed-type-dashboard-hero break-words">\r\n' +
+    '            Welcome, {user?.name ?? "Principal"}!\r\n' +
+    '          </h1>\r\n' +
+    '          <p className="qed-type-hero-description mt-2 max-w-xl text-white/80 sm:mt-3">\r\n' +
+    `            Here's how the school is doing this{" "}\r\n` +
+    '            <span className="font-bold text-white underline underline-offset-4 decoration-white/40">\r\n' +
+    '              {data.currentTerm}\r\n' +
+    '            </span>{" "}\r\n' +
+    '            of School Year {academicYear?.label ?? "…"}\r\n' +
+    '          </p>\r\n' +
+    '        </div>\r\n' +
+    '      </div>\r\n' +
+    '\r\n' +
+    '      <OverviewCards\r\n' +
+    '        overview={data.overview}\r\n' +
+    '        currentTermLabel={data.currentTerm}\r\n' +
+    '        panelBg={panelBg}\r\n' +
+    '        panelBorder={panelBorder}\r\n' +
+    '        textPrimary={textPrimary}\r\n' +
+    '        textMuted={textMuted}\r\n' +
+    '        darkMode={darkMode}\r\n' +
+    '      />\r\n' +
+    '\r\n' +
+    '      <TodaysAttendanceSection\r\n' +
+    '        attendanceByGrade={data.attendanceByGrade}\r\n' +
+    '        todaysAttendance={data.todaysAttendance}\r\n' +
+    '        panelBg={panelBg}\r\n' +
+    '        panelBorder={panelBorder}\r\n' +
+    '        textPrimary={textPrimary}\r\n' +
+    '        textMuted={textMuted}\r\n' +
+    '        darkMode={darkMode}\r\n' +
+    '        gridStroke={gridStroke}\r\n' +
+    '        axisColor={axisColor}\r\n' +
+    '      />\r\n' +
+    '\r\n' +
+    '      <SubjectPerformanceSection\r\n' +
+    '        topSubjectPerGrade={data.topSubjectPerGrade}\r\n' +
+    '        ranking={top5Ranking}\r\n' +
+    '        rankingTerm={rankingTerm}\r\n' +
+    '        onRankingTermChange={setRankingTerm}\r\n' +
+    '        onExpandRanking={() => setShowFullRanking(true)}\r\n' +
+    '        panelBg={panelBg}\r\n' +
+    '        panelBorder={panelBorder}\r\n' +
+    '        textPrimary={textPrimary}\r\n' +
+    '        textMuted={textMuted}\r\n' +
+    '        darkMode={darkMode}\r\n' +
+    '      />\r\n' +
+    '\r\n' +
+    '      {showFullRanking && (\r\n' +
+    '        <FullRankingModal\r\n' +
+    '          ranking={fullRanking}\r\n' +
+    '          term={rankingTerm}\r\n' +
+    '          onTermChange={setRankingTerm}\r\n' +
+    '          onClose={() => setShowFullRanking(false)}\r\n' +
+    '          panelBg={panelBg}\r\n' +
+    '          panelBorder={panelBorder}\r\n' +
+    '          textPrimary={textPrimary}\r\n' +
+    '          textMuted={textMuted}\r\n' +
+    '          darkMode={darkMode}\r\n' +
+    '        />\r\n' +
+    '      )}\r\n' +
+    '\r\n' +
+    '      <HolisticDevelopmentSection\r\n' +
+    '        domains={data.holisticDomains}\r\n' +
+    '        rubric={data.holisticRubric}\r\n' +
+    '        panelBg={panelBg}\r\n' +
+    '        panelBorder={panelBorder}\r\n' +
+    '        textPrimary={textPrimary}\r\n' +
+    '        textMuted={textMuted}\r\n' +
+    '        darkMode={darkMode}\r\n' +
+    '        gridStroke={gridStroke}\r\n' +
+    '        axisColor={axisColor}\r\n' +
+    '      />\r\n' +
+    '\r\n' +
+    '      <AcademicPerformanceSection\r\n' +
+    '        performanceByGrade={data.performanceByGrade}\r\n' +
+    '        performanceTrend={data.performanceTrend}\r\n' +
+    '        panelBg={panelBg}\r\n' +
+    '        panelBorder={panelBorder}\r\n' +
+    '        textPrimary={textPrimary}\r\n' +
+    '        textMuted={textMuted}\r\n' +
+    '        darkMode={darkMode}\r\n' +
+    '        gridStroke={gridStroke}\r\n' +
+    '        axisColor={axisColor}\r\n' +
+    '      />\r\n' +
+    '    </div>\r\n' +
+    '  );\r\n' +
+    '}\r\n',
+  expected: /\b(?:QedSplash|AdvisorySkeleton|DashboardSkeleton)\b|\.qed-splash(?:\b|-)/,
+  operator: 'doesNotMatch',
+  diff: 'simple'
+}
+
+Node.js v22.20.0

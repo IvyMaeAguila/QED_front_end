@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+import { Suspense } from "react";
+import { RouteSkeleton } from "@shared/loading/RouteSkeleton";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "@shared/components/Sidebar";
 import { Header } from "@shared/components/Header";
@@ -54,9 +57,9 @@ export function ParentLayout({ onLogout }: ParentLayoutProps) {
   const theme: AdminThemeContext = {
     darkMode,
     panelBg: darkMode
-      ? "bg-[#2A1A18]/90 backdrop-blur-md"
+      ? "bg-panel-dark/90 backdrop-blur-md"
       : "bg-white/85 backdrop-blur-md",
-    panelBorder: darkMode ? "border-[#543632]" : "border-[#E5E7EB]",
+    panelBorder: darkMode ? "border-border-dark" : "border-border-subtle",
     textPrimary: darkMode ? "text-white" : "text-[#111827]",
     textMuted: darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]",
   };
@@ -66,7 +69,7 @@ export function ParentLayout({ onLogout }: ParentLayoutProps) {
   return (
     <div
       className={`qed-account-ui parent-system flex h-dvh w-full overflow-hidden transition-colors ${
-        darkMode ? "dark bg-[#1A1110]" : "bg-[#F3F4F6]"
+        darkMode ? "dark bg-page-dark" : "bg-surface"
       }`}
     >
       {/* lg:z-0 → on desktop the sidebar sits below <main> (z-10), so modals
@@ -107,7 +110,7 @@ export function ParentLayout({ onLogout }: ParentLayoutProps) {
         </div>
 
         <main className="relative z-10 flex-1 overflow-y-auto p-4 sm:p-6">
-          <Outlet context={outletContext} />
+          <Suspense fallback={<RouteSkeleton outletContext={outletContext} />}><Outlet context={outletContext} /></Suspense>
         </main>
       </div>
 

@@ -4,6 +4,10 @@ import { StudentDirectoryTable, type StudentDirectoryRow } from "./StudentDirect
 
 interface StudentDirectoryProps {
   students: Array<StudentDirectoryRow & { studentId?: string }>;
+  loading?: boolean;
+  error?: unknown;
+  retry?: () => void;
+  view?: string;
   panelBg: string;
   panelBorder: string;
   textPrimary: string;
@@ -12,7 +16,7 @@ interface StudentDirectoryProps {
   onActivate?: (id: string) => void;
 }
 
-export function StudentDirectory({ students, panelBg, panelBorder, textPrimary, textMuted, darkMode, onActivate }: StudentDirectoryProps) {
+export function StudentDirectory({ students, panelBg, panelBorder, textPrimary, textMuted, darkMode, onActivate, loading, error, retry, view = "student-directory" }: StudentDirectoryProps) {
   const [search, setSearch] = useState("");
   const [gender, setGender] = useState<"All" | "Male" | "Female">("All");
   const visibleStudents = useMemo(() => {
@@ -53,6 +57,7 @@ export function StudentDirectory({ students, panelBg, panelBorder, textPrimary, 
         </select>
       </div>
       <StudentDirectoryTable
+        loading={loading} error={error} retry={retry} view={`${view}:${search}:${gender}`}
         students={visibleStudents}
         totalStudents={students.length}
         panelBg={panelBg}
@@ -65,3 +70,4 @@ export function StudentDirectory({ students, panelBg, panelBorder, textPrimary, 
     </div>
   );
 }
+

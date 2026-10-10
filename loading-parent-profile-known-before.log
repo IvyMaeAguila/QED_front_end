@@ -1,0 +1,146 @@
+
+[WebServer] (node:32692) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1140) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 4 tests using 1 worker
+
+(node:26712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/4] tests\parent-detail-loading.spec.ts:32:62 › parent profile 375 light keeps known class and masks unknown avatar
+  1) tests\parent-detail-loading.spec.ts:32:62 › parent profile 375 light keeps known class and masks unknown avatar 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('[data-sk-region="parent-student-profile"]').getByText('Current class', { exact: true }).locator('..')
+    Expected substring: "Grade 1 - Maroon"
+    Received string:    "Current class"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" locator('[data-sk-region="parent-student-profile"]').getByText('Current class', { exact: true }).locator('..') with timeout 5000ms
+      - waiting for locator('[data-sk-region="parent-student-profile"]').getByText('Current class', { exact: true }).locator('..')
+        14 × locator resolved to <div class="min-w-0 flex-1">…</div>
+           - unexpected value "Current class"
+
+
+      33 |   await page.setViewportSize({width,height:1100});const release=await detailFixture(page,dark);await page.goto('/parent/students/1?tab=studentProfile');
+      34 |   const profile=page.locator('[data-sk-region="parent-student-profile"]');await expect(profile).toHaveAttribute('data-sk-phase','revealed');
+    > 35 |   await expect(profile.getByText('Current class',{exact:true}).locator('..')).toContainText('Grade 1 - Maroon');
+         |                                                                               ^
+      36 |   const avatar=profile.locator('[data-sk-region="parent-profile-avatar"]');await expect(avatar.locator('[data-sk-primitive="avatar"]')).toBeVisible();await expect(avatar.locator('img')).toHaveCount(0);
+      37 |   await checkRenderedContrast(avatar.locator('[data-sk-primitive="avatar"]'),`parent-profile-avatar-${width}-${dark}`);
+      38 |   const verify=await captureFixedOverlay(page,`parent-profile-avatar-${width}-${dark}`,['[data-sk-region="parent-profile-avatar"]']);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\parent-detail-loading.spec.ts:35:79
+
+    Error Context: test-results\parent-detail-loading-pare-41830-ss-and-masks-unknown-avatar\error-context.md
+
+
+
+(node:14832) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[2/4] tests\parent-detail-loading.spec.ts:32:62 › parent profile 375 dark keeps known class and masks unknown avatar
+  2) tests\parent-detail-loading.spec.ts:32:62 › parent profile 375 dark keeps known class and masks unknown avatar 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('[data-sk-region="parent-student-profile"]').getByText('Current class', { exact: true }).locator('..')
+    Expected substring: "Grade 1 - Maroon"
+    Received string:    "Current class"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" locator('[data-sk-region="parent-student-profile"]').getByText('Current class', { exact: true }).locator('..') with timeout 5000ms
+      - waiting for locator('[data-sk-region="parent-student-profile"]').getByText('Current class', { exact: true }).locator('..')
+        14 × locator resolved to <div class="min-w-0 flex-1">…</div>
+           - unexpected value "Current class"
+
+
+      33 |   await page.setViewportSize({width,height:1100});const release=await detailFixture(page,dark);await page.goto('/parent/students/1?tab=studentProfile');
+      34 |   const profile=page.locator('[data-sk-region="parent-student-profile"]');await expect(profile).toHaveAttribute('data-sk-phase','revealed');
+    > 35 |   await expect(profile.getByText('Current class',{exact:true}).locator('..')).toContainText('Grade 1 - Maroon');
+         |                                                                               ^
+      36 |   const avatar=profile.locator('[data-sk-region="parent-profile-avatar"]');await expect(avatar.locator('[data-sk-primitive="avatar"]')).toBeVisible();await expect(avatar.locator('img')).toHaveCount(0);
+      37 |   await checkRenderedContrast(avatar.locator('[data-sk-primitive="avatar"]'),`parent-profile-avatar-${width}-${dark}`);
+      38 |   const verify=await captureFixedOverlay(page,`parent-profile-avatar-${width}-${dark}`,['[data-sk-region="parent-profile-avatar"]']);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\parent-detail-loading.spec.ts:35:79
+
+    Error Context: test-results\parent-detail-loading-pare-4f920-ss-and-masks-unknown-avatar\error-context.md
+
+
+
+(node:26828) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[3/4] tests\parent-detail-loading.spec.ts:32:62 › parent profile 1280 light keeps known class and masks unknown avatar
+  3) tests\parent-detail-loading.spec.ts:32:62 › parent profile 1280 light keeps known class and masks unknown avatar 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('[data-sk-region="parent-student-profile"]').getByText('Current class', { exact: true }).locator('..')
+    Expected substring: "Grade 1 - Maroon"
+    Received string:    "Current class"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" locator('[data-sk-region="parent-student-profile"]').getByText('Current class', { exact: true }).locator('..') with timeout 5000ms
+      - waiting for locator('[data-sk-region="parent-student-profile"]').getByText('Current class', { exact: true }).locator('..')
+        14 × locator resolved to <div class="min-w-0 flex-1">…</div>
+           - unexpected value "Current class"
+
+
+      33 |   await page.setViewportSize({width,height:1100});const release=await detailFixture(page,dark);await page.goto('/parent/students/1?tab=studentProfile');
+      34 |   const profile=page.locator('[data-sk-region="parent-student-profile"]');await expect(profile).toHaveAttribute('data-sk-phase','revealed');
+    > 35 |   await expect(profile.getByText('Current class',{exact:true}).locator('..')).toContainText('Grade 1 - Maroon');
+         |                                                                               ^
+      36 |   const avatar=profile.locator('[data-sk-region="parent-profile-avatar"]');await expect(avatar.locator('[data-sk-primitive="avatar"]')).toBeVisible();await expect(avatar.locator('img')).toHaveCount(0);
+      37 |   await checkRenderedContrast(avatar.locator('[data-sk-primitive="avatar"]'),`parent-profile-avatar-${width}-${dark}`);
+      38 |   const verify=await captureFixedOverlay(page,`parent-profile-avatar-${width}-${dark}`,['[data-sk-region="parent-profile-avatar"]']);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\parent-detail-loading.spec.ts:35:79
+
+    Error Context: test-results\parent-detail-loading-pare-dc015-ss-and-masks-unknown-avatar\error-context.md
+
+
+
+(node:11512) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[4/4] tests\parent-detail-loading.spec.ts:32:62 › parent profile 1280 dark keeps known class and masks unknown avatar
+  4) tests\parent-detail-loading.spec.ts:32:62 › parent profile 1280 dark keeps known class and masks unknown avatar 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('[data-sk-region="parent-student-profile"]').getByText('Current class', { exact: true }).locator('..')
+    Expected substring: "Grade 1 - Maroon"
+    Received string:    "Current class"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" locator('[data-sk-region="parent-student-profile"]').getByText('Current class', { exact: true }).locator('..') with timeout 5000ms
+      - waiting for locator('[data-sk-region="parent-student-profile"]').getByText('Current class', { exact: true }).locator('..')
+        14 × locator resolved to <div class="min-w-0 flex-1">…</div>
+           - unexpected value "Current class"
+
+
+      33 |   await page.setViewportSize({width,height:1100});const release=await detailFixture(page,dark);await page.goto('/parent/students/1?tab=studentProfile');
+      34 |   const profile=page.locator('[data-sk-region="parent-student-profile"]');await expect(profile).toHaveAttribute('data-sk-phase','revealed');
+    > 35 |   await expect(profile.getByText('Current class',{exact:true}).locator('..')).toContainText('Grade 1 - Maroon');
+         |                                                                               ^
+      36 |   const avatar=profile.locator('[data-sk-region="parent-profile-avatar"]');await expect(avatar.locator('[data-sk-primitive="avatar"]')).toBeVisible();await expect(avatar.locator('img')).toHaveCount(0);
+      37 |   await checkRenderedContrast(avatar.locator('[data-sk-primitive="avatar"]'),`parent-profile-avatar-${width}-${dark}`);
+      38 |   const verify=await captureFixedOverlay(page,`parent-profile-avatar-${width}-${dark}`,['[data-sk-region="parent-profile-avatar"]']);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\parent-detail-loading.spec.ts:35:79
+
+    Error Context: test-results\parent-detail-loading-pare-998eb-ss-and-masks-unknown-avatar\error-context.md
+
+
+  4 failed
+    tests\parent-detail-loading.spec.ts:32:62 › parent profile 375 light keeps known class and masks unknown avatar 
+    tests\parent-detail-loading.spec.ts:32:62 › parent profile 375 dark keeps known class and masks unknown avatar 
+    tests\parent-detail-loading.spec.ts:32:62 › parent profile 1280 light keeps known class and masks unknown avatar 
+    tests\parent-detail-loading.spec.ts:32:62 › parent profile 1280 dark keeps known class and masks unknown avatar 

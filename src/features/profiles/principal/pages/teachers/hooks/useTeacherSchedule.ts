@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { TeacherProfile } from "../data/types";
 import {
   getTeacherProfile,
@@ -12,20 +13,23 @@ interface UseTeacherScheduleResult {
   loading: boolean;
   error: Error | null;
   notFound: boolean;
+  retry: () => void;
 }
 
-export function useTeacherSchedule(teacherId: string | undefined): UseTeacherScheduleResult {
+export function useTeacherSchedule(teacherId: string | undefined, enabled = true): UseTeacherScheduleResult {
   const [teacher, setTeacher] = useState<TeacherProfile | null>(() =>
     teacherId ? getCachedTeacherProfile(teacherId) ?? null : null
   );
   const [schoolYear, setSchoolYear] = useState("");
   const [loading, setLoading] = useState(() =>
-    teacherId ? !getCachedTeacherProfile(teacherId) : false
+    !enabled || (teacherId ? !getCachedTeacherProfile(teacherId) : false)
   );
   const [error, setError] = useState<Error | null>(null);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
+    if (!enabled) return;
 
     if (!teacherId) {
       setLoading(false);
@@ -35,7 +39,7 @@ export function useTeacherSchedule(teacherId: string | undefined): UseTeacherSch
 
     const cached = getCachedTeacherProfile(teacherId);
 
-    if (cached) {
+    if (cached && attempt === 0) {
       setTeacher(cached);
       setLoading(false);
       setError(null);
@@ -61,7 +65,7 @@ export function useTeacherSchedule(teacherId: string | undefined): UseTeacherSch
     return () => {
       cancelled = true;
     };
-  }, [teacherId]);
+  }, [teacherId, attempt, enabled]);
 
-  return { teacher, schoolYear, loading, error, notFound: !loading && !error && !teacher };
+  return { teacher, schoolYear, loading: !enabled || loading, error, retry: () => setAttempt(value => value + 1), notFound: !loading && !error && !teacher };
 }

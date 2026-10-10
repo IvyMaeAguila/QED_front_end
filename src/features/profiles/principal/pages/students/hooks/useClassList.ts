@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { ClassList } from "../data/types";
 import {
   getClassList,
@@ -18,6 +19,7 @@ interface UseClassListResult {
   loading: boolean;
   error: Error | null;
   notFound: boolean;
+  retry: () => void;
 }
 
 function peekCache(target: ClassListTarget | undefined): ClassList | null | undefined {
@@ -37,6 +39,7 @@ export function useClassList(target: ClassListTarget | undefined): UseClassListR
   const [loading, setLoading] = useState(() => peekCache(target) === undefined && !!target);
   const [error, setError] = useState<Error | null>(null);
 
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     let cancelled = false;
 
@@ -48,7 +51,7 @@ export function useClassList(target: ClassListTarget | undefined): UseClassListR
 
     const cached = peekCache(target);
 
-    if (cached !== undefined) {
+    if (cached !== undefined && attempt === 0) {
       setClassList(cached);
       setLoading(false);
       setError(null);
@@ -74,7 +77,7 @@ export function useClassList(target: ClassListTarget | undefined): UseClassListR
     return () => {
       cancelled = true;
     };
-  }, [target?.type, target?.id]);
+  }, [target?.type, target?.id, attempt]);
 
-  return { classList, schoolYear, loading, error, notFound: !loading && !error && !classList };
+  return { classList, schoolYear, loading, error, retry: () => setAttempt(value => value + 1), notFound: !loading && !error && !classList };
 }

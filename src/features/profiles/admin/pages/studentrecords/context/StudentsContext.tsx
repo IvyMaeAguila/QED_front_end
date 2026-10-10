@@ -1,4 +1,5 @@
-import { createContext, useContext, useMemo, useState, useEffect } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { ReactNode } from "react";
 import type { Student } from "../types/Students";
 // import { seedStudents } from "../data/studentData";
@@ -75,7 +76,7 @@ export function StudentsProvider({ children }: { children: ReactNode }) {
         await fetchStudents();
       },
     }),
-    [students],
+    [students, loading, error],
   );
 
   return (

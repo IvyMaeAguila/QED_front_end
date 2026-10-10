@@ -36,8 +36,8 @@ export function EditEntryModal({
 
   const inputClasses = `w-full h-10 px-3 rounded-xl border outline-none transition-colors ${
     darkMode
-      ? "bg-[#2A1A18] border-[#543632] text-white focus:border-[#8B0D0D]"
-      : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
+      ? "bg-panel-dark border-border-dark text-white focus:border-maroon-light"
+      : "bg-brand-light border-border-subtle text-[#111827] focus:border-maroon-light"
   }`;
   const labelClasses = `qed-type-label block mb-1.5 ${textMuted}`;
 
@@ -98,7 +98,7 @@ export function EditEntryModal({
             onClick={onClose}
             disabled={saving}
             className={`qed-type-button flex-1 h-10 rounded-xl border transition-colors disabled:opacity-50 ${
-              darkMode ? "border-[#543632] text-[#D1D5DB] hover:bg-white/10" : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+              darkMode ? "border-border-dark text-[#D1D5DB] hover:bg-white/10" : "border-border-subtle text-[#374151] hover:bg-brand-light"
             }`}
           >
             Cancel

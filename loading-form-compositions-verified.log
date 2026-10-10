@@ -1,0 +1,70 @@
+[WebServer] (node:33444) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:19468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 35 tests using 1 worker
+
+(node:31736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners (5.4s)
+  ok  2 tests\add-subject-loading.spec.ts:14:62 › add subject 375 dark keeps known form real without data spinners (1.9s)
+  ok  3 tests\add-subject-loading.spec.ts:14:62 › add subject 1280 light keeps known form real without data spinners (2.0s)
+  ok  4 tests\add-subject-loading.spec.ts:14:62 › add subject 1280 dark keeps known form real without data spinners (2.0s)
+  ok  5 tests\add-subject-loading.spec.ts:19:46 › add subject year failure exposes retry and preserves local input (1.3s)
+  ok  6 tests\add-subject-loading.spec.ts:19:46 › add subject grade failure exposes retry and preserves local input (1.3s)
+[WebServer] 9:43:08 AM [vite] (client) [console.error] Failed to load assessment types: Error: Failed to fetch assessment types: 500
+[WebServer]     at getAssessmentTypes (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subject.service.ts:76:9)
+[WebServer]     at async http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/context/SubjectsCatalogContext.tsx:40:17
+[WebServer] 9:43:08 AM [vite] (client) [console.error] Failed to load assessment types: Error: Failed to fetch assessment types: 500
+[WebServer]     at getAssessmentTypes (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subject.service.ts:76:9)
+[WebServer]     at async http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/context/SubjectsCatalogContext.tsx:40:17
+  ok  7 tests\add-subject-loading.spec.ts:19:46 › add subject catalog failure exposes retry and preserves local input (1.3s)
+  ok  8 tests\add-subject-loading.spec.ts:22:1 › non-graded subject retains its original endpoint and creation payload (1.4s)
+  ok  9 tests\admin-class-view.spec.ts:28:68 › class details 375 light: real actions, tabs and weekday headings (2.7s)
+  ok 10 tests\admin-class-view.spec.ts:28:68 › class details 375 dark: real actions, tabs and weekday headings (2.5s)
+  ok 11 tests\admin-class-view.spec.ts:28:68 › class details 1280 light: real actions, tabs and weekday headings (3.2s)
+  ok 12 tests\admin-class-view.spec.ts:28:68 › class details 1280 dark: real actions, tabs and weekday headings (3.2s)
+  ok 13 tests\admin-class-view.spec.ts:56:32 › class schedule 0 returned time slots retains original content (849ms)
+  ok 14 tests\admin-class-view.spec.ts:56:32 › class schedule 1 returned time slots retains original content (783ms)
+  ok 15 tests\admin-class-view.spec.ts:56:32 › class schedule 9 returned time slots retains original content (814ms)
+[WebServer] 9:43:26 AM [vite] (client) [console.error] Error: Class temporarily unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+[WebServer] 9:43:26 AM [vite] (client) [console.error] Error: Class temporarily unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+  ok 16 tests\admin-class-view.spec.ts:65:1 › class details error removes every reservation immediately and retries context loads (1.5s)
+  ok 17 tests\admin-class-view.spec.ts:80:1 › class schedule auto-column classification observes native content width changes (1.3s)
+  ok 18 tests\admin-class-view.spec.ts:93:1 › class roster auto-column classification observes native content width changes (1.5s)
+  ok 19 tests\admin-class-view.spec.ts:107:35 › class schedule light: time cell shimmer fits its real tinted surface (1.9s)
+  ok 20 tests\admin-class-view.spec.ts:107:35 › class schedule dark: time cell shimmer fits its real tinted surface (2.0s)
+  ok 21 tests\student-form-loading.spec.ts:11:62 › student edit 375 light keeps actual fields while the record loads (2.1s)
+  ok 22 tests\student-form-loading.spec.ts:11:62 › student edit 375 dark keeps actual fields while the record loads (2.1s)
+  ok 23 tests\student-form-loading.spec.ts:11:62 › student edit 1280 light keeps actual fields while the record loads (1.9s)
+  ok 24 tests\student-form-loading.spec.ts:11:62 › student edit 1280 dark keeps actual fields while the record loads (1.9s)
+  ok 25 tests\student-form-loading.spec.ts:21:1 › student edit error clears all shapes and retries the record request (1.5s)
+  ok 26 tests\student-form-loading.spec.ts:25:1 › student not found is rendered only after a completed empty response (628ms)
+  ok 27 tests\student-form-loading.spec.ts:28:62 › student new 375 light keeps known input and workflow real (801ms)
+  ok 28 tests\student-form-loading.spec.ts:28:62 › student new 375 dark keeps known input and workflow real (751ms)
+  ok 29 tests\student-form-loading.spec.ts:28:62 › student new 1280 light keeps known input and workflow real (846ms)
+  ok 30 tests\student-form-loading.spec.ts:28:62 › student new 1280 dark keeps known input and workflow real (832ms)
+[WebServer] 9:43:47 AM [vite] (client) [console.error] Error in gradeService: Error: Failed to fetch grade levels: Internal Server Error
+[WebServer]     at fetchGradeLevels (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/services/grade-section.service.ts:7:10)
+[WebServer]     at async loadGrades (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/StudentFormPage.tsx:99:18)
+[WebServer] 9:43:47 AM [vite] (client) [console.error] Error in gradeService: Error: Failed to fetch grade levels: Internal Server Error
+[WebServer]     at fetchGradeLevels (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/services/grade-section.service.ts:7:10)
+[WebServer]     at async loadGrades (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/StudentFormPage.tsx:99:18)
+[WebServer] 9:43:47 AM [vite] (client) [console.error] Error in sectionService: Error: Failed to fetch sections: Internal Server Error
+[WebServer]     at fetchSectionByGrade (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/services/grade-section.service.ts:21:10)
+[WebServer]     at async loadSections (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/StudentFormPage.tsx:128:18)
+[WebServer] 9:43:47 AM [vite] (client) [console.error] Failed loading sections: Error: Failed to fetch sections: Internal Server Error
+[WebServer]     at fetchSectionByGrade (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/services/grade-section.service.ts:21:10)
+[WebServer]     at async loadSections (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/StudentFormPage.tsx:128:18)
+  ok 31 tests\student-form-loading.spec.ts:32:1 › placement errors are retryable without losing edited student fields (1.3s)
+  ok 32 tests\student-form-loading.spec.ts:35:1 › student edit retains the existing update endpoint and payload (1.3s)
+  ok 33 tests\student-form-loading.spec.ts:38:32 › student input light contrast and shimmer pixels (1.8s)
+  ok 34 tests\student-form-loading.spec.ts:38:32 › student input dark contrast and shimmer pixels (1.6s)
+  ok 35 tests\student-form-loading.spec.ts:41:1 › single-line form controls remain fixed across short and long student values (1.6s)
+
+  35 passed (1.1m)

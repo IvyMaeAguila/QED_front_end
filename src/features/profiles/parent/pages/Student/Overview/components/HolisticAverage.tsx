@@ -1,3 +1,6 @@
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { SkeletonText } from "@shared/components/SkeletonLoading";
+import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 import { Clock, Lock, Sparkles } from "lucide-react";
 import SectionHeader from "../../../ui/SectionHeader";
 import EmptyState from "../components/EmptyState";
@@ -9,16 +12,16 @@ import type { StudentDomainKey } from "../types/holisticAverageType";
 import type { DetailStudent } from "../../GlobalTypes/types";
 import type { AdminThemeContext } from "../../../../../admin/pages/AdminLayout";
 
-const ACCENT = "#6B0000";
+const ACCENT = "var(--color-maroon)";
 
 const STUDENT_DOMAIN_META: Record<
   StudentDomainKey,
   { label: string; color: string }
 > = {
-  cognitive: { label: "cognitive", color: "#2563EB" },
-  emotional: { label: "emotional", color: "#7C3AED" },
-  behavioral: { label: "behavioral", color: "#B45309" },
-  social: { label: "social", color: "#0D9488" },
+  cognitive: { label: "cognitive", color: "var(--chart-cognitive)" },
+  emotional: { label: "emotional", color: "var(--chart-emotional)" },
+  behavioral: { label: "behavioral", color: "var(--chart-behavioral)" },
+  social: { label: "social", color: "var(--chart-social)" },
 };
 
 // Display labels for the domain rating cards.
@@ -108,7 +111,7 @@ function StudentNarrativeSnapshotContent({
   theme,
 }: StudentNarrativeSnapshotProps) {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
-  const { snapshot, loading } = useStudentNarrativeSnapshot();
+  const { snapshot, loading, error, retry } = useStudentNarrativeSnapshot();
 
   const accentColor = darkMode ? "#F87171" : ACCENT;
 
@@ -123,23 +126,18 @@ function StudentNarrativeSnapshotContent({
         theme={theme}
       />
       <div className="flex flex-1 flex-col p-4 sm:p-5">
-        {loading ? (
-          <p
-            className={`py-6 text-center text-sm font-medium ${textMuted}`}
-          >
-            Loading…
-          </p>
-        ) : !snapshot ? (
+        <LoadingRegion name="parent-term-snapshot" loading={loading} error={error} retry={retry} variable skeleton={null} frame={(pending) => (
+        !pending && !snapshot ? (
           <EmptyState
             icon={Sparkles}
             message={`No holistic data available yet for ${student.firstName}.`}
             theme={theme}
           />
-        ) : snapshot.reportCardStatus !== "released" ? (
+        ) : !pending && snapshot!.reportCardStatus !== "released" ? (
           <EmptyState
-            icon={snapshot.reportCardStatus === "processing" ? Clock : Lock}
+            icon={snapshot!.reportCardStatus === "processing" ? Clock : Lock}
             message={
-              snapshot.reportCardStatus === "processing"
+              snapshot!.reportCardStatus === "processing"
                 ? `${student.firstName}'s report card is being finalized. The narrative snapshot will appear here once released.`
                 : `${student.firstName}'s report card hasn't been released yet. The narrative snapshot will appear here once it is.`
             }
@@ -147,7 +145,8 @@ function StudentNarrativeSnapshotContent({
           />
         ) : (
           (() => {
-            const { compositeScore, domainScores } = snapshot;
+            const compositeScore = snapshot?.compositeScore ?? null;
+            const domainScores = pending ? (Object.keys(DOMAIN_AXIS_LABEL) as StudentDomainKey[]).map(domain=>({domain,score:0})) : snapshot!.domainScores;
 
             const withScores = domainScores.filter((d) => d.score !== null);
             const strongest = withScores.length
@@ -169,13 +168,13 @@ function StudentNarrativeSnapshotContent({
                   <p className={`text-xs font-semibold uppercase tracking-wide ${textMuted}`}>
                     Overall holistic rating
                   </p>
-                  {compositeScore !== null && (
-                    <p className="mt-4 text-3xl font-bold" style={{ color: ACCENT }}>
-                      {bandFor(compositeScore).label}
+                  {(pending || compositeScore !== null) && (
+                    <p className="mt-4 text-3xl font-bold" style={{ color: "var(--brand-ink)" }}>
+                      {pending ? <SkeletonParagraph field="parent-snapshot-overall" typical={2} width="10ch" /> : <span data-sk-field="parent-snapshot-overall">{bandFor(compositeScore!).label}</span>}
                     </p>
                   )}
                   <p className={`mt-1 text-xs ${textMuted}`}>
-                    Across {withScores.length} development {withScores.length === 1 ? "domain" : "domains"}
+                    {pending ? <SkeletonText width="24ch" /> : <>Across {withScores.length} development {withScores.length === 1 ? "domain" : "domains"}</>}
                   </p>
                 </div>
 
@@ -197,15 +196,15 @@ function StudentNarrativeSnapshotContent({
                             <span
                               className="shrink-0 rounded-full px-2 py-0.5 text-xs font-bold"
                               style={{
-                                color: band.color,
-                                backgroundColor: `${band.color}18`,
+                                color: pending ? undefined : band.color,
+                                backgroundColor: pending ? undefined : `color-mix(in srgb, ${band.color} 9.41%, transparent)`,
                               }}
                             >
-                              {band.label}
+                              {pending ? <SkeletonText width="7ch" /> : band.label}
                             </span>
                           </div>
                           <p className={`text-xs leading-relaxed ${textMuted}`}>
-                            {interpretationFor(d.domain, score)}
+                            {pending ? <SkeletonParagraph field={`parent-snapshot-${d.domain}`} typical={2} width="100%" /> : <span data-sk-field={`parent-snapshot-${d.domain}`}>{interpretationFor(d.domain, score)}</span>}
                           </p>
                         </div>
                       );
@@ -214,10 +213,10 @@ function StudentNarrativeSnapshotContent({
 
                   <div className={`border-t pt-3 ${panelBorder}`}>
                     <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: accentColor }}>
-                      {snapshot.termLabel} snapshot
+                      {pending ? <SkeletonText width="7ch" className="inline-block" /> : snapshot!.termLabel} snapshot
                     </p>
                     <p className={`mt-1 text-sm font-medium leading-relaxed ${textPrimary}`}>
-                      {strongest && weakest && strongest.domain !== weakest.domain ? (
+                      {pending ? <SkeletonParagraph field="parent-snapshot-narrative" typical={3} width="100%" /> : strongest && weakest && strongest.domain !== weakest.domain ? (
                         <>
                           {student.firstName} is showing the most strength in{" "}
                           <span style={{ color: STUDENT_DOMAIN_META[strongest.domain].color }}>
@@ -241,7 +240,7 @@ function StudentNarrativeSnapshotContent({
                 No domain scores available yet.
               </p>
             );          })()
-        )}
+        ))}>{null}</LoadingRegion>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 // SchoolYearContext.tsx
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { ReactNode } from "react";
 import SchoolYearService from "../service/schoolYear.service"; // adjust path as needed
 import type { MonthOption } from "../service/schoolYear.service"; // adjust path as needed

@@ -1,0 +1,50 @@
+
+[WebServer] (node:20244) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:9404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 16 tests using 1 worker
+
+(node:20232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/16] tests\add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners
+[2/16] tests\add-subject-loading.spec.ts:14:62 › add subject 375 dark keeps known form real without data spinners
+[3/16] tests\add-subject-loading.spec.ts:14:62 › add subject 1280 light keeps known form real without data spinners
+[4/16] tests\add-subject-loading.spec.ts:14:62 › add subject 1280 dark keeps known form real without data spinners
+[5/16] tests\add-subject-loading.spec.ts:19:46 › add subject year failure exposes retry and preserves local input
+[6/16] tests\add-subject-loading.spec.ts:19:46 › add subject grade failure exposes retry and preserves local input
+[7/16] tests\add-subject-loading.spec.ts:19:46 › add subject catalog failure exposes retry and preserves local input
+
+[WebServer] 10:07:25 AM [vite] (client) [console.error] Failed to load assessment types: Error: Failed to fetch assessment types: 500
+[WebServer]     at getAssessmentTypes (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subject.service.ts:76:9)
+[WebServer]     at async http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/context/SubjectsCatalogContext.tsx:40:17
+
+[WebServer] 10:07:25 AM [vite] (client) [console.error] Failed to load assessment types: Error: Failed to fetch assessment types: 500
+[WebServer]     at getAssessmentTypes (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subject.service.ts:76:9)
+[WebServer]     at async http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/context/SubjectsCatalogContext.tsx:40:17
+[8/16] tests\add-subject-loading.spec.ts:22:1 › non-graded subject retains its original endpoint and creation payload
+(node:24152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[9/16] tests\add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners
+[10/16] tests\add-subject-loading.spec.ts:14:62 › add subject 375 dark keeps known form real without data spinners
+[11/16] tests\add-subject-loading.spec.ts:14:62 › add subject 1280 light keeps known form real without data spinners
+[12/16] tests\add-subject-loading.spec.ts:14:62 › add subject 1280 dark keeps known form real without data spinners
+[13/16] tests\add-subject-loading.spec.ts:19:46 › add subject year failure exposes retry and preserves local input
+[14/16] tests\add-subject-loading.spec.ts:19:46 › add subject grade failure exposes retry and preserves local input
+[15/16] tests\add-subject-loading.spec.ts:19:46 › add subject catalog failure exposes retry and preserves local input
+[WebServer] 10:07:40 AM [vite] (client) [console.error] Failed to load assessment types: Error: Failed to fetch assessment types: 500
+
+[WebServer]     at getAssessmentTypes (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subject.service.ts:76:9)
+[WebServer]     at async http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/context/SubjectsCatalogContext.tsx:40:17
+[WebServer] 10:07:40 AM [vite] (client) [console.error] Failed to load assessment types: Error: Failed to fetch assessment types: 500
+[WebServer]     at getAssessmentTypes (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subject.service.ts:76:9)
+[WebServer]     at async http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/context/SubjectsCatalogContext.tsx:40:17
+
+[16/16] tests\add-subject-loading.spec.ts:22:1 › non-graded subject retains its original endpoint and creation payload
+  16 passed (46.8s)

@@ -59,7 +59,7 @@ export default function RoundResult({
                 <p className="text-xs text-emerald-700 font-semibold">{nextDiff} Level Unlocked!</p>
                 <button
                   onClick={onContinue}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-rose-800 px-4 py-3 text-sm font-bold text-white shadow transition-transform active:scale-95 hover:bg-rose-900"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-maroon px-4 py-3 text-sm font-bold text-white shadow transition-transform active:scale-95 hover:bg-maroon-light"
                 >
                   <ArrowUpCircle size={16} />
                   Continue to {nextDiff}
@@ -72,7 +72,7 @@ export default function RoundResult({
                 </p>
                 <button
                   onClick={onContinue}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-indigo-800 px-4 py-3 text-sm font-bold text-white shadow transition-transform active:scale-95 hover:bg-indigo-900"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-maroon px-4 py-3 text-sm font-bold text-white shadow transition-transform active:scale-95 hover:bg-maroon"
                 >
                   <ArrowUpCircle size={16} />
                   Back to the road

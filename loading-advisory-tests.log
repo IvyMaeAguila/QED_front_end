@@ -1,0 +1,226 @@
+
+[WebServer] (node:19204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 32 tests using 1 worker
+
+(node:23728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/32] tests\advisory-roster.spec.ts:17:68 › advisory roster 375 light: real labels, actions and table
+
+[WebServer] 10:52:00 PM [vite] (client) [console.warn] No routes matched location "/teacher/advisory-roster" 
+[WebServer] 10:52:00 PM [vite] (client) [console.warn] No routes matched location "/teacher/advisory-roster" 
+
+  1) tests\advisory-roster.spec.ts:17:68 › advisory roster 375 light: real labels, actions and table 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Class Roster', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Class Roster', exact: true }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: 'Class Roster', exact: true })
+
+
+      19 |   const release = await advisoryFixture(page, dark);
+      20 |   await page.goto("/teacher/advisory-roster");
+    > 21 |   await expect(page.getByRole("heading", { name: "Class Roster", exact: true })).toBeVisible();
+         |                                                                                  ^
+      22 |   await expect(page.getByRole("button", { name: "Export to Excel", exact: true })).toBeVisible();
+      23 |   await expect(page.getByPlaceholder("Search student...")).toBeVisible();
+      24 |   await expect(page.getByRole("columnheader", { name: "Student", exact: true })).toBeVisible();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\advisory-roster.spec.ts:21:82
+
+    Error Context: test-results\advisory-roster-advisory-r-e20ce-al-labels-actions-and-table\error-context.md
+
+
+(node:40812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[2/32] tests\advisory-roster.spec.ts:17:68 › advisory roster 375 dark: real labels, actions and table
+
+[WebServer] 10:52:06 PM [vite] (client) [console.warn] No routes matched location "/teacher/advisory-roster" 
+[WebServer] 10:52:06 PM [vite] (client) [console.warn] No routes matched location "/teacher/advisory-roster" 
+
+  2) tests\advisory-roster.spec.ts:17:68 › advisory roster 375 dark: real labels, actions and table 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Class Roster', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Class Roster', exact: true }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: 'Class Roster', exact: true })
+
+
+      19 |   const release = await advisoryFixture(page, dark);
+      20 |   await page.goto("/teacher/advisory-roster");
+    > 21 |   await expect(page.getByRole("heading", { name: "Class Roster", exact: true })).toBeVisible();
+         |                                                                                  ^
+      22 |   await expect(page.getByRole("button", { name: "Export to Excel", exact: true })).toBeVisible();
+      23 |   await expect(page.getByPlaceholder("Search student...")).toBeVisible();
+      24 |   await expect(page.getByRole("columnheader", { name: "Student", exact: true })).toBeVisible();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\advisory-roster.spec.ts:21:82
+
+    Error Context: test-results\advisory-roster-advisory-r-80ffc-al-labels-actions-and-table\error-context.md
+
+
+
+(node:40304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[3/32] tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 light: real labels, actions and table
+
+[WebServer] 10:52:12 PM [vite] (client) [console.warn] No routes matched location "/teacher/advisory-roster" 
+
+[WebServer] 10:52:12 PM [vite] (client) [console.warn] No routes matched location "/teacher/advisory-roster" 
+
+[WebServer] 10:52:15 PM [vite] (client) [console.warn] No routes matched location "/teacher/advisory-roster" 
+[WebServer] 10:52:15 PM [vite] (client) [console.warn] No routes matched location "/teacher/advisory-roster" 
+
+  3) tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 light: real labels, actions and table 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Class Roster', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Class Roster', exact: true }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: 'Class Roster', exact: true })
+
+
+      19 |   const release = await advisoryFixture(page, dark);
+      20 |   await page.goto("/teacher/advisory");
+    > 21 |   await expect(page.getByRole("heading", { name: "Class Roster", exact: true })).toBeVisible();
+         |                                                                                  ^
+      22 |   await expect(page.getByRole("button", { name: "Export to Excel", exact: true })).toBeVisible();
+      23 |   await expect(page.getByPlaceholder("Search student...")).toBeVisible();
+      24 |   await expect(page.getByRole("columnheader", { name: "Student", exact: true })).toBeVisible();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\advisory-roster.spec.ts:21:82
+
+    Error Context: test-results\advisory-roster-advisory-r-0a2e9-al-labels-actions-and-table\error-context.md
+
+
+
+(node:16260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[4/32] tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 dark: real labels, actions and table
+
+[WebServer] 10:52:18 PM [vite] (client) [console.warn] No routes matched location "/teacher/advisory-roster" 
+[WebServer] 10:52:18 PM [vite] (client) [console.warn] No routes matched location "/teacher/advisory-roster" 
+
+  4) tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 dark: real labels, actions and table 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Class Roster', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Class Roster', exact: true }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: 'Class Roster', exact: true })
+
+
+      19 |   const release = await advisoryFixture(page, dark);
+      20 |   await page.goto("/teacher/advisory");
+    > 21 |   await expect(page.getByRole("heading", { name: "Class Roster", exact: true })).toBeVisible();
+         |                                                                                  ^
+      22 |   await expect(page.getByRole("button", { name: "Export to Excel", exact: true })).toBeVisible();
+      23 |   await expect(page.getByPlaceholder("Search student...")).toBeVisible();
+      24 |   await expect(page.getByRole("columnheader", { name: "Student", exact: true })).toBeVisible();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\advisory-roster.spec.ts:21:82
+
+    Error Context: test-results\advisory-roster-advisory-r-7920e-al-labels-actions-and-table\error-context.md
+
+
+
+(node:30868) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[5/32] tests\advisory-roster.spec.ts:36:1 › student directory classification observes native columns across short/long names
+
+[WebServer] 10:52:24 PM [vite] (client) [console.warn] No routes matched location "/teacher/advisory-roster" 
+
+[WebServer] 10:52:24 PM [vite] (client) [console.warn] No routes matched location "/teacher/advisory-roster" 
+  5) tests\advisory-roster.spec.ts:36:1 › student directory classification observes native columns across short/long names 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Class Roster', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Class Roster', exact: true }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: 'Class Roster', exact: true })
+
+
+      39 |     const release = await advisoryFixture(page, false, 1, long);
+      40 |     await page.goto("/teacher/advisory");
+    > 41 |     await expect(page.getByRole("heading", { name: "Class Roster", exact: true })).toBeVisible();
+         |                                                                                    ^
+      42 |     release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);
+      43 |     widths.push(await page.locator("thead th").evaluateAll(elements => elements.map(element => element.getBoundingClientRect().width)));
+      44 |     await page.unroute("**/api/**"); await page.unroute("**/api/teacherAttendance/advisory-sections");
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\advisory-roster.spec.ts:41:84
+
+    Error Context: test-results\advisory-roster-student-di-a8c9e-mns-across-short-long-names\error-context.md
+
+
+
+(node:26736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[6/32] tests\auto-columns.spec.ts:9:32 › auto columns: 0 rows, one swap, stable shell and cached repeat
+[7/32] tests\auto-columns.spec.ts:9:32 › auto columns: 1 rows, one swap, stable shell and cached repeat
+[8/32] tests\auto-columns.spec.ts:9:32 › auto columns: 9 rows, one swap, stable shell and cached repeat
+[9/32] tests\auto-columns.spec.ts:44:1 › auto-column classification requires observed data-dependent widths
+[10/32] tests\loading.spec.ts:7:1 › 60ms never reveals a skeleton
+[11/32] tests\loading.spec.ts:11:1 › 320ms reveals after 200ms and reserves at least 400ms
+[12/32] tests\loading.spec.ts:20:1 › 1500ms begins showing content within 150ms of data
+[13/32] tests\loading.spec.ts:24:1 › fixed region retains height and has zero CLS
+[14/32] tests\loading.spec.ts:30:3 › variable list, data size 0: one swap, stable surroundings
+[15/32] tests\loading.spec.ts:30:3 › variable list, data size 2: one swap, stable surroundings
+[16/32] tests\loading.spec.ts:30:3 › variable list, data size 9: one swap, stable surroundings
+[17/32] tests\loading.spec.ts:30:3 › variable text, data size 1: one swap, stable surroundings
+[18/32] tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings
+[19/32] tests\loading.spec.ts:30:3 › variable text, data size 24: one swap, stable surroundings
+[20/32] tests\loading.spec.ts:49:1 › animation properties, shimmer duration and shared easing
+[21/32] tests\loading.spec.ts:59:1 › different mount times share shimmer phase
+[22/32] tests\loading.spec.ts:64:30 › 5 items use exact stagger policy
+[23/32] tests\loading.spec.ts:64:30 › 12 items use exact stagger policy
+[24/32] tests\loading.spec.ts:68:1 › reduced motion has no shimmer or fade wait
+[25/32] tests\loading.spec.ts:76:1 › aria busy, hidden reservation, delayed status and complete cleanup
+[26/32] tests\loading.spec.ts:85:1 › error removes skeleton and retry reloads
+[27/32] tests\loading.spec.ts:92:1 › negative control catches wrong fixed height and CLS
+[28/32] tests\loading.spec.ts:97:1 › negative control catches unsynchronized shimmer
+[29/32] tests\loading.spec.ts:102:1 › skeleton CSS uses tokens for every color
+[30/32] tests\loading.spec.ts:107:40 › light: neutral contrast on every surface
+[31/32] tests\loading.spec.ts:107:40 › dark: neutral contrast on every surface
+[32/32] tests\loading.spec.ts:116:1 › text line metrics and adjacent widths
+  5 failed
+    tests\advisory-roster.spec.ts:17:68 › advisory roster 375 light: real labels, actions and table 
+    tests\advisory-roster.spec.ts:17:68 › advisory roster 375 dark: real labels, actions and table ─
+    tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 light: real labels, actions and table 
+    tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 dark: real labels, actions and table 
+    tests\advisory-roster.spec.ts:36:1 › student directory classification observes native columns across short/long names 
+  27 passed (1.4m)
