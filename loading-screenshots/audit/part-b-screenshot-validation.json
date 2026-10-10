@@ -1,0 +1,11 @@
+{
+  "groups": 67,
+  "files": 536,
+  "missing": [],
+  "wrongDimensions": [],
+  "notRefreshedThisRun": [
+    "loading-screenshots/admin-add-subject-375-light-skeleton.png",
+    "loading-screenshots/admin-add-subject-375-light-loaded.png"
+  ],
+  "runStarted": "2026-10-10T03:50:23.468Z"
+}

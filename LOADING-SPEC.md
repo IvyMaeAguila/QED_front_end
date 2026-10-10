@@ -190,3 +190,7 @@ These decisions supersede any earlier pending or three-run instructions below.
 * Exact Pet Quiz user decision: “Preserve game animations; require zero remaining loading animations (recommended)”. Preserve gameplay breathing, hunger, story clouds and challenge effects; the zero-animation cleanup requirement applies to loading effects.
 * Create a new git branch and commit everything; do not push or deploy. Production build and one complete suite after these changes are required. No need to rerun three full suites.
 
+
+## Post-sync execution limit checkpoint
+
+The authorized full suite has completed exactly once (1 failed, 602 passed, 17.6m). Main sync changed no files. A Part A cold-dev regression at the first Add Subject main visibility assertion remains; permission to fix Part A regressions and run an additional full suite has been asked but not received. Preserve the current failure evidence and all assertions; do not assume a new approval from elapsed time.

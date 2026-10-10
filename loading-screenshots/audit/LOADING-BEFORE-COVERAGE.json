@@ -1190,6 +1190,18 @@
     },
     "targetedAfter": "part-a-targeted-final.txt",
     "targetedSummary": "16 passed (23.2s)",
-    "approvedExistingTestChange": "Only fast-bootstrap fixture setup; all assertions retained, zero-request assertion exact"
+    "approvedExistingTestChange": "Only fast-bootstrap fixture setup; all assertions retained, zero-request assertion exact",
+    "fullSuite": {
+      "cases": 603,
+      "passed": 602,
+      "failed": 1,
+      "skipped": 0,
+      "retries": 0,
+      "summary": "602 passed (17.6m)",
+      "failure": "add subject 375 light keeps known form real without data spinners",
+      "raw": "part-b-final-suite.txt",
+      "sourceInputsUnchanged": 580,
+      "toolingInputsUnchanged": 8
+    }
   }
 }

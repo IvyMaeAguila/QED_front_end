@@ -1,3 +1,23 @@
+Final production rebuild passed: loading-screenshots/audit/part-b-final-build.txt (exit 0). Source/config/test and tooling freezes are intact. Git merge-tree dry-run passed without touching main. Verification evidence and screenshots are saved on the loading branch; check git log for its evidence commit. The regression decision remains pending; no further full suite is authorized.
+
+# Current checkpoint — awaiting regression decision (2026-10-10)
+
+Part A implemented and committed ac3a860d627c50addc88221a8c158cbbe8b54f57; backup/loading-before-main-sync retained at that commit. Local main cbc1623a72da35d159424d777d733a2824bdb5d6 was already an ancestor; git merge main on the loading branch returned Already up to date, no conflicts/new pages. Main/remotes/deployment were not modified. Build + guards pass; targeted 16 passed (25.4s). Full suite executed exactly once: 1 failed, 602 passed (17.6m), all 603 cases, zero retries/skips. Raw output: loading-screenshots/audit/part-b-final-suite.txt.
+
+Failure: tests/add-subject-loading.spec.ts first 375px/light case timed out at the unchanged 5s main visibility assertion during cold dev compilation; snapshot only Loading…. Other Add Subject cases pass warm. This predates any main change (merge was a no-op), so the user's Part B restriction “fix only what the sync itself broke” requires a new decision before a Part A fix/additional full run. Pending async question: allow fixes to Part A regressions without weakening tests plus one additional full run, or retain the one-run limit and report failure. No answer yet; no regression fix or second full run performed.
+
+All 580 source/test/config and eight tooling hashes unchanged during suite. All 55 routes registered; current statuses in part-b-route-status.json and LOADING-REPORT.md. 536 main captures exist; only Add Subject 375px/light skeleton/loaded were not refreshed because its test failed before capture. Nine action/upload spinners, determinate graph, and Pet Quiz gameplay retained. Original zero-request assertion remains exact; only fast-bootstrap setup changed with explicit user approval.
+
+Build command: npm run build (includes fixed budget + registry/graph check). Targeted: npx playwright test tests/bootstrap-loading.spec.ts tests/role-bundles.spec.ts tests/bundle-budget.spec.ts. Full command: npx playwright test --reporter=line --workers=1; DO NOT RUN AGAIN without the pending decision. If approved, investigate development cold role compilation/server readiness without changing protected page effects or test assertions; preserve the failed raw run, fix and target-verify, then run only the additionally approved full run. Also audit late chart-library arrival after data and preview axis visual parity if authorized. Never prefetch data, loosen dimensions/tolerances, switch to main, modify main, contact remotes, push, rebase/reset/force or deploy.
+
+Next authorized housekeeping: save final sync/evidence commit on codex/finish-loading-verification; git merge-tree --write-tree main codex/finish-loading-verification; verify main ref and clean status; report failed certification and the pending decision.
+
+This checkpoint supersedes older in-progress sections below.
+
+## Part B verification in progress — 2026-10-10
+
+Part A committed ac3a860d627c50addc88221a8c158cbbe8b54f57. Backup/loading-before-main-sync points to that commit. git merge main returned Already up to date; no conflicts, no incoming pages. Main remains cbc1623a72da35d159424d777d733a2824bdb5d6. Post-sync production build including bundle guards passed; targeted checks: 16 passed (25.4s). Frozen 580 source/test/config inputs and separate tooling hashes. Starting full suite exactly once, expected 603 cases, one worker, zero retries. Raw output: loading-screenshots/audit/part-b-final-suite.txt. Do not edit source/tests/config or rerun the full suite. When complete, record the actual summary/failures, validate hashes/screenshots, update docs/evidence, commit the sync verification, and git merge-tree --write-tree main codex/finish-loading-verification. Do not switch to main, contact remotes, push or deploy.
+
 # Current Part A / Part B checkpoint — 2026-10-10
 
 Part A implementation builds and its 16 targeted checks pass. Nine new tests: seven role/chart tests fail baseline 417100a; the bundle test fails baseline; the already-correct registry family fails a real eager-import mutation and passes restoration. Current code is on codex/finish-loading-verification. No main/remote/deployment writes. No full suite run during Part A.

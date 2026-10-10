@@ -1,3 +1,124 @@
+Final production rebuild passed (exit 0): loading-screenshots/audit/part-b-final-build.txt. Full-suite result remains 1 failed / 602 passed (17.6m); no second full run or regression fix was performed.
+
+Git merge-tree dry-run passed (exit 0), main ref unchanged; it will also be checked after the evidence commit. All source/config/test hashes remain unchanged. The code builds, but full certification is blocked by the recorded cold Add Subject failure and pending user decision.
+
+# Current Part A / Part B result — 2026-10-10
+
+**Not fully certified: 602 passed, 1 failed (17.6m).** The sole failure is Add Subject, 375px light: the unchanged 5s assertion waiting for main timed out while the first role graph was being compiled. Its failure snapshot contains only Loading…. All subsequent Add Subject cases passed warm. This is a Part A cold-dev regression, not a merge conflict: merging local main changed no files. A decision is pending on authorizing its fix and one additional full run; neither has been performed.
+
+Part A commit: ac3a860d627c50addc88221a8c158cbbe8b54f57. Backup branch backup/loading-before-main-sync points there. git merge main returned Already up to date. Conflicted files: none. Incoming/new main pages: none. Main remains cbc1623a72da35d159424d777d733a2824bdb5d6. No remotes, push or deployment were used. The sync verification commit contains only evidence/docs/screenshots.
+
+Production build and fixed-budget guards passed (exit 0); targeted tests passed: 16 passed (25.4s). Full suite was executed exactly once, all 603 cases, one worker, zero retries/skips. Raw unedited output is loading-screenshots/audit/part-b-final-suite.txt; failure snapshot is part-b-add-subject-failure.md. All 580 source/test/config hashes and eight tooling hashes remained unchanged throughout. No test was skipped, deleted or weakened. The only existing bootstrap change was its explicitly approved fast-code fixture setup; every other byte and the held-controller zero-request assertion are exact (part-b-bootstrap-preservation.json).
+
+## Bundle results
+
+Entry: before 1708.984 raw / 481.009 gzip kB; after 338.746 raw / 101.957 gzip kB using Node gzip level 6. Vite prints 485.95→102.98 gzip kB. The after public eager closure is 395.536 raw / 123.044 gzip kB. Fixed ceilings: entry 112153 bytes, eager closure 135349 bytes. No protected views/heavy libraries enter the public eager graph.
+
+Role chunks did not exist separately before: all four shells/views were in the old entry. After sizes below distinguish the small role facade from its full additional eager download, excluding the public graph. Shared compositions are eager dependencies, so facade bytes alone are not the role's total download.
+
+| Role | Facade raw / gzip kB | Additional eager graph raw / gzip kB |
+|---|---:|---:|
+| ADMIN | 13.269 / 4.304 | 525.294 / 180.012 |
+| TEACHER | 13.258 / 4.529 | 580.949 / 193.035 |
+| PRINCIPAL | 6.622 / 2.389 | 416.263 / 141.842 |
+| PARENT | 11.003 / 4.247 | 517.673 / 162.968 |
+
+Recharts and XLSX are separate lazy chunks. Chart previews use the existing chart JSX/axes without waiting for Recharts. Login and session responses start only their named role's code import before profile/redirect completion. No page-data prefetch was introduced; page effects/calculations remain unchanged.
+
+## Startup and before/after evidence
+
+Three cold contexts per version; Slow 4G: latency 150ms, download 1600000bps, upload 750000bps; CPU 4x. Same uncompressed local production server and 320ms mock dashboard response latency in both versions. Values are median milliseconds, not deployed performance.
+
+| Measurement | Before | After |
+|---|---:|---:|
+| Login navigation to first visible content | 14889.3 | 3802.5 |
+| Teacher login to first page skeleton | 1551.7 | 4753.2 |
+| Teacher login to first rendered data | 2152.1 | 6371.8 |
+
+First data is **4219.7ms slower after login**, which is significant. The chosen no-prefetch design was not changed based on these numbers. Raw samples: startup-before.json/startup-after.json.
+
+Nine new cases: public role isolation; teacher/admin/principal/parent role isolation (four); 1500ms role arrival; chart skeleton without heavy library; bundle budget; registry eager-import guard. The first eight fail actual baseline 417100a and pass fixed code. The registry family already accepted valid metadata; a real temporary eager TeacherLayout import makes its test fail, then byte-for-byte restoration passes. Logs: part-a-before-tests.txt (seven failures), part-a-budget-before-tests.txt (one failure/one pass), part-a-registry-mutation-test.txt (one failure), part-a-budget-restored-tests.txt (two passes), part-b-targeted-tests.txt (16 passes). Ledger: LOADING-BEFORE-COVERAGE.json.
+
+## Current 55-route statuses
+
+Every route remains registered; no route is omitted. PASS denotes associated suite checks, not certification of every optional field/state. Add Subject is explicitly marked with its cold-start failure.
+
+| Route | Status |
+|---|---|
+| /teacher/holistic | PASS |
+| /teacher/attendance/records | PASS |
+| /teacher/holistic/domain-trends | PASS |
+| /principal/gradebooks/:grade | PASS |
+| /admin/classes/new | PASS |
+| /admin/classes/:classId/edit | PASS |
+| /admin/subjects/new | COVERED WITH FAILURE |
+| /admin/students/new | PASS |
+| /admin/students/:studentId/edit | PASS |
+| /admin/users/new | PASS |
+| /admin/users/:role/:userId/edit | PASS |
+| /teacher/subjects/:subjectId | PASS |
+| /principal/reports | PASS |
+| /teacher/students/:studentId | PASS |
+| /admin/users/:role/:userId | PASS |
+| /admin/classes/:classId | PASS |
+| /admin/subjects/:subjectId | PASS |
+| /parent/students/:studentId/topics/:topicId/support | PASS |
+| /parent/students/:studentId/topics/:topicId/courseware | PASS |
+| /teacher/attendance | PASS |
+| /principal/gradebooks | PASS |
+| /teacher/advisory | PASS |
+| /teacher/subjects/:subjectSectionId/students | PASS |
+| / | PASS |
+| /login | PASS |
+| /admin/help | PASS |
+| /principal/help | PASS |
+| /teacher/help | PASS |
+| /parent/help | PASS |
+| /parent | PASS |
+| /principal/students | PASS |
+| /admin/calendar | PASS |
+| /principal/calendar | PASS |
+| /teacher/calendar | PASS |
+| /parent/calendar | PASS |
+| /principal/teachers/:teacherId | PASS |
+| /admin/academic-year | PASS |
+| /admin/subjects | PASS |
+| /admin/students | PASS |
+| /principal/teachers | PASS |
+| /parent/enrolled-children | PASS |
+| /admin | PASS |
+| /admin/classes | PASS |
+| /admin/users | PASS |
+| /teacher/subjects | PASS |
+| /teacher | PASS |
+| /teacher/holistic/:studentId | PASS |
+| /principal | PASS |
+| /teacher/grades | PASS |
+| /principal/students/class/:classId | PASS |
+| /principal/students/grade/:gradeId | PASS |
+| /principal/holistic-performance-analytics | PASS |
+| /teacher/subjects/:subjectId/records | PASS |
+| /parent/students/:studentId | PASS |
+| /parent/students/:studentId/topics/:topicId/quiz | PASS |
+
+## Screenshots and preserved indicators
+
+67 groups / 536 expected screenshots exist, zero missing or incorrect dimensions. 534 refreshed during the full run. The two admin-add-subject-375-light skeleton/loaded captures remain from the earlier successful run because the cold case failed before capture. Detailed freshness: part-b-screenshot-validation.json. Current priority pages: Teacher dashboard, Teacher subject page, Admin dashboard/Audit Logs, Student holistic profile, Teacher gradebook, Principal dashboard charts, Parent child overview, and Pet Quiz. Existing contact sheets are historical; use current individual captures. The Principal dark chart frames were inspected after this run.
+
+Nine action/upload spinners and the determinate graph are unchanged. Pet Quiz gameplay was preserved under the user's exact decision: “Preserve game animations; require zero remaining loading animations (recommended)”. Only loading animations must disappear after data settles.
+
+## Still uncertified / next decision
+
+The initial cold Add Subject case is failing and blocks full certification. The pending question asks whether Part A regressions may be fixed after the no-op sync, followed by one additional full run, or whether the original one-run limit should remain. Do not fix/rerun without that decision. Exhaustive optional/offscreen-region overlays/classification/line-cache paths, all late-library/data-arrival combinations, live backend/accounts, and deployed gzip/network timings remain uncertified. No new layout widths, truncation or page data prefetch were added to satisfy tests.
+
+Git merge-tree dry-run and final verification commit are recorded separately after this report is saved. A clean merge means Git conflict-free only; this failing test still needs resolution before claiming ready.
+
+Historical reports follow.
+
+## Part B verification in progress — 2026-10-10
+
+Part A committed ac3a860d627c50addc88221a8c158cbbe8b54f57. Backup/loading-before-main-sync points to that commit. git merge main returned Already up to date; no conflicts, no incoming pages. Main remains cbc1623a72da35d159424d777d733a2824bdb5d6. Post-sync production build including bundle guards passed; targeted checks: 16 passed (25.4s). Frozen 580 source/test/config inputs and separate tooling hashes. Starting full suite exactly once, expected 603 cases, one worker, zero retries. Raw output: loading-screenshots/audit/part-b-final-suite.txt. Do not edit source/tests/config or rerun the full suite. When complete, record the actual summary/failures, validate hashes/screenshots, update docs/evidence, commit the sync verification, and git merge-tree --write-tree main codex/finish-loading-verification. Do not switch to main, contact remotes, push or deploy.
+
 # Current role-bundle verification — 2026-10-10
 
 Part A implemented; production build and 16 targeted tests pass. Part B sync/full-suite verification pending. This section supersedes historical performance and manifest notes below; the full 55-route inventory remains applicable.
