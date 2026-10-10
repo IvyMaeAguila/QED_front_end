@@ -1,3 +1,132 @@
+<!-- PART-C-REGRESSION -->
+# Narrow Part A regression follow-up — 2026-10-10
+
+Scope authorized by the latest user decision: fix Part A, isolate Add Subject ten times first, preserve every test assertion/threshold/timing, no data prefetch or other-role browser code, fixed bundle budgets, one additional full run only. Main/remotes/deployment untouched; branch codex/finish-loading-verification. Earlier pending-permission notes below are historical and superseded.
+
+## Cold diagnosis
+
+Ten separate CLI invocations each started a fresh Vite server and browser against an archive of untouched current commit 67a3c5b. Reporter only observed existing Playwright step times; no test/fixture edits and no tracing overhead in these ten. 9 passes, 1 failures: a real cold compilation slowdown produces a flaky pass/fail at the existing 5000ms assertion. Navigation-to-main times include the real navigation; failed values are censored at timeout, not successful first-render times. The first exploratory ten runs overlapped the throttled-login diagnostic, so they were repeated without another diagnostic running; original cold-current-* and startup-current-exploratory.json evidence is retained, not used as the final isolated result. Clean evidence: cold-clean-current-*; the final current startup sample was also remeasured alone.
+
+| Run | Navigation s | Main assertion s | Navigation to main/end s | Result |
+| --- | ---: | ---: | ---: | --- |
+| 1 | 3.967 | 4.953 | 8.926 | passed |
+| 2 | 3.521 | 4.923 | 8.450 | passed |
+| 3 | 3.519 | 4.994 | 8.519 | passed |
+| 4 | 3.606 | 4.939 | 8.553 | passed |
+| 5 | 3.360 | 4.950 | 8.316 | passed |
+| 6 | 3.369 | 5.010 (timeout) | 8.386 (censored) | failed |
+| 7 | 3.026 | 4.937 | 7.968 | passed |
+| 8 | 3.365 | 4.948 | 8.318 | passed |
+| 9 | 3.484 | 4.955 | 8.445 | passed |
+| 10 | 3.450 | 4.939 | 8.394 | passed |
+
+Separate trace: 205 requests, 179 source-module requests; auth responses ~9ms, source transforms waited up to 2374ms. The dev graph recursively discovers uncompiled modules after auth. This source-transformation cost is development-environment-only; production serves built JS. Evidence: cold-current-trace.zip and cold-current.network. Production has a separate bandwidth/parse cost, not dismissed as a test issue.
+
+Development fix: explicitly finish static source transforms before advertising HTML readiness. It neither executes protected components nor sends browser/page data requests. All four role roots are transformed server-side; the browser still receives only its authenticated role. Static imports are parsed from transformed JS, excluding dynamic controllers and optional libraries. This deliberately moves compilation into dev-server readiness; it is not a claim that total dev-server startup is free. Entire isolated CLI runs took 29.1s, 26.5s and 25.8s, including readiness. No fixture was changed. Final independent cold reruns: passed, navigation 0.880s + main wait 1.441s = 2.328s; passed, navigation 0.706s + main wait 0.315s = 1.028s; passed, navigation 0.708s + main wait 0.330s = 1.044s. Intermediate unsuccessful warmup approaches and their actual timings are retained in cold-fixed-*.json/txt.
+
+## Production changes and full downloads
+
+Role/static-dependency modulepreload already ran at the first successful auth response; built Vite dependency maps already included the full static closure. No page controller or page-data request was moved earlier. Production groups modules by their exact role audience sets and coalesces shared/public modules without duplicating them. Only source audit descriptions (regions) are omitted from runtime registry output; source classifications, registry load functions and all tests remain intact. Recharts/XLSX/ExcelJS remain outside every role eager closure. No layout, effect, route, API or calculation source file changed.
+
+Entry before this fix: 338.746 raw / 101.957 gzip kB. After: 1.132 / 0.626 kB facade. The meaningful complete public eager closure is 395.536 / 123.044 before, 427.223 / 133.116 after. Its gzip grows within the unchanged 135349-byte ceiling; the entry ceiling remains 112153 bytes. A tiny facade does not represent the full initial download.
+
+All sizes below are decimal kB, raw / calculated Node gzip level 6. The HTTP harness actually transfers uncompressed content. Eager totals exclude public code; first-skeleton request totals INCLUDE public code, controllers already requested, and optional chart code requested by that point. The latter inventory includes in-flight requests, not a claim that every response finished at that instant.
+
+| Role | Eager beyond public before | Eager beyond public after | Scripts requested by skeleton before | Scripts requested by skeleton after |
+| --- | ---: | ---: | ---: | ---: |
+| Admin | 525.294 / 180.012 | 474.462 / 143.321 | 921.121 / 303.294 | 902.045 / 276.718 |
+| Teacher | 580.949 / 193.035 | 528.674 / 158.379 | 977.985 / 316.911 | 957.408 / 292.335 |
+| Principal | 416.263 / 141.842 | 369.205 / 114.445 | 1375.322 / 415.320 | 1383.195 / 410.239 |
+| Parent | 517.673 / 162.968 | 469.391 / 142.774 | 913.526 / 286.255 | 897.000 / 276.180 |
+
+Every role chunk, shared/vendor chunk, import edge and eager composition is listed in role-downloads-{current,fixed}.json. Actual first-skeleton requests, scripts AND CSS/images, are listed individually with byte sizes in role-network-{current,fixed}.json. Current network inventory was reproduced from an archive of unmodified commit 67a3c5b in a temporary directory (no checkout/main changes); its production build output is part-c-current-reconstruction-build.txt. Gzip/hash noise of a few bytes in the reconstructed build is retained honestly.
+
+Largest pre-fix contributors: Teacher's full role preview graph (581kB beyond public), shared Header chunk (157kB, including registry/shared UI), Subject Records (54kB), Attendance Records (43kB); Parent Child Detail (128kB) and Pet Quiz (94kB); Principal Dashboard (46kB). After coalescing, Teacher's own eager chunk and the common role UI dominate. Principal also requests deferred Recharts after chart mount; it is not an eager role dependency. Complete per-file rankings are in the JSON inventories.
+
+## Slow 4G / 4x CPU
+
+Same harness/profile: 150ms RTT, 1.6Mbps download, 750kbps upload, 4x CPU, 320ms mocked teacher data response, three cold browser contexts, median. Login content is measured from navigation; skeleton/data from Login click. Original baseline is 417100a. Current remeasurement is 67a3c5b. Historical prior current measurements (startup-after.json) remain intact too.
+
+| Version | Login content s | Teacher skeleton s | Teacher first data s |
+| --- | ---: | ---: | ---: |
+| before | 14.889 | 1.552 | 2.152 |
+| current | 3.813 | 5.064 | 5.803 |
+| fixed | 3.816 | 4.433 | 5.591 |
+
+**Target not reached.** The measured achieved result is 4.433s / 5.591s; this is not claimed as an absolute mathematical optimum. Teacher still needs 528.674kB of real shared page compositions before its registered route skeleton can render. At 200000 bytes/s, that code alone has a 2.64s transfer lower bound, before latency, competition, parsing/evaluation at 4x CPU, bootstrap settling, and the lazy controller/data round trip. Those costs explain the remaining delay. A route-composition loading architecture change or production compression policy needs separate scope; neither was smuggled into this fix. No data prefetching was used.
+
+## Verification
+
+No new tests, fixture changes, assertion/timing/threshold edits, skips, deletions or weakened checks in this follow-up. Existing Add Subject case failed on current code in 1/10 clean independent starts and passed all final isolated reruns AND the full run. Existing seven bootstrap/lazy and two budget cases were used while iterating. Historical nine new Part A tests retain their recorded old-code/mutation proof in LOADING-BEFORE-COVERAGE.json.
+
+Final full suite (one additional invocation, no retries): 2 failed; 601 passed (21.6m). Raw, unedited output: part-c-final-suite.txt. All 580 source/test/config and 13 tooling hashes were unchanged during the run. Two failures remain: loading.spec.ts variable text size 4 expected transient revealed but observed settled; teacher-subjects.spec.ts 375 dark measured a 6.671875px card Y shift against the unchanged <=1px limit. Neither was dismissed as a flake or fixed after the single authorized full run. Failure contexts are saved as part-c-failure-*.md. Frozen inputs and post-run comparison: part-c-input-freeze.txt / part-c-input-check.txt / part-c-tooling-check.json. Production build/guard: part-c-final-build.txt; final unchanged-app rebuild: part-c-post-verification-build.txt. Nine action/upload spinners and determinate graph are unchanged. Pet Quiz gameplay is preserved under the user's exact decision: “Preserve game animations; require zero remaining loading animations (recommended)”.
+
+Uncertified: requested 1.5s-added teacher latency target; the two failed checks above (so no full-suite certification); real backend timing/data and deployed compression/network behavior; absolute optimal latency floor; late chart code arrival after data has loaded and dark radar preview visual parity from the previous report; exhaustive optional-region combinations. Teacher Subjects 375 dark loaded screenshot was not refreshed because its geometry assertion failed before capture. Full route inventory, classifications, spinner list, screenshot matrix and original mutation evidence below remain applicable; current route/screenshot results are part-c-route-status.json and part-c-screenshot-validation.json.
+
+## Current route inventory
+
+All 55 routes are registered and covered. One route has a failed geometry check; a shared variable-text primitive check also failed globally.
+
+| Route | Result |
+| --- | --- |
+| /teacher/holistic | PASS |
+| /teacher/attendance/records | PASS |
+| /teacher/holistic/domain-trends | PASS |
+| /principal/gradebooks/:grade | PASS |
+| /admin/classes/new | PASS |
+| /admin/classes/:classId/edit | PASS |
+| /admin/subjects/new | PASS |
+| /admin/students/new | PASS |
+| /admin/students/:studentId/edit | PASS |
+| /admin/users/new | PASS |
+| /admin/users/:role/:userId/edit | PASS |
+| /teacher/subjects/:subjectId | PASS |
+| /principal/reports | PASS |
+| /teacher/students/:studentId | PASS |
+| /admin/users/:role/:userId | PASS |
+| /admin/classes/:classId | PASS |
+| /admin/subjects/:subjectId | PASS |
+| /parent/students/:studentId/topics/:topicId/support | PASS |
+| /parent/students/:studentId/topics/:topicId/courseware | PASS |
+| /teacher/attendance | PASS |
+| /principal/gradebooks | PASS |
+| /teacher/advisory | PASS |
+| /teacher/subjects/:subjectSectionId/students | PASS |
+| / | PASS |
+| /login | PASS |
+| /admin/help | PASS |
+| /principal/help | PASS |
+| /teacher/help | PASS |
+| /parent/help | PASS |
+| /parent | PASS |
+| /principal/students | PASS |
+| /admin/calendar | PASS |
+| /principal/calendar | PASS |
+| /teacher/calendar | PASS |
+| /parent/calendar | PASS |
+| /principal/teachers/:teacherId | PASS |
+| /admin/academic-year | PASS |
+| /admin/subjects | PASS |
+| /admin/students | PASS |
+| /principal/teachers | PASS |
+| /parent/enrolled-children | PASS |
+| /admin | PASS |
+| /admin/classes | PASS |
+| /admin/users | PASS |
+| /teacher/subjects | FAIL |
+| /teacher | PASS |
+| /teacher/holistic/:studentId | PASS |
+| /principal | PASS |
+| /teacher/grades | PASS |
+| /principal/students/class/:classId | PASS |
+| /principal/students/grade/:gradeId | PASS |
+| /principal/holistic-performance-analytics | PASS |
+| /teacher/subjects/:subjectId/records | PASS |
+| /parent/students/:studentId | PASS |
+| /parent/students/:studentId/topics/:topicId/quiz | PASS |
+
+<!-- END-PART-C-REGRESSION -->
+
 Final production rebuild passed (exit 0): loading-screenshots/audit/part-b-final-build.txt. Full-suite result remains 1 failed / 602 passed (17.6m); no second full run or regression fix was performed.
 
 Git merge-tree dry-run passed (exit 0), main ref unchanged; it will also be checked after the evidence commit. All source/config/test hashes remain unchanged. The code builds, but full certification is blocked by the recorded cold Add Subject failure and pending user decision.

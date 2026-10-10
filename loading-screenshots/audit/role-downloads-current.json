@@ -1,0 +1,3711 @@
+{
+  "stage": "current",
+  "entry": {
+    "file": "assets/index-CALc1q2j.js",
+    "rawBytes": 338746,
+    "gzipBytes": 101957,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/preload-helper-zJ_50EbN.js",
+      "assets/jsx-runtime-aNkLRTnx.js",
+      "assets/react-dom-rMUovVdx.js",
+      "assets/react-DxZHKUKd.js",
+      "assets/api.config-qjE84KfK.js"
+    ],
+    "compositions": [
+      "src/features/auth/LoginPanel.loading-view.tsx",
+      "src/features/Landing/LandingPage.loading-view.tsx"
+    ],
+    "vendors": [
+      "node_modules/scheduler/cjs/scheduler.production.js",
+      "node_modules/scheduler/index.js",
+      "node_modules/react-dom/cjs/react-dom-client.production.js",
+      "node_modules/react-dom/client.js",
+      "node_modules/lucide-react/dist/esm/icons/arrow-left.js",
+      "node_modules/lucide-react/dist/esm/icons/arrow-right.js",
+      "node_modules/lucide-react/dist/esm/icons/arrow-up-right.js",
+      "node_modules/lucide-react/dist/esm/icons/badge-check.js",
+      "node_modules/lucide-react/dist/esm/icons/blocks.js",
+      "node_modules/lucide-react/dist/esm/icons/book-marked.js",
+      "node_modules/lucide-react/dist/esm/icons/brain.js",
+      "node_modules/lucide-react/dist/esm/icons/check.js",
+      "node_modules/lucide-react/dist/esm/icons/chevron-right.js",
+      "node_modules/lucide-react/dist/esm/icons/circle-arrow-right.js",
+      "node_modules/lucide-react/dist/esm/icons/circle-play.js",
+      "node_modules/lucide-react/dist/esm/icons/circle-user-round.js",
+      "node_modules/lucide-react/dist/esm/icons/eye-off.js",
+      "node_modules/lucide-react/dist/esm/icons/eye.js",
+      "node_modules/lucide-react/dist/esm/icons/file-chart-column-increasing.js",
+      "node_modules/lucide-react/dist/esm/icons/heart.js",
+      "node_modules/lucide-react/dist/esm/icons/key-round.js",
+      "node_modules/lucide-react/dist/esm/icons/list-checks.js",
+      "node_modules/lucide-react/dist/esm/icons/log-out.js",
+      "node_modules/lucide-react/dist/esm/icons/mail.js",
+      "node_modules/lucide-react/dist/esm/icons/menu.js",
+      "node_modules/lucide-react/dist/esm/icons/siren.js",
+      "node_modules/lucide-react/dist/esm/icons/square-pen.js",
+      "node_modules/lucide-react/dist/esm/icons/user-round-check.js",
+      "node_modules/lucide-react/dist/esm/icons/user.js",
+      "node_modules/lucide-react/dist/esm/icons/users-round.js",
+      "node_modules/lucide-react/dist/esm/icons/users.js",
+      "node_modules/lucide-react/dist/esm/icons/x.js",
+      "node_modules/engine.io-parser/build/esm/commons.js",
+      "node_modules/engine.io-parser/build/esm/encodePacket.browser.js",
+      "node_modules/engine.io-parser/build/esm/contrib/base64-arraybuffer.js",
+      "node_modules/engine.io-parser/build/esm/decodePacket.browser.js",
+      "node_modules/engine.io-parser/build/esm/index.js",
+      "node_modules/@socket.io/component-emitter/lib/esm/index.js",
+      "node_modules/engine.io-client/build/esm/globals.js",
+      "node_modules/engine.io-client/build/esm/util.js",
+      "node_modules/engine.io-client/build/esm/contrib/parseqs.js",
+      "node_modules/engine.io-client/build/esm/transport.js",
+      "node_modules/engine.io-client/build/esm/transports/polling.js",
+      "node_modules/engine.io-client/build/esm/contrib/has-cors.js",
+      "node_modules/engine.io-client/build/esm/transports/polling-xhr.js",
+      "node_modules/engine.io-client/build/esm/transports/websocket.js",
+      "node_modules/engine.io-client/build/esm/transports/webtransport.js",
+      "node_modules/engine.io-client/build/esm/transports/index.js",
+      "node_modules/engine.io-client/build/esm/contrib/parseuri.js",
+      "node_modules/engine.io-client/build/esm/socket.js",
+      "node_modules/engine.io-client/build/esm/transports/polling-fetch.js",
+      "node_modules/engine.io-client/build/esm/index.js",
+      "node_modules/socket.io-client/build/esm/url.js",
+      "node_modules/socket.io-parser/build/esm/is-binary.js",
+      "node_modules/socket.io-parser/build/esm/binary.js",
+      "node_modules/socket.io-parser/build/esm/index.js",
+      "node_modules/socket.io-client/build/esm/on.js",
+      "node_modules/socket.io-client/build/esm/socket.js",
+      "node_modules/socket.io-client/build/esm/contrib/backo2.js",
+      "node_modules/socket.io-client/build/esm/manager.js",
+      "node_modules/socket.io-client/build/esm/index.js"
+    ]
+  },
+  "publicTotal": {
+    "rawBytes": 395536,
+    "gzipBytes": 123044
+  },
+  "roles": {
+    "Admin": {
+      "roleChunk": "assets/AdminRoutes-BbETZipo.js",
+      "total": {
+        "rawBytes": 920830,
+        "gzipBytes": 303056
+      },
+      "beyondPublic": {
+        "rawBytes": 525294,
+        "gzipBytes": 180012
+      },
+      "files": [
+        {
+          "file": "assets/index-CALc1q2j.js",
+          "rawBytes": 338746,
+          "gzipBytes": 101957,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [
+            "src/features/auth/LoginPanel.loading-view.tsx",
+            "src/features/Landing/LandingPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/scheduler/cjs/scheduler.production.js",
+            "node_modules/scheduler/index.js",
+            "node_modules/react-dom/cjs/react-dom-client.production.js",
+            "node_modules/react-dom/client.js",
+            "node_modules/lucide-react/dist/esm/icons/arrow-left.js",
+            "node_modules/lucide-react/dist/esm/icons/arrow-right.js",
+            "node_modules/lucide-react/dist/esm/icons/arrow-up-right.js",
+            "node_modules/lucide-react/dist/esm/icons/badge-check.js",
+            "node_modules/lucide-react/dist/esm/icons/blocks.js",
+            "node_modules/lucide-react/dist/esm/icons/book-marked.js",
+            "node_modules/lucide-react/dist/esm/icons/brain.js",
+            "node_modules/lucide-react/dist/esm/icons/check.js",
+            "node_modules/lucide-react/dist/esm/icons/chevron-right.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-arrow-right.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-play.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-user-round.js",
+            "node_modules/lucide-react/dist/esm/icons/eye-off.js",
+            "node_modules/lucide-react/dist/esm/icons/eye.js",
+            "node_modules/lucide-react/dist/esm/icons/file-chart-column-increasing.js",
+            "node_modules/lucide-react/dist/esm/icons/heart.js",
+            "node_modules/lucide-react/dist/esm/icons/key-round.js",
+            "node_modules/lucide-react/dist/esm/icons/list-checks.js",
+            "node_modules/lucide-react/dist/esm/icons/log-out.js",
+            "node_modules/lucide-react/dist/esm/icons/mail.js",
+            "node_modules/lucide-react/dist/esm/icons/menu.js",
+            "node_modules/lucide-react/dist/esm/icons/siren.js",
+            "node_modules/lucide-react/dist/esm/icons/square-pen.js",
+            "node_modules/lucide-react/dist/esm/icons/user-round-check.js",
+            "node_modules/lucide-react/dist/esm/icons/user.js",
+            "node_modules/lucide-react/dist/esm/icons/users-round.js",
+            "node_modules/lucide-react/dist/esm/icons/users.js",
+            "node_modules/lucide-react/dist/esm/icons/x.js",
+            "node_modules/engine.io-parser/build/esm/commons.js",
+            "node_modules/engine.io-parser/build/esm/encodePacket.browser.js",
+            "node_modules/engine.io-parser/build/esm/contrib/base64-arraybuffer.js",
+            "node_modules/engine.io-parser/build/esm/decodePacket.browser.js",
+            "node_modules/engine.io-parser/build/esm/index.js",
+            "node_modules/@socket.io/component-emitter/lib/esm/index.js",
+            "node_modules/engine.io-client/build/esm/globals.js",
+            "node_modules/engine.io-client/build/esm/util.js",
+            "node_modules/engine.io-client/build/esm/contrib/parseqs.js",
+            "node_modules/engine.io-client/build/esm/transport.js",
+            "node_modules/engine.io-client/build/esm/transports/polling.js",
+            "node_modules/engine.io-client/build/esm/contrib/has-cors.js",
+            "node_modules/engine.io-client/build/esm/transports/polling-xhr.js",
+            "node_modules/engine.io-client/build/esm/transports/websocket.js",
+            "node_modules/engine.io-client/build/esm/transports/webtransport.js",
+            "node_modules/engine.io-client/build/esm/transports/index.js",
+            "node_modules/engine.io-client/build/esm/contrib/parseuri.js",
+            "node_modules/engine.io-client/build/esm/socket.js",
+            "node_modules/engine.io-client/build/esm/transports/polling-fetch.js",
+            "node_modules/engine.io-client/build/esm/index.js",
+            "node_modules/socket.io-client/build/esm/url.js",
+            "node_modules/socket.io-parser/build/esm/is-binary.js",
+            "node_modules/socket.io-parser/build/esm/binary.js",
+            "node_modules/socket.io-parser/build/esm/index.js",
+            "node_modules/socket.io-client/build/esm/on.js",
+            "node_modules/socket.io-client/build/esm/socket.js",
+            "node_modules/socket.io-client/build/esm/contrib/backo2.js",
+            "node_modules/socket.io-client/build/esm/manager.js",
+            "node_modules/socket.io-client/build/esm/index.js"
+          ]
+        },
+        {
+          "file": "assets/Header-CF7rdTMv.js",
+          "rawBytes": 157187,
+          "gzipBytes": 45334,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [
+            "src/features/profiles/admin/pages/help/HelpSupportPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/bell.js",
+            "node_modules/lucide-react/dist/esm/icons/book-open.js",
+            "node_modules/lucide-react/dist/esm/icons/calendar-days.js",
+            "node_modules/lucide-react/dist/esm/icons/calendar-heart.js",
+            "node_modules/lucide-react/dist/esm/icons/calendar-range.js",
+            "node_modules/lucide-react/dist/esm/icons/chevron-down.js",
+            "node_modules/lucide-react/dist/esm/icons/chevron-left.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-check.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-question-mark.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-x.js",
+            "node_modules/lucide-react/dist/esm/icons/clipboard-x.js",
+            "node_modules/lucide-react/dist/esm/icons/graduation-cap.js",
+            "node_modules/lucide-react/dist/esm/icons/info.js",
+            "node_modules/lucide-react/dist/esm/icons/layout-dashboard.js",
+            "node_modules/lucide-react/dist/esm/icons/life-buoy.js",
+            "node_modules/lucide-react/dist/esm/icons/map-pin.js",
+            "node_modules/lucide-react/dist/esm/icons/maximize-2.js",
+            "node_modules/lucide-react/dist/esm/icons/message-circle-question-mark.js",
+            "node_modules/lucide-react/dist/esm/icons/moon.js",
+            "node_modules/lucide-react/dist/esm/icons/pencil.js",
+            "node_modules/lucide-react/dist/esm/icons/phone.js",
+            "node_modules/lucide-react/dist/esm/icons/shield.js",
+            "node_modules/lucide-react/dist/esm/icons/sparkles.js",
+            "node_modules/lucide-react/dist/esm/icons/sun.js",
+            "node_modules/lucide-react/dist/esm/icons/trash-2.js",
+            "node_modules/lucide-react/dist/esm/icons/triangle-alert.js",
+            "node_modules/lucide-react/dist/esm/icons/user-round.js",
+            "node_modules/tailwind-merge/dist/bundle-mjs.mjs"
+          ]
+        },
+        {
+          "file": "assets/ManageSubjectsPage.loading-view-DhkKWucO.js",
+          "rawBytes": 51113,
+          "gzipBytes": 17157,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/loader-circle-DxY1GE3W.js",
+            "assets/plus-DSNzCDc6.js",
+            "assets/school-B0ork6uJ.js",
+            "assets/search-B-cScTIO.js",
+            "assets/user-plus-76L47Kwg.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/Teacher-x3HOHZiH.js",
+            "assets/SubjectGradeTemplateSection-h_OVj9Q_.js",
+            "assets/SubjectSectionsContext-BgTb1wUS.js",
+            "assets/academicyear.service-CshyqqlM.js",
+            "assets/subjectGradeTemplate.service-pWyI120D.js",
+            "assets/types-C7Tfi_0a.js",
+            "assets/SubjectAssignmentCard-BKMvc9ZX.js"
+          ],
+          "compositions": [
+            "src/features/profiles/admin/pages/subjects/ManageSubjectsPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/circle-alert.js"
+          ]
+        },
+        {
+          "file": "assets/jsx-runtime-aNkLRTnx.js",
+          "rawBytes": 43369,
+          "gzipBytes": 15481,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/react/cjs/react-compiler-runtime.production.js",
+            "node_modules/react/compiler-runtime.js",
+            "node_modules/react-router/dist/development/chunk-6CSD65Y2.mjs",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.js",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/toKebabCase.js",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/toCamelCase.js",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/toPascalCase.js",
+            "node_modules/lucide-react/dist/esm/defaultAttributes.js",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.js",
+            "node_modules/lucide-react/dist/esm/context.js",
+            "node_modules/lucide-react/dist/esm/Icon.js",
+            "node_modules/lucide-react/dist/esm/createLucideIcon.js",
+            "node_modules/react/cjs/react-jsx-runtime.production.js",
+            "node_modules/react/jsx-runtime.js"
+          ]
+        },
+        {
+          "file": "assets/StudentRecordsPage.loading-view-D9Dh-wqF.js",
+          "rawBytes": 27192,
+          "gzipBytes": 9709,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/download-4ZpfCl3y.js",
+            "assets/ellipsis-vertical-CAEZsHps.js",
+            "assets/upload-CnESDsZ5.js",
+            "assets/loader-circle-DxY1GE3W.js",
+            "assets/search-B-cScTIO.js",
+            "assets/user-plus-76L47Kwg.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/Studentsfilterbar-Bq_nn4tu.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/grade-section.service-5nBrQcSV.js",
+            "assets/Students-DjDH3iB3.js"
+          ],
+          "compositions": [
+            "src/features/profiles/admin/pages/studentrecords/StudentRecordsPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/AdminDashboardHome.loading-view-pP51os6S.js",
+          "rawBytes": 25233,
+          "gzipBytes": 9122,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [
+            "src/features/profiles/admin/pages/dashboard/AdminDashboardHome.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/refresh-cw.js"
+          ]
+        },
+        {
+          "file": "assets/AcademicYearPage.loading-view-Dp5tRbdY.js",
+          "rawBytes": 22003,
+          "gzipBytes": 7204,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/academicyear.service-CshyqqlM.js",
+            "assets/types-C7Tfi_0a.js"
+          ],
+          "compositions": [
+            "src/features/profiles/admin/pages/subjects/AcademicYearPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/ClassFormPage.loading-view-DeE5DgNJ.js",
+          "rawBytes": 18790,
+          "gzipBytes": 5998,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/plus-DSNzCDc6.js",
+            "assets/save-DuYu6phG.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/ClassesContext-CPpBPMyl.js",
+            "assets/classes.service-G6eMozPB.js",
+            "assets/Class-ByaEhWw5.js",
+            "assets/WorkflowStepper-D75BmqKr.js"
+          ],
+          "compositions": [
+            "src/features/profiles/admin/pages/classes/ClassFormPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/UserManagementPage.loading-view-uHzPu8i-.js",
+          "rawBytes": 18447,
+          "gzipBytes": 6420,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/crown-BYaTXTbV.js",
+            "assets/ellipsis-vertical-CAEZsHps.js",
+            "assets/search-B-cScTIO.js",
+            "assets/user-plus-76L47Kwg.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/ConfirmDeleteUserModal-rwJ1BIjA.js",
+            "assets/user-wJ1MNslM.js"
+          ],
+          "compositions": [
+            "src/features/profiles/admin/pages/usermanagement/UserManagementPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/TeacherSchedulePage.loading-view-CxLJ5bBi.js",
+          "rawBytes": 17883,
+          "gzipBytes": 6286,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/students.service-Cbil_lyp.js",
+            "assets/teachers.service-vXIDzqX-.js",
+            "assets/DashboardUI-CTIScyKT.js",
+            "assets/ProfileOverviewCard-PT1vOiYK.js"
+          ],
+          "compositions": [
+            "src/features/profiles/principal/pages/teachers/TeacherSchedulePage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/ClassPage.loading-view-CS72oIfh.js",
+          "rawBytes": 17086,
+          "gzipBytes": 6919,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/ellipsis-vertical-CAEZsHps.js",
+            "assets/plus-DSNzCDc6.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/ClassesContext-CPpBPMyl.js",
+            "assets/Class-ByaEhWw5.js",
+            "assets/Studentsfilterbar-Bq_nn4tu.js",
+            "assets/Students-DjDH3iB3.js"
+          ],
+          "compositions": [
+            "src/features/profiles/admin/pages/classes/ClassPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/AddSubjectPage.loading-view-omSn_gP-.js",
+          "rawBytes": 15462,
+          "gzipBytes": 5289,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/circle-check-big-DnwbIArs.js",
+            "assets/upload-CnESDsZ5.js",
+            "assets/loader-circle-DxY1GE3W.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/adminFeedbackModal-DqwCCa0C.js",
+            "assets/classes.service-G6eMozPB.js",
+            "assets/SubjectSectionsContext-BgTb1wUS.js",
+            "assets/academicyear.service-CshyqqlM.js",
+            "assets/subjectGradeTemplate.service-pWyI120D.js",
+            "assets/types-C7Tfi_0a.js",
+            "assets/WorkflowStepper-D75BmqKr.js"
+          ],
+          "compositions": [
+            "src/features/profiles/admin/pages/subjects/AddSubjectPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/UserFormPage.loading-view-DtrYAHNV.js",
+          "rawBytes": 14648,
+          "gzipBytes": 5100,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/circle-check-big-DnwbIArs.js",
+            "assets/save-DuYu6phG.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/adminFeedbackModal-DqwCCa0C.js",
+            "assets/user-wJ1MNslM.js",
+            "assets/WorkflowStepper-D75BmqKr.js"
+          ],
+          "compositions": [
+            "src/features/profiles/admin/pages/usermanagement/UserFormPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/CalendarPage.loading-view-Gsn0YV4x.js",
+          "rawBytes": 13975,
+          "gzipBytes": 4335,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/party-popper-BrLiT9H8.js",
+            "assets/plus-DSNzCDc6.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [
+            "src/shared/calendar/CalendarPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/calendar-plus.js",
+            "node_modules/lucide-react/dist/esm/icons/landmark.js"
+          ]
+        },
+        {
+          "file": "assets/StudentFormPage.loading-view-DXfBNlvG.js",
+          "rawBytes": 13361,
+          "gzipBytes": 4049,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/save-DuYu6phG.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/grade-section.service-5nBrQcSV.js",
+            "assets/Students-DjDH3iB3.js",
+            "assets/WorkflowStepper-D75BmqKr.js"
+          ],
+          "compositions": [
+            "src/features/profiles/admin/pages/studentrecords/StudentFormPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/AdminRoutes-BbETZipo.js",
+          "rawBytes": 13269,
+          "gzipBytes": 4304,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/CalendarPage.loading-view-Gsn0YV4x.js",
+            "assets/calendar-BaCgnYDw.js",
+            "assets/ManageSubjectsPage.loading-view-DhkKWucO.js",
+            "assets/AdminDashboardHome.loading-view-pP51os6S.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/UserFormPage.loading-view-DtrYAHNV.js",
+            "assets/ClassFormPage.loading-view-DeE5DgNJ.js",
+            "assets/ClassPage.loading-view-CS72oIfh.js",
+            "assets/ClassViewPage.loading-view-D1Y1gZa7.js",
+            "assets/ClassesContext-CPpBPMyl.js",
+            "assets/StudentFormPage.loading-view-DXfBNlvG.js",
+            "assets/StudentRecordsPage.loading-view-D9Dh-wqF.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/AcademicYearPage.loading-view-Dp5tRbdY.js",
+            "assets/AddSubjectPage.loading-view-omSn_gP-.js",
+            "assets/AdminSubjectDetailPage.loading-view-JtjWJPYh.js",
+            "assets/SubjectSectionsContext-BgTb1wUS.js",
+            "assets/UserManagementPage.loading-view-uHzPu8i-.js",
+            "assets/UserViewPage.loading-view-Su5Kfpy3.js",
+            "assets/user-wJ1MNslM.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/ClassViewPage.loading-view-D1Y1gZa7.js",
+          "rawBytes": 12534,
+          "gzipBytes": 4682,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/ClassesContext-CPpBPMyl.js",
+            "assets/Class-ByaEhWw5.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/Students-DjDH3iB3.js",
+            "assets/DashboardUI-CTIScyKT.js",
+            "assets/ProfileOverviewCard-PT1vOiYK.js",
+            "assets/StudentDirectory-m17EBdAZ.js"
+          ],
+          "compositions": [
+            "src/features/profiles/admin/pages/classes/ClassViewPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/DashboardUI-CTIScyKT.js",
+          "rawBytes": 11991,
+          "gzipBytes": 4415,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/minus-BmJzL3b8.js",
+            "assets/trending-down-6t3XXVcF.js",
+            "assets/trending-up-xv87XHQ5.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/UserViewPage.loading-view-Su5Kfpy3.js",
+          "rawBytes": 8106,
+          "gzipBytes": 3021,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/ConfirmDeleteUserModal-rwJ1BIjA.js",
+            "assets/user-wJ1MNslM.js",
+            "assets/TeacherSchedulePage-C5BDlNtc.js"
+          ],
+          "compositions": [
+            "src/features/profiles/admin/pages/usermanagement/UserViewPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/react-DxZHKUKd.js",
+          "rawBytes": 7521,
+          "gzipBytes": 2878,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/react/cjs/react.production.js",
+            "node_modules/react/index.js"
+          ]
+        },
+        {
+          "file": "assets/SubjectSectionsContext-BgTb1wUS.js",
+          "rawBytes": 6565,
+          "gzipBytes": 2132,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/types-C7Tfi_0a.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/SubjectGradeTemplateSection-h_OVj9Q_.js",
+          "rawBytes": 6156,
+          "gzipBytes": 2142,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/circle-check-big-DnwbIArs.js",
+            "assets/upload-CnESDsZ5.js",
+            "assets/loader-circle-DxY1GE3W.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/subjectGradeTemplate.service-pWyI120D.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/subjectGradeTemplate.service-pWyI120D.js",
+          "rawBytes": 6039,
+          "gzipBytes": 2701,
+          "imports": [
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/ProfileOverviewCard-PT1vOiYK.js",
+          "rawBytes": 5429,
+          "gzipBytes": 2401,
+          "imports": [
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/SubjectAssignmentCard-BKMvc9ZX.js",
+          "rawBytes": 4838,
+          "gzipBytes": 2186,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/AdminSubjectDetailPage.loading-view-JtjWJPYh.js",
+          "rawBytes": 4015,
+          "gzipBytes": 1928,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/SubjectGradeTemplateSection-h_OVj9Q_.js",
+            "assets/subjectGradeTemplate.service-pWyI120D.js"
+          ],
+          "compositions": [
+            "src/features/profiles/admin/pages/subjects/AdminSubjectDetailPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/StudentDirectoryTable-5nUp7Q8Y.js",
+          "rawBytes": 3938,
+          "gzipBytes": 1524,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/react-dom-rMUovVdx.js",
+          "rawBytes": 3568,
+          "gzipBytes": 1351,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/react-dom/cjs/react-dom.production.js",
+            "node_modules/react-dom/index.js"
+          ]
+        },
+        {
+          "file": "assets/StudentDirectory-m17EBdAZ.js",
+          "rawBytes": 3219,
+          "gzipBytes": 1540,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/StudentDirectoryTable-5nUp7Q8Y.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/Studentsfilterbar-Bq_nn4tu.js",
+          "rawBytes": 2976,
+          "gzipBytes": 1473,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/user-wJ1MNslM.js",
+          "rawBytes": 2752,
+          "gzipBytes": 1130,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/StudentsContext-D8GL98q6.js",
+          "rawBytes": 2597,
+          "gzipBytes": 1039,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/ClassesContext-CPpBPMyl.js",
+          "rawBytes": 1966,
+          "gzipBytes": 1028,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/classes.service-G6eMozPB.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/classes.service-G6eMozPB.js",
+          "rawBytes": 1864,
+          "gzipBytes": 722,
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/WorkflowStepper-D75BmqKr.js",
+          "rawBytes": 1802,
+          "gzipBytes": 867,
+          "imports": [
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/TeacherSchedulePage-C5BDlNtc.js",
+          "rawBytes": 1489,
+          "gzipBytes": 844,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/TeacherSchedulePage.loading-view-CxLJ5bBi.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/students.service-Cbil_lyp.js",
+          "rawBytes": 1280,
+          "gzipBytes": 514,
+          "imports": [
+            "assets/api.config-qjE84KfK.js",
+            "assets/academicyear.service-CshyqqlM.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/adminFeedbackModal-DqwCCa0C.js",
+          "rawBytes": 1262,
+          "gzipBytes": 739,
+          "imports": [
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/academicyear.service-CshyqqlM.js",
+          "rawBytes": 1214,
+          "gzipBytes": 464,
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/preload-helper-zJ_50EbN.js",
+          "rawBytes": 1193,
+          "gzipBytes": 681,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/chunk-aKtaBQYM.js",
+          "rawBytes": 1084,
+          "gzipBytes": 621,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/teachers.service-vXIDzqX-.js",
+          "rawBytes": 826,
+          "gzipBytes": 454,
+          "imports": [
+            "assets/api.config-qjE84KfK.js",
+            "assets/academicyear.service-CshyqqlM.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/ConfirmDeleteUserModal-rwJ1BIjA.js",
+          "rawBytes": 739,
+          "gzipBytes": 488,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/user-wJ1MNslM.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/party-popper-BrLiT9H8.js",
+          "rawBytes": 725,
+          "gzipBytes": 408,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/party-popper.js"
+          ]
+        },
+        {
+          "file": "assets/grade-section.service-5nBrQcSV.js",
+          "rawBytes": 610,
+          "gzipBytes": 330,
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/upload-CnESDsZ5.js",
+          "rawBytes": 600,
+          "gzipBytes": 327,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/file-spreadsheet.js",
+            "node_modules/lucide-react/dist/esm/icons/upload.js"
+          ]
+        },
+        {
+          "file": "assets/school-B0ork6uJ.js",
+          "rawBytes": 450,
+          "gzipBytes": 290,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/school.js"
+          ]
+        },
+        {
+          "file": "assets/crown-BYaTXTbV.js",
+          "rawBytes": 357,
+          "gzipBytes": 253,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/crown.js"
+          ]
+        },
+        {
+          "file": "assets/save-DuYu6phG.js",
+          "rawBytes": 322,
+          "gzipBytes": 224,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/save.js"
+          ]
+        },
+        {
+          "file": "assets/Class-ByaEhWw5.js",
+          "rawBytes": 310,
+          "gzipBytes": 238,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/user-plus-76L47Kwg.js",
+          "rawBytes": 305,
+          "gzipBytes": 229,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/user-plus.js"
+          ]
+        },
+        {
+          "file": "assets/types-C7Tfi_0a.js",
+          "rawBytes": 280,
+          "gzipBytes": 161,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/calendar-BaCgnYDw.js",
+          "rawBytes": 252,
+          "gzipBytes": 198,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/calendar.js"
+          ]
+        },
+        {
+          "file": "assets/ellipsis-vertical-CAEZsHps.js",
+          "rawBytes": 230,
+          "gzipBytes": 168,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/ellipsis-vertical.js"
+          ]
+        },
+        {
+          "file": "assets/download-4ZpfCl3y.js",
+          "rawBytes": 227,
+          "gzipBytes": 188,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/download.js"
+          ]
+        },
+        {
+          "file": "assets/Students-DjDH3iB3.js",
+          "rawBytes": 214,
+          "gzipBytes": 159,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/circle-check-big-DnwbIArs.js",
+          "rawBytes": 189,
+          "gzipBytes": 178,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/circle-check-big.js"
+          ]
+        },
+        {
+          "file": "assets/trending-down-6t3XXVcF.js",
+          "rawBytes": 173,
+          "gzipBytes": 166,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/trending-down.js"
+          ]
+        },
+        {
+          "file": "assets/trending-up-xv87XHQ5.js",
+          "rawBytes": 170,
+          "gzipBytes": 166,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/trending-up.js"
+          ]
+        },
+        {
+          "file": "assets/search-B-cScTIO.js",
+          "rawBytes": 169,
+          "gzipBytes": 164,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/search.js"
+          ]
+        },
+        {
+          "file": "assets/plus-DSNzCDc6.js",
+          "rawBytes": 148,
+          "gzipBytes": 147,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/plus.js"
+          ]
+        },
+        {
+          "file": "assets/loader-circle-DxY1GE3W.js",
+          "rawBytes": 139,
+          "gzipBytes": 151,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/loader-circle.js"
+          ]
+        },
+        {
+          "file": "assets/minus-BmJzL3b8.js",
+          "rawBytes": 112,
+          "gzipBytes": 129,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/minus.js"
+          ]
+        },
+        {
+          "file": "assets/Teacher-x3HOHZiH.js",
+          "rawBytes": 66,
+          "gzipBytes": 78,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/api.config-qjE84KfK.js",
+          "rawBytes": 55,
+          "gzipBytes": 75,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        }
+      ],
+      "eagerCompositions": [
+        "src/features/auth/LoginPanel.loading-view.tsx",
+        "src/features/Landing/LandingPage.loading-view.tsx",
+        "src/features/profiles/admin/pages/help/HelpSupportPage.loading-view.tsx",
+        "src/features/profiles/admin/pages/subjects/ManageSubjectsPage.loading-view.tsx",
+        "src/features/profiles/admin/pages/studentrecords/StudentRecordsPage.loading-view.tsx",
+        "src/features/profiles/admin/pages/dashboard/AdminDashboardHome.loading-view.tsx",
+        "src/features/profiles/admin/pages/subjects/AcademicYearPage.loading-view.tsx",
+        "src/features/profiles/admin/pages/classes/ClassFormPage.loading-view.tsx",
+        "src/features/profiles/admin/pages/usermanagement/UserManagementPage.loading-view.tsx",
+        "src/features/profiles/principal/pages/teachers/TeacherSchedulePage.loading-view.tsx",
+        "src/features/profiles/admin/pages/classes/ClassPage.loading-view.tsx",
+        "src/features/profiles/admin/pages/subjects/AddSubjectPage.loading-view.tsx",
+        "src/features/profiles/admin/pages/usermanagement/UserFormPage.loading-view.tsx",
+        "src/shared/calendar/CalendarPage.loading-view.tsx",
+        "src/features/profiles/admin/pages/studentrecords/StudentFormPage.loading-view.tsx",
+        "src/features/profiles/admin/pages/classes/ClassViewPage.loading-view.tsx",
+        "src/features/profiles/admin/pages/usermanagement/UserViewPage.loading-view.tsx",
+        "src/features/profiles/admin/pages/subjects/AdminSubjectDetailPage.loading-view.tsx"
+      ]
+    },
+    "Teacher": {
+      "roleChunk": "assets/TeacherRoutes-BcVPtBEz.js",
+      "total": {
+        "rawBytes": 976485,
+        "gzipBytes": 316079
+      },
+      "beyondPublic": {
+        "rawBytes": 580949,
+        "gzipBytes": 193035
+      },
+      "files": [
+        {
+          "file": "assets/index-CALc1q2j.js",
+          "rawBytes": 338746,
+          "gzipBytes": 101957,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [
+            "src/features/auth/LoginPanel.loading-view.tsx",
+            "src/features/Landing/LandingPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/scheduler/cjs/scheduler.production.js",
+            "node_modules/scheduler/index.js",
+            "node_modules/react-dom/cjs/react-dom-client.production.js",
+            "node_modules/react-dom/client.js",
+            "node_modules/lucide-react/dist/esm/icons/arrow-left.js",
+            "node_modules/lucide-react/dist/esm/icons/arrow-right.js",
+            "node_modules/lucide-react/dist/esm/icons/arrow-up-right.js",
+            "node_modules/lucide-react/dist/esm/icons/badge-check.js",
+            "node_modules/lucide-react/dist/esm/icons/blocks.js",
+            "node_modules/lucide-react/dist/esm/icons/book-marked.js",
+            "node_modules/lucide-react/dist/esm/icons/brain.js",
+            "node_modules/lucide-react/dist/esm/icons/check.js",
+            "node_modules/lucide-react/dist/esm/icons/chevron-right.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-arrow-right.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-play.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-user-round.js",
+            "node_modules/lucide-react/dist/esm/icons/eye-off.js",
+            "node_modules/lucide-react/dist/esm/icons/eye.js",
+            "node_modules/lucide-react/dist/esm/icons/file-chart-column-increasing.js",
+            "node_modules/lucide-react/dist/esm/icons/heart.js",
+            "node_modules/lucide-react/dist/esm/icons/key-round.js",
+            "node_modules/lucide-react/dist/esm/icons/list-checks.js",
+            "node_modules/lucide-react/dist/esm/icons/log-out.js",
+            "node_modules/lucide-react/dist/esm/icons/mail.js",
+            "node_modules/lucide-react/dist/esm/icons/menu.js",
+            "node_modules/lucide-react/dist/esm/icons/siren.js",
+            "node_modules/lucide-react/dist/esm/icons/square-pen.js",
+            "node_modules/lucide-react/dist/esm/icons/user-round-check.js",
+            "node_modules/lucide-react/dist/esm/icons/user.js",
+            "node_modules/lucide-react/dist/esm/icons/users-round.js",
+            "node_modules/lucide-react/dist/esm/icons/users.js",
+            "node_modules/lucide-react/dist/esm/icons/x.js",
+            "node_modules/engine.io-parser/build/esm/commons.js",
+            "node_modules/engine.io-parser/build/esm/encodePacket.browser.js",
+            "node_modules/engine.io-parser/build/esm/contrib/base64-arraybuffer.js",
+            "node_modules/engine.io-parser/build/esm/decodePacket.browser.js",
+            "node_modules/engine.io-parser/build/esm/index.js",
+            "node_modules/@socket.io/component-emitter/lib/esm/index.js",
+            "node_modules/engine.io-client/build/esm/globals.js",
+            "node_modules/engine.io-client/build/esm/util.js",
+            "node_modules/engine.io-client/build/esm/contrib/parseqs.js",
+            "node_modules/engine.io-client/build/esm/transport.js",
+            "node_modules/engine.io-client/build/esm/transports/polling.js",
+            "node_modules/engine.io-client/build/esm/contrib/has-cors.js",
+            "node_modules/engine.io-client/build/esm/transports/polling-xhr.js",
+            "node_modules/engine.io-client/build/esm/transports/websocket.js",
+            "node_modules/engine.io-client/build/esm/transports/webtransport.js",
+            "node_modules/engine.io-client/build/esm/transports/index.js",
+            "node_modules/engine.io-client/build/esm/contrib/parseuri.js",
+            "node_modules/engine.io-client/build/esm/socket.js",
+            "node_modules/engine.io-client/build/esm/transports/polling-fetch.js",
+            "node_modules/engine.io-client/build/esm/index.js",
+            "node_modules/socket.io-client/build/esm/url.js",
+            "node_modules/socket.io-parser/build/esm/is-binary.js",
+            "node_modules/socket.io-parser/build/esm/binary.js",
+            "node_modules/socket.io-parser/build/esm/index.js",
+            "node_modules/socket.io-client/build/esm/on.js",
+            "node_modules/socket.io-client/build/esm/socket.js",
+            "node_modules/socket.io-client/build/esm/contrib/backo2.js",
+            "node_modules/socket.io-client/build/esm/manager.js",
+            "node_modules/socket.io-client/build/esm/index.js"
+          ]
+        },
+        {
+          "file": "assets/Header-CF7rdTMv.js",
+          "rawBytes": 157187,
+          "gzipBytes": 45334,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [
+            "src/features/profiles/admin/pages/help/HelpSupportPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/bell.js",
+            "node_modules/lucide-react/dist/esm/icons/book-open.js",
+            "node_modules/lucide-react/dist/esm/icons/calendar-days.js",
+            "node_modules/lucide-react/dist/esm/icons/calendar-heart.js",
+            "node_modules/lucide-react/dist/esm/icons/calendar-range.js",
+            "node_modules/lucide-react/dist/esm/icons/chevron-down.js",
+            "node_modules/lucide-react/dist/esm/icons/chevron-left.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-check.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-question-mark.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-x.js",
+            "node_modules/lucide-react/dist/esm/icons/clipboard-x.js",
+            "node_modules/lucide-react/dist/esm/icons/graduation-cap.js",
+            "node_modules/lucide-react/dist/esm/icons/info.js",
+            "node_modules/lucide-react/dist/esm/icons/layout-dashboard.js",
+            "node_modules/lucide-react/dist/esm/icons/life-buoy.js",
+            "node_modules/lucide-react/dist/esm/icons/map-pin.js",
+            "node_modules/lucide-react/dist/esm/icons/maximize-2.js",
+            "node_modules/lucide-react/dist/esm/icons/message-circle-question-mark.js",
+            "node_modules/lucide-react/dist/esm/icons/moon.js",
+            "node_modules/lucide-react/dist/esm/icons/pencil.js",
+            "node_modules/lucide-react/dist/esm/icons/phone.js",
+            "node_modules/lucide-react/dist/esm/icons/shield.js",
+            "node_modules/lucide-react/dist/esm/icons/sparkles.js",
+            "node_modules/lucide-react/dist/esm/icons/sun.js",
+            "node_modules/lucide-react/dist/esm/icons/trash-2.js",
+            "node_modules/lucide-react/dist/esm/icons/triangle-alert.js",
+            "node_modules/lucide-react/dist/esm/icons/user-round.js",
+            "node_modules/tailwind-merge/dist/bundle-mjs.mjs"
+          ]
+        },
+        {
+          "file": "assets/SubjectRecordsPage.loading-view-BzRvQ--p.js",
+          "rawBytes": 54491,
+          "gzipBytes": 16432,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/download-4ZpfCl3y.js",
+            "assets/send-BVOWpxsv.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/holistic.service-zOo9fL3s.js",
+            "assets/Grading-BxF5tKfg.js",
+            "assets/subjectGradeTemplate.service-73AD7h0c.js",
+            "assets/subjectGrading.service-B8KnN8HV.js"
+          ],
+          "compositions": [
+            "src/features/profiles/teacher/pages/subjects/detail/SubjectRecordsPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/jsx-runtime-aNkLRTnx.js",
+          "rawBytes": 43369,
+          "gzipBytes": 15481,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/react/cjs/react-compiler-runtime.production.js",
+            "node_modules/react/compiler-runtime.js",
+            "node_modules/react-router/dist/development/chunk-6CSD65Y2.mjs",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.js",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/toKebabCase.js",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/toCamelCase.js",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/toPascalCase.js",
+            "node_modules/lucide-react/dist/esm/defaultAttributes.js",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.js",
+            "node_modules/lucide-react/dist/esm/context.js",
+            "node_modules/lucide-react/dist/esm/Icon.js",
+            "node_modules/lucide-react/dist/esm/createLucideIcon.js",
+            "node_modules/react/cjs/react-jsx-runtime.production.js",
+            "node_modules/react/jsx-runtime.js"
+          ]
+        },
+        {
+          "file": "assets/TeacherAttendanceRecordsPage.loading-view-CL-GultO.js",
+          "rawBytes": 42609,
+          "gzipBytes": 14082,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/calendar-check-C9_qLLPf.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/useSelectedAdvisorySection.service-DfNQYuA9.js",
+            "assets/Grading-BxF5tKfg.js"
+          ],
+          "compositions": [
+            "src/features/profiles/teacher/pages/attendance/TeacherAttendanceRecordsPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/SubjectDetailPage.loading-view-DZQiQJxU.js",
+          "rawBytes": 42588,
+          "gzipBytes": 13403,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/calendar-BaCgnYDw.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/plus-DSNzCDc6.js",
+            "assets/save-DuYu6phG.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/Grading-BxF5tKfg.js",
+            "assets/subjectGradeTemplate.service-73AD7h0c.js",
+            "assets/subjectGrading.service-B8KnN8HV.js"
+          ],
+          "compositions": [
+            "src/features/profiles/teacher/pages/subjects/detail/SubjectDetailPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/file-text.js",
+            "node_modules/lucide-react/dist/esm/icons/tag.js"
+          ]
+        },
+        {
+          "file": "assets/StudentDetailPage.loading-view-DK7u9ww7.js",
+          "rawBytes": 38671,
+          "gzipBytes": 12586,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/calendar-BaCgnYDw.js",
+            "assets/chart-column-bJmgof9X.js",
+            "assets/layout-grid-Cgsueyq8.js",
+            "assets/shield-check-CPUaNMWo.js",
+            "assets/trending-up-xv87XHQ5.js",
+            "assets/zap-C6mNkzga.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/ClassesContext-CPpBPMyl.js",
+            "assets/Teacher-x3HOHZiH.js",
+            "assets/StudentsContext-D8GL98q6.js"
+          ],
+          "compositions": [
+            "src/shared/components/StudentDetailPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/smile.js",
+            "node_modules/lucide-react/dist/esm/icons/text-align-justify.js"
+          ]
+        },
+        {
+          "file": "assets/TeacherDashboardHome.loading-view-B_9CuF20.js",
+          "rawBytes": 38228,
+          "gzipBytes": 12595,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/clock-3-DJzs4NSX.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [
+            "src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/clipboard-check.js"
+          ]
+        },
+        {
+          "file": "assets/GradePage.loading-view-PhpRD7Zy.js",
+          "rawBytes": 32143,
+          "gzipBytes": 9020,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/clock-DYYi5eLs.js",
+            "assets/download-4ZpfCl3y.js",
+            "assets/loader-circle-DxY1GE3W.js",
+            "assets/search-B-cScTIO.js",
+            "assets/send-BVOWpxsv.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/subjectGrading.service-B8KnN8HV.js"
+          ],
+          "compositions": [
+            "src/features/profiles/teacher/pages/grades/GradePage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/funnel.js",
+            "node_modules/lucide-react/dist/esm/icons/history.js",
+            "node_modules/lucide-react/dist/esm/icons/square-check-big.js",
+            "node_modules/lucide-react/dist/esm/icons/square.js"
+          ]
+        },
+        {
+          "file": "assets/HolisticDomainTrendsPage.loading-view-B-Ghcaqc.js",
+          "rawBytes": 25378,
+          "gzipBytes": 9003,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/activity-UJFE1vfX.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/compass-SNsI0u2e.js",
+            "assets/minus-BmJzL3b8.js",
+            "assets/trending-down-6t3XXVcF.js",
+            "assets/trending-up-xv87XHQ5.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/DashboardUI-CTIScyKT.js",
+            "assets/useSelectedAdvisorySection.service-DfNQYuA9.js",
+            "assets/holistic.service-zOo9fL3s.js",
+            "assets/DeferredChart-bu8gzaJn.js"
+          ],
+          "compositions": [
+            "src/features/profiles/teacher/pages/holistic/HolisticDomainTrendsPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/StudentHolisticProfilePage.loading-view-DmemXyPj.js",
+          "rawBytes": 18453,
+          "gzipBytes": 6260,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/minus-BmJzL3b8.js",
+            "assets/trending-down-6t3XXVcF.js",
+            "assets/trending-up-xv87XHQ5.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/holistic.service-zOo9fL3s.js"
+          ],
+          "compositions": [
+            "src/features/profiles/teacher/pages/holistic/StudentHolisticProfilePage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/calendar-clock.js"
+          ]
+        },
+        {
+          "file": "assets/TeacherAttendancePage.loading-view-DecbOAwx.js",
+          "rawBytes": 17162,
+          "gzipBytes": 6538,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/useSelectedAdvisorySection.service-DfNQYuA9.js",
+            "assets/Grading-BxF5tKfg.js"
+          ],
+          "compositions": [
+            "src/features/profiles/teacher/pages/attendance/TeacherAttendancePage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/check-check.js"
+          ]
+        },
+        {
+          "file": "assets/HolisticOverviewPage.loading-view-D4d7tWRk.js",
+          "rawBytes": 16884,
+          "gzipBytes": 6488,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/activity-UJFE1vfX.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/search-B-cScTIO.js",
+            "assets/trending-down-6t3XXVcF.js",
+            "assets/trending-up-xv87XHQ5.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/useSelectedAdvisorySection.service-DfNQYuA9.js",
+            "assets/holistic.service-zOo9fL3s.js"
+          ],
+          "compositions": [
+            "src/features/profiles/teacher/pages/holistic/HolisticOverviewPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/TeacherRoutes-BcVPtBEz.js",
+          "rawBytes": 13258,
+          "gzipBytes": 4529,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/StudentHolisticProfilePage.loading-view-DmemXyPj.js",
+            "assets/TeacherAttendancePage.loading-view-DecbOAwx.js",
+            "assets/TeacherDashboardHome.loading-view-B_9CuF20.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/SubjectDetailPage.loading-view-DZQiQJxU.js",
+            "assets/GradePage.loading-view-PhpRD7Zy.js",
+            "assets/StudentDetailPage.loading-view-DK7u9ww7.js",
+            "assets/square-star-Cywu8jWx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/ClassesContext-CPpBPMyl.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/TeacherAttendanceRecordsPage.loading-view-CL-GultO.js",
+            "assets/HolisticDomainTrendsPage.loading-view-B-Ghcaqc.js",
+            "assets/HolisticOverviewPage.loading-view-D4d7tWRk.js",
+            "assets/AdvisoryRosterPage.loading-view-cfuPiMvy.js",
+            "assets/SubjectClassListPage.loading-view-DQey4zQk.js",
+            "assets/SubjectPage.loading-view-sw9AA-If.js",
+            "assets/SubjectRecordsPage.loading-view-BzRvQ--p.js",
+            "assets/CalendarPageView.loading-view-Ci2_9jo7.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/library-big.js",
+            "node_modules/lucide-react/dist/esm/icons/list-todo.js",
+            "node_modules/lucide-react/dist/esm/icons/table-2.js"
+          ]
+        },
+        {
+          "file": "assets/SubjectPage.loading-view-sw9AA-If.js",
+          "rawBytes": 12232,
+          "gzipBytes": 4948,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/types-C7Tfi_0a.js",
+            "assets/DashboardUI-CTIScyKT.js",
+            "assets/SubjectAssignmentCard-BKMvc9ZX.js"
+          ],
+          "compositions": [
+            "src/features/profiles/teacher/pages/subjects/SubjectPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/DashboardUI-CTIScyKT.js",
+          "rawBytes": 11991,
+          "gzipBytes": 4415,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/minus-BmJzL3b8.js",
+            "assets/trending-down-6t3XXVcF.js",
+            "assets/trending-up-xv87XHQ5.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/AdvisoryRosterPage.loading-view-cfuPiMvy.js",
+          "rawBytes": 9981,
+          "gzipBytes": 4003,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/download-4ZpfCl3y.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/useSelectedAdvisorySection.service-DfNQYuA9.js",
+            "assets/StudentDirectoryTable-5nUp7Q8Y.js"
+          ],
+          "compositions": [
+            "src/features/profiles/teacher/pages/roster/AdvisoryRosterPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/SubjectClassListPage.loading-view-DQey4zQk.js",
+          "rawBytes": 9754,
+          "gzipBytes": 3660,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/download-4ZpfCl3y.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [
+            "src/features/profiles/teacher/pages/subjects/SubjectClassListPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/react-DxZHKUKd.js",
+          "rawBytes": 7521,
+          "gzipBytes": 2878,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/react/cjs/react.production.js",
+            "node_modules/react/index.js"
+          ]
+        },
+        {
+          "file": "assets/DeferredChart-bu8gzaJn.js",
+          "rawBytes": 7169,
+          "gzipBytes": 3187,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/SubjectAssignmentCard-BKMvc9ZX.js",
+          "rawBytes": 4838,
+          "gzipBytes": 2186,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/StudentDirectoryTable-5nUp7Q8Y.js",
+          "rawBytes": 3938,
+          "gzipBytes": 1524,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/useSelectedAdvisorySection.service-DfNQYuA9.js",
+          "rawBytes": 3589,
+          "gzipBytes": 1879,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/react-dom-rMUovVdx.js",
+          "rawBytes": 3568,
+          "gzipBytes": 1351,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/react-dom/cjs/react-dom.production.js",
+            "node_modules/react-dom/index.js"
+          ]
+        },
+        {
+          "file": "assets/CalendarPageView.loading-view-Ci2_9jo7.js",
+          "rawBytes": 2900,
+          "gzipBytes": 1117,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [
+            "src/shared/calendar/CalendarPageView.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/StudentsContext-D8GL98q6.js",
+          "rawBytes": 2597,
+          "gzipBytes": 1039,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/subjectGrading.service-B8KnN8HV.js",
+          "rawBytes": 2091,
+          "gzipBytes": 844,
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/ClassesContext-CPpBPMyl.js",
+          "rawBytes": 1966,
+          "gzipBytes": 1028,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/classes.service-G6eMozPB.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/classes.service-G6eMozPB.js",
+          "rawBytes": 1864,
+          "gzipBytes": 722,
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/Grading-BxF5tKfg.js",
+          "rawBytes": 1276,
+          "gzipBytes": 636,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/subjectGradeTemplate.service-73AD7h0c.js",
+          "rawBytes": 1195,
+          "gzipBytes": 687,
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/preload-helper-zJ_50EbN.js",
+          "rawBytes": 1193,
+          "gzipBytes": 681,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/chunk-aKtaBQYM.js",
+          "rawBytes": 1084,
+          "gzipBytes": 621,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/holistic.service-zOo9fL3s.js",
+          "rawBytes": 1015,
+          "gzipBytes": 537,
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/square-star-Cywu8jWx.js",
+          "rawBytes": 490,
+          "gzipBytes": 317,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/square-star.js"
+          ]
+        },
+        {
+          "file": "assets/clipboard-list-CamLZ1O6.js",
+          "rawBytes": 406,
+          "gzipBytes": 258,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/clipboard-list.js"
+          ]
+        },
+        {
+          "file": "assets/layout-grid-Cgsueyq8.js",
+          "rawBytes": 341,
+          "gzipBytes": 190,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/layout-grid.js"
+          ]
+        },
+        {
+          "file": "assets/save-DuYu6phG.js",
+          "rawBytes": 322,
+          "gzipBytes": 224,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/save.js"
+          ]
+        },
+        {
+          "file": "assets/shield-check-CPUaNMWo.js",
+          "rawBytes": 315,
+          "gzipBytes": 246,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/shield-check.js"
+          ]
+        },
+        {
+          "file": "assets/calendar-check-C9_qLLPf.js",
+          "rawBytes": 300,
+          "gzipBytes": 223,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/calendar-check.js"
+          ]
+        },
+        {
+          "file": "assets/send-BVOWpxsv.js",
+          "rawBytes": 285,
+          "gzipBytes": 226,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/send.js"
+          ]
+        },
+        {
+          "file": "assets/types-C7Tfi_0a.js",
+          "rawBytes": 280,
+          "gzipBytes": 161,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/zap-C6mNkzga.js",
+          "rawBytes": 257,
+          "gzipBytes": 203,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/zap.js"
+          ]
+        },
+        {
+          "file": "assets/calendar-BaCgnYDw.js",
+          "rawBytes": 252,
+          "gzipBytes": 198,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/calendar.js"
+          ]
+        },
+        {
+          "file": "assets/chart-column-bJmgof9X.js",
+          "rawBytes": 246,
+          "gzipBytes": 190,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/chart-column.js"
+          ]
+        },
+        {
+          "file": "assets/compass-SNsI0u2e.js",
+          "rawBytes": 246,
+          "gzipBytes": 206,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/compass.js"
+          ]
+        },
+        {
+          "file": "assets/activity-UJFE1vfX.js",
+          "rawBytes": 229,
+          "gzipBytes": 197,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/activity.js"
+          ]
+        },
+        {
+          "file": "assets/download-4ZpfCl3y.js",
+          "rawBytes": 227,
+          "gzipBytes": 188,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/download.js"
+          ]
+        },
+        {
+          "file": "assets/trending-down-6t3XXVcF.js",
+          "rawBytes": 173,
+          "gzipBytes": 166,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/trending-down.js"
+          ]
+        },
+        {
+          "file": "assets/trending-up-xv87XHQ5.js",
+          "rawBytes": 170,
+          "gzipBytes": 166,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/trending-up.js"
+          ]
+        },
+        {
+          "file": "assets/search-B-cScTIO.js",
+          "rawBytes": 169,
+          "gzipBytes": 164,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/search.js"
+          ]
+        },
+        {
+          "file": "assets/clock-3-DJzs4NSX.js",
+          "rawBytes": 164,
+          "gzipBytes": 163,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/clock-3.js"
+          ]
+        },
+        {
+          "file": "assets/clock-DYYi5eLs.js",
+          "rawBytes": 164,
+          "gzipBytes": 162,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/clock.js"
+          ]
+        },
+        {
+          "file": "assets/plus-DSNzCDc6.js",
+          "rawBytes": 148,
+          "gzipBytes": 147,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/plus.js"
+          ]
+        },
+        {
+          "file": "assets/loader-circle-DxY1GE3W.js",
+          "rawBytes": 139,
+          "gzipBytes": 151,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/loader-circle.js"
+          ]
+        },
+        {
+          "file": "assets/minus-BmJzL3b8.js",
+          "rawBytes": 112,
+          "gzipBytes": 129,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/minus.js"
+          ]
+        },
+        {
+          "file": "assets/Teacher-x3HOHZiH.js",
+          "rawBytes": 66,
+          "gzipBytes": 78,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/api.config-qjE84KfK.js",
+          "rawBytes": 55,
+          "gzipBytes": 75,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        }
+      ],
+      "eagerCompositions": [
+        "src/features/auth/LoginPanel.loading-view.tsx",
+        "src/features/Landing/LandingPage.loading-view.tsx",
+        "src/features/profiles/admin/pages/help/HelpSupportPage.loading-view.tsx",
+        "src/features/profiles/teacher/pages/subjects/detail/SubjectRecordsPage.loading-view.tsx",
+        "src/features/profiles/teacher/pages/attendance/TeacherAttendanceRecordsPage.loading-view.tsx",
+        "src/features/profiles/teacher/pages/subjects/detail/SubjectDetailPage.loading-view.tsx",
+        "src/shared/components/StudentDetailPage.loading-view.tsx",
+        "src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.loading-view.tsx",
+        "src/features/profiles/teacher/pages/grades/GradePage.loading-view.tsx",
+        "src/features/profiles/teacher/pages/holistic/HolisticDomainTrendsPage.loading-view.tsx",
+        "src/features/profiles/teacher/pages/holistic/StudentHolisticProfilePage.loading-view.tsx",
+        "src/features/profiles/teacher/pages/attendance/TeacherAttendancePage.loading-view.tsx",
+        "src/features/profiles/teacher/pages/holistic/HolisticOverviewPage.loading-view.tsx",
+        "src/features/profiles/teacher/pages/subjects/SubjectPage.loading-view.tsx",
+        "src/features/profiles/teacher/pages/roster/AdvisoryRosterPage.loading-view.tsx",
+        "src/features/profiles/teacher/pages/subjects/SubjectClassListPage.loading-view.tsx",
+        "src/shared/calendar/CalendarPageView.loading-view.tsx"
+      ]
+    },
+    "Principal": {
+      "roleChunk": "assets/PrincipalRoutes-CL94VgOn.js",
+      "total": {
+        "rawBytes": 811799,
+        "gzipBytes": 264886
+      },
+      "beyondPublic": {
+        "rawBytes": 416263,
+        "gzipBytes": 141842
+      },
+      "files": [
+        {
+          "file": "assets/index-CALc1q2j.js",
+          "rawBytes": 338746,
+          "gzipBytes": 101957,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [
+            "src/features/auth/LoginPanel.loading-view.tsx",
+            "src/features/Landing/LandingPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/scheduler/cjs/scheduler.production.js",
+            "node_modules/scheduler/index.js",
+            "node_modules/react-dom/cjs/react-dom-client.production.js",
+            "node_modules/react-dom/client.js",
+            "node_modules/lucide-react/dist/esm/icons/arrow-left.js",
+            "node_modules/lucide-react/dist/esm/icons/arrow-right.js",
+            "node_modules/lucide-react/dist/esm/icons/arrow-up-right.js",
+            "node_modules/lucide-react/dist/esm/icons/badge-check.js",
+            "node_modules/lucide-react/dist/esm/icons/blocks.js",
+            "node_modules/lucide-react/dist/esm/icons/book-marked.js",
+            "node_modules/lucide-react/dist/esm/icons/brain.js",
+            "node_modules/lucide-react/dist/esm/icons/check.js",
+            "node_modules/lucide-react/dist/esm/icons/chevron-right.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-arrow-right.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-play.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-user-round.js",
+            "node_modules/lucide-react/dist/esm/icons/eye-off.js",
+            "node_modules/lucide-react/dist/esm/icons/eye.js",
+            "node_modules/lucide-react/dist/esm/icons/file-chart-column-increasing.js",
+            "node_modules/lucide-react/dist/esm/icons/heart.js",
+            "node_modules/lucide-react/dist/esm/icons/key-round.js",
+            "node_modules/lucide-react/dist/esm/icons/list-checks.js",
+            "node_modules/lucide-react/dist/esm/icons/log-out.js",
+            "node_modules/lucide-react/dist/esm/icons/mail.js",
+            "node_modules/lucide-react/dist/esm/icons/menu.js",
+            "node_modules/lucide-react/dist/esm/icons/siren.js",
+            "node_modules/lucide-react/dist/esm/icons/square-pen.js",
+            "node_modules/lucide-react/dist/esm/icons/user-round-check.js",
+            "node_modules/lucide-react/dist/esm/icons/user.js",
+            "node_modules/lucide-react/dist/esm/icons/users-round.js",
+            "node_modules/lucide-react/dist/esm/icons/users.js",
+            "node_modules/lucide-react/dist/esm/icons/x.js",
+            "node_modules/engine.io-parser/build/esm/commons.js",
+            "node_modules/engine.io-parser/build/esm/encodePacket.browser.js",
+            "node_modules/engine.io-parser/build/esm/contrib/base64-arraybuffer.js",
+            "node_modules/engine.io-parser/build/esm/decodePacket.browser.js",
+            "node_modules/engine.io-parser/build/esm/index.js",
+            "node_modules/@socket.io/component-emitter/lib/esm/index.js",
+            "node_modules/engine.io-client/build/esm/globals.js",
+            "node_modules/engine.io-client/build/esm/util.js",
+            "node_modules/engine.io-client/build/esm/contrib/parseqs.js",
+            "node_modules/engine.io-client/build/esm/transport.js",
+            "node_modules/engine.io-client/build/esm/transports/polling.js",
+            "node_modules/engine.io-client/build/esm/contrib/has-cors.js",
+            "node_modules/engine.io-client/build/esm/transports/polling-xhr.js",
+            "node_modules/engine.io-client/build/esm/transports/websocket.js",
+            "node_modules/engine.io-client/build/esm/transports/webtransport.js",
+            "node_modules/engine.io-client/build/esm/transports/index.js",
+            "node_modules/engine.io-client/build/esm/contrib/parseuri.js",
+            "node_modules/engine.io-client/build/esm/socket.js",
+            "node_modules/engine.io-client/build/esm/transports/polling-fetch.js",
+            "node_modules/engine.io-client/build/esm/index.js",
+            "node_modules/socket.io-client/build/esm/url.js",
+            "node_modules/socket.io-parser/build/esm/is-binary.js",
+            "node_modules/socket.io-parser/build/esm/binary.js",
+            "node_modules/socket.io-parser/build/esm/index.js",
+            "node_modules/socket.io-client/build/esm/on.js",
+            "node_modules/socket.io-client/build/esm/socket.js",
+            "node_modules/socket.io-client/build/esm/contrib/backo2.js",
+            "node_modules/socket.io-client/build/esm/manager.js",
+            "node_modules/socket.io-client/build/esm/index.js"
+          ]
+        },
+        {
+          "file": "assets/Header-CF7rdTMv.js",
+          "rawBytes": 157187,
+          "gzipBytes": 45334,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [
+            "src/features/profiles/admin/pages/help/HelpSupportPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/bell.js",
+            "node_modules/lucide-react/dist/esm/icons/book-open.js",
+            "node_modules/lucide-react/dist/esm/icons/calendar-days.js",
+            "node_modules/lucide-react/dist/esm/icons/calendar-heart.js",
+            "node_modules/lucide-react/dist/esm/icons/calendar-range.js",
+            "node_modules/lucide-react/dist/esm/icons/chevron-down.js",
+            "node_modules/lucide-react/dist/esm/icons/chevron-left.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-check.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-question-mark.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-x.js",
+            "node_modules/lucide-react/dist/esm/icons/clipboard-x.js",
+            "node_modules/lucide-react/dist/esm/icons/graduation-cap.js",
+            "node_modules/lucide-react/dist/esm/icons/info.js",
+            "node_modules/lucide-react/dist/esm/icons/layout-dashboard.js",
+            "node_modules/lucide-react/dist/esm/icons/life-buoy.js",
+            "node_modules/lucide-react/dist/esm/icons/map-pin.js",
+            "node_modules/lucide-react/dist/esm/icons/maximize-2.js",
+            "node_modules/lucide-react/dist/esm/icons/message-circle-question-mark.js",
+            "node_modules/lucide-react/dist/esm/icons/moon.js",
+            "node_modules/lucide-react/dist/esm/icons/pencil.js",
+            "node_modules/lucide-react/dist/esm/icons/phone.js",
+            "node_modules/lucide-react/dist/esm/icons/shield.js",
+            "node_modules/lucide-react/dist/esm/icons/sparkles.js",
+            "node_modules/lucide-react/dist/esm/icons/sun.js",
+            "node_modules/lucide-react/dist/esm/icons/trash-2.js",
+            "node_modules/lucide-react/dist/esm/icons/triangle-alert.js",
+            "node_modules/lucide-react/dist/esm/icons/user-round.js",
+            "node_modules/tailwind-merge/dist/bundle-mjs.mjs"
+          ]
+        },
+        {
+          "file": "assets/PrincipalDashboardHome.loading-view-Dnr67Jrf.js",
+          "rawBytes": 46193,
+          "gzipBytes": 13826,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/chart-column-bJmgof9X.js",
+            "assets/trending-up-xv87XHQ5.js",
+            "assets/trophy-D37JXsQ2.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/PrincipalChartLoading-BogomJvh.js",
+            "assets/DashboardUI-CTIScyKT.js",
+            "assets/DeferredChart-bu8gzaJn.js"
+          ],
+          "compositions": [
+            "src/features/profiles/principal/pages/dashboard/PrincipalDashboardHome.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/jsx-runtime-aNkLRTnx.js",
+          "rawBytes": 43369,
+          "gzipBytes": 15481,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/react/cjs/react-compiler-runtime.production.js",
+            "node_modules/react/compiler-runtime.js",
+            "node_modules/react-router/dist/development/chunk-6CSD65Y2.mjs",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.js",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/toKebabCase.js",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/toCamelCase.js",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/toPascalCase.js",
+            "node_modules/lucide-react/dist/esm/defaultAttributes.js",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.js",
+            "node_modules/lucide-react/dist/esm/context.js",
+            "node_modules/lucide-react/dist/esm/Icon.js",
+            "node_modules/lucide-react/dist/esm/createLucideIcon.js",
+            "node_modules/react/cjs/react-jsx-runtime.production.js",
+            "node_modules/react/jsx-runtime.js"
+          ]
+        },
+        {
+          "file": "assets/AnalyticsPage.loading-view-swl0f5Ib.js",
+          "rawBytes": 26501,
+          "gzipBytes": 8608,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/crown-BYaTXTbV.js",
+            "assets/reports.service-DGxuJOAi.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/DashboardUI-CTIScyKT.js",
+            "assets/DeferredChart-bu8gzaJn.js"
+          ],
+          "compositions": [
+            "src/features/profiles/principal/pages/reports/AnalyticsPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/PrincipalGradeSheetPage.loading-view-t-UCO76X.js",
+          "rawBytes": 22999,
+          "gzipBytes": 8158,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/clock-DYYi5eLs.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/gradebooks.service-iPFFbSBM.js",
+            "assets/DashboardUI-CTIScyKT.js"
+          ],
+          "compositions": [
+            "src/features/profiles/principal/pages/gradebooks/PrincipalGradeSheetPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/TeacherSchedulePage.loading-view-CxLJ5bBi.js",
+          "rawBytes": 17883,
+          "gzipBytes": 6286,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/students.service-Cbil_lyp.js",
+            "assets/teachers.service-vXIDzqX-.js",
+            "assets/DashboardUI-CTIScyKT.js",
+            "assets/ProfileOverviewCard-PT1vOiYK.js"
+          ],
+          "compositions": [
+            "src/features/profiles/principal/pages/teachers/TeacherSchedulePage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/HolisticPerformanceAnalyticsPage.loading-view-B-NjpFRH.js",
+          "rawBytes": 16074,
+          "gzipBytes": 6707,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/activity-UJFE1vfX.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/reports.service-DGxuJOAi.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/DashboardUI-CTIScyKT.js"
+          ],
+          "compositions": [
+            "src/features/profiles/principal/pages/reports/HolisticPerformanceAnalyticsPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/corner-down-right.js",
+            "node_modules/lucide-react/dist/esm/icons/mouse-pointer-click.js"
+          ]
+        },
+        {
+          "file": "assets/PrincipalStudentsPage.loading-view-BpRf4NVa.js",
+          "rawBytes": 14657,
+          "gzipBytes": 5880,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/GradeLevelSearchInput-iayhC2PF.js",
+            "assets/students.service-Cbil_lyp.js"
+          ],
+          "compositions": [
+            "src/features/profiles/principal/pages/students/PrincipalStudentsPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/CalendarPage.loading-view-Gsn0YV4x.js",
+          "rawBytes": 13975,
+          "gzipBytes": 4335,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/party-popper-BrLiT9H8.js",
+            "assets/plus-DSNzCDc6.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [
+            "src/shared/calendar/CalendarPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/calendar-plus.js",
+            "node_modules/lucide-react/dist/esm/icons/landmark.js"
+          ]
+        },
+        {
+          "file": "assets/PrincipalTeachersPage.loading-view-D9jvOWC3.js",
+          "rawBytes": 12625,
+          "gzipBytes": 5007,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/teachers.service-vXIDzqX-.js"
+          ],
+          "compositions": [
+            "src/features/profiles/principal/pages/teachers/PrincipalTeachersPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/door-open.js"
+          ]
+        },
+        {
+          "file": "assets/DashboardUI-CTIScyKT.js",
+          "rawBytes": 11991,
+          "gzipBytes": 4415,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/minus-BmJzL3b8.js",
+            "assets/trending-down-6t3XXVcF.js",
+            "assets/trending-up-xv87XHQ5.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/PrincipalGradebooksPage.loading-view-BkEXHxOD.js",
+          "rawBytes": 9010,
+          "gzipBytes": 3549,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/gradebooks.service-iPFFbSBM.js",
+            "assets/GradeLevelSearchInput-iayhC2PF.js",
+            "assets/SubjectAssignmentCard-BKMvc9ZX.js"
+          ],
+          "compositions": [
+            "src/features/profiles/principal/pages/gradebooks/PrincipalGradebooksPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/lock-keyhole.js"
+          ]
+        },
+        {
+          "file": "assets/react-DxZHKUKd.js",
+          "rawBytes": 7521,
+          "gzipBytes": 2878,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/react/cjs/react.production.js",
+            "node_modules/react/index.js"
+          ]
+        },
+        {
+          "file": "assets/DeferredChart-bu8gzaJn.js",
+          "rawBytes": 7169,
+          "gzipBytes": 3187,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/ClassListPage.loading-view-GaIuazvJ.js",
+          "rawBytes": 7032,
+          "gzipBytes": 3094,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/students.service-Cbil_lyp.js",
+            "assets/DashboardUI-CTIScyKT.js",
+            "assets/StudentDirectory-m17EBdAZ.js"
+          ],
+          "compositions": [
+            "src/features/profiles/principal/pages/students/ClassListPage.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/PrincipalRoutes-CL94VgOn.js",
+          "rawBytes": 6622,
+          "gzipBytes": 2389,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/calendar-check-C9_qLLPf.js",
+            "assets/CalendarPage.loading-view-Gsn0YV4x.js",
+            "assets/chart-column-bJmgof9X.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/HolisticPerformanceAnalyticsPage.loading-view-B-NjpFRH.js",
+            "assets/PrincipalTeachersPage.loading-view-D9jvOWC3.js",
+            "assets/PrincipalGradebooksPage.loading-view-BkEXHxOD.js",
+            "assets/school-B0ork6uJ.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/ClassesContext-CPpBPMyl.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/PrincipalDashboardHome.loading-view-Dnr67Jrf.js",
+            "assets/PrincipalGradeSheetPage.loading-view-t-UCO76X.js",
+            "assets/AnalyticsPage.loading-view-swl0f5Ib.js",
+            "assets/ClassListPage.loading-view-GaIuazvJ.js",
+            "assets/PrincipalStudentsPage.loading-view-BpRf4NVa.js",
+            "assets/TeacherSchedulePage.loading-view-CxLJ5bBi.js",
+            "assets/PolygonLayout-7Jakrtk0.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/ProfileOverviewCard-PT1vOiYK.js",
+          "rawBytes": 5429,
+          "gzipBytes": 2401,
+          "imports": [
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/SubjectAssignmentCard-BKMvc9ZX.js",
+          "rawBytes": 4838,
+          "gzipBytes": 2186,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/reports.service-DGxuJOAi.js",
+          "rawBytes": 4389,
+          "gzipBytes": 1783,
+          "imports": [
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/chart-column-bJmgof9X.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/heart-pulse.js"
+          ]
+        },
+        {
+          "file": "assets/StudentDirectoryTable-5nUp7Q8Y.js",
+          "rawBytes": 3938,
+          "gzipBytes": 1524,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/react-dom-rMUovVdx.js",
+          "rawBytes": 3568,
+          "gzipBytes": 1351,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/react-dom/cjs/react-dom.production.js",
+            "node_modules/react-dom/index.js"
+          ]
+        },
+        {
+          "file": "assets/StudentDirectory-m17EBdAZ.js",
+          "rawBytes": 3219,
+          "gzipBytes": 1540,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/StudentDirectoryTable-5nUp7Q8Y.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/PolygonLayout-7Jakrtk0.js",
+          "rawBytes": 2871,
+          "gzipBytes": 944,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/gradebooks.service-iPFFbSBM.js",
+          "rawBytes": 2811,
+          "gzipBytes": 1107,
+          "imports": [
+            "assets/api.config-qjE84KfK.js",
+            "assets/academicyear.service-CshyqqlM.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/StudentsContext-D8GL98q6.js",
+          "rawBytes": 2597,
+          "gzipBytes": 1039,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/PrincipalChartLoading-BogomJvh.js",
+          "rawBytes": 2579,
+          "gzipBytes": 1159,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/DeferredChart-bu8gzaJn.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/GradeLevelSearchInput-iayhC2PF.js",
+          "rawBytes": 2404,
+          "gzipBytes": 1178,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/search-B-cScTIO.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/ClassesContext-CPpBPMyl.js",
+          "rawBytes": 1966,
+          "gzipBytes": 1028,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/classes.service-G6eMozPB.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/classes.service-G6eMozPB.js",
+          "rawBytes": 1864,
+          "gzipBytes": 722,
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/students.service-Cbil_lyp.js",
+          "rawBytes": 1280,
+          "gzipBytes": 514,
+          "imports": [
+            "assets/api.config-qjE84KfK.js",
+            "assets/academicyear.service-CshyqqlM.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/academicyear.service-CshyqqlM.js",
+          "rawBytes": 1214,
+          "gzipBytes": 464,
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/preload-helper-zJ_50EbN.js",
+          "rawBytes": 1193,
+          "gzipBytes": 681,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/chunk-aKtaBQYM.js",
+          "rawBytes": 1084,
+          "gzipBytes": 621,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/teachers.service-vXIDzqX-.js",
+          "rawBytes": 826,
+          "gzipBytes": 454,
+          "imports": [
+            "assets/api.config-qjE84KfK.js",
+            "assets/academicyear.service-CshyqqlM.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/party-popper-BrLiT9H8.js",
+          "rawBytes": 725,
+          "gzipBytes": 408,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/party-popper.js"
+          ]
+        },
+        {
+          "file": "assets/trophy-D37JXsQ2.js",
+          "rawBytes": 471,
+          "gzipBytes": 271,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/trophy.js"
+          ]
+        },
+        {
+          "file": "assets/school-B0ork6uJ.js",
+          "rawBytes": 450,
+          "gzipBytes": 290,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/school.js"
+          ]
+        },
+        {
+          "file": "assets/clipboard-list-CamLZ1O6.js",
+          "rawBytes": 406,
+          "gzipBytes": 258,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/clipboard-list.js"
+          ]
+        },
+        {
+          "file": "assets/crown-BYaTXTbV.js",
+          "rawBytes": 357,
+          "gzipBytes": 253,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/crown.js"
+          ]
+        },
+        {
+          "file": "assets/calendar-check-C9_qLLPf.js",
+          "rawBytes": 300,
+          "gzipBytes": 223,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/calendar-check.js"
+          ]
+        },
+        {
+          "file": "assets/chart-column-bJmgof9X.js",
+          "rawBytes": 246,
+          "gzipBytes": 190,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/chart-column.js"
+          ]
+        },
+        {
+          "file": "assets/activity-UJFE1vfX.js",
+          "rawBytes": 229,
+          "gzipBytes": 197,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/activity.js"
+          ]
+        },
+        {
+          "file": "assets/trending-down-6t3XXVcF.js",
+          "rawBytes": 173,
+          "gzipBytes": 166,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/trending-down.js"
+          ]
+        },
+        {
+          "file": "assets/trending-up-xv87XHQ5.js",
+          "rawBytes": 170,
+          "gzipBytes": 166,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/trending-up.js"
+          ]
+        },
+        {
+          "file": "assets/search-B-cScTIO.js",
+          "rawBytes": 169,
+          "gzipBytes": 164,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/search.js"
+          ]
+        },
+        {
+          "file": "assets/clock-DYYi5eLs.js",
+          "rawBytes": 164,
+          "gzipBytes": 162,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/clock.js"
+          ]
+        },
+        {
+          "file": "assets/plus-DSNzCDc6.js",
+          "rawBytes": 148,
+          "gzipBytes": 147,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/plus.js"
+          ]
+        },
+        {
+          "file": "assets/minus-BmJzL3b8.js",
+          "rawBytes": 112,
+          "gzipBytes": 129,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/minus.js"
+          ]
+        },
+        {
+          "file": "assets/api.config-qjE84KfK.js",
+          "rawBytes": 55,
+          "gzipBytes": 75,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        }
+      ],
+      "eagerCompositions": [
+        "src/features/auth/LoginPanel.loading-view.tsx",
+        "src/features/Landing/LandingPage.loading-view.tsx",
+        "src/features/profiles/admin/pages/help/HelpSupportPage.loading-view.tsx",
+        "src/features/profiles/principal/pages/dashboard/PrincipalDashboardHome.loading-view.tsx",
+        "src/features/profiles/principal/pages/reports/AnalyticsPage.loading-view.tsx",
+        "src/features/profiles/principal/pages/gradebooks/PrincipalGradeSheetPage.loading-view.tsx",
+        "src/features/profiles/principal/pages/teachers/TeacherSchedulePage.loading-view.tsx",
+        "src/features/profiles/principal/pages/reports/HolisticPerformanceAnalyticsPage.loading-view.tsx",
+        "src/features/profiles/principal/pages/students/PrincipalStudentsPage.loading-view.tsx",
+        "src/shared/calendar/CalendarPage.loading-view.tsx",
+        "src/features/profiles/principal/pages/teachers/PrincipalTeachersPage.loading-view.tsx",
+        "src/features/profiles/principal/pages/gradebooks/PrincipalGradebooksPage.loading-view.tsx",
+        "src/features/profiles/principal/pages/students/ClassListPage.loading-view.tsx"
+      ]
+    },
+    "Parent": {
+      "roleChunk": "assets/ParentRoutes-DP26tR3X.js",
+      "total": {
+        "rawBytes": 913209,
+        "gzipBytes": 286012
+      },
+      "beyondPublic": {
+        "rawBytes": 517673,
+        "gzipBytes": 162968
+      },
+      "files": [
+        {
+          "file": "assets/index-CALc1q2j.js",
+          "rawBytes": 338746,
+          "gzipBytes": 101957,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [
+            "src/features/auth/LoginPanel.loading-view.tsx",
+            "src/features/Landing/LandingPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/scheduler/cjs/scheduler.production.js",
+            "node_modules/scheduler/index.js",
+            "node_modules/react-dom/cjs/react-dom-client.production.js",
+            "node_modules/react-dom/client.js",
+            "node_modules/lucide-react/dist/esm/icons/arrow-left.js",
+            "node_modules/lucide-react/dist/esm/icons/arrow-right.js",
+            "node_modules/lucide-react/dist/esm/icons/arrow-up-right.js",
+            "node_modules/lucide-react/dist/esm/icons/badge-check.js",
+            "node_modules/lucide-react/dist/esm/icons/blocks.js",
+            "node_modules/lucide-react/dist/esm/icons/book-marked.js",
+            "node_modules/lucide-react/dist/esm/icons/brain.js",
+            "node_modules/lucide-react/dist/esm/icons/check.js",
+            "node_modules/lucide-react/dist/esm/icons/chevron-right.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-arrow-right.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-play.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-user-round.js",
+            "node_modules/lucide-react/dist/esm/icons/eye-off.js",
+            "node_modules/lucide-react/dist/esm/icons/eye.js",
+            "node_modules/lucide-react/dist/esm/icons/file-chart-column-increasing.js",
+            "node_modules/lucide-react/dist/esm/icons/heart.js",
+            "node_modules/lucide-react/dist/esm/icons/key-round.js",
+            "node_modules/lucide-react/dist/esm/icons/list-checks.js",
+            "node_modules/lucide-react/dist/esm/icons/log-out.js",
+            "node_modules/lucide-react/dist/esm/icons/mail.js",
+            "node_modules/lucide-react/dist/esm/icons/menu.js",
+            "node_modules/lucide-react/dist/esm/icons/siren.js",
+            "node_modules/lucide-react/dist/esm/icons/square-pen.js",
+            "node_modules/lucide-react/dist/esm/icons/user-round-check.js",
+            "node_modules/lucide-react/dist/esm/icons/user.js",
+            "node_modules/lucide-react/dist/esm/icons/users-round.js",
+            "node_modules/lucide-react/dist/esm/icons/users.js",
+            "node_modules/lucide-react/dist/esm/icons/x.js",
+            "node_modules/engine.io-parser/build/esm/commons.js",
+            "node_modules/engine.io-parser/build/esm/encodePacket.browser.js",
+            "node_modules/engine.io-parser/build/esm/contrib/base64-arraybuffer.js",
+            "node_modules/engine.io-parser/build/esm/decodePacket.browser.js",
+            "node_modules/engine.io-parser/build/esm/index.js",
+            "node_modules/@socket.io/component-emitter/lib/esm/index.js",
+            "node_modules/engine.io-client/build/esm/globals.js",
+            "node_modules/engine.io-client/build/esm/util.js",
+            "node_modules/engine.io-client/build/esm/contrib/parseqs.js",
+            "node_modules/engine.io-client/build/esm/transport.js",
+            "node_modules/engine.io-client/build/esm/transports/polling.js",
+            "node_modules/engine.io-client/build/esm/contrib/has-cors.js",
+            "node_modules/engine.io-client/build/esm/transports/polling-xhr.js",
+            "node_modules/engine.io-client/build/esm/transports/websocket.js",
+            "node_modules/engine.io-client/build/esm/transports/webtransport.js",
+            "node_modules/engine.io-client/build/esm/transports/index.js",
+            "node_modules/engine.io-client/build/esm/contrib/parseuri.js",
+            "node_modules/engine.io-client/build/esm/socket.js",
+            "node_modules/engine.io-client/build/esm/transports/polling-fetch.js",
+            "node_modules/engine.io-client/build/esm/index.js",
+            "node_modules/socket.io-client/build/esm/url.js",
+            "node_modules/socket.io-parser/build/esm/is-binary.js",
+            "node_modules/socket.io-parser/build/esm/binary.js",
+            "node_modules/socket.io-parser/build/esm/index.js",
+            "node_modules/socket.io-client/build/esm/on.js",
+            "node_modules/socket.io-client/build/esm/socket.js",
+            "node_modules/socket.io-client/build/esm/contrib/backo2.js",
+            "node_modules/socket.io-client/build/esm/manager.js",
+            "node_modules/socket.io-client/build/esm/index.js"
+          ]
+        },
+        {
+          "file": "assets/Header-CF7rdTMv.js",
+          "rawBytes": 157187,
+          "gzipBytes": 45334,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [
+            "src/features/profiles/admin/pages/help/HelpSupportPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/bell.js",
+            "node_modules/lucide-react/dist/esm/icons/book-open.js",
+            "node_modules/lucide-react/dist/esm/icons/calendar-days.js",
+            "node_modules/lucide-react/dist/esm/icons/calendar-heart.js",
+            "node_modules/lucide-react/dist/esm/icons/calendar-range.js",
+            "node_modules/lucide-react/dist/esm/icons/chevron-down.js",
+            "node_modules/lucide-react/dist/esm/icons/chevron-left.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-check.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-question-mark.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-x.js",
+            "node_modules/lucide-react/dist/esm/icons/clipboard-x.js",
+            "node_modules/lucide-react/dist/esm/icons/graduation-cap.js",
+            "node_modules/lucide-react/dist/esm/icons/info.js",
+            "node_modules/lucide-react/dist/esm/icons/layout-dashboard.js",
+            "node_modules/lucide-react/dist/esm/icons/life-buoy.js",
+            "node_modules/lucide-react/dist/esm/icons/map-pin.js",
+            "node_modules/lucide-react/dist/esm/icons/maximize-2.js",
+            "node_modules/lucide-react/dist/esm/icons/message-circle-question-mark.js",
+            "node_modules/lucide-react/dist/esm/icons/moon.js",
+            "node_modules/lucide-react/dist/esm/icons/pencil.js",
+            "node_modules/lucide-react/dist/esm/icons/phone.js",
+            "node_modules/lucide-react/dist/esm/icons/shield.js",
+            "node_modules/lucide-react/dist/esm/icons/sparkles.js",
+            "node_modules/lucide-react/dist/esm/icons/sun.js",
+            "node_modules/lucide-react/dist/esm/icons/trash-2.js",
+            "node_modules/lucide-react/dist/esm/icons/triangle-alert.js",
+            "node_modules/lucide-react/dist/esm/icons/user-round.js",
+            "node_modules/tailwind-merge/dist/bundle-mjs.mjs"
+          ]
+        },
+        {
+          "file": "assets/ChildDetailPage.loading-view-DojvwLtQ.js",
+          "rawBytes": 128196,
+          "gzipBytes": 39373,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/calendar-BaCgnYDw.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/clock-3-DJzs4NSX.js",
+            "assets/clock-DYYi5eLs.js",
+            "assets/download-4ZpfCl3y.js",
+            "assets/layout-grid-Cgsueyq8.js",
+            "assets/lock-Db-bsDub.js",
+            "assets/save-DuYu6phG.js",
+            "assets/square-star-Cywu8jWx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/ParentDashboardContext-6SAkXjT7.js",
+            "assets/PrincipalChartLoading-BogomJvh.js",
+            "assets/DeferredChart-bu8gzaJn.js"
+          ],
+          "compositions": [
+            "src/features/profiles/parent/pages/Student/ChildDetailPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/circle-user.js",
+            "node_modules/lucide-react/dist/esm/icons/sparkle.js",
+            "node_modules/lucide-react/dist/esm/icons/user-check.js",
+            "node_modules/lucide-react/dist/esm/icons/user-x.js"
+          ]
+        },
+        {
+          "file": "assets/PetQuizPage.loading-view-DxCSAglZ.js",
+          "rawBytes": 94381,
+          "gzipBytes": 27522,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/QuestWorldBackground-DejGFX3Y.js",
+            "assets/lightbulb-D0b3enjf.js",
+            "assets/lock-Db-bsDub.js",
+            "assets/party-popper-BrLiT9H8.js",
+            "assets/trophy-D37JXsQ2.js",
+            "assets/zap-C6mNkzga.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [
+            "src/features/profiles/parent/pages/Student/Academic/PetQuizPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/apple.js",
+            "node_modules/lucide-react/dist/esm/icons/battery.js",
+            "node_modules/lucide-react/dist/esm/icons/book.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-arrow-up.js",
+            "node_modules/lucide-react/dist/esm/icons/circle-pause.js",
+            "node_modules/lucide-react/dist/esm/icons/flag.js",
+            "node_modules/lucide-react/dist/esm/icons/hand.js",
+            "node_modules/lucide-react/dist/esm/icons/puzzle.js",
+            "node_modules/lucide-react/dist/esm/icons/radio.js",
+            "node_modules/lucide-react/dist/esm/icons/refresh-ccw.js",
+            "node_modules/lucide-react/dist/esm/icons/rocket.js",
+            "node_modules/lucide-react/dist/esm/icons/sprout.js"
+          ]
+        },
+        {
+          "file": "assets/ParentDashboardHome.loading-view-CwcEG4wJ.js",
+          "rawBytes": 55427,
+          "gzipBytes": 16733,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/layout-grid-Cgsueyq8.js",
+            "assets/user-plus-76L47Kwg.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/ParentDashboardContext-6SAkXjT7.js"
+          ],
+          "compositions": [
+            "src/features/profiles/parent/pages/dashboard/ParentDashboardHome.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/ellipsis.js",
+            "node_modules/lucide-react/dist/esm/icons/mouse-pointer-2.js",
+            "node_modules/lucide-react/dist/esm/icons/rows-3.js"
+          ]
+        },
+        {
+          "file": "assets/jsx-runtime-aNkLRTnx.js",
+          "rawBytes": 43369,
+          "gzipBytes": 15481,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/react/cjs/react-compiler-runtime.production.js",
+            "node_modules/react/compiler-runtime.js",
+            "node_modules/react-router/dist/development/chunk-6CSD65Y2.mjs",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.js",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/toKebabCase.js",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/toCamelCase.js",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/toPascalCase.js",
+            "node_modules/lucide-react/dist/esm/defaultAttributes.js",
+            "node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.js",
+            "node_modules/lucide-react/dist/esm/context.js",
+            "node_modules/lucide-react/dist/esm/Icon.js",
+            "node_modules/lucide-react/dist/esm/createLucideIcon.js",
+            "node_modules/react/cjs/react-jsx-runtime.production.js",
+            "node_modules/react/jsx-runtime.js"
+          ]
+        },
+        {
+          "file": "assets/EnrolledChildrenPage.loading-view-B_tPFg4w.js",
+          "rawBytes": 16376,
+          "gzipBytes": 6288,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/user-plus-76L47Kwg.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/ParentDashboardContext-6SAkXjT7.js"
+          ],
+          "compositions": [
+            "src/features/profiles/parent/pages/EnrollledStudent/EnrolledChildrenPage.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/hash.js"
+          ]
+        },
+        {
+          "file": "assets/CoursewareView.loading-view-vnlYSb10.js",
+          "rawBytes": 15832,
+          "gzipBytes": 5692,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/compass-SNsI0u2e.js",
+            "assets/lightbulb-D0b3enjf.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [
+            "src/features/profiles/parent/pages/Student/Academic/CoursewareView.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/calculator.js",
+            "node_modules/lucide-react/dist/esm/icons/play.js"
+          ]
+        },
+        {
+          "file": "assets/ParentRoutes-DP26tR3X.js",
+          "rawBytes": 11003,
+          "gzipBytes": 4247,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/PetQuizPage.loading-view-DxCSAglZ.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/CoursewareView.loading-view-vnlYSb10.js",
+            "assets/ChildDetailPage.loading-view-DojvwLtQ.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/ParentDashboardHome.loading-view-CwcEG4wJ.js",
+            "assets/TopicSupportChoice.loading-view-Bf9aLNYY.js",
+            "assets/EnrolledChildrenPage.loading-view-B_tPFg4w.js",
+            "assets/shield-check-CPUaNMWo.js",
+            "assets/user-plus-76L47Kwg.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/ParentDashboardContext-6SAkXjT7.js",
+            "assets/PolygonLayout-7Jakrtk0.js",
+            "assets/CalendarPageView.loading-view-Ci2_9jo7.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/TopicSupportChoice.loading-view-Bf9aLNYY.js",
+          "rawBytes": 8185,
+          "gzipBytes": 3609,
+          "imports": [
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/QuestWorldBackground-DejGFX3Y.js"
+          ],
+          "compositions": [
+            "src/features/profiles/parent/pages/Student/Academic/TopicSupportChoice.loading-view.tsx"
+          ],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/gamepad-2.js"
+          ]
+        },
+        {
+          "file": "assets/react-DxZHKUKd.js",
+          "rawBytes": 7521,
+          "gzipBytes": 2878,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/react/cjs/react.production.js",
+            "node_modules/react/index.js"
+          ]
+        },
+        {
+          "file": "assets/DeferredChart-bu8gzaJn.js",
+          "rawBytes": 7169,
+          "gzipBytes": 3187,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/QuestWorldBackground-DejGFX3Y.js",
+          "rawBytes": 5325,
+          "gzipBytes": 2322,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/flame.js",
+            "node_modules/lucide-react/dist/esm/icons/star.js"
+          ]
+        },
+        {
+          "file": "assets/ParentDashboardContext-6SAkXjT7.js",
+          "rawBytes": 5075,
+          "gzipBytes": 1769,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CALc1q2j.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js",
+            "assets/api.config-qjE84KfK.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/react-dom-rMUovVdx.js",
+          "rawBytes": 3568,
+          "gzipBytes": 1351,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/react-dom/cjs/react-dom.production.js",
+            "node_modules/react-dom/index.js"
+          ]
+        },
+        {
+          "file": "assets/CalendarPageView.loading-view-Ci2_9jo7.js",
+          "rawBytes": 2900,
+          "gzipBytes": 1117,
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/react-DxZHKUKd.js"
+          ],
+          "compositions": [
+            "src/shared/calendar/CalendarPageView.loading-view.tsx"
+          ],
+          "vendors": []
+        },
+        {
+          "file": "assets/PolygonLayout-7Jakrtk0.js",
+          "rawBytes": 2871,
+          "gzipBytes": 944,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/PrincipalChartLoading-BogomJvh.js",
+          "rawBytes": 2579,
+          "gzipBytes": 1159,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/Header-CF7rdTMv.js",
+            "assets/DeferredChart-bu8gzaJn.js"
+          ],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/preload-helper-zJ_50EbN.js",
+          "rawBytes": 1193,
+          "gzipBytes": 681,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/chunk-aKtaBQYM.js",
+          "rawBytes": 1084,
+          "gzipBytes": 621,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        },
+        {
+          "file": "assets/party-popper-BrLiT9H8.js",
+          "rawBytes": 725,
+          "gzipBytes": 408,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/party-popper.js"
+          ]
+        },
+        {
+          "file": "assets/square-star-Cywu8jWx.js",
+          "rawBytes": 490,
+          "gzipBytes": 317,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/square-star.js"
+          ]
+        },
+        {
+          "file": "assets/trophy-D37JXsQ2.js",
+          "rawBytes": 471,
+          "gzipBytes": 271,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/trophy.js"
+          ]
+        },
+        {
+          "file": "assets/clipboard-list-CamLZ1O6.js",
+          "rawBytes": 406,
+          "gzipBytes": 258,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/clipboard-list.js"
+          ]
+        },
+        {
+          "file": "assets/layout-grid-Cgsueyq8.js",
+          "rawBytes": 341,
+          "gzipBytes": 190,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/layout-grid.js"
+          ]
+        },
+        {
+          "file": "assets/save-DuYu6phG.js",
+          "rawBytes": 322,
+          "gzipBytes": 224,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/save.js"
+          ]
+        },
+        {
+          "file": "assets/shield-check-CPUaNMWo.js",
+          "rawBytes": 315,
+          "gzipBytes": 246,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/shield-check.js"
+          ]
+        },
+        {
+          "file": "assets/user-plus-76L47Kwg.js",
+          "rawBytes": 305,
+          "gzipBytes": 229,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/user-plus.js"
+          ]
+        },
+        {
+          "file": "assets/lightbulb-D0b3enjf.js",
+          "rawBytes": 281,
+          "gzipBytes": 221,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/lightbulb.js"
+          ]
+        },
+        {
+          "file": "assets/zap-C6mNkzga.js",
+          "rawBytes": 257,
+          "gzipBytes": 203,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/zap.js"
+          ]
+        },
+        {
+          "file": "assets/calendar-BaCgnYDw.js",
+          "rawBytes": 252,
+          "gzipBytes": 198,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/calendar.js"
+          ]
+        },
+        {
+          "file": "assets/compass-SNsI0u2e.js",
+          "rawBytes": 246,
+          "gzipBytes": 206,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/compass.js"
+          ]
+        },
+        {
+          "file": "assets/download-4ZpfCl3y.js",
+          "rawBytes": 227,
+          "gzipBytes": 188,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/download.js"
+          ]
+        },
+        {
+          "file": "assets/lock-Db-bsDub.js",
+          "rawBytes": 201,
+          "gzipBytes": 188,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/lock.js"
+          ]
+        },
+        {
+          "file": "assets/clock-3-DJzs4NSX.js",
+          "rawBytes": 164,
+          "gzipBytes": 163,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/clock-3.js"
+          ]
+        },
+        {
+          "file": "assets/clock-DYYi5eLs.js",
+          "rawBytes": 164,
+          "gzipBytes": 162,
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ],
+          "compositions": [],
+          "vendors": [
+            "node_modules/lucide-react/dist/esm/icons/clock.js"
+          ]
+        },
+        {
+          "file": "assets/api.config-qjE84KfK.js",
+          "rawBytes": 55,
+          "gzipBytes": 75,
+          "imports": [],
+          "compositions": [],
+          "vendors": []
+        }
+      ],
+      "eagerCompositions": [
+        "src/features/auth/LoginPanel.loading-view.tsx",
+        "src/features/Landing/LandingPage.loading-view.tsx",
+        "src/features/profiles/admin/pages/help/HelpSupportPage.loading-view.tsx",
+        "src/features/profiles/parent/pages/Student/ChildDetailPage.loading-view.tsx",
+        "src/features/profiles/parent/pages/Student/Academic/PetQuizPage.loading-view.tsx",
+        "src/features/profiles/parent/pages/dashboard/ParentDashboardHome.loading-view.tsx",
+        "src/features/profiles/parent/pages/EnrollledStudent/EnrolledChildrenPage.loading-view.tsx",
+        "src/features/profiles/parent/pages/Student/Academic/CoursewareView.loading-view.tsx",
+        "src/features/profiles/parent/pages/Student/Academic/TopicSupportChoice.loading-view.tsx",
+        "src/shared/calendar/CalendarPageView.loading-view.tsx"
+      ]
+    }
+  }
+}

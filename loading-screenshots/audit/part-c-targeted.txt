@@ -1,0 +1,23 @@
+
+[WebServer] (node:30328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:22616) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 9 tests using 1 worker
+
+
+(node:20448) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/9] tests\bootstrap-loading.spec.ts:31:1 › bootstrap 60ms never shows the brand loader or status
+[2/9] tests\bootstrap-loading.spec.ts:68:1 › revealed bootstrap animates only the real logo opacity, never rotation
+[3/9] tests\bootstrap-loading.spec.ts:79:1 › bootstrap reduced motion has no running animation
+[4/9] tests\bootstrap-loading.spec.ts:90:1 › bootstrap busy and status follow reveal, minimum duration, and DOM cleanup
+[5/9] tests\bootstrap-loading.spec.ts:106:1 › protected components and page requests never render before auth resolves
+[6/9] tests\bootstrap-loading.spec.ts:114:34 › lazy route 375: registered composition inside real shell with stable surroundings
+[7/9] tests\bootstrap-loading.spec.ts:114:34 › lazy route 1280: registered composition inside real shell with stable surroundings
+[8/9] tests\bundle-budget.spec.ts:4:1 › production entry and eager dependency closure stay within the fixed plus 10% budget
+[9/9] tests\bundle-budget.spec.ts:9:1 › registry guard rejects an eager page import and accepts the restored metadata
+  9 passed (31.3s)

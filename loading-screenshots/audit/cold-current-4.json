@@ -1,0 +1,43 @@
+{
+  "title": "add subject 375 light keeps known form real without data spinners",
+  "status": "failed",
+  "durationMs": 8751,
+  "steps": [
+    {
+      "title": "Launch browser",
+      "start": "2026-10-10T04:50:01.126Z",
+      "durationMs": 137
+    },
+    {
+      "title": "Create context",
+      "start": "2026-10-10T04:50:01.269Z",
+      "durationMs": 12
+    },
+    {
+      "title": "Create page",
+      "start": "2026-10-10T04:50:01.285Z",
+      "durationMs": 122
+    },
+    {
+      "title": "Set viewport size",
+      "start": "2026-10-10T04:50:01.409Z",
+      "durationMs": 3
+    },
+    {
+      "title": "Navigate",
+      "start": "2026-10-10T04:50:01.432Z",
+      "durationMs": 3555
+    },
+    {
+      "title": "Expect \"toBeVisible\"",
+      "start": "2026-10-10T04:50:04.993Z",
+      "durationMs": 5007,
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('main')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('main') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('main')\u001b[22m\n"
+    },
+    {
+      "title": "Close context",
+      "start": "2026-10-10T04:50:10.009Z",
+      "durationMs": 7
+    }
+  ]
+}

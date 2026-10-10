@@ -1,3 +1,9 @@
+<!-- PART-C-REGRESSION -->
+## Part C regression audit
+
+No regions/routes/layouts reclassified or changed. Production-only removal of registry region descriptions reduces shipped text; the complete source audit and tests retain every classification and reason. Role audience chunk grouping preserves role boundaries and deferred libraries; detailed eager compositions/imports are in role-downloads-fixed.json. Dev-only static module warmup changes readiness, not browser protected rendering, data effects or any fixture/assertion. See LOADING-BEFORE-COVERAGE.json partCRegression for environmental proof and exact cold timings. Pet Quiz gameplay preserved by explicit user decision.
+<!-- END-PART-C-REGRESSION -->
+
 # QED loading design audit
 
 Audit started 2026-10-08, before skeleton implementation. This document distinguishes

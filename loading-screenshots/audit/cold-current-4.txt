@@ -1,0 +1,39 @@
+
+Running 1 test using 1 worker
+
+  x  1 tests\add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners (8.8s)
+
+
+  1) tests\add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('main')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('main') with timeout 5000ms
+      - waiting for locator('main')
+
+
+      13 | }
+      14 | for(const width of [375,1280])for(const dark of [false,true])test(`add subject ${width} ${dark?'dark':'light'} keeps known form real without data spinners`,async({page})=>{
+    > 15 |  await page.setViewportSize({width,height:1100});const release=await fixture(page,dark);await page.goto('/admin/subjects/new');await expect(page.locator('main')).toBeVisible();await expect(page.locator('[data-route-skeleton]')).toHaveCount(0);await expect(page.getByRole('heading',{name:'Add New Subject',exact:true})).toBeVisible();await expect(page.getByText('Subject Name',{exact:true})).toBeVisible();await expect(page.locator('[data-sk-region="subject-form-prerequisites"]')).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);await expect(page.locator('main [data-sk-primitive]')).toHaveCount(0);
+         |                                                                                                                                                                   ^
+      16 |  expect(await page.locator('main [role=status]').evaluate(element=>{const style=getComputedStyle(element);return {width:style.width,height:style.height,clip:style.clipPath};})).toEqual({width:'1px',height:'1px',clip:'inset(50%)'});
+      17 |  const boxes=()=>page.locator('main h1, main input, main select').evaluateAll(elements=>elements.map(element=>{const r=element.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height};}));const before=await boxes();fs.mkdirSync('loading-screenshots',{recursive:true});const prefix=`loading-screenshots/admin-add-subject-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});release();await expect(page.locator('main select')).toBeEnabled();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);expect(await boxes()).toEqual(before);await page.screenshot({path:prefix+'-loaded.png',fullPage:true});
+      18 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\add-subject-loading.spec.ts:15:163
+
+    Error Context: test-results\add-subject-loading-add-su-13dd7--real-without-data-spinners\error-context.md
+
+  1 failed
+    tests\add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners 
+[WebServer] (node:18396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:35792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:16520) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

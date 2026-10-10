@@ -1,3 +1,9 @@
+<!-- PART-C-REGRESSION -->
+# Current regression checkpoint
+
+Latest user authorization supersedes prior pending-decision notes. Narrow Part A fix implemented; tests unchanged; no data prefetch, main/remotes/deployment untouched. Final isolated results: passed, passed, passed. Full run: 2 failed; 601 passed (21.6m). See LOADING-REPORT.md and loading-screenshots/audit/part-c-*.txt. Build: npm run build. Allowed targeted checks were Add Subject isolation, bootstrap-loading.spec.ts (including lazy cases), bundle-budget.spec.ts. One additional full invocation only. Commit on codex/finish-loading-verification, no push. Performance goal remains unmet; measured results and transfer floor are recorded, not certified as meeting target. Two full-run failures remain: variable text size 4 misses the revealed phase; Teacher Subjects 375 dark card Y delta is 6.671875px against 1px. Do not rerun the full suite without a new user decision. Current application production rebuild passed; this checkpoint leaves the code in a building state.
+<!-- END-PART-C-REGRESSION -->
+
 Final production rebuild passed: loading-screenshots/audit/part-b-final-build.txt (exit 0). Source/config/test and tooling freezes are intact. Git merge-tree dry-run passed without touching main. Verification evidence and screenshots are saved on the loading branch; check git log for its evidence commit. The regression decision remains pending; no further full suite is authorized.
 
 # Current checkpoint — awaiting regression decision (2026-10-10)

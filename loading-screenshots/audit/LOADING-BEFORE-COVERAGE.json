@@ -1203,5 +1203,349 @@
       "sourceInputsUnchanged": 580,
       "toolingInputsUnchanged": 8
     }
+  },
+  "partCRegression": {
+    "baselineCommit": "67a3c5bb4a7904f017f875ab72162f08e44e9273",
+    "coldRuns": [
+      {
+        "run": 1,
+        "status": "passed",
+        "navigation": {
+          "title": "Navigate",
+          "start": "2026-10-10T05:32:49.309Z",
+          "durationMs": 3967
+        },
+        "main": {
+          "title": "Expect \"toBeVisible\"",
+          "start": "2026-10-10T05:32:53.282Z",
+          "durationMs": 4953
+        },
+        "navigationToMainMs": 8926
+      },
+      {
+        "run": 2,
+        "status": "passed",
+        "navigation": {
+          "title": "Navigate",
+          "start": "2026-10-10T05:33:04.574Z",
+          "durationMs": 3521
+        },
+        "main": {
+          "title": "Expect \"toBeVisible\"",
+          "start": "2026-10-10T05:33:08.101Z",
+          "durationMs": 4923
+        },
+        "navigationToMainMs": 8450
+      },
+      {
+        "run": 3,
+        "status": "passed",
+        "navigation": {
+          "title": "Navigate",
+          "start": "2026-10-10T05:33:19.279Z",
+          "durationMs": 3519
+        },
+        "main": {
+          "title": "Expect \"toBeVisible\"",
+          "start": "2026-10-10T05:33:22.804Z",
+          "durationMs": 4994
+        },
+        "navigationToMainMs": 8519
+      },
+      {
+        "run": 4,
+        "status": "passed",
+        "navigation": {
+          "title": "Navigate",
+          "start": "2026-10-10T05:33:34.124Z",
+          "durationMs": 3606
+        },
+        "main": {
+          "title": "Expect \"toBeVisible\"",
+          "start": "2026-10-10T05:33:37.738Z",
+          "durationMs": 4939
+        },
+        "navigationToMainMs": 8553
+      },
+      {
+        "run": 5,
+        "status": "passed",
+        "navigation": {
+          "title": "Navigate",
+          "start": "2026-10-10T05:33:48.993Z",
+          "durationMs": 3360
+        },
+        "main": {
+          "title": "Expect \"toBeVisible\"",
+          "start": "2026-10-10T05:33:52.359Z",
+          "durationMs": 4950
+        },
+        "navigationToMainMs": 8316
+      },
+      {
+        "run": 6,
+        "status": "failed",
+        "navigation": {
+          "title": "Navigate",
+          "start": "2026-10-10T05:34:03.484Z",
+          "durationMs": 3369
+        },
+        "main": {
+          "title": "Expect \"toBeVisible\"",
+          "start": "2026-10-10T05:34:06.860Z",
+          "durationMs": 5010,
+          "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('main')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('main') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('main')\u001b[22m\n"
+        },
+        "navigationToMainMs": 8386
+      },
+      {
+        "run": 7,
+        "status": "passed",
+        "navigation": {
+          "title": "Navigate",
+          "start": "2026-10-10T05:34:16.702Z",
+          "durationMs": 3026
+        },
+        "main": {
+          "title": "Expect \"toBeVisible\"",
+          "start": "2026-10-10T05:34:19.733Z",
+          "durationMs": 4937
+        },
+        "navigationToMainMs": 7968
+      },
+      {
+        "run": 8,
+        "status": "passed",
+        "navigation": {
+          "title": "Navigate",
+          "start": "2026-10-10T05:34:30.936Z",
+          "durationMs": 3365
+        },
+        "main": {
+          "title": "Expect \"toBeVisible\"",
+          "start": "2026-10-10T05:34:34.306Z",
+          "durationMs": 4948
+        },
+        "navigationToMainMs": 8318
+      },
+      {
+        "run": 9,
+        "status": "passed",
+        "navigation": {
+          "title": "Navigate",
+          "start": "2026-10-10T05:34:45.398Z",
+          "durationMs": 3484
+        },
+        "main": {
+          "title": "Expect \"toBeVisible\"",
+          "start": "2026-10-10T05:34:48.888Z",
+          "durationMs": 4955
+        },
+        "navigationToMainMs": 8445
+      },
+      {
+        "run": 10,
+        "status": "passed",
+        "navigation": {
+          "title": "Navigate",
+          "start": "2026-10-10T05:35:00.253Z",
+          "durationMs": 3450
+        },
+        "main": {
+          "title": "Expect \"toBeVisible\"",
+          "start": "2026-10-10T05:35:03.708Z",
+          "durationMs": 4939
+        },
+        "navigationToMainMs": 8394
+      }
+    ],
+    "fixedColdRuns": [
+      {
+        "run": 1,
+        "status": "passed",
+        "navigation": {
+          "title": "Navigate",
+          "start": "2026-10-10T05:06:50.334Z",
+          "durationMs": 880
+        },
+        "main": {
+          "title": "Expect \"toBeVisible\"",
+          "start": "2026-10-10T05:06:51.221Z",
+          "durationMs": 1441
+        },
+        "navigationToMainMs": 2328
+      },
+      {
+        "run": 2,
+        "status": "passed",
+        "navigation": {
+          "title": "Navigate",
+          "start": "2026-10-10T05:07:19.147Z",
+          "durationMs": 706
+        },
+        "main": {
+          "title": "Expect \"toBeVisible\"",
+          "start": "2026-10-10T05:07:19.860Z",
+          "durationMs": 315
+        },
+        "navigationToMainMs": 1028
+      },
+      {
+        "run": 3,
+        "status": "passed",
+        "navigation": {
+          "title": "Navigate",
+          "start": "2026-10-10T05:07:45.780Z",
+          "durationMs": 708
+        },
+        "main": {
+          "title": "Expect \"toBeVisible\"",
+          "start": "2026-10-10T05:07:46.494Z",
+          "durationMs": 330
+        },
+        "navigationToMainMs": 1044
+      }
+    ],
+    "diagnosis": "Real cold source compilation slowdown, flaky at unchanged 5000ms main assertion: 9 pass / 1 fail in clean isolated runs. Separate trace auth ~9ms; source response wait up to 2374ms. First exploratory measurements overlapped another diagnostic and are retained separately.",
+    "fixtureChanges": [],
+    "testChanges": [],
+    "assertionThresholdTimingChanges": [],
+    "environmentalChange": {
+      "file": "vite.config.ts",
+      "change": "Static server-side source compilation before HTML readiness",
+      "proof": "cold-current.network: /src TSX waits occur only in Vite dev; production graph contains built JS. No browser code/data prefetch. Entire fixed CLI times 29.1/26.5/25.8s include the moved compilation cost.",
+      "before": "cold-clean-current-summary.json",
+      "after": "cold-fixed-final-summary.json"
+    },
+    "newTests": 0,
+    "inheritedNewTestProof": "roleBundleFollowup",
+    "fullSuite": {
+      "summary": "2 failed; 601 passed (21.6m)",
+      "raw": "part-c-final-suite.txt",
+      "sha256": "73060851d3694833be168703bc3493428fb7f0d2a4d5120e080adccec630306b",
+      "cases": 603,
+      "passed": 601,
+      "failed": 2,
+      "skipped": 0,
+      "retries": 0,
+      "sourceInputsUnchanged": 580,
+      "toolingInputsUnchangedDuringRun": 13,
+      "failures": [
+        {
+          "file": "tests/loading.spec.ts:30",
+          "reason": "Expected revealed; received settled"
+        },
+        {
+          "file": "tests/teacher-subjects.spec.ts:43",
+          "reason": "Card Y delta 6.671875px > 1px"
+        }
+      ]
+    },
+    "performanceGoalMet": false,
+    "startup": [
+      {
+        "stage": "before",
+        "profile": {
+          "latencyMs": 150,
+          "downloadBitsPerSecond": 1600000,
+          "uploadBitsPerSecond": 750000,
+          "cpuSlowdown": 4,
+          "dataResponseDelayMs": 320,
+          "samples": 3,
+          "coldBrowserContexts": true
+        },
+        "samples": [
+          {
+            "loginVisibleMs": 15031.699999988079,
+            "loginToSkeletonMs": 1551.699999988079,
+            "loginToDataMs": 2152.099999964237
+          },
+          {
+            "loginVisibleMs": 14889.300000011921,
+            "loginToSkeletonMs": 1717,
+            "loginToDataMs": 2313.2000000476837
+          },
+          {
+            "loginVisibleMs": 14820.299999952316,
+            "loginToSkeletonMs": 1431.699999988079,
+            "loginToDataMs": 2100.400000035763
+          }
+        ],
+        "median": {
+          "loginVisibleMs": 14889.300000011921,
+          "loginToSkeletonMs": 1551.699999988079,
+          "loginToDataMs": 2152.099999964237
+        }
+      },
+      {
+        "stage": "current",
+        "profile": {
+          "latencyMs": 150,
+          "downloadBitsPerSecond": 1600000,
+          "uploadBitsPerSecond": 750000,
+          "cpuSlowdown": 4,
+          "dataResponseDelayMs": 320,
+          "samples": 3,
+          "coldBrowserContexts": true
+        },
+        "samples": [
+          {
+            "loginVisibleMs": 3869.300000011921,
+            "loginToSkeletonMs": 5064.5,
+            "loginToDataMs": 5684.700000047684
+          },
+          {
+            "loginVisibleMs": 3813,
+            "loginToSkeletonMs": 4599.699999988079,
+            "loginToDataMs": 5882.699999988079
+          },
+          {
+            "loginVisibleMs": 3776.099999964237,
+            "loginToSkeletonMs": 5207.800000011921,
+            "loginToDataMs": 5803.400000035763
+          }
+        ],
+        "median": {
+          "loginVisibleMs": 3813,
+          "loginToSkeletonMs": 5064.5,
+          "loginToDataMs": 5803.400000035763
+        }
+      },
+      {
+        "stage": "fixed",
+        "profile": {
+          "latencyMs": 150,
+          "downloadBitsPerSecond": 1600000,
+          "uploadBitsPerSecond": 750000,
+          "cpuSlowdown": 4,
+          "dataResponseDelayMs": 320,
+          "samples": 3,
+          "coldBrowserContexts": true
+        },
+        "samples": [
+          {
+            "loginVisibleMs": 3833.699999988079,
+            "loginToSkeletonMs": 4310.899999976158,
+            "loginToDataMs": 5591.100000023842
+          },
+          {
+            "loginVisibleMs": 3816.199999988079,
+            "loginToSkeletonMs": 4685.699999988079,
+            "loginToDataMs": 5295.399999976158
+          },
+          {
+            "loginVisibleMs": 3787.199999988079,
+            "loginToSkeletonMs": 4432.899999976158,
+            "loginToDataMs": 5744
+          }
+        ],
+        "median": {
+          "loginVisibleMs": 3816.199999988079,
+          "loginToSkeletonMs": 4432.899999976158,
+          "loginToDataMs": 5591.100000023842
+        }
+      }
+    ],
+    "postRunToolingChanges": "Report-generation text only, after validating the frozen 13 tooling files; no application/test/config change after full suite."
   }
 }

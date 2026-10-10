@@ -1,0 +1,1017 @@
+{
+  "stage": "fixed",
+  "roles": {
+    "ADMIN": {
+      "cutoff": 1791608413000.6,
+      "rolesRequested": [
+        "admin"
+      ],
+      "scriptTotal": {
+        "rawBytes": 902045,
+        "gzipBytes": 276718
+      },
+      "allAssetTotal": {
+        "rawBytes": 1499938,
+        "gzipBytes": 714450
+      },
+      "files": [
+        {
+          "url": "http://127.0.0.1:5194/assets/index-C2RZ-o3l.js",
+          "type": "script",
+          "at": 1791608405013,
+          "file": "assets/index-C2RZ-o3l.js",
+          "rawBytes": 1132,
+          "gzipBytes": 626,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/rolldown-runtime-BVpWp9h4.js",
+          "type": "script",
+          "at": 1791608405017,
+          "file": "assets/rolldown-runtime-BVpWp9h4.js",
+          "rawBytes": 1122,
+          "gzipBytes": 636,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/public-vendor-LhP3KStT.js",
+          "type": "script",
+          "at": 1791608405017,
+          "file": "assets/public-vendor-LhP3KStT.js",
+          "rawBytes": 313061,
+          "gzipBytes": 100203,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/QED_Logo-CsCr7MaE.js",
+          "type": "script",
+          "at": 1791608405017,
+          "file": "assets/QED_Logo-CsCr7MaE.js",
+          "rawBytes": 116,
+          "gzipBytes": 132,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/public-app-Cukd_puC.js",
+          "type": "script",
+          "at": 1791608405017,
+          "file": "assets/public-app-Cukd_puC.js",
+          "rawBytes": 111792,
+          "gzipBytes": 31519,
+          "compositions": [
+            "src/features/auth/LoginPanel.loading-view.tsx",
+            "src/features/Landing/LandingPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/index-C2RZ-o3l.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/QED_Logo-CsCr7MaE.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/index-DMrwbaqa.css",
+          "type": "stylesheet",
+          "at": 1791608405017,
+          "file": "assets/index-DMrwbaqa.css",
+          "rawBytes": 189038,
+          "gzipBytes": 30293,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/QED_Logo-qUfJaevn.png",
+          "type": "image",
+          "at": 1791608408494,
+          "file": "assets/QED_Logo-qUfJaevn.png",
+          "rawBytes": 201892,
+          "gzipBytes": 201402,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-admin-wHR_I391.js",
+          "type": "script",
+          "at": 1791608409177,
+          "file": "assets/role-eager-admin-wHR_I391.js",
+          "rawBytes": 287992,
+          "gzipBytes": 84832,
+          "compositions": [
+            "src/features/profiles/admin/pages/classes/ClassFormPage.loading-view.tsx",
+            "src/features/profiles/admin/pages/classes/ClassPage.loading-view.tsx",
+            "src/features/profiles/admin/pages/classes/ClassViewPage.loading-view.tsx",
+            "src/features/profiles/admin/pages/dashboard/AdminDashboardHome.loading-view.tsx",
+            "src/features/profiles/admin/pages/studentrecords/StudentFormPage.loading-view.tsx",
+            "src/features/profiles/admin/pages/studentrecords/StudentRecordsPage.loading-view.tsx",
+            "src/features/profiles/admin/pages/subjects/AcademicYearPage.loading-view.tsx",
+            "src/features/profiles/admin/pages/subjects/AddSubjectPage.loading-view.tsx",
+            "src/features/profiles/admin/pages/subjects/AdminSubjectDetailPage.loading-view.tsx",
+            "src/features/profiles/admin/pages/subjects/ManageSubjectsPage.loading-view.tsx",
+            "src/features/profiles/admin/pages/usermanagement/UserFormPage.loading-view.tsx",
+            "src/features/profiles/admin/pages/usermanagement/UserManagementPage.loading-view.tsx",
+            "src/features/profiles/admin/pages/usermanagement/UserViewPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+            "assets/role-eager-admin-teacher-principal-D8KK4vSN.js",
+            "assets/role-eager-admin-teacher-CCaAbY-2.js",
+            "assets/role-eager-admin-principal-CkE5vfXW.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+          "type": "script",
+          "at": 1791608409181,
+          "file": "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+          "rawBytes": 114933,
+          "gzipBytes": 34868,
+          "compositions": [
+            "src/features/profiles/admin/pages/help/HelpSupportPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/index-C2RZ-o3l.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/admin_hat-E7baY_zC.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/admin_hat-E7baY_zC.js",
+          "type": "script",
+          "at": 1791608409182,
+          "file": "assets/admin_hat-E7baY_zC.js",
+          "rawBytes": 803,
+          "gzipBytes": 419,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-admin-teacher-principal-D8KK4vSN.js",
+          "type": "script",
+          "at": 1791608409182,
+          "file": "assets/role-eager-admin-teacher-principal-D8KK4vSN.js",
+          "rawBytes": 26771,
+          "gzipBytes": 9226,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-admin-teacher-CCaAbY-2.js",
+          "type": "script",
+          "at": 1791608409182,
+          "file": "assets/role-eager-admin-teacher-CCaAbY-2.js",
+          "rawBytes": 442,
+          "gzipBytes": 269,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-admin-principal-CkE5vfXW.js",
+          "type": "script",
+          "at": 1791608409182,
+          "file": "assets/role-eager-admin-principal-CkE5vfXW.js",
+          "rawBytes": 43521,
+          "gzipBytes": 13707,
+          "compositions": [
+            "src/features/profiles/principal/pages/teachers/TeacherSchedulePage.loading-view.tsx",
+            "src/shared/calendar/CalendarPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+            "assets/role-eager-admin-teacher-principal-D8KK4vSN.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/AdminDashboardHome-CQ9mi7XW.js",
+          "type": "script",
+          "at": 1791608412648,
+          "file": "assets/AdminDashboardHome-CQ9mi7XW.js",
+          "rawBytes": 360,
+          "gzipBytes": 281,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-admin-wHR_I391.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/EUC-BZZDGRxc.webp",
+          "type": "image",
+          "at": 1791608412649,
+          "file": "assets/EUC-BZZDGRxc.webp",
+          "rawBytes": 62856,
+          "gzipBytes": 62894,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/admin_hat-B0JzeJgD.png",
+          "type": "image",
+          "at": 1791608412650,
+          "file": "assets/admin_hat-B0JzeJgD.png",
+          "rawBytes": 144107,
+          "gzipBytes": 143143,
+          "compositions": [],
+          "imports": []
+        }
+      ],
+      "note": "All assets requested by first visible skeleton, including any still in flight. Uncompressed HTTP harness; gzip totals are calculated, not transferred."
+    },
+    "TEACHER": {
+      "cutoff": 1791608421756.5,
+      "rolesRequested": [
+        "teacher"
+      ],
+      "scriptTotal": {
+        "rawBytes": 957408,
+        "gzipBytes": 292335
+      },
+      "allAssetTotal": {
+        "rawBytes": 1411194,
+        "gzipBytes": 586924
+      },
+      "files": [
+        {
+          "url": "http://127.0.0.1:5194/assets/index-C2RZ-o3l.js",
+          "type": "script",
+          "at": 1791608413408,
+          "file": "assets/index-C2RZ-o3l.js",
+          "rawBytes": 1132,
+          "gzipBytes": 626,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/rolldown-runtime-BVpWp9h4.js",
+          "type": "script",
+          "at": 1791608413409,
+          "file": "assets/rolldown-runtime-BVpWp9h4.js",
+          "rawBytes": 1122,
+          "gzipBytes": 636,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/public-vendor-LhP3KStT.js",
+          "type": "script",
+          "at": 1791608413409,
+          "file": "assets/public-vendor-LhP3KStT.js",
+          "rawBytes": 313061,
+          "gzipBytes": 100203,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/QED_Logo-CsCr7MaE.js",
+          "type": "script",
+          "at": 1791608413410,
+          "file": "assets/QED_Logo-CsCr7MaE.js",
+          "rawBytes": 116,
+          "gzipBytes": 132,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/public-app-Cukd_puC.js",
+          "type": "script",
+          "at": 1791608413410,
+          "file": "assets/public-app-Cukd_puC.js",
+          "rawBytes": 111792,
+          "gzipBytes": 31519,
+          "compositions": [
+            "src/features/auth/LoginPanel.loading-view.tsx",
+            "src/features/Landing/LandingPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/index-C2RZ-o3l.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/QED_Logo-CsCr7MaE.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/index-DMrwbaqa.css",
+          "type": "stylesheet",
+          "at": 1791608413410,
+          "file": "assets/index-DMrwbaqa.css",
+          "rawBytes": 189038,
+          "gzipBytes": 30293,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/QED_Logo-qUfJaevn.png",
+          "type": "image",
+          "at": 1791608416854,
+          "file": "assets/QED_Logo-qUfJaevn.png",
+          "rawBytes": 201892,
+          "gzipBytes": 201402,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-teacher-Bov8UJHT.js",
+          "type": "script",
+          "at": 1791608417485,
+          "file": "assets/role-eager-teacher-Bov8UJHT.js",
+          "rawBytes": 375232,
+          "gzipBytes": 109090,
+          "compositions": [
+            "src/features/profiles/teacher/pages/attendance/TeacherAttendancePage.loading-view.tsx",
+            "src/features/profiles/teacher/pages/attendance/TeacherAttendanceRecordsPage.loading-view.tsx",
+            "src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.loading-view.tsx",
+            "src/features/profiles/teacher/pages/grades/GradePage.loading-view.tsx",
+            "src/features/profiles/teacher/pages/holistic/HolisticDomainTrendsPage.loading-view.tsx",
+            "src/features/profiles/teacher/pages/holistic/HolisticOverviewPage.loading-view.tsx",
+            "src/features/profiles/teacher/pages/holistic/StudentHolisticProfilePage.loading-view.tsx",
+            "src/features/profiles/teacher/pages/roster/AdvisoryRosterPage.loading-view.tsx",
+            "src/features/profiles/teacher/pages/subjects/SubjectClassListPage.loading-view.tsx",
+            "src/features/profiles/teacher/pages/subjects/SubjectPage.loading-view.tsx",
+            "src/features/profiles/teacher/pages/subjects/detail/SubjectDetailPage.loading-view.tsx",
+            "src/features/profiles/teacher/pages/subjects/detail/SubjectRecordsPage.loading-view.tsx",
+            "src/shared/components/StudentDetailPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+            "assets/role-eager-admin-teacher-principal-D8KK4vSN.js",
+            "assets/role-eager-admin-teacher-CCaAbY-2.js",
+            "assets/role-eager-teacher-parent-DJ2ljvc_.js",
+            "assets/role-eager-teacher-principal-parent-BiAe1hSl.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+          "type": "script",
+          "at": 1791608417485,
+          "file": "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+          "rawBytes": 114933,
+          "gzipBytes": 34868,
+          "compositions": [
+            "src/features/profiles/admin/pages/help/HelpSupportPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/index-C2RZ-o3l.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/admin_hat-E7baY_zC.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/admin_hat-E7baY_zC.js",
+          "type": "script",
+          "at": 1791608417488,
+          "file": "assets/admin_hat-E7baY_zC.js",
+          "rawBytes": 803,
+          "gzipBytes": 419,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-admin-teacher-principal-D8KK4vSN.js",
+          "type": "script",
+          "at": 1791608417488,
+          "file": "assets/role-eager-admin-teacher-principal-D8KK4vSN.js",
+          "rawBytes": 26771,
+          "gzipBytes": 9226,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-admin-teacher-CCaAbY-2.js",
+          "type": "script",
+          "at": 1791608417488,
+          "file": "assets/role-eager-admin-teacher-CCaAbY-2.js",
+          "rawBytes": 442,
+          "gzipBytes": 269,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-teacher-parent-DJ2ljvc_.js",
+          "type": "script",
+          "at": 1791608417488,
+          "file": "assets/role-eager-teacher-parent-DJ2ljvc_.js",
+          "rawBytes": 3070,
+          "gzipBytes": 1209,
+          "compositions": [
+            "src/shared/calendar/CalendarPageView.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-teacher-principal-parent-BiAe1hSl.js",
+          "type": "script",
+          "at": 1791608417488,
+          "file": "assets/role-eager-teacher-principal-parent-BiAe1hSl.js",
+          "rawBytes": 7423,
+          "gzipBytes": 3298,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/TeacherDashboardHome-CBsflZNu.js",
+          "type": "script",
+          "at": 1791608421207,
+          "file": "assets/TeacherDashboardHome-CBsflZNu.js",
+          "rawBytes": 1511,
+          "gzipBytes": 840,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-teacher-Bov8UJHT.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/EUC-BZZDGRxc.webp",
+          "type": "image",
+          "at": 1791608421208,
+          "file": "assets/EUC-BZZDGRxc.webp",
+          "rawBytes": 62856,
+          "gzipBytes": 62894,
+          "compositions": [],
+          "imports": []
+        }
+      ],
+      "note": "All assets requested by first visible skeleton, including any still in flight. Uncompressed HTTP harness; gzip totals are calculated, not transferred."
+    },
+    "PRINCIPAL": {
+      "cutoff": 1791608429759.7,
+      "rolesRequested": [
+        "principal"
+      ],
+      "scriptTotal": {
+        "rawBytes": 1383195,
+        "gzipBytes": 410239
+      },
+      "allAssetTotal": {
+        "rawBytes": 1836981,
+        "gzipBytes": 704828
+      },
+      "files": [
+        {
+          "url": "http://127.0.0.1:5194/assets/index-C2RZ-o3l.js",
+          "type": "script",
+          "at": 1791608422149,
+          "file": "assets/index-C2RZ-o3l.js",
+          "rawBytes": 1132,
+          "gzipBytes": 626,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/rolldown-runtime-BVpWp9h4.js",
+          "type": "script",
+          "at": 1791608422151,
+          "file": "assets/rolldown-runtime-BVpWp9h4.js",
+          "rawBytes": 1122,
+          "gzipBytes": 636,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/public-vendor-LhP3KStT.js",
+          "type": "script",
+          "at": 1791608422151,
+          "file": "assets/public-vendor-LhP3KStT.js",
+          "rawBytes": 313061,
+          "gzipBytes": 100203,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/QED_Logo-CsCr7MaE.js",
+          "type": "script",
+          "at": 1791608422151,
+          "file": "assets/QED_Logo-CsCr7MaE.js",
+          "rawBytes": 116,
+          "gzipBytes": 132,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/public-app-Cukd_puC.js",
+          "type": "script",
+          "at": 1791608422151,
+          "file": "assets/public-app-Cukd_puC.js",
+          "rawBytes": 111792,
+          "gzipBytes": 31519,
+          "compositions": [
+            "src/features/auth/LoginPanel.loading-view.tsx",
+            "src/features/Landing/LandingPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/index-C2RZ-o3l.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/QED_Logo-CsCr7MaE.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/index-DMrwbaqa.css",
+          "type": "stylesheet",
+          "at": 1791608422151,
+          "file": "assets/index-DMrwbaqa.css",
+          "rawBytes": 189038,
+          "gzipBytes": 30293,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/QED_Logo-qUfJaevn.png",
+          "type": "image",
+          "at": 1791608425644,
+          "file": "assets/QED_Logo-qUfJaevn.png",
+          "rawBytes": 201892,
+          "gzipBytes": 201402,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-principal-BOTzWw0u.js",
+          "type": "script",
+          "at": 1791608426302,
+          "file": "assets/role-eager-principal-BOTzWw0u.js",
+          "rawBytes": 170179,
+          "gzipBytes": 50924,
+          "compositions": [
+            "src/features/profiles/principal/pages/dashboard/PrincipalDashboardHome.loading-view.tsx",
+            "src/features/profiles/principal/pages/gradebooks/PrincipalGradeSheetPage.loading-view.tsx",
+            "src/features/profiles/principal/pages/gradebooks/PrincipalGradebooksPage.loading-view.tsx",
+            "src/features/profiles/principal/pages/reports/AnalyticsPage.loading-view.tsx",
+            "src/features/profiles/principal/pages/reports/HolisticPerformanceAnalyticsPage.loading-view.tsx",
+            "src/features/profiles/principal/pages/students/ClassListPage.loading-view.tsx",
+            "src/features/profiles/principal/pages/students/PrincipalStudentsPage.loading-view.tsx",
+            "src/features/profiles/principal/pages/teachers/PrincipalTeachersPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+            "assets/role-eager-admin-teacher-principal-D8KK4vSN.js",
+            "assets/role-eager-admin-principal-CkE5vfXW.js",
+            "assets/role-eager-principal-parent-CrhatEGg.js",
+            "assets/role-eager-teacher-principal-parent-BiAe1hSl.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+          "type": "script",
+          "at": 1791608426302,
+          "file": "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+          "rawBytes": 114933,
+          "gzipBytes": 34868,
+          "compositions": [
+            "src/features/profiles/admin/pages/help/HelpSupportPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/index-C2RZ-o3l.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/admin_hat-E7baY_zC.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/admin_hat-E7baY_zC.js",
+          "type": "script",
+          "at": 1791608426302,
+          "file": "assets/admin_hat-E7baY_zC.js",
+          "rawBytes": 803,
+          "gzipBytes": 419,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-admin-teacher-principal-D8KK4vSN.js",
+          "type": "script",
+          "at": 1791608426302,
+          "file": "assets/role-eager-admin-teacher-principal-D8KK4vSN.js",
+          "rawBytes": 26771,
+          "gzipBytes": 9226,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-admin-principal-CkE5vfXW.js",
+          "type": "script",
+          "at": 1791608426308,
+          "file": "assets/role-eager-admin-principal-CkE5vfXW.js",
+          "rawBytes": 43521,
+          "gzipBytes": 13707,
+          "compositions": [
+            "src/features/profiles/principal/pages/teachers/TeacherSchedulePage.loading-view.tsx",
+            "src/shared/calendar/CalendarPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+            "assets/role-eager-admin-teacher-principal-D8KK4vSN.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-principal-parent-CrhatEGg.js",
+          "type": "script",
+          "at": 1791608426308,
+          "file": "assets/role-eager-principal-parent-CrhatEGg.js",
+          "rawBytes": 5575,
+          "gzipBytes": 2003,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+            "assets/role-eager-teacher-principal-parent-BiAe1hSl.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-teacher-principal-parent-BiAe1hSl.js",
+          "type": "script",
+          "at": 1791608426308,
+          "file": "assets/role-eager-teacher-principal-parent-BiAe1hSl.js",
+          "rawBytes": 7423,
+          "gzipBytes": 3298,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/PrincipalDashboardHome-B63aYD7w.js",
+          "type": "script",
+          "at": 1791608429504,
+          "file": "assets/PrincipalDashboardHome-B63aYD7w.js",
+          "rawBytes": 919,
+          "gzipBytes": 582,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-principal-BOTzWw0u.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/LoadedChart-Bc89OAiU.js",
+          "type": "script",
+          "at": 1791608429504,
+          "file": "assets/LoadedChart-Bc89OAiU.js",
+          "rawBytes": 585848,
+          "gzipBytes": 162096,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-vendor-LhP3KStT.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/EUC-BZZDGRxc.webp",
+          "type": "image",
+          "at": 1791608429508,
+          "file": "assets/EUC-BZZDGRxc.webp",
+          "rawBytes": 62856,
+          "gzipBytes": 62894,
+          "compositions": [],
+          "imports": []
+        }
+      ],
+      "note": "All assets requested by first visible skeleton, including any still in flight. Uncompressed HTTP harness; gzip totals are calculated, not transferred."
+    },
+    "PARENT": {
+      "cutoff": 1791608438300.5,
+      "rolesRequested": [
+        "parent"
+      ],
+      "scriptTotal": {
+        "rawBytes": 897000,
+        "gzipBytes": 276180
+      },
+      "allAssetTotal": {
+        "rawBytes": 1350786,
+        "gzipBytes": 570769
+      },
+      "files": [
+        {
+          "url": "http://127.0.0.1:5194/assets/index-C2RZ-o3l.js",
+          "type": "script",
+          "at": 1791608430178,
+          "file": "assets/index-C2RZ-o3l.js",
+          "rawBytes": 1132,
+          "gzipBytes": 626,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/rolldown-runtime-BVpWp9h4.js",
+          "type": "script",
+          "at": 1791608430180,
+          "file": "assets/rolldown-runtime-BVpWp9h4.js",
+          "rawBytes": 1122,
+          "gzipBytes": 636,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/public-vendor-LhP3KStT.js",
+          "type": "script",
+          "at": 1791608430180,
+          "file": "assets/public-vendor-LhP3KStT.js",
+          "rawBytes": 313061,
+          "gzipBytes": 100203,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/QED_Logo-CsCr7MaE.js",
+          "type": "script",
+          "at": 1791608430180,
+          "file": "assets/QED_Logo-CsCr7MaE.js",
+          "rawBytes": 116,
+          "gzipBytes": 132,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/public-app-Cukd_puC.js",
+          "type": "script",
+          "at": 1791608430180,
+          "file": "assets/public-app-Cukd_puC.js",
+          "rawBytes": 111792,
+          "gzipBytes": 31519,
+          "compositions": [
+            "src/features/auth/LoginPanel.loading-view.tsx",
+            "src/features/Landing/LandingPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/index-C2RZ-o3l.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/QED_Logo-CsCr7MaE.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/index-DMrwbaqa.css",
+          "type": "stylesheet",
+          "at": 1791608430180,
+          "file": "assets/index-DMrwbaqa.css",
+          "rawBytes": 189038,
+          "gzipBytes": 30293,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/QED_Logo-qUfJaevn.png",
+          "type": "image",
+          "at": 1791608433650,
+          "file": "assets/QED_Logo-qUfJaevn.png",
+          "rawBytes": 201892,
+          "gzipBytes": 201402,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-parent-D1CsFKHf.js",
+          "type": "script",
+          "at": 1791608434301,
+          "file": "assets/role-eager-parent-D1CsFKHf.js",
+          "rawBytes": 337348,
+          "gzipBytes": 100712,
+          "compositions": [
+            "src/features/profiles/parent/pages/EnrollledStudent/EnrolledChildrenPage.loading-view.tsx",
+            "src/features/profiles/parent/pages/Student/Academic/CoursewareView.loading-view.tsx",
+            "src/features/profiles/parent/pages/Student/Academic/PetQuizPage.loading-view.tsx",
+            "src/features/profiles/parent/pages/Student/Academic/TopicSupportChoice.loading-view.tsx",
+            "src/features/profiles/parent/pages/Student/ChildDetailPage.loading-view.tsx",
+            "src/features/profiles/parent/pages/dashboard/ParentDashboardHome.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/index-C2RZ-o3l.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+            "assets/DepEd-B95_2pMl.js",
+            "assets/pet-idle-DUyGvZst.js",
+            "assets/role-eager-principal-parent-CrhatEGg.js",
+            "assets/role-eager-teacher-parent-DJ2ljvc_.js",
+            "assets/role-eager-teacher-principal-parent-BiAe1hSl.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+          "type": "script",
+          "at": 1791608434304,
+          "file": "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+          "rawBytes": 114933,
+          "gzipBytes": 34868,
+          "compositions": [
+            "src/features/profiles/admin/pages/help/HelpSupportPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/index-C2RZ-o3l.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/admin_hat-E7baY_zC.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/admin_hat-E7baY_zC.js",
+          "type": "script",
+          "at": 1791608434304,
+          "file": "assets/admin_hat-E7baY_zC.js",
+          "rawBytes": 803,
+          "gzipBytes": 419,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/DepEd-B95_2pMl.js",
+          "type": "script",
+          "at": 1791608434304,
+          "file": "assets/DepEd-B95_2pMl.js",
+          "rawBytes": 113,
+          "gzipBytes": 129,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/pet-idle-DUyGvZst.js",
+          "type": "script",
+          "at": 1791608434308,
+          "file": "assets/pet-idle-DUyGvZst.js",
+          "rawBytes": 126,
+          "gzipBytes": 136,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-principal-parent-CrhatEGg.js",
+          "type": "script",
+          "at": 1791608434308,
+          "file": "assets/role-eager-principal-parent-CrhatEGg.js",
+          "rawBytes": 5575,
+          "gzipBytes": 2003,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+            "assets/role-eager-teacher-principal-parent-BiAe1hSl.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-teacher-principal-parent-BiAe1hSl.js",
+          "type": "script",
+          "at": 1791608434308,
+          "file": "assets/role-eager-teacher-principal-parent-BiAe1hSl.js",
+          "rawBytes": 7423,
+          "gzipBytes": 3298,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/role-eager-teacher-parent-DJ2ljvc_.js",
+          "type": "script",
+          "at": 1791608434308,
+          "file": "assets/role-eager-teacher-parent-DJ2ljvc_.js",
+          "rawBytes": 3070,
+          "gzipBytes": 1209,
+          "compositions": [
+            "src/shared/calendar/CalendarPageView.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-app-Cukd_puC.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ParentDashboardHome-BZq9JauP.js",
+          "type": "script",
+          "at": 1791608437762,
+          "file": "assets/ParentDashboardHome-BZq9JauP.js",
+          "rawBytes": 386,
+          "gzipBytes": 290,
+          "compositions": [],
+          "imports": [
+            "assets/rolldown-runtime-BVpWp9h4.js",
+            "assets/public-vendor-LhP3KStT.js",
+            "assets/role-eager-parent-D1CsFKHf.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/EUC-BZZDGRxc.webp",
+          "type": "image",
+          "at": 1791608437762,
+          "file": "assets/EUC-BZZDGRxc.webp",
+          "rawBytes": 62856,
+          "gzipBytes": 62894,
+          "compositions": [],
+          "imports": []
+        }
+      ],
+      "note": "All assets requested by first visible skeleton, including any still in flight. Uncompressed HTTP harness; gzip totals are calculated, not transferred."
+    }
+  }
+}

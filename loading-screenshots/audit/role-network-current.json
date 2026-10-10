@@ -1,0 +1,3542 @@
+{
+  "stage": "current",
+  "roles": {
+    "ADMIN": {
+      "cutoff": 1791608613125,
+      "rolesRequested": [
+        "admin"
+      ],
+      "scriptTotal": {
+        "rawBytes": 921121,
+        "gzipBytes": 303294
+      },
+      "allAssetTotal": {
+        "rawBytes": 1518411,
+        "gzipBytes": 740932
+      },
+      "files": [
+        {
+          "url": "http://127.0.0.1:5194/assets/index-CB5HIbiV.js",
+          "type": "script",
+          "at": 1791608604637,
+          "file": "assets/index-CB5HIbiV.js",
+          "rawBytes": 338748,
+          "gzipBytes": 101970,
+          "compositions": [
+            "src/features/auth/LoginPanel.loading-view.tsx",
+            "src/features/Landing/LandingPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/chunk-aKtaBQYM.js",
+          "type": "script",
+          "at": 1791608604641,
+          "file": "assets/chunk-aKtaBQYM.js",
+          "rawBytes": 1084,
+          "gzipBytes": 621,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/preload-helper-zJ_50EbN.js",
+          "type": "script",
+          "at": 1791608604641,
+          "file": "assets/preload-helper-zJ_50EbN.js",
+          "rawBytes": 1193,
+          "gzipBytes": 681,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/api.config-qjE84KfK.js",
+          "type": "script",
+          "at": 1791608604641,
+          "file": "assets/api.config-qjE84KfK.js",
+          "rawBytes": 55,
+          "gzipBytes": 75,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/react-DxZHKUKd.js",
+          "type": "script",
+          "at": 1791608604641,
+          "file": "assets/react-DxZHKUKd.js",
+          "rawBytes": 7521,
+          "gzipBytes": 2878,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/jsx-runtime-aNkLRTnx.js",
+          "type": "script",
+          "at": 1791608604641,
+          "file": "assets/jsx-runtime-aNkLRTnx.js",
+          "rawBytes": 43369,
+          "gzipBytes": 15481,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/react-dom-rMUovVdx.js",
+          "type": "script",
+          "at": 1791608604641,
+          "file": "assets/react-dom-rMUovVdx.js",
+          "rawBytes": 3568,
+          "gzipBytes": 1351,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/index-D-MJdwHN.css",
+          "type": "stylesheet",
+          "at": 1791608604642,
+          "file": "assets/index-D-MJdwHN.css",
+          "rawBytes": 188435,
+          "gzipBytes": 30199,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/QED_Logo-qUfJaevn.png",
+          "type": "image",
+          "at": 1791608607990,
+          "file": "assets/QED_Logo-qUfJaevn.png",
+          "rawBytes": 201892,
+          "gzipBytes": 201402,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/AdminRoutes-BwaYzFKU.js",
+          "type": "script",
+          "at": 1791608608871,
+          "file": "assets/AdminRoutes-BwaYzFKU.js",
+          "rawBytes": 13269,
+          "gzipBytes": 4303,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/UserFormPage.loading-view-BidVO1nI.js",
+            "assets/ClassFormPage.loading-view-BM-gBdcd.js",
+            "assets/ClassPage.loading-view-Cy80NwjI.js",
+            "assets/ClassViewPage.loading-view-kJtQvF61.js",
+            "assets/ClassesContext-CPpBPMyl.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/AdminDashboardHome.loading-view-BXnWSQt6.js",
+            "assets/StudentFormPage.loading-view-DJnyDkRi.js",
+            "assets/StudentRecordsPage.loading-view-CaUwZ7t0.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/AcademicYearPage.loading-view-CYSyBltA.js",
+            "assets/AddSubjectPage.loading-view-CZs7oL05.js",
+            "assets/AdminSubjectDetailPage.loading-view-BLeLfGP-.js",
+            "assets/ManageSubjectsPage.loading-view-BqWR-Bxb.js",
+            "assets/SubjectSectionsContext-BgTb1wUS.js",
+            "assets/UserManagementPage.loading-view-C53WKCIh.js",
+            "assets/UserViewPage.loading-view-CiR2bbBP.js",
+            "assets/user-wJ1MNslM.js",
+            "assets/CalendarPage.loading-view-OjtGRTeK.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/calendar-BaCgnYDw.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/UserFormPage.loading-view-BidVO1nI.js",
+          "type": "script",
+          "at": 1791608608875,
+          "file": "assets/UserFormPage.loading-view-BidVO1nI.js",
+          "rawBytes": 14648,
+          "gzipBytes": 5102,
+          "compositions": [
+            "src/features/profiles/admin/pages/usermanagement/UserFormPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/adminFeedbackModal-C6JnKTZY.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/user-wJ1MNslM.js",
+            "assets/WorkflowStepper-e5kR5ire.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/circle-check-big-DnwbIArs.js",
+            "assets/save-DuYu6phG.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/adminFeedbackModal-C6JnKTZY.js",
+          "type": "script",
+          "at": 1791608608875,
+          "file": "assets/adminFeedbackModal-C6JnKTZY.js",
+          "rawBytes": 1262,
+          "gzipBytes": 741,
+          "compositions": [],
+          "imports": [
+            "assets/index-CB5HIbiV.js",
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/Header-9nGj7jYD.js",
+          "type": "script",
+          "at": 1791608608875,
+          "file": "assets/Header-9nGj7jYD.js",
+          "rawBytes": 157187,
+          "gzipBytes": 45308,
+          "compositions": [
+            "src/features/profiles/admin/pages/help/HelpSupportPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/user-wJ1MNslM.js",
+          "type": "script",
+          "at": 1791608608875,
+          "file": "assets/user-wJ1MNslM.js",
+          "rawBytes": 2752,
+          "gzipBytes": 1130,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/WorkflowStepper-e5kR5ire.js",
+          "type": "script",
+          "at": 1791608608875,
+          "file": "assets/WorkflowStepper-e5kR5ire.js",
+          "rawBytes": 1802,
+          "gzipBytes": 869,
+          "compositions": [],
+          "imports": [
+            "assets/index-CB5HIbiV.js",
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/circle-check-big-DnwbIArs.js",
+          "type": "script",
+          "at": 1791608608875,
+          "file": "assets/circle-check-big-DnwbIArs.js",
+          "rawBytes": 189,
+          "gzipBytes": 178,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/save-DuYu6phG.js",
+          "type": "script",
+          "at": 1791608608875,
+          "file": "assets/save-DuYu6phG.js",
+          "rawBytes": 322,
+          "gzipBytes": 224,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ClassFormPage.loading-view-BM-gBdcd.js",
+          "type": "script",
+          "at": 1791608608875,
+          "file": "assets/ClassFormPage.loading-view-BM-gBdcd.js",
+          "rawBytes": 18790,
+          "gzipBytes": 5998,
+          "compositions": [
+            "src/features/profiles/admin/pages/classes/ClassFormPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/ClassesContext-CPpBPMyl.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/classes.service-G6eMozPB.js",
+            "assets/Class-ByaEhWw5.js",
+            "assets/WorkflowStepper-e5kR5ire.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/plus-DSNzCDc6.js",
+            "assets/save-DuYu6phG.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ClassesContext-CPpBPMyl.js",
+          "type": "script",
+          "at": 1791608608875,
+          "file": "assets/ClassesContext-CPpBPMyl.js",
+          "rawBytes": 1966,
+          "gzipBytes": 1028,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/classes.service-G6eMozPB.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/classes.service-G6eMozPB.js",
+          "type": "script",
+          "at": 1791608608875,
+          "file": "assets/classes.service-G6eMozPB.js",
+          "rawBytes": 1864,
+          "gzipBytes": 722,
+          "compositions": [],
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/Class-ByaEhWw5.js",
+          "type": "script",
+          "at": 1791608608875,
+          "file": "assets/Class-ByaEhWw5.js",
+          "rawBytes": 310,
+          "gzipBytes": 238,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/plus-DSNzCDc6.js",
+          "type": "script",
+          "at": 1791608608875,
+          "file": "assets/plus-DSNzCDc6.js",
+          "rawBytes": 148,
+          "gzipBytes": 147,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ClassPage.loading-view-Cy80NwjI.js",
+          "type": "script",
+          "at": 1791608608875,
+          "file": "assets/ClassPage.loading-view-Cy80NwjI.js",
+          "rawBytes": 17086,
+          "gzipBytes": 6921,
+          "compositions": [
+            "src/features/profiles/admin/pages/classes/ClassPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/ClassesContext-CPpBPMyl.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/Class-ByaEhWw5.js",
+            "assets/Studentsfilterbar-CqbdFrzh.js",
+            "assets/Students-DjDH3iB3.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/ellipsis-vertical-CAEZsHps.js",
+            "assets/plus-DSNzCDc6.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/Studentsfilterbar-CqbdFrzh.js",
+          "type": "script",
+          "at": 1791608608875,
+          "file": "assets/Studentsfilterbar-CqbdFrzh.js",
+          "rawBytes": 2976,
+          "gzipBytes": 1472,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/Students-DjDH3iB3.js",
+          "type": "script",
+          "at": 1791608608875,
+          "file": "assets/Students-DjDH3iB3.js",
+          "rawBytes": 214,
+          "gzipBytes": 159,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ellipsis-vertical-CAEZsHps.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/ellipsis-vertical-CAEZsHps.js",
+          "rawBytes": 230,
+          "gzipBytes": 168,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/search-B-cScTIO.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/search-B-cScTIO.js",
+          "rawBytes": 169,
+          "gzipBytes": 164,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ClassViewPage.loading-view-kJtQvF61.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/ClassViewPage.loading-view-kJtQvF61.js",
+          "rawBytes": 12534,
+          "gzipBytes": 4682,
+          "compositions": [
+            "src/features/profiles/admin/pages/classes/ClassViewPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/ClassesContext-CPpBPMyl.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/Class-ByaEhWw5.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/Students-DjDH3iB3.js",
+            "assets/DashboardUI-Bht-ETSZ.js",
+            "assets/ProfileOverviewCard-BMwR6oew.js",
+            "assets/StudentDirectory-DYpzPA_L.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/StudentsContext-D8GL98q6.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/StudentsContext-D8GL98q6.js",
+          "rawBytes": 2597,
+          "gzipBytes": 1039,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/DashboardUI-Bht-ETSZ.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/DashboardUI-Bht-ETSZ.js",
+          "rawBytes": 11991,
+          "gzipBytes": 4416,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/minus-BmJzL3b8.js",
+            "assets/trending-down-6t3XXVcF.js",
+            "assets/trending-up-xv87XHQ5.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/minus-BmJzL3b8.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/minus-BmJzL3b8.js",
+          "rawBytes": 112,
+          "gzipBytes": 129,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/trending-down-6t3XXVcF.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/trending-down-6t3XXVcF.js",
+          "rawBytes": 173,
+          "gzipBytes": 166,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/trending-up-xv87XHQ5.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/trending-up-xv87XHQ5.js",
+          "rawBytes": 170,
+          "gzipBytes": 166,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ProfileOverviewCard-BMwR6oew.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/ProfileOverviewCard-BMwR6oew.js",
+          "rawBytes": 5429,
+          "gzipBytes": 2401,
+          "compositions": [],
+          "imports": [
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/StudentDirectory-DYpzPA_L.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/StudentDirectory-DYpzPA_L.js",
+          "rawBytes": 3219,
+          "gzipBytes": 1541,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/StudentDirectoryTable-Dq5YFn_6.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/StudentDirectoryTable-Dq5YFn_6.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/StudentDirectoryTable-Dq5YFn_6.js",
+          "rawBytes": 3938,
+          "gzipBytes": 1525,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/AdminDashboardHome.loading-view-BXnWSQt6.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/AdminDashboardHome.loading-view-BXnWSQt6.js",
+          "rawBytes": 25233,
+          "gzipBytes": 9123,
+          "compositions": [
+            "src/features/profiles/admin/pages/dashboard/AdminDashboardHome.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/StudentFormPage.loading-view-DJnyDkRi.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/StudentFormPage.loading-view-DJnyDkRi.js",
+          "rawBytes": 13361,
+          "gzipBytes": 4048,
+          "compositions": [
+            "src/features/profiles/admin/pages/studentrecords/StudentFormPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/grade-section.service-5nBrQcSV.js",
+            "assets/Students-DjDH3iB3.js",
+            "assets/WorkflowStepper-e5kR5ire.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/save-DuYu6phG.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/grade-section.service-5nBrQcSV.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/grade-section.service-5nBrQcSV.js",
+          "rawBytes": 610,
+          "gzipBytes": 330,
+          "compositions": [],
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/StudentRecordsPage.loading-view-CaUwZ7t0.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/StudentRecordsPage.loading-view-CaUwZ7t0.js",
+          "rawBytes": 27192,
+          "gzipBytes": 9709,
+          "compositions": [
+            "src/features/profiles/admin/pages/studentrecords/StudentRecordsPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/Studentsfilterbar-CqbdFrzh.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/grade-section.service-5nBrQcSV.js",
+            "assets/Students-DjDH3iB3.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/download-4ZpfCl3y.js",
+            "assets/ellipsis-vertical-CAEZsHps.js",
+            "assets/upload-CnESDsZ5.js",
+            "assets/loader-circle-DxY1GE3W.js",
+            "assets/search-B-cScTIO.js",
+            "assets/user-plus-76L47Kwg.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/download-4ZpfCl3y.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/download-4ZpfCl3y.js",
+          "rawBytes": 227,
+          "gzipBytes": 188,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/upload-CnESDsZ5.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/upload-CnESDsZ5.js",
+          "rawBytes": 600,
+          "gzipBytes": 327,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/loader-circle-DxY1GE3W.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/loader-circle-DxY1GE3W.js",
+          "rawBytes": 139,
+          "gzipBytes": 151,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/user-plus-76L47Kwg.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/user-plus-76L47Kwg.js",
+          "rawBytes": 305,
+          "gzipBytes": 229,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/AcademicYearPage.loading-view-CYSyBltA.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/AcademicYearPage.loading-view-CYSyBltA.js",
+          "rawBytes": 22003,
+          "gzipBytes": 7205,
+          "compositions": [
+            "src/features/profiles/admin/pages/subjects/AcademicYearPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/academicyear.service-CshyqqlM.js",
+            "assets/types-C7Tfi_0a.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/academicyear.service-CshyqqlM.js",
+          "type": "script",
+          "at": 1791608608887,
+          "file": "assets/academicyear.service-CshyqqlM.js",
+          "rawBytes": 1214,
+          "gzipBytes": 464,
+          "compositions": [],
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/types-C7Tfi_0a.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/types-C7Tfi_0a.js",
+          "rawBytes": 280,
+          "gzipBytes": 161,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/AddSubjectPage.loading-view-CZs7oL05.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/AddSubjectPage.loading-view-CZs7oL05.js",
+          "rawBytes": 15462,
+          "gzipBytes": 5288,
+          "compositions": [
+            "src/features/profiles/admin/pages/subjects/AddSubjectPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/adminFeedbackModal-C6JnKTZY.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/classes.service-G6eMozPB.js",
+            "assets/SubjectSectionsContext-BgTb1wUS.js",
+            "assets/academicyear.service-CshyqqlM.js",
+            "assets/subjectGradeTemplate.service-pWyI120D.js",
+            "assets/types-C7Tfi_0a.js",
+            "assets/WorkflowStepper-e5kR5ire.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/circle-check-big-DnwbIArs.js",
+            "assets/upload-CnESDsZ5.js",
+            "assets/loader-circle-DxY1GE3W.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/SubjectSectionsContext-BgTb1wUS.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/SubjectSectionsContext-BgTb1wUS.js",
+          "rawBytes": 6565,
+          "gzipBytes": 2132,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/types-C7Tfi_0a.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/subjectGradeTemplate.service-pWyI120D.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/subjectGradeTemplate.service-pWyI120D.js",
+          "rawBytes": 6039,
+          "gzipBytes": 2701,
+          "compositions": [],
+          "imports": [
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/api.config-qjE84KfK.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/AdminSubjectDetailPage.loading-view-BLeLfGP-.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/AdminSubjectDetailPage.loading-view-BLeLfGP-.js",
+          "rawBytes": 4015,
+          "gzipBytes": 1928,
+          "compositions": [
+            "src/features/profiles/admin/pages/subjects/AdminSubjectDetailPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/SubjectGradeTemplateSection-CC4iLnZw.js",
+            "assets/subjectGradeTemplate.service-pWyI120D.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/SubjectGradeTemplateSection-CC4iLnZw.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/SubjectGradeTemplateSection-CC4iLnZw.js",
+          "rawBytes": 6156,
+          "gzipBytes": 2141,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/subjectGradeTemplate.service-pWyI120D.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/circle-check-big-DnwbIArs.js",
+            "assets/upload-CnESDsZ5.js",
+            "assets/loader-circle-DxY1GE3W.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ManageSubjectsPage.loading-view-BqWR-Bxb.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/ManageSubjectsPage.loading-view-BqWR-Bxb.js",
+          "rawBytes": 51113,
+          "gzipBytes": 17156,
+          "compositions": [
+            "src/features/profiles/admin/pages/subjects/ManageSubjectsPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/Teacher-x3HOHZiH.js",
+            "assets/SubjectGradeTemplateSection-CC4iLnZw.js",
+            "assets/SubjectSectionsContext-BgTb1wUS.js",
+            "assets/academicyear.service-CshyqqlM.js",
+            "assets/subjectGradeTemplate.service-pWyI120D.js",
+            "assets/types-C7Tfi_0a.js",
+            "assets/SubjectAssignmentCard-B2ILEjA2.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/loader-circle-DxY1GE3W.js",
+            "assets/plus-DSNzCDc6.js",
+            "assets/school-B0ork6uJ.js",
+            "assets/search-B-cScTIO.js",
+            "assets/user-plus-76L47Kwg.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/Teacher-x3HOHZiH.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/Teacher-x3HOHZiH.js",
+          "rawBytes": 66,
+          "gzipBytes": 78,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/SubjectAssignmentCard-B2ILEjA2.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/SubjectAssignmentCard-B2ILEjA2.js",
+          "rawBytes": 4838,
+          "gzipBytes": 2188,
+          "compositions": [],
+          "imports": [
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/school-B0ork6uJ.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/school-B0ork6uJ.js",
+          "rawBytes": 450,
+          "gzipBytes": 290,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/UserManagementPage.loading-view-C53WKCIh.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/UserManagementPage.loading-view-C53WKCIh.js",
+          "rawBytes": 18447,
+          "gzipBytes": 6422,
+          "compositions": [
+            "src/features/profiles/admin/pages/usermanagement/UserManagementPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/ConfirmDeleteUserModal-B-whc9De.js",
+            "assets/user-wJ1MNslM.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/crown-BYaTXTbV.js",
+            "assets/ellipsis-vertical-CAEZsHps.js",
+            "assets/search-B-cScTIO.js",
+            "assets/user-plus-76L47Kwg.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ConfirmDeleteUserModal-B-whc9De.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/ConfirmDeleteUserModal-B-whc9De.js",
+          "rawBytes": 739,
+          "gzipBytes": 490,
+          "compositions": [],
+          "imports": [
+            "assets/Header-9nGj7jYD.js",
+            "assets/user-wJ1MNslM.js",
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/crown-BYaTXTbV.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/crown-BYaTXTbV.js",
+          "rawBytes": 357,
+          "gzipBytes": 253,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/UserViewPage.loading-view-CiR2bbBP.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/UserViewPage.loading-view-CiR2bbBP.js",
+          "rawBytes": 8106,
+          "gzipBytes": 3023,
+          "compositions": [
+            "src/features/profiles/admin/pages/usermanagement/UserViewPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/ConfirmDeleteUserModal-B-whc9De.js",
+            "assets/user-wJ1MNslM.js",
+            "assets/TeacherSchedulePage-Cu31gW4x.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/TeacherSchedulePage-Cu31gW4x.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/TeacherSchedulePage-Cu31gW4x.js",
+          "rawBytes": 1489,
+          "gzipBytes": 845,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/TeacherSchedulePage.loading-view-98mS8sJZ.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/TeacherSchedulePage.loading-view-98mS8sJZ.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/TeacherSchedulePage.loading-view-98mS8sJZ.js",
+          "rawBytes": 17883,
+          "gzipBytes": 6286,
+          "compositions": [
+            "src/features/profiles/principal/pages/teachers/TeacherSchedulePage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/students.service-Cbil_lyp.js",
+            "assets/teachers.service-vXIDzqX-.js",
+            "assets/DashboardUI-Bht-ETSZ.js",
+            "assets/ProfileOverviewCard-BMwR6oew.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/students.service-Cbil_lyp.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/students.service-Cbil_lyp.js",
+          "rawBytes": 1280,
+          "gzipBytes": 514,
+          "compositions": [],
+          "imports": [
+            "assets/api.config-qjE84KfK.js",
+            "assets/academicyear.service-CshyqqlM.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/teachers.service-vXIDzqX-.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/teachers.service-vXIDzqX-.js",
+          "rawBytes": 826,
+          "gzipBytes": 454,
+          "compositions": [],
+          "imports": [
+            "assets/api.config-qjE84KfK.js",
+            "assets/academicyear.service-CshyqqlM.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/CalendarPage.loading-view-OjtGRTeK.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/CalendarPage.loading-view-OjtGRTeK.js",
+          "rawBytes": 13975,
+          "gzipBytes": 4335,
+          "compositions": [
+            "src/shared/calendar/CalendarPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/party-popper-BrLiT9H8.js",
+            "assets/plus-DSNzCDc6.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/party-popper-BrLiT9H8.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/party-popper-BrLiT9H8.js",
+          "rawBytes": 725,
+          "gzipBytes": 408,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/calendar-BaCgnYDw.js",
+          "type": "script",
+          "at": 1791608608888,
+          "file": "assets/calendar-BaCgnYDw.js",
+          "rawBytes": 252,
+          "gzipBytes": 198,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/AdminDashboardHome-DPrJxezI.js",
+          "type": "script",
+          "at": 1791608612780,
+          "file": "assets/AdminDashboardHome-DPrJxezI.js",
+          "rawBytes": 289,
+          "gzipBytes": 235,
+          "compositions": [],
+          "imports": [
+            "assets/AdminDashboardHome.loading-view-BXnWSQt6.js",
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/EUC-BZZDGRxc.webp",
+          "type": "image",
+          "at": 1791608612781,
+          "file": "assets/EUC-BZZDGRxc.webp",
+          "rawBytes": 62856,
+          "gzipBytes": 62894,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/admin_hat-B0JzeJgD.png",
+          "type": "image",
+          "at": 1791608612781,
+          "file": "assets/admin_hat-B0JzeJgD.png",
+          "rawBytes": 144107,
+          "gzipBytes": 143143,
+          "compositions": [],
+          "imports": []
+        }
+      ],
+      "note": "All assets requested by first visible skeleton, including any still in flight. Uncompressed HTTP harness; gzip totals are calculated, not transferred."
+    },
+    "TEACHER": {
+      "cutoff": 1791608622394.6,
+      "rolesRequested": [
+        "teacher"
+      ],
+      "scriptTotal": {
+        "rawBytes": 977985,
+        "gzipBytes": 316911
+      },
+      "allAssetTotal": {
+        "rawBytes": 1431168,
+        "gzipBytes": 611406
+      },
+      "files": [
+        {
+          "url": "http://127.0.0.1:5194/assets/index-CB5HIbiV.js",
+          "type": "script",
+          "at": 1791608613659,
+          "file": "assets/index-CB5HIbiV.js",
+          "rawBytes": 338748,
+          "gzipBytes": 101970,
+          "compositions": [
+            "src/features/auth/LoginPanel.loading-view.tsx",
+            "src/features/Landing/LandingPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/chunk-aKtaBQYM.js",
+          "type": "script",
+          "at": 1791608613663,
+          "file": "assets/chunk-aKtaBQYM.js",
+          "rawBytes": 1084,
+          "gzipBytes": 621,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/preload-helper-zJ_50EbN.js",
+          "type": "script",
+          "at": 1791608613663,
+          "file": "assets/preload-helper-zJ_50EbN.js",
+          "rawBytes": 1193,
+          "gzipBytes": 681,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/api.config-qjE84KfK.js",
+          "type": "script",
+          "at": 1791608613663,
+          "file": "assets/api.config-qjE84KfK.js",
+          "rawBytes": 55,
+          "gzipBytes": 75,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/react-DxZHKUKd.js",
+          "type": "script",
+          "at": 1791608613663,
+          "file": "assets/react-DxZHKUKd.js",
+          "rawBytes": 7521,
+          "gzipBytes": 2878,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/jsx-runtime-aNkLRTnx.js",
+          "type": "script",
+          "at": 1791608613663,
+          "file": "assets/jsx-runtime-aNkLRTnx.js",
+          "rawBytes": 43369,
+          "gzipBytes": 15481,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/react-dom-rMUovVdx.js",
+          "type": "script",
+          "at": 1791608613663,
+          "file": "assets/react-dom-rMUovVdx.js",
+          "rawBytes": 3568,
+          "gzipBytes": 1351,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/index-D-MJdwHN.css",
+          "type": "stylesheet",
+          "at": 1791608613663,
+          "file": "assets/index-D-MJdwHN.css",
+          "rawBytes": 188435,
+          "gzipBytes": 30199,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/QED_Logo-qUfJaevn.png",
+          "type": "image",
+          "at": 1791608617051,
+          "file": "assets/QED_Logo-qUfJaevn.png",
+          "rawBytes": 201892,
+          "gzipBytes": 201402,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/TeacherRoutes-2j4AQ7qH.js",
+          "type": "script",
+          "at": 1791608617872,
+          "file": "assets/TeacherRoutes-2j4AQ7qH.js",
+          "rawBytes": 13258,
+          "gzipBytes": 4531,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/ClassesContext-CPpBPMyl.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/TeacherAttendanceRecordsPage.loading-view-DQgizTTL.js",
+            "assets/TeacherAttendancePage.loading-view-CNpuiXU5.js",
+            "assets/TeacherDashboardHome.loading-view-BFkhg5eI.js",
+            "assets/GradePage.loading-view-WDcXAgfA.js",
+            "assets/HolisticDomainTrendsPage.loading-view-LaCCdpVb.js",
+            "assets/HolisticOverviewPage.loading-view-D25c32WI.js",
+            "assets/StudentHolisticProfilePage.loading-view-CrNWn6Lc.js",
+            "assets/AdvisoryRosterPage.loading-view-0E88lAnI.js",
+            "assets/SubjectClassListPage.loading-view-CrprbTrm.js",
+            "assets/SubjectPage.loading-view-nj1BUDhR.js",
+            "assets/SubjectRecordsPage.loading-view-CDfN4UoK.js",
+            "assets/SubjectDetailPage.loading-view-NbdKe_xd.js",
+            "assets/CalendarPageView.loading-view-Cgz25eWn.js",
+            "assets/StudentDetailPage.loading-view-D7j0xxlq.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/square-star-Cywu8jWx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ClassesContext-CPpBPMyl.js",
+          "type": "script",
+          "at": 1791608617872,
+          "file": "assets/ClassesContext-CPpBPMyl.js",
+          "rawBytes": 1966,
+          "gzipBytes": 1028,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/classes.service-G6eMozPB.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/classes.service-G6eMozPB.js",
+          "type": "script",
+          "at": 1791608617872,
+          "file": "assets/classes.service-G6eMozPB.js",
+          "rawBytes": 1864,
+          "gzipBytes": 722,
+          "compositions": [],
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/Header-9nGj7jYD.js",
+          "type": "script",
+          "at": 1791608617872,
+          "file": "assets/Header-9nGj7jYD.js",
+          "rawBytes": 157187,
+          "gzipBytes": 45308,
+          "compositions": [
+            "src/features/profiles/admin/pages/help/HelpSupportPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/StudentsContext-D8GL98q6.js",
+          "type": "script",
+          "at": 1791608617873,
+          "file": "assets/StudentsContext-D8GL98q6.js",
+          "rawBytes": 2597,
+          "gzipBytes": 1039,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/TeacherAttendanceRecordsPage.loading-view-DQgizTTL.js",
+          "type": "script",
+          "at": 1791608617873,
+          "file": "assets/TeacherAttendanceRecordsPage.loading-view-DQgizTTL.js",
+          "rawBytes": 42609,
+          "gzipBytes": 14082,
+          "compositions": [
+            "src/features/profiles/teacher/pages/attendance/TeacherAttendanceRecordsPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/useSelectedAdvisorySection.service-D4dG4xfU.js",
+            "assets/Grading-BxF5tKfg.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/calendar-check-C9_qLLPf.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/useSelectedAdvisorySection.service-D4dG4xfU.js",
+          "type": "script",
+          "at": 1791608617873,
+          "file": "assets/useSelectedAdvisorySection.service-D4dG4xfU.js",
+          "rawBytes": 3589,
+          "gzipBytes": 1882,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/Grading-BxF5tKfg.js",
+          "type": "script",
+          "at": 1791608617873,
+          "file": "assets/Grading-BxF5tKfg.js",
+          "rawBytes": 1276,
+          "gzipBytes": 636,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/calendar-check-C9_qLLPf.js",
+          "type": "script",
+          "at": 1791608617873,
+          "file": "assets/calendar-check-C9_qLLPf.js",
+          "rawBytes": 300,
+          "gzipBytes": 223,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/TeacherAttendancePage.loading-view-CNpuiXU5.js",
+          "type": "script",
+          "at": 1791608617873,
+          "file": "assets/TeacherAttendancePage.loading-view-CNpuiXU5.js",
+          "rawBytes": 17162,
+          "gzipBytes": 6539,
+          "compositions": [
+            "src/features/profiles/teacher/pages/attendance/TeacherAttendancePage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/useSelectedAdvisorySection.service-D4dG4xfU.js",
+            "assets/Grading-BxF5tKfg.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/clipboard-list-CamLZ1O6.js",
+          "type": "script",
+          "at": 1791608617873,
+          "file": "assets/clipboard-list-CamLZ1O6.js",
+          "rawBytes": 406,
+          "gzipBytes": 258,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/search-B-cScTIO.js",
+          "type": "script",
+          "at": 1791608617873,
+          "file": "assets/search-B-cScTIO.js",
+          "rawBytes": 169,
+          "gzipBytes": 164,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/TeacherDashboardHome.loading-view-BFkhg5eI.js",
+          "type": "script",
+          "at": 1791608617873,
+          "file": "assets/TeacherDashboardHome.loading-view-BFkhg5eI.js",
+          "rawBytes": 38228,
+          "gzipBytes": 12596,
+          "compositions": [
+            "src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/clock-3-DJzs4NSX.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/clock-3-DJzs4NSX.js",
+          "type": "script",
+          "at": 1791608617873,
+          "file": "assets/clock-3-DJzs4NSX.js",
+          "rawBytes": 164,
+          "gzipBytes": 163,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/GradePage.loading-view-WDcXAgfA.js",
+          "type": "script",
+          "at": 1791608617873,
+          "file": "assets/GradePage.loading-view-WDcXAgfA.js",
+          "rawBytes": 32143,
+          "gzipBytes": 9022,
+          "compositions": [
+            "src/features/profiles/teacher/pages/grades/GradePage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/subjectGrading.service-B8KnN8HV.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/clock-DYYi5eLs.js",
+            "assets/download-4ZpfCl3y.js",
+            "assets/loader-circle-DxY1GE3W.js",
+            "assets/search-B-cScTIO.js",
+            "assets/send-BVOWpxsv.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/subjectGrading.service-B8KnN8HV.js",
+          "type": "script",
+          "at": 1791608617873,
+          "file": "assets/subjectGrading.service-B8KnN8HV.js",
+          "rawBytes": 2091,
+          "gzipBytes": 844,
+          "compositions": [],
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/clock-DYYi5eLs.js",
+          "type": "script",
+          "at": 1791608617873,
+          "file": "assets/clock-DYYi5eLs.js",
+          "rawBytes": 164,
+          "gzipBytes": 162,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/download-4ZpfCl3y.js",
+          "type": "script",
+          "at": 1791608617873,
+          "file": "assets/download-4ZpfCl3y.js",
+          "rawBytes": 227,
+          "gzipBytes": 188,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/loader-circle-DxY1GE3W.js",
+          "type": "script",
+          "at": 1791608617882,
+          "file": "assets/loader-circle-DxY1GE3W.js",
+          "rawBytes": 139,
+          "gzipBytes": 151,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/send-BVOWpxsv.js",
+          "type": "script",
+          "at": 1791608617882,
+          "file": "assets/send-BVOWpxsv.js",
+          "rawBytes": 285,
+          "gzipBytes": 226,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/HolisticDomainTrendsPage.loading-view-LaCCdpVb.js",
+          "type": "script",
+          "at": 1791608617882,
+          "file": "assets/HolisticDomainTrendsPage.loading-view-LaCCdpVb.js",
+          "rawBytes": 25378,
+          "gzipBytes": 9005,
+          "compositions": [
+            "src/features/profiles/teacher/pages/holistic/HolisticDomainTrendsPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/DashboardUI-Bht-ETSZ.js",
+            "assets/useSelectedAdvisorySection.service-D4dG4xfU.js",
+            "assets/holistic.service-zOo9fL3s.js",
+            "assets/DeferredChart-3v9Xg9Hx.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/activity-UJFE1vfX.js",
+            "assets/compass-SNsI0u2e.js",
+            "assets/minus-BmJzL3b8.js",
+            "assets/trending-down-6t3XXVcF.js",
+            "assets/trending-up-xv87XHQ5.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/DashboardUI-Bht-ETSZ.js",
+          "type": "script",
+          "at": 1791608617882,
+          "file": "assets/DashboardUI-Bht-ETSZ.js",
+          "rawBytes": 11991,
+          "gzipBytes": 4416,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/minus-BmJzL3b8.js",
+            "assets/trending-down-6t3XXVcF.js",
+            "assets/trending-up-xv87XHQ5.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/minus-BmJzL3b8.js",
+          "type": "script",
+          "at": 1791608617882,
+          "file": "assets/minus-BmJzL3b8.js",
+          "rawBytes": 112,
+          "gzipBytes": 129,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/trending-down-6t3XXVcF.js",
+          "type": "script",
+          "at": 1791608617882,
+          "file": "assets/trending-down-6t3XXVcF.js",
+          "rawBytes": 173,
+          "gzipBytes": 166,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/trending-up-xv87XHQ5.js",
+          "type": "script",
+          "at": 1791608617882,
+          "file": "assets/trending-up-xv87XHQ5.js",
+          "rawBytes": 170,
+          "gzipBytes": 166,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/holistic.service-zOo9fL3s.js",
+          "type": "script",
+          "at": 1791608617882,
+          "file": "assets/holistic.service-zOo9fL3s.js",
+          "rawBytes": 1015,
+          "gzipBytes": 537,
+          "compositions": [],
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/DeferredChart-3v9Xg9Hx.js",
+          "type": "script",
+          "at": 1791608617882,
+          "file": "assets/DeferredChart-3v9Xg9Hx.js",
+          "rawBytes": 7169,
+          "gzipBytes": 3186,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/activity-UJFE1vfX.js",
+          "type": "script",
+          "at": 1791608617882,
+          "file": "assets/activity-UJFE1vfX.js",
+          "rawBytes": 229,
+          "gzipBytes": 197,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/compass-SNsI0u2e.js",
+          "type": "script",
+          "at": 1791608617882,
+          "file": "assets/compass-SNsI0u2e.js",
+          "rawBytes": 246,
+          "gzipBytes": 206,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/HolisticOverviewPage.loading-view-D25c32WI.js",
+          "type": "script",
+          "at": 1791608617882,
+          "file": "assets/HolisticOverviewPage.loading-view-D25c32WI.js",
+          "rawBytes": 16884,
+          "gzipBytes": 6488,
+          "compositions": [
+            "src/features/profiles/teacher/pages/holistic/HolisticOverviewPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/useSelectedAdvisorySection.service-D4dG4xfU.js",
+            "assets/holistic.service-zOo9fL3s.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/activity-UJFE1vfX.js",
+            "assets/search-B-cScTIO.js",
+            "assets/trending-down-6t3XXVcF.js",
+            "assets/trending-up-xv87XHQ5.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/StudentHolisticProfilePage.loading-view-CrNWn6Lc.js",
+          "type": "script",
+          "at": 1791608617882,
+          "file": "assets/StudentHolisticProfilePage.loading-view-CrNWn6Lc.js",
+          "rawBytes": 18453,
+          "gzipBytes": 6261,
+          "compositions": [
+            "src/features/profiles/teacher/pages/holistic/StudentHolisticProfilePage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/holistic.service-zOo9fL3s.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/minus-BmJzL3b8.js",
+            "assets/trending-down-6t3XXVcF.js",
+            "assets/trending-up-xv87XHQ5.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/AdvisoryRosterPage.loading-view-0E88lAnI.js",
+          "type": "script",
+          "at": 1791608617882,
+          "file": "assets/AdvisoryRosterPage.loading-view-0E88lAnI.js",
+          "rawBytes": 9981,
+          "gzipBytes": 4004,
+          "compositions": [
+            "src/features/profiles/teacher/pages/roster/AdvisoryRosterPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/useSelectedAdvisorySection.service-D4dG4xfU.js",
+            "assets/StudentDirectoryTable-Dq5YFn_6.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/download-4ZpfCl3y.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/StudentDirectoryTable-Dq5YFn_6.js",
+          "type": "script",
+          "at": 1791608617882,
+          "file": "assets/StudentDirectoryTable-Dq5YFn_6.js",
+          "rawBytes": 3938,
+          "gzipBytes": 1525,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/SubjectClassListPage.loading-view-CrprbTrm.js",
+          "type": "script",
+          "at": 1791608617882,
+          "file": "assets/SubjectClassListPage.loading-view-CrprbTrm.js",
+          "rawBytes": 9754,
+          "gzipBytes": 3661,
+          "compositions": [
+            "src/features/profiles/teacher/pages/subjects/SubjectClassListPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/download-4ZpfCl3y.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/SubjectPage.loading-view-nj1BUDhR.js",
+          "type": "script",
+          "at": 1791608617883,
+          "file": "assets/SubjectPage.loading-view-nj1BUDhR.js",
+          "rawBytes": 12232,
+          "gzipBytes": 4947,
+          "compositions": [
+            "src/features/profiles/teacher/pages/subjects/SubjectPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/types-C7Tfi_0a.js",
+            "assets/DashboardUI-Bht-ETSZ.js",
+            "assets/SubjectAssignmentCard-B2ILEjA2.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/types-C7Tfi_0a.js",
+          "type": "script",
+          "at": 1791608617883,
+          "file": "assets/types-C7Tfi_0a.js",
+          "rawBytes": 280,
+          "gzipBytes": 161,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/SubjectAssignmentCard-B2ILEjA2.js",
+          "type": "script",
+          "at": 1791608617883,
+          "file": "assets/SubjectAssignmentCard-B2ILEjA2.js",
+          "rawBytes": 4838,
+          "gzipBytes": 2188,
+          "compositions": [],
+          "imports": [
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/SubjectRecordsPage.loading-view-CDfN4UoK.js",
+          "type": "script",
+          "at": 1791608617883,
+          "file": "assets/SubjectRecordsPage.loading-view-CDfN4UoK.js",
+          "rawBytes": 54491,
+          "gzipBytes": 16435,
+          "compositions": [
+            "src/features/profiles/teacher/pages/subjects/detail/SubjectRecordsPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/holistic.service-zOo9fL3s.js",
+            "assets/Grading-BxF5tKfg.js",
+            "assets/subjectGradeTemplate.service-73AD7h0c.js",
+            "assets/subjectGrading.service-B8KnN8HV.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/download-4ZpfCl3y.js",
+            "assets/send-BVOWpxsv.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/subjectGradeTemplate.service-73AD7h0c.js",
+          "type": "script",
+          "at": 1791608617883,
+          "file": "assets/subjectGradeTemplate.service-73AD7h0c.js",
+          "rawBytes": 1195,
+          "gzipBytes": 687,
+          "compositions": [],
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/SubjectDetailPage.loading-view-NbdKe_xd.js",
+          "type": "script",
+          "at": 1791608617883,
+          "file": "assets/SubjectDetailPage.loading-view-NbdKe_xd.js",
+          "rawBytes": 42588,
+          "gzipBytes": 13402,
+          "compositions": [
+            "src/features/profiles/teacher/pages/subjects/detail/SubjectDetailPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/Grading-BxF5tKfg.js",
+            "assets/subjectGradeTemplate.service-73AD7h0c.js",
+            "assets/subjectGrading.service-B8KnN8HV.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/calendar-BaCgnYDw.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/plus-DSNzCDc6.js",
+            "assets/save-DuYu6phG.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/calendar-BaCgnYDw.js",
+          "type": "script",
+          "at": 1791608617883,
+          "file": "assets/calendar-BaCgnYDw.js",
+          "rawBytes": 252,
+          "gzipBytes": 198,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/plus-DSNzCDc6.js",
+          "type": "script",
+          "at": 1791608617883,
+          "file": "assets/plus-DSNzCDc6.js",
+          "rawBytes": 148,
+          "gzipBytes": 147,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/save-DuYu6phG.js",
+          "type": "script",
+          "at": 1791608617883,
+          "file": "assets/save-DuYu6phG.js",
+          "rawBytes": 322,
+          "gzipBytes": 224,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/CalendarPageView.loading-view-Cgz25eWn.js",
+          "type": "script",
+          "at": 1791608617883,
+          "file": "assets/CalendarPageView.loading-view-Cgz25eWn.js",
+          "rawBytes": 2900,
+          "gzipBytes": 1119,
+          "compositions": [
+            "src/shared/calendar/CalendarPageView.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/StudentDetailPage.loading-view-D7j0xxlq.js",
+          "type": "script",
+          "at": 1791608617883,
+          "file": "assets/StudentDetailPage.loading-view-D7j0xxlq.js",
+          "rawBytes": 38671,
+          "gzipBytes": 12586,
+          "compositions": [
+            "src/shared/components/StudentDetailPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/ClassesContext-CPpBPMyl.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/Teacher-x3HOHZiH.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/calendar-BaCgnYDw.js",
+            "assets/chart-column-bJmgof9X.js",
+            "assets/layout-grid-Cgsueyq8.js",
+            "assets/shield-check-CPUaNMWo.js",
+            "assets/trending-up-xv87XHQ5.js",
+            "assets/zap-C6mNkzga.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/Teacher-x3HOHZiH.js",
+          "type": "script",
+          "at": 1791608617883,
+          "file": "assets/Teacher-x3HOHZiH.js",
+          "rawBytes": 66,
+          "gzipBytes": 78,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/chart-column-bJmgof9X.js",
+          "type": "script",
+          "at": 1791608617883,
+          "file": "assets/chart-column-bJmgof9X.js",
+          "rawBytes": 246,
+          "gzipBytes": 190,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/layout-grid-Cgsueyq8.js",
+          "type": "script",
+          "at": 1791608617883,
+          "file": "assets/layout-grid-Cgsueyq8.js",
+          "rawBytes": 341,
+          "gzipBytes": 190,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/shield-check-CPUaNMWo.js",
+          "type": "script",
+          "at": 1791608617883,
+          "file": "assets/shield-check-CPUaNMWo.js",
+          "rawBytes": 315,
+          "gzipBytes": 246,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/zap-C6mNkzga.js",
+          "type": "script",
+          "at": 1791608617883,
+          "file": "assets/zap-C6mNkzga.js",
+          "rawBytes": 257,
+          "gzipBytes": 203,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/square-star-Cywu8jWx.js",
+          "type": "script",
+          "at": 1791608617883,
+          "file": "assets/square-star-Cywu8jWx.js",
+          "rawBytes": 490,
+          "gzipBytes": 317,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/TeacherDashboardHome-BdtYGvth.js",
+          "type": "script",
+          "at": 1791608621916,
+          "file": "assets/TeacherDashboardHome-BdtYGvth.js",
+          "rawBytes": 1498,
+          "gzipBytes": 825,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/TeacherDashboardHome.loading-view-BFkhg5eI.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/EUC-BZZDGRxc.webp",
+          "type": "image",
+          "at": 1791608621916,
+          "file": "assets/EUC-BZZDGRxc.webp",
+          "rawBytes": 62856,
+          "gzipBytes": 62894,
+          "compositions": [],
+          "imports": []
+        }
+      ],
+      "note": "All assets requested by first visible skeleton, including any still in flight. Uncompressed HTTP harness; gzip totals are calculated, not transferred."
+    },
+    "PRINCIPAL": {
+      "cutoff": 1791608630805.8,
+      "rolesRequested": [
+        "principal"
+      ],
+      "scriptTotal": {
+        "rawBytes": 1375322,
+        "gzipBytes": 415320
+      },
+      "allAssetTotal": {
+        "rawBytes": 1828505,
+        "gzipBytes": 709815
+      },
+      "files": [
+        {
+          "url": "http://127.0.0.1:5194/assets/index-CB5HIbiV.js",
+          "type": "script",
+          "at": 1791608622904,
+          "file": "assets/index-CB5HIbiV.js",
+          "rawBytes": 338748,
+          "gzipBytes": 101970,
+          "compositions": [
+            "src/features/auth/LoginPanel.loading-view.tsx",
+            "src/features/Landing/LandingPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/chunk-aKtaBQYM.js",
+          "type": "script",
+          "at": 1791608622904,
+          "file": "assets/chunk-aKtaBQYM.js",
+          "rawBytes": 1084,
+          "gzipBytes": 621,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/preload-helper-zJ_50EbN.js",
+          "type": "script",
+          "at": 1791608622904,
+          "file": "assets/preload-helper-zJ_50EbN.js",
+          "rawBytes": 1193,
+          "gzipBytes": 681,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/api.config-qjE84KfK.js",
+          "type": "script",
+          "at": 1791608622904,
+          "file": "assets/api.config-qjE84KfK.js",
+          "rawBytes": 55,
+          "gzipBytes": 75,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/react-DxZHKUKd.js",
+          "type": "script",
+          "at": 1791608622904,
+          "file": "assets/react-DxZHKUKd.js",
+          "rawBytes": 7521,
+          "gzipBytes": 2878,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/jsx-runtime-aNkLRTnx.js",
+          "type": "script",
+          "at": 1791608622906,
+          "file": "assets/jsx-runtime-aNkLRTnx.js",
+          "rawBytes": 43369,
+          "gzipBytes": 15481,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/react-dom-rMUovVdx.js",
+          "type": "script",
+          "at": 1791608622906,
+          "file": "assets/react-dom-rMUovVdx.js",
+          "rawBytes": 3568,
+          "gzipBytes": 1351,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/index-D-MJdwHN.css",
+          "type": "stylesheet",
+          "at": 1791608622906,
+          "file": "assets/index-D-MJdwHN.css",
+          "rawBytes": 188435,
+          "gzipBytes": 30199,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/QED_Logo-qUfJaevn.png",
+          "type": "image",
+          "at": 1791608626305,
+          "file": "assets/QED_Logo-qUfJaevn.png",
+          "rawBytes": 201892,
+          "gzipBytes": 201402,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/PrincipalRoutes-Cy2w9pXh.js",
+          "type": "script",
+          "at": 1791608627146,
+          "file": "assets/PrincipalRoutes-Cy2w9pXh.js",
+          "rawBytes": 6622,
+          "gzipBytes": 2391,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/ClassesContext-CPpBPMyl.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/StudentsContext-D8GL98q6.js",
+            "assets/PrincipalDashboardHome.loading-view-uK5cfM-4.js",
+            "assets/PrincipalGradeSheetPage.loading-view-Dve7eRfL.js",
+            "assets/PrincipalGradebooksPage.loading-view-6tZngklA.js",
+            "assets/AnalyticsPage.loading-view-9YGfJw9h.js",
+            "assets/HolisticPerformanceAnalyticsPage.loading-view-B1tnBYie.js",
+            "assets/ClassListPage.loading-view-5QWrLzdo.js",
+            "assets/PrincipalStudentsPage.loading-view-D6p077qd.js",
+            "assets/PrincipalTeachersPage.loading-view-t-m7XoxW.js",
+            "assets/TeacherSchedulePage.loading-view-98mS8sJZ.js",
+            "assets/PolygonLayout-7Jakrtk0.js",
+            "assets/CalendarPage.loading-view-OjtGRTeK.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/calendar-check-C9_qLLPf.js",
+            "assets/chart-column-bJmgof9X.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/school-B0ork6uJ.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ClassesContext-CPpBPMyl.js",
+          "type": "script",
+          "at": 1791608627146,
+          "file": "assets/ClassesContext-CPpBPMyl.js",
+          "rawBytes": 1966,
+          "gzipBytes": 1028,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/classes.service-G6eMozPB.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/classes.service-G6eMozPB.js",
+          "type": "script",
+          "at": 1791608627147,
+          "file": "assets/classes.service-G6eMozPB.js",
+          "rawBytes": 1864,
+          "gzipBytes": 722,
+          "compositions": [],
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/Header-9nGj7jYD.js",
+          "type": "script",
+          "at": 1791608627147,
+          "file": "assets/Header-9nGj7jYD.js",
+          "rawBytes": 157187,
+          "gzipBytes": 45308,
+          "compositions": [
+            "src/features/profiles/admin/pages/help/HelpSupportPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/StudentsContext-D8GL98q6.js",
+          "type": "script",
+          "at": 1791608627147,
+          "file": "assets/StudentsContext-D8GL98q6.js",
+          "rawBytes": 2597,
+          "gzipBytes": 1039,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/PrincipalDashboardHome.loading-view-uK5cfM-4.js",
+          "type": "script",
+          "at": 1791608627154,
+          "file": "assets/PrincipalDashboardHome.loading-view-uK5cfM-4.js",
+          "rawBytes": 46193,
+          "gzipBytes": 13826,
+          "compositions": [
+            "src/features/profiles/principal/pages/dashboard/PrincipalDashboardHome.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/PrincipalChartLoading-CONVbSs0.js",
+            "assets/DashboardUI-Bht-ETSZ.js",
+            "assets/DeferredChart-3v9Xg9Hx.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/chart-column-bJmgof9X.js",
+            "assets/trending-up-xv87XHQ5.js",
+            "assets/trophy-D37JXsQ2.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/PrincipalChartLoading-CONVbSs0.js",
+          "type": "script",
+          "at": 1791608627154,
+          "file": "assets/PrincipalChartLoading-CONVbSs0.js",
+          "rawBytes": 2579,
+          "gzipBytes": 1160,
+          "compositions": [],
+          "imports": [
+            "assets/Header-9nGj7jYD.js",
+            "assets/DeferredChart-3v9Xg9Hx.js",
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/DeferredChart-3v9Xg9Hx.js",
+          "type": "script",
+          "at": 1791608627154,
+          "file": "assets/DeferredChart-3v9Xg9Hx.js",
+          "rawBytes": 7169,
+          "gzipBytes": 3186,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/DashboardUI-Bht-ETSZ.js",
+          "type": "script",
+          "at": 1791608627154,
+          "file": "assets/DashboardUI-Bht-ETSZ.js",
+          "rawBytes": 11991,
+          "gzipBytes": 4416,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/minus-BmJzL3b8.js",
+            "assets/trending-down-6t3XXVcF.js",
+            "assets/trending-up-xv87XHQ5.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/minus-BmJzL3b8.js",
+          "type": "script",
+          "at": 1791608627154,
+          "file": "assets/minus-BmJzL3b8.js",
+          "rawBytes": 112,
+          "gzipBytes": 129,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/trending-down-6t3XXVcF.js",
+          "type": "script",
+          "at": 1791608627154,
+          "file": "assets/trending-down-6t3XXVcF.js",
+          "rawBytes": 173,
+          "gzipBytes": 166,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/trending-up-xv87XHQ5.js",
+          "type": "script",
+          "at": 1791608627154,
+          "file": "assets/trending-up-xv87XHQ5.js",
+          "rawBytes": 170,
+          "gzipBytes": 166,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/chart-column-bJmgof9X.js",
+          "type": "script",
+          "at": 1791608627154,
+          "file": "assets/chart-column-bJmgof9X.js",
+          "rawBytes": 246,
+          "gzipBytes": 190,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/trophy-D37JXsQ2.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/trophy-D37JXsQ2.js",
+          "rawBytes": 471,
+          "gzipBytes": 271,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/PrincipalGradeSheetPage.loading-view-Dve7eRfL.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/PrincipalGradeSheetPage.loading-view-Dve7eRfL.js",
+          "rawBytes": 22999,
+          "gzipBytes": 8158,
+          "compositions": [
+            "src/features/profiles/principal/pages/gradebooks/PrincipalGradeSheetPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/gradebooks.service-iPFFbSBM.js",
+            "assets/DashboardUI-Bht-ETSZ.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/clock-DYYi5eLs.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/gradebooks.service-iPFFbSBM.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/gradebooks.service-iPFFbSBM.js",
+          "rawBytes": 2811,
+          "gzipBytes": 1107,
+          "compositions": [],
+          "imports": [
+            "assets/api.config-qjE84KfK.js",
+            "assets/academicyear.service-CshyqqlM.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/academicyear.service-CshyqqlM.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/academicyear.service-CshyqqlM.js",
+          "rawBytes": 1214,
+          "gzipBytes": 464,
+          "compositions": [],
+          "imports": [
+            "assets/api.config-qjE84KfK.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/clock-DYYi5eLs.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/clock-DYYi5eLs.js",
+          "rawBytes": 164,
+          "gzipBytes": 162,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/PrincipalGradebooksPage.loading-view-6tZngklA.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/PrincipalGradebooksPage.loading-view-6tZngklA.js",
+          "rawBytes": 9010,
+          "gzipBytes": 3550,
+          "compositions": [
+            "src/features/profiles/principal/pages/gradebooks/PrincipalGradebooksPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/gradebooks.service-iPFFbSBM.js",
+            "assets/GradeLevelSearchInput-CVhO69dj.js",
+            "assets/SubjectAssignmentCard-B2ILEjA2.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/GradeLevelSearchInput-CVhO69dj.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/GradeLevelSearchInput-CVhO69dj.js",
+          "rawBytes": 2404,
+          "gzipBytes": 1180,
+          "compositions": [],
+          "imports": [
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/search-B-cScTIO.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/search-B-cScTIO.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/search-B-cScTIO.js",
+          "rawBytes": 169,
+          "gzipBytes": 164,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/SubjectAssignmentCard-B2ILEjA2.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/SubjectAssignmentCard-B2ILEjA2.js",
+          "rawBytes": 4838,
+          "gzipBytes": 2188,
+          "compositions": [],
+          "imports": [
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/AnalyticsPage.loading-view-9YGfJw9h.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/AnalyticsPage.loading-view-9YGfJw9h.js",
+          "rawBytes": 26501,
+          "gzipBytes": 8606,
+          "compositions": [
+            "src/features/profiles/principal/pages/reports/AnalyticsPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/reports.service-iNvXT_1S.js",
+            "assets/DashboardUI-Bht-ETSZ.js",
+            "assets/DeferredChart-3v9Xg9Hx.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/crown-BYaTXTbV.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/reports.service-iNvXT_1S.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/reports.service-iNvXT_1S.js",
+          "rawBytes": 4389,
+          "gzipBytes": 1783,
+          "compositions": [],
+          "imports": [
+            "assets/index-CB5HIbiV.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/chart-column-bJmgof9X.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/crown-BYaTXTbV.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/crown-BYaTXTbV.js",
+          "rawBytes": 357,
+          "gzipBytes": 253,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/HolisticPerformanceAnalyticsPage.loading-view-B1tnBYie.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/HolisticPerformanceAnalyticsPage.loading-view-B1tnBYie.js",
+          "rawBytes": 16074,
+          "gzipBytes": 6702,
+          "compositions": [
+            "src/features/profiles/principal/pages/reports/HolisticPerformanceAnalyticsPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/reports.service-iNvXT_1S.js",
+            "assets/DashboardUI-Bht-ETSZ.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/activity-UJFE1vfX.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/activity-UJFE1vfX.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/activity-UJFE1vfX.js",
+          "rawBytes": 229,
+          "gzipBytes": 197,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ClassListPage.loading-view-5QWrLzdo.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/ClassListPage.loading-view-5QWrLzdo.js",
+          "rawBytes": 7032,
+          "gzipBytes": 3098,
+          "compositions": [
+            "src/features/profiles/principal/pages/students/ClassListPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/students.service-Cbil_lyp.js",
+            "assets/DashboardUI-Bht-ETSZ.js",
+            "assets/StudentDirectory-DYpzPA_L.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/students.service-Cbil_lyp.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/students.service-Cbil_lyp.js",
+          "rawBytes": 1280,
+          "gzipBytes": 514,
+          "compositions": [],
+          "imports": [
+            "assets/api.config-qjE84KfK.js",
+            "assets/academicyear.service-CshyqqlM.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/StudentDirectory-DYpzPA_L.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/StudentDirectory-DYpzPA_L.js",
+          "rawBytes": 3219,
+          "gzipBytes": 1541,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/StudentDirectoryTable-Dq5YFn_6.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/StudentDirectoryTable-Dq5YFn_6.js",
+          "type": "script",
+          "at": 1791608627160,
+          "file": "assets/StudentDirectoryTable-Dq5YFn_6.js",
+          "rawBytes": 3938,
+          "gzipBytes": 1525,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/PrincipalStudentsPage.loading-view-D6p077qd.js",
+          "type": "script",
+          "at": 1791608627161,
+          "file": "assets/PrincipalStudentsPage.loading-view-D6p077qd.js",
+          "rawBytes": 14657,
+          "gzipBytes": 5882,
+          "compositions": [
+            "src/features/profiles/principal/pages/students/PrincipalStudentsPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/GradeLevelSearchInput-CVhO69dj.js",
+            "assets/students.service-Cbil_lyp.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/PrincipalTeachersPage.loading-view-t-m7XoxW.js",
+          "type": "script",
+          "at": 1791608627161,
+          "file": "assets/PrincipalTeachersPage.loading-view-t-m7XoxW.js",
+          "rawBytes": 12625,
+          "gzipBytes": 5007,
+          "compositions": [
+            "src/features/profiles/principal/pages/teachers/PrincipalTeachersPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/teachers.service-vXIDzqX-.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/search-B-cScTIO.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/teachers.service-vXIDzqX-.js",
+          "type": "script",
+          "at": 1791608627161,
+          "file": "assets/teachers.service-vXIDzqX-.js",
+          "rawBytes": 826,
+          "gzipBytes": 454,
+          "compositions": [],
+          "imports": [
+            "assets/api.config-qjE84KfK.js",
+            "assets/academicyear.service-CshyqqlM.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/TeacherSchedulePage.loading-view-98mS8sJZ.js",
+          "type": "script",
+          "at": 1791608627161,
+          "file": "assets/TeacherSchedulePage.loading-view-98mS8sJZ.js",
+          "rawBytes": 17883,
+          "gzipBytes": 6286,
+          "compositions": [
+            "src/features/profiles/principal/pages/teachers/TeacherSchedulePage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/students.service-Cbil_lyp.js",
+            "assets/teachers.service-vXIDzqX-.js",
+            "assets/DashboardUI-Bht-ETSZ.js",
+            "assets/ProfileOverviewCard-BMwR6oew.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ProfileOverviewCard-BMwR6oew.js",
+          "type": "script",
+          "at": 1791608627161,
+          "file": "assets/ProfileOverviewCard-BMwR6oew.js",
+          "rawBytes": 5429,
+          "gzipBytes": 2401,
+          "compositions": [],
+          "imports": [
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/PolygonLayout-7Jakrtk0.js",
+          "type": "script",
+          "at": 1791608627161,
+          "file": "assets/PolygonLayout-7Jakrtk0.js",
+          "rawBytes": 2871,
+          "gzipBytes": 944,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/CalendarPage.loading-view-OjtGRTeK.js",
+          "type": "script",
+          "at": 1791608627161,
+          "file": "assets/CalendarPage.loading-view-OjtGRTeK.js",
+          "rawBytes": 13975,
+          "gzipBytes": 4335,
+          "compositions": [
+            "src/shared/calendar/CalendarPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/party-popper-BrLiT9H8.js",
+            "assets/plus-DSNzCDc6.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/party-popper-BrLiT9H8.js",
+          "type": "script",
+          "at": 1791608627161,
+          "file": "assets/party-popper-BrLiT9H8.js",
+          "rawBytes": 725,
+          "gzipBytes": 408,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/plus-DSNzCDc6.js",
+          "type": "script",
+          "at": 1791608627161,
+          "file": "assets/plus-DSNzCDc6.js",
+          "rawBytes": 148,
+          "gzipBytes": 147,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/calendar-check-C9_qLLPf.js",
+          "type": "script",
+          "at": 1791608627161,
+          "file": "assets/calendar-check-C9_qLLPf.js",
+          "rawBytes": 300,
+          "gzipBytes": 223,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/clipboard-list-CamLZ1O6.js",
+          "type": "script",
+          "at": 1791608627161,
+          "file": "assets/clipboard-list-CamLZ1O6.js",
+          "rawBytes": 406,
+          "gzipBytes": 258,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/school-B0ork6uJ.js",
+          "type": "script",
+          "at": 1791608627161,
+          "file": "assets/school-B0ork6uJ.js",
+          "rawBytes": 450,
+          "gzipBytes": 290,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/PrincipalDashboardHome-DJDx_gp4.js",
+          "type": "script",
+          "at": 1791608630565,
+          "file": "assets/PrincipalDashboardHome-DJDx_gp4.js",
+          "rawBytes": 906,
+          "gzipBytes": 563,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/PrincipalDashboardHome.loading-view-uK5cfM-4.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/LoadedChart-CXel6AX3.js",
+          "type": "script",
+          "at": 1791608630565,
+          "file": "assets/LoadedChart-CXel6AX3.js",
+          "rawBytes": 562615,
+          "gzipBytes": 149875,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/EUC-BZZDGRxc.webp",
+          "type": "image",
+          "at": 1791608630568,
+          "file": "assets/EUC-BZZDGRxc.webp",
+          "rawBytes": 62856,
+          "gzipBytes": 62894,
+          "compositions": [],
+          "imports": []
+        }
+      ],
+      "note": "All assets requested by first visible skeleton, including any still in flight. Uncompressed HTTP harness; gzip totals are calculated, not transferred."
+    },
+    "PARENT": {
+      "cutoff": 1791608639586.8,
+      "rolesRequested": [
+        "parent"
+      ],
+      "scriptTotal": {
+        "rawBytes": 913526,
+        "gzipBytes": 286255
+      },
+      "allAssetTotal": {
+        "rawBytes": 1366709,
+        "gzipBytes": 580750
+      },
+      "files": [
+        {
+          "url": "http://127.0.0.1:5194/assets/index-CB5HIbiV.js",
+          "type": "script",
+          "at": 1791608631319,
+          "file": "assets/index-CB5HIbiV.js",
+          "rawBytes": 338748,
+          "gzipBytes": 101970,
+          "compositions": [
+            "src/features/auth/LoginPanel.loading-view.tsx",
+            "src/features/Landing/LandingPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/chunk-aKtaBQYM.js",
+          "type": "script",
+          "at": 1791608631321,
+          "file": "assets/chunk-aKtaBQYM.js",
+          "rawBytes": 1084,
+          "gzipBytes": 621,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/preload-helper-zJ_50EbN.js",
+          "type": "script",
+          "at": 1791608631321,
+          "file": "assets/preload-helper-zJ_50EbN.js",
+          "rawBytes": 1193,
+          "gzipBytes": 681,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/api.config-qjE84KfK.js",
+          "type": "script",
+          "at": 1791608631321,
+          "file": "assets/api.config-qjE84KfK.js",
+          "rawBytes": 55,
+          "gzipBytes": 75,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/react-DxZHKUKd.js",
+          "type": "script",
+          "at": 1791608631321,
+          "file": "assets/react-DxZHKUKd.js",
+          "rawBytes": 7521,
+          "gzipBytes": 2878,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/jsx-runtime-aNkLRTnx.js",
+          "type": "script",
+          "at": 1791608631321,
+          "file": "assets/jsx-runtime-aNkLRTnx.js",
+          "rawBytes": 43369,
+          "gzipBytes": 15481,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/react-dom-rMUovVdx.js",
+          "type": "script",
+          "at": 1791608631321,
+          "file": "assets/react-dom-rMUovVdx.js",
+          "rawBytes": 3568,
+          "gzipBytes": 1351,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/index-D-MJdwHN.css",
+          "type": "stylesheet",
+          "at": 1791608631321,
+          "file": "assets/index-D-MJdwHN.css",
+          "rawBytes": 188435,
+          "gzipBytes": 30199,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/QED_Logo-qUfJaevn.png",
+          "type": "image",
+          "at": 1791608634648,
+          "file": "assets/QED_Logo-qUfJaevn.png",
+          "rawBytes": 201892,
+          "gzipBytes": 201402,
+          "compositions": [],
+          "imports": []
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ParentRoutes-4HrrF_59.js",
+          "type": "script",
+          "at": 1791608635351,
+          "file": "assets/ParentRoutes-4HrrF_59.js",
+          "rawBytes": 11003,
+          "gzipBytes": 4245,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/ChildDetailPage.loading-view-BggoTpIX.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/ParentDashboardHome.loading-view-BS00cJ5L.js",
+            "assets/EnrolledChildrenPage.loading-view-BYi3xkie.js",
+            "assets/ParentDashboardContext-CUVcjx8h.js",
+            "assets/CoursewareView.loading-view-eqZ6mpKN.js",
+            "assets/PetQuizPage.loading-view-D7CUMdKO.js",
+            "assets/TopicSupportChoice.loading-view-Bd3SwAy-.js",
+            "assets/PolygonLayout-7Jakrtk0.js",
+            "assets/CalendarPageView.loading-view-Cgz25eWn.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/shield-check-CPUaNMWo.js",
+            "assets/user-plus-76L47Kwg.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ChildDetailPage.loading-view-BggoTpIX.js",
+          "type": "script",
+          "at": 1791608635351,
+          "file": "assets/ChildDetailPage.loading-view-BggoTpIX.js",
+          "rawBytes": 128196,
+          "gzipBytes": 39374,
+          "compositions": [
+            "src/features/profiles/parent/pages/Student/ChildDetailPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/ParentDashboardContext-CUVcjx8h.js",
+            "assets/PrincipalChartLoading-CONVbSs0.js",
+            "assets/DeferredChart-3v9Xg9Hx.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/calendar-BaCgnYDw.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/clock-3-DJzs4NSX.js",
+            "assets/clock-DYYi5eLs.js",
+            "assets/download-4ZpfCl3y.js",
+            "assets/layout-grid-Cgsueyq8.js",
+            "assets/lock-Db-bsDub.js",
+            "assets/save-DuYu6phG.js",
+            "assets/square-star-Cywu8jWx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/Header-9nGj7jYD.js",
+          "type": "script",
+          "at": 1791608635355,
+          "file": "assets/Header-9nGj7jYD.js",
+          "rawBytes": 157187,
+          "gzipBytes": 45308,
+          "compositions": [
+            "src/features/profiles/admin/pages/help/HelpSupportPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-dom-rMUovVdx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ParentDashboardContext-CUVcjx8h.js",
+          "type": "script",
+          "at": 1791608635355,
+          "file": "assets/ParentDashboardContext-CUVcjx8h.js",
+          "rawBytes": 5075,
+          "gzipBytes": 1769,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/PrincipalChartLoading-CONVbSs0.js",
+          "type": "script",
+          "at": 1791608635355,
+          "file": "assets/PrincipalChartLoading-CONVbSs0.js",
+          "rawBytes": 2579,
+          "gzipBytes": 1160,
+          "compositions": [],
+          "imports": [
+            "assets/Header-9nGj7jYD.js",
+            "assets/DeferredChart-3v9Xg9Hx.js",
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/DeferredChart-3v9Xg9Hx.js",
+          "type": "script",
+          "at": 1791608635355,
+          "file": "assets/DeferredChart-3v9Xg9Hx.js",
+          "rawBytes": 7169,
+          "gzipBytes": 3186,
+          "compositions": [],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/preload-helper-zJ_50EbN.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/calendar-BaCgnYDw.js",
+          "type": "script",
+          "at": 1791608635355,
+          "file": "assets/calendar-BaCgnYDw.js",
+          "rawBytes": 252,
+          "gzipBytes": 198,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/clipboard-list-CamLZ1O6.js",
+          "type": "script",
+          "at": 1791608635355,
+          "file": "assets/clipboard-list-CamLZ1O6.js",
+          "rawBytes": 406,
+          "gzipBytes": 258,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/clock-3-DJzs4NSX.js",
+          "type": "script",
+          "at": 1791608635355,
+          "file": "assets/clock-3-DJzs4NSX.js",
+          "rawBytes": 164,
+          "gzipBytes": 163,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/clock-DYYi5eLs.js",
+          "type": "script",
+          "at": 1791608635355,
+          "file": "assets/clock-DYYi5eLs.js",
+          "rawBytes": 164,
+          "gzipBytes": 162,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/download-4ZpfCl3y.js",
+          "type": "script",
+          "at": 1791608635355,
+          "file": "assets/download-4ZpfCl3y.js",
+          "rawBytes": 227,
+          "gzipBytes": 188,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/layout-grid-Cgsueyq8.js",
+          "type": "script",
+          "at": 1791608635355,
+          "file": "assets/layout-grid-Cgsueyq8.js",
+          "rawBytes": 341,
+          "gzipBytes": 190,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/lock-Db-bsDub.js",
+          "type": "script",
+          "at": 1791608635355,
+          "file": "assets/lock-Db-bsDub.js",
+          "rawBytes": 201,
+          "gzipBytes": 188,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/save-DuYu6phG.js",
+          "type": "script",
+          "at": 1791608635355,
+          "file": "assets/save-DuYu6phG.js",
+          "rawBytes": 322,
+          "gzipBytes": 224,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/square-star-Cywu8jWx.js",
+          "type": "script",
+          "at": 1791608635355,
+          "file": "assets/square-star-Cywu8jWx.js",
+          "rawBytes": 490,
+          "gzipBytes": 317,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ParentDashboardHome.loading-view-BS00cJ5L.js",
+          "type": "script",
+          "at": 1791608635355,
+          "file": "assets/ParentDashboardHome.loading-view-BS00cJ5L.js",
+          "rawBytes": 55427,
+          "gzipBytes": 16733,
+          "compositions": [
+            "src/features/profiles/parent/pages/dashboard/ParentDashboardHome.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/ParentDashboardContext-CUVcjx8h.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/clipboard-list-CamLZ1O6.js",
+            "assets/layout-grid-Cgsueyq8.js",
+            "assets/user-plus-76L47Kwg.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/user-plus-76L47Kwg.js",
+          "type": "script",
+          "at": 1791608635360,
+          "file": "assets/user-plus-76L47Kwg.js",
+          "rawBytes": 305,
+          "gzipBytes": 229,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/EnrolledChildrenPage.loading-view-BYi3xkie.js",
+          "type": "script",
+          "at": 1791608635360,
+          "file": "assets/EnrolledChildrenPage.loading-view-BYi3xkie.js",
+          "rawBytes": 16376,
+          "gzipBytes": 6290,
+          "compositions": [
+            "src/features/profiles/parent/pages/EnrollledStudent/EnrolledChildrenPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/ParentDashboardContext-CUVcjx8h.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/user-plus-76L47Kwg.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/CoursewareView.loading-view-eqZ6mpKN.js",
+          "type": "script",
+          "at": 1791608635360,
+          "file": "assets/CoursewareView.loading-view-eqZ6mpKN.js",
+          "rawBytes": 15832,
+          "gzipBytes": 5693,
+          "compositions": [
+            "src/features/profiles/parent/pages/Student/Academic/CoursewareView.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/compass-SNsI0u2e.js",
+            "assets/lightbulb-D0b3enjf.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/compass-SNsI0u2e.js",
+          "type": "script",
+          "at": 1791608635360,
+          "file": "assets/compass-SNsI0u2e.js",
+          "rawBytes": 246,
+          "gzipBytes": 206,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/lightbulb-D0b3enjf.js",
+          "type": "script",
+          "at": 1791608635360,
+          "file": "assets/lightbulb-D0b3enjf.js",
+          "rawBytes": 281,
+          "gzipBytes": 221,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/PetQuizPage.loading-view-D7CUMdKO.js",
+          "type": "script",
+          "at": 1791608635360,
+          "file": "assets/PetQuizPage.loading-view-D7CUMdKO.js",
+          "rawBytes": 94381,
+          "gzipBytes": 27523,
+          "compositions": [
+            "src/features/profiles/parent/pages/Student/Academic/PetQuizPage.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/index-CB5HIbiV.js",
+            "assets/api.config-qjE84KfK.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/QuestWorldBackground-DejGFX3Y.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/lightbulb-D0b3enjf.js",
+            "assets/lock-Db-bsDub.js",
+            "assets/party-popper-BrLiT9H8.js",
+            "assets/trophy-D37JXsQ2.js",
+            "assets/zap-C6mNkzga.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/QuestWorldBackground-DejGFX3Y.js",
+          "type": "script",
+          "at": 1791608635360,
+          "file": "assets/QuestWorldBackground-DejGFX3Y.js",
+          "rawBytes": 5325,
+          "gzipBytes": 2322,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/party-popper-BrLiT9H8.js",
+          "type": "script",
+          "at": 1791608635360,
+          "file": "assets/party-popper-BrLiT9H8.js",
+          "rawBytes": 725,
+          "gzipBytes": 408,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/trophy-D37JXsQ2.js",
+          "type": "script",
+          "at": 1791608635360,
+          "file": "assets/trophy-D37JXsQ2.js",
+          "rawBytes": 471,
+          "gzipBytes": 271,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/zap-C6mNkzga.js",
+          "type": "script",
+          "at": 1791608635360,
+          "file": "assets/zap-C6mNkzga.js",
+          "rawBytes": 257,
+          "gzipBytes": 203,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/TopicSupportChoice.loading-view-Bd3SwAy-.js",
+          "type": "script",
+          "at": 1791608635361,
+          "file": "assets/TopicSupportChoice.loading-view-Bd3SwAy-.js",
+          "rawBytes": 8185,
+          "gzipBytes": 3610,
+          "compositions": [
+            "src/features/profiles/parent/pages/Student/Academic/TopicSupportChoice.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/index-CB5HIbiV.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/QuestWorldBackground-DejGFX3Y.js",
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/PolygonLayout-7Jakrtk0.js",
+          "type": "script",
+          "at": 1791608635361,
+          "file": "assets/PolygonLayout-7Jakrtk0.js",
+          "rawBytes": 2871,
+          "gzipBytes": 944,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/CalendarPageView.loading-view-Cgz25eWn.js",
+          "type": "script",
+          "at": 1791608635361,
+          "file": "assets/CalendarPageView.loading-view-Cgz25eWn.js",
+          "rawBytes": 2900,
+          "gzipBytes": 1119,
+          "compositions": [
+            "src/shared/calendar/CalendarPageView.loading-view.tsx"
+          ],
+          "imports": [
+            "assets/chunk-aKtaBQYM.js",
+            "assets/Header-9nGj7jYD.js",
+            "assets/jsx-runtime-aNkLRTnx.js",
+            "assets/react-DxZHKUKd.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/shield-check-CPUaNMWo.js",
+          "type": "script",
+          "at": 1791608635361,
+          "file": "assets/shield-check-CPUaNMWo.js",
+          "rawBytes": 315,
+          "gzipBytes": 246,
+          "compositions": [],
+          "imports": [
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/ParentDashboardHome-CGwnPJ-R.js",
+          "type": "script",
+          "at": 1791608639093,
+          "file": "assets/ParentDashboardHome-CGwnPJ-R.js",
+          "rawBytes": 315,
+          "gzipBytes": 250,
+          "compositions": [],
+          "imports": [
+            "assets/ParentDashboardHome.loading-view-BS00cJ5L.js",
+            "assets/jsx-runtime-aNkLRTnx.js"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:5194/assets/EUC-BZZDGRxc.webp",
+          "type": "image",
+          "at": 1791608639093,
+          "file": "assets/EUC-BZZDGRxc.webp",
+          "rawBytes": 62856,
+          "gzipBytes": 62894,
+          "compositions": [],
+          "imports": []
+        }
+      ],
+      "note": "All assets requested by first visible skeleton, including any still in flight. Uncompressed HTTP harness; gzip totals are calculated, not transferred."
+    }
+  }
+}

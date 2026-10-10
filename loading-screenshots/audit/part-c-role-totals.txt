@@ -1,0 +1,130 @@
+{
+  "Admin": {
+    "total": {
+      "rawBytes": 901685,
+      "gzipBytes": 276437
+    },
+    "beyondPublic": {
+      "rawBytes": 474462,
+      "gzipBytes": 143321
+    },
+    "biggest": [
+      {
+        "file": "assets/public-vendor-LhP3KStT.js",
+        "rawBytes": 313061
+      },
+      {
+        "file": "assets/role-eager-admin-wHR_I391.js",
+        "rawBytes": 287992
+      },
+      {
+        "file": "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+        "rawBytes": 114933
+      },
+      {
+        "file": "assets/public-app-Cukd_puC.js",
+        "rawBytes": 111792
+      },
+      {
+        "file": "assets/role-eager-admin-principal-CkE5vfXW.js",
+        "rawBytes": 43521
+      }
+    ]
+  },
+  "Teacher": {
+    "total": {
+      "rawBytes": 955897,
+      "gzipBytes": 291495
+    },
+    "beyondPublic": {
+      "rawBytes": 528674,
+      "gzipBytes": 158379
+    },
+    "biggest": [
+      {
+        "file": "assets/role-eager-teacher-Bov8UJHT.js",
+        "rawBytes": 375232
+      },
+      {
+        "file": "assets/public-vendor-LhP3KStT.js",
+        "rawBytes": 313061
+      },
+      {
+        "file": "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+        "rawBytes": 114933
+      },
+      {
+        "file": "assets/public-app-Cukd_puC.js",
+        "rawBytes": 111792
+      },
+      {
+        "file": "assets/role-eager-admin-teacher-principal-D8KK4vSN.js",
+        "rawBytes": 26771
+      }
+    ]
+  },
+  "Principal": {
+    "total": {
+      "rawBytes": 796428,
+      "gzipBytes": 247561
+    },
+    "beyondPublic": {
+      "rawBytes": 369205,
+      "gzipBytes": 114445
+    },
+    "biggest": [
+      {
+        "file": "assets/public-vendor-LhP3KStT.js",
+        "rawBytes": 313061
+      },
+      {
+        "file": "assets/role-eager-principal-BOTzWw0u.js",
+        "rawBytes": 170179
+      },
+      {
+        "file": "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+        "rawBytes": 114933
+      },
+      {
+        "file": "assets/public-app-Cukd_puC.js",
+        "rawBytes": 111792
+      },
+      {
+        "file": "assets/role-eager-admin-principal-CkE5vfXW.js",
+        "rawBytes": 43521
+      }
+    ]
+  },
+  "Parent": {
+    "total": {
+      "rawBytes": 896614,
+      "gzipBytes": 275890
+    },
+    "beyondPublic": {
+      "rawBytes": 469391,
+      "gzipBytes": 142774
+    },
+    "biggest": [
+      {
+        "file": "assets/role-eager-parent-D1CsFKHf.js",
+        "rawBytes": 337348
+      },
+      {
+        "file": "assets/public-vendor-LhP3KStT.js",
+        "rawBytes": 313061
+      },
+      {
+        "file": "assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js",
+        "rawBytes": 114933
+      },
+      {
+        "file": "assets/public-app-Cukd_puC.js",
+        "rawBytes": 111792
+      },
+      {
+        "file": "assets/role-eager-teacher-principal-parent-BiAe1hSl.js",
+        "rawBytes": 7423
+      }
+    ]
+  }
+}

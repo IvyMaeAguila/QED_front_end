@@ -1,0 +1,12 @@
+
+> qed@0.0.0 build
+> tsc -b && vite build && node scripts/check-bundle-budget.mjs
+
+vite.config.ts(26,78): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Type '{ strictExecutionOrder: true; codeSplitting: { groups: { name: (id: string) => string | null; includeDependenciesRecursively: false; }[]; }; }' is not assignable to type 'OutputOptions | OutputOptions[] | undefined'.
+      Types of property 'codeSplitting' are incompatible.
+        Type '{ groups: { name: (id: string) => string | null; includeDependenciesRecursively: false; }[]; }' is not assignable to type 'boolean | CodeSplittingOptions | undefined'.
+          Types of property 'groups' are incompatible.
+            Type '{ name: (id: string) => string | null; includeDependenciesRecursively: false; }[]' is not assignable to type 'CodeSplittingGroup[]'.
+              Object literal may only specify known properties, and 'includeDependenciesRecursively' does not exist in type 'CodeSplittingGroup'.

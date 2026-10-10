@@ -1,0 +1,62 @@
+{
+  "compression": "node:zlib gzip, default level 6; bytes, not rounded Vite estimates",
+  "budget": {
+    "entryGzipBytes": 112153,
+    "entryEagerClosureGzipBytes": 135349
+  },
+  "entry": {
+    "fileName": "assets/index-C2RZ-o3l.js",
+    "rawBytes": 1132,
+    "gzipBytes": 626
+  },
+  "entryEagerClosure": {
+    "rawBytes": 427223,
+    "gzipBytes": 133116
+  },
+  "roles": {
+    "ADMIN": {
+      "fileName": "assets/role-eager-admin-wHR_I391.js",
+      "chunk": {
+        "rawBytes": 287992,
+        "gzipBytes": 84832
+      },
+      "eagerDownloadBeyondPublic": {
+        "rawBytes": 474462,
+        "gzipBytes": 143321
+      }
+    },
+    "TEACHER": {
+      "fileName": "assets/role-eager-teacher-Bov8UJHT.js",
+      "chunk": {
+        "rawBytes": 375232,
+        "gzipBytes": 109090
+      },
+      "eagerDownloadBeyondPublic": {
+        "rawBytes": 528674,
+        "gzipBytes": 158379
+      }
+    },
+    "PRINCIPAL": {
+      "fileName": "assets/role-eager-principal-BOTzWw0u.js",
+      "chunk": {
+        "rawBytes": 170179,
+        "gzipBytes": 50924
+      },
+      "eagerDownloadBeyondPublic": {
+        "rawBytes": 369205,
+        "gzipBytes": 114445
+      }
+    },
+    "PARENT": {
+      "fileName": "assets/role-eager-parent-D1CsFKHf.js",
+      "chunk": {
+        "rawBytes": 337348,
+        "gzipBytes": 100712
+      },
+      "eagerDownloadBeyondPublic": {
+        "rawBytes": 469391,
+        "gzipBytes": 142774
+      }
+    }
+  }
+}

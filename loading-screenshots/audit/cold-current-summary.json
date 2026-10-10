@@ -1,0 +1,154 @@
+[
+  {
+    "run": 1,
+    "status": "passed",
+    "main": {
+      "title": "Expect \"toBeVisible\"",
+      "start": "2026-10-10T04:49:23.191Z",
+      "durationMs": 4975
+    },
+    "navigationToMainMs": 7869,
+    "navigation": {
+      "title": "Navigate",
+      "start": "2026-10-10T04:49:20.297Z",
+      "durationMs": 2889
+    }
+  },
+  {
+    "run": 2,
+    "status": "passed",
+    "main": {
+      "title": "Expect \"toBeVisible\"",
+      "start": "2026-10-10T04:49:36.207Z",
+      "durationMs": 4947
+    },
+    "navigationToMainMs": 7546,
+    "navigation": {
+      "title": "Navigate",
+      "start": "2026-10-10T04:49:33.608Z",
+      "durationMs": 2595
+    }
+  },
+  {
+    "run": 3,
+    "status": "passed",
+    "main": {
+      "title": "Expect \"toBeVisible\"",
+      "start": "2026-10-10T04:49:49.931Z",
+      "durationMs": 4943
+    },
+    "navigationToMainMs": 8340,
+    "navigation": {
+      "title": "Navigate",
+      "start": "2026-10-10T04:49:46.534Z",
+      "durationMs": 3391
+    }
+  },
+  {
+    "run": 4,
+    "status": "failed",
+    "main": {
+      "title": "Expect \"toBeVisible\"",
+      "start": "2026-10-10T04:50:04.993Z",
+      "durationMs": 5007,
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('main')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('main') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('main')\u001b[22m\n"
+    },
+    "navigationToMainMs": 8568,
+    "navigation": {
+      "title": "Navigate",
+      "start": "2026-10-10T04:50:01.432Z",
+      "durationMs": 3555
+    }
+  },
+  {
+    "run": 5,
+    "status": "failed",
+    "main": {
+      "title": "Expect \"toBeVisible\"",
+      "start": "2026-10-10T04:50:18.690Z",
+      "durationMs": 5005,
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('main')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('main') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('main')\u001b[22m\n"
+    },
+    "navigationToMainMs": 8265,
+    "navigation": {
+      "title": "Navigate",
+      "start": "2026-10-10T04:50:15.430Z",
+      "durationMs": 3254
+    }
+  },
+  {
+    "run": 6,
+    "status": "passed",
+    "main": {
+      "title": "Expect \"toBeVisible\"",
+      "start": "2026-10-10T04:50:31.193Z",
+      "durationMs": 4932
+    },
+    "navigationToMainMs": 7799,
+    "navigation": {
+      "title": "Navigate",
+      "start": "2026-10-10T04:50:28.326Z",
+      "durationMs": 2861
+    }
+  },
+  {
+    "run": 7,
+    "status": "passed",
+    "main": {
+      "title": "Expect \"toBeVisible\"",
+      "start": "2026-10-10T04:50:44.979Z",
+      "durationMs": 4521
+    },
+    "navigationToMainMs": 7298,
+    "navigation": {
+      "title": "Navigate",
+      "start": "2026-10-10T04:50:42.202Z",
+      "durationMs": 2772
+    }
+  },
+  {
+    "run": 8,
+    "status": "passed",
+    "main": {
+      "title": "Expect \"toBeVisible\"",
+      "start": "2026-10-10T04:50:58.411Z",
+      "durationMs": 4941
+    },
+    "navigationToMainMs": 7755,
+    "navigation": {
+      "title": "Navigate",
+      "start": "2026-10-10T04:50:55.597Z",
+      "durationMs": 2807
+    }
+  },
+  {
+    "run": 9,
+    "status": "passed",
+    "main": {
+      "title": "Expect \"toBeVisible\"",
+      "start": "2026-10-10T04:51:12.331Z",
+      "durationMs": 4941
+    },
+    "navigationToMainMs": 7782,
+    "navigation": {
+      "title": "Navigate",
+      "start": "2026-10-10T04:51:09.490Z",
+      "durationMs": 2836
+    }
+  },
+  {
+    "run": 10,
+    "status": "passed",
+    "main": {
+      "title": "Expect \"toBeVisible\"",
+      "start": "2026-10-10T04:51:25.846Z",
+      "durationMs": 4935
+    },
+    "navigationToMainMs": 7709,
+    "navigation": {
+      "title": "Navigate",
+      "start": "2026-10-10T04:51:23.072Z",
+      "durationMs": 2769
+    }
+  }
+]

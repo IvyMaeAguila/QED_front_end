@@ -1,0 +1,47 @@
+[
+  {
+    "run": 1,
+    "status": "passed",
+    "navigation": {
+      "title": "Navigate",
+      "start": "2026-10-10T05:06:50.334Z",
+      "durationMs": 880
+    },
+    "main": {
+      "title": "Expect \"toBeVisible\"",
+      "start": "2026-10-10T05:06:51.221Z",
+      "durationMs": 1441
+    },
+    "navigationToMainMs": 2328
+  },
+  {
+    "run": 2,
+    "status": "passed",
+    "navigation": {
+      "title": "Navigate",
+      "start": "2026-10-10T05:07:19.147Z",
+      "durationMs": 706
+    },
+    "main": {
+      "title": "Expect \"toBeVisible\"",
+      "start": "2026-10-10T05:07:19.860Z",
+      "durationMs": 315
+    },
+    "navigationToMainMs": 1028
+  },
+  {
+    "run": 3,
+    "status": "passed",
+    "navigation": {
+      "title": "Navigate",
+      "start": "2026-10-10T05:07:45.780Z",
+      "durationMs": 708
+    },
+    "main": {
+      "title": "Expect \"toBeVisible\"",
+      "start": "2026-10-10T05:07:46.494Z",
+      "durationMs": 330
+    },
+    "navigationToMainMs": 1044
+  }
+]

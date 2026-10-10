@@ -11,7 +11,7 @@ walk('src'); walk('tests');
 files.push('playwright.config.ts', 'package.json', 'package-lock.json', 'vite.config.ts');
 const current = Object.fromEntries(files.filter(file => fs.existsSync(file)).sort().map(file =>
   [file, crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex')]));
-const target = 'loading-screenshots/audit/followup-input-hashes.json';
+const target = process.env.QED_HASH_OUTPUT ?? 'loading-screenshots/audit/followup-input-hashes.json';
 if (process.argv.includes('--check')) {
   const saved = JSON.parse(fs.readFileSync(target, 'utf8'));
   const changed = [...new Set([...Object.keys(saved), ...Object.keys(current)])].filter(file => saved[file] !== current[file]);

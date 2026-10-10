@@ -1,3 +1,9 @@
+<!-- PART-C-REGRESSION -->
+## Latest regression authorization
+
+Keep the existing 5000ms Add Subject assertion and every other assertion/threshold/timing unchanged. No fixture change unless proven environment-only and recorded. No page-data prefetch. Role chunk plus all static dependencies start at the earliest authenticated role response; never load another role's browser code. Fixed gzip budgets remain entry 112153 bytes and entry eager closure 135349 bytes. Compare teacher against baseline skeleton 1.55s / data 2.15s, goal added delay about 1.5s. Same Slow 4G/4x profile, report achieved numbers if unmet. Ten isolated fresh-server runs before edits; iteration only isolated failing case, bootstrap/lazy, budget and production build; exactly one additional full suite at end. Only loading branch may be committed; main/remotes/deployment untouched. All prior geometry/motion/classification decisions stand.
+<!-- END-PART-C-REGRESSION -->
+
 ## Current role-bundle amendment — 2026-10-10
 
 Work only on codex/finish-loading-verification. No checkout/modification of main, no remote contact/push/deploy, no rebase/reset/force. Part A must be committed and building before creating backup/loading-before-main-sync and running a normal git merge main on the loading branch. Post-sync build + bundle check + targeted tests, then full suite exactly once. Dry-run via git merge-tree; leave main untouched.

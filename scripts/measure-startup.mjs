@@ -2,7 +2,7 @@ import { chromium } from '@playwright/test';
 import fs from 'node:fs';
 import { serveBuild, prepareLogin, login } from './startup-harness.mjs';
 const stage = process.argv[2];
-if (!['before', 'after'].includes(stage)) throw new Error('Specify before or after');
+if (!['before', 'after', 'current', 'fixed'].includes(stage)) throw new Error('Specify before, after, current or fixed');
 const server = await serveBuild(5193);
 const browser = await chromium.launch();
 const samples = [];

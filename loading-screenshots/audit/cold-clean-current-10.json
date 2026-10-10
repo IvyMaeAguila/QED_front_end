@@ -1,0 +1,122 @@
+{
+  "title": "add subject 375 light keeps known form real without data spinners",
+  "status": "passed",
+  "durationMs": 10118,
+  "steps": [
+    {
+      "title": "Launch browser",
+      "start": "2026-10-10T05:34:59.959Z",
+      "durationMs": 115
+    },
+    {
+      "title": "Create context",
+      "start": "2026-10-10T05:35:00.077Z",
+      "durationMs": 10
+    },
+    {
+      "title": "Create page",
+      "start": "2026-10-10T05:35:00.091Z",
+      "durationMs": 140
+    },
+    {
+      "title": "Set viewport size",
+      "start": "2026-10-10T05:35:00.233Z",
+      "durationMs": 3
+    },
+    {
+      "title": "Navigate",
+      "start": "2026-10-10T05:35:00.253Z",
+      "durationMs": 3450
+    },
+    {
+      "title": "Expect \"toBeVisible\"",
+      "start": "2026-10-10T05:35:03.708Z",
+      "durationMs": 4939
+    },
+    {
+      "title": "Expect \"toHaveCount\"",
+      "start": "2026-10-10T05:35:08.648Z",
+      "durationMs": 204
+    },
+    {
+      "title": "Expect \"toBeVisible\"",
+      "start": "2026-10-10T05:35:08.854Z",
+      "durationMs": 9
+    },
+    {
+      "title": "Expect \"toBeVisible\"",
+      "start": "2026-10-10T05:35:08.864Z",
+      "durationMs": 6
+    },
+    {
+      "title": "Expect \"toHaveAttribute\"",
+      "start": "2026-10-10T05:35:08.871Z",
+      "durationMs": 230
+    },
+    {
+      "title": "Evaluate",
+      "start": "2026-10-10T05:35:09.111Z",
+      "durationMs": 11
+    },
+    {
+      "title": "data-loading spinner/text outside preserved actions",
+      "start": "2026-10-10T05:35:09.122Z",
+      "durationMs": 1
+    },
+    {
+      "title": "Expect \"toHaveCount\"",
+      "start": "2026-10-10T05:35:09.123Z",
+      "durationMs": 3
+    },
+    {
+      "title": "Evaluate",
+      "start": "2026-10-10T05:35:09.127Z",
+      "durationMs": 30
+    },
+    {
+      "title": "Expect \"toEqual\"",
+      "start": "2026-10-10T05:35:09.158Z",
+      "durationMs": 0
+    },
+    {
+      "title": "Evaluate",
+      "start": "2026-10-10T05:35:09.159Z",
+      "durationMs": 8
+    },
+    {
+      "title": "Screenshot",
+      "start": "2026-10-10T05:35:09.169Z",
+      "durationMs": 48
+    },
+    {
+      "title": "Expect \"toBeEnabled\"",
+      "start": "2026-10-10T05:35:09.227Z",
+      "durationMs": 36
+    },
+    {
+      "title": "Expect \"toHaveCount\"",
+      "start": "2026-10-10T05:35:09.266Z",
+      "durationMs": 836
+    },
+    {
+      "title": "Evaluate",
+      "start": "2026-10-10T05:35:10.103Z",
+      "durationMs": 3
+    },
+    {
+      "title": "Expect \"toEqual\"",
+      "start": "2026-10-10T05:35:10.107Z",
+      "durationMs": 0
+    },
+    {
+      "title": "Screenshot",
+      "start": "2026-10-10T05:35:10.108Z",
+      "durationMs": 57
+    },
+    {
+      "title": "Close context",
+      "start": "2026-10-10T05:35:10.184Z",
+      "durationMs": 11
+    }
+  ]
+}

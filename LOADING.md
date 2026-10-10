@@ -1,3 +1,9 @@
+<!-- PART-C-REGRESSION -->
+## Production and development loading
+
+Role preloading begins when auth returns the role. Vite modulepreloads that role's static dependency closure; page controllers and data effects remain lazy. Production coalesces identical audience groups and excludes audit-only region prose from runtime output. Never add another role's code or optional heavy libraries to the eager path. Development HTML readiness waits for static source compilation; dynamic controllers/libraries are excluded. This warmup is server-side and is not a page-data prefetch. All original skeleton rules below stand.
+<!-- END-PART-C-REGRESSION -->
+
 # QED loading system
 
 The 55 route compositions are registered in `src/shared/loading/routeSkeletons.ts` and connected to the real lazy router. Registration is enforced independently with an AST coverage test. It does not replace per-region visual verification. See LOADING-PROGRESS.md for current verification status and LOADING-SPEC.md for every requirement and accepted exception.
