@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { StudentDirectoryTable, type StudentDirectoryRow } from "./StudentDirectoryTable";
@@ -44,7 +45,7 @@ export function StudentDirectory({ students, panelBg, panelBorder, textPrimary, 
             className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-xs font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
           />
         </div>
-        <select
+        <AccountSelect data-account-select=""
           value={gender}
           onChange={(event) => setGender(event.target.value as typeof gender)}
           aria-label="Filter students by gender"
@@ -54,7 +55,7 @@ export function StudentDirectory({ students, panelBg, panelBorder, textPrimary, 
           <option value="All">All genders</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
-        </select>
+        </AccountSelect>
       </div>
       <StudentDirectoryTable
         loading={loading} error={error} retry={retry} view={`${view}:${search}:${gender}`}

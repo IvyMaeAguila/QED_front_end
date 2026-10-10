@@ -30,7 +30,8 @@ for (const width of [375, 1280]) for (const dark of [false, true]) test(`teacher
   await expect(page.getByRole("heading", { name: "Subjects", exact: true })).toBeVisible();
   await expect(page.getByPlaceholder("Search subject...")).toBeVisible();
   await expect(page.getByRole("button", { name: "By Section" })).toBeVisible();
-  await expect(page.getByText("Grade Level", { exact: true })).toBeVisible();
+  await expect(page.getByText("Grade Level", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "All Grades", exact: true })).toBeVisible();
   await expect(page.locator(".qed-splash")).toHaveCount(0);
   const skeletonCard = page.locator("[data-sk-layer] article, [data-sk-frame] article").first();
   const before = await skeletonCard.boundingBox();
@@ -42,6 +43,18 @@ for (const width of [375, 1280]) for (const dark of [false, true]) test(`teacher
   const after = await page.locator("[data-sk-content] article").first().boundingBox();
   for (const key of ["x", "y", "width", "height"] as const) expect(Math.abs(after![key] - before![key]), key).toBeLessThanOrEqual(1);
   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+  const filter = page.getByRole("button", { name: "All Grades", exact: true });
+  const filterBox = (await filter.boundingBox())!;
+  const viewBox = (await page.getByRole("button", { name: "By Section" }).boundingBox())!;
+  expect(Math.abs(filterBox.y - viewBox.y)).toBeLessThanOrEqual(1);
+  expect(filterBox.x + filterBox.width).toBeLessThan(viewBox.x);
+  await filter.click();
+  await page.getByRole("option", { name: "Grade 2", exact: true }).click();
+  await expect(page.locator("[data-sk-content] article")).toHaveCount(0);
+  await page.getByRole("button", { name: "Grade 2", exact: true }).click();
+  await page.getByRole("option", { name: "All Grades", exact: true }).click();
+  await expect(page.locator("[data-sk-content] article")).toHaveCount(6);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
 });
 
 for (const count of [0, 1, 9]) test(`teacher subjects variable result: ${count} rows, stable actions and filters`, async ({ page }) => {

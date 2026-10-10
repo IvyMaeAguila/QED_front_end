@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { useMemo, useState } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { CalendarCheck, CalendarDays } from "lucide-react";
@@ -296,7 +297,7 @@ export function AttendanceMonthSummarySection({
           </p>
         </div>
 
-        <select
+        <AccountSelect data-account-select="" data-dropdown-dark={darkMode}
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value)}
           style={{ borderRadius: "8px" }}
@@ -309,7 +310,7 @@ export function AttendanceMonthSummarySection({
               {monthLabel(key)}
             </option>
           ))}
-        </select>
+        </AccountSelect>
       </div>
 
       <LoadingRegion loading={prerequisitesLoading || loading} error={attendanceError} retry={() => setAttempt(value => value + 1)} name="attendance-month-summary" variable skeleton={null} frame={renderSummary} retainPrevious hasContent={Object.keys(attendance).length > 0} onSettled={() => rememberRows(view, absencesByDate.length)}>{null}</LoadingRegion>

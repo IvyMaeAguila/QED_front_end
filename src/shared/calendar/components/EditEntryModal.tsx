@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { useState } from "react";
 import { Pencil } from "lucide-react";
 import { ACCENT, HOLIDAY_TYPE_LABELS, type HolidayType, type CalendarTheme } from "../types/Calendar";
@@ -80,13 +81,13 @@ export function EditEntryModal({
           {!isActivity && (
             <div>
               <label className={labelClasses}>Type</label>
-              <select value={holidayType} onChange={(e) => setHolidayType(e.target.value as HolidayType)} className={inputClasses}>
+              <AccountSelect data-account-select="" value={holidayType} onChange={(e) => setHolidayType(e.target.value as HolidayType)} className={inputClasses}>
                 {Object.entries(HOLIDAY_TYPE_LABELS).map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}
                   </option>
                 ))}
-              </select>
+              </AccountSelect>
             </div>
           )}
 

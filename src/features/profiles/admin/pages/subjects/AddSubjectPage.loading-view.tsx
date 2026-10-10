@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import {
 AlertTriangle,
 ArrowLeft,
@@ -341,7 +342,7 @@ function useAddSubjectPageState() {
             {currentStep === 0 && <div className="grid max-w-3xl gap-4 sm:grid-cols-2">
             <div>
               <label className={labelClasses}>Grade Level</label>
-              <select
+              <AccountSelect data-account-select=""
                 value={gradeLevel}
                 onChange={(e) => handleGradeChange(e.target.value)}
                 disabled={isSubmitting || loadingGradeLevels}
@@ -359,7 +360,7 @@ function useAddSubjectPageState() {
                     {g}
                   </option>
                 ))}
-              </select>
+              </AccountSelect>
             </div>
 
             <div>

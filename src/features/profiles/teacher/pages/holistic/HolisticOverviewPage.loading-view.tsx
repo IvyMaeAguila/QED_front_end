@@ -1,6 +1,6 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import {
 Activity,
-ChevronDown,
 ChevronRight,
 Search,
 TrendingDown,
@@ -402,7 +402,7 @@ function useHolisticOverviewPageState() {
 
             {/* Term dropdown, placed as the SectionCard-style header action, same slot Attendance uses for "Mark All Present" */}
             <div className="relative w-full shrink-0 sm:w-44">
-              <LoadingFormValue loading={termsLoading && !error} name="holistic-overview-term" width="9ch"><select
+              <LoadingFormValue loading={termsLoading && !error} name="holistic-overview-term" width="9ch"><AccountSelect data-account-select="" data-dropdown-dark={darkMode}
                 value={selectedTerm ?? ""}
                 onChange={(e) => setSelectedTerm(Number(e.target.value))}
                 disabled={terms.length === 0}
@@ -416,11 +416,7 @@ function useHolisticOverviewPageState() {
                     {t.isActive ? " · Current" : ""}
                   </option>
                 ))}
-              </select></LoadingFormValue>
-              <ChevronDown
-                size={12}
-                className={`pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 ${textMuted}`}
-              />
+              </AccountSelect></LoadingFormValue>
             </div>
           </div>
 

@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { useState } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { School, Plus, Trash2, Pencil, Check, X } from "lucide-react";
@@ -108,7 +109,7 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
     <ModalShell title="Manage Sections" icon={School} onClose={onClose} {...theme}>
       <div>
         <label className={labelClasses}>Grade Level</label>
-        <select
+        <AccountSelect data-account-select=""
           value={gradeLevel}
           onChange={(e) => {
             setGradeLevel(e.target.value as GradeLevel);
@@ -123,7 +124,7 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
               {g}
             </option>
           ))}
-        </select>
+        </AccountSelect>
       </div>
 
       <div>

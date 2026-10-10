@@ -1,8 +1,9 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { LoadingFormValue } from "@shared/loading/LoadingFormValue";
 import { Skeleton, SkeletonText } from "@shared/components/SkeletonLoading";
 import { useMemo, useState } from "react";
-import { Calendar, ChevronDown, UserCheck, UserX, Clock3 } from "lucide-react";
+import { Calendar, UserCheck, UserX, Clock3 } from "lucide-react";
 import { COLORS } from "../utils/constants";
 import type { DetailStudent } from "../../GlobalTypes/types";
 import type { AdminThemeContext } from "../../../../../admin/pages/AdminLayout"; // adjust path as needed
@@ -144,7 +145,7 @@ function AttendanceOverviewContent({ theme }: AttendanceOverviewContentProps) {
         <div className="flex items-center gap-2">
           {/* Month select — options galing na sa DB (grading_periods) */}
           <div className="relative">
-            <LoadingFormValue loading={monthsLoading} name="parent-attendance-month" width="14ch" intrinsic><select
+            <LoadingFormValue loading={monthsLoading} name="parent-attendance-month" width="14ch" intrinsic><AccountSelect data-account-select=""
               value={monthKey}
               onChange={(e) => handleMonthChange(e.target.value)}
               disabled={monthsLoading || monthOptions.length === 0}
@@ -160,11 +161,7 @@ function AttendanceOverviewContent({ theme }: AttendanceOverviewContentProps) {
                   {m.label}
                 </option>
               ))}
-            </select></LoadingFormValue>
-            <ChevronDown
-              size={13}
-              className={`pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 ${textMuted}`}
-            />
+            </AccountSelect></LoadingFormValue>
           </div>
         </div>
       </div>

@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { LoadingFormValue } from "@shared/loading/LoadingFormValue";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
@@ -333,7 +334,7 @@ function useStudentFormPageState() {
             </div>
             <div>
               <label className={labelClasses}>Gender</label>
-              <LoadingFormValue loading={isEditing && loading && !existing} name="student-form-gender" width="6ch"><select
+              <LoadingFormValue loading={isEditing && loading && !existing} name="student-form-gender" width="6ch"><AccountSelect data-account-select=""
                 className={inputClasses}
                 value={form.gender}
                 onChange={(e) =>
@@ -345,7 +346,7 @@ function useStudentFormPageState() {
                     {g}
                   </option>
                 ))}
-              </select></LoadingFormValue>
+              </AccountSelect></LoadingFormValue>
             </div>
           </div>
           </div>}
@@ -356,7 +357,7 @@ function useStudentFormPageState() {
           <div className="grid max-w-3xl gap-4 sm:grid-cols-2">
             <div>
               <label className={labelClasses}>Grade Level</label>
-              <LoadingFormValue loading={(isEditing && loading && !existing) || (loadingGrades && Boolean(form.gradeLevel))} name="student-form-gradeLevel" width="7ch"><select
+              <LoadingFormValue loading={(isEditing && loading && !existing) || (loadingGrades && Boolean(form.gradeLevel))} name="student-form-gradeLevel" width="7ch"><AccountSelect data-account-select=""
                 className={inputClasses}
                 disabled={loadingGrades || Boolean(gradeError)}
                 value={form.gradeLevel}
@@ -387,7 +388,7 @@ function useStudentFormPageState() {
                       {g.grade_level}
                     </option>
                   ))}
-              </select></LoadingFormValue>
+              </AccountSelect></LoadingFormValue>
               {errors.gradeLevel && (
                 <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.gradeLevel}
@@ -396,7 +397,7 @@ function useStudentFormPageState() {
             </div>
             <div>
               <label className={labelClasses}>Section</label>
-              <LoadingFormValue loading={(isEditing && loading && !existing) || (loadingSections && Boolean(form.gradeLevel))} name="student-form-section" width="10ch"><select
+              <LoadingFormValue loading={(isEditing && loading && !existing) || (loadingSections && Boolean(form.gradeLevel))} name="student-form-section" width="10ch"><AccountSelect data-account-select=""
                 className={`${inputClasses} ${!sectionIsSelectable ? "opacity-60 cursor-not-allowed" : ""}`}
                 value={form.section}
                 disabled={!sectionIsSelectable || loadingSections || Boolean(sectionError)}
@@ -414,7 +415,7 @@ function useStudentFormPageState() {
                     {s.section_name}
                   </option>
                 ))}
-              </select></LoadingFormValue>
+              </AccountSelect></LoadingFormValue>
               {errors.section && (
                 <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.section}

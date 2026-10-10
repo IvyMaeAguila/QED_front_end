@@ -1,12 +1,13 @@
-import { SkeletonText } from "@shared/components/SkeletonLoading";
+import { AccountSelect } from "@shared/components/AccountSelect";
+
 import { useToast } from "@shared/context/ToastContext";
 import { LoadingFormValue } from "@shared/loading/LoadingFormValue";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 import { rememberRows,skeletonRows } from "@shared/loading/reservations";
-import { ArrowLeft,ChevronDown,Plus,Save,Trash2 } from "lucide-react";
-import { useRef, useState, type FormEvent, type KeyboardEvent } from "react";
-import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
+import { ArrowLeft,Plus,Save,Trash2 } from "lucide-react";
+import { useRef, useState, type FormEvent } from "react";
+
 import { useNavigate, useParams } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import { WorkflowStepper } from "../../../shared/components/WorkflowStepper";
@@ -69,123 +70,11 @@ interface TeacherDropdownProps {
   onChange: (teacherId: string) => void;
 }
 
-function TeacherDropdown({
-  label,
-  value,
-  options,
-  disabled,
-  loading,
-  valueLoading = false,
-  darkMode,
-  className,
-  onChange,
-}: TeacherDropdownProps) {
-  const rootRef = useRef<HTMLDivElement>(null);
-  const [open, setOpen] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const selected = options.find((teacher) => String(teacher.id) === value);
-  const selectedLabel = selected
-    ? `${selected.last_name}, ${selected.first_name}`
-    : "Select a teacher…";
-
-  useEffect(() => {
-    if (!open) return;
-    const closeOnOutsidePointer = (event: PointerEvent) => {
-      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
-    };
-    const closeOnEscape = (event: globalThis.KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("pointerdown", closeOnOutsidePointer);
-    document.addEventListener("keydown", closeOnEscape);
-    return () => {
-      document.removeEventListener("pointerdown", closeOnOutsidePointer);
-      document.removeEventListener("keydown", closeOnEscape);
-    };
-  }, [open]);
-
-  function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
-    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-      event.preventDefault();
-      if (!open) {
-        setActiveIndex(Math.max(0, options.findIndex((teacher) => String(teacher.id) === value)));
-        setOpen(true);
-        return;
-      }
-      const direction = event.key === "ArrowDown" ? 1 : -1;
-      if (options.length > 0) {
-        setActiveIndex((index) => (index + direction + options.length) % options.length);
-      }
-    } else if (event.key === "Enter" && open && options[activeIndex]) {
-      event.preventDefault();
-      onChange(String(options[activeIndex].id));
-      setOpen(false);
-    }
-  }
-
-  return (
-    <div className="relative w-full" ref={rootRef}>
-      <LoadingRegion loading={valueLoading || (loading && Boolean(value) && !selected)} name={label === "Class adviser" ? "class-adviser-value" : "class-period-teacher"} skeleton={null} frame={pending => <div className="relative">
-      <button
-        type="button"
-        role="combobox"
-        aria-label={label}
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        disabled={disabled || pending}
-        onKeyDown={handleKeyDown}
-        onClick={() => {
-          setActiveIndex(Math.max(0, options.findIndex((teacher) => String(teacher.id) === value)));
-          setOpen((isOpen) => !isOpen);
-        }}
-        className={`${className} flex items-center justify-between gap-3 text-left disabled:cursor-not-allowed disabled:opacity-60`}
-      >
-        <span className={`${selected ? "truncate" : "truncate text-[#8B929E]"}${pending ? " invisible" : ""}`}>{selectedLabel}</span>
-        <ChevronDown size={16} className={`shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
-      </button>
-      {pending && <span className="pointer-events-none absolute inset-y-0 left-3 right-8 flex items-center"><SkeletonText width={label === "Class adviser" ? "12ch" : "10ch"} className="max-w-full text-sm font-semibold" /></span>}
-      </div>}>{null}</LoadingRegion>
-      {open && (
-        <div
-          role="listbox"
-          aria-label={`${label} options`}
-          className={`absolute left-0 top-full z-[100] mt-1 max-h-64 w-full overflow-y-auto rounded-lg border py-1 shadow-xl ${darkMode ? "border-[#374151] bg-[#111827]" : "border-border-subtle bg-white"}`}
-        >
-          {options.map((teacher, index) => {
-            const teacherId = String(teacher.id);
-            const isSelected = teacherId === value;
-            const isActive = index === activeIndex;
-            return (
-              <button
-                key={teacher.id}
-                type="button"
-                role="option"
-                aria-selected={isSelected}
-                onMouseEnter={() => setActiveIndex(index)}
-                onClick={() => {
-                  onChange(teacherId);
-                  setOpen(false);
-                }}
-                className={`block w-full px-3 py-2 text-left text-sm transition-colors ${
-                  isActive
-                    ? darkMode ? "bg-white/10" : "bg-brand-light"
-                    : darkMode ? "hover:bg-white/5" : "hover:bg-brand-light"
-                } ${darkMode ? "text-white" : "text-[#111827]"}`}
-              >
-                {teacher.last_name}, {teacher.first_name}
-              </button>
-            );
-          })}
-          {options.length === 0 && (
-            <p className={`px-3 py-2 text-sm ${darkMode ? "text-[#9CA3AF]" : "text-[#64748B]"}`}>
-              No teachers available
-            </p>
-          )}
-        </div>
-      )}
-    </div>
-  );
+function TeacherDropdown({label,value,options,disabled,loading,valueLoading=false,darkMode,className,onChange}:TeacherDropdownProps) {
+ const pending=valueLoading || (loading && Boolean(value) && !options.some(teacher=>String(teacher.id)===value));
+ return <LoadingFormValue loading={pending} name={label === "Class adviser" ? "class-adviser-value" : "class-period-teacher"} width={label === "Class adviser" ? "12ch" : "10ch"}><AccountSelect data-account-select="" aria-label={label} className={className} data-dropdown-dark={darkMode} disabled={disabled} value={value} onChange={event=>onChange(event.target.value)}><option value="">Select a teacher…</option>{options.map(teacher=><option key={teacher.id} value={teacher.id}>{teacher.last_name}, {teacher.first_name}</option>)}</AccountSelect></LoadingFormValue>;
 }
+
 
 function useClassFormPageState() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
@@ -409,7 +298,7 @@ function useClassFormPageState() {
           <div className="grid max-w-3xl gap-4 sm:grid-cols-2">
             <div>
               <label className={labelClasses}>Grade Level</label>
-              <LoadingFormValue loading={recordPending || (loadingGradeLevels && Boolean(form.gradeLevelId) && !gradeLevels.some(grade => grade.id === form.gradeLevelId))} name="class-form-gradeLevelId" width="7ch"><select
+              <LoadingFormValue loading={recordPending || (loadingGradeLevels && Boolean(form.gradeLevelId) && !gradeLevels.some(grade => grade.id === form.gradeLevelId))} name="class-form-gradeLevelId" width="7ch"><AccountSelect data-account-select=""
                 className={inputClasses}
                 value={form.gradeLevelId}
                 disabled={loadingGradeLevels}
@@ -431,7 +320,7 @@ function useClassFormPageState() {
                     {g.grade_level}
                   </option>
                 ))}
-              </select></LoadingFormValue>
+              </AccountSelect></LoadingFormValue>
               {errors.gradeLevelId && (
                 <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.gradeLevelId}
@@ -441,7 +330,7 @@ function useClassFormPageState() {
 
             <div>
               <label className={labelClasses}>Section (Optional)</label>
-              <LoadingFormValue loading={recordPending || (loadingSections && Boolean(form.section) && !sections.some(section => section.section_name === form.section))} name="class-form-section" width="10ch"><select
+              <LoadingFormValue loading={recordPending || (loadingSections && Boolean(form.section) && !sections.some(section => section.section_name === form.section))} name="class-form-section" width="10ch"><AccountSelect data-account-select=""
                 className={`${inputClasses} disabled:opacity-60 disabled:cursor-not-allowed`}
                 value={form.section}
                 disabled={form.gradeLevelId === "" || loadingSections}
@@ -463,7 +352,7 @@ function useClassFormPageState() {
                     {s.section_name}
                   </option>
                 ))}
-              </select></LoadingFormValue>
+              </AccountSelect></LoadingFormValue>
               {errors.section && (
                 <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.section}
@@ -545,7 +434,7 @@ function useClassFormPageState() {
                   className={`rounded-[12px] border p-3 sm:p-4 space-y-3 ${panelBorder}`}
                 >
                   <div className="grid max-w-3xl gap-3 sm:grid-cols-2">
-                    <LoadingFormValue loading={pending || (loadingSubjects && Boolean(period.subject) && !subjects.some(subject => String(subject.id) === period.subject))} name="class-period-subject" width="14ch"><select
+                    <LoadingFormValue loading={pending || (loadingSubjects && Boolean(period.subject) && !subjects.some(subject => String(subject.id) === period.subject))} name="class-period-subject" width="14ch"><AccountSelect data-account-select=""
                       className={inputClasses}
                       value={period.subject}
                       disabled={form.gradeLevelId === "" || loadingSubjects}
@@ -567,7 +456,7 @@ function useClassFormPageState() {
                           {s.subject_name}
                         </option>
                       ))}
-                    </select></LoadingFormValue>
+                    </AccountSelect></LoadingFormValue>
                     <TeacherDropdown
                       label="Subject teacher"
                       value={period.teacherId}

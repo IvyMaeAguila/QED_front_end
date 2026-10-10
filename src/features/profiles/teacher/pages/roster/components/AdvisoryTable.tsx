@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { Search } from "lucide-react";
 import { StudentDirectoryTable } from "@shared/components/StudentDirectoryTable";
 import { type RosterStudent } from "../../subjects/detail/data";
@@ -41,7 +42,7 @@ export function AdvisoryTable({
             className={`h-8 w-full rounded-lg border pl-8 pr-2.5 text-xs font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
           />
         </div>
-        <select
+        <AccountSelect data-account-select="" data-dropdown-dark={darkMode}
           value={genderFilter}
           onChange={(event) => setGenderFilter(event.target.value as GenderFilter)}
           aria-label="Filter by gender"
@@ -51,7 +52,7 @@ export function AdvisoryTable({
           <option value="All">All genders</option>
           <option value="M">Male</option>
           <option value="F">Female</option>
-        </select>
+        </AccountSelect>
       </div>
       <StudentDirectoryTable
         loading={loading} error={error} retry={retry} view={view}

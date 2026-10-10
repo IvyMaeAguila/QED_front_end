@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { useState, useMemo } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
@@ -287,17 +288,17 @@ export function EditSubjectModal({
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className={labelClasses}>Grade Level</label>
-          <select value={gradeLevel} onChange={(e) => {
+          <AccountSelect data-account-select="" value={gradeLevel} onChange={(e) => {
             const nextGrade = e.target.value as Subject["gradeLevel"];
             setGradeLevel(nextGrade);
             if (nextGrade !== gradeLevel) setSection("");
           }} disabled={saving} className={saving ? disabledInputClasses : inputClasses}>
             {GRADE_LEVELS.map((grade) => <option key={grade} value={grade}>{grade}</option>)}
-          </select>
+          </AccountSelect>
         </div>
         <div>
           <label className={labelClasses}>Section</label>
-          <select
+          <AccountSelect data-account-select=""
             value={section}
             onChange={(e) => setSection(e.target.value)}
             disabled={saving}
@@ -309,14 +310,14 @@ export function EditSubjectModal({
                 {s.name}
               </option>
             ))}
-          </select>
+          </AccountSelect>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className={labelClasses}>Assigned Teacher</label>
-          <select
+          <AccountSelect data-account-select=""
             value={teacherId}
             onChange={(e) => setTeacherId(e.target.value)}
             disabled={saving}
@@ -328,21 +329,21 @@ export function EditSubjectModal({
                 {formatTeacherName(t)}
               </option>
             ))}
-          </select>
+          </AccountSelect>
         </div>
         <div>
           <label className={labelClasses}>School Year</label>
-          <select value={schoolYear} onChange={(e) => setSchoolYear(e.target.value)} disabled={saving} className={saving ? disabledInputClasses : inputClasses}>
+          <AccountSelect data-account-select="" value={schoolYear} onChange={(e) => setSchoolYear(e.target.value)} disabled={saving} className={saving ? disabledInputClasses : inputClasses}>
             {[...new Set([subject.schoolYear, ...schoolYears.map((year) => year.school_year)])].filter(Boolean).map((year) => (
               <option key={year} value={year}>{year}</option>
             ))}
-          </select>
+          </AccountSelect>
         </div>
       </div>
 
       <div>
         <label className={labelClasses}>Type</label>
-        <select
+        <AccountSelect data-account-select=""
           value={isGraded ? "graded" : "non-graded"}
           onChange={(e) => setIsGraded(e.target.value === "graded")}
           disabled={saving}
@@ -350,7 +351,7 @@ export function EditSubjectModal({
         >
           <option value="graded">Graded</option>
           <option value="non-graded">Non-Graded</option>
-        </select>
+        </AccountSelect>
       </div>
       </div>
 {isGraded && (
@@ -394,7 +395,7 @@ export function EditSubjectModal({
 
             return (
               <div key={row.id} className="flex items-center gap-2">
-                <select
+                <AccountSelect data-account-select=""
                   value={row.assessmentType}
                   onChange={(e) =>
                     updateRow(row.id, { assessmentType: e.target.value })
@@ -425,7 +426,7 @@ export function EditSubjectModal({
                       {t.assessmentName}
                     </option>
                   ))}
-                </select>
+                </AccountSelect>
 
                 <div className="relative w-24 shrink-0">
                   <input

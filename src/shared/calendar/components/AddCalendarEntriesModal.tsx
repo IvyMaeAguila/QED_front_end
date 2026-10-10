@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { useState } from "react";
 import { Plus, Trash2, CalendarDays } from "lucide-react";
 import { ACCENT, HOLIDAY_TYPE_LABELS, type HolidayType, type CalendarTheme } from "../types/Calendar";
@@ -121,7 +122,7 @@ export function AddCalendarEntriesModal({
               {!isActivity && (
                 <div>
                   <label className={labelClasses}>Type</label>
-                  <select
+                  <AccountSelect data-account-select=""
                     value={row.holidayType}
                     onChange={(e) => updateRow(row.key, { holidayType: e.target.value as HolidayType })}
                     className={inputClasses}
@@ -131,7 +132,7 @@ export function AddCalendarEntriesModal({
                         {label}
                       </option>
                     ))}
-                  </select>
+                  </AccountSelect>
                 </div>
               )}
             </div>

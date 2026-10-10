@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { Skeleton,SkeletonText } from "@shared/components/SkeletonLoading";
 import { LoadingFormValue } from "@shared/loading/LoadingFormValue";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
@@ -6,7 +7,6 @@ import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 import {
 Activity,
 Brain,
-ChevronDown,
 Compass,
 Heart,
 Minus,
@@ -628,7 +628,7 @@ function useHolisticDomainTrendsPageState() {
             )}
 
             <div className="relative w-full sm:w-48">
-              <LoadingFormValue loading={termsLoading && !error} name="domain-trends-term" width="9ch"><select
+              <LoadingFormValue loading={termsLoading && !error} name="domain-trends-term" width="9ch"><AccountSelect data-account-select="" data-dropdown-dark={darkMode}
                 value={selectedTerm ?? ""}
                 onChange={(e) => setSelectedTerm(Number(e.target.value))}
                 disabled={terms.length === 0}
@@ -642,11 +642,7 @@ function useHolisticDomainTrendsPageState() {
                     {t.isActive ? " · Current" : ""}
                   </option>
                 ))}
-              </select></LoadingFormValue>
-              <ChevronDown
-                size={13}
-                className={`pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 ${textMuted}`}
-              />
+              </AccountSelect></LoadingFormValue>
             </div>
           </div>
         </div>

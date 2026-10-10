@@ -1,6 +1,8 @@
-import { useState } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
-import { Search, ChevronDown, Check } from "lucide-react";
+import { AccountSelect } from "@shared/components/AccountSelect";
+
+
+import { Search } from "lucide-react";
 import { useTeachers } from "../../classes/context/TeachersContext";
 import { formatTeacherName } from "../../classes/types/Teacher";
 import { GRADE_LEVELS, type GradeLevel, type SubjectsTheme } from "../types/types";
@@ -30,75 +32,8 @@ interface Option {
 
 // Custom dropdown (same look as the Students toolbar) — takes {value,label}
 // options so teacher ids can be stored while the teacher name is displayed.
-function Dropdown({
-  value,
-  options,
-  onChange,
-  darkMode,
-}: {
-  value: string;
-  options: Option[];
-  onChange: (v: string) => void;
-  darkMode: boolean;
-}) {
-  const [open, setOpen] = useState(false);
-  const current = options.find((o) => o.value === value)?.label ?? "";
-
-  return (
-    <div className="relative shrink-0">
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        onBlur={() => setTimeout(() => setOpen(false), 120)}
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        className={`qed-filter-control min-w-32 px-3 rounded-lg border font-bold flex items-center justify-between gap-2 transition-colors ${
-          darkMode
-            ? "bg-[#0B1120] border-[#374151] text-white hover:bg-[#111827]"
-            : "bg-brand-light border-border-subtle text-[#111827] hover:bg-brand-light"
-        }`}
-      >
-        <span className="truncate max-w-36">{current}</span>
-        <ChevronDown
-          size={13}
-          className={`transition-transform ${open ? "rotate-180" : ""}`}
-        />
-      </button>
-
-      {open && (
-        <div
-          role="listbox"
-          className={`absolute right-0 top-9 z-30 w-52 max-h-64 overflow-y-auto rounded-xl border p-1 shadow-lg ${
-            darkMode
-              ? "bg-[#111827] border-[#374151]"
-              : "bg-white border-border-subtle"
-          }`}
-        >
-          {options.map((option) => (
-            <button
-              type="button"
-              key={option.value}
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={() => {
-                onChange(option.value);
-                setOpen(false);
-              }}
-              className={`w-full px-3 py-2 rounded-lg text-left text-xs font-semibold flex items-center justify-between gap-2 transition-colors ${
-                darkMode
-                  ? "text-[#D1D5DB] hover:bg-white/10"
-                  : "text-[#374151] hover:bg-brand-light"
-              }`}
-            >
-              <span className="truncate">{option.label}</span>
-              {value === option.value && (
-                <Check size={14} className="text-brand-ink shrink-0" />
-              )}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+function Dropdown({value, options, onChange, darkMode}: {value: string; options: Option[]; onChange:(value:string)=>void; darkMode:boolean}) {
+ return <AccountSelect role="button" aria-label={options.find(option=>option.value===value)?.label} value={value} onChange={event=>onChange(event.target.value)} data-dropdown-dark={darkMode}>{options.map(option=><option key={option.value} value={option.value}>{option.label}</option>)}</AccountSelect>;
 }
 
 export function SubjectFilters({

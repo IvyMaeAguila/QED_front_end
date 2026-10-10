@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { LoadingFormValue } from "@shared/loading/LoadingFormValue";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
@@ -213,7 +214,7 @@ function GradeSheetContent({
               <span className={`whitespace-nowrap text-xs font-semibold ${textMuted}`}>
                 Showing <LoadingRegion as="span" loading={initialLoading} skeleton={<SkeletonText width="1ch" />}>{filteredStudents.length}</LoadingRegion> of <LoadingRegion as="span" loading={initialLoading} skeleton={<SkeletonText width="2ch" />}>{students.length}</LoadingRegion> students
               </span>
-              <select
+              <AccountSelect data-account-select=""
                 value={studentFilter}
                 onChange={(event) => setStudentFilter(event.target.value)}
                 aria-label="Filter students and grade ranking"
@@ -225,10 +226,10 @@ function GradeSheetContent({
                 <option>Lowest Grades</option>
                 <option>Boys</option>
                 <option>Girls</option>
-              </select>
+              </AccountSelect>
               <label className={`flex h-8 items-center gap-2 rounded-lg border px-3 text-xs font-semibold ${panelBg} ${panelBorder} ${textMuted}`}>
                 <span>Term:</span>
-                <LoadingFormValue loading={periodsLoading && gradingPeriods.length === 0} name="grade-sheet-term" intrinsic width="5ch" className="h-full"><select
+                <LoadingFormValue loading={periodsLoading && gradingPeriods.length === 0} name="grade-sheet-term" intrinsic width="5ch" className="h-full"><AccountSelect data-account-select=""
                   value={String(gradingPeriodId)}
                   onChange={(event) => onTermChange(event.target.value)}
                   aria-label="Select grading term"
@@ -237,7 +238,7 @@ function GradeSheetContent({
                   {gradingPeriods.map((period) => (
                     <option key={period.id} value={String(period.id)}>{period.termLabel}</option>
                   ))}
-                </select></LoadingFormValue>
+                </AccountSelect></LoadingFormValue>
               </label>
             </div>
           </div>

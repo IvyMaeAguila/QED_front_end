@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { ConfirmationModal } from "@shared/components/ConfirmationModal";
 import {
 ArrowLeft,
@@ -322,7 +323,7 @@ function useSubjectRecordsPageState() {
           {(terms.length > 0 || isAssessment) && (
             <div className="flex items-center gap-2.5">
               {terms.length > 0 && (
-                <select
+                <AccountSelect data-account-select="" data-dropdown-dark={darkMode}
                   value={term}
                   onChange={(e) => setTerm(e.target.value)}
                   className={`h-8 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
@@ -333,7 +334,7 @@ function useSubjectRecordsPageState() {
                       {t.label}
                     </option>
                   ))}
-                </select>
+                </AccountSelect>
               )}
 
               {isAssessment && (

@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { useState } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { Calendar, Tag, Plus, ListChecks } from "lucide-react";
@@ -172,7 +173,7 @@ export function AddItemModal({
           {isExam && (
             <label className={fieldRow}>
               <ListChecks size={13} className={textMuted} />
-              <select
+              <AccountSelect data-account-select="" data-dropdown-dark={darkMode}
                 value={examType}
                 onChange={(e) => setExamType(e.target.value as ExamType)}
                 className={`flex-1 bg-transparent outline-none ${textPrimary}`}
@@ -182,16 +183,16 @@ export function AddItemModal({
                     {t} — {EXAM_TYPE_LABELS[t]}
                   </option>
                 ))}
-              </select>
+              </AccountSelect>
             </label>
           )}
 
           {!isExam && templateDomains.length > 1 && (
             <label className={`${fieldRow} justify-between`}>
               <span className={`qed-type-label ${textMuted}`}>Template domain</span>
-              <select value={templateDomainId} onChange={(e) => setTemplateDomainId(e.target.value)} className={`${inputBare} text-right`}>
+              <AccountSelect data-account-select="" data-dropdown-dark={darkMode} value={templateDomainId} onChange={(e) => setTemplateDomainId(e.target.value)} className={`${inputBare} text-right`}>
                 {templateDomains.map((domain) => <option key={domain.id} value={domain.id}>{domain.label} ({domain.weightPercent}%)</option>)}
-              </select>
+              </AccountSelect>
             </label>
           )}
 
@@ -228,7 +229,7 @@ export function AddItemModal({
             ) : (
               <div className={fieldRow}>
                 <Tag size={13} className={textMuted} />
-                <select
+                <AccountSelect data-account-select="" data-dropdown-dark={darkMode}
                   value={selectedTopicId}
                   onChange={(e) => setSelectedTopicId(e.target.value)}
                   className={`flex-1 bg-transparent outline-none ${textPrimary}`}
@@ -242,7 +243,7 @@ export function AddItemModal({
                       {t.topicName}
                     </option>
                   ))}
-                </select>
+                </AccountSelect>
                 <button
                   onClick={() => setNewTopicMode(true)}
                   className={`flex shrink-0 items-center gap-1 qed-type-button ${textMuted}`}

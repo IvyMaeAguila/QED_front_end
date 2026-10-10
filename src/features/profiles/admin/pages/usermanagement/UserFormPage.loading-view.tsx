@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { LoadingFormValue } from "@shared/loading/LoadingFormValue";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
@@ -408,7 +409,7 @@ function useUserFormPageState() {
             </div>
             <div>
               <label className={labelClasses}>Role</label>
-              <select
+              <AccountSelect data-account-select=""
                 className={`${inputClasses} disabled:opacity-50 disabled:cursor-not-allowed`}
                 value={form.role}
                 disabled={isEditing}
@@ -421,7 +422,7 @@ function useUserFormPageState() {
                     {ROLE_LABELS[r]}
                   </option>
                 ))}
-              </select>
+              </AccountSelect>
             </div>
           </div>
 
@@ -430,7 +431,7 @@ function useUserFormPageState() {
               <label className={labelClasses} htmlFor="user-gender">
                 Gender
               </label>
-              <LoadingFormValue loading={isEditing && loading && !existing} name="user-form-gender" width="6ch"><select
+              <LoadingFormValue loading={isEditing && loading && !existing} name="user-form-gender" width="6ch"><AccountSelect data-account-select=""
                 id="user-gender"
                 className={inputClasses}
                 value={form.gender}
@@ -444,7 +445,7 @@ function useUserFormPageState() {
                 <option value="">Select gender…</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
-              </select></LoadingFormValue>
+              </AccountSelect></LoadingFormValue>
               {errors.gender && (
                 <p className="text-xs font-semibold text-[#B91C1C] mt-1">
                   {errors.gender}
@@ -499,7 +500,7 @@ function useUserFormPageState() {
             </div>
             <div>
               <label className={labelClasses}>Status</label>
-              <LoadingFormValue loading={isEditing && loading && !existing} name="user-form-status" width="7ch"><select
+              <LoadingFormValue loading={isEditing && loading && !existing} name="user-form-status" width="7ch"><AccountSelect data-account-select=""
                 className={inputClasses}
                 value={form.status}
                 onChange={(e) =>
@@ -511,7 +512,7 @@ function useUserFormPageState() {
                     {s}
                   </option>
                 ))}
-              </select></LoadingFormValue>
+              </AccountSelect></LoadingFormValue>
             </div>
           </div>
           </div>}

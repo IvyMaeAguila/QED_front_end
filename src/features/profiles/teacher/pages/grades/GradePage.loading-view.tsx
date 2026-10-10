@@ -496,8 +496,8 @@ function useGradesPageState() {
               </div>
               <div className="relative z-20 flex flex-wrap items-center gap-2">
                 {/* NEW: only shown when the teacher advises more than one class */}
-                {!tableError && (<LoadingRegion loading={sectionsLoading && !sections.length} variable name="teacher-grade-section-filter" skeleton={<FilterDropdown label="Section" value="" options={[]} loading onChange={()=>{}} darkMode={darkMode} />}>{sections.length > 1 && (
-                  <FilterDropdown
+                {!tableError && (<LoadingRegion loading={sectionsLoading && !sections.length} variable name="teacher-grade-section-filter" skeleton={<FilterDropdown compact label="Section" value="" options={[]} loading onChange={()=>{}} darkMode={darkMode} />}>{sections.length > 1 && (
+                  <FilterDropdown compact
                     label="Section"
                     value={
                       sections.find((s) => s.classId === selectedClassId)?.sectionName ??
@@ -513,8 +513,8 @@ function useGradesPageState() {
                   />
                 )}
                 </LoadingRegion>)}
-                <FilterDropdown label="Filter" value={studentFilter} options={FILTER_OPTIONS} onChange={setStudentFilter} darkMode={darkMode} />
-                <FilterDropdown
+                <FilterDropdown compact label="Filter" value={studentFilter} options={FILTER_OPTIONS} onChange={setStudentFilter} darkMode={darkMode} />
+                <FilterDropdown compact
                   label="Term" loading={tableError ? undefined : termsLoading && !terms.length}
                   value={terms.find((t) => t.id === selectedTermId)?.label ?? ""}
                   options={terms.map((t) => t.label)}

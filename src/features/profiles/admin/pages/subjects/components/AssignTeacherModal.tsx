@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { useState } from "react";
 import { UserPlus, Sparkles, Loader2, AlertCircle } from "lucide-react";
 import { useTeachers } from "../../classes/context/TeachersContext";
@@ -77,7 +78,7 @@ export function AssignTeacherModal({
       </div>
       <div>
         <label className={labelClasses}>Assigned Teacher</label>
-        <select
+        <AccountSelect data-account-select=""
           value={teacherId}
           onChange={(e) => setTeacherId(e.target.value)}
           disabled={saving}
@@ -89,7 +90,7 @@ export function AssignTeacherModal({
               {formatTeacherName(t)}
             </option>
           ))}
-        </select>
+        </AccountSelect>
       </div>
 
       <div className="flex gap-3 pt-2">

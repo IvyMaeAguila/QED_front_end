@@ -1,6 +1,7 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { useMemo, useState } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
-import { ChevronDown, Check, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import {
   getLoginFrequency,
   LoginFrequencyServiceError,
@@ -44,7 +45,6 @@ export function LoginFrequency({
   textPrimary,
   textMuted,
 }: LoginFrequencyProps) {
-  const [periodOpen, setPeriodOpen] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState<LoginFrequencyPeriod>("weekly");
   const [data, setData] = useState<LoginFrequencyResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -203,52 +203,11 @@ export function LoginFrequency({
         >
           <RefreshCw size={14} aria-hidden="true" />
         </button>
-        <div className="relative shrink-0">
-          <button
-            onClick={() => setPeriodOpen(!periodOpen)}
-            className={`h-9 min-w-30 px-3 rounded-xl border text-xs font-bold flex items-center justify-between gap-2 transition-colors ${
-              darkMode
-                ? "bg-[#0B1120] border-[#374151] text-white hover:bg-[#111827]"
-                : "bg-brand-light border-border-subtle text-[#111827] hover:bg-brand-light"
-            }`}
-          >
-            <span className="truncate">{selectedLabel}</span>
-            <ChevronDown
-              size={15}
-              className={`transition-transform ${periodOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-
-          {periodOpen && (
-            <div
-              className={`absolute right-0 top-11 z-30 w-40 rounded-xl border p-1 shadow-lg ${
-                darkMode ? "bg-[#111827] border-[#374151]" : "bg-white border-border-subtle"
-              }`}
-            >
-              {PERIOD_OPTIONS.map((period) => (
-                <button
-                  key={period.value}
-                  onClick={() => {
-                    setSelectedPeriod(period.value);
-                    setPeriodOpen(false);
-                  }}
-                  className={`w-full px-3 py-2 rounded-lg text-left text-xs font-semibold flex items-center justify-between transition-colors ${
-                    darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#374151] hover:bg-brand-light"
-                  }`}
-                >
-                  {period.label}
-                  {selectedPeriod === period.value && (
-                    <Check size={14} className="text-brand-ink" />
-                  )}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        <AccountSelect role="button" aria-label={selectedLabel} data-dropdown-dark={darkMode} value={selectedPeriod} onChange={event=>setSelectedPeriod(event.target.value as typeof selectedPeriod)}>{PERIOD_OPTIONS.map(period=><option key={period.value} value={period.value}>{period.label}</option>)}</AccountSelect>
         </div>
       </div>
 
       <LoadingRegion loading={loading} error={error} retry={() => setRefreshTick(tick => tick + 1)} variable skeleton={renderChart(true)} onSettled={() => rememberRows(view, chart.length)}>{renderChart(false)}</LoadingRegion>
     </section>
   );
-}
+}

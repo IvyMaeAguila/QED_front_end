@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { useMemo, useState } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -403,7 +404,7 @@ export function AttendanceCalendarSection({
         </div>
 
         <div className="flex items-center gap-2">
-          <LoadingFormValue loading={prerequisitesLoading} intrinsic name="attendance-records-term" width="7ch"><select
+          <LoadingFormValue loading={prerequisitesLoading} intrinsic name="attendance-records-term" width="7ch"><AccountSelect data-account-select="" data-dropdown-dark={darkMode}
             value={selectedTermId}
             onChange={(e) => setSelectedTermId(e.target.value)}
             className={`h-9 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
@@ -414,7 +415,7 @@ export function AttendanceCalendarSection({
                 {t.label}
               </option>
             ))}
-          </select></LoadingFormValue>
+          </AccountSelect></LoadingFormValue>
 
           <div className={`flex h-9 items-center gap-1 rounded-lg border px-1 ${panelBorder}`}>
             <button

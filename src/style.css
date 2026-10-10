@@ -1405,3 +1405,45 @@ html[data-qed-theme="dark"] [class*="border-[#374151]"] {
   --sk-base: color-mix(in srgb, var(--border-subtle) 80%, var(--border-subtle-dark));
   --sk-shine: color-mix(in srgb, var(--sk-base) 88%, var(--surface-card));
 }
+
+
+/* Shared Admin dropdown presentation across account filters and forms. */
+.account-select,
+.qed-account-ui .account-select {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 2rem;
+  min-height: 2rem;
+  min-width: 8rem;
+  max-width: 100%;
+  padding: 0 0.75rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--brand-light);
+  color: #111827;
+  font-size: var(--qed-type-small-control);
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: left;
+  box-shadow: none;
+}
+.account-select-value { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; width: 100%; min-width: 0; pointer-events: none; white-space: nowrap; overflow: hidden; }
+.account-select-value > svg { flex-shrink: 0; }
+.account-select .account-select-native { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.account-select[data-keyboard-focus="true"] { outline: 2px solid var(--color-maroon); outline-offset: 2px; }
+.account-select[data-disabled] { opacity: 0.5; }
+.account-select[data-disabled] select { cursor: not-allowed; }
+.dark .account-select, .account-select:has([data-dropdown-dark="true"]) { background: #0b1120; border-color: #374151; color: #fff; }
+.account-select-menu { overflow-y: auto; box-sizing: border-box; border: 1px solid var(--border-subtle); border-radius: 8px; background: white; padding: 4px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+.account-select-menu button { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; border: 0; border-radius: 8px; padding: 8px 12px; background: transparent; color: #374151; font-size: var(--qed-type-small-control); font-weight: 600; text-align: left; }
+.account-select-menu button[data-active="true"], .account-select-menu button:hover { background: var(--brand-light); }
+.account-select-menu button > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.account-select-menu button svg { flex-shrink: 0; color: var(--brand-ink); }
+.account-select-menu button:disabled { opacity: 0.5; cursor: not-allowed; }
+.account-select-menu.dark { background: #111827; border-color: #374151; }
+.account-select-menu.dark button { color: #d1d5db; }
+.account-select-menu.dark button[data-active="true"], .account-select-menu.dark button:hover { background: rgb(255 255 255 / 0.1); }
+.account-select-value > span { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+body:has(.qed-account-ui.dark) .account-select { background: #0b1120; border-color: #374151; color: #fff; }

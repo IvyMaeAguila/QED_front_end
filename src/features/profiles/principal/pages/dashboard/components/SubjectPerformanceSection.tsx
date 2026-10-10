@@ -1,6 +1,7 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { Skeleton, SkeletonText, SkeletonAvatar } from "@shared/components/SkeletonLoading";
 import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
-import { ChevronDown, Trophy, Maximize2 } from "lucide-react";
+import { Trophy, Maximize2 } from "lucide-react";
 import { SectionCard, TrendChip, ProgressBar, RankBadge } from "../../../../shared/components/DashboardUI";
 import type { SubjectRankingItem, Term, TopSubjectPerGrade } from "../data/types";
 
@@ -64,7 +65,7 @@ export function SubjectPerformanceSection({
           <p className={`text-sm font-semibold ${textMuted}`}>School-wide subject ranking</p>
           <div className="flex items-center gap-3">
             <div className="relative">
-              <select
+              <AccountSelect data-account-select=""
                 value={rankingTerm}
                 onChange={(e) => onRankingTermChange(e.target.value as Term)}
                 className={`appearance-none rounded-lg border py-2.5 pl-4 pr-9 text-sm font-medium ${panelBg} ${panelBorder} ${textPrimary} shadow-sm focus:outline-none focus:ring-2 focus:ring-maroon/30 cursor-pointer`}
@@ -72,8 +73,7 @@ export function SubjectPerformanceSection({
                 <option value="Term 1">Term 1</option>
                 <option value="Term 2">Term 2</option>
                 <option value="Term 3">Term 3</option>
-              </select>
-              <ChevronDown className={`h-3.5 w-3.5 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none ${textMuted}`} />
+              </AccountSelect>
             </div>
             <button
               onClick={onExpandRanking} disabled={loading}

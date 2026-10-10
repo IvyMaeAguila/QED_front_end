@@ -1,4 +1,5 @@
-import { ChevronDown } from "lucide-react";
+import { AccountSelect } from "@shared/components/AccountSelect";
+
 
 interface GradeLevelFilterDropdownProps {
   label: string;
@@ -17,7 +18,7 @@ export function GradeLevelFilterDropdown({
 }: GradeLevelFilterDropdownProps) {
   return (
     <div className="relative shrink-0">
-      <select
+      <AccountSelect data-account-select=""
         aria-label={label}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -32,13 +33,7 @@ export function GradeLevelFilterDropdown({
             {option}
           </option>
         ))}
-      </select>
-      <ChevronDown
-        size={13}
-        className={`pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 ${
-          darkMode ? "text-gray-400" : "text-gray-500"
-        }`}
-      />
+      </AccountSelect>
     </div>
   );
 }

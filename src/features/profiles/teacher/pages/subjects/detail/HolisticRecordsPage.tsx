@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { LoadingFormValue } from "@shared/loading/LoadingFormValue";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonControl } from "@shared/components/SkeletonLoading";
@@ -484,7 +485,7 @@ export function HolisticRecordsSection({
 
         <div className="flex items-center gap-2.5">
           {(displayGroup || (loading || !periodsLoaded)) && (
-            <LoadingFormValue name="subject-holistic-month" loading={(loading || !periodsLoaded) && !displayGroup} width="16ch" intrinsic><select
+            <LoadingFormValue name="subject-holistic-month" loading={(loading || !periodsLoaded) && !displayGroup} width="16ch" intrinsic><AccountSelect data-account-select="" data-dropdown-dark={darkMode}
               value={displayGroup?.key ?? ""}
               disabled={(loading || !periodsLoaded)}
               onChange={(e) => setSelectedMonthKey(e.target.value)}
@@ -497,7 +498,7 @@ export function HolisticRecordsSection({
                   {formatMonthLabel(key)}
                 </option>
               ))}
-            </select></LoadingFormValue>
+            </AccountSelect></LoadingFormValue>
           )}
           <button
             onClick={() => setIsEditing((v) => !v)}

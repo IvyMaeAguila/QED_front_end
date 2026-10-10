@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 // src/features/profiles/shared/components/DashboardUI.tsx
 //
 // Shared building blocks for dashboard-style pages across every role
@@ -10,7 +11,7 @@
 // global.css) — nothing here hardcodes hex.
 import type { LucideIcon } from "lucide-react";
 import { useId } from "react";
-import { TrendingUp, TrendingDown, Minus, ChevronDown, ArrowLeft } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, ArrowLeft } from "lucide-react";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonAvatar, SkeletonText } from "@shared/components/SkeletonLoading";
 
@@ -106,7 +107,8 @@ export function Dropdown({
       {Icon && (
         <Icon className={`h-4 w-4 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none ${textMuted}`} />
       )}
-      <select
+      <AccountSelect data-account-select=""
+        style={Icon ? { paddingLeft: "2.25rem" } : undefined}
         id={selectId}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -119,9 +121,7 @@ export function Dropdown({
             { `${o.label}`}
           </option>
         ))}
-      </select>
-
-      <ChevronDown className={`${compact ? "h-3 w-3 right-2" : "h-4 w-4 right-3"} absolute top-1/2 -translate-y-1/2 pointer-events-none ${textMuted}`} />
+      </AccountSelect>
     </div>
   );
 }

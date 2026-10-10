@@ -129,7 +129,7 @@ function usePrincipalDashboardHomeState() {
 </div>);
   };
   return { content: ((
-    <div className="mx-auto flex w-full max-w-[1360px] flex-col gap-4 font-sans sm:gap-5 xl:gap-6">
+    <div className="flex w-full min-w-0 flex-col gap-4 font-sans sm:gap-5 xl:gap-6">
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,3fr)_minmax(280px,1fr)]">
         <DashboardWelcomeBanner name={user?.name ?? "Principal"} description={<>
             Here's how the school is doing this{" "}

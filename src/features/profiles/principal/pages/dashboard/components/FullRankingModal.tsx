@@ -1,4 +1,5 @@
-import { ChevronDown } from "lucide-react";
+import { AccountSelect } from "@shared/components/AccountSelect";
+
 import { TrendChip, ProgressBar, RankBadge } from "../../../../shared/components/DashboardUI";
 import type { SubjectRankingItem, Term } from "../data/types";
 import { ModalBody, ModalFrame, ModalHeader } from "@shared/components/modal";
@@ -38,7 +39,7 @@ export function FullRankingModal({
           className="items-center border-b px-6 py-5"
           actions={(
             <div className="relative">
-              <select
+              <AccountSelect data-account-select=""
                 value={term}
                 onChange={(e) => onTermChange(e.target.value as Term)}
                 className={`appearance-none text-sm font-bold uppercase tracking-wide pl-5 pr-10 py-2.5 rounded-lg shadow-card ${panelBg} ${panelBorder} border ${textPrimary} focus:outline-none focus:ring-2 focus:ring-maroon/40 cursor-pointer`}
@@ -46,8 +47,7 @@ export function FullRankingModal({
                 <option value="Term 1">Term 1</option>
                 <option value="Term 2">Term 2</option>
                 <option value="Term 3">Term 3</option>
-              </select>
-              <ChevronDown className={`h-3.5 w-3.5 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none ${textMuted}`} />
+              </AccountSelect>
             </div>
           )}
         />

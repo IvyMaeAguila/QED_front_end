@@ -12,9 +12,7 @@ import {
 GRADE_LEVELS,
 type GradeLevel,
 } from "../../../admin/pages/subjects/types/types";
-import {
-Dropdown,
-} from "../../../shared/components/DashboardUI";
+import { Dropdown } from "../../../admin/pages/studentrecords/components/Studentsfilterbar";
 import { SubjectAssignmentCard } from "../../../shared/components/SubjectAssignmentCard";
 import {
 assignedSubjectsService,
@@ -228,7 +226,7 @@ function useSubjectsPageState() {
 
         {/* Toolbar — search + subject count, same bar style as attendance page */}
         <div
-          className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 rounded-xl border px-3 py-2 ${panelBg} ${panelBorder}`}
+          className={`flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-2.5 rounded-xl border px-3 py-2 ${panelBg} ${panelBorder}`}
         >
           <div className="relative w-full sm:w-80">
             <span className="absolute inset-y-0 left-0 z-10 flex items-center pl-2.5 pointer-events-none text-gray-400">
@@ -243,12 +241,19 @@ function useSubjectsPageState() {
             />
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
-            <p className={`text-xs font-semibold whitespace-nowrap ${textMuted}`}>
+          <div className="flex flex-wrap items-center gap-3">
+            <p className={`w-full text-xs font-semibold whitespace-nowrap sm:w-auto ${textMuted}`}>
               {filteredSubjects.length} subject
               {filteredSubjects.length === 1 ? "" : "s"} shown
             </p>
 
+            <Dropdown
+              label="Grade level filter"
+              value={gradeFilter}
+              onChange={(value) => setGradeFilter(value as GradeFilter)}
+              options={GRADE_FILTER_OPTIONS}
+              darkMode={darkMode}
+            />
             <div
               className={`qed-segmented-control flex h-8 items-center box-border rounded-lg p-0 ${
                 darkMode
@@ -290,25 +295,6 @@ function useSubjectsPageState() {
         <div className={`rounded-2xl border shadow-card ${panelBg} ${panelBorder}`}>
           {(
             <>
-              <div
-                className={`flex items-center justify-between gap-2.5 px-4 pt-4 ${
-                  filteredSubjects.length === 0 ? "" : "pb-0"
-                }`}
-              >
-                <span className={`text-sm font-bold ${textPrimary}`} data-sk-region="subjectpage-grade-level" data-sk-static="">
-                  Grade Level
-                </span>
-                <Dropdown
-                  value={gradeFilter}
-                  onChange={(v) => setGradeFilter(v as GradeFilter)}
-                  options={GRADE_FILTER_OPTIONS}
-                  panelBg={panelBg}
-                  panelBorder={panelBorder}
-                  textPrimary={textPrimary}
-                  textMuted={textMuted}
-                />
-              </div>
-
               {(<LoadingRegion name="teacher-subject-collection" loading={loading} variable error={error} retry={() => setRefresh(value => value + 1)} retainPrevious hasContent={filteredSubjects.length > 0} frame={renderSubjects} onSettled={() => rememberRows(viewKey, filteredSubjects.length)} skeleton={renderSubjects(true)}>{renderSubjects(false)}</LoadingRegion>)}
             </>
           )}

@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { useMemo, useState } from "react";
 import { DoorOpen, ChevronRight,Search, UserRound } from "lucide-react";
 import type { TeacherSummary } from "../data/types";
@@ -151,7 +152,7 @@ export function TeacherDirectoryTable({
           />
         </div>
         <div className="flex w-full gap-2 sm:w-auto">
-          <select
+          <AccountSelect data-account-select=""
             value={genderFilter}
             onChange={(event) => setGenderFilter(event.target.value as typeof genderFilter)}
             aria-label="Filter teachers by gender"
@@ -161,8 +162,8 @@ export function TeacherDirectoryTable({
             <option value="all">All genders</option>
             <option value="Female">Female</option>
             <option value="Male">Male</option>
-          </select>
-          <select
+          </AccountSelect>
+          <AccountSelect data-account-select=""
             value={advisoryFilter}
             onChange={(event) => setAdvisoryFilter(event.target.value as typeof advisoryFilter)}
             aria-label="Filter teachers by advisory assignment"
@@ -171,7 +172,7 @@ export function TeacherDirectoryTable({
             <option value="all">All teachers</option>
             <option value="assigned">With advisory</option>
             <option value="unassigned">No advisory</option>
-          </select>
+          </AccountSelect>
         </div>
       </div>
       <section className={`overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`} aria-label="Teacher directory">

@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { useState } from "react";
 import { ACCENT } from "../types/types";
 import type { AcademicYear, SchoolYearStatus } from "../types/academicyear";
@@ -100,7 +101,7 @@ export function EditAcademicYearModal({
 
           <div>
             <label className={labelClasses}>Status</label>
-            <select
+            <AccountSelect data-account-select=""
               className={inputClasses}
               value={status}
               onChange={(e) => setStatus(e.target.value as SchoolYearStatus)}
@@ -110,7 +111,7 @@ export function EditAcademicYearModal({
                   {option}
                 </option>
               ))}
-            </select>
+            </AccountSelect>
           </div>
         </ModalBody>
 

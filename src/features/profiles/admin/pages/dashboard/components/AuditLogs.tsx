@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { useMemo, useRef, useState, type FormEvent } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { ChevronLeft, ChevronRight, RefreshCw, Search } from "lucide-react";
@@ -92,12 +93,12 @@ export function AuditLogs({ darkMode, panelBg, panelBorder, textPrimary, textMut
           </div>
           <button className="rounded-lg bg-maroon px-3 text-xs font-bold text-white" data-sk-region="auditlogs-search" data-sk-static="">Search</button>
         </form>
-        <select aria-label="Filter by role" value={role} onChange={(event) => { setRole(event.target.value); setPageNumber(1); }} className={inputClass}>
+        <AccountSelect data-account-select="" aria-label="Filter by role" value={role} onChange={(event) => { setRole(event.target.value); setPageNumber(1); }} className={inputClass}>
           <option value="">All roles</option><option value="ADMIN">Admin</option><option value="PRINCIPAL">Principal</option><option value="TEACHER">Teacher</option><option value="PARENT">Parent</option><option value="ANONYMOUS">Anonymous</option>
-        </select>
-        <select aria-label="Filter by action" value={action} onChange={(event) => { setAction(event.target.value); setPageNumber(1); }} className={inputClass}>
+        </AccountSelect>
+        <AccountSelect data-account-select="" aria-label="Filter by action" value={action} onChange={(event) => { setAction(event.target.value); setPageNumber(1); }} className={inputClass}>
           <option value="">All actions</option><option value="LOGIN">Login</option><option value="CREATE">Create</option><option value="UPDATE">Update</option><option value="DELETE">Delete</option><option value="UPLOAD">Upload</option><option value="SUBMIT">Submit</option><option value="CHANGE">Other change</option>
-        </select>
+        </AccountSelect>
         <label className={`flex items-center gap-1 text-xs font-semibold ${textMuted}`} data-sk-region="auditlogs-from" data-sk-static="">From<input aria-label="From date" type="date" value={from} onChange={(event) => { setFrom(event.target.value); setPageNumber(1); }} className={inputClass} /></label>
         <label className={`flex items-center gap-1 text-xs font-semibold ${textMuted}`} data-sk-region="auditlogs-to" data-sk-static="">To<input aria-label="To date" type="date" value={to} onChange={(event) => { setTo(event.target.value); setPageNumber(1); }} className={inputClass} /></label>
       </div>

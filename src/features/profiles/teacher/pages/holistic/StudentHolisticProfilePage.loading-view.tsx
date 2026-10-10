@@ -1,3 +1,4 @@
+import { AccountSelect } from "@shared/components/AccountSelect";
 import { Skeleton,SkeletonAvatar,SkeletonText } from "@shared/components/SkeletonLoading";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { lastKnownCount,rememberRows,skeletonRows } from "@shared/loading/reservations";
@@ -314,7 +315,7 @@ function useStudentHolisticProfilePageState() {
                   </span>
                 )} */}
 
-                <select data-sk-variable="" disabled={pending}
+                <AccountSelect data-account-select="" data-dropdown-dark={darkMode} data-sk-variable="" disabled={pending}
                   value={activeTab}
                   onChange={(e) => setActiveTab(e.target.value)}
                   aria-label="Filter holistic profile by subject"
@@ -332,7 +333,7 @@ function useStudentHolisticProfilePageState() {
                       {subj.subjectName}
                     </option>
                   ))}
-                </select>
+                </AccountSelect>
               </div>
 
               {averages.evaluationCount > 0 && (
