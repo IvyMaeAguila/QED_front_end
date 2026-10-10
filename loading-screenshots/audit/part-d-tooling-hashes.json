@@ -1,0 +1,20 @@
+{
+  "scripts/audit-loading.mjs": "5d59d0f51eba6f3a2b906d0582e34ac92b8aa5e4b62c16f4dc9c027aff45b155",
+  "scripts/check-bundle-budget.mjs": "12f45bba3550eb660d2558541f176606b1b4dbcfd7e7d0ff599991df31708940",
+  "scripts/cold-start-reporter.mjs": "2a7cd21e1a48df2b4d4762f9d9408fa10da77bd031c0b675a201317052de31f4",
+  "scripts/diagnose-cold-start.mjs": "52b14d0ba2e9e2615d8da3d1618ed648524e4f385386d074d31303750989ec97",
+  "scripts/diagnose-loading-pair.mjs": "d81e58da3e02d01b66a6853a9e3b00c6e25f361dec491f266424576a969dc613",
+  "scripts/loading-input-hashes.mjs": "48962753320c6c29a2930e300575784b35cf6290b06bc200c69eae08c1a5e812",
+  "scripts/measure-role-downloads.mjs": "1f89149ce8ed60f6c9d93b2dbd7689696e8023d185b7d6262ed277c3bb47d35f",
+  "scripts/measure-startup.mjs": "a41d13ae3016d35c13f24563ba62443abe8405b3b2c2bda66ccba4d61ea24c8b",
+  "scripts/probe-loading-pair.mjs": "5d94cf3ad1e3e8a23e858d2cb622b9f39fa39325918dc053a1b9a9f653a3351c",
+  "scripts/report-loading-pair.mjs": "19ed7f2d0974f076322684aac20839d7843af6dcb34f9bbf03457a8ff4043799",
+  "scripts/report-loading-regression.mjs": "c274db0cbf068384a810d5a3260d9231171c3c40ce8e20a76a109d7bb03ad54d",
+  "scripts/role-download-audit.mjs": "08504be1fc482f3f3b9e2cef6bfce61d61e0f193aaebe2117e0de56e2527e6fb",
+  "scripts/run-loading-verification.mjs": "ca343aafa425f67349447a2083d11f33e1d24e16331ca3620bf0ffc2f2671af7",
+  "scripts/startup-harness.mjs": "1df4a009f5833eb4b169c6bf37f7237e539de1229d2b7cb033e495a73b1b5c3f",
+  "scripts/tag-loading-regions.mjs": "ec58c65b515602e76cdf66ccd2ec36e82349428110321e69b6707b89664161a2",
+  "scripts/validate-loading-matrix.mjs": "5e0e277243cf10169d5e38a1ab8e8396b04c41e061826df59fe2fb3d28cdc8a4",
+  "scripts/verify-loading-mutations.mjs": "8d3a6ae2d0e4387833a4b6fef1d9b390bf51609135e0c9f28f7cf6d97791fb6e",
+  "scripts/verify-part-a-baseline.mjs": "47a0dcd4b5028deaae88383b79bc7db8c0d1ff442451e42d3aae82921f47a8f1"
+}

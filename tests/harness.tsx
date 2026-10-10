@@ -88,5 +88,11 @@ function Harness() {
     {params.has("surfaces") && <div className="mt-6 grid gap-4">{["page", "card", "modal", "raised", "sidebar", "brand"].map(surface => <div key={surface} data-surface={surface} className={surface === "sidebar" ? "sk-surface-sidebar" : surface === "brand" ? "sk-surface-brand" : ""} style={{ padding: 16, background: surface === "sidebar" ? "var(--sidebar-maroon)" : surface === "brand" ? "var(--brand-primary)" : surface === "page" ? document.documentElement.classList.contains("dark") ? "var(--surface-page-dark)" : "var(--surface-page)" : surface === "raised" && document.documentElement.classList.contains("dark") ? "var(--surface-raised-dark)" : document.documentElement.classList.contains("dark") ? "var(--surface-card-dark)" : "var(--surface-card)" }}><SkeletonText width="65%"/></div>)}</div>}
   </main>;
 }
+// Vite injects CSS asynchronously: fonts.load can resolve before the remote
+// @import has registered Inter. Start the fixture's request clock only after
+// navigation resources are ready, so page.goto cannot consume its reveal phase.
+if (document.readyState !== "complete") await new Promise<void>(resolve => {
+  window.addEventListener("load", () => resolve(), { once: true });
+});
 await Promise.all([400, 500, 600, 700].map(weight => document.fonts.load(`${weight} 12px Inter`)));
 createRoot(document.getElementById("root")!).render(<Harness/>);

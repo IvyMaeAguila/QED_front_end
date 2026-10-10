@@ -1,3 +1,11 @@
+<!-- PART-D-CLASSIFICATION -->
+## Subject geometry classification confirmation
+
+The /teacher/subjects assignment card remains FIXED-SIZE: existing 218px height and no data-dependent outer height. No widths, truncation or dimensions were added. Group heading and collection remain VARIABLE because section labels can wrap and returned groups/card counts vary. The failing fixture uses a 16px single-line section heading in both states; its card moves only because late external font loading reflows the real shell above it. All page-relative geometry stays identical. Awaiting the actual font in the route-specific fixture removes mixed-typography measurements; the strict 1px x/y/width/height assertion remains exact. No new conflict class or relaxed classification.
+
+Primitive text remains VARIABLE (60px typical three-line skeleton; size-4 loaded field is 40px). One instant data-dependent resize at swap is allowed, with unchanged surroundings. Fix waits for navigation/font setup before mounting the test harness; 200ms reveal delay, 400ms minimum, 200ms fade and 1200ms test request are unchanged. See part-d probes and LOADING-BEFORE-COVERAGE.json for before/after proof.
+<!-- END-PART-D-CLASSIFICATION -->
+
 <!-- PART-C-REGRESSION -->
 ## Part C regression audit
 

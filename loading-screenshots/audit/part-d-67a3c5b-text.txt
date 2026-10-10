@@ -1,0 +1,39 @@
+
+Running 10 tests using 1 worker
+
+  ok  1 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (3.8s)
+  ok  2 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.1s)
+  ok  3 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.1s)
+  ok  4 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.0s)
+  ok  5 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.0s)
+  ok  6 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.0s)
+  ok  7 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.1s)
+  ok  8 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.1s)
+  ok  9 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.2s)
+  ok 10 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.0s)
+
+  10 passed (37.7s)
+[WebServer] (node:2980) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:22696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:38584) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:38656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21244) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:22328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25248) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8620) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:18124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

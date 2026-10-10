@@ -1,0 +1,522 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\Mavys\\Downloads\\QED_System\\QED_front_end\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/teacher-subjects.spec.ts",
+      "--grep",
+      "teacher subjects 375px dark: real shell, card geometry and screenshots",
+      "--repeat-each=10",
+      "--workers=1",
+      "--retries=0",
+      "--reporter=list,json"
+    ],
+    "configFile": "C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\playwright.config.ts",
+    "rootDir": "C:/Users/Mavys/AppData/Local/Temp/qed-part-d/67a3c5b/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Mavys/AppData/Local/Temp/qed-part-d/67a3c5b/test-results",
+        "repeatEach": 10,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/Mavys/AppData/Local/Temp/qed-part-d/67a3c5b/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\test-results",
+        "repeatEach": 10,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\tests",
+        "snapshotDir": "C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "browserName": "chromium",
+          "baseURL": "http://127.0.0.1:5187",
+          "viewport": {
+            "width": 1280,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run dev -- --host 127.0.0.1 --port 5187 --strictPort",
+      "url": "http://127.0.0.1:5187/loading-harness.html",
+      "reuseExistingServer": false,
+      "timeout": 60000
+    }
+  },
+  "suites": [
+    {
+      "title": "teacher-subjects.spec.ts",
+      "file": "teacher-subjects.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "teacher subjects 375px dark: real shell, card geometry and screenshots",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 10962,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.qed-account-ui')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('.qed-account-ui') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.qed-account-ui')\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.qed-account-ui')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('.qed-account-ui') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.qed-account-ui')\u001b[22m\n\n    at waitForDataRoute (C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\tests\\fixtures\\routeReady.ts:7:49)\n    at C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\tests\\teacher-subjects.spec.ts:29:46",
+                    "location": {
+                      "file": "C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\tests\\fixtures\\routeReady.ts",
+                      "column": 49,
+                      "line": 7
+                    },
+                    "snippet": "\u001b[90m   at \u001b[39mfixtures\\routeReady.ts:7\n\n   5 | export async function waitForDataRoute(page: Page) {\n   6 |   if (!/^\\/(admin|principal|teacher|parent)(\\/|$)/.test(new URL(page.url()).pathname)) return;\n>  7 |   await expect(page.locator(\".qed-account-ui\")).toBeVisible();\n     |                                                 ^\n   8 |   await expect(page.locator(\"[data-route-skeleton]\")).toHaveCount(0);\n   9 | }\n  10 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\tests\\fixtures\\routeReady.ts",
+                        "column": 49,
+                        "line": 7
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.qed-account-ui')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('.qed-account-ui') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.qed-account-ui')\u001b[22m\n\n\n   at fixtures\\routeReady.ts:7\n\n   5 | export async function waitForDataRoute(page: Page) {\n   6 |   if (!/^\\/(admin|principal|teacher|parent)(\\/|$)/.test(new URL(page.url()).pathname)) return;\n>  7 |   await expect(page.locator(\".qed-account-ui\")).toBeVisible();\n     |                                                 ^\n   8 |   await expect(page.locator(\"[data-route-skeleton]\")).toHaveCount(0);\n   9 | }\n  10 |\n    at waitForDataRoute (C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\tests\\fixtures\\routeReady.ts:7:49)\n    at C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\tests\\teacher-subjects.spec.ts:29:46"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T05:58:17.715Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\test-results\\teacher-subjects-teacher-s-4dc57-rd-geometry-and-screenshots\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\tests\\fixtures\\routeReady.ts",
+                    "column": 49,
+                    "line": 7
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e01bb80dd73919011a6d-8b3067db655d6d47f213",
+          "file": "teacher-subjects.spec.ts",
+          "line": 26,
+          "column": 68
+        },
+        {
+          "title": "teacher subjects 375px dark: real shell, card geometry and screenshots",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4947,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T05:58:30.324Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e01bb80dd73919011a6d-90460ba43c084f510ef4",
+          "file": "teacher-subjects.spec.ts",
+          "line": 26,
+          "column": 68
+        },
+        {
+          "title": "teacher subjects 375px dark: real shell, card geometry and screenshots",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2132,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T05:58:36.435Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e01bb80dd73919011a6d-e01ef2a5f0216bc09a20",
+          "file": "teacher-subjects.spec.ts",
+          "line": 26,
+          "column": 68
+        },
+        {
+          "title": "teacher subjects 375px dark: real shell, card geometry and screenshots",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1474,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T05:58:39.501Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e01bb80dd73919011a6d-c8e1e94a2599acb2aa37",
+          "file": "teacher-subjects.spec.ts",
+          "line": 26,
+          "column": 68
+        },
+        {
+          "title": "teacher subjects 375px dark: real shell, card geometry and screenshots",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1393,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T05:58:41.859Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e01bb80dd73919011a6d-9df08c9a788bafac5167",
+          "file": "teacher-subjects.spec.ts",
+          "line": 26,
+          "column": 68
+        },
+        {
+          "title": "teacher subjects 375px dark: real shell, card geometry and screenshots",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1328,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T05:58:44.173Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e01bb80dd73919011a6d-20887c573dea9427946f",
+          "file": "teacher-subjects.spec.ts",
+          "line": 26,
+          "column": 68
+        },
+        {
+          "title": "teacher subjects 375px dark: real shell, card geometry and screenshots",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1384,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T05:58:46.407Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e01bb80dd73919011a6d-15ebcf4513a38fef6435",
+          "file": "teacher-subjects.spec.ts",
+          "line": 26,
+          "column": 68
+        },
+        {
+          "title": "teacher subjects 375px dark: real shell, card geometry and screenshots",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1380,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T05:58:48.675Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e01bb80dd73919011a6d-f4edb05cab4ab61885ce",
+          "file": "teacher-subjects.spec.ts",
+          "line": 26,
+          "column": 68
+        },
+        {
+          "title": "teacher subjects 375px dark: real shell, card geometry and screenshots",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1412,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T05:58:50.968Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e01bb80dd73919011a6d-1e7fd569abed6d8b61da",
+          "file": "teacher-subjects.spec.ts",
+          "line": 26,
+          "column": 68
+        },
+        {
+          "title": "teacher subjects 375px dark: real shell, card geometry and screenshots",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 2211,
+                  "error": {
+                    "message": "Error: y\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m1\u001b[39m\nReceived:    \u001b[31m6.671875\u001b[39m",
+                    "stack": "Error: y\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m1\u001b[39m\nReceived:    \u001b[31m6.671875\u001b[39m\n    at C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\tests\\teacher-subjects.spec.ts:43:111",
+                    "location": {
+                      "file": "C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\tests\\teacher-subjects.spec.ts",
+                      "column": 111,
+                      "line": 43
+                    },
+                    "snippet": "  41 |   release(); await expect(page.locator('.sk-region[aria-busy=\"true\"]')).toHaveCount(0); await expect(page.locator(\"[data-sk-layer], [data-sk-frame]\")).toHaveCount(0);\n  42 |   const after = await page.locator(\"[data-sk-content] article\").first().boundingBox();\n> 43 |   for (const key of [\"x\", \"y\", \"width\", \"height\"] as const) expect(Math.abs(after![key] - before![key]), key).toBeLessThanOrEqual(1);\n     |                                                                                                               ^\n  44 |   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });\n  45 | });\n  46 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\tests\\teacher-subjects.spec.ts",
+                        "column": 111,
+                        "line": 43
+                      },
+                      "message": "Error: y\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m1\u001b[39m\nReceived:    \u001b[31m6.671875\u001b[39m\n\n  41 |   release(); await expect(page.locator('.sk-region[aria-busy=\"true\"]')).toHaveCount(0); await expect(page.locator(\"[data-sk-layer], [data-sk-frame]\")).toHaveCount(0);\n  42 |   const after = await page.locator(\"[data-sk-content] article\").first().boundingBox();\n> 43 |   for (const key of [\"x\", \"y\", \"width\", \"height\"] as const) expect(Math.abs(after![key] - before![key]), key).toBeLessThanOrEqual(1);\n     |                                                                                                               ^\n  44 |   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });\n  45 | });\n  46 |\n    at C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\tests\\teacher-subjects.spec.ts:43:111"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T05:58:53.267Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\test-results\\teacher-subjects-teacher-s-4dc57-rd-geometry-and-screenshots-repeat9\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Mavys\\AppData\\Local\\Temp\\qed-part-d\\67a3c5b\\tests\\teacher-subjects.spec.ts",
+                    "column": 111,
+                    "line": 43
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e01bb80dd73919011a6d-973e60d380c115c1d3a8",
+          "file": "teacher-subjects.spec.ts",
+          "line": 26,
+          "column": 68
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-10T05:58:13.784Z",
+    "duration": 42373.242,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

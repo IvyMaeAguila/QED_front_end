@@ -1,0 +1,60 @@
+{
+  "method": "Each exact existing case repeated ten times, one worker, zero retries, independent browser contexts, one Vite server per case/commit batch. No overlapping test or measurement jobs. Historical trees from git archive, node_modules junction only; current tests run in original checkout. No test/assertion/timing edits during baseline repetitions.",
+  "isolated": [
+    {
+      "commit": "a94f3d0",
+      "subjects": {
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0,
+        "report": "part-d-current-subjects.json",
+        "sha256": "2b8ee070be92f6801738e03cd979b925825fc895bf54741456fd611d14f2d2d3"
+      },
+      "text": {
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0,
+        "report": "part-d-a94f3d0-text.json",
+        "sha256": "c6e9ac3759ae0439776175a706f2a9057db3214ed8ad11726cc285054aed2c6b"
+      }
+    },
+    {
+      "commit": "67a3c5b",
+      "subjects": {
+        "passed": 8,
+        "failed": 2,
+        "skipped": 0,
+        "report": "part-d-67a3c5b-subjects.json",
+        "sha256": "6996e0d02575a1fda430c8a4faad400b749f5eaf7c0a82e5211c1a66aa9c7e8f"
+      },
+      "text": {
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0,
+        "report": "part-d-67a3c5b-text.json",
+        "sha256": "e995e2852785626dacef8311a302d3b6401b25b99e0b02144d7bb675560d8bfe"
+      }
+    },
+    {
+      "commit": "417100a",
+      "subjects": {
+        "passed": 8,
+        "failed": 2,
+        "skipped": 0,
+        "report": "part-d-417100a-subjects.json",
+        "sha256": "a22b0e1b2399d7b1a27ad78ffca417caa9989dbc64a0c31c149d967c4f2c0727"
+      },
+      "text": {
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0,
+        "report": "part-d-417100a-text.json",
+        "sha256": "775fdf7e00bbe8ce1c9751c3a1b147e969531c71c04cd3de186cce34e1983f57"
+      }
+    }
+  ],
+  "excludedInfrastructureAttempt": {
+    "report": "part-d-a94f3d0-subjects.txt",
+    "reason": "Archive development-server readiness timed out before any test executed; zero cases, not counted. Current-commit ten actual repetitions subsequently ran in original checkout."
+  }
+}

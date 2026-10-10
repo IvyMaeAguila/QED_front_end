@@ -1,0 +1,118 @@
+{
+  "title": "variable text, data size 4: one swap, stable surroundings",
+  "status": "passed",
+  "boxes": [
+    {
+      "navigationReady": {
+        "time": 483.60000002384186,
+        "phase": "revealed"
+      }
+    }
+  ],
+  "data": {
+    "events": [
+      {
+        "phase": "waiting",
+        "time": 145.10000002384186,
+        "height": 60,
+        "busy": "true",
+        "hidden": "true",
+        "reservationVisibility": "hidden",
+        "statusCount": 0
+      },
+      {
+        "phase": "revealed",
+        "time": 370.5,
+        "height": 60,
+        "busy": "true",
+        "hidden": "true",
+        "reservationVisibility": "visible",
+        "statusCount": 1
+      },
+      {
+        "phase": "swapping",
+        "time": 1372.300000011921,
+        "height": 40,
+        "busy": "true",
+        "hidden": "true",
+        "reservationVisibility": "visible",
+        "statusCount": 0
+      },
+      {
+        "phase": "settled",
+        "time": 1595.800000011921,
+        "height": 40,
+        "busy": "false",
+        "hidden": null,
+        "reservationVisibility": null,
+        "statusCount": 0
+      }
+    ],
+    "mounted": 145,
+    "data": 1368.6000000238419,
+    "probe": [
+      {
+        "event": "dom-ready",
+        "time": 128.70000004768372,
+        "fonts": "loaded",
+        "ready": "interactive"
+      },
+      {
+        "event": "window-load",
+        "time": 465.30000001192093,
+        "fonts": "loaded",
+        "ready": "complete"
+      },
+      {
+        "event": "fonts-loading",
+        "time": 479.5,
+        "fonts": "loading",
+        "ready": "complete"
+      },
+      {
+        "event": "fonts-done",
+        "time": 872.4000000357628,
+        "fonts": "loaded",
+        "ready": "complete"
+      }
+    ],
+    "resources": [
+      {
+        "name": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+        "entryType": "resource",
+        "startTime": 111.60000002384186,
+        "duration": 351.89999997615814,
+        "navigationId": 1654,
+        "initiatorType": "css",
+        "deliveryType": "",
+        "nextHopProtocol": "h2",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "",
+        "contentEncoding": "",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 111.60000002384186,
+        "domainLookupStart": 117,
+        "domainLookupEnd": 128.30000001192093,
+        "connectStart": 128.30000001192093,
+        "secureConnectionStart": 252.9000000357628,
+        "connectEnd": 399.4000000357628,
+        "requestStart": 399.80000001192093,
+        "responseStart": 462.4000000357628,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 462.4000000357628,
+        "responseEnd": 463.5,
+        "transferSize": 1042,
+        "encodedBodySize": 742,
+        "decodedBodySize": 9884,
+        "responseStatus": 0,
+        "serverTiming": []
+      }
+    ]
+  }
+}

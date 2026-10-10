@@ -1,0 +1,18 @@
+
+Running 3 tests using 1 worker
+
+  ok 1 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (6.2s)
+  ok 2 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (5.2s)
+  ok 3 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (5.4s)
+
+  3 passed (50.1s)
+[WebServer] (node:31880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18024) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:37120) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8508) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

@@ -1,0 +1,91 @@
+
+Running 10 tests using 1 worker
+
+  x   1 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (11.0s)
+  ok  2 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (4.9s)
+  ok  3 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (2.1s)
+  ok  4 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (1.5s)
+  ok  5 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (1.4s)
+  ok  6 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (1.3s)
+  ok  7 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (1.4s)
+  ok  8 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (1.4s)
+  ok  9 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (1.4s)
+  x  10 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (2.2s)
+
+
+  1) tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.qed-account-ui')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('.qed-account-ui') with timeout 5000ms
+      - waiting for locator('.qed-account-ui')
+
+
+       at fixtures\routeReady.ts:7
+
+       5 | export async function waitForDataRoute(page: Page) {
+       6 |   if (!/^\/(admin|principal|teacher|parent)(\/|$)/.test(new URL(page.url()).pathname)) return;
+    >  7 |   await expect(page.locator(".qed-account-ui")).toBeVisible();
+         |                                                 ^
+       8 |   await expect(page.locator("[data-route-skeleton]")).toHaveCount(0);
+       9 | }
+      10 |
+        at waitForDataRoute (C:\Users\Mavys\AppData\Local\Temp\qed-part-d\67a3c5b\tests\fixtures\routeReady.ts:7:49)
+        at C:\Users\Mavys\AppData\Local\Temp\qed-part-d\67a3c5b\tests\teacher-subjects.spec.ts:29:46
+
+    Error Context: test-results\teacher-subjects-teacher-s-4dc57-rd-geometry-and-screenshots\error-context.md
+
+  2) tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots 
+
+    Error: y
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 1
+    Received:    6.671875
+
+      41 |   release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+      42 |   const after = await page.locator("[data-sk-content] article").first().boundingBox();
+    > 43 |   for (const key of ["x", "y", "width", "height"] as const) expect(Math.abs(after![key] - before![key]), key).toBeLessThanOrEqual(1);
+         |                                                                                                               ^
+      44 |   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      45 | });
+      46 |
+        at C:\Users\Mavys\AppData\Local\Temp\qed-part-d\67a3c5b\tests\teacher-subjects.spec.ts:43:111
+
+    Error Context: test-results\teacher-subjects-teacher-s-4dc57-rd-geometry-and-screenshots-repeat9\error-context.md
+
+  2 failed
+    tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots 
+    tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots 
+  8 passed (42.4s)
+[WebServer] (node:40544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:8440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2420) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:38924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:17784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:19352) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:19228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

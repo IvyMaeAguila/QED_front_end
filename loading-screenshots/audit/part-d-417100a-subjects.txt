@@ -1,0 +1,83 @@
+
+Running 10 tests using 1 worker
+
+  x   1 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (29.3s)
+  ok  2 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (2.4s)
+  ok  3 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (1.4s)
+  ok  4 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (2.2s)
+  ok  5 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (1.3s)
+  ok  6 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (1.4s)
+  ok  7 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (1.3s)
+  ok  8 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (2.2s)
+  ok  9 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (2.2s)
+  x  10 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (2.5s)
+
+
+  1) tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots 
+
+    Error: y
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 1
+    Received:    6.671875
+
+      41 |   release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+      42 |   const after = await page.locator("[data-sk-content] article").first().boundingBox();
+    > 43 |   for (const key of ["x", "y", "width", "height"] as const) expect(Math.abs(after![key] - before![key]), key).toBeLessThanOrEqual(1);
+         |                                                                                                               ^
+      44 |   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      45 | });
+      46 |
+        at C:\Users\Mavys\AppData\Local\Temp\qed-part-d\417100a\tests\teacher-subjects.spec.ts:43:111
+
+    Error Context: test-results\teacher-subjects-teacher-s-4dc57-rd-geometry-and-screenshots\error-context.md
+
+  2) tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots 
+
+    Error: y
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 1
+    Received:    6.671875
+
+      41 |   release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+      42 |   const after = await page.locator("[data-sk-content] article").first().boundingBox();
+    > 43 |   for (const key of ["x", "y", "width", "height"] as const) expect(Math.abs(after![key] - before![key]), key).toBeLessThanOrEqual(1);
+         |                                                                                                               ^
+      44 |   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      45 | });
+      46 |
+        at C:\Users\Mavys\AppData\Local\Temp\qed-part-d\417100a\tests\teacher-subjects.spec.ts:43:111
+
+    Error Context: test-results\teacher-subjects-teacher-s-4dc57-rd-geometry-and-screenshots-repeat9\error-context.md
+
+  2 failed
+    tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots 
+    tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots 
+  8 passed (1.0m)
+[WebServer] (node:11224) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:35596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:23644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:38280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:28236) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

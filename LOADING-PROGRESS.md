@@ -1,3 +1,29 @@
+<!-- PART-D-FIXTURES -->
+# Remaining full-suite failures — latest checkpoint
+
+This decision supersedes earlier pending-permission and latency-target notes below. Latency miss accepted: no further bundle/latency work and no data prefetching. Branch: codex/finish-loading-verification; main/remotes/deployment untouched.
+
+| Commit | Subject 375px dark: pass / fail | Variable text size 4: pass / fail |
+| --- | ---: | ---: |
+| a94f3d0 | 10 / 0 | 10 / 0 |
+| 67a3c5b | 8 / 2 | 10 / 0 |
+| 417100a | 8 / 2 | 10 / 0 |
+
+Ten exact-case isolated repetitions per cell, one worker, zero retries and no skipped cases. On 67a3c5b, one failure is the existing cold shell-readiness timeout and one is the exact 6.671875px Y shift. On 417100a, both failures are the exact Y shift. The card defect therefore predates the role split. A separate archive startup timeout executed zero tests and is excluded, with raw evidence retained. Full details: part-d-isolation-summary.json and raw per-commit logs.
+
+Subject root cause: late external Inter font swap moves the real page and card together by 6.671875px, with card-relative Y unchanged at 291px, width 309px, height 218px and group-heading height 16px. Before geometry used fallback typography; screenshot then awaited loaded fonts before release. Fixture now awaits the real fonts only on this route. No production layout, dimension or classification workaround. Probe before failed; three delayed-font after runs passed with identical card geometry.
+
+Text root cause: the fixture's 1200ms request starts before Vite's external CSS @import finishes, while page.goto awaits document load. A controlled 2200ms stylesheet delay reproduces the exact settled observation: reveal at 221.8ms, swap at 1226.4ms, navigation returns at 2510.4ms already settled. After waiting for navigation resources before harness mount, the same delayed-resource test passes. This is an observation/setup race, not a loading-engine timing regression. No production source or .spec.ts changed, no assertion/threshold/timing changes. Exact before/after evidence and fixture rationale are in LOADING-BEFORE-COVERAGE.json.
+
+Accepted known cost: cold cache, Slow 4G (150ms RTT, 1.6Mbps down / 750kbps up), 4x CPU, three-sample medians with 320ms mocked page-data response and uncompressed local HTTP: navigation → login content **3.8162s**; login → Teacher first skeleton **4.4329s**; login → Teacher first data **5.5911s**. Original pre-split numbers: 14.8893s / 1.5517s / 2.1521s respectively. These are recorded costs, not performance targets met. Real cache headers on the hashed assets are required for returning users. Deployed compression/cache behavior remains unverified; no deployment performed.
+
+After-fix isolated results: 20 passed, 0 failed, 0 skipped. Final full suite: **603 passed (18.2m)**. Raw unedited output: loading-screenshots/audit/part-d-final-suite-retry.txt. The initial final invocation stopped at server readiness before any cases executed (part-d-final-suite.json and .txt retained). The user replied "continue" to the explicit request to retry once; part-d-final-suite-retry records that authorized retry.
+
+Build: npm run build (includes fixed bundle budget). Allowed targeted checks: exact two cases, bootstrap-loading.spec.ts (includes lazy handoff), bundle-budget.spec.ts. Screenshot matrix: 67 groups × 2 themes × 2 widths × 2 states = 536 files; final validation is part-d-screenshot-validation.json. Existing accepted limits remain: no real backend/deployment certification, no further latency tuning; historical chart-preview parity caveats below remain uncertified.
+Completed: final suite 603 passed (18.2m), zero failures/skips/retries; build and allowed targeted checks passed; screenshot matrix 536/536 refreshed; frozen inputs verified. No further runs authorized or planned. Commit this completed verification to codex/finish-loading-verification without push; main/remotes/deployment remain untouched. Known issues are listed in the latest LOADING-REPORT.md section.
+
+<!-- END-PART-D-FIXTURES -->
+
 <!-- PART-C-REGRESSION -->
 # Current regression checkpoint
 

@@ -1547,5 +1547,191 @@
       }
     ],
     "postRunToolingChanges": "Report-generation text only, after validating the frozen 13 tooling files; no application/test/config change after full suite."
+  },
+  "partDRemainingFailures": {
+    "scope": "Accepted latency cost; two test-environment readiness fixes only; no production source/build config changes, data prefetch, assertions, thresholds or loading timing changes. Main/remotes/deployment untouched.",
+    "isolated": [
+      {
+        "commit": "a94f3d0",
+        "subjects": {
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0,
+          "report": "part-d-current-subjects.json",
+          "sha256": "2b8ee070be92f6801738e03cd979b925825fc895bf54741456fd611d14f2d2d3"
+        },
+        "text": {
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0,
+          "report": "part-d-a94f3d0-text.json",
+          "sha256": "c6e9ac3759ae0439776175a706f2a9057db3214ed8ad11726cc285054aed2c6b"
+        }
+      },
+      {
+        "commit": "67a3c5b",
+        "subjects": {
+          "passed": 8,
+          "failed": 2,
+          "skipped": 0,
+          "report": "part-d-67a3c5b-subjects.json",
+          "sha256": "6996e0d02575a1fda430c8a4faad400b749f5eaf7c0a82e5211c1a66aa9c7e8f"
+        },
+        "text": {
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0,
+          "report": "part-d-67a3c5b-text.json",
+          "sha256": "e995e2852785626dacef8311a302d3b6401b25b99e0b02144d7bb675560d8bfe"
+        }
+      },
+      {
+        "commit": "417100a",
+        "subjects": {
+          "passed": 8,
+          "failed": 2,
+          "skipped": 0,
+          "report": "part-d-417100a-subjects.json",
+          "sha256": "a22b0e1b2399d7b1a27ad78ffca417caa9989dbc64a0c31c149d967c4f2c0727"
+        },
+        "text": {
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0,
+          "report": "part-d-417100a-text.json",
+          "sha256": "775fdf7e00bbe8ce1c9751c3a1b147e969531c71c04cd3de186cce34e1983f57"
+        }
+      }
+    ],
+    "subjectCause": {
+      "evidence": "part-d-probe-subjects-0.json",
+      "before": {
+        "x": 33,
+        "y": 406,
+        "width": 309,
+        "height": 218,
+        "fontStatus": "loading",
+        "pageY": 115,
+        "sectionHeadingHeight": 16
+      },
+      "after": {
+        "x": 33,
+        "y": 412.671875,
+        "width": 309,
+        "height": 218,
+        "fontStatus": "loaded",
+        "pageY": 121.671875,
+        "sectionHeadingHeight": 16
+      },
+      "relativeCardY": 291,
+      "reason": "Remote Inter font arrival reflows the real shell above the page. The first boundingBox precedes fonts.ready; screenshot waits for fonts.ready before data release. Card and group heading heights are unchanged; this is not a skeleton size/count or role-chunk regression.",
+      "fix": "Only /teacher/subjects in routeReady waits for document.fonts.ready, preserving the actual font and every geometry assertion.",
+      "afterProof": [
+        "part-d-font-ready-after-subjects-0.json",
+        "part-d-font-ready-after-subjects-1.json",
+        "part-d-font-ready-after-subjects-2.json"
+      ]
+    },
+    "textCause": {
+      "reason": "Vite-injected CSS @import can finish after the primitive fixture mounts. page.goto waits for document load while its real 1200ms request/reveal/swap cycle runs. Delaying only the external font stylesheet 2200ms reproduces settled at navigation return with unchanged reveal and minimum-duration logic.",
+      "controlledEnvironmentOnly": "A diagnostic beforeEach delayed fonts.googleapis.com traffic, without altering any test body, assertion, threshold, request delay or production implementation. Before/after use the same delayed resource. These diagnostic-only hooks were applied to an archive and removed afterward; they are not full-suite fixtures.",
+      "before": {
+        "mountedMs": 184,
+        "navigationReady": {
+          "time": 2510.400000035763,
+          "phase": "settled"
+        },
+        "phases": [
+          {
+            "phase": "waiting",
+            "afterMountMs": 0.10000002384185791
+          },
+          {
+            "phase": "revealed",
+            "afterMountMs": 221.80000001192093
+          },
+          {
+            "phase": "swapping",
+            "afterMountMs": 1226.4000000357628
+          },
+          {
+            "phase": "settled",
+            "afterMountMs": 1453.9000000357628
+          }
+        ],
+        "status": "failed"
+      },
+      "after": {
+        "mountedMs": 2717,
+        "navigationReady": {
+          "time": 2586.100000023842
+        },
+        "phases": [
+          {
+            "phase": "waiting",
+            "afterMountMs": 0.19999998807907104
+          },
+          {
+            "phase": "revealed",
+            "afterMountMs": 220.19999998807907
+          },
+          {
+            "phase": "swapping",
+            "afterMountMs": 1223.800000011921
+          },
+          {
+            "phase": "settled",
+            "afterMountMs": 1437.5
+          }
+        ],
+        "status": "passed"
+      },
+      "fix": "Harness waits for window load and real font registration before mounting, so its request clock starts after navigation resources are ready. All 60/320/900/1200/1500ms test delays and 200/400/200ms loader rules stay unchanged."
+    },
+    "fixedPair": {
+      "startTime": "2026-10-10T06:09:09.011Z",
+      "duration": 100237.834,
+      "expected": 20,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "full": {
+      "summary": "603 passed (18.2m)",
+      "rawFile": "loading-screenshots/audit/part-d-final-suite-retry.txt",
+      "sha256": "80d3c0e37ece70ebeb5423133e9194c367c3d651803dba2cec3ff950557e40d1",
+      "exit": "0",
+      "initialStartup": "part-d-final-suite.json: zero cases executed, readiness timeout; raw log retained. User subsequently replied continue to the explicit retry request, authorizing one retry invocation."
+    },
+    "assertions": "No .spec.ts changed. No assertions, thresholds, timing constants, tests, skips or retries changed. Only tests/harness.tsx and the route-specific readiness branch in tests/fixtures/routeReady.ts changed.",
+    "fixAttempts": {
+      "subjects": 1,
+      "text": 1
+    },
+    "finalStats": {
+      "startTime": "2026-10-10T07:37:07.051Z",
+      "duration": 1093089.308,
+      "expected": 603,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "inputVerification": {
+      "files": 580,
+      "changed": []
+    },
+    "toolingVerification": {
+      "toolingFiles": 18,
+      "changed": []
+    },
+    "screenshotValidation": {
+      "groups": 67,
+      "expected": 536,
+      "files": 536,
+      "missing": [],
+      "wrongDimensions": [],
+      "notRefreshed": []
+    },
+    "wrapUp": "User instructed wrap-up while final suite was running. Used that existing final run; no further fixes, tests, runtime measurements or latency/bundle work. Main remains cbc1623a72da35d159424d777d733a2824bdb5d6."
   }
 }

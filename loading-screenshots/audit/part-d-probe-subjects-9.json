@@ -1,0 +1,396 @@
+{
+  "title": "teacher subjects 375px dark: real shell, card geometry and screenshots",
+  "status": "passed",
+  "boxes": [
+    {
+      "navigationReady": {
+        "time": 541.6999999880791
+      }
+    },
+    {
+      "selector": "[data-sk-layer] article, [data-sk-frame] article",
+      "value": {
+        "x": 33,
+        "y": 412.671875,
+        "width": 309,
+        "height": 218
+      },
+      "detail": {
+        "time": 1187.5,
+        "fonts": "loaded",
+        "nodes": [
+          {
+            "tag": "DIV",
+            "text": "SubjectsEverything you teach, organized in one place.0 subjects shownBy SectionA",
+            "box": {
+              "x": 16,
+              "y": 121.671875,
+              "width": 343,
+              "height": 1002,
+              "top": 121.671875,
+              "right": 359,
+              "bottom": 1123.671875,
+              "left": 16
+            },
+            "font": "14px / 21px Inter, ui-sans-serif, system-ui, sans-serif",
+            "line": "21px",
+            "transform": "none"
+          },
+          {
+            "tag": "H1",
+            "text": "Subjects",
+            "box": {
+              "x": 16,
+              "y": 121.671875,
+              "width": 301.96875,
+              "height": 24,
+              "top": 121.671875,
+              "right": 317.96875,
+              "bottom": 145.671875,
+              "left": 16
+            },
+            "font": "700 20px / 24px Inter, ui-sans-serif, system-ui, sans-serif",
+            "line": "24px",
+            "transform": "none"
+          },
+          {
+            "tag": "DIV",
+            "text": "SY 2026–2027·ActiveRecord GradesView Class List SY 2026–2027·ActiveRecord Grades",
+            "box": {
+              "x": 17,
+              "y": 364.671875,
+              "width": 341,
+              "height": 758,
+              "top": 364.671875,
+              "right": 358,
+              "bottom": 1122.671875,
+              "left": 17
+            },
+            "font": "14px / 21px Inter, ui-sans-serif, system-ui, sans-serif",
+            "line": "21px",
+            "transform": "none"
+          },
+          {
+            "tag": "H4",
+            "text": "",
+            "box": {
+              "x": 45,
+              "y": 382.671875,
+              "width": 160,
+              "height": 16,
+              "top": 382.671875,
+              "right": 205,
+              "bottom": 398.671875,
+              "left": 45
+            },
+            "font": "700 12px / 16px Inter, ui-sans-serif, system-ui, sans-serif",
+            "line": "16px",
+            "transform": "none"
+          },
+          {
+            "tag": "ARTICLE",
+            "text": "SY 2026–2027·ActiveRecord GradesView Class List ",
+            "box": {
+              "x": 33,
+              "y": 412.671875,
+              "width": 309,
+              "height": 218,
+              "top": 412.671875,
+              "right": 342,
+              "bottom": 630.671875,
+              "left": 33
+            },
+            "font": "14px / 21px Inter, ui-sans-serif, system-ui, sans-serif",
+            "line": "21px",
+            "transform": "none"
+          },
+          {
+            "tag": "ARTICLE",
+            "text": "SY 2026–2027·ActiveRecord GradesView Class List ",
+            "box": {
+              "x": 33,
+              "y": 650.671875,
+              "width": 309,
+              "height": 218,
+              "top": 650.671875,
+              "right": 342,
+              "bottom": 868.671875,
+              "left": 33
+            },
+            "font": "14px / 21px Inter, ui-sans-serif, system-ui, sans-serif",
+            "line": "21px",
+            "transform": "none"
+          },
+          {
+            "tag": "ARTICLE",
+            "text": "SY 2026–2027·ActiveRecord GradesView Class List ",
+            "box": {
+              "x": 33,
+              "y": 888.671875,
+              "width": 309,
+              "height": 218,
+              "top": 888.671875,
+              "right": 342,
+              "bottom": 1106.671875,
+              "left": 33
+            },
+            "font": "14px / 21px Inter, ui-sans-serif, system-ui, sans-serif",
+            "line": "21px",
+            "transform": "none"
+          }
+        ]
+      }
+    },
+    {
+      "selector": "[data-sk-content] article",
+      "value": {
+        "x": 33,
+        "y": 412.671875,
+        "width": 309,
+        "height": 218
+      },
+      "detail": {
+        "time": 2133.300000011921,
+        "fonts": "loaded",
+        "nodes": [
+          {
+            "tag": "DIV",
+            "text": "SubjectsEverything you teach, organized in one place.6 subjects shownBy SectionA",
+            "box": {
+              "x": 16,
+              "y": 121.671875,
+              "width": 343,
+              "height": 1716,
+              "top": 121.671875,
+              "right": 359,
+              "bottom": 1837.671875,
+              "left": 16
+            },
+            "font": "14px / 21px Inter, ui-sans-serif, system-ui, sans-serif",
+            "line": "21px",
+            "transform": "none"
+          },
+          {
+            "tag": "H1",
+            "text": "Subjects",
+            "box": {
+              "x": 16,
+              "y": 121.671875,
+              "width": 301.96875,
+              "height": 24,
+              "top": 121.671875,
+              "right": 317.96875,
+              "bottom": 145.671875,
+              "left": 16
+            },
+            "font": "700 20px / 24px Inter, ui-sans-serif, system-ui, sans-serif",
+            "line": "24px",
+            "transform": "none"
+          },
+          {
+            "tag": "DIV",
+            "text": "Grade 1 · Section Maroon(6 subjects)SY 2026–2027·ActiveMathematics 1Grade 1 · Ma",
+            "box": {
+              "x": 17,
+              "y": 364.671875,
+              "width": 341,
+              "height": 1472,
+              "top": 364.671875,
+              "right": 358,
+              "bottom": 1836.671875,
+              "left": 17
+            },
+            "font": "14px / 21px Inter, ui-sans-serif, system-ui, sans-serif",
+            "line": "21px",
+            "transform": "none"
+          },
+          {
+            "tag": "H4",
+            "text": "Grade 1 · Section Maroon",
+            "box": {
+              "x": 45,
+              "y": 382.671875,
+              "width": 179.015625,
+              "height": 16,
+              "top": 382.671875,
+              "right": 224.015625,
+              "bottom": 398.671875,
+              "left": 45
+            },
+            "font": "700 12px / 16px Inter, ui-sans-serif, system-ui, sans-serif",
+            "line": "16px",
+            "transform": "none"
+          },
+          {
+            "tag": "ARTICLE",
+            "text": "SY 2026–2027·ActiveMathematics 1Grade 1 · MaroonRecord GradesView Class List ",
+            "box": {
+              "x": 33,
+              "y": 412.671875,
+              "width": 309,
+              "height": 218,
+              "top": 412.671875,
+              "right": 342,
+              "bottom": 630.671875,
+              "left": 33
+            },
+            "font": "14px / 21px Inter, ui-sans-serif, system-ui, sans-serif",
+            "line": "21px",
+            "transform": "none"
+          },
+          {
+            "tag": "ARTICLE",
+            "text": "SY 2026–2027·ActiveMathematics 2Grade 1 · MaroonRecord GradesView Class List ",
+            "box": {
+              "x": 33,
+              "y": 650.671875,
+              "width": 309,
+              "height": 218,
+              "top": 650.671875,
+              "right": 342,
+              "bottom": 868.671875,
+              "left": 33
+            },
+            "font": "14px / 21px Inter, ui-sans-serif, system-ui, sans-serif",
+            "line": "21px",
+            "transform": "none"
+          },
+          {
+            "tag": "ARTICLE",
+            "text": "SY 2026–2027·ActiveMathematics 3Grade 1 · MaroonRecord GradesView Class List ",
+            "box": {
+              "x": 33,
+              "y": 888.671875,
+              "width": 309,
+              "height": 218,
+              "top": 888.671875,
+              "right": 342,
+              "bottom": 1106.671875,
+              "left": 33
+            },
+            "font": "14px / 21px Inter, ui-sans-serif, system-ui, sans-serif",
+            "line": "21px",
+            "transform": "none"
+          },
+          {
+            "tag": "ARTICLE",
+            "text": "SY 2026–2027·ActiveMathematics 4Grade 1 · MaroonRecord GradesView Class List ",
+            "box": {
+              "x": 33,
+              "y": 1126.671875,
+              "width": 309,
+              "height": 218,
+              "top": 1126.671875,
+              "right": 342,
+              "bottom": 1344.671875,
+              "left": 33
+            },
+            "font": "14px / 21px Inter, ui-sans-serif, system-ui, sans-serif",
+            "line": "21px",
+            "transform": "none"
+          },
+          {
+            "tag": "ARTICLE",
+            "text": "SY 2026–2027·ActiveMathematics 5Grade 1 · MaroonRecord GradesView Class List ",
+            "box": {
+              "x": 33,
+              "y": 1364.671875,
+              "width": 309,
+              "height": 218,
+              "top": 1364.671875,
+              "right": 342,
+              "bottom": 1582.671875,
+              "left": 33
+            },
+            "font": "14px / 21px Inter, ui-sans-serif, system-ui, sans-serif",
+            "line": "21px",
+            "transform": "none"
+          },
+          {
+            "tag": "ARTICLE",
+            "text": "SY 2026–2027·ActiveMathematics 6Grade 1 · MaroonRecord GradesView Class List ",
+            "box": {
+              "x": 33,
+              "y": 1602.671875,
+              "width": 309,
+              "height": 218,
+              "top": 1602.671875,
+              "right": 342,
+              "bottom": 1820.671875,
+              "left": 33
+            },
+            "font": "14px / 21px Inter, ui-sans-serif, system-ui, sans-serif",
+            "line": "21px",
+            "transform": "none"
+          }
+        ]
+      }
+    }
+  ],
+  "data": {
+    "probe": [
+      {
+        "event": "dom-ready",
+        "time": 514.8999999761581,
+        "fonts": "loaded",
+        "ready": "interactive"
+      },
+      {
+        "event": "window-load",
+        "time": 517.5,
+        "fonts": "loaded",
+        "ready": "complete"
+      },
+      {
+        "event": "fonts-loading",
+        "time": 799.6999999880791,
+        "fonts": "loading",
+        "ready": "complete"
+      },
+      {
+        "event": "fonts-done",
+        "time": 1012.3999999761581,
+        "fonts": "loaded",
+        "ready": "complete"
+      }
+    ],
+    "resources": [
+      {
+        "name": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+        "entryType": "resource",
+        "startTime": 45.19999998807907,
+        "duration": 412.89999997615814,
+        "navigationId": 7203,
+        "initiatorType": "css",
+        "deliveryType": "",
+        "nextHopProtocol": "h2",
+        "renderBlockingStatus": "blocking",
+        "contentType": "",
+        "contentEncoding": "",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 45.19999998807907,
+        "domainLookupStart": 60.30000001192093,
+        "domainLookupEnd": 66.19999998807907,
+        "connectStart": 66.19999998807907,
+        "secureConnectionStart": 176.5,
+        "connectEnd": 282.89999997615814,
+        "requestStart": 283.0999999642372,
+        "responseStart": 457,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 457,
+        "responseEnd": 458.0999999642372,
+        "transferSize": 1042,
+        "encodedBodySize": 742,
+        "decodedBodySize": 9884,
+        "responseStatus": 0,
+        "serverTiming": []
+      }
+    ]
+  }
+}

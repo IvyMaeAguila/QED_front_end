@@ -1,3 +1,11 @@
+## Latest decision — accepted latency and two fixture readiness corrections
+
+The latency miss is accepted. Do not pursue further bundle/latency work or add data prefetching. Record the final cold-cache Slow 4G / 4x CPU cost in LOADING-REPORT.md; returning users require real cache headers on hashed assets. Earlier performance goals below are historical.
+
+Diagnose Teacher Subjects 375px dark and variable text size 4 with ten isolated repetitions each on a94f3d0, 67a3c5b and 417100a, then fix only proven causes. Preserve every assertion, threshold and test/loading timing. Environment-only fixture fixes require before/after proof in loading-screenshots/audit/LOADING-BEFORE-COVERAGE.json. Fonts must be ready before Subject geometry is measured; navigation resources and font registration must precede mounting the primitive test harness and its unchanged request clock. Production page logic remains untouched. Existing FIXED-SIZE, VARIABLE, AUTO-COLUMN and variable-aligned static rules remain exact.
+
+Iteration permits only these two exact cases, bootstrap/lazy tests, the bundle guard and production build. Run the full suite exactly once at the end, revalidate the 536-image matrix and regenerate the Subject loaded captures. Commit to codex/finish-loading-verification without push. Main, remotes and deployment stay untouched.
+
 <!-- PART-C-REGRESSION -->
 ## Latest regression authorization
 

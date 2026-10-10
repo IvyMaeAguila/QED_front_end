@@ -1,0 +1,12 @@
+
+Running 1 test using 1 worker
+
+  ok 1 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (4.6s)
+
+  1 passed (36.4s)
+[WebServer] (node:12144) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:37016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:17568) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
