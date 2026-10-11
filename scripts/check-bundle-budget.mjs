@@ -1,7 +1,8 @@
 import fs from 'node:fs';
 import { gzipSync } from 'node:zlib';
 import ts from 'typescript';
-export const budget = { entryGzipBytes: 112153, entryEagerClosureGzipBytes: 135349 };
+// Admin cap is its measured pre-correction eager download beyond public chunks.
+export const budget = { entryGzipBytes: 112153, entryEagerClosureGzipBytes: 135349, adminEagerDownloadGzipBytes: 151512 };
 export function checkRegistry(source = fs.readFileSync('src/shared/loading/routeSkeletons.ts', 'utf8')) {
   const ast = ts.createSourceFile('routeSkeletons.ts', source, ts.ScriptTarget.Latest, true);
   for (const statement of ast.statements) if (ts.isImportDeclaration(statement) && !statement.importClause?.isTypeOnly)
@@ -24,6 +25,9 @@ export function inspectBuild() {
   }
   const total = files => [...files].reduce((sum, file) => ({ rawBytes: sum.rawBytes + measured.get(file).rawBytes, gzipBytes: sum.gzipBytes + measured.get(file).gzipBytes }), { rawBytes: 0, gzipBytes: 0 });
   const publicFiles = closure(entry.fileName);
+  const queryModules = files => [...files].flatMap(file => measured.get(file).modules)
+    .filter(module => /node_modules\/@tanstack\//.test(module) || module.endsWith('/shared/query/queryClient.ts'));
+  if (queryModules(publicFiles).length) throw new Error('Public entry must not load TanStack Query');
   const entrySize = measured.get(entry.fileName);
   const entryClosure = total(publicFiles);
   if (entrySize.gzipBytes > budget.entryGzipBytes) throw new Error(`Entry gzip ${entrySize.gzipBytes} exceeds ${budget.entryGzipBytes}`);
@@ -36,6 +40,9 @@ export function inspectBuild() {
     if (!chunk || chunk.isEntry) throw new Error(`Missing isolated ${role} chunk`);
     const files = [...closure(chunk.fileName)].filter(file => !publicFiles.has(file));
     const eagerModules = files.flatMap(file => measured.get(file).modules);
+    if (role !== 'Principal' && queryModules(files).length) throw new Error(`${role} must not load TanStack Query`);
+    if (role === 'Admin' && total(files).gzipBytes > budget.adminEagerDownloadGzipBytes)
+      throw new Error(`Admin eager download exceeds ${budget.adminEagerDownloadGzipBytes}`);
     if (eagerModules.some(module => /node_modules\/(?:recharts|xlsx|exceljs)\//.test(module))) throw new Error(`${role} preview depends on a heavy library`);
     roles[role.toUpperCase()] = { fileName: chunk.fileName, chunk: { rawBytes: measured.get(chunk.fileName).rawBytes, gzipBytes: measured.get(chunk.fileName).gzipBytes }, eagerDownloadBeyondPublic: total(files) };
   }

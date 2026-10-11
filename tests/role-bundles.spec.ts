@@ -2,6 +2,10 @@ import { test, expect } from '@playwright/test';
 // @ts-expect-error Node-only production audit harness deliberately has no browser build.
 import { serveBuild, prepareLogin, login, rolesInChunks, bundleAudit } from '../scripts/startup-harness.mjs';
 let server: { url: string; close: () => Promise<void> };
+function queryRequests(requests: string[]) {
+  const chunks = bundleAudit().filter((item: { modules: string[] }) => item.modules.some(id => /node_modules\/@tanstack\//.test(id)));
+  return requests.filter(url => chunks.some((chunk: { fileName: string }) => new URL(url).pathname.endsWith('/' + chunk.fileName)));
+}
 test.beforeAll(async () => { server = await serveBuild(5192); });
 test.afterAll(async () => { await server.close(); });
 test('public login requests no protected role code', async ({ page }) => {
@@ -9,6 +13,7 @@ test('public login requests no protected role code', async ({ page }) => {
   await page.goto(server.url + '/login');
   await expect(page.getByPlaceholder('e.g. TC_maria.delacruz')).toBeVisible();
   expect(rolesInChunks(fixture.requests)).toEqual([]);
+  expect(queryRequests(fixture.requests)).toEqual([]);
   fixture.release();
 });
 for (const role of ['TEACHER', 'ADMIN', 'PRINCIPAL', 'PARENT']) test(`${role} login requests only its own role code`, async ({ page }) => {
@@ -17,6 +22,7 @@ for (const role of ['TEACHER', 'ADMIN', 'PRINCIPAL', 'PARENT']) test(`${role} lo
   await login(page);
   await expect(page.locator('.qed-account-ui')).toBeVisible();
   expect(rolesInChunks(fixture.requests)).toEqual([role.toLowerCase()]);
+  if (role !== 'PRINCIPAL') expect(queryRequests(fixture.requests)).toEqual([]);
   fixture.release();
 });
 test('a 1500ms role import uses bootstrap then the real shell and registered skeleton', async ({ page }) => {

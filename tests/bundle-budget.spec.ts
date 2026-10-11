@@ -5,6 +5,7 @@ test('production entry and eager dependency closure stay within the fixed plus 1
   const result = inspectBuild();
   expect(result.entry.gzipBytes).toBeLessThanOrEqual(budget.entryGzipBytes);
   expect(result.entryEagerClosure.gzipBytes).toBeLessThanOrEqual(budget.entryEagerClosureGzipBytes);
+  expect(result.roles.ADMIN.eagerDownloadBeyondPublic.gzipBytes).toBeLessThanOrEqual(budget.adminEagerDownloadGzipBytes);
 });
 test('registry guard rejects an eager page import and accepts the restored metadata', () => {
   expect(() => checkRegistry('import { TeacherLayout } from "../../features/profiles/teacher/pages/TeacherLayout";')).toThrow('eager imports are forbidden');

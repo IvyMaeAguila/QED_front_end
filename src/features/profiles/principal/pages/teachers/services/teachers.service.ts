@@ -1,3 +1,4 @@
+import { QueryHttpError } from "@shared/http/QueryHttpError";
 import { API_CONFIG } from "../../../../../../config/api.config"; 
 import { fetchActiveAcademicYear } from "../../../../admin/pages/subjects/services/academicyear.service";
 import type { TeacherProfile, TeacherSummary } from "../data/types";
@@ -40,49 +41,23 @@ export async function getTeacherProfile(
   return data;
 }
 
-let teachersListCache: TeacherSummary[] | null = null;
-let teachersListCacheTimestamp: number | null = null;
-const TEACHERS_LIST_TTL = 5 * 60 * 1000; // 5 minutes
-
-export function getCachedTeachersList(): TeacherSummary[] | null {
-  return teachersListCache;
+// Directory responses are cached exclusively by TanStack Query.
+export async function getTeachers(signal?: AbortSignal): Promise<TeacherSummary[]> {
+  const response = await fetch(BASE_URL, { credentials: "include", signal });
+  if (!response.ok) throw new QueryHttpError(`Failed to fetch teachers (${response.status})`, response.status);
+  return response.json();
 }
 
-export function clearTeachersListCache(): void {
-  teachersListCache = null;
-  teachersListCacheTimestamp = null;
-}
-
-export async function getTeachers(
-  options: { forceRefresh?: boolean } = {}
-): Promise<TeacherSummary[]> {
-  const { forceRefresh = false } = options;
-
-  const isCacheValid =
-    teachersListCache !== null &&
-    teachersListCacheTimestamp !== null &&
-    Date.now() - teachersListCacheTimestamp < TEACHERS_LIST_TTL;
-
-  if (!forceRefresh && isCacheValid) {
-    return teachersListCache!;
-  }
-
-  const response = await fetch(BASE_URL, {
-    method: "GET",
-    credentials: "include",
+// Keep the schedule's existing getSchoolYear cache separate.
+export async function getDirectorySchoolYear(signal?: AbortSignal): Promise<string> {
+  const response = await fetch(`${API_CONFIG.baseURL}/api/academic-year/getAcademicYear`, {
+    credentials: "include", signal,
   });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch teachers (${response.status})`);
-  }
-
-  const data: TeacherSummary[] = await response.json();
-  teachersListCache = data;
-  teachersListCacheTimestamp = Date.now();
-  return data;
+  if (!response.ok) throw new QueryHttpError("Failed to fetch academic year.", response.status);
+  const json = await response.json();
+  if (!json.data) throw new Error(json.message || "Failed to fetch academic year.");
+  return json.data.label;
 }
-
-
 let schoolYearCache: string | null = null;
 
 export async function getSchoolYear(): Promise<string> {
@@ -94,6 +69,6 @@ export async function getSchoolYear(): Promise<string> {
 
 export function clearAllTeacherCaches(): void {
   clearTeacherProfileCache();
-  clearTeachersListCache();
+
   schoolYearCache = null;
 }
