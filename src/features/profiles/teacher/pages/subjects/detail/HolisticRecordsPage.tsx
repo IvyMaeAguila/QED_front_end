@@ -1,3 +1,5 @@
+import {useContext} from 'react';
+import {TeacherAcademicQueryContext,useTeacherAcademicServices} from '../../../query/TeacherAcademicQueryContext';
 import { AccountSelect } from "@shared/components/AccountSelect";
 import { LoadingFormValue } from "@shared/loading/LoadingFormValue";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
@@ -10,9 +12,6 @@ import { StudentAvatar } from "@shared/components/StudentAvatar";
 import type { RosterStudent } from "./data";
 import { HOLISTIC_COLUMNS, HOLISTIC_LEVELS, type HolisticAxisKey } from "./types/Grading";
 import {
-  fetchGradingPeriodsGlobal,
-  fetchHolisticWeekly,
-  saveHolistic,
   type GradingPeriod,
   type HolisticWeeklyMap,
   type StudentWeeklyHolisticRecord,
@@ -162,6 +161,9 @@ export function HolisticRecordsSection({
   textPrimary,
   textMuted,
 }: HolisticRecordsSectionProps) {
+  const port=useContext(TeacherAcademicQueryContext);
+  const queryManaged=port!==null;
+  const {holistic:{saveHolistic,fetchGradingPeriodsGlobal,fetchHolisticWeekly}}=useTeacherAcademicServices();
   const [attempt, setAttempt] = useState(0);
   const [periodError, setPeriodError] = useState<string | null>(null);
   const table = useRef<HTMLTableElement>(null);
@@ -180,12 +182,13 @@ export function HolisticRecordsSection({
   const [periodsLoaded, setPeriodsLoaded] = useState(false);
 
   useEffect(() => {
+    if(queryManaged)return;
     let cancelled = false; setPeriodsLoaded(false); setPeriodError(null);
     fetchGradingPeriodsGlobal().then(value => { if (!cancelled) setGradingPeriods(value); })
       .catch(err => { if (!cancelled) setPeriodError(err instanceof Error ? err.message : "Couldn't load grading periods."); })
       .finally(() => { if (!cancelled) setPeriodsLoaded(true); });
     return () => { cancelled = true; };
-  }, [attempt]);
+  }, [attempt,queryManaged,fetchGradingPeriodsGlobal]);
 
   // Resolve which period is "active" for this view: an explicit
   // gradingPeriodId wins, then a matching termNumber, then whichever period
@@ -208,6 +211,7 @@ export function HolisticRecordsSection({
   const resolvedTermNumber = termNumber ?? activePeriod?.termNumber;
 
   useEffect(() => {
+    if(queryManaged)return;
     const requestId = ++latestRequestId.current;
     setLoading(true);
     setError(null);
@@ -224,7 +228,8 @@ export function HolisticRecordsSection({
       .finally(() => {
         if (latestRequestId.current === requestId) setLoading(false);
       });
-  }, [subjectSectionId, resolvedTermNumber, attempt]);
+  }, [subjectSectionId, resolvedTermNumber, attempt,queryManaged,fetchHolisticWeekly]);
+  useEffect(()=>{hasInitializedMonth.current=false;setSelectedMonthKey(null);},[subjectSectionId,resolvedTermNumber,attempt]);
 
   function handleCellChange(studentId: string, axis: HolisticAxisKey, weekStartDate: string, raw: string) {
     const trimmed = raw.trim();
@@ -457,7 +462,8 @@ export function HolisticRecordsSection({
           );
  }
 
-  return (
+  return (<>{port&&<port.WeeklyEffects subjectId={subjectSectionId} termNumber={resolvedTermNumber} periodId={activePeriod?.id} attempt={attempt} editing={isEditing} setData={setWeeklyData} setLoading={setLoading} setError={setError} setPeriods={setGradingPeriods} setPeriodsLoaded={setPeriodsLoaded} setPeriodError={setPeriodError}/>}
+{(
     <section className={cardClasses} aria-label="Weekly holistic ratings">
       <div
         className={`flex flex-col gap-4 border-b px-5 py-5 sm:flex-row sm:items-center sm:justify-between ${panelBorder}`}
@@ -519,5 +525,5 @@ export function HolisticRecordsSection({
 
       <LoadingRegion name="subject-holistic-records" loading={loading || !periodsLoaded} error={error || periodError} retry={() => setAttempt(value => value + 1)} variable autoColumns skeleton={null} frame={renderWeeklyTable} retainPrevious hasContent={Object.keys(weeklyData).length > 0} onSettled={() => rememberColumns(view, table.current)}>{null}</LoadingRegion>
     </section>
-  );
+  )}</>);
 }

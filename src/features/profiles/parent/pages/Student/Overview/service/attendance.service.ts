@@ -1,3 +1,5 @@
+import { parentFetch } from '../../../../query/parentRequest';
+import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
 import { API_CONFIG } from '../../../../../../../config/api.config';
 
 const API_BASE_URL = `${API_CONFIG.baseURL}`;
@@ -70,60 +72,10 @@ function mapToMonthlyAttendance(
   };
 }
 
-function buildCacheKey(studentId: number, month: number, year: number): string {
-  return `${studentId}-${month}-${year}`;
-}
-
-const inFlightRequests = new Map<string, Promise<MonthlyAttendance>>();
-
-const AttendanceService = {
-  async getMonthlyAttendance(
-    studentId: number,
-    month: number,
-    year: number
-  ): Promise<MonthlyAttendance> {
-    const cacheKey = buildCacheKey(studentId, month, year);
-
-    const inFlight = inFlightRequests.get(cacheKey);
-    if (inFlight) {
-      return inFlight;
-    }
-
-    const request = (async () => {
-      const params = new URLSearchParams({
-        student_id: String(studentId),
-        month: String(month),
-        year: String(year),
-      });
-
-      const response = await fetch(
-        `${API_BASE_URL}/api/attendance?${params.toString()}`,
-        {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const result: MonthlyAttendanceResponseRaw = await response.json();
-
-      if (!response.ok || !result.success || !result.data) {
-        throw new Error(result.message || "Failed to fetch monthly attendance.");
-      }
-
-      return mapToMonthlyAttendance(result.data);
-    })();
-
-    inFlightRequests.set(cacheKey, request);
-
-    try {
-      return await request;
-    } finally {
-      inFlightRequests.delete(cacheKey);
-    }
-  },
-};
-
-export default AttendanceService;
+const AttendanceService={
+ async getMonthlyAttendance(studentId:number,month:number,year:number,options?:ApiRequestOptions):Promise<MonthlyAttendance>{
+ const params=new URLSearchParams({student_id:String(studentId),month:String(month),year:String(year)});
+ const response=await parentFetch(`${API_BASE_URL}/api/attendance?${params}`,options);
+ const result:MonthlyAttendanceResponseRaw=await response.json();
+ if(!result.success||!result.data)throw new Error(result.message||'Failed to fetch monthly attendance.');return mapToMonthlyAttendance(result.data);
+ }};export default AttendanceService;

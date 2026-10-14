@@ -22,7 +22,14 @@ for (const role of ['TEACHER', 'ADMIN', 'PRINCIPAL', 'PARENT']) test(`${role} lo
   await login(page);
   await expect(page.locator('.qed-account-ui')).toBeVisible();
   expect(rolesInChunks(fixture.requests)).toEqual([role.toLowerCase()]);
-  if (role !== 'PRINCIPAL') expect(queryRequests(fixture.requests)).toEqual([]);
+  if (role === 'ADMIN' || role === 'PARENT') expect(queryRequests(fixture.requests)).toEqual([]);
+  else {
+    // Principal and Teacher now execute Query behind their authenticated lazy pages.
+    // Public and static role-layout isolation remain enforced by the bundle audit.
+    await expect.poll(() => queryRequests(fixture.requests).length).toBeGreaterThan(0);
+    const requests = queryRequests(fixture.requests);
+    expect(new Set(requests).size, 'Query chunks must not download twice').toBe(requests.length);
+  }
   fixture.release();
 });
 test('a 1500ms role import uses bootstrap then the real shell and registered skeleton', async ({ page }) => {

@@ -1,3 +1,4 @@
+import {useTeacherAcademicServices} from '../../../query/TeacherAcademicQueryContext';
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
@@ -18,7 +19,7 @@ import {
   computeWS,
   computeTransmutedGrade,
 } from "./utils/GradeWeights";
-import { submitGrades } from "../services/subjectGrading.service";
+
 import { downloadGradeRecordExport } from "../services/subjectGradeTemplate.service";
 import type { GradeTemplateStructure, TemplateDomain, TemplateExamComponent, TemplateExaminations } from "../../../../shared/grading/gradeTemplate.types";
 
@@ -372,7 +373,7 @@ export function AssessmentRecordsSection({
   // Zero values are layout sentinels only while rules are unknown; never grade with them.
   const weights = resolvedWeights ?? { ww: 0, pt: 0, exam: 0 };
   const view = `subject-records:${subjectSectionId}:${term}`;
-  const table = useRef<HTMLTableElement>(null);
+  const recordSection = useRef<HTMLElement>(null);
   const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
   const cellInputClasses = `w-14 rounded-md border px-1 py-0.5 text-center text-xs font-bold outline-none ${panelBorder} ${
     darkMode ? "bg-panel-dark text-white" : "bg-white text-[#111827]"
@@ -469,6 +470,7 @@ export function AssessmentRecordsSection({
     });
   }, [roster, groups, scores, examinations, weights.templateStructure?.descriptorTable, weights.templateStructure?.transmutationTable]);
 
+  const {grading:{submitGrades}}=useTeacherAcademicServices();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [justSubmitted, setJustSubmitted] = useState(false);
@@ -728,7 +730,7 @@ export function AssessmentRecordsSection({
                 </>}
               </Fragment>);
   function renderRecordsTable(pending: boolean) { return (<div className="max-h-[68vh] overflow-auto">
-        <table ref={table} className="teacher-user-table w-full min-w-max border-collapse text-xs">
+        <table className="teacher-user-table w-full min-w-max border-collapse text-xs">
           {pending && <colgroup>{columnWidths.map((width, index) => <col key={index} style={{ width }} />)}</colgroup>}
           <thead className={`sticky top-0 z-30 ${darkMode ? "bg-[#241311]" : "bg-white"}`}>
             <tr className={darkMode ? "bg-white/5" : "bg-brand-light"}>
@@ -806,7 +808,7 @@ export function AssessmentRecordsSection({
       </div>); }
 
   return (
-    <section className={cardClasses} aria-label={title}>
+    <section ref={recordSection} className={cardClasses} aria-label={title}>
       <div className={`flex items-center justify-between gap-3 border-b px-4 py-2 ${panelBorder}`}>
         <span className={`text-xs font-semibold ${textMuted}`}>Export this term's assessment records using the official DepEd template configured for this subject.</span>
         <button type="button" onClick={() => void exportClassRecord()} disabled={loading} className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold ${panelBorder} ${textPrimary}`}>
@@ -820,7 +822,12 @@ export function AssessmentRecordsSection({
             .join(". ")}. Export is blocked until an appropriately mapped template is assigned; no assessments are hidden.
         </div>
       )}
-      <LoadingRegion name="subject-assessment-records" loading={loading} variable autoColumns skeleton={null} frame={renderRecordsTable} retainPrevious hasContent={!!resolvedWeights && roster.length > 0} onSettled={() => rememberColumns(view, table.current)}>{null}</LoadingRegion>
+      <LoadingRegion name="subject-assessment-records" loading={loading} variable autoColumns skeleton={null} frame={renderRecordsTable} retainPrevious hasContent={!!resolvedWeights && roster.length > 0} onSettled={() => {
+        // Outgoing and incoming frames coexist during the swap. Sharing one
+        // table ref lets outgoing cleanup null it after incoming attachment.
+        // Measure the settled live table through the stable section instead.
+        rememberColumns(view, recordSection.current?.querySelector<HTMLTableElement>('[data-sk-region="subject-assessment-records"] [data-sk-content] table') ?? null);
+      }}>{null}</LoadingRegion>
       {!loading && groups.every((g) => g.items.length === 0) && (
         <p className={`px-5 py-6 text-center text-sm font-semibold ${textMuted}`}>
           {weights.templateStructure

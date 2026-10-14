@@ -4,8 +4,8 @@ import { mockDirectory } from "./fixtures/directory";
 import { assertNoDataSpinner, captureFixedOverlay } from "./design-pixels";
 import fs from "node:fs";
 
-async function studentFixture(page: Page, dark: boolean, count = 3, long = false, missing = false) {
-  const context = await mockDirectory(page, "TEACHER", dark);
+async function studentFixture(page: Page, dark: boolean, count = 3, long = false, missing = false, role: "ADMIN" | "TEACHER" = "TEACHER") {
+  const context = await mockDirectory(page, role, dark);
   let release!: () => void;
   const gate = new Promise<void>(resolve => { release = resolve; });
   let failed = false, requests = 0;
@@ -22,6 +22,19 @@ async function studentFixture(page: Page, dark: boolean, count = 3, long = false
   });
   return Object.assign(() => { context(); release(); }, { fail: () => { failed = true; }, recover: () => { failed = false; }, requests: () => requests });
 }
+
+test('Teacher student profile is read-only and returns to its own advisory route', async ({page}) => {
+  const release=await studentFixture(page,false);release();await page.goto('/teacher/students/1');await waitForDataRoute(page);
+  await expect(page.getByRole('heading',{name:'Cruz, Ana',exact:true})).toBeVisible();
+  await expect(page.getByRole('link',{name:'Edit Student Record',exact:true})).toHaveCount(0);
+  await page.getByRole('button',{name:'Back to Students',exact:true}).click();await expect(page).toHaveURL(/\/teacher\/advisory/);
+});
+test('Admin student directory retains its existing edit navigation', async ({page}) => {
+  const release=await studentFixture(page,false,3,false,false,'ADMIN');release();await page.goto('/admin/students');await waitForDataRoute(page);
+  await expect(page.getByRole('heading',{name:'Student Records',exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'Row actions',exact:true}).first().click();
+  await page.getByRole('button',{name:'Edit',exact:true}).click();await expect(page).toHaveURL(/\/admin\/students\/1\/edit$/);
+});
 
 for (const width of [375, 1280]) for (const dark of [false, true]) test(`student details ${width} ${dark ? "dark" : "light"}: real labels, baseline chart and controls`, async ({ page }) => {
   await page.setViewportSize({ width, height: 1000 });

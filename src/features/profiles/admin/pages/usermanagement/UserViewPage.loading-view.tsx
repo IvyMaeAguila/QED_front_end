@@ -2,7 +2,7 @@ import { ArrowLeft,Pencil,Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
-import { TeacherSchedulePage } from "../../../principal/pages/teachers/TeacherSchedulePage";
+import { AdminTeacherSchedule as TeacherSchedulePage } from '../../query/AdminTeacherSchedule';
 import type { AdminThemeContext } from "../AdminLayout";
 import { useTeachers } from "../classes/context/TeachersContext";
 import { ConfirmDeleteUserModal } from "./components/ConfirmDeleteUserModal";
@@ -18,7 +18,7 @@ function useUserViewPageState() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const { role, userId } = useParams<{ role: string; userId: string }>();
-  const { getUser, deleteUser, loading, error, refetchUsers } = useUsers();
+  const { getUser, deleteUser, loading, error, refetchUsers, forbidden } = useUsers();
   const { getTeacherByUserId, loading: teachersLoading, error: teachersError, refetchTeachers } = useTeachers();
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
@@ -31,6 +31,7 @@ function useUserViewPageState() {
   const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
   const sectionTitleClasses = `qed-type-page-title ${textPrimary}`;
 
+  if (forbidden) return { content: <LoadingRegion loading={false} error={error} retry={refetchUsers} name="user-account-details" skeleton={null}>{null}</LoadingRegion>, scope: {} };
   if (!loading && !error && !foundUser) {
     return { content: ((
       <div className="max-w-7xl mx-auto pb-12">
@@ -84,8 +85,8 @@ function useUserViewPageState() {
             user={user}
             darkMode={darkMode}
             onCancel={() => setConfirmingDelete(false)}
-            onConfirm={() => {
-              deleteUser(user.id, user.role);
+            onConfirm={async () => {
+              await deleteUser(user.id, user.role);
               navigate("/admin/users");
             }}
           />
@@ -165,8 +166,8 @@ function useUserViewPageState() {
             user={user}
             darkMode={darkMode}
             onCancel={() => setConfirmingDelete(false)}
-            onConfirm={() => {
-              deleteUser(user.id, user.role);
+            onConfirm={async () => {
+              await deleteUser(user.id, user.role);
               navigate("/admin/users");
             }}
           />

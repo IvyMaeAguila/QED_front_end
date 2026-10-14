@@ -1,4 +1,5 @@
 import { API_CONFIG } from "../../../../../../config/api.config";
+import { QueryHttpError } from "@shared/http/QueryHttpError";
 
 export interface AuditLogEntry {
   id: number;
@@ -34,7 +35,7 @@ export interface AuditLogFilters {
   to: string;
 }
 
-export async function fetchAuditLogs(filters: AuditLogFilters, signal?: AbortSignal): Promise<AuditLogPage> {
+export async function fetchAuditLogs(filters: AuditLogFilters, signal?: AbortSignal, onUnauthorized?: () => void): Promise<AuditLogPage> {
   const params = new URLSearchParams({
     page: String(filters.page), search: filters.search, role: filters.role,
     action: filters.action, from: filters.from, to: filters.to, limit: "20",
@@ -43,9 +44,10 @@ export async function fetchAuditLogs(filters: AuditLogFilters, signal?: AbortSig
     credentials: "include",
     signal,
   });
+  if (response.status === 401) onUnauthorized?.();
   const body = await response.json().catch(() => null);
   if (!response.ok || !body?.success) {
-    throw new Error(body?.message || "Unable to load audit logs.");
+    throw new QueryHttpError(body?.message || "Unable to load audit logs.", response.status);
   }
   return body.data as AuditLogPage;
 }

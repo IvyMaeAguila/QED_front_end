@@ -5,24 +5,23 @@ import { RouteViewsContext } from "../../shared/loading/RouteViewsContext";
 import { routeViews } from "./AdminViews";
 import { useAuth } from "../../features/auth/context/authContext";
 import { AdminLayout } from "../../features/profiles/admin/pages/AdminLayout";
-import { StudentsProvider } from "../../features/profiles/admin/pages/studentrecords/context/StudentsContext";
+import { AdminStudentsProvider } from "../../features/profiles/admin/query/AdminStudentsProvider";
 import { UsersProvider } from "../../features/profiles/admin/pages/usermanagement/context/UsersContext";
-import { TeachersProvider } from "../../features/profiles/admin/pages/classes/context/TeachersContext";
-import { ClassesProvider } from "../../features/profiles/admin/pages/classes/context/ClassesContext";
+import { AdminSchoolProvider } from "../../features/profiles/admin/query/AdminSchoolProvider";
+import {AdminNotificationActivation} from '../../features/profiles/admin/query/AdminNotificationActivation';
 import { SubjectsSection } from "../../features/profiles/admin/pages/subjects/SubjectSection";
 function AdminSection() {
   const { logout } = useAuth();
 
   return (
-    <StudentsProvider>
-      <UsersProvider>
-        <TeachersProvider>
-          <ClassesProvider>
+    <AdminStudentsProvider>
+        <AdminSchoolProvider>
+            <UsersProvider>
+            <AdminNotificationActivation/>
             <AdminLayout onLogout={logout} />
-          </ClassesProvider>
-        </TeachersProvider>
-      </UsersProvider>
-    </StudentsProvider>
+            </UsersProvider>
+        </AdminSchoolProvider>
+    </AdminStudentsProvider>
   );
 }
 const AdminDashboardHome = lazy(routeSkeletons["/admin"].load);

@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useUserQueries } from './hooks/useUserQueries';
 import { UserFormPageComposition,type UserFormPageEffectScope } from "./UserFormPage.loading-view";
 export * from "./UserFormPage.loading-view";
 
@@ -14,5 +15,6 @@ function UserFormPageDataEffects({ scope }: { scope: UserFormPageEffectScope }) 
 }
 
 export function UserFormPage() {
+ useUserQueries();
  return <UserFormPageComposition effects={scope => <UserFormPageDataEffects scope={scope}/>} />;
 }

@@ -1,19 +1,13 @@
 import { useAuth } from "../features/auth/context/authContext";
 import { ParentLayout } from "../features/profiles/parent/pages/ParentLayout";
-import { TeachersProvider } from "../features/profiles/admin/pages/classes/context/TeachersContext";
 import { ParentDashboardProvider } from "../features/profiles/parent/pages/dashboard/context/ParentDashboardContext";
-import { NotificationProvider } from "../shared/notification/NotificationContext";
 
 export function ParentSection() {
-  const { logout } = useAuth();
+  const { logout, user, sessionScope } = useAuth();
 
   return (
-    <NotificationProvider>
-      <ParentDashboardProvider>
-        <TeachersProvider>
+      <ParentDashboardProvider key={`${sessionScope}:${user?.role}:${user?.id}`}>
           <ParentLayout onLogout={logout} />
-        </TeachersProvider>
       </ParentDashboardProvider>
-    </NotificationProvider>
   );
 }

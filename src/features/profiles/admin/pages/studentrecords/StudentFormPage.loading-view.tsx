@@ -16,7 +16,6 @@ fetchSectionByGrade,
 type DBGradeLevelResponse,
 type DBSectionResponse,
 } from "./services/grade-section.service";
-import { studentService } from "./services/student-record.service";
 import { GENDERS,type Gender } from "./types/Students";
 
 const ACCENT = "var(--color-maroon)";
@@ -56,7 +55,7 @@ function useStudentFormPageState() {
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const { studentId } = useParams<{ studentId: string }>();
-  const { getStudent, updateStudent, students, refetch, loading, error } = useStudents();
+  const { getStudent, updateStudent, students, refetch, loading, error,createRecord } = useStudents();
   const { showToast } = useToast();
 
   const isEditing = Boolean(studentId);
@@ -188,7 +187,7 @@ function useStudentFormPageState() {
         showToast("Student updated successfully!", "success");
         navigate(`/admin/students`);
       } else {
-        await studentService.addNewStudent(payload);
+        await createRecord(payload);
         showToast("Student added successfully!", "success");
         await refetch(); // kunin ulit ang buong listahan galing backend
         navigate(`/admin/students`);

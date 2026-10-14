@@ -1,3 +1,4 @@
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { CalendarHeart,CalendarRange } from "lucide-react";
 import { useMemo,useState } from "react";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
@@ -35,7 +36,16 @@ type CalendarHoliday,
 type Role,
 } from "./types/Calendar";
 
+export interface CalendarData {
+  activities: CalendarActivity[]; holidays: CalendarHoliday[]; allActivities: CalendarActivity[]; allHolidays: CalendarHoliday[];
+  loading: boolean; error: string | null; cachedOffline?: boolean; retry: () => void;
+  saveActivities: (entries: DraftEntry[]) => Promise<unknown>; saveHolidays: (entries: DraftEntry[]) => Promise<unknown>;
+  edit: (state: NonNullable<EditState>, value: EditEntryValue) => Promise<unknown>;
+  remove: (state: NonNullable<DeleteState>) => Promise<unknown>;
+}
+
 interface CalendarPageProps {
+  data?: CalendarData;
   viewerRole?: Role;
 }
 
@@ -50,18 +60,20 @@ type DeleteState =
   | { kind: "holiday"; entry: CalendarHoliday }
   | null;
 
-function useCalendarPageState({ viewerRole = "ADMIN" }: CalendarPageProps) {
+function useCalendarPageState({ viewerRole = "ADMIN", data }: CalendarPageProps) {
   const theme = useOutletContext<AdminThemeContext>();
-  if (!theme) return { content: null, scope: null };
 
-  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
+  const [legacyActivities, setActivities] = useState<CalendarActivity[]>([]);
+  const [legacyHolidays, setHolidays] = useState<CalendarHoliday[]>([]);
+  const [legacyAllActivities, setAllActivities] = useState<CalendarActivity[]>([]);
+  const [legacyAllHolidays, setAllHolidays] = useState<CalendarHoliday[]>([]);
+  const [legacyLoading, setLoading] = useState(true);
+  const [legacyError, setError] = useState<string | null>(null);
 
-  const [activities, setActivities] = useState<CalendarActivity[]>([]);
-  const [holidays, setHolidays] = useState<CalendarHoliday[]>([]);
-  const [allActivities, setAllActivities] = useState<CalendarActivity[]>([]);
-  const [allHolidays, setAllHolidays] = useState<CalendarHoliday[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const activities = data?.activities ?? legacyActivities, holidays = data?.holidays ?? legacyHolidays;
+  const allActivities = data?.allActivities ?? legacyAllActivities, allHolidays = data?.allHolidays ?? legacyAllHolidays;
+  const loading = data?.loading ?? legacyLoading, error = data ? data.cachedOffline ? null : data.error : legacyError;
+  const retry = data?.retry ?? (() => setAttempt(value => value + 1));
 
   const [viewDate, setViewDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -82,6 +94,9 @@ function useCalendarPageState({ viewerRole = "ADMIN" }: CalendarPageProps) {
     return dates;
   }, [activities, holidays]);
 
+  if (!theme) return { content: null, scope: null };
+  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
+
   function shiftMonth(delta: number) {
     const nextMonth = new Date(viewDate.getFullYear(), viewDate.getMonth() + delta, 1);
     setViewDate(nextMonth);
@@ -89,6 +104,7 @@ function useCalendarPageState({ viewerRole = "ADMIN" }: CalendarPageProps) {
   }
 
   async function handleSaveActivities(entries: DraftEntry[]) {
+    if (data) { await data.saveActivities(entries); setManageTarget(null); return; }
     const created = await createCalendarActivities(
       entries.map((e) => ({ title: e.title.trim(), date: e.date })),
     );
@@ -98,6 +114,7 @@ function useCalendarPageState({ viewerRole = "ADMIN" }: CalendarPageProps) {
   }
 
   async function handleSaveHolidays(entries: DraftEntry[]) {
+    if (data) { await data.saveHolidays(entries); setManageTarget(null); return; }
     const created = await createCalendarHolidays(
       entries.map((e) => ({
         title: e.title.trim(),
@@ -112,6 +129,7 @@ function useCalendarPageState({ viewerRole = "ADMIN" }: CalendarPageProps) {
 
   async function handleEditSave(value: EditEntryValue) {
     if (!editState) return;
+    if (data) { await data.edit(editState, value); setEditState(null); return; }
     if (editState.kind === "activity") {
       await updateCalendarActivity(editState.entry.id, {
         title: value.title,
@@ -150,6 +168,7 @@ function useCalendarPageState({ viewerRole = "ADMIN" }: CalendarPageProps) {
 
   async function handleDeleteConfirm() {
     if (!deleteState) return;
+    if (data) { await data.remove(deleteState); setDeleteState(null); return; }
     if (deleteState.kind === "activity") {
       await deleteCalendarActivityApi(deleteState.entry.id);
       const filterer = (prev: CalendarActivity[]) =>
@@ -177,6 +196,7 @@ function useCalendarPageState({ viewerRole = "ADMIN" }: CalendarPageProps) {
         </p>
       </div>
 
+      {data?.cachedOffline && <LoadingRegion loading={false} error={data.error} retry={retry} skeleton={null} className={textPrimary}>{null}</LoadingRegion>}
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.75fr)_minmax(16rem,0.75fr)]">
         <MonthGrid
           viewDate={viewDate}
@@ -206,7 +226,7 @@ function useCalendarPageState({ viewerRole = "ADMIN" }: CalendarPageProps) {
           )}
 
           <ActivitiesCard
-            loading={loading} error={error} retry={() => setAttempt(value => value + 1)}
+            loading={loading} error={error} retry={retry}
             activities={activities}
             viewDate={viewDate}
             selectedDate={selectedDate}
@@ -219,7 +239,7 @@ function useCalendarPageState({ viewerRole = "ADMIN" }: CalendarPageProps) {
           />
 
           <HolidaysCard
-            loading={loading} error={error} retry={() => setAttempt(value => value + 1)}
+            loading={loading} error={error} retry={retry}
             holidays={holidays}
             viewDate={viewDate}
             selectedDate={selectedDate}
@@ -262,7 +282,7 @@ function useCalendarPageState({ viewerRole = "ADMIN" }: CalendarPageProps) {
           textMuted={textMuted}
         >
           <ActivityGroupList
-            loading={loading} error={error} retry={() => setAttempt(value => value + 1)}
+            loading={loading} error={error} retry={retry}
             activities={allActivities}
             darkMode={darkMode}
             textMuted={textMuted}
@@ -284,7 +304,7 @@ function useCalendarPageState({ viewerRole = "ADMIN" }: CalendarPageProps) {
           textMuted={textMuted}
         >
           <HolidayGroupList
-            loading={loading} error={error} retry={() => setAttempt(value => value + 1)}
+            loading={loading} error={error} retry={retry}
             holidays={allHolidays}
             darkMode={darkMode}
             textMuted={textMuted}

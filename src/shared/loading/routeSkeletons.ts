@@ -363,7 +363,7 @@ export const routeSkeletons = {
     role: "PRINCIPAL",
     component: "TeacherSchedulePage",
     skeleton: "TeacherSchedulePageComposition",
-    load: () => import("../../features/profiles/principal/pages/teachers/TeacherSchedulePage").then(module => ({ default: module.TeacherSchedulePage })),
+    load: () => import("../../features/profiles/principal/pages/teachers/PrincipalTeacherProfilePage").then(module => ({ default: module.TeacherSchedulePage })),
     regions: [
       { name: "profile identity", classification: "VARIABLE", reason: "Returned names and school year subtitle can wrap", count: "Last known field line count, otherwise two lines" },
       { name: "profile avatar", classification: "FIXED-SIZE", reason: "Existing responsive circular avatar dimensions", count: "One" },

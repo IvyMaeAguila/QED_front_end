@@ -1,3 +1,5 @@
+import { parentFetch } from '../../../../query/parentRequest';
+import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
 import { API_CONFIG } from '../../../../../../../config/api.config';
 
 import type { InterventionFlag } from "../types/types";
@@ -62,8 +64,8 @@ function isArchived(raw: RawLowGradeTopic): boolean {
 }
 
 const LowGradeTopicsService = {
-  async getLowGradeTopics(studentId: number | string): Promise<InterventionFlag[]> {
-    const response = await fetch(`${API_BASE_URL}/${studentId}`, {
+  async getLowGradeTopics(studentId: number | string, options?: ApiRequestOptions): Promise<InterventionFlag[]> {
+    const response = await parentFetch(`${API_BASE_URL}/${studentId}`, options, {
       method: "GET",
       credentials: "include",
       cache: "no-store", // always refetch, so an archived topic disappears right away

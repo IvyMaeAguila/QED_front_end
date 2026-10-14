@@ -1,8 +1,7 @@
 import { AccountSelect } from "@shared/components/AccountSelect";
 import { useMemo, useRef, useState, type FormEvent } from "react";
-import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { ChevronLeft, ChevronRight, RefreshCw, Search } from "lucide-react";
-import { fetchAuditLogs, type AuditLogPage } from "../services/auditLogs.service";
+import { useAdminDashboardData, adminDashboardOfflineError } from "../AdminDashboardDataContext";
 
 import { LoadingRegion } from "../../../../../../shared/loading/LoadingRegion";
 import { SkeletonText } from "../../../../../../shared/components/SkeletonLoading";
@@ -28,33 +27,17 @@ function formatTimestamp(value: string) {
 }
 
 export function AuditLogs({ darkMode, panelBg, panelBorder, textPrimary, textMuted }: AuditLogsProps) {
-  const [page, setPage] = useState<AuditLogPage | null>(null);
-  const [pageNumber, setPageNumber] = useState(1);
+  const { audit: state, filters, setFilters } = useAdminDashboardData();
+  const { data: page, loading, error, retry } = state;
+  const { page: pageNumber, search, role, action, from, to } = filters;
+  const setPageNumber = (value: number | ((current: number) => number)) => setFilters(current => ({ ...current, page: typeof value === "function" ? value(current.page) : value }));
+  const setSearch = (search: string) => setFilters(current => ({ ...current, search }));
+  const setRole = (role: string) => setFilters(current => ({ ...current, role }));
+  const setAction = (action: string) => setFilters(current => ({ ...current, action }));
+  const setFrom = (from: string) => setFilters(current => ({ ...current, from }));
+  const setTo = (to: string) => setFilters(current => ({ ...current, to }));
   const [searchInput, setSearchInput] = useState("");
-  const [search, setSearch] = useState("");
-  const [role, setRole] = useState("");
-  const [action, setAction] = useState("");
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setError(null);
-    fetchAuditLogs({ page: pageNumber, search, role, action, from, to }, controller.signal)
-      .then(setPage)
-      .catch((loadError) => {
-        if (loadError?.name === "AbortError") return;
-        setError(loadError instanceof Error ? loadError.message : "Unable to load audit logs.");
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
-      });
-    return () => controller.abort();
-  }, [pageNumber, search, role, action, from, to, refreshKey]);
+  const cachedOffline = error === adminDashboardOfflineError && page !== undefined;
 
   const totalPages = Math.max(1, Math.ceil((page?.total ?? 0) / (page?.limit ?? 20)));
   const inputClass = `h-9 rounded-lg border px-3 text-xs outline-none focus:ring-2 focus:ring-maroon-light/30 ${darkMode ? "border-[#374151] bg-[#0B1120] text-white" : "border-border-subtle bg-white text-[#111827]"}`;
@@ -80,7 +63,7 @@ export function AuditLogs({ darkMode, panelBg, panelBorder, textPrimary, textMut
           <h2 className={`font-bold ${textPrimary}`} data-sk-region="auditlogs-system-audit-logs" data-sk-static="">System Audit Logs</h2>
           <p className={`mt-1 text-xs ${textMuted}`} data-sk-region="auditlogs-sign-ins-and-system-changes-across-all-user-r" data-sk-static="">Sign-ins and system changes across all user roles.</p>
         </div>
-        <button type="button" onClick={() => setRefreshKey((key) => key + 1)} className={`inline-flex h-9 items-center gap-2 rounded-lg border px-3 text-xs font-bold ${inputClass}`} data-sk-region="auditlogs-refresh" data-sk-static="">
+        <button type="button" onClick={retry} className={`inline-flex h-9 items-center gap-2 rounded-lg border px-3 text-xs font-bold ${inputClass}`} data-sk-region="auditlogs-refresh" data-sk-static="">
           <RefreshCw size={14} aria-hidden="true" /> Refresh
         </button>
       </div>
@@ -103,7 +86,8 @@ export function AuditLogs({ darkMode, panelBg, panelBorder, textPrimary, textMut
         <label className={`flex items-center gap-1 text-xs font-semibold ${textMuted}`} data-sk-region="auditlogs-to" data-sk-static="">To<input aria-label="To date" type="date" value={to} onChange={(event) => { setTo(event.target.value); setPageNumber(1); }} className={inputClass} /></label>
       </div>
 
-      <LoadingRegion name="audit-table-body" retainPrevious hasContent={entries.length > 0} loading={loading} error={error} retry={() => setRefreshKey(key => key + 1)} variable autoColumns layerAs="tbody"
+      {cachedOffline && <div role="alert">{error?.message}</div>}
+      <LoadingRegion key={String(state.forbidden)} name="audit-table-body" retainPrevious hasContent={entries.length > 0} loading={loading} error={cachedOffline ? null : error} retry={retry} variable autoColumns layerAs="tbody"
         className="sk-table-region"
         onSettled={() => { rememberColumns(view, table.current); rememberRows(view, entries.length); }}
         skeleton={placeholders.map((_, index) => <tr key={index} className={`border-t ${panelBorder}`} data-sk-region="auditlogs-tr-field-1">

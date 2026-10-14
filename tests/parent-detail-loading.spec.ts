@@ -3,6 +3,7 @@ import {test,expect,type Page} from '@playwright/test';
 import fs from 'node:fs';
 import {assertNoDataSpinner,checkRenderedContrast,checkShimmerPixels,captureFixedOverlay} from './design-pixels';
 import {mockDirectory} from './fixtures/directory';
+import {invalidateReaderForTest} from './fixtures/queryLifecycle';
 test('parent detail keeps navigation and identity labels during linked-student fetch',async({page})=>{const release=await mockDirectory(page,'PARENT',false);await page.goto('/parent/students/1');await waitForDataRoute(page);await expect(page.getByRole('button',{name:'Overview',exact:true})).toBeVisible();await expect(page.getByText('Learner',{exact:true})).toBeVisible();await expect(page.locator('[data-sk-region="parent-student-identity"]')).toHaveAttribute('data-sk-phase','revealed');await expect(page.getByText(/couldn't find a student/)).toHaveCount(0);release();});
 
 async function detailFixture(page:Page,dark=false,count=3,long=false,locked=false) {
@@ -112,7 +113,7 @@ test('parent report repeat visit restores native column reservations within 2px'
   const loaded=await tables().evaluateAll(ts=>ts.map(t=>Array.from(t.querySelectorAll('thead tr:first-child th')).map(c=>c.getBoundingClientRect().width)));
   expect(loaded).toHaveLength(2);
   await page.getByRole('button',{name:'Academic',exact:true}).click();await expect(page.getByText('Class Schedule',{exact:true})).toBeVisible();await expect(page.locator('[data-sk-primitive]')).toHaveCount(0);
-  await page.evaluate(async()=>{const module=await import('/src/features/profiles/parent/pages/Student/ProgressReport/service/TermPerformance.service.ts');module.clearStudentTermPerformanceProgressCache('1');});
+  await invalidateReaderForTest(page,'PARENT',['progress','academic']);
   release.hold();await page.getByRole('button',{name:'Progress Report',exact:true}).click();await expect(report).toHaveAttribute('data-sk-phase','revealed');
   const pending=await tables().evaluateAll(ts=>ts.map(t=>Array.from(t.querySelectorAll('thead tr:first-child th')).map(c=>c.getBoundingClientRect().width)));
   expect(pending).toHaveLength(loaded.length);pending.forEach((ws,i)=>ws.forEach((w,j)=>expect(Math.abs(w-loaded[i][j]),`table ${i} column ${j}`).toBeLessThanOrEqual(2)));

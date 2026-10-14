@@ -1,42 +1,17 @@
-import { useEffect } from "react";
-import { TeacherAttendancePageComposition,type TeacherAttendancePageEffectScope } from "./TeacherAttendancePage.loading-view";
-export * from "./TeacherAttendancePage.loading-view";
-
-function TeacherAttendancePageDataEffects({ scope }: { scope: TeacherAttendancePageEffectScope }) {
- const { section, setAttendanceLoading, setAttendanceError, fetchAdvisoryAttendance, setAttendance, setAttendanceLoadedFor, attendanceAttempt } = scope;
- useEffect(() => {
-    if (!section) {
-      setAttendanceLoading(false);
-      return;
-    }
-
-    let cancelled = false;
-    setAttendanceLoading(true);
-    setAttendanceError(null);
-
-    fetchAdvisoryAttendance(section.classId)
-      .then((att) => {
-        if (cancelled) return;
-        setAttendance(att.data);
-      })
-      .catch((err) => {
-        if (cancelled) return;
-        console.error("Failed to load advisory attendance:", err);
-        setAttendanceError(
-          "Couldn't load attendance for this class. Please try again.",
-        );
-      })
-      .finally(() => {
-        if (!cancelled) { setAttendanceLoading(false); setAttendanceLoadedFor(section.classId); }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [section?.classId, attendanceAttempt]);
- return null;
+import {useContext} from 'react';
+import {QueryClientProvider} from '@tanstack/react-query';
+import {queryClient} from '@shared/query/queryClient';
+import {TeacherAdvisoryQueries} from '../../query/TeacherAdvisoryQueries';
+import {TeacherAttendanceQueries} from '../../query/TeacherAttendanceQueries';
+import {TeacherSessionBoundary} from '../../query/TeacherSessionBoundary';
+import {AttendanceQueryContext} from '../../query/AttendanceQueryContext';
+import {TeacherAttendancePageComposition,type TeacherAttendancePageEffectScope} from './TeacherAttendancePage.loading-view';
+export {TeacherAttendancePageComposition} from './TeacherAttendancePage.loading-view';
+export type {TeacherAttendancePageEffectScope,TeacherAttendancePageRouteProps} from './TeacherAttendancePage.loading-view';
+function Effects({scope}:{scope:TeacherAttendancePageEffectScope}){
+ const bridge=useContext(AttendanceQueryContext)!;
+ return <bridge.Effects classId={scope.section?.classId??''} ready={!!scope.section} attempt={scope.attendanceAttempt} setAttendance={scope.setAttendance} setLoading={scope.setAttendanceLoading} setError={scope.setAttendanceError} setLoadedFor={scope.setAttendanceLoadedFor} errorMessage="Couldn't load attendance for this class. Please try again."/>;
 }
-
-export function TeacherAttendancePage() {
- return <TeacherAttendancePageComposition effects={scope => <TeacherAttendancePageDataEffects scope={scope}/>} />;
+export function TeacherAttendancePage(){
+ return <TeacherSessionBoundary><QueryClientProvider client={queryClient}><TeacherAdvisoryQueries><TeacherAttendanceQueries><TeacherAttendancePageComposition effects={scope=><Effects scope={scope}/>}/></TeacherAttendanceQueries></TeacherAdvisoryQueries></QueryClientProvider></TeacherSessionBoundary>;
 }

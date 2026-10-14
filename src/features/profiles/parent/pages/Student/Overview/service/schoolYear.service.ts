@@ -1,3 +1,5 @@
+import { parentFetch } from '../../../../query/parentRequest';
+import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
 import { API_CONFIG } from '../../../../../../../config/api.config';
 
 const API_BASE_URL = `${API_CONFIG.baseURL}`;
@@ -28,48 +30,13 @@ function toMonthOption(month: number, year: number): MonthOption {
   return { key: `${year}-${mm}`, label: `${MONTH_NAMES[month - 1]} ${year}` };
 }
 
-// In-memory cache — buong lifetime ng tab/session lang ito nabubuhay.
-let cachedMonths: MonthOption[] | null = null;
-let inFlightRequest: Promise<MonthOption[]> | null = null;
-
+export async function fetchParentSchoolYear(options?: ApiRequestOptions) {
+  const response = await parentFetch(`${API_BASE_URL}/api/sy_term`, options);
+  const result: SchoolYearMonthsResponse = await response.json();
+  if(!result.success || !result.data) throw new Error(result.message || 'Failed to fetch school year months.');
+  return { id: result.data.school_year_id ?? null, months: result.data.months.map(m => toMonthOption(m.month, m.year)) };
+}
 const SchoolYearService = {
-  async getSchoolYearMonths(): Promise<MonthOption[]> {
-    if (cachedMonths) {
-      return cachedMonths;
-    }
-
-    if (inFlightRequest) {
-      return inFlightRequest;
-    }
-
-    inFlightRequest = (async () => {
-      const response = await fetch(`${API_BASE_URL}/api/sy_term`, {
-        method: "GET",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      const result: SchoolYearMonthsResponse = await response.json();
-
-      if (!response.ok || !result.success || !result.data) {
-        throw new Error(result.message || "Failed to fetch school year months.");
-      }
-
-      const months = result.data.months.map((m) => toMonthOption(m.month, m.year));
-      cachedMonths = months;
-      return months;
-    })();
-
-    try {
-      return await inFlightRequest;
-    } finally {
-      inFlightRequest = null;
-    }
-  },
-
-  clearCache() {
-    cachedMonths = null;
-  },
+  async getSchoolYearMonths(options?: ApiRequestOptions): Promise<MonthOption[]> { return (await fetchParentSchoolYear(options)).months; },
 };
-
 export default SchoolYearService;

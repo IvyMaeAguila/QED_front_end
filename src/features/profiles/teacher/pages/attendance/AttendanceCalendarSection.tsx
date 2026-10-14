@@ -1,3 +1,5 @@
+import {useContext,useRef,useLayoutEffect} from 'react';
+import {AttendanceQueryContext} from '../../query/AttendanceQueryContext';
 import { AccountSelect } from "@shared/components/AccountSelect";
 import { useMemo, useState } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
@@ -95,6 +97,7 @@ export function AttendanceCalendarSection({
   editable = true,
   prerequisitesLoading = false,
 }: AttendanceCalendarSectionProps) {
+  const bridge=useContext(AttendanceQueryContext);
   const [attempt, setAttempt] = useState(0);
   const [attendance, setAttendance] = useState<AttendanceMap>({});
   const [loading, setLoading] = useState(true);
@@ -105,6 +108,8 @@ export function AttendanceCalendarSection({
     return defaultViewDate(t);
   });
 
+  const currentResource=useRef('');
+  useLayoutEffect(()=>{currentResource.current=sectionId+':'+selectedTermId;return()=>{currentResource.current='';};},[sectionId,selectedTermId]);
   const [summaryStudent, setSummaryStudent] = useState<RosterStudent | null>(null);
 
   const term = terms.find((t) => t.id === selectedTermId) ?? terms[0];
@@ -115,7 +120,7 @@ export function AttendanceCalendarSection({
   );
 
   useEffect(() => {
-    if (prerequisitesLoading) return;
+    if (bridge || prerequisitesLoading) return;
     let cancelled = false;
     setLoading(true);
     setAttendanceError(null);
@@ -127,7 +132,7 @@ export function AttendanceCalendarSection({
       })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [sectionId, selectedTermId, attempt, prerequisitesLoading]);
+  }, [sectionId, selectedTermId, attempt, prerequisitesLoading, bridge]);
 
   useEffect(() => {
     if (term) setViewDate(defaultViewDate(term));
@@ -189,7 +194,8 @@ export function AttendanceCalendarSection({
       [studentId]: { ...prev[studentId], [dateISO]: next },
     }));
 
-    saveAdvisoryAttendance(sectionId, studentId, dateISO, next, selectedTermId).catch((err) => {
+    (bridge?.save ?? saveAdvisoryAttendance)(sectionId, studentId, dateISO, next, selectedTermId).catch((err) => {
+      if(currentResource.current!==sectionId+':'+selectedTermId)return;
       console.error("Failed to save attendance:", err);
       setAttendance((prev) => ({
         ...prev,
@@ -382,15 +388,17 @@ export function AttendanceCalendarSection({
   };
 
   if (!term && !prerequisitesLoading) {
-    return (
+    return (<>{bridge && <bridge.Effects {...{classId:sectionId,termId:selectedTermId,ready:!prerequisitesLoading&&!!sectionId,attempt,setAttendance,setLoading,setError:setAttendanceError,errorMessage:"Couldn't load attendance for this term. Please try again."}}/>}
+{(
       <div className={`${cardClasses} px-5 py-16 text-center`}>
         <p className={`font-bold ${textPrimary}`}>No terms set up yet</p>
         <p className={`mt-1 text-sm ${textMuted}`}>Add a grading period before recording attendance.</p>
       </div>
-    );
+    )}</>);
   }
 
-  return (
+  return (<>{bridge && <bridge.Effects {...{classId:sectionId,termId:selectedTermId,ready:!prerequisitesLoading&&!!sectionId,attempt,setAttendance,setLoading,setError:setAttendanceError,errorMessage:"Couldn't load attendance for this term. Please try again."}}/>}
+{(
     <section className={cardClasses} aria-label="Attendance records">
       <div className={`flex flex-col gap-4 border-b px-5 py-5 sm:flex-row sm:items-center sm:justify-between ${panelBorder}`}>
         <div className="flex items-start gap-3">
@@ -478,6 +486,6 @@ export function AttendanceCalendarSection({
         />
       )}
     </section>
-  );
+  )}</>);
 }
 

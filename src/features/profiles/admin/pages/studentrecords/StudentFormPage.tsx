@@ -1,98 +1,31 @@
-import { useEffect } from "react";
-import { StudentFormPageComposition,type StudentFormPageEffectScope } from "./StudentFormPage.loading-view";
-export * from "./StudentFormPage.loading-view";
-
-function StudentFormPageDataEffects({ scope }: { scope: StudentFormPageEffectScope }) {
- const { existing, loading, seededRecord, studentId, setForm, setLoadingGrades, setGradeError, fetchGradeLevels, setGradeLevels, isEditing, choicesAttempt, form, setSections, setSectionError, setLoadingSections, fetchSectionByGrade } = scope;
- useEffect(() => {
-    if (!existing || loading || seededRecord.current === studentId) return;
-    seededRecord.current = studentId;
-    setForm({ studentId: existing.studentId, lastName: existing.lastName, firstName: existing.firstName, middleName: existing.middleName ?? "", lrn: existing.lrn, gender: existing.gender, gradeLevel: String(existing.gradeLevelId), section: existing.sectionId != null ? String(existing.sectionId) : "" });
-  }, [existing, loading, studentId]);
-useEffect(() => {
-    let isMounted = true;
-
-    async function loadGrades() {
-      setLoadingGrades(true);
-      setGradeError(null);
-      try {
-        const data = await fetchGradeLevels();
-        if (isMounted) {
-          setGradeLevels(data);
-          // 👇 wala nang auto-select dito. Sa "Add" mode, manatiling "Select grade level…"
-          // ang naka-display hangga't hindi pa pumipili ang user. Sa "Edit" mode, hindi
-          // na ito ginagamit dahil naka-set na agad ang form.gradeLevel mula sa existing student.
-        }
-      } catch (err) {
-        if (isMounted) {
-          setGradeError(
-            err instanceof Error ? err.message : "Failed to load grade levels",
-          );
-        }
-      } finally {
-        if (isMounted) setLoadingGrades(false);
-      }
-    }
-
-    loadGrades();
-    return () => {
-      isMounted = false;
-    };
-  }, [isEditing, choicesAttempt]);
-useEffect(() => {
-    if (!form.gradeLevel) {
-      setSections([]);
-      setSectionError(null);
-      setLoadingSections(false);
-      return;
-    }
-
-    let isMounted = true;
-
-    async function loadSections() {
-      setLoadingSections(true);
-      setSectionError(null);
-      try {
-        const data = await fetchSectionByGrade(form.gradeLevel);
-        if (isMounted) {
-          setSections(data);
-
-          if (data.length >= 1) {
-            // 👇 kahit isa lang o marami pang section, kailangan pa ring pumili ng user.
-            // panatilihin ang existing section kung nasa listahan pa rin (valid pa siya).
-            // kung wala talagang naka-assign na section sa student (o hindi na valid),
-            // iwanan na lang na blangko para lumabas ang "Select section" placeholder —
-            // hindi na dapat mag-auto-select ng section para sa user.
-            const stillValid = data.some(
-              (s) => String(s.id) === form.section,
-            );
-            if (!stillValid) {
-              setForm((prev) => ({ ...prev, section: "" }));
-            }
-          } else {
-            // 👇 walang section sa grade level na 'to.
-            setForm((prev) => ({ ...prev, section: "" }));
-          }
-        }
-      } catch (err) {
-        console.error("Failed loading sections:", err);
-        if (isMounted) {
-          setSectionError(err instanceof Error ? err.message : "Could not load sections.");
-        }
-      } finally {
-        if (isMounted) setLoadingSections(false);
-      }
-    }
-
-    loadSections();
-    return () => {
-      isMounted = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.gradeLevel, choicesAttempt]);
+import {useEffect} from 'react';
+import {useAdminReader,useAdminRetryAttempt} from '../../query/useAdminReader';
+import {useStudents} from './context/StudentsContext';
+import {fetchGradeLevels,fetchSectionByGrade} from './services/grade-section.service';
+import {StudentFormPageComposition,type StudentFormPageEffectScope} from './StudentFormPage.loading-view';
+export * from './StudentFormPage.loading-view';
+const emptyGrades:Awaited<ReturnType<typeof fetchGradeLevels>>=[];
+const emptySections:Awaited<ReturnType<typeof fetchSectionByGrade>>=[];
+function StudentFormPageDataEffects({scope:s}:{scope:StudentFormPageEffectScope}){
+ const {activateQueries}=useStudents();useEffect(()=>{activateQueries();},[activateQueries]);
+ const {existing,loading,seededRecord:seededRecordRef,studentId,setForm,setLoadingGrades,setGradeError,setGradeLevels,choicesAttempt,form,setSections,setSectionError,setLoadingSections}=s;
+ const grade=form.gradeLevel;
+ const grades=useAdminReader(['student-options','grades'],fetchGradeLevels,'Failed to load grade levels',true,undefined,300_000);
+ const sections=useAdminReader(['student-options','sections',grade],o=>fetchSectionByGrade(grade,o),'Could not load sections.',!!grade);
+ useAdminRetryAttempt(choicesAttempt,grades.retry);useAdminRetryAttempt(choicesAttempt,sections.retry);
+ useEffect(()=>{
+  if(!existing||loading||seededRecordRef.current===studentId)return;
+  seededRecordRef.current=studentId;
+  setForm({studentId:existing.studentId,lastName:existing.lastName,firstName:existing.firstName,middleName:existing.middleName??'',lrn:existing.lrn,gender:existing.gender,gradeLevel:String(existing.gradeLevelId),section:existing.sectionId!=null?String(existing.sectionId):''});
+ },[existing,loading,seededRecordRef,studentId,setForm]);
+ useEffect(()=>{setLoadingGrades(grades.loading);setGradeError(grades.error);if(!grades.loading)setGradeLevels(grades.data??emptyGrades);},[grades.loading,grades.error,grades.data,setLoadingGrades,setGradeError,setGradeLevels]);
+ useEffect(()=>{
+  if(!grade){setSections(emptySections);setSectionError(null);setLoadingSections(false);return;}
+  setLoadingSections(sections.loading);setSectionError(sections.error);
+  if(sections.loading)return;
+  const rows=sections.data??emptySections;setSections(rows);
+  if(!sections.error)setForm(previous=>previous.gradeLevel!==grade||rows.some(row=>String(row.id)===previous.section)?previous:{...previous,section:''});
+ },[grade,sections.loading,sections.error,sections.data,setSections,setSectionError,setLoadingSections,setForm]);
  return null;
 }
-
-export function StudentFormPage() {
- return <StudentFormPageComposition effects={scope => <StudentFormPageDataEffects scope={scope}/>} />;
-}
+export function StudentFormPage(){return <StudentFormPageComposition effects={scope=><StudentFormPageDataEffects scope={scope}/>}/>;}

@@ -1,3 +1,5 @@
+import {useContext,useLayoutEffect} from 'react';
+import {AttendanceQueryContext} from '../../query/AttendanceQueryContext';
 import { SkeletonAvatar,SkeletonText } from "@shared/components/SkeletonLoading";
 import { StudentAvatar } from "@shared/components/StudentAvatar";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
@@ -31,6 +33,7 @@ const PRESENT = "P" as keyof typeof ATTENDANCE_META;
 type RosterEntry = AdvisorySection["roster"][number];
 
 function useTeacherAttendancePageState() {
+  const bridge=useContext(AttendanceQueryContext);
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
@@ -44,6 +47,8 @@ function useTeacherAttendancePageState() {
     requestedClassId,
   } = useSelectedAdvisorySection();
 
+  const currentClass=useRef(section?.classId);
+  useLayoutEffect(()=>{currentClass.current=section?.classId;return()=>{currentClass.current=undefined;};},[section?.classId]);
   const [attendance, setAttendance] = useState<AttendanceMap>({});
   const [attendanceLoading, setAttendanceLoading] = useState(true);
   const [attendanceError, setAttendanceError] = useState<string | null>(null);
@@ -73,8 +78,9 @@ function useTeacherAttendancePageState() {
       [studentId]: { ...prev[studentId], [iso]: next },
     }));
 
-    saveAdvisoryAttendance(section.classId, studentId, iso, next, activeTerm.id).catch(
+    (bridge?.save ?? saveAdvisoryAttendance)(section.classId, studentId, iso, next, activeTerm.id).catch(
       (err) => {
+        if(currentClass.current!==section.classId)return;
         console.error("Failed to save attendance:", err);
         setAttendance((prev) => ({
           ...prev,
@@ -97,9 +103,10 @@ function useTeacherAttendancePageState() {
         [student.id]: { ...prev[student.id], [iso]: PRESENT },
       }));
 
-      saveAdvisoryAttendance(section.classId, student.id, iso, PRESENT, activeTerm.id).catch(
+      (bridge?.save ?? saveAdvisoryAttendance)(section.classId, student.id, iso, PRESENT, activeTerm.id).catch(
         (err) => {
-          console.error("Failed to save attendance:", err);
+          if(currentClass.current!==section.classId)return;
+        console.error("Failed to save attendance:", err);
           setAttendance((prev) => ({
             ...prev,
             [student.id]: { ...prev[student.id], [iso]: current },

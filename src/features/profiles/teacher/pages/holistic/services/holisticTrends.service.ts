@@ -1,4 +1,6 @@
 import { API_CONFIG } from '../../../../../../config/api.config';
+import type { TeacherRequestOptions } from "../../../query/teacherQueryScope";
+import { QueryHttpError } from "@shared/http/QueryHttpError";
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/teacherHolistic`;
 
@@ -34,8 +36,9 @@ export interface DomainTrendsSection {
 }
 
 async function handleJsonResponse(res: Response) {
-  const data = await res.json();
+  const data = await res.json().catch(error => { if(!res.ok)throw new QueryHttpError('Request failed.',res.status);throw error; });
   if (!res.ok || !data.success) {
+    if(!res.ok)throw new QueryHttpError(data.message || 'Request failed.',res.status);
     throw new Error(data.message || "Request failed.");
   }
   return data;
@@ -45,11 +48,13 @@ async function handleJsonResponse(res: Response) {
  * Domain trends for EVERY advisory section, from every subject those
  * students take (including subjects other teachers handle).
  */
-export async function fetchDomainTrendsSections(termNumber: number): Promise<DomainTrendsSection[]> {
+export async function fetchDomainTrendsSections(termNumber: number, options: TeacherRequestOptions = {}): Promise<DomainTrendsSection[]> {
   const res = await fetch(`${BASE_URL}/domain-trends?termNumber=${termNumber}`, {
     credentials: "include",
+    signal: options.signal,
     headers: { "Content-Type": "application/json" },
   });
+  if(res.status===401)options.onUnauthorized?.();
   const json = await handleJsonResponse(res);
   return json.data.sections as DomainTrendsSection[];
 }
@@ -62,9 +67,10 @@ export async function fetchDomainTrendsSections(termNumber: number): Promise<Dom
  */
 export async function fetchDomainTrendsOverview(
   termNumber: number,
-  classId?: string
+  classId?: string,
+  options: TeacherRequestOptions = {},
 ): Promise<DomainTrendsOverview> {
-  const sections = await fetchDomainTrendsSections(termNumber);
+  const sections = await fetchDomainTrendsSections(termNumber, options);
   const match = classId ? sections.find((s) => s.classId === classId) : sections[0];
   return {
     termNumber,

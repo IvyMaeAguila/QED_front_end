@@ -1,11 +1,12 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { ReactNode } from "react";
 import type { Student } from "../types/Students";
 // import { seedStudents } from "../data/studentData";
 import { studentService } from "../services/student-record.service";
+import {fetchGradeLevels,fetchSectionByGrade} from '../services/grade-section.service';
 
-interface StudentsContextValue {
+export interface StudentsContextValue {
   students: Student[];
   loading: boolean;
   error: string | null;
@@ -15,33 +16,60 @@ interface StudentsContextValue {
   addStudents: (students: Student[]) => void;
   updateStudent: (dbId: number, updates: Partial<Student>) => Promise<void>;
   deleteStudent: (dbId: number) => Promise<void>;
+  createRecord:(payload:Record<string,unknown>)=>Promise<{id?:number;data?:{id?:number}}>;
+  fetchGrades:typeof fetchGradeLevels;
+  fetchSections:typeof fetchSectionByGrade;
+  activateQueries:()=>void;
+  serverUpdatedAt:number;
 }
+export type StudentOperations=Pick<StudentsContextValue,'refetch'|'addStudent'|'addStudents'|'updateStudent'|'deleteStudent'|'createRecord'|'fetchGrades'|'fetchSections'>;
+const noop=()=>{};
 
 const StudentsContext = createContext<StudentsContextValue | undefined>(
   undefined,
 );
 
-export function StudentsProvider({ children }: { children: ReactNode }) {
-  const [students, setStudents] = useState<Student[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export interface StudentsReader {
+  students: Student[]; loading: boolean; error: string | null; retry: () => void;
+}
+export function StudentsProvider({ children, reader,operations,activateQueries=noop,bootstrapEnabled=true }: { children: ReactNode; reader?: StudentsReader;operations?:StudentOperations;activateQueries?:()=>void;bootstrapEnabled?:boolean }) {
+  const [localStudents, setStudents] = useState<Student[]>([]);
+  const [localLoading, setLoading] = useState(true);
+  const [localError, setError] = useState<string | null>(null);
+  const [serverUpdatedAt,setServerUpdatedAt]=useState(0);
+  const request=useRef<AbortController|null>(null);
+  const queryActivated=useRef(false);
+  const activate=useCallback(()=>{queryActivated.current=true;activateQueries();},[activateQueries]);
+  const students = reader?.students ?? localStudents;
+  const loading = reader?.loading ?? localLoading;
+  const error = reader ? reader.error : localError;
+  const external = !!reader;
 
-  async function fetchStudents() {
+  const fetchStudents = useCallback(async () => {
+    if (reader) { reader.retry(); return; }
+    // A child may activate the lazy driver before this bootstrap effect runs.
+    // Retire synchronously so the outgoing effect cannot start a second read.
+    if(queryActivated.current||!bootstrapEnabled)return;
+    request.current?.abort();const controller=new AbortController();request.current=controller;
     try {
       setLoading(true);
       setError(null);
-      const data = await studentService.getAllStudents();
+      const data = await studentService.getAllStudents({signal:controller.signal});
+      if(controller.signal.aborted)return;
       setStudents(data);
+      setServerUpdatedAt(Date.now());
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load students");
+      if(!controller.signal.aborted)setError(err instanceof Error ? err.message : "Failed to load students");
     } finally {
-      setLoading(false);
+      if(!controller.signal.aborted)setLoading(false);
     }
-  }
+  }, [reader,bootstrapEnabled]);
 
   useEffect(() => {
-    fetchStudents();
-  }, []);
+    if (!external) void fetchStudents();
+    else setStudents(previous=>previous.length?[]:previous);
+    return()=>request.current?.abort();
+  }, [external, fetchStudents]);
 
   function sortStudents(list: Student[]): Student[] {
     return [...list].sort((a, b) => { 
@@ -57,6 +85,9 @@ export function StudentsProvider({ children }: { children: ReactNode }) {
       students,
       loading,
       error,
+      activateQueries:activate,serverUpdatedAt,
+      createRecord:studentService.addNewStudent,
+      fetchGrades:fetchGradeLevels,fetchSections:fetchSectionByGrade,
       refetch: fetchStudents,
       getStudent: (id) => students.find((s) => s.id === id),
       addStudent: (student) => {
@@ -75,8 +106,9 @@ export function StudentsProvider({ children }: { children: ReactNode }) {
         await studentService.softDeleteStudent(dbId);
         await fetchStudents();
       },
+      ...operations,
     }),
-    [students, loading, error],
+    [students, loading, error, fetchStudents,operations,activate,serverUpdatedAt],
   );
 
   return (

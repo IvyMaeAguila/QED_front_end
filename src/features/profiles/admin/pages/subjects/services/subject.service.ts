@@ -1,3 +1,5 @@
+import type {ApiRequestOptions} from '@shared/http/ApiRequestOptions';
+import {QueryHttpError} from '@shared/http/QueryHttpError';
 import { API_CONFIG } from '../../../../../../config/api.config';
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/subject`;
@@ -59,18 +61,20 @@ export interface NewAssessmentType {
 }
 
 export async function fetchSubjectSectionsByGrade(
-  gradeLevel: string
+  gradeLevel: string, options:ApiRequestOptions={}
 ): Promise<SubjectSectionByGradeRow[]> {
-  const res = await fetch(`${BASE_URL}/getSubjectSectionsByGrade/${gradeLevel}`, {credentials: "include"});
-  const json: ApiResponse<SubjectSectionByGradeRow[]> = await res.json();
-  if (!res.ok) throw new Error(json.message || "Failed to fetch subjects.");
+  const res = await fetch(`${BASE_URL}/getSubjectSectionsByGrade/${gradeLevel}`, {credentials: "include", signal:options.signal});
+  if(res.status===401)options.onUnauthorized?.();
+  const json: ApiResponse<SubjectSectionByGradeRow[]> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to fetch subjects.",res.status);
   return json.data ?? [];
 }
 
-export async function fetchSubjectsByGrade(gradeLevel: string): Promise<ElemSubjectRow[]> {
-  const res = await fetch(`${BASE_URL}/getSubjectsByGrade/${gradeLevel}`, {credentials: "include"});
-  const json: ApiResponse<ElemSubjectRow[]> = await res.json();
-  if (!res.ok) throw new Error(json.message || "Failed to fetch subjects.");
+export async function fetchSubjectsByGrade(gradeLevel: string, options:ApiRequestOptions={}): Promise<ElemSubjectRow[]> {
+  const res = await fetch(`${BASE_URL}/getSubjectsByGrade/${gradeLevel}`, {credentials: "include", signal:options.signal});
+  if(res.status===401)options.onUnauthorized?.();
+  const json: ApiResponse<ElemSubjectRow[]> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to fetch subjects.",res.status);
   return json.data ?? [];
 }
 
@@ -80,15 +84,16 @@ export async function addSubject(payload: {
   subjectName: string;
   schoolYear: string;
   weightDistribution?: WeightDistributionPayloadItem[];
-}): Promise<ElemSubjectRow> {
+}, options:ApiRequestOptions={}): Promise<ElemSubjectRow> {
   const res = await fetch(`${BASE_URL}/addSubject`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload), signal:options.signal,
   });
-  const json: ApiResponse<ElemSubjectRow> = await res.json();
-  if (!res.ok) throw new Error(json.message || "Failed to add subject.");
+  if(res.status===401)options.onUnauthorized?.();
+  const json: ApiResponse<ElemSubjectRow> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to add subject.",res.status);
   return json.data as ElemSubjectRow;
 }
 
@@ -114,69 +119,74 @@ export async function updateSubjectAssignment(
     sectionName?: string | null;
     teacherId?: string | null;
     schoolYear?: string;
-  }
+  }, options:ApiRequestOptions={}
 ): Promise<UpdateSubjectAssignmentResult> {
   const res = await fetch(`${BASE_URL}/updateSubjectSection/${id}`, {
     method: "PUT",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload), signal:options.signal,
   });
-  const json: ApiResponse<UpdateSubjectAssignmentResult> = await res.json();
-  if (!res.ok) throw new Error(json.message || "Failed to update subject.");
+  if(res.status===401)options.onUnauthorized?.();
+  const json: ApiResponse<UpdateSubjectAssignmentResult> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to update subject.",res.status);
   return json.data as UpdateSubjectAssignmentResult;
 }
 
 export async function assignTeacherToSubject(
   id: string,
-  payload: { gradeLevelId: number; sectionName: string; teacherId: string | null }
+  payload: { gradeLevelId: number; sectionName: string; teacherId: string | null }, options:ApiRequestOptions={}
 ): Promise<{ id: number; section_id: number; teacher_id: string | number | null }> {
   const res = await fetch(`${BASE_URL}/assignTeacher/${id}`, {
     method: "PUT",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload), signal:options.signal,
   });
-  const json: ApiResponse<{ id: number; section_id: number; teacher_id: string | number | null }> = await res.json();
-  if (!res.ok) throw new Error(json.message || "Failed to assign teacher.");
+  if(res.status===401)options.onUnauthorized?.();
+  const json: ApiResponse<{ id: number; section_id: number; teacher_id: string | number | null }> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to assign teacher.",res.status);
   return json.data as { id: number; section_id: number; teacher_id: string | number | null };
 }
 
 export async function toggleSubjectStatus(
-  id: string
+  id: string, options:ApiRequestOptions={}
 ): Promise<{ id: number; status: "Active" | "Inactive" }> {
   const res = await fetch(`${BASE_URL}/toggleStatus/${id}`, {
     method: "PUT",
     credentials: "include",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json" }, signal:options.signal,
   });
-  const json: ApiResponse<{ id: number; status: "Active" | "Inactive" }> = await res.json();
-  if (!res.ok) throw new Error(json.message || "Failed to toggle status.");
+  if(res.status===401)options.onUnauthorized?.();
+  const json: ApiResponse<{ id: number; status: "Active" | "Inactive" }> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to toggle status.",res.status);
   return json.data as { id: number; status: "Active" | "Inactive" };
 }
 
 export async function createAssessmentType(payload: {
   assessmentName: string;
-}): Promise<NewAssessmentType> {
+}, options:ApiRequestOptions={}): Promise<NewAssessmentType> {
   const res = await fetch(`${BASE_URL}/`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload), signal:options.signal,
   });
-  const json: ApiResponse<NewAssessmentType> = await res.json();
-  if (!res.ok) throw new Error(json.message || "Failed to add assessment type.");
+  if(res.status===401)options.onUnauthorized?.();
+  const json: ApiResponse<NewAssessmentType> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to add assessment type.",res.status);
   return json.data as NewAssessmentType;
 }
 
-export async function getAssessmentTypes(): Promise<ApiResponse<NewAssessmentType[]>> {
+export async function getAssessmentTypes(options:ApiRequestOptions={}): Promise<ApiResponse<NewAssessmentType[]>> {
   const response = await fetch(`${BASE_URL}/`, {
     method: 'GET',
     credentials: "include",
-    headers: { 'Content-Type': 'application/json' }
+    headers: { 'Content-Type': 'application/json' }, signal:options.signal
   });
+  if(response.status===401)options.onUnauthorized?.();
   if (!response.ok) {
-    throw new Error(`Failed to fetch assessment types: ${response.status}`);
+    throw new QueryHttpError(`Failed to fetch assessment types: ${response.status}`,response.status);
   }
   const json: ApiResponse<Array<{
     id: number;
@@ -199,14 +209,15 @@ export async function getAssessmentTypes(): Promise<ApiResponse<NewAssessmentTyp
 
 export async function updateAssessmentType(
   id: number,
-  payload: { assessmentName: string }
+  payload: { assessmentName: string }, options:ApiRequestOptions={}
 ): Promise<NewAssessmentType> {
   const res = await fetch(`${BASE_URL}/${id}`, {
     method: "PUT",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload), signal:options.signal,
   });
+  if(res.status===401)options.onUnauthorized?.();
   const body = await res.text();
   let json: ApiResponse<NewAssessmentType> | undefined;
   try {
@@ -215,19 +226,20 @@ export async function updateAssessmentType(
     // Keep a useful API error visible if an intermediary returns plain text.
   }
   if (!res.ok || !json?.success) {
-    throw new Error(json?.message || body || "Failed to update assessment type.");
+    throw new QueryHttpError(json?.message || body || "Failed to update assessment type.",res.status);
   }
   return json.data as NewAssessmentType;
 }
 
-export async function deleteAssessmentType(id: number): Promise<void> {
+export async function deleteAssessmentType(id: number, options:ApiRequestOptions={}): Promise<void> {
   const res = await fetch(`${BASE_URL}/${id}`, {
     method: "DELETE",
     credentials: "include",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json" }, signal:options.signal,
   });
-  const json: ApiResponse<null> = await res.json();
-  if (!res.ok) throw new Error(json.message || "Failed to delete assessment type.");
+  if(res.status===401)options.onUnauthorized?.();
+  const json: ApiResponse<null> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to delete assessment type.",res.status);
 }
 
 export function toWeightPayload(

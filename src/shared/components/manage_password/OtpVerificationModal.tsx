@@ -62,7 +62,7 @@ export function OtpVerificationModal({
           <div className="mb-6 text-center">
             <p className="qed-type-modal-title text-black">Enter Verification Code</p>
             <p className="qed-type-modal-subtitle mt-1.5 leading-relaxed text-[#9d9d9d]">
-              We sent a 6-digit code to
+              If your account details match, a 6-digit code will be emailed to
               <br />
               <span className="font-semibold text-[#5d5d5d]">{email}</span>
             </p>

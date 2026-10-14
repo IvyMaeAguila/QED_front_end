@@ -4,12 +4,12 @@ interface QuestWorldBackgroundProps {
 
 /** Decorative, responsive landscape used behind the Study Quest and quiz screens. */
 export default function QuestWorldBackground({ darkMode = false }: QuestWorldBackgroundProps) {
-  const skyTop = darkMode ? "var(--surface-page-dark)" : "var(--brand-light)";
+  const skyTop = darkMode ? "#172442" : "#C7EEFF";
   const cloud = darkMode ? "#D2E2E2" : "#FFFFFF";
-  const hillFar = darkMode ? "var(--surface-raised-dark)" : "#E0E0E0";
-  const hillNear = darkMode ? "var(--surface-card-dark)" : "#D5D5D5";
-  const hillFront = darkMode ? "var(--surface-page-dark)" : "#CACACA";
-  const water = darkMode ? "var(--surface-raised-dark)" : "var(--brand-soft)";
+  const hillFar = darkMode ? "#285B62" : "#A2D985";
+  const hillNear = darkMode ? "#214D50" : "#77C998";
+  const hillFront = darkMode ? "#183D46" : "#4EAF85";
+  const water = darkMode ? "#327D9C" : "#60CDEC";
 
   return (
     <svg
@@ -20,12 +20,13 @@ export default function QuestWorldBackground({ darkMode = false }: QuestWorldBac
       className="pointer-events-none absolute inset-0 -z-10 h-full w-full"
     >
       <defs>
+        <linearGradient id="quest-sky" x2="0" y2="1"><stop stopColor={skyTop} /><stop offset="1" stopColor={darkMode ? "#34345D" : "#FFF5CD"} /></linearGradient>
         <filter id="quest-cloud-shadow" x="-20%" y="-30%" width="140%" height="170%">
           <feDropShadow dx="0" dy="8" stdDeviation="9" floodColor="var(--brand-primary)" floodOpacity={darkMode ? "0.1" : "0.14"} />
         </filter>
       </defs>
 
-      <rect width="1440" height="900" fill={skyTop} />
+      <rect width="1440" height="900" fill="url(#quest-sky)" />
       <circle cx="1160" cy="175" r="112" fill="#FFF4A8" opacity="0.4" />
       <circle cx="1160" cy="175" r="40" fill="#FFE27C" opacity="0.88" />
 

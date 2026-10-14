@@ -1,90 +1,22 @@
 import { useMemo, useState } from "react";
-import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
-import type { Term, RankedSubject } from "../data/types";
-import { getTermOptions, getGradeOptions, getSubjectRanking } from "../services/reports.service";
+import type { Term } from "../data/types";
+import { getGradeOptions, getSubjectRanking } from "../services/reports.service";
 import { aggregateWholeElementary, filterAndRankByGrade, getLowestPerforming } from "../utils/ranking";
+import { useAnalyticsReads } from "./useAnalyticsReads";
 
-interface UseSubjectAnalyticsResult {
-  term: Term;
-  setTerm: (term: Term) => void;
-  termOptions: Term[];
-  gradeFilter: string;
-  setGradeFilter: (grade: string) => void;
-  gradeOptions: string[];
-  wholeElementaryRanking: ReturnType<typeof aggregateWholeElementary>;
-  filteredRanking: ReturnType<typeof filterAndRankByGrade>;
-  lowestPerforming: ReturnType<typeof getLowestPerforming>;
-  loading: boolean;
-  error: Error | null;
-  retry: () => void;
-}
-
-export function useSubjectAnalytics(): UseSubjectAnalyticsResult {
+export function useSubjectAnalytics() {
   const [term, setTerm] = useState<Term>("Term 1");
   const [gradeFilter, setGradeFilter] = useState("All Grades");
-  const [termOptions, setTermOptions] = useState<Term[]>([]);
-  const [gradeOptions, setGradeOptions] = useState<string[]>([]);
-  const [rawRanking, setRawRanking] = useState<RankedSubject[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [attempt, setAttempt] = useState(0);
-  const [optionsLoading, setOptionsLoading] = useState(true);
-  const [optionsError, setOptionsError] = useState<Error | null>(null);
-  const [error, setError] = useState<Error | null>(null);
-
-  // Filter options load once.
-  useEffect(() => {
-    let cancelled = false;
-    setOptionsLoading(true); setOptionsError(null);
-    Promise.all([getTermOptions(), getGradeOptions()]).then(([terms, grades]) => {
-      if (cancelled) return;
-      setTermOptions(terms);
-      setGradeOptions(grades);
-    }).catch((error: unknown) => { if (!cancelled) setOptionsError(error instanceof Error ? error : new Error("Failed to load report filters")); }).finally(() => { if (!cancelled) setOptionsLoading(false); });
-    return () => {
-      cancelled = true;
-    };
-  }, [attempt]);
-
-  // Ranking data refetches whenever the term changes.
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-
-    getSubjectRanking(term)
-      .then((result) => {
-        if (cancelled) return;
-        setRawRanking(result);
-      })
-      .catch((err: unknown) => {
-        if (cancelled) return;
-        setError(err instanceof Error ? err : new Error("Failed to load subject ranking"));
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [term, attempt]);
-
+  const reads = useAnalyticsReads("subjects", [term], options => getSubjectRanking(term, options), "grades", getGradeOptions);
+  const rawRanking = useMemo(() => reads.data ?? [], [reads.data]);
   const wholeElementaryRanking = useMemo(() => aggregateWholeElementary(rawRanking), [rawRanking]);
   const filteredRanking = useMemo(() => filterAndRankByGrade(rawRanking, gradeFilter), [rawRanking, gradeFilter]);
   const lowestPerforming = useMemo(() => getLowestPerforming(wholeElementaryRanking, 3), [wholeElementaryRanking]);
-
   return {
-    term,
-    setTerm,
-    termOptions,
-    gradeFilter,
-    setGradeFilter,
-    gradeOptions,
-    wholeElementaryRanking,
-    filteredRanking,
-    lowestPerforming,
-    loading: loading || optionsLoading,
-    error: error || optionsError,
-    retry: () => setAttempt(value => value + 1),
+    term, setTerm, gradeFilter, setGradeFilter,
+    termOptions: reads.terms ?? [], gradeOptions: reads.filters ?? [],
+    wholeElementaryRanking, filteredRanking, lowestPerforming,
+    loading: reads.loading, error: reads.error, retry: reads.retry,
+    cachedOffline: reads.cachedOffline, dataScope: reads.dataScope,
   };
 }

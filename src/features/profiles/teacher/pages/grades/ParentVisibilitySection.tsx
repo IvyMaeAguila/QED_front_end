@@ -1,3 +1,5 @@
+import {useContext,useRef,useLayoutEffect} from 'react';
+import {TeacherGradeQueryContext} from '../../query/TeacherGradeQueryContext';
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { LoadingTable } from "@shared/loading/LoadingTable";
 import { SkeletonAvatar, SkeletonText } from "@shared/components/SkeletonLoading";
@@ -45,6 +47,7 @@ export function ParentVisibilitySection({
   textPrimary,
   textMuted,
 }: ParentVisibilitySectionProps) {
+  const bridge=useContext(TeacherGradeQueryContext);
   const [attempt,setAttempt] = useState(0);
   const [students, setStudents] = useState<VisibilityStudent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -53,7 +56,7 @@ export function ParentVisibilitySection({
   const [applying, setApplying] = useState<"show" | "hide" | null>(null);
 
   useEffect(() => {
-    if (prerequisitesLoading) return;
+    if (bridge || prerequisitesLoading) return;
     if (!gradingPeriodId) {setLoading(false);return;}
     let cancelled = false;
     setLoading(true);
@@ -72,7 +75,7 @@ export function ParentVisibilitySection({
     return () => {
       cancelled = true;
     };
-  }, [gradingPeriodId, classId, attempt, prerequisitesLoading]);
+  }, [gradingPeriodId, classId, attempt, prerequisitesLoading, bridge]);
 
   const groupedStudents = useMemo(() => {
     const sorted = [...students].sort((a, b) => studentDisplayName(a).localeCompare(studentDisplayName(b)));
@@ -100,18 +103,22 @@ export function ParentVisibilitySection({
     setSelected(allSelected ? new Set() : new Set(students.map((s) => s.studentId)));
   }
 
+  const resource=(classId??'default')+':'+gradingPeriodId;
+  const currentResource=useRef(resource);
+  useLayoutEffect(()=>{currentResource.current=resource;return()=>{currentResource.current='';};},[resource]);
   async function applyVisibility(visible: boolean) {
     if (selected.size === 0) return;
     setApplying(visible ? "show" : "hide");
     try {
       const applyToAll = selected.size === students.length;
-      await setGradeVisibility({
+      await (bridge?.saveVisibility ?? setGradeVisibility)({
         gradingPeriodId,
         visible,
         applyToAll,
         studentIds: applyToAll ? undefined : Array.from(selected),
         classId,
       });
+      if(currentResource.current!==resource)return;
       setStudents((prev) =>
         prev.map((s) =>
           selected.has(s.studentId)
@@ -121,6 +128,7 @@ export function ParentVisibilitySection({
       );
       setSelected(new Set());
     } catch (err) {
+      if(currentResource.current!==resource)return;
       console.error("Failed to update grade visibility:", err);
       setError("Failed to update visibility. Please try again.");
     } finally {
@@ -233,7 +241,8 @@ export function ParentVisibilitySection({
               </tr>
             </thead></>;
 
-  return (
+  return (<>{bridge&&<bridge.VisibilityEffects period={gradingPeriodId} classId={classId} ready={!prerequisitesLoading&&!prerequisitesError} attempt={attempt} setStudents={setStudents} setSelected={setSelected} setLoading={setLoading} setError={setError}/>}
+{(
     <section className={cardClasses} aria-label="Parent grade visibility">
       <div className={`flex flex-col gap-2.5 border-b px-4 py-2.5 lg:flex-row lg:items-center lg:justify-between ${panelBorder}`}>
         <div className="min-w-0">
@@ -270,5 +279,5 @@ export function ParentVisibilitySection({
 
       <div className="overflow-x-auto"><LoadingTable name="teacher-grade-visibility:table-body" staticRows view={view} loading={loading || prerequisitesLoading} error={prerequisitesError || error} retry={prerequisitesError ? retryPrerequisites : ()=>setAttempt(value=>value+1)} columns={[{label:"",typical:""},{label:"Student",typical:"Last name, First name"},{label:"Parent/Guardian",typical:"Guardian name and contact"},{label:"Visible to Parents",typical:"Visible"},{label:"Last Updated",typical:"10/9/2026, 8:00 AM"}]} header={tableHeader} skeleton={renderRows(true)} count={students.length} className="teacher-user-table w-full min-w-max text-sm">{renderRows(false)}</LoadingTable></div>
     </section>
-  );
+  )}</>);
 }

@@ -7,6 +7,9 @@ import { BackButton } from "../../../shared/components/DashboardUI";
 import { ClassNotFound } from "./components/ClassNotFound";
 import { ClassRoster } from "./components/ClassRoster";
 import { useClassList,type ClassListTarget } from "./hooks/useClassList";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@shared/query/queryClient";
+import { rosterOfflineError } from "./hooks/rosterOfflineError";
 
 function useClassListPageState() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
@@ -27,9 +30,12 @@ function useClassListPageState() {
   }
 
   const { classList, schoolYear, loading, notFound, error, retry } = useClassList(target);
+  const cachedOffline = error === rosterOfflineError && classList !== null;
 
-  if ((!loading && !error && (notFound || !classList)) || isInvalidId) {
+  if ((!loading && (notFound || (!error && !classList))) || isInvalidId) {
     return { content: ((
+      <>
+      {error === rosterOfflineError && <LoadingRegion loading={false} error={error} retry={retry} skeleton={null} className={textPrimary}>{null}</LoadingRegion>}
       <ClassNotFound
         gradeLabel={classId ?? gradeId ?? ""}
         panelBg={panelBg}
@@ -37,6 +43,7 @@ function useClassListPageState() {
         textPrimary={textPrimary}
         textMuted={textMuted}
       />
+      </>
     )), scope: {  } };
   }
 
@@ -59,9 +66,10 @@ function useClassListPageState() {
         </div>
       </div>
 
+      {cachedOffline && <LoadingRegion loading={false} error={error} retry={retry} skeleton={null} className={textPrimary}>{null}</LoadingRegion>}
       <ClassRoster
         roster={record.roster}
-        loading={loading} error={error} retry={retry} view={view}
+        loading={loading} error={cachedOffline ? null : error} retry={retry} view={view}
         panelBg={panelBg}
         panelBorder={panelBorder}
         textPrimary={textPrimary}
@@ -77,6 +85,10 @@ function useClassListPageState() {
 export type ClassListPageEffectScope = ReturnType<typeof useClassListPageState>["scope"];
 export type ClassListPageRouteProps = Record<string, never>;
 export function ClassListPageComposition(props: object & { effects?: (scope: ClassListPageEffectScope) => import("react").ReactNode }) {
+ return <QueryClientProvider client={queryClient}><PrincipalClassListContent {...props} /></QueryClientProvider>;
+}
+
+function PrincipalClassListContent(props: object & { effects?: (scope: ClassListPageEffectScope) => import("react").ReactNode }) {
  const state = useClassListPageState();
  return <>{props.effects?.(state.scope)}{state.content}</>;
 }

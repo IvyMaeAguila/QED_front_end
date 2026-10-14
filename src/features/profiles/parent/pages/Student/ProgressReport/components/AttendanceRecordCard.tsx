@@ -34,7 +34,7 @@ export function AttendanceRecordCard({ record, theme, student, loading = false }
 
   const view = `parent-report-attendance:${student.id}`;
   const renderRow = (m:NonNullable<AttendanceTermEntry["months"]>[number],index:number,pending:boolean) => (
-                <tr key={m.month} className={`border-t ${panelBorder}`}>
+                <tr key={`${m.month}:${index}`} className={`border-t ${panelBorder}`}>
                   <td className={`px-3 py-2.5 font-semibold ${textPrimary}`}>{pending ? <SkeletonParagraph field={view+":month:"+index} typical={2} width="100%" /> : <span data-sk-field={view+":month:"+index}>{m.month}</span>}</td>
                   <td className={`px-3 py-2.5 text-right ${textPrimary}`}>{pending ? <SkeletonText width="2ch" /> : m.schoolDays}</td>
                   <td className={`px-3 py-2.5 text-right ${textPrimary}`}>{pending ? <SkeletonText width="2ch" /> : m.present}</td>

@@ -120,8 +120,8 @@ function useUserManagementPageState() {
           user={userToDelete}
           darkMode={darkMode}
           onCancel={() => setUserToDelete(null)}
-          onConfirm={() => {
-            deleteUser(userToDelete.id, userToDelete.role.toLowerCase());
+          onConfirm={async () => {
+            await deleteUser(userToDelete.id, userToDelete.role.toLowerCase());
             setUserToDelete(null);
           }}
         />

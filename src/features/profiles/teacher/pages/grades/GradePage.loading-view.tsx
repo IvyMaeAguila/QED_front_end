@@ -1,3 +1,5 @@
+import {useContext,useRef,useLayoutEffect} from 'react';
+import {TeacherGradeQueryContext} from '../../query/TeacherGradeQueryContext';
 import { FilterDropdown } from "@shared/components/FilterDropdown";
 import { SkeletonAvatar,SkeletonText } from "@shared/components/SkeletonLoading";
 import { StudentAvatar } from "@shared/components/StudentAvatar";
@@ -98,6 +100,7 @@ function downloadCSV(content: string, filename: string) {
 }
 
 function useGradesPageState() {
+  const bridge=useContext(TeacherGradeQueryContext);
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
   const { students } = useStudents();
 
@@ -152,15 +155,20 @@ function useGradesPageState() {
     ).length;
   }, [gradebook]);
 
+  const resource=selectedClassId+':'+selectedTermId;
+  const currentResource=useRef(resource);
+  useLayoutEffect(()=>{currentResource.current=resource;return()=>{currentResource.current='';};},[resource]);
   async function handleSubmit() {
     if (!selectedTermId) return;
     setSubmitting(true);
     setSubmitError(null);
     try {
-      await submitClassGrades(selectedTermId, selectedClassId);
+      await (bridge?.submit ?? submitClassGrades)(selectedTermId, selectedClassId);
+      if(currentResource.current!==resource)return;
       setSubmitted(true);
       setSubmittedAt(new Date().toISOString());
-      setSubmissionLogs(await fetchClassSubmissionLogs(selectedTermId, selectedClassId));
+      const logs=await (bridge?.fetchLogs ?? fetchClassSubmissionLogs)(selectedTermId, selectedClassId);
+      if(currentResource.current===resource)setSubmissionLogs(logs);
     } catch (err) {
       console.error("Failed to submit class grades:", err);
       setSubmitError(err instanceof Error ? err.message : "Failed to submit class grades. Please try again.");

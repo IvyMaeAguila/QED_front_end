@@ -1,3 +1,6 @@
+import { QueryHttpError } from '@shared/http/QueryHttpError';
+import { parentFetch } from '../../../query/parentRequest';
+import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
 import type { PerformanceStatus, Student } from "../../dashboard/types/student";
 import { API_CONFIG } from '../../../../../../config/api.config';
 
@@ -65,7 +68,7 @@ function mapStudentRow(row: StudentData): Student {
 }
 
 export const verificationService = {
-    verifyStudent: async (data: StudentVerifyRequest): Promise<StudentVerifyResponse> => {
+    verifyStudent: async (data: StudentVerifyRequest, options?: ApiRequestOptions): Promise<StudentVerifyResponse> => {
         try {
             const response = await fetch(`${LINKEDCHILDREN_API}/`, {
                 method: "POST",
@@ -78,6 +81,8 @@ export const verificationService = {
 
             const result: { success: boolean; message: string; student?: StudentData } =
                 await response.json();
+            if(response.status===401 && result.message!=='No information matched') options?.onUnauthorized?.();
+            if([401,403].includes(response.status) && result.message!=='No information matched') throw new QueryHttpError(result.message,response.status);
 
             return {
                 success: result.success,
@@ -85,6 +90,7 @@ export const verificationService = {
                 student: result.student ? mapStudentRow(result.student) : undefined,
             };
         } catch (error) {
+            if(options) throw error;
             return {
                 success: false,
                 message: "Can't connect to server, try again.",
@@ -92,7 +98,7 @@ export const verificationService = {
         }
     },
 
-    confirmLink: async (data: StudentVerifyRequest): Promise<LinkConfirmResponse> => {
+    confirmLink: async (data: StudentVerifyRequest, options?: ApiRequestOptions): Promise<LinkConfirmResponse> => {
         try {
             const response = await fetch(`${LINKEDCHILDREN_API}/confirm`, {
                 method: "POST",
@@ -105,6 +111,8 @@ export const verificationService = {
 
             const result: { success: boolean; message: string; student?: StudentData } =
                 await response.json();
+            if(response.status===401 && result.message!=='No information matched') options?.onUnauthorized?.();
+            if([401,403].includes(response.status) && result.message!=='No information matched') throw new QueryHttpError(result.message,response.status);
 
             return {
                 success: result.success,
@@ -112,6 +120,7 @@ export const verificationService = {
                 student: result.student ? mapStudentRow(result.student) : undefined,
             };
         } catch (error) {
+            if(options) throw error;
             return {
                 success: false,
                 message: "Can't connect to server, try again.",
@@ -121,9 +130,9 @@ export const verificationService = {
 };
 
 export const enrolledChildrenService = {
-    getEnrolledChildren: async (): Promise<EnrolledChildrenResponse> => {
+    getEnrolledChildren: async (options?: ApiRequestOptions): Promise<EnrolledChildrenResponse> => {
         try {
-            const response = await fetch(`${LINKEDCHILDREN_API}/`, {
+            const response = await parentFetch(`${LINKEDCHILDREN_API}/`, options, {
                 method: "GET",
                 credentials: "include",
                 headers: {
@@ -140,6 +149,7 @@ export const enrolledChildrenService = {
                 students: result.students ? result.students.map(mapStudentRow) : [],
             };
         } catch (error) {
+            if(options) throw error;
             return {
                 success: false,
                 message: "Can't connect to server, try again.",

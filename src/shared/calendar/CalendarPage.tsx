@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { CalendarPageComposition,type CalendarPageEffectScope,type CalendarPageRouteProps } from "./CalendarPage.loading-view";
 export * from "./CalendarPage.loading-view";
 
@@ -37,6 +37,11 @@ function CalendarPageDataEffects({ scope }: { scope: CalendarPageEffectScope }) 
  return null;
 }
 
+const PrincipalCalendar = lazy(() => import("./PrincipalCalendarQueries"));
+const AdminCalendar = lazy(() => import('../../features/profiles/admin/query/AdminCalendarQueries'));
+
 export function CalendarPage(props: CalendarPageRouteProps) {
+ if (props.viewerRole === "PRINCIPAL") return <Suspense fallback={<CalendarPageComposition {...props}/>}><PrincipalCalendar/></Suspense>;
+ if(props.viewerRole===undefined||props.viewerRole==='ADMIN')return <Suspense fallback={<CalendarPageComposition {...props}/>}><AdminCalendar/></Suspense>;
  return <CalendarPageComposition {...props} effects={scope => <CalendarPageDataEffects scope={scope}/>} />;
 }

@@ -213,6 +213,9 @@ const isDirty = useMemo(() => {
       setSavedFlash(true);
       setToast("Grades saved to Records.");
       setTimeout(() => setSavedFlash(false), 1800);
+    } catch {
+      setSavedFlash(false);
+      setToast("Could not save scores. Please try again.");
     } finally {
       setSaving(false);
     }

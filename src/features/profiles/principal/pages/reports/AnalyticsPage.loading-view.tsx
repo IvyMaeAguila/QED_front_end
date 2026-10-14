@@ -1,3 +1,5 @@
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@shared/query/queryClient";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
@@ -25,6 +27,8 @@ function useAnalyticsPageState() {
     loading,
     error,
     retry,
+    cachedOffline,
+    dataScope,
   } = useSubjectAnalytics();
 
   const averageScore = wholeElementaryRanking.length
@@ -40,7 +44,7 @@ function useAnalyticsPageState() {
   ];
 
   return { content: ((
-    <div className="flex flex-col gap-5 font-sans">
+    <div key={dataScope} className="flex flex-col gap-5 font-sans">
       <div className={`flex flex-col gap-2.5 rounded-xl border px-3 py-2 sm:flex-row sm:items-center sm:justify-between ${panelBg} ${panelBorder}`}>
         <PrincipalAnalyticsTabs textMuted={textMuted} />
         <Dropdown
@@ -64,7 +68,8 @@ function useAnalyticsPageState() {
         </div>
       </div>
 
-      {error ? <LoadingRegion loading={false} error={error} retry={retry} skeleton={null}>{null}</LoadingRegion> : (
+      {cachedOffline && <LoadingRegion loading={false} error={error} retry={retry} skeleton={null} className={textPrimary}>{null}</LoadingRegion>}
+      {error && !cachedOffline ? <LoadingRegion loading={false} error={error} retry={retry} skeleton={null}>{null}</LoadingRegion> : (
         <>
           <ReportMetricCards loading={loading} view={`subject-report:${term}`} items={reportMetrics} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} />
           <WholeElementaryRanking
@@ -104,7 +109,11 @@ function useAnalyticsPageState() {
 
 export type AnalyticsPageEffectScope = ReturnType<typeof useAnalyticsPageState>["scope"];
 export type AnalyticsPageRouteProps = Record<string, never>;
-export function AnalyticsPageComposition(props: object & { effects?: (scope: AnalyticsPageEffectScope) => import("react").ReactNode }) {
+function AnalyticsPageContent(props: object & { effects?: (scope: AnalyticsPageEffectScope) => import("react").ReactNode }) {
  const state = useAnalyticsPageState();
  return <>{props.effects?.(state.scope)}{state.content}</>;
+}
+
+export function AnalyticsPageComposition(props: object & { effects?: (scope: AnalyticsPageEffectScope) => import("react").ReactNode }) {
+ return <QueryClientProvider client={queryClient}><AnalyticsPageContent {...props} /></QueryClientProvider>;
 }

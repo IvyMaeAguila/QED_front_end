@@ -1,31 +1,12 @@
-import { useEffect } from "react";
-import { SubjectsPageComposition,type SubjectsPageEffectScope } from "./SubjectPage.loading-view";
-export * from "./SubjectPage.loading-view";
-
-function SubjectsPageDataEffects({ scope }: { scope: SubjectsPageEffectScope }) {
- const { user, setLoading, setError, assignedSubjectsService, setSubjects, mapToDisplaySubject, refresh } = scope;
- useEffect(() => {
-    if (!user?.id) return;
-
-    const fetchSubjects = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const rows = await assignedSubjectsService.getAssignedSubjects();
-        setSubjects(rows.map(mapToDisplaySubject));
-      } catch (err) {
-        console.error("Failed to fetch teacher subjects:", err);
-        setError("Failed to load your subjects.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSubjects();
-  }, [user?.id, refresh]);
- return null;
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@shared/query/queryClient";
+import { useTeacherReader } from "../../query/useTeacherReader";
+import { assignedSubjectsService } from "./services/subjects.service";
+import { SubjectsPageComposition } from "./SubjectPage.loading-view";
+export { SubjectsPageComposition } from "./SubjectPage.loading-view";
+export type { SubjectsPageEffectScope, SubjectsPageRouteProps } from "./SubjectPage.loading-view";
+function SubjectsQueries() {
+  const reader = useTeacherReader(["subjects", "assigned"], options => assignedSubjectsService.getAssignedSubjects(options), "Failed to load your subjects.");
+  return <SubjectsPageComposition reader={reader}/>;
 }
-
-export function SubjectsPage() {
- return <SubjectsPageComposition effects={scope => <SubjectsPageDataEffects scope={scope}/>} />;
-}
+export function SubjectsPage() { return <QueryClientProvider client={queryClient}><SubjectsQueries/></QueryClientProvider>; }

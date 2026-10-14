@@ -1,3 +1,4 @@
+import "./intervention-adventure.css";
 import { ArrowLeft,BookOpen,Flame,Gamepad2,Sparkles,Star } from "lucide-react";
 import type { ReactNode } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -28,7 +29,7 @@ function useTopicSupportChoiceState() {
   }
 
   return { content: ((
-    <div data-sk-region="topic-support-content" className="relative isolate -m-4 min-h-[calc(100dvh-5.8125rem)] sm:-m-6">
+    <div data-sk-region="topic-support-content" className={`intervention-adventure ${darkMode ? "adventure-night" : ""} relative isolate -m-4 min-h-[calc(100dvh-5.8125rem)] sm:-m-6`}>
       <QuestWorldBackground darkMode={darkMode} />
 
       <div className="relative mx-auto w-full max-w-6xl px-4 py-4 sm:px-6 sm:py-6">
@@ -47,7 +48,7 @@ function useTopicSupportChoiceState() {
       <div className="flex w-full flex-col items-stretch gap-6 sm:gap-7">
 
         <div
-          className={`relative w-full overflow-hidden rounded-3xl px-5 py-6 text-center sm:py-8 ${
+          className={`adventure-banner relative w-full overflow-hidden rounded-3xl px-5 py-6 text-center sm:py-8 ${
             darkMode
               ? "bg-panel-dark shadow-[0_6px_0_0_#000000]"
               : "bg-maroon shadow-[0_6px_0_0_var(--brand-primary)]"
@@ -65,10 +66,10 @@ function useTopicSupportChoiceState() {
             Pick your path
           </p>
           <h1 className="mt-1 text-2xl font-black text-white sm:text-3xl">
-            How do we help today?
+            Your adventure starts here!
           </h1>
           <p className="mx-auto mt-2 max-w-xs text-sm font-semibold text-white/70 sm:max-w-sm">
-            Choose a quest to support your child with this topic.
+            Discover something new or help your pet grow. Pick a quest!
           </p>
         </div>
 
@@ -79,12 +80,12 @@ function useTopicSupportChoiceState() {
             icon={BookOpen}
             eyebrow="Study Quest"
             title="Learn"
-            description="A reviewer and curated videos for this topic"
+            description="Explore your lesson, discover new ideas, and watch learning videos."
             colors={{
-              face: "bg-maroon",
-              edge: "var(--brand-primary)",
-              badgeBg: "bg-maroon",
-              iconRing: "ring-maroon/20",
+              face: "bg-violet-600",
+              edge: "#6D28D9",
+              badgeBg: "bg-violet-700",
+              iconRing: "ring-violet-300/50",
             }}
             panelBg={panelBg}
             panelBorder={panelBorder}
@@ -99,10 +100,10 @@ function useTopicSupportChoiceState() {
             title="Quiz"
             description="A gamified quiz for this topic — feed your pet by answering correctly!"
             colors={{
-              face: "bg-maroon-light",
-              edge: "var(--brand-secondary)",
-              badgeBg: "bg-maroon-light",
-              iconRing: "ring-maroon/20",
+              face: "bg-teal-600",
+              edge: "#0F766E",
+              badgeBg: "bg-teal-700",
+              iconRing: "ring-teal-300/50",
             }}
             panelBg={panelBg}
             panelBorder={panelBorder}
@@ -161,7 +162,7 @@ function QuestCard({
       type="button"
       onClick={onClick}
       style={{ boxShadow: `0 6px 0 0 ${colors.edge}` }}
-      className={`group relative flex flex-col items-start gap-3 rounded-3xl border p-5 text-left transition-transform active:translate-y-1 sm:p-6 ${panelBg} ${panelBorder}`}
+      className={`adventure-choice group relative flex flex-col items-start gap-3 rounded-3xl border p-5 text-left transition-transform active:translate-y-1 sm:p-6 ${panelBg} ${panelBorder}`}
       onMouseDown={(e) => {
         e.currentTarget.style.boxShadow = `0 2px 0 0 ${colors.edge}`;
       }}

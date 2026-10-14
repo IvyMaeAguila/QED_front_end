@@ -45,9 +45,10 @@ export function useTeachersDirectory(): UseTeachersDirectoryResult {
       return { teachers, schoolYear };
     },
   });
+  const permitted = enabled && !(query.error instanceof QueryHttpError && [401, 403].includes(query.error.status));
   return {
-    teachers: enabled ? query.data?.teachers ?? [] : [],
-    schoolYear: enabled ? query.data?.schoolYear ?? "" : "",
+    teachers: permitted ? query.data?.teachers ?? [] : [],
+    schoolYear: permitted ? query.data?.schoolYear ?? "" : "",
     // Like the old cached hook, keep fresh/cached rows usable during refresh.
     loading: !enabled || (online && !query.isPaused && query.data === undefined && (query.isPending || query.isFetching)),
     error: enabled ? !online || query.isPaused ? directoryOfflineError : !query.isFetching ? query.error : null : null,

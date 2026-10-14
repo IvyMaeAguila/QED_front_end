@@ -1,3 +1,5 @@
+import {useContext} from 'react';
+import {AttendanceQueryContext} from '../../query/AttendanceQueryContext';
 import { AccountSelect } from "@shared/components/AccountSelect";
 import { useMemo, useState } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
@@ -88,6 +90,7 @@ export function AttendanceMonthSummarySection({
   textPrimary,
   textMuted,
 }: AttendanceMonthSummarySectionProps) {
+  const bridge=useContext(AttendanceQueryContext);
   const [attempt, setAttempt] = useState(0);
   const [attendance, setAttendance] = useState<AttendanceMap>({});
   const [loading, setLoading] = useState(true);
@@ -107,7 +110,7 @@ export function AttendanceMonthSummarySection({
   }, [months]);
 
   useEffect(() => {
-    if (prerequisitesLoading) return;
+    if (bridge || prerequisitesLoading) return;
     let cancelled = false;
     setLoading(true);
     setAttendanceError(null);
@@ -119,7 +122,7 @@ export function AttendanceMonthSummarySection({
       })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [sectionId, attempt, prerequisitesLoading]);
+  }, [sectionId, attempt, prerequisitesLoading, bridge]);
 
   const cardClasses = `overflow-hidden rounded-[12px] border shadow-sm ${panelBg} ${panelBorder}`;
 
@@ -275,17 +278,19 @@ export function AttendanceMonthSummarySection({
   };
 
   if (months.length === 0 && !prerequisitesLoading) {
-    return (
+    return (<>{bridge && <bridge.Effects {...{classId:sectionId,allPeriods:true,ready:!prerequisitesLoading&&!!sectionId,attempt,setAttendance,setLoading,setError:setAttendanceError,errorMessage:"Couldn't load attendance history. Please try again."}}/>}
+{(
       <div className={`${cardClasses} px-5 py-16 text-center`}>
         <p className={`font-bold ${textPrimary}`}>No terms set up yet</p>
         <p className={`mt-1 text-sm ${textMuted}`}>
           Add a grading period before viewing a monthly summary.
         </p>
       </div>
-    );
+    )}</>);
   }
 
-  return (
+  return (<>{bridge && <bridge.Effects {...{classId:sectionId,allPeriods:true,ready:!prerequisitesLoading&&!!sectionId,attempt,setAttendance,setLoading,setError:setAttendanceError,errorMessage:"Couldn't load attendance history. Please try again."}}/>}
+{(
     <section className={cardClasses} aria-label="Monthly attendance summary">
       <div
         className={`flex flex-col gap-4 border-b px-5 py-5 sm:flex-row sm:items-center sm:justify-between ${panelBorder}`}
@@ -316,5 +321,5 @@ export function AttendanceMonthSummarySection({
       <LoadingRegion loading={prerequisitesLoading || loading} error={attendanceError} retry={() => setAttempt(value => value + 1)} name="attendance-month-summary" variable skeleton={null} frame={renderSummary} retainPrevious hasContent={Object.keys(attendance).length > 0} onSettled={() => rememberRows(view, absencesByDate.length)}>{null}</LoadingRegion>
 
     </section>
-  );
+  )}</>);
 }

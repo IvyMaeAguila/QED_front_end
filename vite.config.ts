@@ -13,6 +13,10 @@ const eagerGroups = new Map<string, string>();
 
 // https://vite.dev/config/
 export default defineConfig({
+  // Source acceptance runs against fixed inputs. Report/fixture writes can be
+  // Tailwind watch dependencies and otherwise reload a page mid-assertion.
+  // Normal interactive development retains Vite's default file watching.
+  server: process.env.QED_ACCEPTANCE_STATIC === "1" ? { watch: null } : undefined,
   // ExcelJS is a large, optional export/import feature and is loaded on demand.
   // Set the warning threshold just above its minified package chunk (about 930 kB).
   build: {
@@ -63,7 +67,17 @@ export default defineConfig({
           if (/\.(?:css|png|jpg|webp|svg)(?:\?|$)/.test(id)) continue;
           eagerGroups.set(id, id.includes("node_modules/") ? "public-vendor" : "public-app");
         }
-        audiences.forEach((roles, id) => eagerGroups.set(id, "role-eager-" + roles.join("-")));
+        audiences.forEach((roles, id) => {
+          // Shared authenticated Query runtime is also reached by the lazy Admin
+          // dashboard. Do not coalesce it with Principal pages, which would pull
+          // another role's code into that dashboard. Existing guards stay intact.
+          if (id.endsWith("/shared/hooks/useAuth.tsx")) {
+            eagerGroups.set(id, "authenticated-auth-hook");
+            return;
+          }
+          if (id.includes("/node_modules/@tanstack/") || id.endsWith("/shared/query/queryClient.ts") || id.endsWith("/shared/http/QueryHttpError.ts")) return;
+          eagerGroups.set(id, "role-eager-" + roles.join("-"));
+        });
       },
     },
     {

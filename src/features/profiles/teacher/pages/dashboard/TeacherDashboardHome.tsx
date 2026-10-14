@@ -1,40 +1,40 @@
-import { useEffect } from "react";
-import { TeacherDashboardHomeComposition,type TeacherDashboardHomeEffectScope } from "./TeacherDashboardHome.loading-view";
-export * from "./TeacherDashboardHome.loading-view";
+import { QueryClientProvider, useQuery } from "@tanstack/react-query";
+import { queryClient } from "@shared/query/queryClient";
+import { QueryHttpError } from "@shared/http/QueryHttpError";
+import { useTeacherQueryScope } from "../../query/teacherQueryScope";
+import { TeacherDashboardHomeComposition } from "./TeacherDashboardHome.loading-view";
+import { fetchAttendanceSummary, fetchDashboardSummary, fetchTeacherStats, fetchUpcomingEvents, fetchWeeklySchedule } from "./services/dashboard.service";
+export { TeacherDashboardHomeComposition } from "./TeacherDashboardHome.loading-view";
+export type { TeacherDashboardHomeEffectScope, TeacherDashboardHomeRouteProps } from "./TeacherDashboardHome.loading-view";
 
-function TeacherDashboardHomeDataEffects({ scope }: { scope: TeacherDashboardHomeEffectScope }) {
- const { setLoading, setErrors, fetchDashboardSummary, fetchTeacherStats, fetchAttendanceSummary, fetchUpcomingEvents, fetchWeeklySchedule, setSummary, setStatsData, setAttendance, setEvents, setAgenda, refresh } = scope;
- useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setErrors([]);
-    Promise.allSettled([
-      fetchDashboardSummary(),
-      fetchTeacherStats(),
-      fetchAttendanceSummary(),
-      fetchUpcomingEvents(),
-      fetchWeeklySchedule(),
-    ])
-      .then(([summaryData, stats, attendanceData, eventsData, agendaData]) => {
-        if (cancelled) return;
-        if (summaryData.status === "fulfilled") setSummary(summaryData.value);
-        if (stats.status === "fulfilled") setStatsData(stats.value);
-        if (attendanceData.status === "fulfilled") setAttendance(attendanceData.value);
-        if (eventsData.status === "fulfilled") setEvents(eventsData.value);
-        if (agendaData.status === "fulfilled") setAgenda(agendaData.value);
-        const results = [summaryData, stats, attendanceData, eventsData, agendaData];
-        setErrors(["profile", "statistics", "attendance", "events", "agenda"].filter((_, index) => results[index].status === "rejected"));
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching dashboard data:", err);
-        setLoading(false);
-      });
-    return () => { cancelled = true; };
-  }, [refresh]);
- return null;
+function TeacherDashboardQueries() {
+  const scope = useTeacherQueryScope();
+  // These endpoints derive the active year/day on the server, with no term parameter.
+  const today = new Date().toLocaleDateString("en-CA");
+  const key = (resource: string, ...params: (string | number)[]) => [...scope.key, "dashboard", resource, today, ...params];
+  const summary = useQuery({ ...scope.options, queryKey: key("summary"), queryFn: ({ signal }) => fetchDashboardSummary(scope.request(signal)) });
+  const stats = useQuery({ ...scope.options, queryKey: key("statistics"), queryFn: ({ signal }) => fetchTeacherStats(scope.request(signal)) });
+  const attendance = useQuery({ ...scope.options, queryKey: key("attendance"), queryFn: ({ signal }) => fetchAttendanceSummary(scope.request(signal)) });
+  const events = useQuery({ ...scope.options, queryKey: key("events", 5), queryFn: ({ signal }) => fetchUpcomingEvents(5, scope.request(signal)) });
+  const agenda = useQuery({ ...scope.options, queryKey: key("agenda"), queryFn: ({ signal }) => fetchWeeklySchedule(scope.request(signal)) });
+  const queries = [summary, stats, attendance, events, agenda];
+  const offline = !scope.online || queries.some(query => query.isPaused);
+  const visible = <T,>(data: T | undefined, error: unknown) => scope.enabled && !(error instanceof QueryHttpError && [401, 403].includes(error.status)) ? data : undefined;
+  const errors = ["profile", "statistics", "attendance", "events", "agenda"].filter((_, i) => scope.enabled && (queries[i].isError || (offline && queries[i].data === undefined)));
+  return <TeacherDashboardHomeComposition data={{
+    summary: visible(summary.data, summary.error) ?? null,
+    statsData: visible(stats.data, stats.error) ?? null,
+    attendance: visible(attendance.data, attendance.error) ?? null,
+    events: visible(events.data, events.error) ?? [],
+    agenda: visible(agenda.data, agenda.error) ?? [],
+    errors, offline,
+    loading: !scope.enabled || (!offline && queries.some(query => query.isFetching || (query.isPending && !query.isError))),
+    retry: () => {
+      if (!scope.enabled || offline || queries.some(query => query.isFetching || query.isPaused)) return;
+      queries.forEach(query => { void query.refetch({ cancelRefetch: false }); });
+    },
+  }}/>;
 }
-
 export function TeacherDashboardHome() {
- return <TeacherDashboardHomeComposition effects={scope => <TeacherDashboardHomeDataEffects scope={scope}/>} />;
+  return <QueryClientProvider client={queryClient}><TeacherDashboardQueries/></QueryClientProvider>;
 }

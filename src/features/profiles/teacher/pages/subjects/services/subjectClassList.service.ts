@@ -1,4 +1,6 @@
 import { API_CONFIG } from '../../../../../../config/api.config';
+import { QueryHttpError } from '@shared/http/QueryHttpError';
+import type { TeacherRequestOptions } from '../../../query/teacherQueryScope';
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/mySubjects`;
 
@@ -48,19 +50,21 @@ function mapStudentRow(row: SubjectClassListStudentRow): SubjectClassListStudent
 export const subjectClassListService = {
   // Assumes a REST pattern consistent with /mySubjects/subjects — adjust
   // the path below if your backend route differs.
-  async getClassList(subjectSectionId: number): Promise<SubjectClassList> {
+  async getClassList(subjectSectionId: number, options?: TeacherRequestOptions): Promise<SubjectClassList> {
     const response = await fetch(`${BASE_URL}/subjects/${subjectSectionId}/students`, {
       method: "GET",
       credentials: "include",
+      signal: options?.signal,
     });
 
     if (response.status === 401) {
-      throw new Error("Unauthorized: kailangan mag-login muna.");
+      if (!options?.signal?.aborted) options?.onUnauthorized?.();
+      throw new QueryHttpError("Unauthorized: kailangan mag-login muna.", 401);
     }
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Failed to fetch class list");
+      throw new QueryHttpError(errorData.message || "Failed to fetch class list", response.status);
     }
 
     const json = await response.json();

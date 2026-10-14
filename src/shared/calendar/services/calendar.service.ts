@@ -38,23 +38,28 @@ function holidayRecordToHoliday(record: CalendarHolidayRecordDTO): CalendarHolid
   };
 }
 
-async function handleJsonResponse(res: Response) {
-  const data = await res.json();
+export interface CalendarRequestOptions { signal?: AbortSignal; onUnauthorized?: () => void }
+
+async function handleJsonResponse(res: Response, options: CalendarRequestOptions = {}) {
+  if (res.status === 401 && !options.signal?.aborted) options.onUnauthorized?.();
+  const data = await res.json().catch(() => ({ success: false, message: "Request failed." }));
   if (!res.ok || !data.success) {
-    throw new Error(data.message || "Request failed.");
+    const error = new Error(data.message || "Request failed.");
+    Object.assign(error, { status: res.status });
+    throw error;
   }
   return data;
 }
 
-export async function fetchCalendarActivities(): Promise<CalendarActivity[]> {
-  const res = await fetch(`${BASE_URL}/activities`);
-  const data = await handleJsonResponse(res);
+export async function fetchCalendarActivities(options: CalendarRequestOptions = {}): Promise<CalendarActivity[]> {
+  const res = await fetch(`${BASE_URL}/activities`, { signal: options.signal });
+  const data = await handleJsonResponse(res, options);
   return (data.data as CalendarActivityRecordDTO[]).map(activityRecordToActivity);
 }
 
-export async function fetchAllCalendarActivities(): Promise<CalendarActivity[]> {
-  const res = await fetch(`${BASE_URL}/all-activities`);
-  const data = await handleJsonResponse(res);
+export async function fetchAllCalendarActivities(options: CalendarRequestOptions = {}): Promise<CalendarActivity[]> {
+  const res = await fetch(`${BASE_URL}/all-activities`, { signal: options.signal });
+  const data = await handleJsonResponse(res, options);
   return (data.data as CalendarActivityRecordDTO[]).map(activityRecordToActivity);
 }
 
@@ -71,7 +76,8 @@ export interface CreateCalendarActivityInput {
 
 export async function createCalendarActivities(
   entries: CreateCalendarActivityInput[],
-  createdBy?: number | null
+  createdBy?: number | null,
+  options: CalendarRequestOptions = {}
 ): Promise<CalendarActivity[]> {
   const body = {
     entries: entries.map((e) => ({
@@ -84,35 +90,37 @@ export async function createCalendarActivities(
 
   const res = await fetch(`${BASE_URL}/activities`, {
     method: "POST",
+    credentials: "include", signal: options.signal,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
 
-  const data = await handleJsonResponse(res);
+  const data = await handleJsonResponse(res, options);
   return (data.data as CalendarActivityRecordDTO[]).map(activityRecordToActivity);
 }
 
 // --------------------------------------------------------
 // Update single activity
 // --------------------------------------------------------
-export async function updateCalendarActivity(id: number, input: CreateCalendarActivityInput): Promise<void> {
+export async function updateCalendarActivity(id: number, input: CreateCalendarActivityInput, options: CalendarRequestOptions = {}): Promise<void> {
   const body = { title: input.title, date: input.date };
 
 const res = await fetch(`${BASE_URL}/activities/${id}`, {
     method: "PUT",
+    credentials: "include", signal: options.signal,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
 
-  await handleJsonResponse(res);
+  await handleJsonResponse(res, options);
 }
 
 // --------------------------------------------------------
 // Delete activity (soft delete)
 // --------------------------------------------------------
-export async function deleteCalendarActivityApi(id: number): Promise<void> {
-  const res = await fetch(`${BASE_URL}/activities/${id}`, { method: "DELETE" });
-  await handleJsonResponse(res); // { success, message }
+export async function deleteCalendarActivityApi(id: number, options: CalendarRequestOptions = {}): Promise<void> {
+  const res = await fetch(`${BASE_URL}/activities/${id}`, { method: "DELETE", credentials: "include", signal: options.signal });
+  await handleJsonResponse(res, options); // { success, message }
 }
 
 // ==========================================================
@@ -122,15 +130,15 @@ export async function deleteCalendarActivityApi(id: number): Promise<void> {
 // --------------------------------------------------------
 // Fetch all holidays
 // --------------------------------------------------------
-export async function fetchCalendarHolidays(): Promise<CalendarHoliday[]> {
-  const res = await fetch(`${BASE_URL}/holidays`);
-  const data = await handleJsonResponse(res);
+export async function fetchCalendarHolidays(options: CalendarRequestOptions = {}): Promise<CalendarHoliday[]> {
+  const res = await fetch(`${BASE_URL}/holidays`, { signal: options.signal });
+  const data = await handleJsonResponse(res, options);
   return (data.data as CalendarHolidayRecordDTO[]).map(holidayRecordToHoliday);
 }
 
-export async function fetchAllCalendarHolidays(): Promise<CalendarHoliday[]> {
-  const res = await fetch(`${BASE_URL}/all-holidays`);
-  const data = await handleJsonResponse(res);
+export async function fetchAllCalendarHolidays(options: CalendarRequestOptions = {}): Promise<CalendarHoliday[]> {
+  const res = await fetch(`${BASE_URL}/all-holidays`, { signal: options.signal });
+  const data = await handleJsonResponse(res, options);
   return (data.data as CalendarHolidayRecordDTO[]).map(holidayRecordToHoliday);
 }
 
@@ -147,7 +155,8 @@ export interface CreateCalendarHolidayInput {
 
 export async function createCalendarHolidays(
   entries: CreateCalendarHolidayInput[],
-  createdBy?: number | null
+  createdBy?: number | null,
+  options: CalendarRequestOptions = {}
 ): Promise<CalendarHoliday[]> {
   const body = {
     entries: entries.map((e) => ({
@@ -160,18 +169,19 @@ export async function createCalendarHolidays(
 
   const res = await fetch(`${BASE_URL}/holidays`, {
     method: "POST",
+    credentials: "include", signal: options.signal,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
 
-  const data = await handleJsonResponse(res); // { success, message, data: CalendarHolidayRecordDTO[] }
+  const data = await handleJsonResponse(res, options); // { success, message, data: CalendarHolidayRecordDTO[] }
   return (data.data as CalendarHolidayRecordDTO[]).map(holidayRecordToHoliday);
 }
 
 // --------------------------------------------------------
 // Update single holiday
 // --------------------------------------------------------
-export async function updateCalendarHoliday(id: number, input: CreateCalendarHolidayInput): Promise<void> {
+export async function updateCalendarHoliday(id: number, input: CreateCalendarHolidayInput, options: CalendarRequestOptions = {}): Promise<void> {
   const body = {
     title: input.title,
     date: input.date,
@@ -180,16 +190,17 @@ export async function updateCalendarHoliday(id: number, input: CreateCalendarHol
 
   const res = await fetch(`${BASE_URL}/holidays/${id}`, {
     method: "PUT",
+    credentials: "include", signal: options.signal,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
 
-  await handleJsonResponse(res); // { success, message }
+  await handleJsonResponse(res, options); // { success, message }
 }
 // --------------------------------------------------------
 // Delete holiday (soft delete)
 // --------------------------------------------------------
-export async function deleteCalendarHolidayApi(id: number): Promise<void> {
-  const res = await fetch(`${BASE_URL}/holidays/${id}`, { method: "DELETE" });
-  await handleJsonResponse(res); // { success, message }
+export async function deleteCalendarHolidayApi(id: number, options: CalendarRequestOptions = {}): Promise<void> {
+  const res = await fetch(`${BASE_URL}/holidays/${id}`, { method: "DELETE", credentials: "include", signal: options.signal });
+  await handleJsonResponse(res, options); // { success, message }
 }

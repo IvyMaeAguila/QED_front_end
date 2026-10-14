@@ -4,13 +4,6 @@ import { preloadRole } from "../../../routes/roleModules";
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/auth`;
 
-export interface RegisterPayload {
-  userName: string;
-  password: string;
-  role: string;
-  userId?: string | number;
-}
-
 export interface LoginPayload {
   userName: string;
   password: string;
@@ -76,20 +69,6 @@ export const AuthService = {
     const data = await response.json();
     if (!response.ok) throw new Error(data?.message || "Failed to update profile.");
     return data.profile;
-  },
-
-  async registerUser(payload: RegisterPayload) {
-    const response = await fetch(`${BASE_URL}/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(payload),
-    });
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to add new user credentials");
-    }
-    return response.json();
   },
 
   async login(payload: LoginPayload): Promise<LoginResponse> {

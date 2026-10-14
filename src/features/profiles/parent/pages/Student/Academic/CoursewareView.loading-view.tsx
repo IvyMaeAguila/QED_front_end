@@ -10,10 +10,9 @@ import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
 import type { CoursewareResource } from "./service/courseware.service";
 import { getCourseware } from "./service/courseware.service";
 
-const resourceCache = new Map<string, CoursewareResource>();
-
 interface CoursewareViewProps {
   darkMode?: boolean;
+  serverState?: {data?:CoursewareResource;loading:boolean;error:string|null;retry:()=>void;denied?:boolean};
 }
 
 // Pick a badge icon that matches what the section is actually about,
@@ -116,18 +115,22 @@ function getYouTubeEmbedUrl(url: string) {
   }
 }
 
-function useCoursewareViewState({ darkMode: requestedDarkMode }: CoursewareViewProps) {
+function useCoursewareViewState({ darkMode: requestedDarkMode, serverState }: CoursewareViewProps) {
   const { studentId, topicId } = useParams<{ studentId: string; topicId: string }>();
   const navigate = useNavigate();
   const theme = useOutletContext<AdminThemeContext | undefined>();
   const darkMode = requestedDarkMode ?? theme?.darkMode ?? false;
   const view = `courseware:${studentId}:${topicId}`;
 
-  const [data, setData] = useState<CoursewareResource | null>(() => resourceCache.get(view) ?? null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedVideo, setSelectedVideo] = useState<CoursewareResource["videos"][number] | null>(null);
+  const [localData, setData] = useState<CoursewareResource | null>(null);
+  const data=serverState?serverState.data??null:localData;
+  const [localLoading, setLoading] = useState(true);
+  const loading=serverState?.loading??localLoading;
+  const [localError, setError] = useState<string | null>(null);
+  const error=serverState?.error??localError;
+  const [localSelectedVideo, setSelectedVideo] = useState<CoursewareResource["videos"][number] | null>(null);
   const [attempt, setAttempt] = useState(0);
+  const selectedVideo=serverState?.denied?null:localSelectedVideo;
 
   const pageBg = darkMode ? "bg-page-dark" : "bg-surface";
   const panelBg = darkMode ? "bg-panel-dark" : "bg-white";
@@ -139,7 +142,7 @@ function useCoursewareViewState({ darkMode: requestedDarkMode }: CoursewareViewP
 
   const videos = data ? dedupeVideos(data.videos) : [];
 
-  const reserved = resourceCache.get(view);
+  const reserved = data;
   const reservedDocument = reserved?.document ?? { title: "", content: Array.from({ length: skeletonRows(`${view}:paragraphs`, undefined, 220) }, () => "paragraph").join("\n\n"), generatedAt: null };
   const reservedVideos = reserved ? dedupeVideos(reserved.videos).slice(0, skeletonRows(`${view}:videos`, undefined, 260)) : Array.from({ length: skeletonRows(`${view}:videos`, undefined, 260) }, (_, index) => ({ title: "", channelName: "", url: String(index), thumbnailUrl: "" }));
   const renderResources = (pending: boolean, headerOnly = false) => {
@@ -258,10 +261,8 @@ function useCoursewareViewState({ darkMode: requestedDarkMode }: CoursewareViewP
         </div>
       )}
       {error && renderResources(false, true)}
-      <LoadingRegion loading={loading} error={error} retry={() => setAttempt(value => value + 1)} variable name="learning-resources" skeleton={null} frame={renderResources} retainPrevious hasContent={!!data} initialContentKnown={!!data} onSettled={() => {
+      <LoadingRegion loading={loading} error={error} retry={serverState?.retry??(()=>setAttempt(value=>value+1))} variable name="learning-resources" skeleton={null} frame={renderResources} retainPrevious hasContent={!!data} initialContentKnown={!!data} onSettled={() => {
         if (!data) return;
-        resourceCache.delete(view); resourceCache.set(view, data);
-        if (resourceCache.size > 128) resourceCache.delete(resourceCache.keys().next().value!);
         rememberRows(`${view}:paragraphs`, data.document.content.split('\n').filter(line => line.trim()).length);
         rememberRows(`${view}:videos`, videos.length);
       }}>{null}</LoadingRegion>

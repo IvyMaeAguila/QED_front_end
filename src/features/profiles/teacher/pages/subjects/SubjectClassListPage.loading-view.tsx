@@ -1,3 +1,5 @@
+import type { TeacherReader } from "../../query/TeacherReader";
+import type { SubjectClassList } from "./services/subjectClassList.service";
 import { SkeletonAvatar,SkeletonText } from "@shared/components/SkeletonLoading";
 import { StudentAvatar } from "@shared/components/StudentAvatar";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
@@ -22,18 +24,24 @@ function sortByName(a: SubjectClassListStudent, b: SubjectClassListStudent) {
   return a.lastName.localeCompare(b.lastName) || a.firstName.localeCompare(b.firstName);
 }
 
-function useSubjectClassListPageState() {
+function useSubjectClassListPageState(reader?: TeacherReader<SubjectClassList>) {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const { subjectSectionId } = useParams<{ subjectSectionId: string }>();
 
-  const [subjectName, setSubjectName] = useState("");
-  const [gradeLevel, setGradeLevel] = useState("");
-  const [sectionName, setSectionName] = useState("");
-  const [students, setStudents] = useState<SubjectClassListStudent[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [localSubjectName, setSubjectName] = useState("");
+  const [localGradeLevel, setGradeLevel] = useState("");
+  const [localSectionName, setSectionName] = useState("");
+  const [localStudents, setStudents] = useState<SubjectClassListStudent[]>([]);
+  const [localLoading, setLoading] = useState(true);
+  const [localError, setError] = useState<string | null>(null);
+  const subjectName = reader ? reader.data?.subjectName ?? "" : localSubjectName;
+  const gradeLevel = reader ? reader.data?.gradeLevel ?? "" : localGradeLevel;
+  const sectionName = reader ? reader.data?.sectionName ?? "" : localSectionName;
+  const students = useMemo(() => reader ? reader.data?.students ?? [] : localStudents, [reader, localStudents]);
+  const loading = reader?.loading ?? localLoading;
+  const error = reader ? reader.error : localError;
   const [attempt, setAttempt] = useState(0);
   const table = useRef<HTMLTableElement>(null);
 
@@ -142,6 +150,7 @@ function useSubjectClassListPageState() {
 
   return { content: ((
     <div className="w-full min-h-full pb-12">
+      {reader?.offline && reader.data && <div role="alert" className={`mb-4 rounded-xl border p-4 ${panelBg} ${panelBorder} ${textPrimary}`}>You're offline. Cached students remain available. Reconnect and try again.</div>}
       <div className="w-full space-y-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2.5">
@@ -192,7 +201,7 @@ function useSubjectClassListPageState() {
             <Users size={13} style={{ color: "var(--brand-ink)" }} />
             <p data-sk-static="" data-sk-region="subject-class-list-label" className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`}>Class List</p>
           </div>
-          <LoadingRegion name="subject-class-roster" loading={loading} error={error} retry={() => setAttempt(value => value + 1)} variable autoColumns frame={renderRoster} skeleton={null} retainPrevious hasContent={filteredCount > 0} onSettled={() => { rememberRows(view, filteredCount); rememberColumns(view, table.current); }}>{null}</LoadingRegion>
+          <LoadingRegion name="subject-class-roster" loading={loading} error={error} retry={reader?.retry ?? (() => setAttempt(value => value + 1))} variable autoColumns frame={renderRoster} skeleton={null} retainPrevious hasContent={filteredCount > 0} onSettled={() => { rememberRows(view, filteredCount); rememberColumns(view, table.current); }}>{null}</LoadingRegion>
         </div>
       </div>
     </div>
@@ -202,7 +211,7 @@ function useSubjectClassListPageState() {
 
 export type SubjectClassListPageEffectScope = ReturnType<typeof useSubjectClassListPageState>["scope"];
 export type SubjectClassListPageRouteProps = Record<string, never>;
-export function SubjectClassListPageComposition(props: object & { effects?: (scope: SubjectClassListPageEffectScope) => import("react").ReactNode }) {
- const state = useSubjectClassListPageState();
+export function SubjectClassListPageComposition(props: object & { reader?: TeacherReader<SubjectClassList>; effects?: (scope: SubjectClassListPageEffectScope) => import("react").ReactNode }) {
+ const state = useSubjectClassListPageState(props.reader);
  return <>{props.effects?.(state.scope)}{state.content}</>;
 }

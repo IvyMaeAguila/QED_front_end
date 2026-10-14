@@ -1,36 +1,16 @@
-import { useEffect } from "react";
-import { CoursewareViewComposition,type CoursewareViewEffectScope,type CoursewareViewRouteProps } from "./CoursewareView.loading-view";
-export * from "./CoursewareView.loading-view";
-
-function CoursewareViewDataEffects({ scope }: { scope: CoursewareViewEffectScope }) {
- const { studentId, topicId, setLoading, setError, setSelectedVideo, getCourseware, setData, attempt } = scope;
- useEffect(() => {
-    if (!studentId || !topicId) return;
-    let isMounted = true;
-
-    async function load() {
-      setLoading(true);
-      setError(null);
-      setSelectedVideo(null);
-      try {
-        const result = await getCourseware(studentId!, topicId!);
-        if (isMounted) setData(result);
-      } catch (err) {
-        console.error("Failed to load courseware:", err);
-        if (isMounted) setError("We couldn't generate learning resources right now. Please try again later.");
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    }
-
-    load();
-    return () => {
-      isMounted = false;
-    };
-  }, [studentId, topicId, attempt]);
- return null;
-}
-
-export default function CoursewareView(props: CoursewareViewRouteProps) {
- return <CoursewareViewComposition {...props} effects={scope => <CoursewareViewDataEffects scope={scope}/>} />;
+import { useParams } from 'react-router-dom';
+import { useParentReader } from '../../../query/useParentReader';
+import { CoursewareViewComposition, type CoursewareViewRouteProps } from './CoursewareView.loading-view';
+import { getCourseware } from './service/courseware.service';
+import {QueryClientProvider} from '@tanstack/react-query';
+import {queryClient} from '@shared/query/queryClient';
+export * from './CoursewareView.loading-view';
+export default function CoursewareView(props:CoursewareViewRouteProps) {
+  const {studentId,topicId}=useParams();
+  // This GET can generate/persist AI resources. Do not abort/replay that server
+  // operation on StrictMode cleanup, focus or reconnect. Query dedupes it;
+  // expiry still checks the originating session generation.
+  const reader=useParentReader(['student',studentId,'courseware',topicId],options=>getCourseware(studentId!,topicId!,options),"We couldn't generate learning resources right now. Please try again later.",!!studentId&&!!topicId,undefined,300_000,undefined,{cancellable:false,reconnect:false});
+  const error=reader.error&&!reader.offline&&!reader.denied?"We couldn't generate learning resources right now. Please try again later.":reader.error;
+  return <QueryClientProvider client={queryClient}><CoursewareViewComposition {...props} key={`${studentId}:${topicId}`} serverState={{...reader,error}}/></QueryClientProvider>;
 }

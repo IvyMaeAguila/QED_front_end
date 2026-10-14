@@ -21,27 +21,39 @@ interface TeacherSchedulePageProps {
   backPath?: string;
   headerActions?: ReactNode;
   prerequisite?: { loading: boolean; error: unknown; retry: () => void };
+  serverState?: {
+    schedule: ReturnType<typeof useTeacherSchedule>;
+    classRosters: TeacherClassRoster[];
+    rostersLoading: boolean;
+    rostersError: boolean;
+    retryRosters: () => void;
+    offline: boolean;
+  };
 }
 
-function useTeacherSchedulePageState({ teacherIdOverride, backPath = "/principal/teachers", headerActions, prerequisite }: TeacherSchedulePageProps = {}) {
+function useTeacherSchedulePageState({ teacherIdOverride, backPath = "/principal/teachers", headerActions, prerequisite, serverState }: TeacherSchedulePageProps, schedule: ReturnType<typeof useTeacherSchedule>) {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const { teacherId: routeTeacherId } = useParams<{ teacherId: string }>();
 
   const id = teacherIdOverride ?? (routeTeacherId ? decodeURIComponent(routeTeacherId) : "");
-  const schedule = useTeacherSchedule(id, !prerequisite?.loading && !prerequisite?.error);
   const { teacher, schoolYear, notFound } = schedule;
   const loading = !!prerequisite?.loading || schedule.loading;
   const error = prerequisite?.error || schedule.error;
   const retry = prerequisite?.error ? prerequisite.retry : schedule.retry;
   const [activeTab, setActiveTab] = useState<"schedule" | "class-list">("class-list");
-  const [classRosters, setClassRosters] = useState<TeacherClassRoster[]>([]);
-  const [rostersLoading, setRostersLoading] = useState(false);
-  const [rostersError, setRostersError] = useState(false);
+  const [localRosters, setClassRosters] = useState<TeacherClassRoster[]>([]);
+  const [localLoading, setRostersLoading] = useState(false);
+  const [localError, setRostersError] = useState(false);
   const [rosterAttempt, setRosterAttempt] = useState(0);
+  const classRosters = serverState?.classRosters ?? localRosters;
+  const rostersLoading = serverState?.rostersLoading ?? localLoading;
+  const rostersError = serverState?.rostersError ?? localError;
+  const offline = !!serverState?.offline && !prerequisite?.error;
+  const blockingError = error && !(offline && teacher);
 
-  if (!loading && !error && (notFound || !teacher)) {
-    return { content: (<TeacherNotFound panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} />), scope: { teacher, setClassRosters, setRostersLoading, setRostersError, getClassList, rosterAttempt } };
+  if (!loading && (!error || offline) && (notFound || (!error && !teacher))) {
+    return { content: (<>{offline && <LoadingRegion loading={false} error={error} retry={retry} skeleton={null}>{null}</LoadingRegion>}<TeacherNotFound panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} /></>), scope: { teacher, setClassRosters, setRostersLoading, setRostersError, getClassList, rosterAttempt } };
   }
   const profile: TeacherProfile = teacher ?? { teacherId: id, fullName: "", gender: null, advisorySection: null, gradeLevel: null, room: null, advisories: [], schedule: [] };
   const scheduleByDay = groupScheduleByDay(profile.schedule);
@@ -75,7 +87,7 @@ function useTeacherSchedulePageState({ teacherIdOverride, backPath = "/principal
       </div>
 
       {error && <LoadingRegion loading={false} error={error} retry={retry} skeleton={null}>{null}</LoadingRegion>}
-      {!error && <><ProfileOverviewCard
+      {!blockingError && <><ProfileOverviewCard
         loading={loading}
         fieldKey={`teacher-profile:${id}`}
         label={`${profile.fullName} teacher profile`}
@@ -129,7 +141,7 @@ function useTeacherSchedulePageState({ teacherIdOverride, backPath = "/principal
             rosters={classRosters}
             loading={loading || rostersLoading}
             view={`teacher-rosters:${id}`}
-            retry={() => setRosterAttempt(value => value + 1)}
+            retry={serverState?.retryRosters ?? (() => setRosterAttempt(value => value + 1))}
             error={rostersError}
             panelBg={panelBg}
             panelBorder={panelBorder}
@@ -147,7 +159,22 @@ function useTeacherSchedulePageState({ teacherIdOverride, backPath = "/principal
 
 export type TeacherSchedulePageEffectScope = ReturnType<typeof useTeacherSchedulePageState>["scope"];
 export type TeacherSchedulePageRouteProps = Parameters<typeof useTeacherSchedulePageState>[0];
-export function TeacherSchedulePageComposition(props: TeacherSchedulePageRouteProps & { effects?: (scope: TeacherSchedulePageEffectScope) => import("react").ReactNode }) {
- const state = useTeacherSchedulePageState(props);
+type CompositionProps = TeacherSchedulePageRouteProps & { effects?: (scope: TeacherSchedulePageEffectScope) => import("react").ReactNode };
+export function TeacherSchedulePageComposition(props: CompositionProps = {}) {
+ return props.serverState
+   ? <TeacherScheduleContent {...props} schedule={props.serverState.schedule} />
+   : <LegacyTeacherScheduleContent {...props} />;
+}
+
+// Admin keeps its existing hook/effects and never imports Principal Query code.
+function LegacyTeacherScheduleContent(props: CompositionProps) {
+ const { teacherId } = useParams<{ teacherId: string }>();
+ const id = props.teacherIdOverride ?? (teacherId ? decodeURIComponent(teacherId) : "");
+ const schedule = useTeacherSchedule(id, !props.prerequisite?.loading && !props.prerequisite?.error);
+ return <TeacherScheduleContent {...props} schedule={schedule} />;
+}
+
+function TeacherScheduleContent(props: CompositionProps & { schedule: ReturnType<typeof useTeacherSchedule> }) {
+ const state = useTeacherSchedulePageState(props, props.schedule);
  return <>{props.effects?.(state.scope)}{state.content}</>;
 }

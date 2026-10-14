@@ -8,11 +8,7 @@ import {
   Loader2,
 } from "lucide-react";
 import type { Student } from "../types/Students";
-import { studentService } from "./../services/student-record.service";
-import {
-  fetchGradeLevels,
-  fetchSectionByGrade,
-} from "./../services/grade-section.service";
+import {useStudents} from '../context/StudentsContext';
 import {
   parseStudentsExcelFile,
   exportStudentsToExcel,
@@ -44,6 +40,7 @@ export function StudentImportExportToolbar({
   textPrimary,
   textMuted,
 }: StudentImportExportToolbarProps) {
+  const {createRecord,fetchGrades:fetchGradeLevels,fetchSections:fetchSectionByGrade}=useStudents();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [result, setResult] = useState<ImportParseResult | null>(null);
   const [isParsing, setIsParsing] = useState(false);
@@ -191,7 +188,7 @@ export function StudentImportExportToolbar({
             section: sectionId ? String(sectionId) : undefined,
           };
 
-          const res = await studentService.addNewStudent(payload);
+          const res = await createRecord(payload);
           const newId = res?.data?.id ?? res?.id;
 
           saved.push({

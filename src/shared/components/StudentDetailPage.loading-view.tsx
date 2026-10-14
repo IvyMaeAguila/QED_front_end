@@ -37,6 +37,7 @@ import { LoadingTable } from "../loading/LoadingTable";
 import { SkeletonParagraph } from "../loading/SkeletonParagraph";
 import { skeletonRows } from "../loading/reservations";
 import { HeroProfileBanner } from "./StudentHeroProfileBanner";
+import { useAuth } from "@shared/hooks/useAuth";
 
 type StudentWithExtras = Student & {
   dateOfBirth?: string;
@@ -198,6 +199,8 @@ function useStudentDetailPageState() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const backToStudents = user?.role === "TEACHER" ? "/teacher/advisory" : "/admin/students";
   const { studentId } = useParams<{ studentId: string }>();
   const { getStudent, loading: studentsLoading, error: studentsError, refetch } = useStudents();
   const { classes, loading: classesLoading, error: classesError, refreshClasses } = useClasses();
@@ -224,7 +227,7 @@ function useStudentDetailPageState() {
           <span className="font-semibold">{studentId}</span>.
         </p>
         <button
-          onClick={() => navigate("/admin/students")}
+          onClick={() => navigate(backToStudents)}
           className="mt-6 h-10 px-5 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 shadow-sm transition-opacity hover:opacity-90"
           style={{ background: ACCENT }} data-sk-region="studentdetailpage-back-to-student-records" data-sk-static=""
         >
@@ -299,8 +302,8 @@ function useStudentDetailPageState() {
               </thead>);
   const navigation = (
       <div className="flex items-center justify-between">
-        <button onClick={() => navigate("/admin/students")} className={`h-9 px-3.5 rounded-xl text-xs font-semibold inline-flex items-center gap-2 border transition-colors ${darkMode ? "border-slate-700 bg-slate-900 text-slate-200 hover:bg-slate-800" : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"}`} data-sk-region="studentdetailpage-back-to-students" data-sk-static=""><ArrowLeft size={14} />Back to Students</button>
-        <Link aria-disabled={studentsLoading || !!studentsError} onClick={event => { if (studentsLoading || studentsError) event.preventDefault(); }} to={`/admin/students/${student.id}/edit`} className="h-9 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 shadow-xs transition-opacity hover:opacity-90" style={{ background: ACCENT }}><Pencil size={13} />Edit Student Record</Link>
+        <button onClick={() => navigate(backToStudents)} className={`h-9 px-3.5 rounded-xl text-xs font-semibold inline-flex items-center gap-2 border transition-colors ${darkMode ? "border-slate-700 bg-slate-900 text-slate-200 hover:bg-slate-800" : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"}`} data-sk-region="studentdetailpage-back-to-students" data-sk-static=""><ArrowLeft size={14} />Back to Students</button>
+        {user?.role === "ADMIN" && <Link aria-disabled={studentsLoading || !!studentsError} onClick={event => { if (studentsLoading || studentsError) event.preventDefault(); }} to={`/admin/students/${student.id}/edit`} className="h-9 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 shadow-xs transition-opacity hover:opacity-90" style={{ background: ACCENT }}><Pencil size={13} />Edit Student Record</Link>}
       </div>
   );
   if (studentsError) return { content: (<div className="max-w-6xl mx-auto space-y-6 pb-12">{navigation}<LoadingRegion loading={false} error={studentsError} retry={() => void refetch()} skeleton={null}>{null}</LoadingRegion></div>), scope: {  } };

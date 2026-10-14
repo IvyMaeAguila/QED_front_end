@@ -4,7 +4,7 @@ import { PrincipalGradebooksPageComposition } from "../../features/profiles/prin
 import { HelpSupportPageComposition } from "../../features/profiles/admin/pages/help/HelpSupportPage.loading-view";
 import { PrincipalStudentsPageComposition } from "../../features/profiles/principal/pages/students/PrincipalStudentsPage.loading-view";
 import { CalendarPageComposition } from "../../shared/calendar/CalendarPage.loading-view";
-import { TeacherSchedulePageComposition } from "../../features/profiles/principal/pages/teachers/TeacherSchedulePage.loading-view";
+import { TeacherSchedulePageComposition } from "../../features/profiles/principal/pages/teachers/PrincipalTeacherProfilePage";
 import { PrincipalTeachersPageComposition } from "../../features/profiles/principal/pages/teachers/PrincipalTeachersPage.loading-view";
 import { PrincipalDashboardHomeComposition } from "../../features/profiles/principal/pages/dashboard/PrincipalDashboardHome.loading-view";
 import { ClassListPageComposition } from "../../features/profiles/principal/pages/students/ClassListPage.loading-view";

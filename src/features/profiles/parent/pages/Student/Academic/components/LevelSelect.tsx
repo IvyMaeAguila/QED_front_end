@@ -290,7 +290,7 @@ export default function LevelSelect({
   return (
     <div className="flex w-full max-w-sm flex-col items-center gap-4">
       {/* banner */}
-      <div className="w-full rounded-3xl bg-maroon px-5 py-4 text-left shadow-[0_5px_0_0_var(--brand-primary)]">
+      <div className="adventure-banner w-full rounded-3xl bg-maroon px-5 py-4 text-left shadow-[0_5px_0_0_var(--brand-primary)]">
         <p className="text-xs font-bold uppercase tracking-wide text-white/85">Recharge Road</p>
         <p className="text-lg font-extrabold text-white">Choose your challenge!</p>
       </div>

@@ -1,4 +1,7 @@
 import { API_CONFIG } from '../../../../../../config/api.config';
+import type {ApiRequestOptions} from '@shared/http/ApiRequestOptions';
+import {QueryHttpError} from '@shared/http/QueryHttpError';
+async function responseJson<T>(res:Response,options:ApiRequestOptions):Promise<ApiResponse<T>>{if(res.status===401)options.onUnauthorized?.();return res.json().catch(error=>{if(!res.ok)throw new QueryHttpError('Academic year request failed.',res.status);throw error;});}
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/academic-year`;
 
@@ -40,52 +43,56 @@ export interface ApiResponse<T> {
   data?: T;
 }
 
-export async function fetchAllSchoolYears(): Promise<SchoolYearRow[]> {
-  const res = await fetch(`${BASE_URL}/getAllSy`, { credentials: "include" });
-  const json: ApiResponse<SchoolYearRow[]> = await res.json();
-  if (!res.ok) throw new Error(json.message || "Failed to fetch school years.");
+export async function fetchAllSchoolYears(options:ApiRequestOptions={}): Promise<SchoolYearRow[]> {
+  const res = await fetch(`${BASE_URL}/getAllSy`, { credentials: "include",signal:options.signal });
+  const json=await responseJson<SchoolYearRow[]>(res,options);
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to fetch school years.",res.status);
   return json.data ?? [];
 }
 
-export async function fetchActiveAcademicYear(): Promise<AcademicYearRow> {
-  const res = await fetch(`${BASE_URL}/getAcademicYear`, { credentials: "include" });
-  const json: ApiResponse<AcademicYearRow> = await res.json();
-  if (!res.ok || !json.data) throw new Error(json.message || "Failed to fetch academic year.");
+export async function fetchActiveAcademicYear(options:ApiRequestOptions={}): Promise<AcademicYearRow> {
+  const res = await fetch(`${BASE_URL}/getAcademicYear`, { credentials: "include",signal:options.signal });
+  const json=await responseJson<AcademicYearRow>(res,options);
+  if (!res.ok || !json.data) throw new QueryHttpError(json.message || "Failed to fetch academic year.",res.status);
   return json.data;
 }
 
 export async function addAcademicYear(
   newYear: { label: string; status: SchoolYearStatus },
+  options:ApiRequestOptions={},
 ): Promise<AcademicYearRow> {
   const res = await fetch(`${BASE_URL}/addAcademicYear`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(newYear),
+    signal:options.signal,
   });
-  const json: ApiResponse<AcademicYearRow> = await res.json();
-  if (!res.ok || !json.data) throw new Error(json.message || "Failed to create academic year.");
+  const json=await responseJson<AcademicYearRow>(res,options);
+  if (!res.ok || !json.data) throw new QueryHttpError(json.message || "Failed to create academic year.",res.status);
   return json.data;
 }
 
-export async function fetchTerms(schoolYearId: number): Promise<TermRow[]> {
-  const res = await fetch(`${BASE_URL}/getTerms/${schoolYearId}`, { credentials: "include" });
-  const json: ApiResponse<TermRow[]> = await res.json();
-  if (!res.ok) throw new Error(json.message || "Failed to fetch terms.");
+export async function fetchTerms(schoolYearId: number,options:ApiRequestOptions={}): Promise<TermRow[]> {
+  const res = await fetch(`${BASE_URL}/getTerms/${schoolYearId}`, { credentials: "include",signal:options.signal });
+  const json=await responseJson<TermRow[]>(res,options);
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to fetch terms.",res.status);
   return json.data ?? [];
 }
 
 export async function saveTerms(
   schoolYearId: number,
   terms: TermInput[],
+  options:ApiRequestOptions={},
 ): Promise<TermRow[]> {
   const res = await fetch(`${BASE_URL}/saveTerms/${schoolYearId}`, {
     method: "PUT",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ terms }),
+    signal:options.signal,
   });
-  const json: ApiResponse<TermRow[]> = await res.json();
-  if (!res.ok) throw new Error(json.message || "Failed to save terms.");
+  const json=await responseJson<TermRow[]>(res,options);
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to save terms.",res.status);
   return json.data ?? [];
 }

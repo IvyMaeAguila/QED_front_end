@@ -21,21 +21,33 @@ type Role,
 interface CalendarPageProps {
   viewerRole?: Role;
 }
+export interface CalendarViewData {
+  activities: CalendarActivity[];
+  holidays: CalendarHoliday[];
+  allActivities: CalendarActivity[];
+  allHolidays: CalendarHoliday[];
+  loading: boolean;
+  error: string | null;
+  offline: boolean;
+  retry: () => void;
+}
 
 type ExpandTarget = "activity" | "holiday" | null;
 
-function useCalendarPageViewState({}: CalendarPageProps) {
+function useCalendarPageViewState(data?: CalendarViewData) {
   const theme = useOutletContext<AdminThemeContext>();
-  if (!theme) return { content: null, scope: null };
+  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme ?? {} as AdminThemeContext;
 
-  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
-
-  const [activities, setActivities] = useState<CalendarActivity[]>([]);
-  const [holidays, setHolidays] = useState<CalendarHoliday[]>([]);
-  const [allActivities, setAllActivities] = useState<CalendarActivity[]>([]);
-  const [allHolidays, setAllHolidays] = useState<CalendarHoliday[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [localActivities, setActivities] = useState<CalendarActivity[]>([]);
+  const [localHolidays, setHolidays] = useState<CalendarHoliday[]>([]);
+  const [localAllActivities, setAllActivities] = useState<CalendarActivity[]>([]);
+  const [localAllHolidays, setAllHolidays] = useState<CalendarHoliday[]>([]);
+  const [localLoading, setLoading] = useState(true);
+  const [localError, setError] = useState<string | null>(null);
+  const { activities, holidays, allActivities, allHolidays, loading, error } = data ?? {
+    activities: localActivities, holidays: localHolidays, allActivities: localAllActivities,
+    allHolidays: localAllHolidays, loading: localLoading, error: localError,
+  };
 
   const [viewDate, setViewDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -57,8 +69,10 @@ function useCalendarPageViewState({}: CalendarPageProps) {
     setSelectedDate(nextMonth);
   }
 
+  if (!theme) return { content: null, scope: null };
   return { content: ((
     <div className="space-y-6 pb-12">
+      {data?.offline && !error && <div role="alert" className={`rounded-xl border p-4 ${panelBg} ${panelBorder} ${textPrimary}`}>You're offline. Cached calendar records remain available. Reconnect and try again.</div>}
       <div>
         <h1 className={`qed-type-page-title ${textPrimary}`}>
           Calendar
@@ -85,7 +99,7 @@ function useCalendarPageViewState({}: CalendarPageProps) {
 
         <div className="space-y-4">
           <ActivitiesCard
-            loading={loading} error={error} retry={() => setAttempt(value => value + 1)}
+            loading={loading} error={error} retry={data?.retry ?? (() => setAttempt(value => value + 1))}
             activities={activities}
             viewDate={viewDate}
             selectedDate={selectedDate}
@@ -98,7 +112,7 @@ function useCalendarPageViewState({}: CalendarPageProps) {
           />
 
           <HolidaysCard
-            loading={loading} error={error} retry={() => setAttempt(value => value + 1)}
+            loading={loading} error={error} retry={data?.retry ?? (() => setAttempt(value => value + 1))}
             holidays={holidays}
             viewDate={viewDate}
             selectedDate={selectedDate}
@@ -124,7 +138,7 @@ function useCalendarPageViewState({}: CalendarPageProps) {
           textMuted={textMuted}
         >
           <ActivityGroupList
-            loading={loading} error={error} retry={() => setAttempt(value => value + 1)}
+            loading={loading} error={error} retry={data?.retry ?? (() => setAttempt(value => value + 1))}
             activities={allActivities}
             darkMode={darkMode}
             textMuted={textMuted}
@@ -144,7 +158,7 @@ function useCalendarPageViewState({}: CalendarPageProps) {
           textMuted={textMuted}
         >
           <HolidayGroupList
-            loading={loading} error={error} retry={() => setAttempt(value => value + 1)}
+            loading={loading} error={error} retry={data?.retry ?? (() => setAttempt(value => value + 1))}
             holidays={allHolidays}
             darkMode={darkMode}
             textMuted={textMuted}
@@ -158,8 +172,8 @@ function useCalendarPageViewState({}: CalendarPageProps) {
 
 
 export type CalendarPageViewEffectScope = NonNullable<ReturnType<typeof useCalendarPageViewState>["scope"]>;
-export type CalendarPageViewRouteProps = Parameters<typeof useCalendarPageViewState>[0];
-export function CalendarPageViewComposition(props: CalendarPageViewRouteProps & { effects?: (scope: CalendarPageViewEffectScope) => import("react").ReactNode }) {
- const state = useCalendarPageViewState(props);
+export type CalendarPageViewRouteProps = CalendarPageProps;
+export function CalendarPageViewComposition(props: CalendarPageViewRouteProps & { data?: CalendarViewData; effects?: (scope: CalendarPageViewEffectScope) => import("react").ReactNode }) {
+ const state = useCalendarPageViewState(props.data);
  return <>{state.scope && props.effects?.(state.scope)}{state.content}</>;
 }

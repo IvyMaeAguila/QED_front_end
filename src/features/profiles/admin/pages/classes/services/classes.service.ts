@@ -1,3 +1,5 @@
+import type {ApiRequestOptions} from '@shared/http/ApiRequestOptions';
+import {QueryHttpError} from '@shared/http/QueryHttpError';
 import type { DayOfWeek, SchedulePeriod } from "../types/Class";
 import { API_CONFIG } from '../../../../../../config/api.config';
 
@@ -76,17 +78,18 @@ interface CreateClassPayload {
 // adviserId, and the full replacement schedule, exactly like createClass.
 export type UpdateClassPayload = CreateClassPayload;
 
-async function handleJsonResponse(res: Response) {
-  const data = await res.json();
+async function handleJsonResponse(res: Response,options:ApiRequestOptions={}) {
+  if(res.status===401)options.onUnauthorized?.();
+  const data = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError('Request failed.',res.status);throw error;});
   if (!res.ok || !data.success) {
-    throw new Error(data.message || "Request failed.");
+    throw new QueryHttpError(data.message || "Request failed.",res.status);
   }
   return data;
 }
 
-export async function fetchGradeLevels(): Promise<GradeLevelOption[]> {
-  const res = await fetch(`${BASE_URL}/gradeLevels`, {credentials: "include"});
-  const data = await handleJsonResponse(res);
+export async function fetchGradeLevels(options:ApiRequestOptions={}): Promise<GradeLevelOption[]> {
+  const res = await fetch(`${BASE_URL}/gradeLevels`, {credentials: "include",signal:options.signal});
+  const data = await handleJsonResponse(res,options);
   return data.data;
 }
 
@@ -96,32 +99,33 @@ export async function fetchGradeLevels(): Promise<GradeLevelOption[]> {
 export async function fetchSectionsByGrade(
   gradeLevelId: number,
   excludeClassId?: string | number,
+  options:ApiRequestOptions={},
 ): Promise<SectionOption[]> {
   const params = new URLSearchParams({ gradeLevelId: String(gradeLevelId) });
   if (excludeClassId) params.set("excludeClassId", String(excludeClassId));
-  const res = await fetch(`${BASE_URL}/sections?${params.toString()}`, {credentials: "include"});
-  const data = await handleJsonResponse(res);
+  const res = await fetch(`${BASE_URL}/sections?${params.toString()}`, {credentials: "include",signal:options.signal});
+  const data = await handleJsonResponse(res,options);
   return data.data;
 }
 
-export async function fetchTeachers(excludeClassId?: string | number): Promise<TeacherOption[]> {
+export async function fetchTeachers(excludeClassId?: string | number,options:ApiRequestOptions={}): Promise<TeacherOption[]> {
   const params = new URLSearchParams();
   if (excludeClassId) params.set("excludeClassId", String(excludeClassId));
   const qs = params.toString();
-  const res = await fetch(`${BASE_URL}/teacher${qs ? `?${qs}` : ""}`, {credentials: "include"});
-  const data = await handleJsonResponse(res);
+  const res = await fetch(`${BASE_URL}/teacher${qs ? `?${qs}` : ""}`, {credentials: "include",signal:options.signal});
+  const data = await handleJsonResponse(res,options);
   return data.data;
 }
 
-export async function fetchAllTeachers(): Promise<TeacherOption[]> {
-  const res = await fetch(`${BASE_URL}/teacher/all`, {credentials: "include"});
-  const data = await handleJsonResponse(res);
+export async function fetchAllTeachers(options:ApiRequestOptions={}): Promise<TeacherOption[]> {
+  const res = await fetch(`${BASE_URL}/teacher/all`, {credentials: "include",signal:options.signal});
+  const data = await handleJsonResponse(res,options);
   return data.data;
 }
 
-export async function fetchSubjectsByGrade(gradeLevelId: number): Promise<SubjectOption[]> {
-  const res = await fetch(`${BASE_URL}/getSubByGrade/${gradeLevelId}`, {credentials: "include"});
-  const data = await handleJsonResponse(res);
+export async function fetchSubjectsByGrade(gradeLevelId: number,options:ApiRequestOptions={}): Promise<SubjectOption[]> {
+  const res = await fetch(`${BASE_URL}/getSubByGrade/${gradeLevelId}`, {credentials: "include",signal:options.signal});
+  const data = await handleJsonResponse(res,options);
   return data.data;
 }
 
@@ -135,7 +139,7 @@ function buildScheduleBody(schedule: SchedulePeriod[]) {
   }));
 }
 
-export async function createClass(payload: CreateClassPayload) {
+export async function createClass(payload: CreateClassPayload,options:ApiRequestOptions={}) {
   const body = {
     gradeLevel: payload.gradeLevelId,
     section: payload.section?.trim() ? payload.section.trim() : null,
@@ -150,14 +154,15 @@ export async function createClass(payload: CreateClassPayload) {
     credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
+    signal:options.signal,
   });
 
-  return handleJsonResponse(res); // { success, message, classId }
+  return handleJsonResponse(res,options); // { success, message, classId }
 }
 
 // PUT /updateClass/:id — replaces the class's grade/section/adviser and its
 // entire schedule (backend deletes the old schedule rows and re-inserts these).
-export async function updateClassApi(id: string | number, payload: UpdateClassPayload) {
+export async function updateClassApi(id: string | number, payload: UpdateClassPayload,options:ApiRequestOptions={}) {
   const body = {
     gradeLevel: payload.gradeLevelId,
     section: payload.section?.trim() ? payload.section.trim() : null,
@@ -171,18 +176,21 @@ export async function updateClassApi(id: string | number, payload: UpdateClassPa
     credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
+    signal:options.signal,
   });
 
-  return handleJsonResponse(res); // { success, message, classId }
+  return handleJsonResponse(res,options); // { success, message, classId }
 }
 
-export async function fetchClasses(): Promise<ClassRecord[]> {
-  const res = await fetch(`${BASE_URL}/`, { credentials: "include" });
+export async function fetchClasses(options:ApiRequestOptions={}): Promise<ClassRecord[]> {
+  const res = await fetch(`${BASE_URL}/`, { credentials: "include",signal:options.signal });
+  if(res.status===401)options.onUnauthorized?.();
+  if(!res.ok){const error=await res.json().catch(()=>({}));throw new QueryHttpError(error.message||"Request failed.",res.status);}
   const data = await handleJsonResponse(res);
   return data.data;
 }
 
-export async function deleteClassApi(id: string | number) {
-  const res = await fetch(`${BASE_URL}/${id}`, { method: "DELETE", credentials: "include", });
-  return handleJsonResponse(res);
+export async function deleteClassApi(id: string | number,options:ApiRequestOptions={}) {
+  const res = await fetch(`${BASE_URL}/${id}`, { method: "DELETE", credentials: "include",signal:options.signal });
+  return handleJsonResponse(res,options);
 }

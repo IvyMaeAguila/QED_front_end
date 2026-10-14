@@ -169,7 +169,7 @@ export function ProfileHeaderCard({
                   {isSaving ? "Saving..." : "Save Changes"}
                 </button>
               </div>
-            ) : (
+            ) : onSave ? (
               <button
                 type="button"
                 disabled={loading}
@@ -179,7 +179,7 @@ export function ProfileHeaderCard({
                 <Pencil className="h-3.5 w-3.5" />
                 Edit
               </button>
-            )}
+            ) : null}
           </div>
 
           <div className="grid flex-1 grid-cols-1 auto-rows-fr gap-3 sm:grid-cols-2">

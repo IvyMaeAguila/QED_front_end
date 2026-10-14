@@ -1,8 +1,6 @@
-import { useState } from "react";
-import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { ArrowUpRight } from "lucide-react";
 import { statsConfig } from "../data/Dashboarddata";
-import { DashboardService } from "../services/totalCounts.service";
+import { useAdminDashboardData, adminDashboardOfflineError } from "../AdminDashboardDataContext";
 import type { DashboardCounts } from "../services/totalCounts.service";
 
 import { LoadingRegion } from "../../../../../../shared/loading/LoadingRegion";
@@ -24,21 +22,12 @@ interface StatCardsProps {
 }
 
 export function StatCards({ panelBg, panelBorder, textPrimary, textMuted }: StatCardsProps) {
-  const [counts, setCounts] = useState<DashboardCounts | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const [attempt, setAttempt] = useState(0);
-  useEffect(() => {
-    setLoading(true); setError(null);
-    DashboardService.getDashboardCounts()
-      .then(setCounts)
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, [attempt]);
+  const { counts: state } = useAdminDashboardData();
+  const { data: counts, loading, error, retry } = state;
+  const cachedOffline = error === adminDashboardOfflineError && counts !== undefined;
 
   const valueFor = (key: keyof DashboardCounts) => {
-    if (error) return "—";
+    if (error && !cachedOffline) return "—";
     return counts?.[key] ?? 0;
   };
 
@@ -94,7 +83,8 @@ export function StatCards({ panelBg, panelBorder, textPrimary, textMuted }: Stat
                     isPrimary ? "text-white" : textPrimary
                   }`}
                 >
-                  <LoadingRegion as="span" className={isPrimary ? "sk-surface-brand" : ""} loading={loading} error={error} retry={() => setAttempt(value => value + 1)} skeleton={<SkeletonText width="3ch" />}>{value}</LoadingRegion>
+                  {cachedOffline && <span role="alert">{error?.message}</span>}
+                  <LoadingRegion key={String(state.forbidden)} as="span" className={isPrimary ? "sk-surface-brand" : ""} loading={loading} error={cachedOffline ? null : error} retry={retry} skeleton={<SkeletonText width="3ch" />}>{value}</LoadingRegion>
                 </p>
                 {unit && (
                   <p className={`text-sm font-medium ${isPrimary ? "text-white/70" : textMuted}`}>

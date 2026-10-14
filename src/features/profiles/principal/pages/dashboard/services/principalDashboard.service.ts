@@ -1,5 +1,7 @@
 import { API_CONFIG } from '../../../../../../config/api.config';
 
+import { QueryHttpError } from "@shared/http/QueryHttpError";
+
 const BASE_URL = `${API_CONFIG.baseURL}/api`;
 
 import type {
@@ -21,23 +23,43 @@ import { HOLISTIC_RUBRIC } from "../utils/HolisticRubrics";
 import type { AcademicYearRow } from "../../../../admin/pages/subjects/services/academicyear.service";
 import type { ApiResponse } from "../../../../admin/pages/subjects/services/academicyear.service";
 
-export async function fetchActiveTerm(): Promise<ActiveTermRow> {
-  const res = await fetch(`${BASE_URL}/principal-dashboard/active-term`, {
+export interface DashboardRequestOptions {
+  signal?: AbortSignal;
+  onUnauthorized?: () => void;
+  activeTerm?: ActiveTermRow;
+}
+
+// Guard each response before aggregation: a sibling rejection must not mask 401.
+async function request(path: string, options: DashboardRequestOptions, init: RequestInit): Promise<Response> {
+  // Let a same-tick StrictMode cleanup cancel before dispatching transport.
+  await Promise.resolve();
+  options.signal?.throwIfAborted();
+  const response = await fetch(`${BASE_URL}${path}`, { ...init, signal: options.signal });
+  if (response.status === 401 && !options.signal?.aborted) options.onUnauthorized?.();
+  return response;
+}
+
+export async function fetchActiveTerm(options: DashboardRequestOptions = {}): Promise<ActiveTermRow> {
+  const res = await request(`/principal-dashboard/active-term`, options, {
     credentials: "include",
   });
+  if (!res.ok) {
+    const failure = await res.json().catch(() => null);
+    throw new QueryHttpError(failure?.message || "Failed to fetch active term.", res.status);
+  }
   const json: ApiResponse<ActiveTermRow> = await res.json();
   if (!res.ok || !json.data) {
-    throw new Error(json.message || "Failed to fetch active term.");
+    throw new QueryHttpError(json.message || "Failed to fetch active term.", res.status);
   }
   return json.data;
 }
 // Total ng lahat ng enrolled na estudyante (hindi kasama ang deleted at graduated)
-async function getTotalStudents(): Promise<number> {
-  const res = await fetch(`${BASE_URL}/student/total-student`, {
+async function getTotalStudents(options: DashboardRequestOptions = {}): Promise<number> {
+  const res = await request(`/student/total-student`, options, {
     credentials: "include",
   });
   if (!res.ok) {
-    throw new Error(`Failed to fetch total students (${res.status})`);
+    throw new QueryHttpError(`Failed to fetch total students (${res.status})`, res.status);
   }
   const json: { total: number } = await res.json();
   return Number(json.total) || 0;
@@ -71,70 +93,74 @@ export interface ActiveTermRow {
   status: "Upcoming" | "Active" | "Completed";
 }
 
-export async function getOverview(): Promise<OverviewData> {
+export async function getOverview(options: DashboardRequestOptions = {}): Promise<OverviewData> {
   const [totalStudents, response] = await Promise.all([
-    getTotalStudents(),
-    fetch(`${BASE_URL}/principal-dashboard/overview-summary`, { credentials: "include" }),
+    getTotalStudents(options),
+    request(`/principal-dashboard/overview-summary`, options, { credentials: "include" }),
   ]);
-  if (!response.ok) throw new Error(`Failed to fetch overview (${response.status})`);
+  if (!response.ok) throw new QueryHttpError(`Failed to fetch overview (${response.status})`, response.status);
   const summary: Pick<OverviewData, "totalTeachers" | "attendance" | "academicPerf"> = await response.json();
   return { totalStudents, ...summary, needsIntervention: 0 };
 }
 
-export async function fetchActiveAcademicYear(): Promise<AcademicYearRow> {
-  const res = await fetch(`${BASE_URL}/academic-year/getAcademicYear`, {credentials: "include"});
+export async function fetchActiveAcademicYear(options: DashboardRequestOptions = {}): Promise<AcademicYearRow> {
+  const res = await request(`/academic-year/getAcademicYear`, options, {credentials: "include"});
+  if (!res.ok) {
+    const failure = await res.json().catch(() => null);
+    throw new QueryHttpError(failure?.message || "Failed to fetch academic year.", res.status);
+  }
   const json: ApiResponse<AcademicYearRow> = await res.json();
-  if (!res.ok || !json.data) throw new Error(json.message || "Failed to fetch academic year.");
+  if (!res.ok || !json.data) throw new QueryHttpError(json.message || "Failed to fetch academic year.", res.status);
   return json.data;
 }
 
-export async function getTodaysAttendance(): Promise<TodaysAttendance> {
-  const res = await fetch(`${BASE_URL}/principal-dashboard/getTodaysAttendance`, {
+export async function getTodaysAttendance(options: DashboardRequestOptions = {}): Promise<TodaysAttendance> {
+  const res = await request(`/principal-dashboard/getTodaysAttendance`, options, {
     credentials: "include",
   });
   if (!res.ok) {
-    throw new Error(`Failed to fetch today's attendance (${res.status})`);
+    throw new QueryHttpError(`Failed to fetch today's attendance (${res.status})`, res.status);
   }
   return res.json();
 }
 
-export async function getAttendanceByGrade(): Promise<GradeAttendance[]> {
-  const res = await fetch(`${BASE_URL}/principal-dashboard/getAttendanceByGrade`, {
+export async function getAttendanceByGrade(options: DashboardRequestOptions = {}): Promise<GradeAttendance[]> {
+  const res = await request(`/principal-dashboard/getAttendanceByGrade`, options, {
     credentials: "include",
   });
   if (!res.ok) {
-    throw new Error(`Failed to fetch attendance by grade (${res.status})`);
+    throw new QueryHttpError(`Failed to fetch attendance by grade (${res.status})`, res.status);
   }
   return res.json();
 }
 
-export async function getTopSubjectPerGrade(): Promise<TopSubjectPerGrade[]> {
-  const res = await fetch(`${BASE_URL}/principal-dashboard/topSubjectPerGrade`, {
+export async function getTopSubjectPerGrade(options: DashboardRequestOptions = {}): Promise<TopSubjectPerGrade[]> {
+  const res = await request(`/principal-dashboard/topSubjectPerGrade`, options, {
     credentials: "include",
   });
   if (!res.ok) {
-    throw new Error(`Failed to fetch top subject per grade (${res.status})`);
+    throw new QueryHttpError(`Failed to fetch top subject per grade (${res.status})`, res.status);
   }
   return res.json();
 }
 
-export async function getSubjectRankingByTerm(): Promise<SubjectRankingByTerm> {
-  const res = await fetch(`${BASE_URL}/principal-dashboard/subjectRankingByTerm`, {
+export async function getSubjectRankingByTerm(options: DashboardRequestOptions = {}): Promise<SubjectRankingByTerm> {
+  const res = await request(`/principal-dashboard/subjectRankingByTerm`, options, {
     credentials: "include",
   });
   if (!res.ok) {
-    throw new Error(`Failed to fetch subject ranking (${res.status})`);
+    throw new QueryHttpError(`Failed to fetch subject ranking (${res.status})`, res.status);
   }
   return res.json();
 }
 
-export async function getHolisticOverview(): Promise<HolisticDomain[]> {
-  const res = await fetch(`${BASE_URL}/principal-dashboard/holisticDomain`, {
+export async function getHolisticOverview(options: DashboardRequestOptions = {}): Promise<HolisticDomain[]> {
+  const res = await request(`/principal-dashboard/holisticDomain`, options, {
     method: "GET",
     credentials: "include",
   });
   if (!res.ok) {
-    throw new Error(`Failed to fetch holistic overview: ${res.status}`);
+    throw new QueryHttpError(`Failed to fetch holistic overview: ${res.status}`, res.status);
   }
   const json: ApiIntegrationResponse<HolisticDomain[]> = await res.json();
   if (!json.success) {
@@ -147,26 +173,26 @@ export function getHolisticRubric(): Promise<HolisticRubric> {
   return Promise.resolve(HOLISTIC_RUBRIC);
 }
 
-export async function getHolisticDevelopmentData(): Promise<{
+export async function getHolisticDevelopmentData(options: DashboardRequestOptions = {}): Promise<{
   holisticDomains: HolisticDomain[];
   holisticRubric: HolisticRubric;
 }> {
   const [holisticDomains, holisticRubric] = await Promise.all([
-    getHolisticOverview(),
+    getHolisticOverview(options),
     getHolisticRubric(),
   ]);
 
   return { holisticDomains, holisticRubric };
 }
 
-export async function getPerformanceByGrade(): Promise<GradePerformance[]> {
-  const res = await fetch(`${BASE_URL}/principal-dashboard/performanceByGrade`, {
+export async function getPerformanceByGrade(options: DashboardRequestOptions = {}): Promise<GradePerformance[]> {
+  const res = await request(`/principal-dashboard/performanceByGrade`, options, {
     method: "GET",
     credentials: "include",
   });
 
   if (!res.ok) {
-    throw new Error(`Failed to fetch performance by grade: ${res.status}`);
+    throw new QueryHttpError(`Failed to fetch performance by grade: ${res.status}`, res.status);
   }
 
   const json: ApiIntegrationResponse<GradePerformance[]> = await res.json();
@@ -178,10 +204,10 @@ export async function getPerformanceByGrade(): Promise<GradePerformance[]> {
   return json.data;
 }
 
-export async function getPerformanceTrend(): Promise<PerformanceTrendPoint[]> {
+export async function getPerformanceTrend(options: DashboardRequestOptions = {}): Promise<PerformanceTrendPoint[]> {
   const token = localStorage.getItem("token");
 
-  const response = await fetch(`${BASE_URL}/principal-dashboard/performanceTrend`, {
+  const response = await request(`/principal-dashboard/performanceTrend`, options, {
     method: "GET",
     credentials: "include",
     headers: {
@@ -192,8 +218,8 @@ export async function getPerformanceTrend(): Promise<PerformanceTrendPoint[]> {
 
   if (!response.ok) {
     const errorBody = await response.json().catch(() => null);
-    throw new Error(
-      errorBody?.message ?? `Failed to fetch performance trend (status ${response.status})`
+    throw new QueryHttpError(
+      errorBody?.message ?? `Failed to fetch performance trend (status ${response.status})`, response.status
     );
   }
 
@@ -211,7 +237,7 @@ export function getAttentionItems(): Promise<AttentionItem[]> {
   return Promise.resolve(ATTENTION_ITEMS);
 }
 
-export async function getPrincipalDashboardData(): Promise<PrincipalDashboardData> {
+export async function getPrincipalDashboardData(options: DashboardRequestOptions = {}): Promise<PrincipalDashboardData> {
   const [
     overview,
     todaysAttendance,
@@ -225,17 +251,17 @@ export async function getPrincipalDashboardData(): Promise<PrincipalDashboardDat
     subjectRankingByTerm,
     activeTerm
   ] = await Promise.all([
-    getOverview(),
-    getTodaysAttendance(),
-    getPerformanceByGrade(),
-    getPerformanceTrend(),
-    getAttendanceByGrade(),
-    getTopSubjectPerGrade(),
-    getHolisticOverview(),
+    getOverview(options),
+    getTodaysAttendance(options),
+    getPerformanceByGrade(options),
+    getPerformanceTrend(options),
+    getAttendanceByGrade(options),
+    getTopSubjectPerGrade(options),
+    getHolisticOverview(options),
     getHolisticRubric(),
     getAttentionItems(),
-    getSubjectRankingByTerm(),
-    fetchActiveTerm(), 
+    getSubjectRankingByTerm(options),
+    options.activeTerm ?? fetchActiveTerm(options),
   ]);
 
   return {

@@ -144,7 +144,7 @@ export function UsersTable({
   return (
     <>
       <div className="hidden md:block overflow-x-auto">
-        <LoadingTable loading={loading} error={error} retry={retry} view={view} count={users.length} className="teacher-user-table w-full text-sm"
+        <LoadingTable key={error ? 'error' : 'ready'} loading={loading} error={error} retry={retry} view={view} count={users.length} className="teacher-user-table w-full text-sm"
           columns={userColumns} header={<thead>
             <tr className={darkMode ? "bg-white/5" : "bg-brand-light"}>
               {userColumns.map((h) => (
@@ -162,7 +162,7 @@ export function UsersTable({
         </LoadingTable>
       </div>
 
-      <div className="md:hidden"><LoadingRegion loading={loading} error={error} retry={retry} variable skeleton={renderMobile(true)}>{renderMobile(false)}</LoadingRegion></div>
+      <div className="md:hidden"><LoadingRegion key={error ? 'error' : 'ready'} loading={loading} error={error} retry={retry} variable skeleton={renderMobile(true)}>{renderMobile(false)}</LoadingRegion></div>
     </>
   );
 }

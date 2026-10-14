@@ -2,54 +2,23 @@ import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonControl } from "@shared/components/SkeletonLoading";
 import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 import { skeletonRows, rememberRows } from "@shared/loading/reservations";
-import { useState } from "react";
-import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
+import {lazy,Suspense} from "react";
+import {useRoutePreview} from "@shared/loading/RoutePreview";
 import { useNavigate } from "react-router-dom";
 import { AlertTriangle, CheckCircle2, ChevronRight } from "lucide-react";
 import type { InterventionFlag } from "../types/types";
 import type { AdminThemeContext } from "../../../../../admin/pages/AdminLayout";
 import SectionHeader from "../../../ui/SectionHeader";
 import type { DetailStudent } from "../../GlobalTypes/types";
-import LowGradeTopicsService from "../service/intervention.service.ts";
 
-interface InterventionSupportProps {
+export interface InterventionSupportProps {
   theme: AdminThemeContext;
   student: DetailStudent;
 }
 
-export default function InterventionSupport({
-  theme,
-  student,
-}: InterventionSupportProps) {
-  const [flags, setFlags] = useState<InterventionFlag[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
-
-  const [attempt,setAttempt] = useState(0);
-  const view = `parent-intervention:${student.id}`;
-  useEffect(() => {
-    let isMounted = true;
-
-    async function loadFlags() {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await LowGradeTopicsService.getLowGradeTopics(student.id);
-        if (isMounted) setFlags(data);
-      } catch (err) {
-        console.error("Failed to load intervention flags:", err);
-        if (isMounted) setError("Unable to load intervention data right now.");
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    }
-
-    loadFlags();
-    return () => {
-      isMounted = false;
-    };
-  }, [student.id, attempt]);
+export function InterventionSupportView({theme,student,reader}:InterventionSupportProps&{reader:{flags:InterventionFlag[];loading:boolean;error:string|null;retry:()=>void}}) {
+  const {flags,loading,error}=reader;
+  const navigate=useNavigate(),view=`parent-intervention:${student.id}`;
 
   const { darkMode, panelBg, panelBorder } = theme;
 
@@ -76,7 +45,7 @@ export default function InterventionSupport({
       />
 
       <div className="p-5 flex flex-col gap-2">
-        <LoadingRegion name="parent-intervention" loading={loading} error={error} retry={() => setAttempt(n=>n+1)} variable retainPrevious hasContent={flags.length > 0} skeleton={null} onSettled={() => rememberRows(view,flags.length)} frame={(pending) => (
+        <LoadingRegion name="parent-intervention" loading={loading} error={error} retry={reader.retry} variable retainPrevious hasContent={flags.length > 0} skeleton={null} onSettled={() => rememberRows(view,flags.length)} frame={(pending) => (
         !pending && flags.length === 0 ? (
           <div className={`flex items-center gap-2 rounded-lg px-3 py-2.5 ${okBg}`}>
             <CheckCircle2 size={16} className={`shrink-0 ${okIcon}`} />
@@ -104,3 +73,5 @@ export default function InterventionSupport({
     </div>
   );
 }
+const Queries=lazy(()=>import('../../../../query/ParentInterventionQueries'));
+export default function InterventionSupport(props:InterventionSupportProps){const preview=useRoutePreview();const fallback=<InterventionSupportView {...props} reader={{flags:[],loading:true,error:null,retry:()=>{}}}/>;return preview?fallback:<Suspense fallback={fallback}><Queries {...props}/></Suspense>;}

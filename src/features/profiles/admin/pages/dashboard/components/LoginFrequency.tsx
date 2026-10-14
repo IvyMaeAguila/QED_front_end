@@ -1,14 +1,10 @@
 import { AccountSelect } from "@shared/components/AccountSelect";
-import { useMemo, useState } from "react";
-import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
+import { useMemo } from "react";
 import { RefreshCw } from "lucide-react";
-import {
-  getLoginFrequency,
-  LoginFrequencyServiceError,
-} from "../services/loginFrequency.service";
+import { useAdminDashboardData, adminDashboardOfflineError } from "../AdminDashboardDataContext";
 import type {
   LoginFrequencyPeriod,
-  LoginFrequencyResponse,
+  LoginFrequencyChartPoint,
 } from "../services/loginFrequency.service";
 
 import { LoadingRegion } from "../../../../../../shared/loading/LoadingRegion";
@@ -28,6 +24,7 @@ const PERIOD_OPTIONS: { label: string; value: LoginFrequencyPeriod }[] = [
   { label: "Monthly", value: "monthly" },
   { label: "Yearly", value: "yearly" },
 ];
+const emptyChart: LoginFrequencyChartPoint[] = [];
 
 // Gumagawa ng "gandang" tick values papunta pataas mula sa max value
 // (hal. 0/25/50/75/100 kung maliit ang data, pero sumusukat pataas
@@ -45,47 +42,14 @@ export function LoginFrequency({
   textPrimary,
   textMuted,
 }: LoginFrequencyProps) {
-  const [selectedPeriod, setSelectedPeriod] = useState<LoginFrequencyPeriod>("weekly");
-  const [data, setData] = useState<LoginFrequencyResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [refreshTick, setRefreshTick] = useState(0);
+  const { frequency: state, selectedPeriod, setSelectedPeriod } = useAdminDashboardData();
+  const { data, loading, error, retry } = state;
+  const cachedOffline = error === adminDashboardOfflineError && data !== undefined;
 
   const selectedLabel =
     PERIOD_OPTIONS.find((p) => p.value === selectedPeriod)?.label ?? "This Week";
 
-  useEffect(() => {
-    const interval = window.setInterval(() => setRefreshTick((tick) => tick + 1), 30_000);
-    return () => window.clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function load() {
-      setLoading(true);
-      setError(null);
-      try {
-        const result = await getLoginFrequency(selectedPeriod, controller.signal);
-        setData(result);
-      } catch (err) {
-        if ((err as Error).name === "AbortError") return;
-        const message =
-          err instanceof LoginFrequencyServiceError
-            ? err.message
-            : "Nagka-error sa pagkuha ng login frequency.";
-        setError(message);
-        setData(null);
-      } finally {
-        if (!controller.signal.aborted) setLoading(false);
-      }
-    }
-
-    load();
-    return () => controller.abort();
-  }, [selectedPeriod, refreshTick]);
-
-  const chart = data?.chart ?? [];
+  const chart = data?.chart ?? emptyChart;
   const summary = data?.summary ?? null;
   const ticks = useMemo(() => buildTicks(Math.max(...chart.map((c) => c.count), 0)), [chart]);
   const maxTick = ticks[0];
@@ -196,7 +160,7 @@ export function LoginFrequency({
         <div className="flex shrink-0 items-center gap-2">
         <button
           type="button"
-          onClick={() => setRefreshTick((tick) => tick + 1)}
+          onClick={retry}
           aria-label="Refresh login frequency"
           title="Refresh login activity"
           className={`h-9 w-9 rounded-xl border flex items-center justify-center transition-colors ${darkMode ? "bg-[#0B1120] border-[#374151] text-white hover:bg-[#111827]" : "bg-brand-light border-border-subtle text-[#111827] hover:bg-brand-light"}`}
@@ -207,7 +171,8 @@ export function LoginFrequency({
         </div>
       </div>
 
-      <LoadingRegion loading={loading} error={error} retry={() => setRefreshTick(tick => tick + 1)} variable skeleton={renderChart(true)} onSettled={() => rememberRows(view, chart.length)}>{renderChart(false)}</LoadingRegion>
+      {cachedOffline && <div role="alert">{error?.message}</div>}
+      <LoadingRegion key={String(state.forbidden)} loading={loading} error={cachedOffline ? null : error} retry={retry} variable skeleton={renderChart(true)} onSettled={() => rememberRows(view, chart.length)}>{renderChart(false)}</LoadingRegion>
     </section>
   );
 }

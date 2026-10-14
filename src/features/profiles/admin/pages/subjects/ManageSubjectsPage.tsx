@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { ManageSubjectsPageComposition,type ManageSubjectsPageEffectScope } from "./ManageSubjectsPage.loading-view";
+import {useTeachers} from '../classes/context/TeachersContext';
 export * from "./ManageSubjectsPage.loading-view";
 
 function ManageSubjectsPageDataEffects({ scope }: { scope: ManageSubjectsPageEffectScope }) {
+ const {activateQueries}=useTeachers();useEffect(()=>{activateQueries();},[activateQueries]);
  const { activeGrade, GRADE_LEVELS, loadSubjectsForGrade } = scope;
  useEffect(() => {
     if (activeGrade === "all") {

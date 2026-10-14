@@ -1,3 +1,5 @@
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@shared/query/queryClient";
 import { useMemo,useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
@@ -20,7 +22,7 @@ function usePrincipalGradebooksPageState() {
   const { panelBg, panelBorder, textPrimary, textMuted } = theme;
   const navigate = useNavigate();
 
-  const { gradeLevels, schoolYear, loading, error, retry } =
+  const { gradeLevels, schoolYear, loading, error, retry, cachedOffline, dataScope } =
     usePrincipalGradebooks();
   const [search, setSearch] = useState("");
   const [gradeFilter, setGradeFilter] = useState("All Grades");
@@ -111,7 +113,7 @@ function usePrincipalGradebooksPageState() {
     );
   };
   return { content: ((
-    <div className="flex flex-col gap-6 font-sans">
+    <div key={dataScope} className="flex flex-col gap-6 font-sans">
       <GradebooksHeader loading={loading}
         schoolYear={schoolYear}
         textPrimary={textPrimary}
@@ -150,7 +152,8 @@ function usePrincipalGradebooksPageState() {
             </div>
           </GradeLevelSearchInput>
 
-          <LoadingRegion name="principal-gradebook-collection" loading={loading} error={error} retry={retry} variable frame={renderGradebooks} skeleton={null} retainPrevious initialContentKnown={gradeLevels.length > 0} hasContent={filtered.length > 0} onSettled={() => rememberRows(view, filtered.length)}>{null}</LoadingRegion>
+          {cachedOffline && <LoadingRegion loading={false} error={error} retry={retry} skeleton={null}>{null}</LoadingRegion>}
+          <LoadingRegion name="principal-gradebook-collection" loading={loading} error={cachedOffline ? null : error} retry={retry} variable frame={renderGradebooks} skeleton={null} retainPrevious initialContentKnown={gradeLevels.length > 0} hasContent={filtered.length > 0} onSettled={() => rememberRows(view, filtered.length)}>{null}</LoadingRegion>
         </>
     </div>
   )), scope: {  } };
@@ -172,6 +175,10 @@ function usePrincipalGradebooksPageState() {
 export type PrincipalGradebooksPageEffectScope = ReturnType<typeof usePrincipalGradebooksPageState>["scope"];
 export type PrincipalGradebooksPageRouteProps = Record<string, never>;
 export function PrincipalGradebooksPageComposition(props: object & { effects?: (scope: PrincipalGradebooksPageEffectScope) => import("react").ReactNode }) {
+ return <QueryClientProvider client={queryClient}><PrincipalGradebooksContent {...props} /></QueryClientProvider>;
+}
+
+function PrincipalGradebooksContent(props: object & { effects?: (scope: PrincipalGradebooksPageEffectScope) => import("react").ReactNode }) {
  const state = usePrincipalGradebooksPageState();
  return <>{props.effects?.(state.scope)}{state.content}</>;
 }

@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { mockTeacher } from "./fixtures/teacher";
 
-async function bootstrap(page: import("@playwright/test").Page, quick = false) {
+async function bootstrap(page: import("@playwright/test").Page, quick = false, warmRole = false) {
   await page.route("https://fonts.googleapis.com/**", route => route.abort());
   const releaseData = await mockTeacher(page, false);
   let release!: () => void;
@@ -10,10 +10,14 @@ async function bootstrap(page: import("@playwright/test").Page, quick = false) {
   page.on("request", request => { if (request.url().includes("/api/teacherDashboard")) requests.push(request.url()); });
   await page.addInitScript(() => {
     Object.assign(window, { bootstrapFrames: [] });
+    const instances = new WeakMap<Element, number>();
+    let nextInstance = 0;
     const record = () => {
       const root = document.querySelector('[data-sk-region="auth-bootstrap"], .qed-fill');
       const logo = root?.querySelector('[data-bootstrap-loader], .qed-wrap');
+      if (root && !instances.has(root)) instances.set(root, ++nextInstance);
       if (root) (window as unknown as { bootstrapFrames: unknown[] }).bootstrapFrames.push({
+        instance: instances.get(root),
         time: performance.now(), busy: root.getAttribute("aria-busy"),
         visible: !!logo && getComputedStyle(logo).visibility !== "hidden" && logo.getBoundingClientRect().height > 0,
         status: root.querySelectorAll(':scope > [role="status"]').length,
@@ -25,7 +29,17 @@ async function bootstrap(page: import("@playwright/test").Page, quick = false) {
     if (quick) await new Promise(resolve => setTimeout(resolve, 60)); else await gate;
     await route.fulfill({ json: { user: { id: "1", role: "TEACHER", name: "Marie Dela Cruz", user_name: "teacher" } } });
   });
-  await page.goto("/teacher");
+  if (warmRole) {
+    await page.route("**/bootstrap-warm-role.html", route => route.fulfill({contentType:"text/html",body:'<html><body><div id="root"></div></body></html>'}));
+    await page.goto("/bootstrap-warm-role.html");
+    await page.evaluate(async()=>{
+      const refresh=await import(/* @vite-ignore */ "/@react-refresh");refresh.default.injectIntoGlobalHook(window);
+      Object.assign(window,{$RefreshReg$:()=>{},$RefreshSig$:()=>(type:unknown)=>type,__vite_plugin_react_preamble_installed__:true});
+      await import(/* @vite-ignore */ "/src/routes/roles/TeacherRoutes.tsx");
+      const roles=await import(/* @vite-ignore */ "/src/routes/roleModules.ts");roles.preloadRole("TEACHER");
+      history.replaceState(null,"","/teacher");await import(/* @vite-ignore */ "/src/main.tsx");
+    });
+  } else await page.goto("/teacher");
   return { release, releaseData, requests };
 }
 test("bootstrap 60ms never shows the brand loader or status", async ({ page }) => {
@@ -94,10 +108,11 @@ test("bootstrap busy and status follow reveal, minimum duration, and DOM cleanup
   await expect(root.getByRole("status")).toHaveText("Loading…");
   release();
   await expect(page.getByRole("heading", { name: /Good .*, Marie Dela Cruz!/ })).toBeVisible();
-  const evidence = await page.evaluate(() => (window as unknown as { bootstrapFrames: { time: number; busy: string; visible: boolean; status: number }[] }).bootstrapFrames);
+  const evidence = await page.evaluate(() => (window as unknown as { bootstrapFrames: { instance: number; time: number; busy: string; visible: boolean; status: number }[] }).bootstrapFrames);
   const visible = evidence.find(x => x.visible)!;
   const done = evidence.find(x => x.busy === "false")!;
   expect(done.time - visible.time).toBeGreaterThanOrEqual(390);
+  expect(new Set(evidence.map(frame => frame.instance)).size, "auth handoff must not remount the router/loader").toBe(1);
   for (const frame of evidence) if (!frame.visible) expect(frame.status).toBe(0);
   await expect(page.locator('[data-bootstrap-loader], .qed-wrap')).toHaveCount(0);
   await expect(root).toHaveCount(0);

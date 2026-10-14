@@ -1,31 +1,14 @@
-import { useEffect } from "react";
-import { SubjectClassListPageComposition,type SubjectClassListPageEffectScope } from "./SubjectClassListPage.loading-view";
-export * from "./SubjectClassListPage.loading-view";
-
-function SubjectClassListPageDataEffects({ scope }: { scope: SubjectClassListPageEffectScope }) {
- const { subjectSectionId, setLoading, setError, subjectClassListService, setSubjectName, setGradeLevel, setSectionName, setStudents, attempt } = scope;
- useEffect(() => {
-    if (!subjectSectionId) return;
-    setLoading(true);
-    setError(null);
-    subjectClassListService
-      .getClassList(Number(subjectSectionId))
-      .then((result) => {
-        setSubjectName(result.subjectName);
-        setGradeLevel(result.gradeLevel);
-        setSectionName(result.sectionName);
-        setStudents(result.students);
-        setError(null);
-      })
-      .catch((err) => {
-        console.error("Failed to load class list:", err);
-        setError("Failed to load this class list.");
-      })
-      .finally(() => setLoading(false));
-  }, [subjectSectionId, attempt]);
- return null;
+import { QueryClientProvider } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
+import { queryClient } from "@shared/query/queryClient";
+import { useTeacherReader } from "../../query/useTeacherReader";
+import { subjectClassListService } from "./services/subjectClassList.service";
+import { SubjectClassListPageComposition } from "./SubjectClassListPage.loading-view";
+export { SubjectClassListPageComposition } from "./SubjectClassListPage.loading-view";
+export type { SubjectClassListPageEffectScope, SubjectClassListPageRouteProps } from "./SubjectClassListPage.loading-view";
+function ClassListQueries() {
+  const { subjectSectionId } = useParams();
+  const reader = useTeacherReader(["subjects", "roster", subjectSectionId ?? null], options => subjectClassListService.getClassList(Number(subjectSectionId), options), "Failed to load this class list.");
+  return <SubjectClassListPageComposition reader={reader}/>;
 }
-
-export function SubjectClassListPage() {
- return <SubjectClassListPageComposition effects={scope => <SubjectClassListPageDataEffects scope={scope}/>} />;
-}
+export function SubjectClassListPage() { return <QueryClientProvider client={queryClient}><ClassListQueries/></QueryClientProvider>; }

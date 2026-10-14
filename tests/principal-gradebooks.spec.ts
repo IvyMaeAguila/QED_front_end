@@ -6,13 +6,15 @@ import fs from "node:fs";
 
 async function gradebooksFixture(page: Page, dark: boolean, count = 3) {
   const releaseContext = await mockDirectory(page, "PRINCIPAL", dark);
+  let calls = 0;
   let release!: () => void;
   let gate = new Promise<void>(resolve => { release = resolve; });
   await page.route("**/api/gradesheets/section-grade", async route => {
+    calls++;
     await gate;
     await route.fulfill({ json: Array.from({ length: count }, (_, index) => ({ gradeLevelId: 1, gradeLevel: "Grade 1", sections: [{ sectionId: index + 1, section: `Maroon ${index + 1}`, studentCount: 20, isSubmitted: index % 2 === 0, gradingPeriodId: index % 2 === 0 ? 1 : null }] })) });
   });
-  return { finish: () => { releaseContext(); release(); }, holdAgain: () => { gate = new Promise<void>(resolve => { release = resolve; }); } };
+  return { calls: () => calls, finish: () => { releaseContext(); release(); }, holdAgain: () => { gate = new Promise<void>(resolve => { release = resolve; }); } };
 }
 
 for (const width of [375, 1280]) for (const dark of [false, true]) test(`principal gradebooks ${width} ${dark ? "dark" : "light"}: real shell and existing cards`, async ({ page }) => {
@@ -47,10 +49,12 @@ test("repeat gradebook visit displays cached cards and school year immediately",
   await expect(page.getByRole("heading", { name: "Help & Support", exact: true })).toBeVisible();
   fixture.holdAgain(); await page.goBack();
   const region = page.locator('[data-sk-region="principal-gradebook-collection"]');
-  await expect(region.locator("[data-sk-stale]")).toBeVisible();
+  // Fresh Query data settles immediately; it must not start a competing refetch.
+  await expect(region.locator("[data-sk-stale]")).toHaveCount(0);
   await expect(region.locator("article")).toHaveCount(3);
   await expect(region.locator("[data-sk-primitive]")).toHaveCount(0);
-  await expect(region).toHaveAttribute("data-sk-phase", "dimmed");
+  await expect(region).toHaveAttribute("data-sk-phase", "settled");
+  expect(fixture.calls()).toBe(1);
   fixture.finish(); await expect(region).toHaveAttribute("data-sk-phase", "settled");
 });
 

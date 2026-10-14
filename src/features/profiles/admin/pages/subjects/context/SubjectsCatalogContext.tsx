@@ -15,7 +15,7 @@ import {
   type NewAssessmentType
 } from "../services/subject.service";
 
-interface SubjectsCatalogContextValue {
+export interface SubjectsCatalogContextValue {
   loading: boolean;
   assessmentError: string | null;
   getSubjectNamesForGrade: (grade: GradeLevel) => string[];
@@ -29,7 +29,7 @@ interface SubjectsCatalogContextValue {
 
 const SubjectsCatalogContext = createContext<SubjectsCatalogContextValue | undefined>(undefined);
 
-export function SubjectsCatalogProvider({ children }: { children: ReactNode }) {
+export function SubjectsCatalogProvider({ children,value:external }: { children: ReactNode;value?:SubjectsCatalogContextValue }) {
   const [subjectsByGrade, setSubjectsByGrade] = useState<Record<string, ElemSubjectRow[]>>({});
   const [assessmentTypes, setAssessmentTypes] = useState<NewAssessmentType[]>([]);
   const [loading, setLoading] = useState(false);
@@ -127,7 +127,7 @@ export function SubjectsCatalogProvider({ children }: { children: ReactNode }) {
 
   return (
     <SubjectsCatalogContext.Provider
-      value={{
+      value={external??{
         loading,
         assessmentError,
         getSubjectNamesForGrade,

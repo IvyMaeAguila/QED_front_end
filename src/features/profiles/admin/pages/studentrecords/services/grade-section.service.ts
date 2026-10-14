@@ -1,4 +1,6 @@
 import { API_CONFIG } from '../../../../../../config/api.config';
+import type {ApiRequestOptions} from '@shared/http/ApiRequestOptions';
+import {QueryHttpError} from '@shared/http/QueryHttpError';
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/gradeLevel`;
 
@@ -7,18 +9,19 @@ export interface DBGradeLevelResponse {
   grade_level: string; 
 }
 
-export const fetchGradeLevels = async (): Promise<DBGradeLevelResponse[]> => {
+export const fetchGradeLevels = async (options:ApiRequestOptions={}): Promise<DBGradeLevelResponse[]> => {
   try {
-    const response = await fetch(`${BASE_URL}/getGradeLevels`, {credentials: "include"});
+    const response = await fetch(`${BASE_URL}/getGradeLevels`, {credentials: "include",signal:options.signal});
+    if(response.status===401)options.onUnauthorized?.();
     
     if (!response.ok) {
-      throw new Error(`Failed to fetch grade levels: ${response.statusText}`);
+      throw new QueryHttpError(`Failed to fetch grade levels: ${response.statusText}`,response.status);
     }
     
     const rawData: DBGradeLevelResponse[] = await response.json();
     return rawData;
   } catch (error) {
-    console.error("Error in gradeService:", error);
+    if(!options.signal?.aborted)console.error("Error in gradeService:", error);
     throw error;
   }
 };
@@ -29,18 +32,19 @@ export interface DBSectionResponse {
   grade_level: string
 }
 
-export const fetchSectionByGrade = async (gradeLevelId: string | number): Promise<DBSectionResponse[]> => {
+export const fetchSectionByGrade = async (gradeLevelId: string | number,options:ApiRequestOptions={}): Promise<DBSectionResponse[]> => {
   try {
     // Ginawang gradeLevelId ang variable para tugma sa query parameter ng backend natin
-    const response = await fetch(`${BASE_URL}/getSectionByGrade?gradeLevelId=${encodeURIComponent(gradeLevelId)}`, {credentials: "include"});
+    const response = await fetch(`${BASE_URL}/getSectionByGrade?gradeLevelId=${encodeURIComponent(gradeLevelId)}`, {credentials: "include",signal:options.signal});
+    if(response.status===401)options.onUnauthorized?.();
     
     if (!response.ok) {
-      throw new Error(`Failed to fetch sections: ${response.statusText}`);
+      throw new QueryHttpError(`Failed to fetch sections: ${response.statusText}`,response.status);
     }
     
     return await response.json();
   } catch (error) {
-    console.error("Error in sectionService:", error);
+    if(!options.signal?.aborted)console.error("Error in sectionService:", error);
     throw error;
   }
 };

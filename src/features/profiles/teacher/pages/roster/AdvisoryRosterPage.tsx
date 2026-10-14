@@ -1,6 +1,8 @@
 import { AdvisoryRosterPageComposition } from "./AdvisoryRosterPage.loading-view";
-export * from "./AdvisoryRosterPage.loading-view";
+import { TeacherAdvisoryQueries } from "../../query/TeacherAdvisoryQueries";
+export { AdvisoryRosterPageComposition } from "./AdvisoryRosterPage.loading-view";
+export type { AdvisoryRosterPageEffectScope, AdvisoryRosterPageRouteProps } from "./AdvisoryRosterPage.loading-view";
 
 export function AdvisoryRosterPage() {
- return <AdvisoryRosterPageComposition/>;
+ return <TeacherAdvisoryQueries><AdvisoryRosterPageComposition/></TeacherAdvisoryQueries>;
 }

@@ -1,175 +1,56 @@
-import { useEffect } from "react";
-import { SubjectDetailPageComposition,type SubjectDetailPageEffectScope } from "./SubjectDetailPage.loading-view";
-import type {
-GradeItem,
-GradingPeriod,
-HolisticMap,
-ScoreMap
-} from "./types/Grading";
-export * from "./SubjectDetailPage.loading-view";
-
-function SubjectDetailPageDataEffects({ scope }: { scope: SubjectDetailPageEffectScope }) {
- const { subjectId, setTemplateLoading, getEffectiveWeightsSafe, selectedTerm, setTemplateStructure, hasUnsavedChanges, attempt, getCachedSubjectDetail, setSubjectName, setGradeLevel, setRoster, setItems, setScores, setHolistic, setHolisticWeekStartDate, setTerms, setSelectedTerm, setIsOwnAdvisory, setAdviserName, setLoading, setError, fetchSubjectSectionInfo, fetchGradingPeriods, fetchItems, fetchScores, fetchHolistic, setCachedSubjectDetail } = scope;
- useEffect(() => {
-    if (!subjectId) return;
-    let cancelled = false;
-    setTemplateLoading(true);
-    getEffectiveWeightsSafe(Number(subjectId), selectedTerm || undefined).then((weights) => {
-      if (!cancelled) { setTemplateStructure(weights?.templateStructure); setTemplateLoading(false); }
-    });
-    return () => { cancelled = true; };
-  }, [subjectId, selectedTerm]);
-useEffect(() => {
-    if (!hasUnsavedChanges) return;
-    const handler = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = "";
-    };
-    window.addEventListener("beforeunload", handler);
-    return () => window.removeEventListener("beforeunload", handler);
-  }, [hasUnsavedChanges]);
-useEffect(() => {
-    if (!subjectId) return;
-    let cancelled = false;
-
-    const cached = attempt === 0 ? getCachedSubjectDetail(subjectId) : undefined;
-    if (cached) {
-      setSubjectName(cached.subjectName);
-      setGradeLevel(cached.gradeLevel);
-      setRoster(cached.roster);
-      setItems(cached.items);
-      setScores(cached.scores);
-      setHolistic(cached.holistic);
-      setHolisticWeekStartDate(cached.holisticWeekStartDate);
-      setTerms(cached.terms);
-      setSelectedTerm(cached.selectedTerm);
-      setIsOwnAdvisory(cached.isOwnAdvisory);
-      setAdviserName(cached.adviserName);
-      setLoading(false);
-      setError(null);
-      return () => {
-        cancelled = true;
-      };
-    }
-
-    const loadAll = async () => {
-      setLoading(true);
-      setError(null);
-
-      const [
-        infoResult,
-        termsResult,
-        itemsResult,
-        scoresResult,
-        holisticResult,
-      ] = await Promise.allSettled([
-        fetchSubjectSectionInfo(subjectId),
-        fetchGradingPeriods(),
-        fetchItems(subjectId, { allPeriods: true }),
-        fetchScores(subjectId),
-        fetchHolistic(subjectId),
-      ]);
-
-      if (cancelled) return;
-
-      if (infoResult.status === "rejected") {
-        console.error("Failed to load subject info:", infoResult.reason);
-        setError("Failed to load this class. You may not have access to it.");
-        setLoading(false);
-        return;
-      }
-
-      if ([termsResult, itemsResult, scoresResult, holisticResult].some(result => result.status === "rejected")) {
-        setError("Could not load the class records. Please try again.");
-        setLoading(false);
-        return;
-      }
-
-      const info = infoResult.value;
-      const nextSubjectName = info.subjectName.toUpperCase();
-      const nextSubjectCode = `${info.subjectName.replace(/\s+/g, "").toUpperCase().slice(0, 4)}101`;
-      const nextGradeLevel = info.gradeLevel;
-      const nextRoster = info.roster;
-      const nextIsOwnAdvisory = info.isOwnAdvisory;
-      const nextAdviserName = info.adviserName;
-
-      setSubjectName(nextSubjectName);
-      setGradeLevel(nextGradeLevel);
-      setRoster(nextRoster);
-      setIsOwnAdvisory(nextIsOwnAdvisory);
-      setAdviserName(nextAdviserName);
-
-      let nextTerms: GradingPeriod[] = [];
-      let nextSelectedTerm = "";
-      if (termsResult.status === "fulfilled") {
-        nextTerms = termsResult.value;
-        nextSelectedTerm =
-          nextTerms.find((t) => t.isActive)?.id ?? nextTerms[0]?.id ?? "";
-        setTerms(nextTerms);
-        setSelectedTerm(nextSelectedTerm);
-      } else {
-        console.error("Failed to load grading periods:", termsResult.reason);
-      }
-
-      let nextItems: GradeItem[] = [];
-      if (itemsResult.status === "fulfilled") {
-        nextItems = itemsResult.value;
-        setItems(nextItems);
-      } else {
-        console.error("Failed to load items:", itemsResult.reason);
-      }
-
-      let nextScores: ScoreMap = {};
-      if (scoresResult.status === "fulfilled") {
-        nextScores = scoresResult.value;
-        setScores(nextScores);
-      } else {
-        console.error("Failed to load scores:", scoresResult.reason);
-      }
-
-      let nextHolistic: HolisticMap = {};
-      let nextHolisticWeekStartDate = "";
-      if (holisticResult.status === "fulfilled") {
-        nextHolistic = holisticResult.value.data;
-        nextHolisticWeekStartDate = holisticResult.value.weekStartDate;
-        setHolistic(nextHolistic);
-        setHolisticWeekStartDate(nextHolisticWeekStartDate);
-      } else {
-        console.error(
-          "Failed to load holistic ratings:",
-          holisticResult.reason,
-        );
-      }
-
-      if (cancelled) return;
-
-      setCachedSubjectDetail(subjectId, {
-        subjectName: nextSubjectName,
-        subjectCode: nextSubjectCode,
-        subjectCategory: null,
-        gradeLevel: nextGradeLevel,
-        roster: nextRoster,
-        items: nextItems,
-        scores: nextScores,
-        holistic: nextHolistic,
-        holisticWeekStartDate: nextHolisticWeekStartDate,
-        terms: nextTerms,
-        selectedTerm: nextSelectedTerm,
-        isOwnAdvisory: nextIsOwnAdvisory,
-        adviserName: nextAdviserName,
-      });
-
-      setLoading(false);
-    };
-
-    loadAll();
-    return () => {
-      cancelled = true;
-    };
-  }, [subjectId, attempt]);
+import {useContext,useEffect,useRef} from 'react';
+import {useParams} from 'react-router-dom';
+import {QueryClientProvider} from '@tanstack/react-query';
+import {queryClient} from '@shared/query/queryClient';
+import {TeacherSessionBoundary} from '../../../query/TeacherSessionBoundary';
+import {TeacherAcademicQueries} from '../../../query/TeacherAcademicQueries';
+import {TeacherAcademicQueryContext} from '../../../query/TeacherAcademicQueryContext';
+import {useTeacherReader} from '../../../query/useTeacherReader';
+import {useTeacherRetryAttempt} from '../../../query/useTeacherRetryAttempt';
+import {subjectKey,currentSchoolWeek} from '../../../query/teacherSubjectKeys';
+import {useTeacherQueryInvalidation} from '../../../query/useTeacherQueryInvalidation';
+import {useTeacherQueryScope} from '../../../query/teacherQueryScope';
+import * as api from '../services/subjectGrading.service';
+import {getEffectiveWeightsSafe} from '../services/subjectGradeTemplate.service';
+import {SubjectDetailPageComposition,type SubjectDetailPageEffectScope} from './SubjectDetailPage.loading-view';
+export {SubjectDetailPageComposition} from './SubjectDetailPage.loading-view';
+export type {SubjectDetailPageEffectScope,SubjectDetailPageRouteProps} from './SubjectDetailPage.loading-view';
+const emptyItems:import('./types/Grading').GradeItem[]=[];
+const emptyScores:import('./types/Grading').ScoreMap={};
+const emptyHolistic:import('./types/Grading').HolisticMap={};
+const emptyRoster:import('./data').RosterStudent[]=[];
+function Effects({scope:s}:{scope:SubjectDetailPageEffectScope}){
+ const port=useContext(TeacherAcademicQueryContext)!;
+ const lastApplied=useRef<unknown[]>([]);
+ const session=useTeacherQueryScope();
+ const {periods,info}=port,year=periods.data?.[0]?.schoolYearId??'active',id=s.subjectId??'';
+ const ready=!!id&&!periods.loading&&!periods.error&&!info.loading&&!info.error;
+ const items=useTeacherReader(subjectKey(year,id,'items',{allPeriods:true}),o=>api.fetchItems(id,{allPeriods:true},o),'Could not load the class records. Please try again.',300_000,ready);
+ const scores=useTeacherReader(subjectKey(year,id,'scores'),o=>api.fetchScores(id,o),'Could not load the class records. Please try again.',300_000,ready);
+ const holistic=useTeacherReader(subjectKey(year,id,'holistic',1,currentSchoolWeek()),o=>api.fetchHolistic(id,o),'Could not load the class records. Please try again.',300_000,ready);
+ const weights=useTeacherReader(subjectKey(year,id,'weights',s.selectedTerm||'active'),async o=>(await getEffectiveWeightsSafe(Number(id),s.selectedTerm||undefined,o))??null,'Could not load grading rules.',300_000,ready&&!!s.selectedTerm);
+ useTeacherRetryAttempt(s.attempt,periods.retry);useTeacherRetryAttempt(s.attempt,info.retry);useTeacherRetryAttempt(s.attempt,items.retry);useTeacherRetryAttempt(s.attempt,scores.retry);useTeacherRetryAttempt(s.attempt,holistic.retry);useTeacherRetryAttempt(s.attempt,weights.retry);
+ const {setTemplateLoading,setTemplateStructure,setTerms,setSelectedTerm,setSubjectName,setGradeLevel,setRoster,setItems,setScores,setHolistic,setHolisticWeekStartDate,setIsOwnAdvisory,setAdviserName,setLoading,setError,hasUnsavedChanges}=s;
+ useEffect(()=>{setTemplateLoading(weights.loading);setTemplateStructure(weights.data?.templateStructure);},[weights.loading,weights.data,setTemplateLoading,setTemplateStructure]);
+ useEffect(()=>{if(periods.data){setTerms(periods.data.map(p=>({...p,label:p.termLabel})));setSelectedTerm(previous=>periods.data!.some(p=>p.id===previous)?previous:(periods.data!.find(p=>p.isActive)??periods.data![0])?.id??'');}},[periods.data,setTerms,setSelectedTerm]);
+ const error=periods.error??info.error??items.error??scores.error??holistic.error;
+ const loading=!error&&(periods.loading||info.loading||items.loading||scores.loading||holistic.loading);
+ const itemKey=[...session.key,...subjectKey(year,id,'items',{allPeriods:true})],scoreKey=[...session.key,...subjectKey(year,id,'scores')];
+ const itemsInvalidated=useTeacherQueryInvalidation(itemKey),scoresInvalidated=useTeacherQueryInvalidation(scoreKey);
+ const invalidated=itemsInvalidated||scoresInvalidated;
+ useEffect(()=>{
+  setLoading(loading);setError(error);
+  if(loading)return;
+  // Never replace a local score draft or a confirmed local save with a stale cache projection.
+  if(!error&&(hasUnsavedChanges||invalidated||port.writing))return;
+  const projection=[info.data,items.data,scores.data,holistic.data];
+  if(!error&&projection.every((value,index)=>value===lastApplied.current[index]))return;
+  lastApplied.current=projection;
+  setSubjectName(info.data?.subjectName.toUpperCase()??'');setGradeLevel(info.data?.gradeLevel??'');
+  setRoster(error?emptyRoster:info.data?.roster??emptyRoster);setIsOwnAdvisory(info.data?.isOwnAdvisory??false);setAdviserName(info.data?.adviserName??null);
+  setItems(error?emptyItems:items.data??emptyItems);setScores(error?emptyScores:scores.data??emptyScores);setHolistic(error?emptyHolistic:holistic.data?.data??emptyHolistic);setHolisticWeekStartDate(holistic.data?.weekStartDate??'');
+ },[loading,error,info.data,items.data,scores.data,holistic.data,hasUnsavedChanges,invalidated,port.writing,setLoading,setError,setSubjectName,setGradeLevel,setRoster,setItems,setScores,setHolistic,setHolisticWeekStartDate,setIsOwnAdvisory,setAdviserName]);
+ useEffect(()=>{if(!hasUnsavedChanges)return;const handler=(e:BeforeUnloadEvent)=>{e.preventDefault();e.returnValue='';};window.addEventListener('beforeunload',handler);return()=>window.removeEventListener('beforeunload',handler);},[hasUnsavedChanges]);
  return null;
 }
-
-export function SubjectDetailPage() {
- return <SubjectDetailPageComposition effects={scope => <SubjectDetailPageDataEffects scope={scope}/>} />;
-}
+export function SubjectDetailPage(){const {subjectId}=useParams();return <TeacherSessionBoundary resource={subjectId}><QueryClientProvider client={queryClient}><TeacherAcademicQueries><SubjectDetailPageComposition effects={scope=><Effects scope={scope}/>}/></TeacherAcademicQueries></QueryClientProvider></TeacherSessionBoundary>;}

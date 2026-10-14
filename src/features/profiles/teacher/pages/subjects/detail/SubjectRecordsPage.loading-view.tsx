@@ -1,3 +1,6 @@
+import {useContext} from 'react';
+import {useAuth} from '@shared/hooks/useAuth';
+import {TeacherAcademicQueryContext,useTeacherAcademicServices} from '../../../query/TeacherAcademicQueryContext';
 import { AccountSelect } from "@shared/components/AccountSelect";
 import { ConfirmationModal } from "@shared/components/ConfirmationModal";
 import {
@@ -14,11 +17,6 @@ import {
 getEffectiveWeightsSafe,
 type EffectiveWeights,
 } from "../services/subjectGradeTemplate.service";
-import {
-fetchItems,
-fetchScores,
-saveScore,
-} from "../services/subjectGrading.service";
 import { AssessmentRecordsSection } from "./AssessmentRecordsPage";
 import type { SubjectDetailTab } from "./components/TabNav";
 import type { RosterStudent } from "./data";
@@ -40,6 +38,7 @@ interface MissingScoreEntry {
 }
 
 interface RecordsLocationState {
+  queryOwner?:{session:number;role:string;user:string};
   subjectName: string;
   subjectCategory: string | null;
   gradeLevel: string;
@@ -62,12 +61,26 @@ const RECORDS_TITLES: Record<SubjectDetailTab, string> = {
 } as Record<SubjectDetailTab, string>;
 
 function useSubjectRecordsPageState() {
+  const port=useContext(TeacherAcademicQueryContext);
+  const {grading:{saveScore,fetchScores,fetchItems}}=useTeacherAcademicServices();
+  const {sessionScope,user}=useAuth();
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const location = useLocation();
   const { subjectId } = useParams<{ subjectId: string }>();
-  const state = location.state as RecordsLocationState | undefined;
+  const raw=location.state as RecordsLocationState|undefined;
+  const owned=raw?.queryOwner?.session===sessionScope&&raw?.queryOwner?.role===user?.role&&raw?.queryOwner?.user===String(user?.id??'');
+  const info=port?.info.data,infoError=port?.info.error,periods=port?.periods.data;
+  const state=useMemo<RecordsLocationState|undefined>(()=>raw?{...raw,
+    subjectName:info?.subjectName??(owned&&!infoError?raw.subjectName:''),
+    gradeLevel:info?.gradeLevel??(owned&&!infoError?raw.gradeLevel:''),
+    roster:info?.roster??(owned&&!infoError?raw.roster:[]),
+    terms:periods?.length?periods.map(p=>({...p,label:p.termLabel})):(owned?raw.terms:[]),
+    items:owned?raw.items:[],scores:{},holistic:{},
+    isOwnAdvisory:info?.isOwnAdvisory??(owned?raw.isOwnAdvisory:false),
+    adviserName:info?.adviserName??(owned?raw.adviserName:undefined),
+  }:undefined,[raw,owned,info,infoError,periods]);
 
   const [term, setTerm] = useState(state?.selectedTerm ?? "");
 
@@ -266,7 +279,7 @@ function useSubjectRecordsPageState() {
           </div>
         </div>
       </div>
-    )), scope: { subjectId, isAssessment, tab, setIsLoadingRecords, setLoadError, fetchItems, term, fetchScores, getEffectiveWeightsSafe, setItems, setLocalScores, setEffectiveWeights, setWeightsError, setHasLoadedOnce, attempt } };
+    )), scope: { subjectId, isAssessment, tab, setIsLoadingRecords, setLoadError, fetchItems, term, setTerm, fetchScores, getEffectiveWeightsSafe, setItems, setLocalScores, setEffectiveWeights, setWeightsError, setHasLoadedOnce, attempt, isEditing } };
   }
 
   const { subjectName, roster, terms } = state;
@@ -441,7 +454,7 @@ function useSubjectRecordsPageState() {
         </ConfirmationModal>
       )}
     </div>
-  )), scope: { subjectId, isAssessment, tab, setIsLoadingRecords, setLoadError, fetchItems, term, fetchScores, getEffectiveWeightsSafe, setItems, setLocalScores, setEffectiveWeights, setWeightsError, setHasLoadedOnce, attempt } };
+  )), scope: { subjectId, isAssessment, tab, setIsLoadingRecords, setLoadError, fetchItems, term, setTerm, fetchScores, getEffectiveWeightsSafe, setItems, setLocalScores, setEffectiveWeights, setWeightsError, setHasLoadedOnce, attempt, isEditing } };
 }
 
 

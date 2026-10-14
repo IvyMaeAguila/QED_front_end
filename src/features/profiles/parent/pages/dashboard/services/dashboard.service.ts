@@ -1,3 +1,5 @@
+import { parentFetch } from '../../../query/parentRequest';
+import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
 import { API_CONFIG } from '../../../../../../config/api.config';
 import type { DailyUpdate  } from '../types/student';
 
@@ -57,9 +59,9 @@ export async function getUserData(): Promise<UserData> {
 }
 
 export const dailyUpdateService = {
-  async getDailyUpdatesForParent(): Promise<DailyUpdatesResponse> {
+  async getDailyUpdatesForParent(options?: ApiRequestOptions): Promise<DailyUpdatesResponse> {
     try {
-      const response = await fetch(`${BASE_API}/parent-dashboard/parent`, {
+      const response = await parentFetch(`${BASE_API}/parent-dashboard/parent`, options, {
         method: "GET",
         credentials: "include",
         headers: {
@@ -86,6 +88,7 @@ export const dailyUpdateService = {
       const data: DailyUpdate[] = await response.json();
       return { success: true, dailyUpdates: data };
     } catch (error: any) {
+      if(options) throw error;
       return {
         success: false,
         message: error?.message || "Failed to load daily updates.",

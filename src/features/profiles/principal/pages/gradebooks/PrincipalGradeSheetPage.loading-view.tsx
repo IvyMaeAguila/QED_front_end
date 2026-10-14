@@ -3,6 +3,8 @@ import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { LoadingFormValue } from "@shared/loading/LoadingFormValue";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { useState } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@shared/query/queryClient";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
@@ -12,10 +14,6 @@ import { GradeSheetSummary } from "./components/GradeSheetSummary";
 import { GradeSheetTable } from "./components/GradeSheetTable";
 import { TermUnavailableModal } from "./components/TermUnavailableModal";
 import { usePrincipalGradeSheet } from "./hooks/usePrincipalGradeSheet";
-import {
-fetchGradingPeriods,
-type GradingPeriod,
-} from "./services/gradebooks.service";
 import { computeAverage,fullName,sortByLastName } from "./utils/gradeSheetUtils";
 function parseId(value: string | null): number | undefined {
   if (!value) return undefined;
@@ -34,13 +32,9 @@ function usePrincipalGradeSheetPageState() {
   const gradingPeriodId = parseId(searchParams.get("gradingPeriodId"));
   const sectionId = parseId(searchParams.get("sectionId"));
 
-  const [periodError, setPeriodError] = useState<string | null>(null);
-  const [periodAttempt, setPeriodAttempt] = useState(0);
-  const [gradingPeriods, setGradingPeriods] = useState<GradingPeriod[]>([]);
-  // true habang naghihintay pa yung fetch ng grading periods
-  const [periodsLoading, setPeriodsLoading] = useState(
-    gradeLevelId !== undefined,
-  );
+  const sheet = usePrincipalGradeSheet({ gradeLevelId: gradeLevelId ?? 0, gradingPeriodId, sectionId }, gradeLevelId !== undefined);
+  const { gradingPeriods } = sheet;
+  const scope = { gradingPeriodId, searchParams, setSearchParams, defaultGradingPeriodId: sheet.defaultGradingPeriodId };
   // Label ng term na hindi pa submitted (null = nakasara ang modal)
   const [unavailableTerm, setUnavailableTerm] = useState<string | null>(null);
 
@@ -66,21 +60,19 @@ function usePrincipalGradeSheetPageState() {
         panelBorder={panelBorder}
         textMuted={textMuted}
       />
-    )), scope: { gradeLevelId, setPeriodsLoading, setPeriodError, fetchGradingPeriods, setGradingPeriods, gradingPeriodId, searchParams, setSearchParams, sectionId, periodAttempt } };
+    )), scope };
   }
 
 
   return { content: ((
     <>
       <GradeSheetContent
+        key={sheet.dataScope}
+        sheet={sheet}
         gradeLabel={gradeLabel}
         gradeLevelId={gradeLevelId}
         gradingPeriodId={gradingPeriodId}
-        periodsLoading={periodsLoading}
-        periodError={periodError}
-        retryPeriods={() => setPeriodAttempt(value => value + 1)}
         sectionId={sectionId}
-        gradingPeriods={gradingPeriods}
         onTermChange={handleTermChange}
       />
       <TermUnavailableModal
@@ -90,29 +82,25 @@ function usePrincipalGradeSheetPageState() {
         darkMode={darkMode}
       />
     </>
-  )), scope: { gradeLevelId, setPeriodsLoading, setPeriodError, fetchGradingPeriods, setGradingPeriods, gradingPeriodId, searchParams, setSearchParams, sectionId, periodAttempt } };
+  )), scope };
 }
 
 interface GradeSheetContentProps {
+  sheet: ReturnType<typeof usePrincipalGradeSheet>;
   gradeLabel: string;
   gradeLevelId: number;
   gradingPeriodId?: number;
-  periodsLoading: boolean;
-  periodError: string | null;
-  retryPeriods: () => void;
   sectionId?: number;
-  gradingPeriods: GradingPeriod[];
   onTermChange: (value: string) => void;
 }
 
 function GradeSheetContent({
+  sheet,
   gradeLabel,
   gradeLevelId,
   gradingPeriodId,
   sectionId,
-  gradingPeriods,
   onTermChange,
-  periodsLoading, periodError, retryPeriods,
 }: GradeSheetContentProps) {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
@@ -127,8 +115,8 @@ function GradeSheetContent({
     sectionName,
     loading: sheetLoading,
     error: sheetError,
-    notFound, ready, retry,
-  } = usePrincipalGradeSheet({ gradeLevelId, gradingPeriodId: gradingPeriodId ?? 0, sectionId }, gradingPeriodId !== undefined && !periodError);
+    notFound, ready, retry, cachedOffline, gradingPeriods, periodsLoading, periodError, retryPeriods,
+  } = sheet;
   const loading = periodsLoading || (gradingPeriodId !== undefined && sheetLoading);
   const error = periodError ?? sheetError;
   const initialLoading = loading && !ready && !error;
@@ -178,7 +166,8 @@ function GradeSheetContent({
         textMuted={textMuted}
       />
 
-      {error ? (
+      {cachedOffline && <LoadingRegion loading={false} error={error} retry={retry} skeleton={null} name="grade-sheet-offline">{null}</LoadingRegion>}
+      {error && !cachedOffline ? (
         <LoadingRegion loading={false} error={error} retry={periodError ? retryPeriods : retry} skeleton={null} name="grade-sheet-error">{null}</LoadingRegion>
       ) : (!loading && (notFound || gradingPeriodId === undefined)) ? (
         <GradeSheetNotFound
@@ -273,6 +262,10 @@ function GradeSheetContent({
 export type PrincipalGradeSheetPageEffectScope = ReturnType<typeof usePrincipalGradeSheetPageState>["scope"];
 export type PrincipalGradeSheetPageRouteProps = Record<string, never>;
 export function PrincipalGradeSheetPageComposition(props: object & { effects?: (scope: PrincipalGradeSheetPageEffectScope) => import("react").ReactNode }) {
+ return <QueryClientProvider client={queryClient}><PrincipalGradeSheetContent {...props} /></QueryClientProvider>;
+}
+
+function PrincipalGradeSheetContent(props: object & { effects?: (scope: PrincipalGradeSheetPageEffectScope) => import("react").ReactNode }) {
  const state = usePrincipalGradeSheetPageState();
  return <>{props.effects?.(state.scope)}{state.content}</>;
 }

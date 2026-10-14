@@ -1,5 +1,9 @@
 import { API_CONFIG } from '../../../../../../config/api.config';
 import type { Student } from "../types/Students";
+import { QueryHttpError } from "@shared/http/QueryHttpError";
+import type {ApiRequestOptions} from '@shared/http/ApiRequestOptions';
+
+interface StudentRequestOptions { signal?: AbortSignal; onUnauthorized?: () => void }
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/student`;
 
@@ -43,30 +47,34 @@ function mapStudentRow(row: StudentRow): Student {
 
 export const studentService = {
 
-  async addNewStudent(payload: any) {
+  async addNewStudent(payload: any, options:ApiRequestOptions={}) {
     const response = await fetch(`${BASE_URL}/addNewStudent`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
+      signal:options.signal,
     });
+    if(response.status===401)options.onUnauthorized?.();
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to add new student");
+      const errorData = await response.json().catch(()=>({}));
+      throw new QueryHttpError(errorData.message || "Failed to add new student",response.status);
     }
     return response.json();
   },
 
-  async getAllStudents(): Promise<Student[]> {
+  async getAllStudents(options: StudentRequestOptions = {}): Promise<Student[]> {
     const response = await fetch(`${BASE_URL}/allStudents`, {
       method: "GET",
       credentials: "include",
+      signal: options.signal,
       headers: { "Content-Type": "application/json" },
     });
 
+    if (response.status === 401) options.onUnauthorized?.();
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Failed to fetch students");
+      throw new QueryHttpError(errorData.message || "Failed to fetch students", response.status);
     }
 
     const json = await response.json();
@@ -75,31 +83,35 @@ export const studentService = {
   },
 
   //-- UPDATE --
-  async updateStudent(id: number, payload: any) {
+  async updateStudent(id: number, payload: any, options:ApiRequestOptions={}) {
     const response = await fetch(`${BASE_URL}/updateStudent/${id}`, {
       method: "PUT",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
+      signal:options.signal,
     });
+    if(response.status===401)options.onUnauthorized?.();
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Failed to update student");
+      throw new QueryHttpError(errorData.message || "Failed to update student",response.status);
     }
     return response.json();
   },
 
 
   //delete (sot)
-  async softDeleteStudent(id: number) {
+  async softDeleteStudent(id: number, options:ApiRequestOptions={}) {
     const response = await fetch(`${BASE_URL}/deleteStudent/${id}`, {
       method: "PUT",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
+      signal:options.signal,
     });
+    if(response.status===401)options.onUnauthorized?.();
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Failed to delete student");
+      throw new QueryHttpError(errorData.message || "Failed to delete student",response.status);
     }
     return response.json();
   },

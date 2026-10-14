@@ -6,7 +6,6 @@ import { AlertTriangle,ArrowLeft,CheckCircle,Save } from "lucide-react";
 import { useRef,useState,type FormEvent } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
-import { API_CONFIG } from "../../../../../config/api.config";
 import { principalConflict,useUsers } from "./context/UsersContext";
 import {
 ROLES,
@@ -17,12 +16,6 @@ type Role,
 type UserAccount,
 type UserStatus,
 } from "./types/user";
-
-import { AuthService } from "./../../../../auth/services/authentication.service";
-import {
-generateRandomPassword,
-generateUsername,
-} from "./../../../../auth/utils/credentials";
 
 // Self-contained modal built for the admin theme — see AdminFeedbackModal.tsx.
 // TODO: palitan ng tamang relative path papunta sa file mo
@@ -49,9 +42,7 @@ interface FormState {
   gender: "Male" | "Female" | "";
 }
 
-// Payload sent to /addUser and /editUser. userName/generatedPassword are only
-// included on create (see handleSubmit) so the backend knows to send the
-// credentials email — they're never sent, or persisted, on edit.
+// Creation submits profile information once; credentials and identity are server-owned.
 interface AddUserPayload {
   userId?: string;
   lastName: string;
@@ -62,8 +53,6 @@ interface AddUserPayload {
   contactNumber: string;
   status: UserStatus;
   gender?: "Male" | "Female" | "";
-  userName?: string;
-  generatedPassword?: string;
 }
 
 const emptyForm: FormState = {
@@ -90,7 +79,7 @@ function useUserFormPageState() {
   const navigate = useNavigate();
   const location = useLocation();
   const { role, userId } = useParams<{ role: string; userId: string }>();
-  const { getUser, refetchUsers, getActivePrincipal, loading, error } = useUsers();
+  const { getUser, refetchUsers, getActivePrincipal, loading, error, forbidden, saveUser } = useUsers();
 
   const isEditing = Boolean(userId);
   const existing = role && userId ? getUser(role, userId) : undefined;
@@ -144,6 +133,7 @@ function useUserFormPageState() {
   const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
   const sectionTitleClasses = `qed-type-page-title ${textPrimary}`;
 
+  if (forbidden) return { content: <LoadingRegion loading={false} error={error} retry={refetchUsers} name="user-form-error" skeleton={null}>{null}</LoadingRegion>, scope: { role, userId, isEditing, existing, loading, seededRecord, setForm, toStr } };
   if (isEditing && !existing && !loading && !error) {
     return { content: ((
       <div className="w-full pb-12">
@@ -214,26 +204,8 @@ function useUserFormPageState() {
     isSubmittingRef.current = true;
     setIsSubmitting(true); // drives the button's disabled/label UI
     try {
-      let currentUserId = existing?.id;
-      let generatedPassword: string | null = null;
-      let userName: string | null = null;
-
-      // Create auth account FIRST (only for new users) so we get an id
-      if (!isEditing) {
-        userName = generateUsername(form.role, form.firstName, form.lastName);
-        generatedPassword = generateRandomPassword(10);
-
-        const authResult = await AuthService.registerUser({
-          userName,
-          password: generatedPassword,
-          role: form.role,
-        });
-
-        currentUserId = authResult.user.id; // <-- this becomes teachers_table.user_id
-      }
-
       const payload: AddUserPayload = {
-        userId: currentUserId,
+        ...(isEditing ? { userId: existing?.id } : {}),
         lastName: toStr(form.lastName).trim(),
         firstName: toStr(form.firstName).trim(),
         middleName: toStr(form.middleName).trim(),
@@ -242,55 +214,26 @@ function useUserFormPageState() {
         contactNumber: toStr(form.contactNumber).trim(),
         status: form.status,
         ...(form.role !== "ADMIN" ? { gender: form.gender } : {}),
-        // only present on create — backend uses these to send the
-        // credentials email, and should never persist the plain password
-        ...(generatedPassword && userName
-          ? { userName, generatedPassword }
-          : {}),
       };
 
-      const endpoint =
-        isEditing && existing
-          ? `${API_CONFIG.baseURL}/api/user/editUser/${existing.id}`
-          : `${API_CONFIG.baseURL}/api/user/addUser`;
-
-      const response = await fetch(endpoint, {
-        method: isEditing && existing ? "PUT" : "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setFeedbackModal({
-          open: true,
-          variant: "error",
-          title: "Couldn't Save User",
-          message: data.message || "Failed to save user's record.",
-        });
-        return;
-      }
-
-      // The raw fetch above already performed the create/update — just
-      // refresh the context's local list from the server. Do NOT call
-      // context's addUser/updateUser here, they'd fire a second
-      // POST/PUT to the same endpoint.
-      await refetchUsers();
+      // One server-owned write; successful Query invalidation refreshes readers.
+      const data = await saveUser(payload, isEditing ? existing?.id : undefined);
 
       setFeedbackModal({
         open: true,
         variant: "success",
-        title: generatedPassword && userName ? "User Added" : "User Updated",
-        message:
-          generatedPassword && userName
-            ? `Credentials were sent to ${payload.email}.`
-            : "User updated successfully!",
+        title: isEditing ? "User Updated" : "User Added",
+        message: isEditing
+          ? "User updated successfully!"
+          : data.credentialDelivery === "accepted"
+            ? `Account created. The email provider accepted the credentials email for ${payload.email}.`
+            : data.credentialDelivery === "test-recipient"
+              ? "Account created. Credentials email was routed to the configured development test recipient."
+              : "Account created, but credentials email delivery failed. Use the existing password-reset workflow before attempting to create the account again.",
         onCloseAction: () => navigate("/admin/users"),
       });
     } catch (error) {
-      console.error("Submission error:", error);
+      // Never log submission responses or credential-related errors.
       // Show the backend's actual message when we have one (e.g. duplicate
       // username, duplicate email) instead of implying it's a connection
       // problem — those are two very different things for the admin to act on.

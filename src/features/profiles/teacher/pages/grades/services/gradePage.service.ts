@@ -1,16 +1,21 @@
+import type {TeacherRequestOptions} from '../../../query/teacherQueryScope';
+import {QueryHttpError} from '@shared/http/QueryHttpError';
 import { API_CONFIG } from '../../../../../../config/api.config';
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/advisoryGrading`;
 
-function authedFetch(url: string, init?: RequestInit) {
-  return fetch(url, { credentials: "include", headers: { "Content-Type": "application/json" }, ...init });
+async function authedFetch(url: string, init?: RequestInit, request:TeacherRequestOptions={}) {
+  const response=await fetch(url, { credentials: "include", headers: { "Content-Type": "application/json" }, ...init, signal:request.signal });
+  if(response.status===401)request.onUnauthorized?.();
+  return response;
 }
 
 async function handleJsonResponse(res: Response) {
   const isJson = (res.headers.get("content-type") ?? "").includes("application/json");
-  if (!isJson) throw new Error(`Unexpected server response (${res.status}): ${res.url}`);
+  if (!isJson) throw new QueryHttpError(`Unexpected server response (${res.status}): ${res.url}`,res.status);
   const data = await res.json();
-  if (!res.ok || !data.success) throw new Error(data.message || "Request failed.");
+  if (!res.ok) throw new QueryHttpError(data.message || "Request failed.",res.status);
+  if (!data.success) throw new Error(data.message || "Request failed.");
   return data;
 }
 
@@ -21,8 +26,8 @@ export interface AdvisorySectionOption {
   gradeLevel: string;
 }
 
-export async function fetchAdvisorySections(): Promise<AdvisorySectionOption[]> {
-  const res = await authedFetch(`${BASE_URL}/sections`);
+export async function fetchAdvisorySections(request: TeacherRequestOptions = {}): Promise<AdvisorySectionOption[]> {
+  const res = await authedFetch(`${BASE_URL}/sections`, undefined, request);
   const json = await handleJsonResponse(res);
   return json.data;
 }
@@ -87,11 +92,11 @@ export interface AdvisoryGradebook {
 // need no frontend changes at all.
 export async function fetchAdvisoryGradebook(
   gradingPeriodId: string,
-  classId?: string
+  classId?: string, request: TeacherRequestOptions = {}
 ): Promise<AdvisoryGradebook> {
   const params = new URLSearchParams({ gradingPeriodId });
   if (classId) params.set("classId", classId);
-  const res = await authedFetch(`${BASE_URL}/gradebook?${params.toString()}`);
+  const res = await authedFetch(`${BASE_URL}/gradebook?${params.toString()}`, undefined, request);
   const json = await handleJsonResponse(res);
   return json.data;
 }
@@ -103,11 +108,11 @@ export interface ClassSubmissionStatus {
 
 export async function fetchClassSubmissionStatus(
   gradingPeriodId: string,
-  classId?: string
+  classId?: string, request: TeacherRequestOptions = {}
 ): Promise<ClassSubmissionStatus> {
   const params = new URLSearchParams({ gradingPeriodId });
   if (classId) params.set("classId", classId);
-  const res = await authedFetch(`${BASE_URL}/submission?${params.toString()}`);
+  const res = await authedFetch(`${BASE_URL}/submission?${params.toString()}`, undefined, request);
   const json = await handleJsonResponse(res);
   return json.data;
 }
@@ -122,20 +127,20 @@ export interface GradeSubmissionLog {
 
 export async function fetchClassSubmissionLogs(
   gradingPeriodId: string,
-  classId?: string,
+  classId?: string, request: TeacherRequestOptions = {},
 ): Promise<GradeSubmissionLog[]> {
   const params = new URLSearchParams({ gradingPeriodId });
   if (classId) params.set("classId", classId);
-  const res = await authedFetch(`${BASE_URL}/submission/logs?${params.toString()}`);
+  const res = await authedFetch(`${BASE_URL}/submission/logs?${params.toString()}`, undefined, request);
   const json = await handleJsonResponse(res);
   return json.data;
 }
 
-export async function submitClassGrades(gradingPeriodId: string, classId?: string): Promise<void> {
+export async function submitClassGrades(gradingPeriodId: string, classId?: string, request: TeacherRequestOptions = {}): Promise<void> {
   const res = await authedFetch(`${BASE_URL}/submission`, {
     method: "POST",
     body: JSON.stringify({ gradingPeriodId, classId }),
-  });
+  }, request);
   await handleJsonResponse(res);
 }
 
@@ -154,11 +159,11 @@ export interface VisibilityStudent {
 
 export async function fetchGradeVisibility(
   gradingPeriodId: string,
-  classId?: string
+  classId?: string, request: TeacherRequestOptions = {}
 ): Promise<VisibilityStudent[]> {
   const params = new URLSearchParams({ gradingPeriodId });
   if (classId) params.set("classId", classId);
-  const res = await authedFetch(`${BASE_URL}/visibility?${params.toString()}`);
+  const res = await authedFetch(`${BASE_URL}/visibility?${params.toString()}`, undefined, request);
   const json = await handleJsonResponse(res);
   return json.data.students;
 }
@@ -171,11 +176,11 @@ export interface SetGradeVisibilityParams {
   classId?: string;
 }
 
-export async function setGradeVisibility(params: SetGradeVisibilityParams): Promise<number> {
+export async function setGradeVisibility(params: SetGradeVisibilityParams, request: TeacherRequestOptions = {}): Promise<number> {
   const res = await authedFetch(`${BASE_URL}/visibility`, {
     method: "POST",
     body: JSON.stringify(params),
-  });
+  }, request);
   const json = await handleJsonResponse(res);
   return json.data.updatedCount as number;
 }

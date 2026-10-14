@@ -1,8 +1,10 @@
+import {useContext} from 'react';
+import {TeacherAcademicQueryContext,useTeacherAcademicServices} from '../../../../query/TeacherAcademicQueryContext';
 import { useState, type CSSProperties } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { Plus, Tag } from "lucide-react";
 import { ModalBody, ModalFrame, ModalHeader } from "@shared/components/modal";
-import { createTopic, fetchTopics, type Topic } from "../../services/subjectGrading.service";
+import type {Topic} from "../../services/subjectGrading.service";
 
 const ACCENT = "var(--color-maroon)";
 
@@ -25,6 +27,9 @@ export function TopicManagerModal({
   panelBorder,
   textMuted,
 }: TopicManagerModalProps) {
+  const port=useContext(TeacherAcademicQueryContext);
+  const queryManaged=port!==null;
+  const {grading:{createTopic,fetchTopics}}=useTeacherAcademicServices();
   const [topics, setTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState(true);
   const [newTopicName, setNewTopicName] = useState("");
@@ -34,6 +39,7 @@ export function TopicManagerModal({
   const textPrimary = darkMode ? "text-white" : "text-[#111827]";
 
   useEffect(() => {
+    if(queryManaged)return;
     fetchTopics(subjectSectionId)
       .then((data) => {
         setTopics(data);
@@ -44,7 +50,7 @@ export function TopicManagerModal({
         setError("Failed to load topics.");
       })
       .finally(() => setLoading(false));
-  }, [subjectSectionId]);
+  }, [subjectSectionId,queryManaged,fetchTopics,onTopicsChanged]);
 
   async function handleAdd() {
     const name = newTopicName.trim();
@@ -66,7 +72,8 @@ export function TopicManagerModal({
     }
   }
 
-  return (
+  return (<>{port&&<port.TopicsEffects {...{subjectId:subjectSectionId,enabled:true,setTopics,setLoading,setError,onTopicsChanged}}/>}
+{(
     <ModalFrame shellVariant={darkMode ? "dark" : "standard"} onClose={onClose} size="md" zIndexClass="z-[1000]" ariaLabel="Manage Topics">
         <ModalHeader
           title="Manage Topics"
@@ -131,5 +138,5 @@ export function TopicManagerModal({
           </div>
         </ModalBody>
     </ModalFrame>
-  );
+  )}</>);
 }

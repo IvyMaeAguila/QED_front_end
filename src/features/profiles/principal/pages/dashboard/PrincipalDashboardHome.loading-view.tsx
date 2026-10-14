@@ -8,28 +8,25 @@ import { useAuth } from "../../../../auth/context/authContext";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
 import type { PrincipalDashboardData } from "./data/types";
 import { usePrincipalDashboardData } from "./hooks/usePrincipalDashboardData";
+import { dashboardOfflineError } from "./hooks/dashboardOfflineError";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@shared/query/queryClient";
 
 import { useState } from "react";
-import type { AcademicYear } from "../../../admin/pages/subjects/types/academicyear";
 import { AcademicPerformanceSection } from "./components/AcademicPerformanceSection";
 import { FullRankingModal } from "./components/FullRankingModal";
 import { HolisticDevelopmentSection } from "./components/HolisticDevelopmentSection";
 import { OverviewCards } from "./components/OverviewCards";
 import { SubjectPerformanceSection } from "./components/SubjectPerformanceSection";
 import { TodaysAttendanceSection } from "./components/TodaysAttendanceSection";
-import { fetchActiveAcademicYear } from "./services/principalDashboard.service";
 
 function usePrincipalDashboardHomeState() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
   const { user } = useAuth();
-  const { data, loading, error, rankingTerm, setRankingTerm, refetch } =
+  const { data, loading, error, rankingTerm, setRankingTerm, refetch, academicYear, yearLoading, yearError, retryYear } =
     usePrincipalDashboardData();
-
-  const [academicYear, setAcademicYear] = useState<AcademicYear | null>(null);
-  const [yearLoading, setYearLoading] = useState(true);
-  const [yearError, setYearError] = useState<Error | null>(null);
-  const [yearAttempt, setYearAttempt] = useState(0);
+  const cachedOffline = error === dashboardOfflineError && !!data;
   const [showFullRanking, setShowFullRanking] = useState(false);
 
   const gridStroke = darkMode
@@ -136,19 +133,23 @@ function usePrincipalDashboardHomeState() {
             <span >
               <LoadingRegion as="span" loading={loading && !error} name="principal-current-term" variable skeleton={<SkeletonText width="6ch" className="inline-block align-top" />}>{data?.currentTerm}</LoadingRegion>
             </span>{" "}
-            of School Year <LoadingRegion as="span" loading={yearLoading} error={yearError} retry={() => setYearAttempt(value => value + 1)} name="principal-school-year" variable skeleton={<SkeletonText width="9ch" className="inline-block align-top" />}>{academicYear?.label}</LoadingRegion>
+            of School Year <LoadingRegion as="span" loading={yearLoading} error={yearError} retry={retryYear} name="principal-school-year" variable skeleton={<SkeletonText width="9ch" className="inline-block align-top" />}>{academicYear?.label}</LoadingRegion>
         </>} />
         <TodayDateCard panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} />
       </div>
-      <LoadingRegion loading={loading} error={error} retry={refetch} name="principal-dashboard-data" variable retainPrevious hasContent={Boolean(data)} skeleton={null} frame={renderData} onSettled={() => { if (data) {rememberRows("principal-dashboard-grades", data.topSubjectPerGrade.length); rememberRows("principal-dashboard-ranking", data.subjectRankingByTerm[rankingTerm]?.length ?? 0);} }}>{null}</LoadingRegion>
+      {cachedOffline && <LoadingRegion loading={false} error={error} retry={refetch} skeleton={null} className={textPrimary}>{null}</LoadingRegion>}
+      <LoadingRegion loading={loading} error={cachedOffline ? null : error} retry={refetch} name="principal-dashboard-data" variable retainPrevious hasContent={Boolean(data)} skeleton={null} frame={renderData} onSettled={() => { if (data) {rememberRows("principal-dashboard-grades", data.topSubjectPerGrade.length); rememberRows("principal-dashboard-ranking", data.subjectRankingByTerm[rankingTerm]?.length ?? 0);} }}>{null}</LoadingRegion>
     </div>
-  )), scope: { setYearLoading, setYearError, fetchActiveAcademicYear, setAcademicYear, yearAttempt } };
+  )), scope: {} };
 }
 
 
 export type PrincipalDashboardHomeEffectScope = ReturnType<typeof usePrincipalDashboardHomeState>["scope"];
 export type PrincipalDashboardHomeRouteProps = Record<string, never>;
-export function PrincipalDashboardHomeComposition(props: object & { effects?: (scope: PrincipalDashboardHomeEffectScope) => import("react").ReactNode }) {
+function PrincipalDashboardHomeContent(props: object & { effects?: (scope: PrincipalDashboardHomeEffectScope) => import("react").ReactNode }) {
  const state = usePrincipalDashboardHomeState();
  return <>{props.effects?.(state.scope)}{state.content}</>;
+}
+export function PrincipalDashboardHomeComposition(props: object & { effects?: (scope: PrincipalDashboardHomeEffectScope) => import("react").ReactNode }) {
+ return <QueryClientProvider client={queryClient}><PrincipalDashboardHomeContent {...props} /></QueryClientProvider>;
 }

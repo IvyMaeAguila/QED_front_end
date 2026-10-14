@@ -3,7 +3,7 @@ import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { fetchGradeLevels } from "../../classes/services/classes.service";
 import type { GradeLevel } from "../types/types";
 
-interface GradeLevelsContextValue {
+export interface GradeLevelsContextValue {
   gradeLevels: GradeLevel[];
   loading: boolean;
   error: string | null;
@@ -12,7 +12,7 @@ interface GradeLevelsContextValue {
 
 const GradeLevelsContext = createContext<GradeLevelsContextValue | undefined>(undefined);
 
-export function GradeLevelsProvider({ children }: { children: ReactNode }) {
+export function GradeLevelsProvider({ children,value:external }: { children: ReactNode;value?:GradeLevelsContextValue }) {
   const [gradeLevels, setGradeLevels] = useState<GradeLevel[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,10 +32,10 @@ export function GradeLevelsProvider({ children }: { children: ReactNode }) {
       if (request.current === current) setLoading(false);
     }
   }, []);
-  useEffect(() => { void refetch(); return () => { request.current++; }; }, [refetch]);
+  useEffect(() => {if(external)return; void refetch(); return () => { request.current++; }; }, [refetch,external]);
 
   return (
-    <GradeLevelsContext.Provider value={{ gradeLevels, loading, error, refetch }}>
+    <GradeLevelsContext.Provider value={external??{ gradeLevels, loading, error, refetch }}>
       {children}
     </GradeLevelsContext.Provider>
   );

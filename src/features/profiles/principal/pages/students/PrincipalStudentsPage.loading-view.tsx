@@ -9,6 +9,9 @@ import { GradeLevelFilterDropdown } from "./components/GradeLevelFilterDropdown"
 import { GradeLevelGrid } from "./components/GradeLevelGrid";
 import { GradeLevelSearchInput } from "./components/GradeLevelSearchInput";
 import { usePrincipalStudentsOverview } from "./hooks/usePrincipalStudentsOverview";
+import { studentsOfflineError } from "./hooks/studentsOfflineError";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@shared/query/queryClient";
 
 function usePrincipalStudentsPageState() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
@@ -16,6 +19,7 @@ function usePrincipalStudentsPageState() {
   const navigate = useNavigate();
   const { gradeLevels, totalStudents, schoolYear, loading, error, retry } =
     usePrincipalStudentsOverview();
+  const cachedOffline = error === studentsOfflineError && gradeLevels.length > 0;
 
   const [search, setSearch] = useState("");
   const [gradeFilter, setGradeFilter] = useState("All Grades");
@@ -121,7 +125,8 @@ function usePrincipalStudentsPageState() {
 
       </GradeLevelSearchInput>
 
-      <LoadingRegion name="principal-grade-collection" loading={loading} error={error} retry={retry} variable frame={renderGrades} retainPrevious hasContent={filtered.length > 0} skeleton={renderGrades(true)} onSettled={() => rememberRows(view, filtered.length)}>
+      {cachedOffline && <LoadingRegion loading={false} error={error} retry={retry} skeleton={null} className={textPrimary}>{null}</LoadingRegion>}
+      <LoadingRegion name="principal-grade-collection" loading={loading} error={cachedOffline ? null : error} retry={retry} variable frame={renderGrades} retainPrevious hasContent={filtered.length > 0} skeleton={renderGrades(true)} onSettled={() => rememberRows(view, filtered.length)}>
         {renderGrades(false)}
       </LoadingRegion>
     </div>
@@ -133,6 +138,10 @@ function usePrincipalStudentsPageState() {
 export type PrincipalStudentsPageEffectScope = ReturnType<typeof usePrincipalStudentsPageState>["scope"];
 export type PrincipalStudentsPageRouteProps = Record<string, never>;
 export function PrincipalStudentsPageComposition(props: object & { effects?: (scope: PrincipalStudentsPageEffectScope) => import("react").ReactNode }) {
+ return <QueryClientProvider client={queryClient}><PrincipalStudentsOverviewContent {...props} /></QueryClientProvider>;
+}
+
+function PrincipalStudentsOverviewContent(props: object & { effects?: (scope: PrincipalStudentsPageEffectScope) => import("react").ReactNode }) {
  const state = usePrincipalStudentsPageState();
  return <>{props.effects?.(state.scope)}{state.content}</>;
 }

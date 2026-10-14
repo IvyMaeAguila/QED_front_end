@@ -2,9 +2,9 @@ import { useState, useRef, type ChangeEvent, type DragEvent } from "react";
 import { FileSpreadsheet, Upload, CheckCircle, AlertTriangle, Loader2 } from "lucide-react";
 import { parseGradeTemplate, type ParsedGradeTemplate } from "../services/gradeTemplateParser.service";
 import {
-  uploadGradeTemplate,
   type ActiveGradeTemplate,
 } from "../services/subjectGradeTemplate.service";
+import {useAdminSubjectOperations} from '../../../query/AdminSubjectOperations';
 import { SkeletonText } from "@shared/components/SkeletonLoading";
 
 interface Props {
@@ -36,6 +36,7 @@ export function SubjectGradeTemplateSection({
   onTemplateSelected,
   onProcessingChange,
 }: Props) {
+  const {uploadTemplate:uploadGradeTemplate}=useAdminSubjectOperations();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploading, setUploading] = useState(false);

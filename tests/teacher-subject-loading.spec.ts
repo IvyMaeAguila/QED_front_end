@@ -102,11 +102,11 @@ for (const dark of [false,true]) test(`teacher score sheet ${dark ? 'dark' : 'li
   release();
 });
 test('teacher working table reuses measured pending column widths on repeat load',async({page})=>{
-  const release=await fixture(page,false,3,true);await page.goto('/teacher/subjects/1');await waitForDataRoute(page);await expect(page.getByText('Score Sheet',{exact:true})).toBeVisible();release();
+  const release=await fixture(page,false,3,true);await page.clock.install();await page.goto('/teacher/subjects/1');await waitForDataRoute(page);await expect(page.getByText('Score Sheet',{exact:true})).toBeVisible();release();
   await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);
   const widths=await page.locator('table.teacher-user-table thead th').evaluateAll(cells=>cells.map(cell=>cell.getBoundingClientRect().width));
   await page.getByRole('button',{name:'Full Records',exact:true}).click();await expect(page).toHaveURL(/\/records$/); await expect(page.getByRole('heading',{name:/— Class Record$/})).toBeVisible();
-  await page.evaluate(async()=>{ const url=performance.getEntriesByType('resource').map(entry=>entry.name).find(url=>url.includes('/subjectDetailCache.service.ts')); if (!url) throw new Error('Application cache module was not loaded'); const cache=await import(/* @vite-ignore */ url); cache.invalidateCachedSubjectDetail('1'); if(cache.getCachedSubjectDetail('1')) throw new Error('Cache invalidation failed'); });
+  await page.clock.fastForward(301_000);
   release.hold();await page.goBack();
   await expect(page.locator('[data-sk-region="assessment-roster"]')).toHaveAttribute('data-sk-phase','revealed');
   const pending=await page.locator('table.teacher-user-table thead th').evaluateAll(cells=>cells.map(cell=>cell.getBoundingClientRect().width));

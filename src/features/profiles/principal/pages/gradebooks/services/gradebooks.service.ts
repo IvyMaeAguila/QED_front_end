@@ -1,6 +1,8 @@
 import type { GradeLevelSummary, GradeSubmissionStatus, Student } from "../data/types";
-import { fetchActiveAcademicYear } from "../../../../admin/pages/subjects/services/academicyear.service"
+import { getRosterAcademicYear } from "../../students/services/students.service";
 import { API_CONFIG } from "../../../../../../config/api.config";
+
+import { QueryHttpError } from "@shared/http/QueryHttpError";
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/gradesheets`;
 // TODO: ayusin ayon sa actual route ng getPrincipalSectionGradebook
@@ -67,30 +69,23 @@ function flattenGradeLevel(raw: RawGradeLevel): GradeLevelSummary[] {
   }];
 }
 
-let cachedGradeLevelSummaries: GradeLevelSummary[] | null = null;
-
-export function getCachedGradeLevelSummaries(): GradeLevelSummary[] | null {
-  return cachedGradeLevelSummaries;
-}
-
-export function clearGradeLevelSummariesCache(): void {
-  cachedGradeLevelSummaries = null;
-}
-
-export async function fetchGradeLevelSummaries(signal?: AbortSignal): Promise<GradeLevelSummary[]> {
+export async function fetchGradeLevelSummaries(signal?: AbortSignal, onUnauthorized?: () => void): Promise<GradeLevelSummary[]> {
+  await Promise.resolve();
+  signal?.throwIfAborted();
   const response = await fetch(`${BASE_URL}/section-grade`, {
     signal,
     credentials: "include",
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch grade level summaries.");
+    if (response.status === 401 && !signal?.aborted) onUnauthorized?.();
+    throw new QueryHttpError("Failed to fetch grade level summaries.", response.status);
   }
 
   const data: RawGradeLevel[] = await response.json();
   const summaries = data.flatMap(flattenGradeLevel);
 
-  cachedGradeLevelSummaries = summaries;
+
 
   return summaries;
 }
@@ -171,7 +166,10 @@ interface RawGradingPeriod {
 export async function fetchGradingPeriods(
   params: { gradeLevelId?: string | number; sectionId?: string | number | null },
   signal?: AbortSignal,
+  onUnauthorized?: () => void,
 ): Promise<GradingPeriodsResult> {
+  await Promise.resolve();
+  signal?.throwIfAborted();
   const query = new URLSearchParams();
   if (params.gradeLevelId !== undefined) {
     query.set("gradeLevelId", String(params.gradeLevelId));
@@ -185,6 +183,9 @@ export async function fetchGradingPeriods(
     signal,
   });
 
+  signal?.throwIfAborted();
+  if (response.status === 401) onUnauthorized?.();
+
   let body:
     | (ApiEnvelope<RawGradingPeriod[]> & { defaultGradingPeriodId?: number | null })
     | null = null;
@@ -195,7 +196,7 @@ export async function fetchGradingPeriods(
   }
 
   if (!response.ok || !body?.success) {
-    throw new Error(body?.message || "Failed to fetch grading periods.");
+    throw new QueryHttpError(body?.message || "Failed to fetch grading periods.", response.status);
   }
 
   return {
@@ -250,7 +251,10 @@ function toStudent(
 export async function fetchPrincipalGradebook(
   params: PrincipalGradebookParams,
   signal?: AbortSignal,
+  onUnauthorized?: () => void,
 ): Promise<PrincipalGradebook | null> {
+  await Promise.resolve();
+  signal?.throwIfAborted();
   const query = new URLSearchParams({
     gradeLevelId: String(params.gradeLevelId),
     gradingPeriodId: String(params.gradingPeriodId),
@@ -264,6 +268,9 @@ export async function fetchPrincipalGradebook(
     signal,
   });
 
+  signal?.throwIfAborted();
+  if (response.status === 401) onUnauthorized?.();
+
   let body: ApiEnvelope<ApiGradebookData> | null = null;
   try {
     body = (await response.json()) as ApiEnvelope<ApiGradebookData>;
@@ -272,7 +279,7 @@ export async function fetchPrincipalGradebook(
   }
 
   if (!response.ok || !body?.success) {
-    throw new Error(body?.message || "Failed to fetch principal gradebook.");
+    throw new QueryHttpError(body?.message || "Failed to fetch principal gradebook.", response.status);
   }
 
   const data = body.data;
@@ -301,8 +308,7 @@ function delay<T>(value: T): Promise<T> {
 }
 
 export async function fetchSchoolYear(signal?: AbortSignal): Promise<string> {
-  void signal;
-  const academicYear = await fetchActiveAcademicYear();
+  const academicYear = await getRosterAcademicYear(signal);
   return academicYear.label;
 }
 

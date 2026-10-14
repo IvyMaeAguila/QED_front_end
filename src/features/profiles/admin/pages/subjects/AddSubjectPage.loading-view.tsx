@@ -26,8 +26,7 @@ import {
 parseGradeTemplate,
 type ParsedGradeTemplate,
 } from "./services/gradeTemplateParser.service";
-import { addSubject as addSubjectApi } from "./services/subject.service";
-import { uploadGradeTemplate } from "./services/subjectGradeTemplate.service";
+import {useAdminSubjectOperations} from '../../query/AdminSubjectOperations';
 import { DEFAULT_ASSESSMENT_TYPES } from "./types/assessmentTypes";
 import { ACCENT,GRADE_LEVEL_IDS,type GradeLevel } from "./types/types";
 
@@ -54,6 +53,7 @@ function formatGroup(group: ParsedGradeTemplate["ww"]): string {
 }
 
 function useAddSubjectPageState() {
+  const {addSubject:addSubjectApi,uploadTemplate:uploadGradeTemplate}=useAdminSubjectOperations();
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();

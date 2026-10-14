@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { TeacherDashboardData } from "./TeacherDashboardData";
 import { useNavigate } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import { useAuth } from "../../../../auth/context/authContext";
@@ -24,19 +25,23 @@ type TeacherStats,
 type WeeklyScheduleItem
 } from "./services/dashboard.service";
 
-function useTeacherDashboardHomeState() {
+function useTeacherDashboardHomeState(data?: TeacherDashboardData) {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const [summary, setSummary] = useState<DashboardSummary | null>(null);
-  const [statsData, setStatsData] = useState<TeacherStats | null>(null);
-  const [attendance, setAttendance] = useState<AttendanceSummary | null>(null);
-  const [events, setEvents] = useState<EventItem[]>([]);
-  const [agenda, setAgenda] = useState<WeeklyScheduleItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [errors, setErrors] = useState<string[]>([]);
+  const [localSummary, setSummary] = useState<DashboardSummary | null>(null);
+  const [localStats, setStatsData] = useState<TeacherStats | null>(null);
+  const [localAttendance, setAttendance] = useState<AttendanceSummary | null>(null);
+  const [localEvents, setEvents] = useState<EventItem[]>([]);
+  const [localAgenda, setAgenda] = useState<WeeklyScheduleItem[]>([]);
+  const [localLoading, setLoading] = useState<boolean>(true);
+  const [localErrors, setErrors] = useState<string[]>([]);
+  const { summary, statsData, attendance, events, agenda, loading, errors } = data ?? {
+    summary: localSummary, statsData: localStats, attendance: localAttendance,
+    events: localEvents, agenda: localAgenda, loading: localLoading, errors: localErrors,
+  };
   const [refresh, setRefresh] = useState(0);
 
   const stats: StatItem[] = [
@@ -60,9 +65,9 @@ function useTeacherDashboardHomeState() {
 
   return { content: ((
     <div className="flex flex-col gap-4 sm:gap-5 xl:gap-6">
-      {errors.length > 0 && <div role="alert" className={`rounded-xl border p-4 ${panelBg} ${panelBorder} ${textPrimary}`}>
-        <p>Unable to load: {errors.map(section => section === "agenda" ? "weekly schedule" : section).join(", ")}. Other sections are available.</p>
-        <button className="mt-2 font-semibold underline" onClick={() => setRefresh(value => value + 1)}>Retry</button>
+      {(errors.length > 0 || data?.offline) && <div role="alert" className={`rounded-xl border p-4 ${panelBg} ${panelBorder} ${textPrimary}`}>
+        <p>{data?.offline ? "You're offline. Cached sections remain available. Reconnect and try again." : <>Unable to load: {errors.map(section => section === "agenda" ? "weekly schedule" : section).join(", ")}. Other sections are available.</>}</p>
+        <button className="mt-2 font-semibold underline" onClick={data?.retry ?? (() => setRefresh(value => value + 1))}>Retry</button>
       </div>}
       <div className="grid grid-cols-1 items-start gap-4 sm:gap-5 xl:grid-cols-[minmax(0,3fr)_minmax(280px,1fr)] xl:gap-6">
         <div className="flex min-w-0 flex-col gap-4 sm:gap-5 xl:gap-6">
@@ -87,7 +92,7 @@ function useTeacherDashboardHomeState() {
 
 export type TeacherDashboardHomeEffectScope = ReturnType<typeof useTeacherDashboardHomeState>["scope"];
 export type TeacherDashboardHomeRouteProps = Record<string, never>;
-export function TeacherDashboardHomeComposition(props: object & { effects?: (scope: TeacherDashboardHomeEffectScope) => import("react").ReactNode }) {
- const state = useTeacherDashboardHomeState();
+export function TeacherDashboardHomeComposition(props: object & { data?: TeacherDashboardData; effects?: (scope: TeacherDashboardHomeEffectScope) => import("react").ReactNode }) {
+ const state = useTeacherDashboardHomeState(props.data);
  return <>{props.effects?.(state.scope)}{state.content}</>;
 }

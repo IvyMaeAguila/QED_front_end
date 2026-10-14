@@ -1,20 +1,18 @@
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { rememberRows, skeletonRows } from "@shared/loading/reservations";
-import { useMemo, useState } from "react";
-import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
+import { lazy,Suspense,useMemo } from "react";
+import { useParentDashboard } from "../context/ParentDashboardContext";
+import { useRoutePreview } from "@shared/loading/RoutePreview";
+import type { CalendarViewData } from "@shared/calendar/CalendarPageView.loading-view";
 import { CalendarDays } from "lucide-react";
 import type { SchoolEvent } from "../types/student";
 import {
   HOLIDAY_TYPE_LABELS,
   type HolidayType,
 } from "@shared/calendar/types/Calendar";
-import {
-  fetchCalendarActivities,
-  fetchCalendarHolidays,
-} from "@shared/calendar/services/calendar.service";
 
-interface EventsCardProps {
+export interface EventsCardProps {
   panelBg?: string;
   textPrimary?: string;
   textMuted?: string;
@@ -81,36 +79,15 @@ function EventRow({
   );
 }
 
-export default function EventsCard({
+export function EventsCardView({
   panelBg = "bg-white",
   textMuted = "text-gray-500",
-  darkMode = false,
-}: EventsCardProps) {
-  const [events, setEvents] = useState<SchoolEvent[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const [attempt, setAttempt] = useState(0);
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-
-    // Explicit discriminated type, para hindi mag-guess si TS
-    // sa shape ng combined array (activities walang `type` field,
-    // holidays may optional `type`).
-    interface RawCalendarRecord {
-      id: number;
-      title: string;
-      _sortKey: string;
-      kind: "activity" | "holiday";
-      holidayType?: HolidayType;
-    }
-
-    Promise.all([fetchCalendarActivities(), fetchCalendarHolidays()])
-      .then(([activityData, holidayData]) => {
-        if (cancelled) return;
-
+  darkMode = false, calendar,
+}: EventsCardProps & {calendar:Pick<CalendarViewData,"activities"|"holidays"|"loading"|"error"|"retry">}) {
+  const loading=calendar.loading,error=calendar.error;
+  const events=useMemo(()=>{
+    interface RawCalendarRecord {id:number;title:string;_sortKey:string;kind:'activity'|'holiday';holidayType?:HolidayType}
+    const activityData=calendar.activities,holidayData=calendar.holidays;
         const visibleYearMonths = new Set(getVisibleYearMonths());
 
         const filteredActivities: RawCalendarRecord[] = activityData
@@ -152,22 +129,9 @@ export default function EventsCard({
           } as SchoolEvent;
         });
 
-        setEvents(combined);
-      })
-      .catch((err) => {
-        if (!cancelled)
-          setError(
-            err instanceof Error ? err.message : "Failed to load events.",
-          );
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
 
-    return () => {
-      cancelled = true;
-    };
-  }, [attempt]);
+    return combined;
+  },[calendar.activities,calendar.holidays]);
 
   const activity = useMemo(
     () => events.filter((e) => e.type === "activity"),
@@ -196,7 +160,15 @@ export default function EventsCard({
         School Calendar
       </p>
 
-      <LoadingRegion name="parent-school-events" loading={loading} error={error} retry={() => setAttempt(value => value + 1)} variable skeleton={null} frame={renderGroups} onSettled={() => { rememberRows("parent-events:activity", activity.length); rememberRows("parent-events:holiday", holiday.length); }}>{null}</LoadingRegion>
+      <LoadingRegion name="parent-school-events" loading={loading} error={error} retry={calendar.retry} variable skeleton={null} frame={renderGroups} onSettled={() => { rememberRows("parent-events:activity", activity.length); rememberRows("parent-events:holiday", holiday.length); }}>{null}</LoadingRegion>
     </div>
   );
+}
+
+const Queries=lazy(()=>import('../../../query/ParentEventsQueries'));
+const pendingCalendar={activities:[],holidays:[],loading:true,error:null,retry:()=>{}};
+export default function EventsCard(props:EventsCardProps){
+ const {isLoadingStudents,isLoadingDailyUpdates}=useParentDashboard(),preview=useRoutePreview();
+ const fallback=<EventsCardView {...props} calendar={pendingCalendar}/>;
+ return !preview&&!isLoadingStudents&&!isLoadingDailyUpdates?<Suspense fallback={fallback}><Queries {...props}/></Suspense>:fallback;
 }

@@ -16,9 +16,8 @@ import { useSubjectSections } from "./context/SubjectSectionsContext";
 import { useSubjectsCatalog } from "./context/SubjectsCatalogContext";
 import {
 toWeightPayload,
-toggleSubjectStatus as toggleSubjectStatusApi,
-updateSubjectAssignment,
 } from "./services/subject.service";
+import {useAdminSubjectOperations} from '../../query/AdminSubjectOperations';
 import {
 GRADE_LEVELS,
 GRADE_LEVEL_IDS,
@@ -27,6 +26,7 @@ type Subject,
 } from "./types/types";
 
 function useManageSubjectsPageState() {
+  const {toggleStatus:toggleSubjectStatusApi,updateSubjectAssignment}=useAdminSubjectOperations();
   const theme = useOutletContext<AdminThemeContext>();
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
   const navigate = useNavigate();

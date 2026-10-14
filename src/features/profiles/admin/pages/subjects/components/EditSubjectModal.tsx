@@ -21,12 +21,11 @@ import {
   DEFAULT_ASSESSMENT_TYPES,
 } from "../types/assessmentTypes";
 import {
-  getActiveGradeTemplate,
-  uploadGradeTemplate,
   type ActiveGradeTemplate,
 } from "../services/subjectGradeTemplate.service";
 import type { ParsedGradeTemplate } from "../services/gradeTemplateParser.service";
-import { fetchAllSchoolYears, type SchoolYearRow } from "../services/academicyear.service";
+import { type SchoolYearRow } from "../services/academicyear.service";
+import {useAdminSubjectOperations} from '../../../query/AdminSubjectOperations';
 
 interface EditSubjectModalProps extends SubjectsTheme {
   subject: Subject;
@@ -52,6 +51,7 @@ export function EditSubjectModal({
   error = null,
   ...theme
 }: EditSubjectModalProps) {
+  const {fetchTemplate:getActiveGradeTemplate,uploadTemplate:uploadGradeTemplate,fetchYears:fetchAllSchoolYears}=useAdminSubjectOperations();
   const [savingTemplate, setSavingTemplate] = useState(false);
   const [processingTemplate, setProcessingTemplate] = useState(false);
   const [pendingTemplate, setPendingTemplate] = useState<{ file: File; preview: ParsedGradeTemplate } | null>(null);
@@ -91,7 +91,7 @@ export function EditSubjectModal({
       .then((rows) => { if (active) setSchoolYears(rows); })
       .catch((err) => console.error("Failed to load school years:", err));
     return () => { active = false; };
-  }, []);
+  }, [fetchAllSchoolYears]);
 
   useEffect(() => {
     void loadAssessmentTypes();
@@ -113,7 +113,7 @@ export function EditSubjectModal({
       })
       .finally(() => { if (active) setLoadingTemplate(false); });
     return () => { active = false; };
-  }, [subject.subjectId, subject.id, templateAttempt]);
+  }, [subject.subjectId, subject.id, templateAttempt,getActiveGradeTemplate]);
 
   // Preview pending weights locally; persist only through Save Changes.
   // A saved template is authoritative for a graded subject. Keep the legacy

@@ -1,3 +1,5 @@
+import { parentFetch } from '../../../../query/parentRequest';
+import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
 import { API_CONFIG } from '../../../../../../../config/api.config';
 
 const API_BASE = `${API_CONFIG.baseURL}/api/attendanceSummary`;
@@ -89,8 +91,8 @@ const AttendanceService = {
    * Kunin ang attendance summary (per grading period, per month)
    * ng isang partikular na anak.
    */
-  async getAttendanceSummary(studentId: number): Promise<AttendanceSummaryResponse> {
-    const res = await fetch(`${API_BASE}/summary/${studentId}`, {
+  async getAttendanceSummary(studentId: number, options?: ApiRequestOptions): Promise<AttendanceSummaryResponse> {
+    const res = await parentFetch(`${API_BASE}/summary/${studentId}`, options, {
       method: "GET",
       credentials: "include",
     });

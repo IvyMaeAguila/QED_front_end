@@ -14,6 +14,7 @@ import { useParentDashboard } from "./dashboard/context/ParentDashboardContext";
 import VerifyStudentModal from "./EnrollledStudent/modal/verifyStudentModal";
 // TODO: adjust this path to wherever you saved LinkStudentForm.tsx
 import { LinkStudentForm } from "./EnrollledStudent/Components/LinkStudentForm";
+import { ParentConnectionNotice } from '../query/ParentConnectionNotice';
 
 interface ParentLayoutProps {
   onLogout: () => void;
@@ -110,6 +111,7 @@ export function ParentLayout({ onLogout }: ParentLayoutProps) {
         </div>
 
         <main className="relative z-10 flex-1 overflow-y-auto p-4 sm:p-6">
+          <ParentConnectionNotice darkMode={darkMode}/>
           <Suspense fallback={<RouteSkeleton outletContext={outletContext} />}><Outlet context={outletContext} /></Suspense>
         </main>
       </div>

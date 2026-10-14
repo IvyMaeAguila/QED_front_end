@@ -34,9 +34,9 @@ export function StudentProfileTab({ student, theme }: StudentProfileTabProps) {
 
 function StudentProfileTabContent({ theme }: { theme: AdminThemeContext }) {
   const { darkMode, panelBorder } = theme;
-  const { profile, isLoading, error, refetch, saveProfile } = useStudentProfile();
+  const { profile, isLoading, error, refetch } = useStudentProfile();
 
-  if (!profile) return null;
+  if (!profile) return <LoadingRegion name="parent-student-profile" loading={isLoading} error={error} retry={refetch} skeleton={null}>{null}</LoadingRegion>;
 
   return (
     <div className="flex flex-col gap-5">
@@ -47,7 +47,6 @@ function StudentProfileTabContent({ theme }: { theme: AdminThemeContext }) {
         personalInformation={profile.personalInformation}
         darkMode={darkMode}
         panelBorder={panelBorder}
-        onSave={(updates) => saveProfile(updates)}
       />
       )}>{null}</LoadingRegion>
     </div>

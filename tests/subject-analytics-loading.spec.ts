@@ -1,4 +1,5 @@
 import { waitForDataRoute } from "./fixtures/routeReady";
+import { waitForQueryReadersIdle } from "./fixtures/queryLifecycle";
 import { test, expect, type Page } from "@playwright/test";
 import { mockDirectory } from "./fixtures/directory";
 import { assertNoDataSpinner, captureFixedOverlay, checkRenderedContrast, checkShimmerPixels } from "./design-pixels";
@@ -79,6 +80,7 @@ test("subject analytics failure removes placeholders and retries all report requ
 });
 
 for (const fast of [true, false]) test(`subject analytics ${fast ? "fast" : "slow"} term refetch preserves the old ranking`, async ({ page }) => {
+  if (fast) await page.clock.install();
   const release = await subjectFixture(page, false);
   await page.goto("/principal/reports");await waitForDataRoute(page);
   await expect(page.getByRole("heading", { name: "Priority Focus", exact: true })).toBeVisible();
@@ -86,12 +88,22 @@ for (const fast of [true, false]) test(`subject analytics ${fast ? "fast" : "slo
   const region = page.locator('[data-sk-region="whole-elementary-ranking"]');
   const heading = page.getByRole("heading", { name: "Subject Performance Analytics", exact: true });
   const before = await heading.boundingBox();
+  if (fast) await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
+  const started = fast ? await page.evaluate(() => performance.now()) : 0;
   await region.evaluate(element => {
     (window as Window & { reportPhases?: string[] }).reportPhases = [];
     new MutationObserver(() => (window as Window & { reportPhases?: string[] }).reportPhases!.push(element.getAttribute("data-sk-phase")!)).observe(element, { attributes: true, attributeFilter: ["data-sk-phase"] });
   });
   release.hold(); await page.getByRole("combobox").first().selectOption("Term 2");
-  if (fast) { await page.waitForTimeout(60); release.finish(); }
+  if (fast) {
+    await expect(region).toHaveAttribute("data-sk-phase", "waiting");
+    await page.clock.runFor(60); release.finish();
+    await waitForQueryReadersIdle(page,"PRINCIPAL",["analytics"],3);
+    // Deliver due notifications with bounded clock ticks, below the reveal deadline.
+    await expect.poll(async()=>{await page.clock.runFor(1);return region.getAttribute("data-sk-phase");}).toBe("settled");
+    const elapsed = await page.evaluate(() => performance.now()) - started;
+    expect(elapsed).toBeGreaterThanOrEqual(60); expect(elapsed).toBeLessThan(200);
+  }
   else {
     await expect(region).toHaveAttribute("data-sk-phase", "dimmed");
     await expect(region.locator("[data-sk-stale]")).toHaveCSS("opacity", "0.6");

@@ -1,3 +1,4 @@
+import type { TeacherReader } from "../../query/TeacherReader";
 import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { rememberRows,skeletonRows } from "@shared/loading/reservations";
@@ -57,17 +58,20 @@ function currentSchoolYearLabel(): string {
   return `SY ${startYear}–${startYear + 1}`;
 }
 
-function useSubjectsPageState() {
+function useSubjectsPageState(reader?: TeacherReader<AssignedSubject[]>) {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const { students } = useStudents();
   const { user } = useAuth();
 
-  const [subjects, setSubjects] = useState<DisplaySubject[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [localSubjects, setSubjects] = useState<DisplaySubject[]>([]);
+  const [localLoading, setLoading] = useState(true);
+  const [localError, setError] = useState<string | null>(null);
 
+  const subjects = useMemo(() => reader ? (reader.data ?? []).map(mapToDisplaySubject) : localSubjects, [reader, localSubjects]);
+  const loading = reader?.loading ?? localLoading;
+  const error = reader ? reader.error : localError;
   const [refresh, setRefresh] = useState(0);
   const [search, setSearch] = useState("");
 
@@ -211,6 +215,7 @@ function useSubjectsPageState() {
 
   return { content: ((
     <div className="w-full min-h-full pb-0">
+      {reader?.offline && reader.data && <div role="alert" className={`mb-4 rounded-xl border p-4 ${panelBg} ${panelBorder} ${textPrimary}`}>You're offline. Cached subjects remain available. Reconnect and try again.</div>}
       <div className="w-full space-y-6">
         {/* Header — same pattern as TeacherAttendancePage */}
         <div className="flex items-start gap-2.5">
@@ -295,7 +300,7 @@ function useSubjectsPageState() {
         <div className={`rounded-2xl border shadow-card ${panelBg} ${panelBorder}`}>
           {(
             <>
-              {(<LoadingRegion name="teacher-subject-collection" loading={loading} variable error={error} retry={() => setRefresh(value => value + 1)} retainPrevious hasContent={filteredSubjects.length > 0} frame={renderSubjects} onSettled={() => rememberRows(viewKey, filteredSubjects.length)} skeleton={renderSubjects(true)}>{renderSubjects(false)}</LoadingRegion>)}
+              {(<LoadingRegion name="teacher-subject-collection" loading={loading} variable error={error} retry={reader?.retry ?? (() => setRefresh(value => value + 1))} retainPrevious hasContent={filteredSubjects.length > 0} frame={renderSubjects} onSettled={() => rememberRows(viewKey, filteredSubjects.length)} skeleton={renderSubjects(true)}>{renderSubjects(false)}</LoadingRegion>)}
             </>
           )}
         </div>
@@ -372,7 +377,7 @@ function SubjectCard({
 
 export type SubjectsPageEffectScope = ReturnType<typeof useSubjectsPageState>["scope"];
 export type SubjectsPageRouteProps = Record<string, never>;
-export function SubjectsPageComposition(props: object & { effects?: (scope: SubjectsPageEffectScope) => import("react").ReactNode }) {
- const state = useSubjectsPageState();
+export function SubjectsPageComposition(props: object & { reader?: TeacherReader<AssignedSubject[]>; effects?: (scope: SubjectsPageEffectScope) => import("react").ReactNode }) {
+ const state = useSubjectsPageState(props.reader);
  return <>{props.effects?.(state.scope)}{state.content}</>;
 }

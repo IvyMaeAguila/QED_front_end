@@ -17,15 +17,20 @@ type TermInput,
 } from "./services/academicyear.service";
 import type { AcademicYear,SchoolYearStatus,Term } from "./types/academicyear";
 
-function useAcademicYearPageState() {
+export interface AcademicYearData {
+ academicYear:AcademicYear|null;terms:Term[];loading:boolean;error:string|null;retry:()=>Promise<void>;
+ addYear:typeof addAcademicYear;saveTerms:typeof saveTermsRequest;refreshYear:()=>Promise<AcademicYear>;
+}
+function useAcademicYearPageState(data?:AcademicYearData) {
   const theme = useOutletContext<AdminThemeContext>();
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
   const navigate = useNavigate();
 
-  const [academicYear, setAcademicYear] = useState<AcademicYear | null>(null);
-  const [terms, setTerms] = useState<Term[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
+  const [localAcademicYear, setAcademicYear] = useState<AcademicYear | null>(null);
+  const [localTerms, setTerms] = useState<Term[]>([]);
+  const [localLoading, setLoading] = useState(true);
+  const [localLoadError, setLoadError] = useState<string | null>(null);
+  const academicYear=data?data.academicYear:localAcademicYear,terms=data?.terms??localTerms,loading=data?.loading??localLoading,loadError=data?data.error:localLoadError;
 
   const [editingYear, setEditingYear] = useState(false);
   const [editingTerms, setEditingTerms] = useState(false);
@@ -37,6 +42,7 @@ function useAcademicYearPageState() {
   const [termsError, setTermsError] = useState<string | null>(null);
 
   const loadAcademicYear = useCallback(async () => {
+    if(data){await data.retry();return;}
     setLoading(true);
     setLoadError(null);
     try {
@@ -52,7 +58,7 @@ function useAcademicYearPageState() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [data]);
 
   async function saveAcademicYear(newYear: {
     label: string;
@@ -61,7 +67,7 @@ function useAcademicYearPageState() {
     setSavingYear(true);
     setYearError(null);
     try {
-      await addAcademicYear(newYear);
+      await (data?.addYear??addAcademicYear)(newYear);
       // Full page reload so the new year, its freshly-seeded terms,
       // and every dependent badge/status all reflect the fresh DB state.
       window.location.reload();
@@ -79,10 +85,10 @@ function useAcademicYearPageState() {
     setSavingTerms(true);
     setTermsError(null);
     try {
-      const saved = await saveTermsRequest(academicYear.id, updatedTerms);
+      const saved = await (data?.saveTerms??saveTermsRequest)(academicYear.id, updatedTerms);
       setTerms(saved);
       setEditingTerms(false);
-      const refreshedYear = await fetchActiveAcademicYear();
+      const refreshedYear = await (data?.refreshYear??fetchActiveAcademicYear)();
       setAcademicYear(refreshedYear);
     } catch (err) {
       console.error("Failed to save term dates:", err);
@@ -192,7 +198,7 @@ function useAcademicYearPageState() {
 
 export type AcademicYearPageEffectScope = ReturnType<typeof useAcademicYearPageState>["scope"];
 export type AcademicYearPageRouteProps = Record<string, never>;
-export function AcademicYearPageComposition(props: object & { effects?: (scope: AcademicYearPageEffectScope) => import("react").ReactNode }) {
- const state = useAcademicYearPageState();
+export function AcademicYearPageComposition(props: object & {data?:AcademicYearData; effects?: (scope: AcademicYearPageEffectScope) => import("react").ReactNode }) {
+ const state = useAcademicYearPageState(props.data);
  return <>{props.effects?.(state.scope)}{state.content}</>;
 }

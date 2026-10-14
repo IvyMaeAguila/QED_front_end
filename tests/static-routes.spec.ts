@@ -8,7 +8,7 @@ for (const width of [375, 1280]) for (const dark of [false, true]) test(`topic s
   await page.setViewportSize({ width, height: 1000 });
   const release = await mockDirectory(page, "PARENT", dark);
   await page.goto("/parent/students/1/topics/1/support");await waitForDataRoute(page);
-  await expect(page.getByRole("heading", { name: "How do we help today?", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Your adventure starts here!", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: /Study Quest Learn/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /Feed Your Pet Quiz/ })).toBeVisible();
   const region = page.locator('[data-sk-region="topic-support-content"]');

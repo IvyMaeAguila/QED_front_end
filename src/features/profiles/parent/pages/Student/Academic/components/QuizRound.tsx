@@ -44,7 +44,7 @@ export default function QuizRound({
   const question = questions[currentIndex];
 
   return (
-    <div className="flex flex-col gap-3 w-full max-w-sm">
+    <div className="adventure-question flex flex-col gap-3 w-full max-w-sm">
       {roundMode === "remedial" && (
         <p className="text-center text-xs font-semibold text-amber-700 flex items-center justify-center gap-1">
           <RefreshCcw size={13} />

@@ -1,3 +1,5 @@
+import {useContext} from 'react';
+import {TeacherAcademicQueryContext,useTeacherAcademicServices} from '../../../../query/TeacherAcademicQueryContext';
 import { AccountSelect } from "@shared/components/AccountSelect";
 import { useState } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
@@ -12,7 +14,7 @@ import {
   type ExamType,
   type GradeItem,
 } from "../types/Grading";
-import { createTopic, fetchTopics, type Topic } from "../../services/subjectGrading.service";
+import type {Topic} from "../../services/subjectGrading.service";
 import type { TemplateDomain } from "../../../../../shared/grading/gradeTemplate.types";
 
 
@@ -53,6 +55,9 @@ export function AddItemModal({
   const [date, setDate] = useState(initialItem?.date ?? todayISO());
   const [templateDomainId, setTemplateDomainId] = useState(initialItem?.templateDomainId ?? templateDomains[0]?.id ?? "");
 
+  const port=useContext(TeacherAcademicQueryContext);
+  const queryManaged=port!==null;
+  const {grading:{createTopic,fetchTopics}}=useTeacherAcademicServices();
   const [topics, setTopics] = useState<Topic[]>([]);
   const [topicsLoading, setTopicsLoading] = useState(true);
   const [selectedTopicId, setSelectedTopicId] = useState<string>(initialItem?.topicId ?? "");
@@ -66,6 +71,7 @@ export function AddItemModal({
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
+    if(queryManaged)return;
     if (isExam) {
       setTopicsLoading(false);
       return;
@@ -77,7 +83,7 @@ export function AddItemModal({
       })
       .catch((err) => console.error("Failed to load topics:", err))
       .finally(() => setTopicsLoading(false));
-  }, [subjectSectionId, isExam]);
+  }, [subjectSectionId, isExam,queryManaged,fetchTopics]);
 
   async function handleCreateTopicInline() {
     const name = newTopicName.trim();
@@ -147,7 +153,8 @@ export function AddItemModal({
     darkMode ? "text-white placeholder:text-[#6B7280]" : "text-[#111827] placeholder:text-[#9CA3AF]"
   }`;
 
-  return (
+  return (<>{port&&<port.TopicsEffects {...{subjectId:subjectSectionId,enabled:!isExam,setTopics,setLoading:setTopicsLoading,setError,setNewTopicMode}}/>}
+{(
     <ModalFrame shellVariant={darkMode ? "dark" : "standard"} onClose={onClose} size="md" zIndexClass="z-[1000]" ariaLabel={`${isEdit ? "Edit" : "Add"} ${ASSESSMENT_TAB_LABELS[tab]}`}>
         <ModalHeader
           title={subjectName}
@@ -283,5 +290,5 @@ export function AddItemModal({
           </button>
         </ModalFooter>
     </ModalFrame>
-  );
+  )}</>);
 }

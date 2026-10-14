@@ -153,3 +153,8 @@ for (const transition of ["switch", "logout-login"] as const) {
     await expect(page.getByTestId("auth")).toHaveText(transition === "switch" ? "2" : "1");
   });
 }
+
+for (const endpoint of ['teachers','year'] as const) test('cached directory '+endpoint+' 403 cannot reappear offline',async({page})=>{
+ const f=await fixture(page);await start(page);await expect(page.getByTestId('teachers')).toHaveText('Current teacher');f.state[endpoint].status=403;await page.getByRole('button',{name:'Retry query'}).click();await expect(page.getByTestId('error')).toHaveText(endpoint === 'teachers' ? 'Failed to fetch teachers (403)' : 'Failed to fetch academic year.');await expect(page.getByTestId('teachers')).toHaveText('');await expect(page.getByTestId('year')).toHaveText('');
+ await page.context().setOffline(true);await expect(page.getByTestId('teachers')).toHaveText('');await expect(page.getByTestId('year')).toHaveText('');
+});

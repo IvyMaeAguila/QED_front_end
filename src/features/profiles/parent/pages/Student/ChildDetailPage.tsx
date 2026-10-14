@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useParams } from 'react-router-dom';
 import { ChildDetailPageComposition,type ChildDetailPageEffectScope } from "./ChildDetailPage.loading-view";
 export * from "./ChildDetailPage.loading-view";
 
@@ -11,5 +12,6 @@ function ChildDetailPageDataEffects({ scope }: { scope: ChildDetailPageEffectSco
 }
 
 export default function ChildDetailPage() {
- return <ChildDetailPageComposition effects={scope => <ChildDetailPageDataEffects scope={scope}/>} />;
+ const {studentId}=useParams();
+ return <ChildDetailPageComposition key={studentId} effects={scope => <ChildDetailPageDataEffects scope={scope}/>} />;
 }

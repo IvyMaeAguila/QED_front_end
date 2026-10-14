@@ -1,4 +1,7 @@
 import { API_CONFIG } from '../../../../../../config/api.config';
+import { QueryHttpError } from "@shared/http/QueryHttpError";
+
+interface DashboardRequestOptions { signal?: AbortSignal; onUnauthorized?: () => void }
 
 
 const USER_BASE_URL = `${API_CONFIG.baseURL}/api/user`; 
@@ -15,39 +18,43 @@ export interface DashboardCounts extends UserCountsResponse {
 }
 
 export const DashboardService = {
-  async getUserCounts(): Promise<UserCountsResponse> {
+  async getUserCounts(options: DashboardRequestOptions = {}): Promise<UserCountsResponse> {
     const response = await fetch(`${USER_BASE_URL}/totalUser`, {
       method: "GET",
       credentials: "include",
+      signal: options.signal,
     });
+    if (response.status === 401) options.onUnauthorized?.();
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to fetch user counts");
+      const errorData = await response.json().catch(() => null);
+      throw new QueryHttpError(errorData?.message || "Failed to fetch user counts", response.status);
     }
 
     return response.json();
   },
 
-  async getTotalStudents(): Promise<number> {
+  async getTotalStudents(options: DashboardRequestOptions = {}): Promise<number> {
     const response = await fetch(`${STUDENT_BASE_URL}/totalStudents`, {
       method: "GET",
       credentials: "include",
+      signal: options.signal,
     });
+    if (response.status === 401) options.onUnauthorized?.();
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to fetch total students");
+      const errorData = await response.json().catch(() => null);
+      throw new QueryHttpError(errorData?.message || "Failed to fetch total students", response.status);
     }
 
     const data = await response.json(); // { success, total }
     return data.total;
   },
 
-  async getDashboardCounts(): Promise<DashboardCounts> {
+  async getDashboardCounts(options: DashboardRequestOptions = {}): Promise<DashboardCounts> {
     const [userCounts, totalStudents] = await Promise.all([
-      this.getUserCounts(),
-      this.getTotalStudents(),
+      this.getUserCounts(options),
+      this.getTotalStudents(options),
     ]);
 
     return {

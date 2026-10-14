@@ -1,3 +1,4 @@
+import "./intervention-adventure.css";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { lastKnownCount,rememberRows,skeletonRows } from "@shared/loading/reservations";
 import { ArrowLeft,ChevronLeft,Flame } from "lucide-react";
@@ -29,7 +30,7 @@ type RoundMode,
 } from "./components/QuizShared";
 import { ConfettiBurst,HungerMeter } from "./components/QuizWidgets";
 import RoundResult from "./components/RoundResult";
-import PetQuizService,{
+import DefaultPetQuizService,{
 InterventionArchivedError,
 type AnswerSubmission,
 type BonusGames,
@@ -72,7 +73,7 @@ function markIntroSeen(studentId?: string, topicId?: string) {
   }
 }
 
-function usePetQuizPageState() {
+function usePetQuizPageState(PetQuizService=DefaultPetQuizService) {
   const { studentId, topicId } = useParams<{
     studentId: string;
     topicId: string;
@@ -617,7 +618,7 @@ function usePetQuizPageState() {
   }
 
   return { content: ((
-    <div className="sk-surface-quiz relative isolate -m-4 flex min-h-[calc(100dvh-5.8125rem)] flex-col items-center gap-4 overflow-x-clip p-4 sm:-m-6 sm:p-6">
+    <div className="intervention-adventure adventure-quiz sk-surface-quiz relative isolate -m-4 flex min-h-[calc(100dvh-5.8125rem)] flex-col items-center gap-4 overflow-x-clip p-4 sm:-m-6 sm:p-6">
       <QuestWorldBackground />
       {view !== "quiz" && (
         <button
@@ -730,7 +731,7 @@ function usePetQuizPageState() {
 
 export type PetQuizPageEffectScope = ReturnType<typeof usePetQuizPageState>["scope"];
 export type PetQuizPageRouteProps = Record<string, never>;
-export function PetQuizPageComposition(props: object & { effects?: (scope: PetQuizPageEffectScope) => import("react").ReactNode }) {
- const state = usePetQuizPageState();
+export function PetQuizPageComposition(props: {service?:typeof DefaultPetQuizService} & { effects?: (scope: PetQuizPageEffectScope) => import("react").ReactNode }) {
+ const state = usePetQuizPageState(props.service);
  return <>{props.effects?.(state.scope)}{state.content}</>;
 }

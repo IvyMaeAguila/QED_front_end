@@ -1,3 +1,5 @@
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@shared/query/queryClient";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
@@ -10,7 +12,7 @@ import { useHolisticAnalytics } from "./hooks/useHolisticAnalytics";
 
 function useHolisticPerformanceAnalyticsPageState() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
-  const { term, setTerm, termOptions, view, setView, viewOptions, rows, loading, error, retry } = useHolisticAnalytics();
+  const { term, setTerm, termOptions, view, setView, viewOptions, rows, loading, error, retry, cachedOffline, dataScope } = useHolisticAnalytics();
 
   const domainKeys = ["cognitive", "emotional", "behavioral", "social"] as const;
   const domainLabels = { cognitive: "Cognitive", emotional: "Emotional", behavioral: "Behavioral", social: "Social" };
@@ -30,7 +32,7 @@ function useHolisticPerformanceAnalyticsPageState() {
   ];
 
   return { content: ((
-    <div className="flex flex-col gap-5 font-sans">
+    <div key={dataScope} className="flex flex-col gap-5 font-sans">
       <div className={`flex flex-col gap-2.5 rounded-xl border px-3 py-2 sm:flex-row sm:items-center sm:justify-between ${panelBg} ${panelBorder}`}>
         <PrincipalAnalyticsTabs textMuted={textMuted} />
         <div className="flex flex-wrap items-center gap-2">
@@ -64,7 +66,8 @@ function useHolisticPerformanceAnalyticsPageState() {
         </div>
       </div>
 
-      {error ? <LoadingRegion loading={false} error={error} retry={retry} skeleton={null}>{null}</LoadingRegion> : (
+      {cachedOffline && <LoadingRegion loading={false} error={error} retry={retry} skeleton={null} className={textPrimary}>{null}</LoadingRegion>}
+      {error && !cachedOffline ? <LoadingRegion loading={false} error={error} retry={retry} skeleton={null}>{null}</LoadingRegion> : (
       <>
       <ReportMetricCards loading={loading} view={`holistic-report:${term}:${view}`} items={reportMetrics} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} />
       <SectionCard title="Development overview" compact panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} darkMode={darkMode}>
@@ -91,7 +94,11 @@ function useHolisticPerformanceAnalyticsPageState() {
 
 export type HolisticPerformanceAnalyticsPageEffectScope = ReturnType<typeof useHolisticPerformanceAnalyticsPageState>["scope"];
 export type HolisticPerformanceAnalyticsPageRouteProps = Record<string, never>;
-export function HolisticPerformanceAnalyticsPageComposition(props: object & { effects?: (scope: HolisticPerformanceAnalyticsPageEffectScope) => import("react").ReactNode }) {
+function HolisticPerformanceAnalyticsPageContent(props: object & { effects?: (scope: HolisticPerformanceAnalyticsPageEffectScope) => import("react").ReactNode }) {
  const state = useHolisticPerformanceAnalyticsPageState();
  return <>{props.effects?.(state.scope)}{state.content}</>;
+}
+
+export function HolisticPerformanceAnalyticsPageComposition(props: object & { effects?: (scope: HolisticPerformanceAnalyticsPageEffectScope) => import("react").ReactNode }) {
+ return <QueryClientProvider client={queryClient}><HolisticPerformanceAnalyticsPageContent {...props} /></QueryClientProvider>;
 }

@@ -1,16 +1,10 @@
+import { parentFetch } from '../../../../query/parentRequest';
+import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
 import { API_CONFIG } from '../../../../../../../config/api.config';
 import type { BackendTerm } from "../utils/transformProgressReport";
 import type { ProgressReportMeta } from "../types/types";
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/termPerformanceProgress`;
-
-function authedFetch(url: string, init?: RequestInit) {
-  return fetch(url, {
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    ...init,
-  });
-}
 
 async function handleJsonResponse(res: Response) {
   const isJson = (res.headers.get("content-type") ?? "").includes("application/json");
@@ -18,10 +12,6 @@ async function handleJsonResponse(res: Response) {
   const data = await res.json();
   if (!res.ok || !data.success) throw new Error(data.message || "Request failed.");
   return data;
-}
-
-function buildCacheKey(studentId: string): string {
-  return studentId;
 }
 
 /** Combined shape returned by the term-performance endpoint: per-term
@@ -38,52 +28,7 @@ const EMPTY_META: ProgressReportMeta = {
   schoolYear: "",
 };
 
-const cache = new Map<string, StudentTermPerformanceResult>();
-const inFlightRequests = new Map<string, Promise<StudentTermPerformanceResult>>();
-
-export async function fetchStudentTermPerformance(
-  studentId: string,
-  options?: { force?: boolean }
-): Promise<StudentTermPerformanceResult> {
-  const cacheKey = buildCacheKey(studentId);
-
-  if (!options?.force) {
-    const cached = cache.get(cacheKey);
-    if (cached) {
-      return cached;
-    }
-  }
-
-  const inFlight = inFlightRequests.get(cacheKey);
-  if (inFlight && !options?.force) {
-    return inFlight;
-  }
-
-const request = (async () => {
-  const res = await authedFetch(`${BASE_URL}/${studentId}/term-performance`);
-  const json = await handleJsonResponse(res);
-
-  const result: StudentTermPerformanceResult = {
-    terms: json.data as BackendTerm[],
-    meta: (json.meta as ProgressReportMeta) ?? EMPTY_META,
-  };
-  cache.set(cacheKey, result);
-  return result;
-})();
-
-  inFlightRequests.set(cacheKey, request);
-
-  try {
-    return await request;
-  } finally {
-    inFlightRequests.delete(cacheKey);
-  }
-}
-
-export function clearStudentTermPerformanceProgressCache(studentId?: string) {
-  if (studentId !== undefined) {
-    cache.delete(buildCacheKey(studentId));
-  } else {
-    cache.clear();
-  }
+export async function fetchStudentTermPerformance(studentId: string, options?: ApiRequestOptions): Promise<StudentTermPerformanceResult> {
+ const json=await handleJsonResponse(await parentFetch(`${BASE_URL}/${studentId}/term-performance`,options));
+ return {terms:json.data as BackendTerm[],meta:(json.meta as ProgressReportMeta)??EMPTY_META};
 }

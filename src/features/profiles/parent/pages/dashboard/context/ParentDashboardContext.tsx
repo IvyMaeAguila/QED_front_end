@@ -1,280 +1,41 @@
-// src/features/ParentDashboard/context/ParentDashboardContext.tsx
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
-import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
-import { dailyUpdateService } from "../services/dashboard.service";
-import {
-  verificationService,
-  enrolledChildrenService,
-} from "../../EnrollledStudent/services/enrolledStudent.service";
-import type {
-  CardViewMode,
-  DailyUpdate,
-  LinkStudentInput,
-  MatchedStudentRecord,
-  Student,
-} from "../types/student";
-import { useToast } from "@shared/context/ToastContext";
-
-interface ParentDashboardContextValue {
-  students: Student[];
-  isLoadingStudents: boolean;
-  studentsError: string | null;
-  refetchStudents: () => Promise<void>;
-
-  dailyUpdates: DailyUpdate[];
-  isLoadingDailyUpdates: boolean;
-  dailyUpdatesError: string | null;
-  refetchDailyUpdates: () => Promise<void>;
-
-  viewMode: CardViewMode;
-  setViewMode: (mode: CardViewMode) => void;
-
-  isVerifyModalOpen: boolean;
-  pendingMatch: MatchedStudentRecord | null;
-  linkError: string | null;
-  isVerifying: boolean;
-  isConfirming: boolean;
-  submitLinkForm: (input: LinkStudentInput) => Promise<void>;
-  confirmMatch: () => Promise<void>;
-  rejectMatch: () => void;
+import {createContext,lazy,Suspense,useCallback,useContext,useRef,useState,type ReactNode} from 'react';
+import {useRouteEffect as useEffect,useRoutePreview} from '@shared/loading/RoutePreview';
+import {useAuth} from '@shared/hooks/useAuth';
+import {useNotifications} from '@shared/notification/NotificationContext';
+import {enrolledChildrenService} from '../../EnrollledStudent/services/enrolledStudent.service';
+import {dailyUpdateService} from '../services/dashboard.service';
+import type {ReaderValue,DashboardSeeds} from '../../../query/drivers/ParentDashboardQueries';
+import type {LinkStudentInput,CardViewMode} from '../types/student';
+const Driver=lazy(()=>import('../../../query/drivers/ParentDashboardQueries'));
+const Context=createContext<ReaderValue|undefined>(undefined);
+// Query-free authenticated bootstrap hands off successful data with its original
+// timestamp, then retires its requests/projections. The role shell stays mounted.
+export function ParentDashboardProvider({children}:{children:ReactNode}) {
+ const {user,isLoading,sessionScope,expireSession}=useAuth(),preview=useRoutePreview();
+ const {activateParentQueries}=useNotifications();
+ const [active,setActive]=useState(false),[snapshot,setSnapshot]=useState<ReaderValue>();
+ const [bootstrap,setBootstrap]=useState<{studentsLoading:boolean;dailyLoading:boolean;studentsError:string|null;dailyError:string|null;done:boolean}>({studentsLoading:true,dailyLoading:true,studentsError:null,dailyError:null,done:false});
+ const [seeds,setSeeds]=useState<DashboardSeeds>();
+ const [viewMode,setViewMode]=useState<CardViewMode>('grid'),[linkError,setLinkError]=useState<string|null>(null);
+ const queue=useRef<{input:LinkStudentInput;resolve:()=>void;reject:(error:Error)=>void}[]>([]);
+ const publish=useCallback((value:ReaderValue)=>{setSnapshot(value);setSeeds(previous=>previous?undefined:previous);const waiting=queue.current.splice(0);for(const action of waiting)void value.submitLinkForm(action.input).then(action.resolve,action.reject);},[]);
+ useEffect(()=>{
+  if(active||isLoading||user?.role!=='PARENT')return;
+  let current=true;const controller=new AbortController(),options={signal:controller.signal,onUnauthorized:()=>{if(current&&!controller.signal.aborted)expireSession(sessionScope);}};
+  const students=enrolledChildrenService.getEnrolledChildren(options).then(result=>{if(!current)return;if(!result.success)throw new Error(result.message||'Failed to load linked students.');const receivedAt=Date.now();setSeeds(previous=>({...previous,students:{data:result.students,updatedAt:receivedAt}}));}).catch(error=>{if(current){if(navigator.onLine)setSeeds(previous=>({...previous,errors:{...previous?.errors,students:error instanceof Error?error:new Error("Can't connect to server, try again.")}}));setBootstrap(previous=>({...previous,studentsError:error instanceof Error?error.message:"Can't connect to server, try again."}));}}).finally(()=>{if(current)setBootstrap(previous=>({...previous,studentsLoading:false}));});
+  const daily=dailyUpdateService.getDailyUpdatesForParent(options).then(result=>{if(!current)return;if(!result.success)throw new Error(result.message||'Failed to load daily updates.');const receivedAt=Date.now();setSeeds(previous=>({...previous,daily:{data:result.dailyUpdates,updatedAt:receivedAt}}));}).catch(error=>{if(current){if(navigator.onLine)setSeeds(previous=>({...previous,errors:{...previous?.errors,daily:error instanceof Error?error:new Error("Can't connect to server, try again.")}}));setBootstrap(previous=>({...previous,dailyError:error instanceof Error?error.message:"Can't connect to server, try again."}));}}).finally(()=>{if(current)setBootstrap(previous=>({...previous,dailyLoading:false}));});
+  void Promise.all([students,daily]).then(()=>{if(current){setBootstrap(previous=>({...previous,done:true}));if(navigator.onLine)setActive(true);}});
+  return()=>{current=false;controller.abort();};
+ },[active,isLoading,user?.role,sessionScope,expireSession]);
+ useEffect(()=>{const online=()=>{if(bootstrap.done)setActive(true);};window.addEventListener('online',online);return()=>window.removeEventListener('online',online);},[bootstrap.done]);
+ useEffect(()=>{if(active)activateParentQueries?.();},[active,activateParentQueries]);
+ useEffect(()=>()=>{for(const action of queue.current.splice(0))action.reject(new Error('Your session changed. Please sign in again.'));},[]);
+ const value:ReaderValue=snapshot??{
+  students:seeds?.students?.data??[],isLoadingStudents:bootstrap.studentsLoading,studentsError:bootstrap.studentsError,refetchStudents:async()=>{if(navigator.onLine)setActive(true);},
+  dailyUpdates:seeds?.daily?.data??[],isLoadingDailyUpdates:bootstrap.dailyLoading,dailyUpdatesError:bootstrap.dailyError,refetchDailyUpdates:async()=>{if(navigator.onLine)setActive(true);},
+  viewMode,setViewMode,isVerifyModalOpen:false,pendingMatch:null,linkError,isVerifying:false,isConfirming:false,
+  submitLinkForm:input=>{if(!navigator.onLine){setLinkError("You're offline. Reconnect and try again.");return Promise.resolve();}setLinkError(null);return new Promise<void>((resolve,reject)=>{queue.current.push({input,resolve,reject});setActive(true);});},confirmMatch:async()=>{},rejectMatch:()=>{},
+ };
+ return <Context.Provider value={value}>{active&&!preview&&<Suspense fallback={null}><Driver onChange={publish} seeds={seeds} initialViewMode={viewMode}/></Suspense>}{children}</Context.Provider>;
 }
-
-const ParentDashboardContext =
-  createContext<ParentDashboardContextValue | null>(null);
-
-function toMatchedStudentRecord(student: Student): MatchedStudentRecord {
-  const fullName =
-    student.fullName ?? `${student.firstName} ${student.lastName}`.trim();
-  const [firstName, ...rest] = fullName.split(" ");
-
-  return {
-    id: Number(student.id) || 0,
-    idNumber: student.studentNumber,
-    firstName: student.firstName ?? firstName ?? "",
-    lastName: student.lastName ?? rest.join(" ") ?? "",
-    fullName,
-    gradeLevel: student.gradeLevel,
-    section: student.section,
-    adviser: student.adviser,
-    gender: student.gender,
-  };
-}
-
-// Ginagamit lang ito kapag walang ibinalik na buong `student` object ang
-// confirmLink response (edge case). `overallScore`/`performanceStatus` ay
-// wala pang laman dito dahil kababago lang ma-link — magre-refresh naman
-// agad ito sa tamang value pagkatapos ng fetchStudents() sa confirmMatch().
-function toStudentFallback(match: MatchedStudentRecord): Student {
-  const [firstName, ...rest] = match.fullName.split(" ");
-  return {
-    id: `std-${match.idNumber}`,
-    studentNumber: match.idNumber,
-    firstName: firstName ?? match.fullName,
-    lastName: rest.length ? rest.join(" ") : "",
-    fullName: match.fullName,
-    gender: match.gender,
-    gradeLevel: match.gradeLevel,
-    section: match.section,
-    adviser: match.adviser,
-    attendanceRate: null,
-    attendanceStatus: "pending",
-    overallScore: null,
-    performanceStatus: "pending",
-    linked: true,
-  };
-}
-
-export function ParentDashboardProvider({ children }: { children: ReactNode }) {
-  const [students, setStudents] = useState<Student[]>([]);
-  const [isLoadingStudents, setIsLoadingStudents] = useState(true);
-  const [studentsError, setStudentsError] = useState<string | null>(null);
-
-  const [dailyUpdates, setDailyUpdates] = useState<DailyUpdate[]>([]);
-  const [isLoadingDailyUpdates, setIsLoadingDailyUpdates] = useState(true);
-  const [dailyUpdatesError, setDailyUpdatesError] = useState<string | null>(
-    null,
-  );
-
-  const [viewMode, setViewMode] = useState<CardViewMode>("grid");
-
-  const [isVerifyModalOpen, setVerifyModalOpen] = useState(false);
-  const [pendingMatch, setPendingMatch] = useState<MatchedStudentRecord | null>(
-    null,
-  );
-  const [linkError, setLinkError] = useState<string | null>(null);
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [isConfirming, setIsConfirming] = useState(false);
-  const { showToast } = useToast();
-
-  const fetchStudents = useCallback(async () => {
-    setIsLoadingStudents(true);
-    setStudentsError(null);
-
-    try {
-      const response = await enrolledChildrenService.getEnrolledChildren();
-
-      if (!response.success) {
-        setStudentsError(response.message || "Failed to load linked students.");
-        setStudents([]);
-        return;
-      }
-
-      setStudents(response.students);
-    } catch (error) {
-      setStudentsError("Can't connect to server, try again.");
-      setStudents([]);
-    } finally {
-      setIsLoadingStudents(false);
-    }
-  }, []);
-
-  const fetchDailyUpdates = useCallback(async () => {
-    setIsLoadingDailyUpdates(true);
-    setDailyUpdatesError(null);
-
-    try {
-      const response = await dailyUpdateService.getDailyUpdatesForParent();
-
-      if (!response.success) {
-        setDailyUpdatesError(response.message || "Failed to load daily updates.");
-        setDailyUpdates([]);
-        return;
-      }
-
-      setDailyUpdates(response.dailyUpdates);
-    } catch (error) {
-      setDailyUpdatesError("Can't connect to server, try again.");
-      setDailyUpdates([]);
-    } finally {
-      setIsLoadingDailyUpdates(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchStudents();
-    fetchDailyUpdates();
-  }, [fetchStudents, fetchDailyUpdates]);
-
-  const submitLinkForm = useCallback(async (input: LinkStudentInput) => {
-    setIsVerifying(true);
-    setLinkError(null);
-
-    try {
-      const response = await verificationService.verifyStudent({
-        studentNumber: input.idNumber.trim(),
-        lastName: input.lastName.trim(),
-        firstName: input.firstName.trim(),
-      });
-
-      if (!response.success || !response.student) {
-        setLinkError(
-          response.message ||
-            "No student record matches that ID number. Please check the details and try again.",
-        );
-        return;
-      }
-
-      setPendingMatch(toMatchedStudentRecord(response.student));
-      setVerifyModalOpen(true);
-    } finally {
-      setIsVerifying(false);
-    }
-  }, []);
-
-  const confirmMatch = useCallback(async () => {
-    if (!pendingMatch) return;
-
-    setIsConfirming(true);
-    try {
-      const response = await verificationService.confirmLink({
-        studentNumber: pendingMatch.idNumber,
-        lastName: pendingMatch.lastName,
-        firstName: pendingMatch.firstName,
-      });
-
-      if (!response.success) {
-        setVerifyModalOpen(false);
-        setPendingMatch(null);
-        showToast(response.message || "Student linked failed!", "error");
-        return;
-      }
-
-      const newStudent = response.student ?? toStudentFallback(pendingMatch);
-
-      setStudents((prev) => [...prev, newStudent]);
-      setVerifyModalOpen(false);
-      setPendingMatch(null);
-      showToast("Student linked successfully!", "success");
-
-      // refetch para siguradong tugma sa DB (adviser, section, overallScore,
-      // performanceStatus, etc.)
-      fetchStudents();
-      fetchDailyUpdates();
-    } finally {
-      setIsConfirming(false);
-    }
-  }, [pendingMatch, fetchStudents, fetchDailyUpdates, showToast]);
-
-  const rejectMatch = useCallback(() => {
-    setVerifyModalOpen(false);
-    setPendingMatch(null);
-  }, []);
-
-  const value = useMemo(
-    () => ({
-      students,
-      isLoadingStudents,
-      studentsError,
-      refetchStudents: fetchStudents,
-      dailyUpdates,
-      isLoadingDailyUpdates,
-      dailyUpdatesError,
-      refetchDailyUpdates: fetchDailyUpdates,
-      viewMode,
-      setViewMode,
-      isVerifyModalOpen,
-      pendingMatch,
-      linkError,
-      isVerifying,
-      isConfirming,
-      submitLinkForm,
-      confirmMatch,
-      rejectMatch,
-    }),
-    [
-      students,
-      isLoadingStudents,
-      studentsError,
-      fetchStudents,
-      dailyUpdates,
-      isLoadingDailyUpdates,
-      dailyUpdatesError,
-      fetchDailyUpdates,
-      viewMode,
-      isVerifyModalOpen,
-      pendingMatch,
-      linkError,
-      isVerifying,
-      isConfirming,
-      submitLinkForm,
-      confirmMatch,
-      rejectMatch,
-    ],
-  );
-
-  return (
-    <ParentDashboardContext.Provider value={value}>
-      {children}
-    </ParentDashboardContext.Provider>
-  );
-}
-
-export function useParentDashboard() {
-  const ctx = useContext(ParentDashboardContext);
-  if (!ctx) {
-    throw new Error(
-      "useParentDashboard must be used within a ParentDashboardProvider",
-    );
-  }
-  return ctx;
-}
+export function useParentDashboard(){const value=useContext(Context);if(!value)throw new Error('ParentDashboardProvider is required.');return value;}

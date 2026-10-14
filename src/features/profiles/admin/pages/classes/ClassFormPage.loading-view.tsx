@@ -14,12 +14,10 @@ import { WorkflowStepper } from "../../../shared/components/WorkflowStepper";
 import type { AdminThemeContext } from ".././AdminLayout";
 import { useClasses } from "./context/ClassesContext";
 import {
-createClass,
 fetchAllTeachers,
 fetchGradeLevels,
 fetchSectionsByGrade,
 fetchSubjectsByGrade,
-updateClassApi,
 type GradeLevelOption,
 type SectionOption,
 type SubjectOption,
@@ -81,7 +79,7 @@ function useClassFormPageState() {
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const { classId } = useParams<{ classId: string }>();
-  const { getClass, refreshClasses, loading: classesLoading, error: classesError } = useClasses();
+  const { getClass, refreshClasses,createClass,updateClass:updateClassApi, loading: classesLoading, error: classesError } = useClasses();
   const { showToast } = useToast();
 
   const isEditing = Boolean(classId);

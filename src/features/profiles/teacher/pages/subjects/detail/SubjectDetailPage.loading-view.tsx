@@ -1,3 +1,5 @@
+import {useTeacherAcademicServices} from '../../../query/TeacherAcademicQueryContext';
+import {useAuth} from '@shared/hooks/useAuth';
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 import { ArrowLeft } from "lucide-react";
@@ -6,23 +8,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
 import type { GradeTemplateStructure } from "../../../../shared/grading/gradeTemplate.types";
-import {
-getCachedSubjectDetail,
-patchCachedSubjectDetail,
-setCachedSubjectDetail,
-} from "../services/subjectDetailCache.service";
-import { getEffectiveWeightsSafe } from "../services/subjectGradeTemplate.service";
-import {
-addItem as addItemApi,
-deleteItem,
-fetchGradingPeriods,
-fetchHolistic,
-fetchItems,
-fetchScores,
-fetchSubjectSectionInfo,
-saveHolistic,
-saveScore,
-} from "../services/subjectGrading.service";
 import { AssessmentTab } from "./components/AssessmentTab";
 import { ConfirmDialog } from "./components/ConfirmDialog";
 import { HolisticTab } from "./components/HolisticTab";
@@ -44,38 +29,40 @@ function currentSchoolYearLabel(): string {
 }
 
 function useSubjectDetailPageState() {
+  const {grading}=useTeacherAcademicServices();
+  const {addItem:addItemApi,deleteItem,fetchItems,saveScore,saveHolistic}=grading;
+  const {sessionScope,user}=useAuth();
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const { subjectId } = useParams<{ subjectId: string }>();
 
-  const [initialCache] = useState(() => subjectId ? getCachedSubjectDetail(subjectId) : undefined);
   const [attempt, setAttempt] = useState(0);
   const [templateLoading, setTemplateLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<SubjectDetailTab>("writtenWorks");
 
-  const [subjectName, setSubjectName] = useState<string>(initialCache?.subjectName ?? "");
+  const [subjectName, setSubjectName] = useState<string>("");
 
-  const [gradeLevel, setGradeLevel] = useState<string>(initialCache?.gradeLevel ?? "");
-  const [roster, setRoster] = useState<RosterStudent[]>(initialCache?.roster ?? []);
+  const [gradeLevel, setGradeLevel] = useState<string>("");
+  const [roster, setRoster] = useState<RosterStudent[]>([]);
 
   // Whether the logged-in teacher is this section's own adviser (drives
   // hiding "Submit Grades" on AssessmentRecordsSection), plus that
   // section's adviser's display name for the confirm-submit copy when
   // it's false. Both come from the backend via fetchSubjectSectionInfo —
   // the frontend has no independent way to know this.
-  const [isOwnAdvisory, setIsOwnAdvisory] = useState(initialCache?.isOwnAdvisory ?? false);
-  const [adviserName, setAdviserName] = useState<string | null>(initialCache?.adviserName ?? null);
+  const [isOwnAdvisory, setIsOwnAdvisory] = useState(false);
+  const [adviserName, setAdviserName] = useState<string | null>(null);
 
-  const [items, setItems] = useState<GradeItem[]>(initialCache?.items ?? []);
-  const [scores, setScores] = useState<ScoreMap>(initialCache?.scores ?? {});
-  const [holistic, setHolistic] = useState<HolisticMap>(initialCache?.holistic ?? {});
+  const [items, setItems] = useState<GradeItem[]>([]);
+  const [scores, setScores] = useState<ScoreMap>({});
+  const [holistic, setHolistic] = useState<HolisticMap>({});
   const [holisticWeekStartDate, setHolisticWeekStartDate] =
-    useState<string>(initialCache?.holisticWeekStartDate ?? "");
+    useState<string>("");
   const [holisticTermNumber] = useState(1);
-  const [terms, setTerms] = useState<GradingPeriod[]>(initialCache?.terms ?? []);
-  const [selectedTerm, setSelectedTerm] = useState<string>(initialCache?.selectedTerm ?? "");
-  const [loading, setLoading] = useState(!initialCache);
+  const [terms, setTerms] = useState<GradingPeriod[]>([]);
+  const [selectedTerm, setSelectedTerm] = useState<string>("");
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [templateStructure, setTemplateStructure] = useState<GradeTemplateStructure | undefined>();
 
@@ -115,7 +102,6 @@ function useSubjectDetailPageState() {
       });
       setItems((prev) => {
         const next = [...prev, { ...item, id, gradingPeriodId: selectedTerm }];
-        patchCachedSubjectDetail(subjectId, { items: next });
         return next;
       });
     } catch (err) {
@@ -127,7 +113,6 @@ function useSubjectDetailPageState() {
   async function handleDeleteItem(itemId: string) {
     setItems((prev) => {
       const next = prev.filter((i) => i.id !== itemId);
-      if (subjectId) patchCachedSubjectDetail(subjectId, { items: next });
       return next;
     });
 
@@ -140,7 +125,6 @@ function useSubjectDetailPageState() {
       try {
         const refreshed = await fetchItems(subjectId, { allPeriods: true });
         setItems(refreshed);
-        patchCachedSubjectDetail(subjectId, { items: refreshed });
       } catch (refetchErr) {
         console.error(
           "Failed to refresh items after failed delete:",
@@ -155,20 +139,21 @@ function useSubjectDetailPageState() {
     itemId: string,
     value: number | null,
   ) {
+
+
+    if (!subjectId) return;
+    try {
+      await saveScore(subjectId, studentId, itemId, value);
     setScores((prev) => {
       const next = {
         ...prev,
         [studentId]: { ...prev[studentId], [itemId]: value },
       };
-      if (subjectId) patchCachedSubjectDetail(subjectId, { scores: next });
       return next;
     });
-
-    if (!subjectId) return;
-    try {
-      await saveScore(subjectId, studentId, itemId, value);
     } catch (err) {
       console.error("Failed to save score:", err);
+      throw err;
     }
   }
 
@@ -182,7 +167,6 @@ function useSubjectDetailPageState() {
         ...prev,
         [studentId]: { ...prev[studentId], [axis]: value },
       };
-      if (subjectId) patchCachedSubjectDetail(subjectId, { holistic: next });
       return next;
     });
 
@@ -198,6 +182,7 @@ function useSubjectDetailPageState() {
     guardedNavigate(() => {
       navigate(`/teacher/subjects/${subjectId}/records`, {
         state: {
+          queryOwner:{session:sessionScope,role:user?.role,user:String(user?.id??'')},
           subjectName,
           gradeLevel,
           tab: activeTab,
@@ -219,7 +204,7 @@ function useSubjectDetailPageState() {
       <div className={`w-full min-h-full ${textPrimary}`}>
         No subject selected.
       </div>
-    )), scope: { subjectId, setTemplateLoading, getEffectiveWeightsSafe, selectedTerm, setTemplateStructure, hasUnsavedChanges, attempt, getCachedSubjectDetail, setSubjectName, setGradeLevel, setRoster, setItems, setScores, setHolistic, setHolisticWeekStartDate, setTerms, setSelectedTerm, setIsOwnAdvisory, setAdviserName, setLoading, setError, fetchSubjectSectionInfo, fetchGradingPeriods, fetchItems, fetchScores, fetchHolistic, setCachedSubjectDetail } };
+    )), scope: { subjectId, setTemplateLoading, selectedTerm, setTemplateStructure, hasUnsavedChanges, attempt, setSubjectName, setGradeLevel, setRoster, setItems, setScores, setHolistic, setHolisticWeekStartDate, setTerms, setSelectedTerm, setIsOwnAdvisory, setAdviserName, setLoading, setError } };
   }
 
   const holisticLocked = [0, 6].includes(new Date().getDay());
@@ -333,7 +318,7 @@ function useSubjectDetailPageState() {
         )}
       </div>
     </div>
-  )), scope: { subjectId, setTemplateLoading, getEffectiveWeightsSafe, selectedTerm, setTemplateStructure, hasUnsavedChanges, attempt, getCachedSubjectDetail, setSubjectName, setGradeLevel, setRoster, setItems, setScores, setHolistic, setHolisticWeekStartDate, setTerms, setSelectedTerm, setIsOwnAdvisory, setAdviserName, setLoading, setError, fetchSubjectSectionInfo, fetchGradingPeriods, fetchItems, fetchScores, fetchHolistic, setCachedSubjectDetail } };
+  )), scope: { subjectId, setTemplateLoading, selectedTerm, setTemplateStructure, hasUnsavedChanges, attempt, setSubjectName, setGradeLevel, setRoster, setItems, setScores, setHolistic, setHolisticWeekStartDate, setTerms, setSelectedTerm, setIsOwnAdvisory, setAdviserName, setLoading, setError } };
 }
 
 
