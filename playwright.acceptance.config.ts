@@ -8,6 +8,7 @@ export default defineConfig({
     env: { QED_ACCEPTANCE_STATIC: "1" },
   },
   testMatch: [
+    "**/sheetjs-preview-compatibility.spec.ts",
     "**/admin-remaining-*.spec.ts",
     "**/student-form-loading.spec.ts", "**/admin-class-view.spec.ts", "**/class-form-loading.spec.ts",
     "**/add-subject-loading.spec.ts", "**/subject-edit-modal-loading.spec.ts",
