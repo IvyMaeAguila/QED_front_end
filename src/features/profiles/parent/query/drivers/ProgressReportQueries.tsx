@@ -207,6 +207,7 @@ function ProgressReportProvider({
         gradingPeriodId: -1,
         termNumber: -1,
         termLabel: "OVERALL",
+        submitted: visibility.every((v) => v.submitted),
         isVisible: allVisible,
         termEnded: allTermEnded,
         available: allAvailable,

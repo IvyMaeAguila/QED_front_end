@@ -17,9 +17,10 @@ export interface TermVisibilityEntry {
   gradingPeriodId: number;
   termNumber: number;
   termLabel: string;
+  submitted: boolean;
   isVisible: boolean;
   termEnded: boolean;
-  /** true kapag pwede nang tignan ng parent (is_visible AND tapos na term) */
+  /** Authoritative backend gate: advisory submission AND term end AND release. */
   available: boolean;
 }
 
