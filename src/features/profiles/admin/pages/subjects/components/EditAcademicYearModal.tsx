@@ -77,7 +77,7 @@ export function EditAcademicYearModal({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          {/* <div className="grid grid-cols-2 gap-3">
             <div>
               <label className={labelClasses}>Start Date</label>
               <input
@@ -96,7 +96,7 @@ export function EditAcademicYearModal({
                 placeholder="e.g. March 31, 2027"
               />
             </div>
-          </div>
+          </div> */}
 
           <div>
             <label className={labelClasses}>Status</label>
