@@ -31,8 +31,8 @@ export function EditAcademicYearModal({
   error = null,
 }: EditAcademicYearModalProps) {
   const [label, setLabel] = useState(academicYear.label);
-  const [startDate, setStartDate] = useState(academicYear.startDate ?? "");
-  const [endDate, setEndDate] = useState(academicYear.endDate ?? "");
+  const [startDate, ] = useState(academicYear.startDate ?? "");
+  const [endDate, ] = useState(academicYear.endDate ?? "");
   const [status, setStatus] = useState<SchoolYearStatus>(academicYear.status);
 
   const inputClasses = `w-full h-10 px-3 rounded-lg text-sm font-semibold border outline-none transition-colors ${
