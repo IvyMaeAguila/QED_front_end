@@ -1,0 +1,33 @@
+[WebServer] (node:2016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:15748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:36048) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\loading.spec.ts:120:1 › text line metrics and adjacent widths
+  1) tests\loading.spec.ts:120:1 › text line metrics and adjacent widths ───────────────────────────
+
+    Error: expect(received).not.toBe(expected) // Object.is equality
+
+    Expected: not 280
+
+      121 |   await go(page, "latency=1500&mode=text");
+      122 |   const metrics = await page.locator('[data-sk-primitive="text"]').evaluateAll(es => es.map(e => ({ width: e.getBoundingClientRect().width, height: e.getBoundingClientRect().height, line: parseFloat(getComputedStyle(e).lineHeight) })));
+    > 123 |   for (const [i, metric] of metrics.entries()) { expect(metric.height).toBe(metric.line); if (i) expect(metric.width).not.toBe(metrics[i - 1].width); }
+          |                                                                                                                           ^
+      124 | });
+      125 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\loading.spec.ts:123:123
+
+    Error Context: test-results\loading-text-line-metrics-and-adjacent-widths\error-context.md
+
+
+  1 failed
+    tests\loading.spec.ts:120:1 › text line metrics and adjacent widths ────────────────────────────

@@ -1,3 +1,5 @@
+import { parentFetch } from '../../../../query/parentRequest';
+import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
 /**
  * Fetches a student's holistic domain averages, one entry per grading term,
  * from GET /holisticTermAverages/students/:studentId.
@@ -29,76 +31,8 @@ export interface BackendHolisticTermAverage {
   riskLevel: "HIGH" | "MEDIUM" | "NONE";
 }
 
-interface CacheEntry {
-  data: BackendHolisticTermAverage[];
-  fetchedAt: number;
-}
-
-// Keyed by studentId. Cleared per-student on force refetch; not time-based —
-// mirrors the "cache until explicitly told otherwise" behavior implied by
-// fetchStudentTermPerformance's `force` option.
-const cache = new Map<string, CacheEntry>();
-
-export interface FetchHolisticTermAveragesOptions {
-  /** Bypass the cache and hit the network, e.g. on ProgressReportContext.refetch(). */
-  force?: boolean;
-  /** Fetch a single term instead of every term for the student's active school year. */
-  termNumber?: number;
-}
-
-export async function fetchStudentHolisticTermAverages(
-  studentId: string,
-  options: FetchHolisticTermAveragesOptions = {},
-): Promise<BackendHolisticTermAverage[]> {
-  const { force = false, termNumber } = options;
-
-  // Only cache the "all terms" call — a single-term call is cheap and rare
-  // enough (used for one-off lookups) that caching it adds complexity for
-  // little benefit.
-  const cacheKey = studentId;
-  if (!force && termNumber === undefined) {
-    const cached = cache.get(cacheKey);
-    if (cached) return cached.data;
-  }
-
-  const url = new URL(`${API_BASE}/${studentId}`, window.location.origin);
-  if (termNumber !== undefined) {
-    url.searchParams.set("termNumber", String(termNumber));
-  }
-
-  const response = await fetch(url.toString(), {
-    method: "GET",
-    credentials: "include",
-  });
-
-  if (!response.ok) {
-    let message = `Failed to fetch holistic term averages (${response.status}).`;
-    try {
-      const body = await response.json();
-      if (body?.message) message = body.message;
-    } catch {
-      // response body wasn't JSON — keep the generic message
-    }
-    throw new Error(message);
-  }
-
-  const body = await response.json();
-  if (!body?.success) {
-    throw new Error(body?.message ?? "Failed to fetch holistic term averages.");
-  }
-
-  const data: BackendHolisticTermAverage[] = body.data ?? [];
-
-  if (termNumber === undefined) {
-    cache.set(cacheKey, { data, fetchedAt: Date.now() });
-  }
-
-  return data;
-}
-
-/** Clears the cached result for one student — call this alongside any other
- * "refetch everything for this student" action if you don't already funnel
- * through `force`. */
-export function clearHolisticTermAveragesCache(studentId: string) {
-  cache.delete(studentId);
+export async function fetchStudentHolisticTermAverages(studentId:string, options:ApiRequestOptions & {termNumber?:number}={}):Promise<BackendHolisticTermAverage[]> {
+ const url=new URL(`${API_BASE}/${studentId}`,window.location.origin);if(options.termNumber!==undefined)url.searchParams.set('termNumber',String(options.termNumber));
+ const response=await parentFetch(url.toString(),options);const body=await response.json();
+ if(!body?.success)throw new Error(body?.message??'Failed to fetch holistic term averages.');return body.data??[];
 }

@@ -19,7 +19,7 @@ export function EntryRowActions({ darkMode, onEdit, onDelete, highlighted = fals
             ? "text-white hover:bg-white/15"
             : darkMode
               ? "hover:bg-white/10 text-[#D1D5DB]"
-              : "hover:bg-[#F6F7FB] text-[#374151]"
+              : "hover:bg-brand-light text-[#374151]"
         }`}
       >
         <Pencil size={13} />

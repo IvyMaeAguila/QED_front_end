@@ -1,5 +1,9 @@
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { SkeletonText } from "@shared/components/SkeletonLoading";
+import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
+import { skeletonRows, rememberRows } from "@shared/loading/reservations";
 import { useMemo } from "react";
-import { CheckCircle2, Loader2, AlertCircle } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import type { AdminThemeContext } from "../../../../../admin/pages/AdminLayout";
 import SectionHeader from "../../../ui/SectionHeader";
 import type { DetailStudent } from "../../GlobalTypes/types";
@@ -11,7 +15,6 @@ interface MissedActivitiesProps {
   student: DetailStudent;
 }
 
-const MAROON = "#8f0000";
 
 export default function MissedActivities({ theme, student }: MissedActivitiesProps) {
   return (
@@ -22,9 +25,10 @@ export default function MissedActivities({ theme, student }: MissedActivitiesPro
 }
 
 function MissedActivitiesContent({ theme, student }: MissedActivitiesProps) {
-  const { activities, loading, error } = useMissedActivities();
+  const { activities, loading, error, retry } = useMissedActivities();
   const { darkMode, panelBg, panelBorder } = theme;
 
+  const view = `parent-missed:${student.id}`;
   const emptyIconBg = darkMode ? "bg-white/5" : "bg-gray-100";
   const emptyIcon = darkMode ? "text-gray-500" : "text-gray-400";
   const emptyText = darkMode ? "text-gray-500" : "text-gray-400";
@@ -74,19 +78,8 @@ function MissedActivitiesContent({ theme, student }: MissedActivitiesProps) {
         theme={theme}
       />
 
-      {loading ? (
-        <div className="flex flex-col items-center gap-2 py-10">
-          <Loader2 size={18} className={`animate-spin ${emptyIcon}`} />
-          <p className={`text-xs ${emptyText}`}>Loading missed activities...</p>
-        </div>
-      ) : error ? (
-        <div className="flex flex-col items-center gap-2 py-10">
-          <div className={`flex h-9 w-9 items-center justify-center rounded-full ${emptyIconBg}`}>
-            <AlertCircle size={18} className="text-rose-400" />
-          </div>
-          <p className="text-xs text-rose-400">{error}</p>
-        </div>
-      ) : activities.length === 0 ? (
+      <LoadingRegion name="parent-missed-activities" loading={loading} error={error} retry={retry} variable retainPrevious hasContent={activities.length > 0} skeleton={null} onSettled={() => rememberRows(view,groupedByDate.length)} frame={(pending) => (
+      !pending && activities.length === 0 ? (
         <div className="flex flex-col items-center gap-2 py-10">
           <div className={`flex h-9 w-9 items-center justify-center rounded-full ${emptyIconBg}`}>
             <CheckCircle2 size={18} className={emptyIcon} />
@@ -97,17 +90,17 @@ function MissedActivitiesContent({ theme, student }: MissedActivitiesProps) {
         </div>
       ) : (
         <div className="flex flex-col gap-4 px-4 pb-4 pt-4">
-          {groupedByDate.map(([dueDate, items]) => (
+          {(pending ? Array.from({length:skeletonRows(view)},(_,i)=>[String(i),[{id:String(i),topic:"",subject:"",maxItems:0,type:"Written Works"}]] as [string,MissedActivity[]]) : groupedByDate).map(([dueDate, items]) => (
             <div key={dueDate} className="flex gap-3">
               <div className="flex w-16 shrink-0 flex-col items-center pt-3">
-                <span className="text-sm font-extrabold leading-none" style={{ color: MAROON }}>
-                  {dueDate.split(",")[0]?.split(" ")[1] ?? ""}
+                <span className="text-sm font-extrabold leading-none" style={{ color: "var(--brand-ink)" }}>
+                  {pending ? <SkeletonText width="2ch" /> : dueDate.split(",")[0]?.split(" ")[1] ?? ""}
                 </span>
-                <span className="text-xs font-bold uppercase leading-none" style={{ color: MAROON }}>
-                  {dueDate.split(",")[0]?.split(" ")[0] ?? ""}
+                <span className="text-xs font-bold uppercase leading-none" style={{ color: "var(--brand-ink)" }}>
+                  {pending ? <SkeletonText width="3ch" /> : dueDate.split(",")[0]?.split(" ")[0] ?? ""}
                 </span>
                 <span className={`mt-1 text-xs ${dateSubText}`}>
-                  {dueDate.split(",")[1]?.trim() ?? ""}
+                  {pending ? <SkeletonText width="4ch" /> : dueDate.split(",")[1]?.trim() ?? ""}
                 </span>
               </div>
 
@@ -119,10 +112,10 @@ function MissedActivitiesContent({ theme, student }: MissedActivitiesProps) {
                       className={`flex items-center gap-3 px-3 py-2.5 transition-colors ${rowHover}`}
                     >
                       <div className="min-w-0 flex-1">
-                        <p className={`truncate text-sm font-semibold ${topicText}`}>{a.topic}</p>
-                        <p className={`mt-0.5 text-xs ${subjectText}`}>{a.subject} | {a.maxItems} points</p>
+                        <p className={`truncate text-sm font-semibold ${topicText}`}>{pending ? <SkeletonText width="14ch" /> : a.topic}</p>
+                        <p className={`mt-0.5 text-xs ${subjectText}`}>{pending ? <SkeletonParagraph field={view+":subject:"+a.id} typical={2} width="18ch" /> : <span data-sk-field={view+":subject:"+a.id}>{a.subject} | {a.maxItems} points</span>}</p>
                       </div>
-                      <span className={`${typeBadgeBase} ${typeBadgeStyles[a.type]}`}>{a.type}</span>
+                      <span className={`${typeBadgeBase} ${pending ? "" : typeBadgeStyles[a.type]}`}>{pending ? <SkeletonText width="8ch" /> : a.type}</span>
                     </div>
                   ))}
                 </div>
@@ -130,7 +123,7 @@ function MissedActivitiesContent({ theme, student }: MissedActivitiesProps) {
             </div>
           ))}
         </div>
-      )}
+      ))}>{null}</LoadingRegion>
     </div>
   );
 }

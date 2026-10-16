@@ -1,0 +1,54 @@
+{
+  "ADMIN": {
+    "scripts": {
+      "rawBytes": 902045,
+      "gzipBytes": 276718
+    },
+    "assets": {
+      "rawBytes": 1499938,
+      "gzipBytes": 714450
+    },
+    "rolesRequested": [
+      "admin"
+    ]
+  },
+  "TEACHER": {
+    "scripts": {
+      "rawBytes": 957408,
+      "gzipBytes": 292335
+    },
+    "assets": {
+      "rawBytes": 1411194,
+      "gzipBytes": 586924
+    },
+    "rolesRequested": [
+      "teacher"
+    ]
+  },
+  "PRINCIPAL": {
+    "scripts": {
+      "rawBytes": 1383195,
+      "gzipBytes": 410239
+    },
+    "assets": {
+      "rawBytes": 1836981,
+      "gzipBytes": 704828
+    },
+    "rolesRequested": [
+      "principal"
+    ]
+  },
+  "PARENT": {
+    "scripts": {
+      "rawBytes": 897000,
+      "gzipBytes": 276180
+    },
+    "assets": {
+      "rawBytes": 1350786,
+      "gzipBytes": 570769
+    },
+    "rolesRequested": [
+      "parent"
+    ]
+  }
+}

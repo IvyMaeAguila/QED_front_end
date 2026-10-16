@@ -1,0 +1,2083 @@
+[
+  {
+    "fileName": "assets/index-DNJPIDYG.js",
+    "isEntry": true,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/preload-helper-zJ_50EbN.js",
+      "assets/CartesianChart-2Gp9Qvra.js",
+      "assets/jsx-runtime-CJllllml.js",
+      "assets/arrow-left-D2tfXTay.js",
+      "assets/chart-column-D0tW75Kt.js",
+      "assets/check-BMaRp4jY.js",
+      "assets/chevron-down-CgegrbJ6.js",
+      "assets/circle-check-big-YVPbVMct.js",
+      "assets/upload-CN5lV3FZ.js",
+      "assets/loader-circle-Dvo5tvjg.js",
+      "assets/minus-DeBLjXqx.js",
+      "assets/search-DRo8L1OT.js",
+      "assets/trending-down-2-I6P391.js",
+      "assets/trending-up-8Ec-1bKh.js",
+      "assets/triangle-alert-B5QO3dta.js",
+      "assets/user-round-DS3Vdsx3.js",
+      "assets/modal-CqbJ28xz.js",
+      "assets/react-dom-BjPNskWF.js",
+      "assets/SkeletonLoading-yH44wkWw.js",
+      "assets/subjectGradeTemplate.service-BRn31rvl.js",
+      "assets/api.config-qjE84KfK.js",
+      "assets/classes.service-G6eMozPB.js",
+      "assets/academicyear.service-CshyqqlM.js",
+      "assets/user-Dl6EKG5o.js",
+      "assets/DashboardUI-BsKzg927.js",
+      "assets/ConfirmationModal-Q2v-enq9.js",
+      "assets/StudentAvatar-I43AUbaH.js",
+      "assets/StudentDirectoryTable-DK3wY_5C.js",
+      "assets/LoadingRegion-Df9hq3O2.js",
+      "assets/LoadingTable-CkuvouK-.js",
+      "assets/SkeletonParagraph-cjSWqeI2.js"
+    ],
+    "modules": [
+      "\u0000vite/modulepreload-polyfill.js",
+      "src/style.css",
+      "node_modules/scheduler/cjs/scheduler.production.js",
+      "node_modules/scheduler/index.js",
+      "node_modules/react-dom/cjs/react-dom-client.production.js",
+      "node_modules/react-dom/client.js",
+      "node_modules/lucide-react/dist/esm/icons/activity.js",
+      "node_modules/lucide-react/dist/esm/icons/apple.js",
+      "node_modules/lucide-react/dist/esm/icons/arrow-right.js",
+      "node_modules/lucide-react/dist/esm/icons/arrow-up-right.js",
+      "node_modules/lucide-react/dist/esm/icons/badge-check.js",
+      "node_modules/lucide-react/dist/esm/icons/battery.js",
+      "node_modules/lucide-react/dist/esm/icons/bell.js",
+      "node_modules/lucide-react/dist/esm/icons/blocks.js",
+      "node_modules/lucide-react/dist/esm/icons/book-marked.js",
+      "node_modules/lucide-react/dist/esm/icons/book-open.js",
+      "node_modules/lucide-react/dist/esm/icons/book.js",
+      "node_modules/lucide-react/dist/esm/icons/brain.js",
+      "node_modules/lucide-react/dist/esm/icons/calculator.js",
+      "node_modules/lucide-react/dist/esm/icons/calendar-check.js",
+      "node_modules/lucide-react/dist/esm/icons/calendar-clock.js",
+      "node_modules/lucide-react/dist/esm/icons/calendar-days.js",
+      "node_modules/lucide-react/dist/esm/icons/calendar-heart.js",
+      "node_modules/lucide-react/dist/esm/icons/calendar-plus.js",
+      "node_modules/lucide-react/dist/esm/icons/calendar-range.js",
+      "node_modules/lucide-react/dist/esm/icons/calendar.js",
+      "node_modules/lucide-react/dist/esm/icons/check-check.js",
+      "node_modules/lucide-react/dist/esm/icons/chevron-left.js",
+      "node_modules/lucide-react/dist/esm/icons/chevron-right.js",
+      "node_modules/lucide-react/dist/esm/icons/circle-alert.js",
+      "node_modules/lucide-react/dist/esm/icons/circle-arrow-right.js",
+      "node_modules/lucide-react/dist/esm/icons/circle-arrow-up.js",
+      "node_modules/lucide-react/dist/esm/icons/circle-check.js",
+      "node_modules/lucide-react/dist/esm/icons/circle-pause.js",
+      "node_modules/lucide-react/dist/esm/icons/circle-play.js",
+      "node_modules/lucide-react/dist/esm/icons/circle-question-mark.js",
+      "node_modules/lucide-react/dist/esm/icons/circle-user-round.js",
+      "node_modules/lucide-react/dist/esm/icons/circle-user.js",
+      "node_modules/lucide-react/dist/esm/icons/circle-x.js",
+      "node_modules/lucide-react/dist/esm/icons/clipboard-check.js",
+      "node_modules/lucide-react/dist/esm/icons/clipboard-list.js",
+      "node_modules/lucide-react/dist/esm/icons/clipboard-x.js",
+      "node_modules/lucide-react/dist/esm/icons/clock-3.js",
+      "node_modules/lucide-react/dist/esm/icons/clock.js",
+      "node_modules/lucide-react/dist/esm/icons/compass.js",
+      "node_modules/lucide-react/dist/esm/icons/corner-down-right.js",
+      "node_modules/lucide-react/dist/esm/icons/crown.js",
+      "node_modules/lucide-react/dist/esm/icons/door-open.js",
+      "node_modules/lucide-react/dist/esm/icons/download.js",
+      "node_modules/lucide-react/dist/esm/icons/ellipsis-vertical.js",
+      "node_modules/lucide-react/dist/esm/icons/ellipsis.js",
+      "node_modules/lucide-react/dist/esm/icons/eye-off.js",
+      "node_modules/lucide-react/dist/esm/icons/eye.js",
+      "node_modules/lucide-react/dist/esm/icons/file-chart-column-increasing.js",
+      "node_modules/lucide-react/dist/esm/icons/file-text.js",
+      "node_modules/lucide-react/dist/esm/icons/flag.js",
+      "node_modules/lucide-react/dist/esm/icons/flame.js",
+      "node_modules/lucide-react/dist/esm/icons/funnel.js",
+      "node_modules/lucide-react/dist/esm/icons/gamepad-2.js",
+      "node_modules/lucide-react/dist/esm/icons/graduation-cap.js",
+      "node_modules/lucide-react/dist/esm/icons/hand.js",
+      "node_modules/lucide-react/dist/esm/icons/hash.js",
+      "node_modules/lucide-react/dist/esm/icons/heart-pulse.js",
+      "node_modules/lucide-react/dist/esm/icons/heart.js",
+      "node_modules/lucide-react/dist/esm/icons/history.js",
+      "node_modules/lucide-react/dist/esm/icons/info.js",
+      "node_modules/lucide-react/dist/esm/icons/key-round.js",
+      "node_modules/lucide-react/dist/esm/icons/landmark.js",
+      "node_modules/lucide-react/dist/esm/icons/layout-dashboard.js",
+      "node_modules/lucide-react/dist/esm/icons/layout-grid.js",
+      "node_modules/lucide-react/dist/esm/icons/library-big.js",
+      "node_modules/lucide-react/dist/esm/icons/life-buoy.js",
+      "node_modules/lucide-react/dist/esm/icons/lightbulb.js",
+      "node_modules/lucide-react/dist/esm/icons/list-checks.js",
+      "node_modules/lucide-react/dist/esm/icons/list-todo.js",
+      "node_modules/lucide-react/dist/esm/icons/lock-keyhole.js",
+      "node_modules/lucide-react/dist/esm/icons/lock.js",
+      "node_modules/lucide-react/dist/esm/icons/log-out.js",
+      "node_modules/lucide-react/dist/esm/icons/mail.js",
+      "node_modules/lucide-react/dist/esm/icons/map-pin.js",
+      "node_modules/lucide-react/dist/esm/icons/maximize-2.js",
+      "node_modules/lucide-react/dist/esm/icons/menu.js",
+      "node_modules/lucide-react/dist/esm/icons/message-circle-question-mark.js",
+      "node_modules/lucide-react/dist/esm/icons/moon.js",
+      "node_modules/lucide-react/dist/esm/icons/mouse-pointer-2.js",
+      "node_modules/lucide-react/dist/esm/icons/mouse-pointer-click.js",
+      "node_modules/lucide-react/dist/esm/icons/party-popper.js",
+      "node_modules/lucide-react/dist/esm/icons/pencil.js",
+      "node_modules/lucide-react/dist/esm/icons/phone.js",
+      "node_modules/lucide-react/dist/esm/icons/play.js",
+      "node_modules/lucide-react/dist/esm/icons/plus.js",
+      "node_modules/lucide-react/dist/esm/icons/puzzle.js",
+      "node_modules/lucide-react/dist/esm/icons/radio.js",
+      "node_modules/lucide-react/dist/esm/icons/refresh-ccw.js",
+      "node_modules/lucide-react/dist/esm/icons/refresh-cw.js",
+      "node_modules/lucide-react/dist/esm/icons/rocket.js",
+      "node_modules/lucide-react/dist/esm/icons/rows-3.js",
+      "node_modules/lucide-react/dist/esm/icons/save.js",
+      "node_modules/lucide-react/dist/esm/icons/school.js",
+      "node_modules/lucide-react/dist/esm/icons/send.js",
+      "node_modules/lucide-react/dist/esm/icons/shield-check.js",
+      "node_modules/lucide-react/dist/esm/icons/shield.js",
+      "node_modules/lucide-react/dist/esm/icons/siren.js",
+      "node_modules/lucide-react/dist/esm/icons/smile.js",
+      "node_modules/lucide-react/dist/esm/icons/sparkle.js",
+      "node_modules/lucide-react/dist/esm/icons/sparkles.js",
+      "node_modules/lucide-react/dist/esm/icons/sprout.js",
+      "node_modules/lucide-react/dist/esm/icons/square-check-big.js",
+      "node_modules/lucide-react/dist/esm/icons/square-pen.js",
+      "node_modules/lucide-react/dist/esm/icons/square-star.js",
+      "node_modules/lucide-react/dist/esm/icons/square.js",
+      "node_modules/lucide-react/dist/esm/icons/star.js",
+      "node_modules/lucide-react/dist/esm/icons/sun.js",
+      "node_modules/lucide-react/dist/esm/icons/table-2.js",
+      "node_modules/lucide-react/dist/esm/icons/tag.js",
+      "node_modules/lucide-react/dist/esm/icons/text-align-justify.js",
+      "node_modules/lucide-react/dist/esm/icons/trash-2.js",
+      "node_modules/lucide-react/dist/esm/icons/trophy.js",
+      "node_modules/lucide-react/dist/esm/icons/user-check.js",
+      "node_modules/lucide-react/dist/esm/icons/user-plus.js",
+      "node_modules/lucide-react/dist/esm/icons/user-round-check.js",
+      "node_modules/lucide-react/dist/esm/icons/user-x.js",
+      "node_modules/lucide-react/dist/esm/icons/user.js",
+      "node_modules/lucide-react/dist/esm/icons/users-round.js",
+      "node_modules/lucide-react/dist/esm/icons/users.js",
+      "node_modules/lucide-react/dist/esm/icons/zap.js",
+      "src/features/auth/services/authentication.service.ts",
+      "src/shared/profile/service/profile.service.ts",
+      "src/features/auth/context/authContext.tsx",
+      "src/shared/loading/routeSkeletons.ts",
+      "src/features/profiles/teacher/pages/holistic/services/holistic.service.ts",
+      "src/shared/loading/LoadingFormValue.tsx",
+      "src/features/profiles/teacher/pages/attendance/components/AdvisorySectionTabs.tsx",
+      "src/features/profiles/teacher/pages/subjects/detail/data.ts",
+      "src/features/profiles/teacher/pages/attendance/services/attendance.service.ts",
+      "src/features/profiles/teacher/pages/attendance/services/useSelectedAdvisorySection.service.ts",
+      "src/features/profiles/teacher/pages/holistic/HolisticOverviewPage.loading-view.tsx",
+      "src/features/profiles/teacher/pages/subjects/detail/types/Grading.ts",
+      "src/features/profiles/teacher/pages/attendance/StudentAttendanceSummaryModal.tsx",
+      "src/features/profiles/teacher/pages/attendance/AttendanceCalendarSection.tsx",
+      "src/features/profiles/teacher/pages/attendance/AttendanceMonthSummarySection.tsx",
+      "src/features/profiles/teacher/pages/attendance/TeacherAttendanceRecordsPage.loading-view.tsx",
+      "node_modules/recharts/es6/component/Cell.js",
+      "node_modules/recharts/es6/component/Customized.js",
+      "node_modules/recharts/es6/shape/Polygon.js",
+      "node_modules/recharts/es6/shape/Dot.js",
+      "node_modules/recharts/es6/state/selectors/polarSelectors.js",
+      "node_modules/recharts/es6/state/selectors/polarScaleSelectors.js",
+      "node_modules/recharts/es6/state/selectors/polarGridSelectors.js",
+      "node_modules/recharts/es6/polar/PolarGrid.js",
+      "node_modules/es-toolkit/dist/compat/_internal/toArray.mjs",
+      "node_modules/es-toolkit/dist/compat/math/maxBy.mjs",
+      "node_modules/es-toolkit/dist/compat/math/minBy.mjs",
+      "node_modules/recharts/es6/polar/PolarRadiusAxis.js",
+      "node_modules/recharts/es6/polar/PolarAngleAxis.js",
+      "node_modules/recharts/es6/context/tooltipContext.js",
+      "node_modules/es-toolkit/dist/array/last.mjs",
+      "node_modules/es-toolkit/dist/compat/array/last.mjs",
+      "node_modules/recharts/es6/component/Dots.js",
+      "node_modules/recharts/es6/component/ActivePoints.js",
+      "node_modules/recharts/es6/state/selectors/radarSelectors.js",
+      "node_modules/recharts/es6/polar/Radar.js",
+      "node_modules/recharts/es6/state/selectors/combiners/combineBarSizeList.js",
+      "node_modules/recharts/es6/state/selectors/combiners/combineAllBarPositions.js",
+      "node_modules/recharts/es6/state/selectors/combiners/combineStackedData.js",
+      "node_modules/recharts/es6/state/selectors/combiners/combineBarPosition.js",
+      "node_modules/recharts/es6/zIndex/getZIndexFromUnknown.js",
+      "node_modules/recharts/es6/util/scale/CartesianScaleHelper.js",
+      "node_modules/recharts/es6/cartesian/ReferenceArea.js",
+      "node_modules/recharts/es6/cartesian/LineDrawShape.js",
+      "node_modules/recharts/es6/cartesian/useAnimatedLineLength.js",
+      "node_modules/recharts/es6/state/selectors/lineSelectors.js",
+      "node_modules/recharts/es6/util/getRadiusAndStrokeWidthFromDot.js",
+      "node_modules/recharts/es6/cartesian/Line.js",
+      "node_modules/recharts/es6/state/selectors/graphicalItemSelectors.js",
+      "node_modules/tiny-invariant/dist/esm/tiny-invariant.js",
+      "node_modules/recharts/es6/util/BarUtils.js",
+      "node_modules/recharts/es6/state/selectors/barSelectors.js",
+      "node_modules/recharts/es6/cartesian/BarStack.js",
+      "node_modules/recharts/es6/cartesian/Bar.js",
+      "node_modules/recharts/es6/chart/LineChart.js",
+      "node_modules/recharts/es6/chart/BarChart.js",
+      "node_modules/recharts/es6/state/ReportPolarOptions.js",
+      "node_modules/recharts/es6/chart/PolarChart.js",
+      "node_modules/recharts/es6/chart/RadarChart.js",
+      "src/features/profiles/teacher/pages/holistic/services/holisticTrends.service.ts",
+      "src/features/profiles/teacher/pages/holistic/HolisticDomainTrendsPage.loading-view.tsx",
+      "src/features/profiles/principal/pages/gradebooks/components/GradeSheetHeader.tsx",
+      "src/features/profiles/principal/pages/gradebooks/components/GradeSheetNotFound.tsx",
+      "src/features/profiles/principal/pages/gradebooks/components/GradeSheetSummary.tsx",
+      "src/features/profiles/principal/pages/gradebooks/utils/gradeSheetUtils.ts",
+      "src/features/profiles/principal/pages/gradebooks/components/StudentGroupTable.tsx",
+      "src/features/profiles/principal/pages/gradebooks/components/GradeSheetTable.tsx",
+      "src/features/profiles/principal/pages/gradebooks/components/TermUnavailableModal.tsx",
+      "src/features/profiles/principal/pages/gradebooks/services/gradebooks.service.ts",
+      "src/features/profiles/principal/pages/gradebooks/hooks/usePrincipalGradeSheet.ts",
+      "src/features/profiles/principal/pages/gradebooks/PrincipalGradeSheetPage.loading-view.tsx",
+      "src/shared/components/ToastNotification.tsx",
+      "src/features/profiles/admin/pages/settings/context/SettingsContext.tsx",
+      "src/shared/context/ToastContext.tsx",
+      "src/features/profiles/shared/components/WorkflowStepper.tsx",
+      "src/features/profiles/admin/pages/classes/context/ClassesContext.tsx",
+      "src/features/profiles/admin/pages/classes/types/Class.ts",
+      "src/features/profiles/admin/pages/classes/ClassFormPage.loading-view.tsx",
+      "src/features/profiles/admin/pages/subjects/context/gradeLevelsContext.tsx",
+      "src/features/profiles/admin/pages/subjects/types/types.ts",
+      "src/features/profiles/admin/pages/subjects/types/assessmentTypes.ts",
+      "src/features/profiles/admin/pages/subjects/services/subject.service.ts",
+      "src/features/profiles/admin/pages/subjects/context/SubjectsCatalogContext.tsx",
+      "src/features/profiles/admin/pages/subjects/context/SubjectSectionsContext.tsx",
+      "src/features/profiles/admin/modal/adminFeedbackModal.tsx",
+      "src/features/profiles/admin/pages/subjects/AddSubjectPage.loading-view.tsx",
+      "src/features/profiles/admin/pages/studentrecords/services/student-record.service.ts",
+      "src/features/profiles/admin/pages/studentrecords/context/StudentsContext.tsx",
+      "src/features/profiles/admin/pages/studentrecords/services/grade-section.service.ts",
+      "src/features/profiles/admin/pages/studentrecords/types/Students.ts",
+      "src/features/profiles/admin/pages/studentrecords/StudentFormPage.loading-view.tsx",
+      "src/features/auth/utils/credentials.ts",
+      "src/features/profiles/admin/pages/usermanagement/UserFormPage.loading-view.tsx",
+      "src/features/profiles/teacher/pages/subjects/services/subjectDetailCache.service.ts",
+      "src/features/profiles/teacher/pages/subjects/services/subjectGradeTemplate.service.ts",
+      "src/features/profiles/teacher/pages/subjects/services/subjectGrading.service.ts",
+      "src/features/profiles/teacher/pages/subjects/detail/components/AddItemModal.tsx",
+      "src/features/profiles/teacher/pages/subjects/detail/components/TopicManagerModal.tsx",
+      "src/features/profiles/teacher/pages/subjects/detail/components/ConfirmDialog.tsx",
+      "src/features/profiles/teacher/pages/subjects/detail/components/AssessmentTab.tsx",
+      "src/features/profiles/teacher/pages/subjects/detail/components/HolisticTab.tsx",
+      "src/features/profiles/teacher/pages/subjects/detail/components/TabNav.tsx",
+      "src/features/profiles/teacher/pages/subjects/detail/SubjectDetailPage.loading-view.tsx",
+      "src/features/profiles/principal/pages/reports/utils/medalStyles.ts",
+      "src/features/profiles/principal/pages/reports/components/PerGradeRanking.tsx",
+      "src/features/profiles/principal/pages/reports/components/PrincipalAnalyticsTabs.tsx",
+      "src/features/profiles/principal/pages/reports/components/PriorityFocus.tsx",
+      "src/features/profiles/principal/pages/reports/components/ReportMetricCards.tsx",
+      "src/features/profiles/principal/pages/reports/components/LeadingSubjectsPanel.tsx",
+      "src/features/profiles/principal/pages/reports/components/WholeElementaryRanking.tsx",
+      "src/features/profiles/principal/pages/reports/services/reports.service.ts",
+      "src/features/profiles/principal/pages/reports/utils/ranking.ts",
+      "src/features/profiles/principal/pages/reports/hooks/useSubjectAnalytics.ts",
+      "src/features/profiles/principal/pages/reports/AnalyticsPage.loading-view.tsx",
+      "src/features/profiles/admin/pages/subjects/services/teacher.service.ts",
+      "src/features/profiles/admin/pages/classes/context/TeachersContext.tsx",
+      "src/features/profiles/admin/pages/classes/types/Teacher.ts",
+      "src/shared/components/StudentHeroProfileBanner.tsx",
+      "src/shared/components/StudentDetailPage.loading-view.tsx",
+      "src/features/profiles/principal/pages/teachers/components/TeacherClassRosters.tsx",
+      "src/shared/components/ProfileOverviewCard.tsx",
+      "src/shared/profile/components/avatars/teacher-illustrations/female-braid.png",
+      "src/shared/profile/components/avatars/teacher-illustrations/female-brown-hair.png",
+      "src/shared/profile/components/avatars/teacher-illustrations/female-pink-hair.png",
+      "src/shared/profile/components/avatars/teacher-illustrations/male-beard.png",
+      "src/shared/profile/components/avatars/teacher-illustrations/male-tie.png",
+      "src/shared/profile/components/avatars/teacher-illustrations/male-white-shirt.png",
+      "src/shared/profile/utils/teacherAvatar.ts",
+      "src/features/profiles/principal/pages/students/services/students.service.ts",
+      "src/features/profiles/principal/pages/teachers/components/ScheduleByDay.tsx",
+      "src/features/profiles/principal/pages/teachers/components/TeacherClassListHeader.tsx",
+      "src/features/profiles/principal/pages/teachers/components/TeacherNotFound.tsx",
+      "src/features/profiles/principal/pages/teachers/services/teachers.service.ts",
+      "src/features/profiles/principal/pages/teachers/hooks/useTeacherSchedule.ts",
+      "src/features/profiles/principal/pages/teachers/utils/schedule.ts",
+      "src/features/profiles/principal/pages/teachers/TeacherSchedulePage.loading-view.tsx",
+      "src/features/profiles/principal/pages/teachers/TeacherSchedulePage.tsx",
+      "src/features/profiles/admin/pages/usermanagement/components/ConfirmDeleteUserModal.tsx",
+      "src/features/profiles/admin/pages/usermanagement/UserViewPage.loading-view.tsx",
+      "src/shared/components/StudentDirectory.tsx",
+      "src/features/profiles/admin/pages/classes/ClassViewPage.loading-view.tsx",
+      "src/features/profiles/admin/pages/subjects/components/SubjectGradeTemplateSection.tsx",
+      "src/features/profiles/admin/pages/subjects/AdminSubjectDetailPage.loading-view.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/components/QuestWorldBackground.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/TopicSupportChoice.loading-view.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/service/courseware.service.ts",
+      "src/features/profiles/parent/pages/Student/Academic/CoursewareView.loading-view.tsx",
+      "src/features/profiles/teacher/pages/attendance/TeacherAttendancePage.loading-view.tsx",
+      "src/features/profiles/principal/pages/gradebooks/hooks/usePrincipalGradebooks.ts",
+      "src/features/profiles/principal/pages/students/components/GradeLevelFilterDropdown.tsx",
+      "src/features/profiles/principal/pages/students/components/GradeLevelSearchInput.tsx",
+      "src/features/profiles/principal/pages/gradebooks/components/GradebooksHeader.tsx",
+      "src/features/profiles/shared/components/SubjectAssignmentCard.tsx",
+      "src/features/profiles/principal/pages/gradebooks/components/GradeLevelCards.tsx",
+      "src/features/profiles/principal/pages/gradebooks/PrincipalGradebooksPage.loading-view.tsx",
+      "src/features/profiles/teacher/pages/roster/components/AdvisoryHeader.tsx",
+      "src/features/profiles/teacher/pages/roster/components/AdvisoryTable.tsx",
+      "src/features/profiles/teacher/pages/roster/AdvisoryRosterPage.loading-view.tsx",
+      "src/features/profiles/teacher/pages/subjects/services/subjectClassList.service.ts",
+      "src/features/profiles/teacher/pages/subjects/SubjectClassListPage.loading-view.tsx",
+      "src/shared/images/QED_Logo.png",
+      "src/shared/components/Logo.tsx",
+      "src/shared/components/manage_password/ForgotPasswordModal.tsx",
+      "src/shared/components/manage_password/OtpVerificationModal.tsx",
+      "src/features/auth/components/LoginIcon.tsx",
+      "src/shared/components/manage_password/ResetPasswordModal.tsx",
+      "src/features/auth/LoginPanel.loading-view.tsx",
+      "src/features/auth/LoginPanel.tsx",
+      "src/features/Landing/components/LandingIcons.tsx",
+      "src/features/Landing/components/Reveal.tsx",
+      "src/features/Landing/components/FeatureSection.tsx",
+      "src/features/Landing/components/Footer.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/components/assets/pet-hungry.png",
+      "src/features/profiles/parent/pages/Student/Academic/components/assets/pet-happy.png",
+      "src/features/Landing/components/InterventionSection.tsx",
+      "src/features/Landing/components/UserRolesSection.tsx",
+      "src/assets/images/EUC.webp",
+      "src/features/Landing/components/WhatIsSection.tsx",
+      "src/features/Landing/components/WhyChooseSection.tsx",
+      "src/features/Landing/LandingPage.loading-view.tsx",
+      "src/features/profiles/admin/pages/help/HelpSupportPage.loading-view.tsx",
+      "src/features/profiles/parent/pages/dashboard/components/DailyUpdateCard.tsx",
+      "src/shared/calendar/types/Calendar.ts",
+      "src/shared/calendar/services/calendar.service.ts",
+      "src/features/profiles/parent/pages/dashboard/components/EventsCard.tsx",
+      "src/features/profiles/parent/pages/dashboard/components/MockUpFrame.tsx",
+      "src/features/profiles/parent/pages/dashboard/components/OnboadingCarousel.tsx",
+      "src/features/profiles/parent/pages/dashboard/components/StudentCard.tsx",
+      "src/features/profiles/parent/pages/dashboard/components/ViewToggle.tsx",
+      "src/features/profiles/parent/pages/dashboard/components/StudentsSection.tsx",
+      "src/features/profiles/parent/hooks/useToday.ts",
+      "src/features/profiles/parent/pages/dashboard/components/TodayDateCard.tsx",
+      "src/features/profiles/parent/pages/dashboard/components/WelcomeBanner.tsx",
+      "src/features/profiles/parent/pages/dashboard/services/dashboard.service.ts",
+      "src/features/profiles/parent/pages/EnrollledStudent/services/enrolledStudent.service.ts",
+      "src/features/profiles/parent/pages/dashboard/context/ParentDashboardContext.tsx",
+      "src/features/profiles/parent/pages/dashboard/ParentDashboardHome.loading-view.tsx",
+      "src/features/profiles/principal/pages/students/components/GradeLevelCard.tsx",
+      "src/features/profiles/principal/pages/students/components/GradeLevelGrid.tsx",
+      "src/features/profiles/principal/pages/students/hooks/usePrincipalStudentsOverview.ts",
+      "src/features/profiles/principal/pages/students/PrincipalStudentsPage.loading-view.tsx",
+      "src/shared/components/DeleteConfirmationModal.tsx",
+      "src/shared/calendar/utils/Groupings.ts",
+      "src/shared/calendar/data.ts",
+      "src/shared/calendar/components/EntryRowsAction.tsx",
+      "src/shared/calendar/components/ActivitiesCard.tsx",
+      "src/shared/calendar/components/AddCalendarEntriesModal.tsx",
+      "src/shared/calendar/components/EditEntryModal.tsx",
+      "src/shared/calendar/components/ExpandedListModal.tsx",
+      "src/shared/calendar/components/HolidaysCard.tsx",
+      "src/shared/calendar/components/ManageCalendarButton.tsx",
+      "src/shared/calendar/components/MonthGrid.tsx",
+      "src/shared/calendar/CalendarPage.loading-view.tsx",
+      "src/shared/calendar/CalendarPageView.loading-view.tsx",
+      "src/features/profiles/admin/pages/subjects/components/StatusBadge.tsx",
+      "src/features/profiles/admin/pages/subjects/components/AcademicYearCard.tsx",
+      "src/features/profiles/admin/pages/subjects/components/EditAcademicYearModal.tsx",
+      "src/features/profiles/admin/pages/subjects/components/EditTermDatesModal.tsx",
+      "src/features/profiles/admin/pages/subjects/components/TermsTable.tsx",
+      "src/features/profiles/admin/pages/subjects/AcademicYearPage.loading-view.tsx",
+      "src/features/profiles/admin/pages/subjects/components/ModalShell.tsx",
+      "src/features/profiles/admin/pages/subjects/components/AssignTeacherModal.tsx",
+      "src/features/profiles/admin/pages/subjects/services/section.service.ts",
+      "src/features/profiles/admin/pages/subjects/context/SectionsContext.tsx",
+      "src/features/profiles/admin/pages/subjects/components/EditSubjectModal.tsx",
+      "src/features/profiles/admin/pages/subjects/components/ManageSectionsModal.tsx",
+      "src/features/profiles/admin/pages/subjects/components/SubjectActions.tsx",
+      "src/features/profiles/admin/pages/subjects/components/SubjectCard.tsx",
+      "src/features/profiles/admin/pages/subjects/components/SubjectFilters.tsx",
+      "src/features/profiles/admin/pages/subjects/ManageSubjectsPage.loading-view.tsx",
+      "src/features/profiles/admin/pages/studentrecords/components/ConfirmDeleteModal.tsx",
+      "src/features/profiles/admin/pages/studentrecords/utils/studentExcel.tsx",
+      "src/features/profiles/admin/pages/studentrecords/components/StudentImportExportToolbar.tsx",
+      "src/features/profiles/admin/pages/studentrecords/components/StudentSearchInput.tsx",
+      "src/features/profiles/admin/pages/studentrecords/components/Studentsfilterbar.tsx",
+      "src/features/profiles/admin/pages/studentrecords/components/Studentstable.tsx",
+      "src/features/profiles/admin/pages/studentrecords/StudentRecordsPage.loading-view.tsx",
+      "src/features/profiles/principal/pages/teachers/components/TeacherDirectoryTable.tsx",
+      "src/features/profiles/principal/pages/teachers/hooks/useTeachersDirectory.ts",
+      "src/features/profiles/principal/pages/teachers/PrincipalTeachersPage.loading-view.tsx",
+      "src/features/profiles/parent/hooks/usseIsMobile.ts",
+      "src/features/profiles/parent/pages/EnrollledStudent/Components/EnrolledChildrenLists.tsx",
+      "src/features/profiles/parent/pages/EnrollledStudent/Components/LinkStudentForm.tsx",
+      "src/features/profiles/parent/pages/EnrollledStudent/EnrolledChildrenPage.loading-view.tsx",
+      "src/features/profiles/admin/pages/dashboard/services/auditLogs.service.ts",
+      "src/features/profiles/admin/pages/dashboard/components/AuditLogs.tsx",
+      "src/features/profiles/admin/pages/dashboard/services/loginFrequency.service.ts",
+      "src/features/profiles/admin/pages/dashboard/components/LoginFrequency.tsx",
+      "src/features/profiles/admin/pages/dashboard/data/Dashboarddata.ts",
+      "src/features/profiles/admin/pages/dashboard/services/totalCounts.service.ts",
+      "src/features/profiles/admin/pages/dashboard/components/StatCards.tsx",
+      "src/features/profiles/admin/pages/dashboard/AdminDashboardHome.loading-view.tsx",
+      "src/shared/components/DangerConfirmModal.tsx",
+      "src/features/profiles/admin/pages/classes/components/ClassCard.tsx",
+      "src/features/profiles/admin/pages/classes/ClassPage.loading-view.tsx",
+      "src/features/profiles/admin/pages/usermanagement/components/UserSearchInput.tsx",
+      "src/features/profiles/admin/pages/usermanagement/components/UsersFilterBar.tsx",
+      "src/features/profiles/admin/pages/usermanagement/components/UsersTable.tsx",
+      "src/features/profiles/admin/pages/usermanagement/UserManagementPage.loading-view.tsx",
+      "src/features/profiles/teacher/pages/subjects/services/subjects.service.ts",
+      "src/features/profiles/teacher/pages/subjects/SubjectPage.loading-view.tsx",
+      "src/features/profiles/teacher/pages/dashboard/components/MiniCalendar.tsx",
+      "src/features/profiles/teacher/pages/dashboard/components/QuickDateCard.tsx",
+      "src/features/profiles/teacher/pages/dashboard/components/Statcards.tsx",
+      "src/features/profiles/teacher/pages/dashboard/components/TodayAttendance.tsx",
+      "src/features/profiles/teacher/pages/dashboard/components/UpcomingEvents.tsx",
+      "src/features/profiles/teacher/pages/dashboard/components/timetable.ts",
+      "src/features/profiles/teacher/pages/dashboard/components/WeeklySchedule.tsx",
+      "src/features/profiles/teacher/pages/dashboard/components/WelcomeBanner.tsx",
+      "src/features/profiles/teacher/pages/dashboard/services/dashboard.service.ts",
+      "src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.loading-view.tsx",
+      "src/features/profiles/teacher/pages/holistic/StudentHolisticProfilePage.loading-view.tsx",
+      "src/features/profiles/principal/pages/dashboard/data/mockData.ts",
+      "src/features/profiles/principal/pages/dashboard/utils/HolisticRubrics.ts",
+      "src/features/profiles/principal/pages/dashboard/services/principalDashboard.service.ts",
+      "src/features/profiles/principal/pages/dashboard/hooks/usePrincipalDashboardData.ts",
+      "src/features/profiles/principal/pages/dashboard/components/PrincipalChartLoading.tsx",
+      "src/features/profiles/principal/pages/dashboard/components/AcademicPerformanceSection.tsx",
+      "src/features/profiles/principal/pages/dashboard/components/FullRankingModal.tsx",
+      "src/features/profiles/principal/pages/dashboard/components/HolisticDevelopmentSection.tsx",
+      "src/features/profiles/principal/pages/dashboard/components/OverviewCards.tsx",
+      "src/features/profiles/principal/pages/dashboard/components/SubjectPerformanceSection.tsx",
+      "src/features/profiles/principal/pages/dashboard/components/TodaysAttendanceSection.tsx",
+      "src/features/profiles/principal/pages/dashboard/PrincipalDashboardHome.loading-view.tsx",
+      "src/shared/components/FilterDropdown.tsx",
+      "src/features/profiles/teacher/pages/grades/services/gradePage.service.ts",
+      "src/features/profiles/teacher/pages/grades/ParentVisibilitySection.tsx",
+      "src/features/profiles/teacher/pages/grades/GradePage.loading-view.tsx",
+      "src/features/profiles/principal/pages/students/components/ClassNotFound.tsx",
+      "src/features/profiles/principal/pages/students/utils/roster.ts",
+      "src/features/profiles/principal/pages/students/components/ClassRoster.tsx",
+      "src/features/profiles/principal/pages/students/hooks/useClassList.ts",
+      "src/features/profiles/principal/pages/students/ClassListPage.loading-view.tsx",
+      "src/features/profiles/principal/pages/reports/components/HolisticHeatmap.tsx",
+      "src/features/profiles/principal/pages/reports/hooks/useHolisticAnalytics.ts",
+      "src/features/profiles/principal/pages/reports/HolisticPerformanceAnalyticsPage.loading-view.tsx",
+      "src/features/profiles/teacher/pages/subjects/detail/utils/GradeWeights.ts",
+      "src/features/profiles/teacher/pages/subjects/detail/AssessmentRecordsPage.tsx",
+      "src/features/profiles/teacher/pages/subjects/detail/HolisticRecordsPage.tsx",
+      "src/features/profiles/teacher/pages/subjects/detail/SubjectRecordsPage.loading-view.tsx",
+      "src/features/profiles/parent/pages/Student/Overview/utils/constants.ts",
+      "src/features/profiles/parent/pages/ui/SectionHeader.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/service/missedActivities.service.ts",
+      "src/features/profiles/parent/pages/Student/Academic/context/missedActivities.context.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/components/MissedActivities.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/service/intervention.service.ts",
+      "src/features/profiles/parent/pages/Student/Academic/components/InterventionSupport.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/service/classSchedule.service.ts",
+      "src/features/profiles/parent/pages/Student/Academic/context/classSchedule.context.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/components/ClassSchedule.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/AcademicTab.tsx",
+      "src/features/profiles/parent/pages/Student/Holistic/context/SnapshotThemeContext.tsx",
+      "src/features/profiles/parent/pages/Student/Holistic/components/weeklyReport.tsx",
+      "src/features/profiles/parent/pages/Student/Holistic/service/weeklyHolistic.service.ts",
+      "src/features/profiles/parent/pages/Student/Holistic/HoisticWeeklyReportTab.tsx",
+      "src/features/profiles/parent/pages/Student/Overview/service/attendance.service.ts",
+      "src/features/profiles/parent/pages/Student/Overview/service/schoolYear.service.ts",
+      "src/features/profiles/parent/pages/Student/Overview/context/AttendanceOverviewContext.tsx",
+      "src/features/profiles/parent/pages/Student/Overview/components/AttendanceOverview.tsx",
+      "src/features/profiles/parent/pages/Student/Overview/components/EmptyState.tsx",
+      "src/features/profiles/parent/pages/Student/Overview/service/holisticTermPerformance.service.ts",
+      "src/features/profiles/parent/pages/Student/Overview/context/HolisticAverageContext.tsx",
+      "src/features/profiles/parent/pages/Student/Overview/components/HolisticAverage.tsx",
+      "src/features/profiles/parent/pages/Student/ProgressReport/types/types.ts",
+      "src/features/profiles/parent/pages/Student/ProgressReport/utils/transformProgressReport.ts",
+      "src/features/profiles/parent/pages/Student/ProgressReport/utils/TransformHolisticPerformance.ts",
+      "src/features/profiles/parent/pages/Student/ProgressReport/utils/transformAttendance.ts",
+      "src/features/profiles/parent/pages/Student/ProgressReport/service/TermPerformance.service.ts",
+      "src/features/profiles/parent/pages/Student/ProgressReport/service/HolisticPerformance.service.ts",
+      "src/features/profiles/parent/pages/Student/ProgressReport/service/AttendanceSummary.service.ts",
+      "src/features/profiles/parent/pages/Student/ProgressReport/service/GradeVisibility.service.ts",
+      "src/features/profiles/parent/pages/Student/ProgressReport/context/ProgressReportContext.tsx",
+      "src/features/profiles/parent/pages/Student/Overview/components/PerformanceAnalytics.tsx",
+      "src/features/profiles/parent/pages/Student/Overview/useStudentDetail.ts",
+      "src/features/profiles/parent/pages/Student/PageComponents/StudentInfoTable.tsx",
+      "src/features/profiles/parent/pages/Student/PageComponents/TopNavigation.tsx",
+      "src/features/profiles/parent/pages/Student/ProgressReport/components/PeriodicRatingCard.tsx",
+      "src/features/profiles/parent/pages/Student/ProgressReport/components/QuarterlyAverageCard.tsx",
+      "src/features/profiles/parent/pages/Student/ProgressReport/components/HolisticDevelopmentCard.tsx",
+      "src/features/profiles/parent/pages/Student/ProgressReport/components/AttendanceRecordCard.tsx",
+      "src/assets/images/DepEd.png",
+      "src/features/profiles/parent/pages/Student/ProgressReport/components/FormalReportTemplate.tsx",
+      "src/features/profiles/parent/pages/Student/ProgressReport/components/TermTabs.tsx",
+      "src/features/profiles/parent/pages/Student/ProgressReport/ProgessReportTab.tsx",
+      "src/features/profiles/parent/pages/Student/ProgressReport/utils/GenerateFormalPDF.ts",
+      "src/features/profiles/parent/pages/Student/ProgressReport/hooks/useFormalreportDownload.ts",
+      "src/features/profiles/parent/pages/Student/ProgressReport/utils/ProgressReportUnavailableModal.tsx",
+      "src/features/profiles/parent/pages/Student/StudentProfile/components/ProfileHeaderCard.tsx",
+      "src/features/profiles/parent/pages/Student/StudentProfile/utils/MapDetailStudentToProfile.ts",
+      "src/features/profiles/parent/pages/Student/StudentProfile/service/StudentProfile.service.ts",
+      "src/features/profiles/parent/pages/Student/StudentProfile/context/StudentProfileContext.tsx",
+      "src/features/profiles/parent/pages/Student/StudentProfile/StudentProfileTab.tsx",
+      "src/features/profiles/parent/pages/Student/ChildDetailPage.loading-view.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/components/assets/pet-idle.png",
+      "src/features/profiles/parent/pages/Student/Academic/components/EDJourneyIntro.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/components/LeaveQuizConfirm.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/components/QuizShared.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/components/LevelSelect.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/components/MatchGame.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/components/MemoryGame.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/components/PetSpeechBubble.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/components/QedPet.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/components/QuizWidgets.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/components/QuizModals.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/components/QuizRound.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/components/RoundResult.tsx",
+      "src/features/profiles/parent/pages/Student/Academic/service/petQuiz.service.ts",
+      "src/features/profiles/parent/pages/Student/Academic/PetQuizPage.loading-view.tsx",
+      "src/shared/loading/routeViews.tsx",
+      "src/shared/loading/RouteSkeleton.tsx",
+      "src/shared/components/Sidebar.tsx",
+      "src/shared/profile/config/ProfileFieldConfig.ts",
+      "src/shared/profile/components/avatars/teacher_women.jpg",
+      "src/shared/profile/components/avatars/teacher_man.jpg",
+      "src/shared/profile/components/avatars/admin_hat.png",
+      "src/shared/profile/components/ProfileMenu.tsx",
+      "node_modules/engine.io-parser/build/esm/commons.js",
+      "node_modules/engine.io-parser/build/esm/encodePacket.browser.js",
+      "node_modules/engine.io-parser/build/esm/contrib/base64-arraybuffer.js",
+      "node_modules/engine.io-parser/build/esm/decodePacket.browser.js",
+      "node_modules/engine.io-parser/build/esm/index.js",
+      "node_modules/@socket.io/component-emitter/lib/esm/index.js",
+      "node_modules/engine.io-client/build/esm/globals.js",
+      "node_modules/engine.io-client/build/esm/util.js",
+      "node_modules/engine.io-client/build/esm/contrib/parseqs.js",
+      "node_modules/engine.io-client/build/esm/transport.js",
+      "node_modules/engine.io-client/build/esm/transports/polling.js",
+      "node_modules/engine.io-client/build/esm/contrib/has-cors.js",
+      "node_modules/engine.io-client/build/esm/transports/polling-xhr.js",
+      "node_modules/engine.io-client/build/esm/transports/websocket.js",
+      "node_modules/engine.io-client/build/esm/transports/webtransport.js",
+      "node_modules/engine.io-client/build/esm/transports/index.js",
+      "node_modules/engine.io-client/build/esm/contrib/parseuri.js",
+      "node_modules/engine.io-client/build/esm/socket.js",
+      "node_modules/engine.io-client/build/esm/transports/polling-fetch.js",
+      "node_modules/engine.io-client/build/esm/index.js",
+      "node_modules/socket.io-client/build/esm/url.js",
+      "node_modules/socket.io-parser/build/esm/is-binary.js",
+      "node_modules/socket.io-parser/build/esm/binary.js",
+      "node_modules/socket.io-parser/build/esm/index.js",
+      "node_modules/socket.io-client/build/esm/on.js",
+      "node_modules/socket.io-client/build/esm/socket.js",
+      "node_modules/socket.io-client/build/esm/contrib/backo2.js",
+      "node_modules/socket.io-client/build/esm/manager.js",
+      "node_modules/socket.io-client/build/esm/index.js",
+      "src/shared/notification/Notification.service.ts",
+      "src/shared/notification/NotificationContext.tsx",
+      "src/shared/notification/NotificationBell.tsx",
+      "src/shared/components/Header.tsx",
+      "src/features/profiles/admin/pages/config/adminNav.ts",
+      "src/features/profiles/admin/pages/AdminLayout.tsx",
+      "src/features/profiles/teacher/pages/config/teacherNav.ts",
+      "src/features/profiles/teacher/pages/TeacherLayout.tsx",
+      "src/routes/TeacherSection.tsx",
+      "src/features/profiles/shared/components/PolygonLayout.tsx",
+      "src/features/profiles/parent/pages/config/parentNavItem.tsx",
+      "src/features/profiles/parent/pages/EnrollledStudent/modal/verifyStudentModal.tsx",
+      "src/features/profiles/parent/pages/ParentLayout.tsx",
+      "src/routes/ParentSection.tsx",
+      "src/features/profiles/principal/pages/config/principalNav.ts",
+      "src/features/profiles/principal/pages/PrincipalLayout.tsx",
+      "src/routes/PrincipalSection.tsx",
+      "src/assets/images/QED_Logo.png",
+      "src/shared/loading/QedBootstrapLoader.tsx",
+      "src/features/profiles/admin/pages/subjects/SubjectSection.tsx",
+      "src/routes/AppRouter.tsx",
+      "src/shared/components/manage_password/ForceChangePasswordModal.tsx",
+      "src/shared/components/manage_password/ForceChangePasswordGate.tsx",
+      "src/App.tsx",
+      "src/main.tsx",
+      "index.html"
+    ]
+  },
+  {
+    "fileName": "assets/AcademicYearPage-DhZaF-0U.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/admin/pages/subjects/AcademicYearPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/AddSubjectPage-Duct-9gv.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/admin/pages/subjects/AddSubjectPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/AdminDashboardHome-C_dZuh_C.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/admin/pages/dashboard/AdminDashboardHome.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/AdminSubjectDetailPage-B8SilGVG.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/admin/pages/subjects/AdminSubjectDetailPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/AdvisoryRosterPage-Dwx74ebE.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/teacher/pages/roster/AdvisoryRosterPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/AnalyticsPage-Div4k0G1.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/principal/pages/reports/AnalyticsPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/CalendarPage-BkLJk20M.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/shared/calendar/CalendarPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/CalendarPageView-DIWjIy7s.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/shared/calendar/CalendarPageView.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/CartesianChart-2Gp9Qvra.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/jsx-runtime-CJllllml.js",
+      "assets/react-dom-BjPNskWF.js"
+    ],
+    "modules": [
+      "node_modules/clsx/dist/clsx.mjs",
+      "node_modules/recharts/es6/util/excludeEventProps.js",
+      "node_modules/recharts/es6/util/svgPropertiesNoEvents.js",
+      "node_modules/recharts/es6/util/svgPropertiesAndEvents.js",
+      "node_modules/recharts/es6/container/Surface.js",
+      "node_modules/recharts/es6/container/Layer.js",
+      "node_modules/es-toolkit/dist/_internal/isUnsafeProperty.mjs",
+      "node_modules/es-toolkit/dist/compat/_internal/isDeepKey.mjs",
+      "node_modules/es-toolkit/dist/compat/_internal/toKey.mjs",
+      "node_modules/es-toolkit/dist/compat/util/toString.mjs",
+      "node_modules/es-toolkit/dist/compat/util/toPath.mjs",
+      "node_modules/es-toolkit/dist/compat/object/get.mjs",
+      "node_modules/recharts/es6/util/round.js",
+      "node_modules/recharts/es6/util/DataUtils.js",
+      "node_modules/recharts/es6/cartesian/cartesianViewBoxToTrapezoid.js",
+      "node_modules/recharts/es6/cartesian/getCartesianPosition.js",
+      "node_modules/recharts/es6/context/legendPortalContext.js",
+      "node_modules/d3-shape/src/constant.js",
+      "node_modules/d3-path/src/path.js",
+      "node_modules/d3-shape/src/path.js",
+      "node_modules/d3-shape/src/array.js",
+      "node_modules/d3-shape/src/curve/linear.js",
+      "node_modules/d3-shape/src/point.js",
+      "node_modules/d3-shape/src/line.js",
+      "node_modules/d3-shape/src/area.js",
+      "node_modules/d3-shape/src/curve/bump.js",
+      "node_modules/d3-shape/src/noop.js",
+      "node_modules/d3-shape/src/curve/basis.js",
+      "node_modules/d3-shape/src/curve/basisClosed.js",
+      "node_modules/d3-shape/src/curve/basisOpen.js",
+      "node_modules/d3-shape/src/curve/linearClosed.js",
+      "node_modules/d3-shape/src/curve/monotone.js",
+      "node_modules/d3-shape/src/curve/natural.js",
+      "node_modules/d3-shape/src/curve/step.js",
+      "node_modules/d3-shape/src/offset/none.js",
+      "node_modules/d3-shape/src/order/none.js",
+      "node_modules/d3-shape/src/stack.js",
+      "node_modules/d3-shape/src/offset/expand.js",
+      "node_modules/d3-shape/src/offset/silhouette.js",
+      "node_modules/d3-shape/src/offset/wiggle.js",
+      "node_modules/recharts/es6/util/types.js",
+      "node_modules/recharts/es6/util/resolveDefaultProps.js",
+      "node_modules/es-toolkit/dist/array/uniqBy.mjs",
+      "node_modules/es-toolkit/dist/function/ary.mjs",
+      "node_modules/es-toolkit/dist/function/identity.mjs",
+      "node_modules/es-toolkit/dist/compat/object/property.mjs",
+      "node_modules/es-toolkit/dist/predicate/isPrimitive.mjs",
+      "node_modules/es-toolkit/dist/predicate/isTypedArray.mjs",
+      "node_modules/es-toolkit/dist/compat/_internal/getSymbols.mjs",
+      "node_modules/es-toolkit/dist/compat/_internal/getTag.mjs",
+      "node_modules/es-toolkit/dist/compat/_internal/tags.mjs",
+      "node_modules/es-toolkit/dist/_internal/globalThis.mjs",
+      "node_modules/es-toolkit/dist/predicate/isBuffer.mjs",
+      "node_modules/es-toolkit/dist/object/cloneDeepWith.mjs",
+      "node_modules/es-toolkit/dist/object/cloneDeep.mjs",
+      "node_modules/es-toolkit/dist/compat/util/eq.mjs",
+      "node_modules/es-toolkit/dist/compat/predicate/isObject.mjs",
+      "node_modules/es-toolkit/dist/compat/predicate/isMatchWith.mjs",
+      "node_modules/es-toolkit/dist/compat/predicate/isMatch.mjs",
+      "node_modules/es-toolkit/dist/compat/predicate/matches.mjs",
+      "node_modules/es-toolkit/dist/compat/object/cloneDeepWith.mjs",
+      "node_modules/es-toolkit/dist/compat/object/cloneDeep.mjs",
+      "node_modules/es-toolkit/dist/compat/_internal/isIndex.mjs",
+      "node_modules/es-toolkit/dist/compat/predicate/isArguments.mjs",
+      "node_modules/es-toolkit/dist/compat/object/has.mjs",
+      "node_modules/es-toolkit/dist/compat/predicate/matchesProperty.mjs",
+      "node_modules/es-toolkit/dist/compat/util/iteratee.mjs",
+      "node_modules/es-toolkit/dist/predicate/isLength.mjs",
+      "node_modules/es-toolkit/dist/compat/predicate/isArrayLike.mjs",
+      "node_modules/es-toolkit/dist/compat/predicate/isObjectLike.mjs",
+      "node_modules/es-toolkit/dist/compat/predicate/isArrayLikeObject.mjs",
+      "node_modules/es-toolkit/dist/compat/array/uniqBy.mjs",
+      "node_modules/recharts/es6/util/payload/getUniqPayload.js",
+      "node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.production.js",
+      "node_modules/use-sync-external-store/shim/index.js",
+      "node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.production.js",
+      "node_modules/use-sync-external-store/shim/with-selector.js",
+      "node_modules/recharts/es6/state/RechartsReduxContext.js",
+      "node_modules/recharts/es6/state/hooks.js",
+      "node_modules/reselect/dist/reselect.mjs",
+      "node_modules/es-toolkit/dist/array/flatten.mjs",
+      "node_modules/es-toolkit/dist/compat/_internal/isIterateeCall.mjs",
+      "node_modules/es-toolkit/dist/compat/_internal/compareValues.mjs",
+      "node_modules/es-toolkit/dist/compat/predicate/isSymbol.mjs",
+      "node_modules/es-toolkit/dist/compat/_internal/isKey.mjs",
+      "node_modules/es-toolkit/dist/compat/array/orderBy.mjs",
+      "node_modules/es-toolkit/dist/compat/array/sortBy.mjs",
+      "node_modules/recharts/es6/state/selectors/legendSelectors.js",
+      "node_modules/recharts/es6/util/useElementOffset.js",
+      "node_modules/redux/dist/redux.mjs",
+      "node_modules/immer/dist/immer.mjs",
+      "node_modules/redux-thunk/dist/redux-thunk.mjs",
+      "node_modules/@reduxjs/toolkit/dist/redux-toolkit.modern.mjs",
+      "node_modules/recharts/es6/state/layoutSlice.js",
+      "node_modules/recharts/es6/util/getSliced.js",
+      "node_modules/recharts/es6/util/isWellBehavedNumber.js",
+      "node_modules/recharts/es6/util/ChartUtils.js",
+      "node_modules/recharts/es6/state/selectors/containerSelectors.js",
+      "node_modules/recharts/es6/state/selectors/selectAllAxes.js",
+      "node_modules/recharts/es6/util/Constants.js",
+      "node_modules/recharts/es6/state/selectors/selectChartOffsetInternal.js",
+      "node_modules/recharts/es6/context/PanoramaContext.js",
+      "node_modules/recharts/es6/state/selectors/brushSelectors.js",
+      "node_modules/es-toolkit/dist/function/debounce.mjs",
+      "node_modules/es-toolkit/dist/compat/function/debounce.mjs",
+      "node_modules/es-toolkit/dist/compat/function/throttle.mjs",
+      "node_modules/recharts/es6/util/LogUtils.js",
+      "node_modules/recharts/es6/component/responsiveContainerUtils.js",
+      "node_modules/recharts/es6/component/ResponsiveContainer.js",
+      "node_modules/recharts/es6/context/chartLayoutContext.js",
+      "node_modules/recharts/es6/state/legendSlice.js",
+      "node_modules/use-sync-external-store/cjs/use-sync-external-store-with-selector.production.js",
+      "node_modules/use-sync-external-store/with-selector.js",
+      "node_modules/react-redux/dist/react-redux.mjs",
+      "node_modules/recharts/es6/util/propsAreEqual.js",
+      "node_modules/recharts/es6/component/DefaultTooltipContent.js",
+      "node_modules/recharts/es6/util/tooltip/translate.js",
+      "node_modules/recharts/es6/util/Global.js",
+      "node_modules/recharts/es6/util/usePrefersReducedMotion.js",
+      "node_modules/recharts/es6/component/TooltipBoundingBox.js",
+      "node_modules/recharts/es6/context/accessibilityContext.js",
+      "node_modules/recharts/es6/shape/Curve.js",
+      "node_modules/recharts/es6/shape/Cross.js",
+      "node_modules/recharts/es6/util/cursor/getCursorRectangle.js",
+      "node_modules/recharts/es6/animation/easing.js",
+      "node_modules/recharts/es6/animation/AnimationControllerImpl.js",
+      "node_modules/recharts/es6/animation/useAnimationController.js",
+      "node_modules/recharts/es6/animation/AnimationHandle.js",
+      "node_modules/recharts/es6/animation/timeoutController.js",
+      "node_modules/recharts/es6/animation/JavascriptAnimate.js",
+      "node_modules/recharts/es6/util/useAnimationId.js",
+      "node_modules/recharts/es6/animation/util.js",
+      "node_modules/recharts/es6/shape/Rectangle.js",
+      "node_modules/recharts/es6/util/PolarUtils.js",
+      "node_modules/recharts/es6/util/cursor/getRadialCursorPoints.js",
+      "node_modules/recharts/es6/shape/Sector.js",
+      "node_modules/recharts/es6/util/cursor/getCursorPoints.js",
+      "node_modules/es-toolkit/dist/compat/util/toNumber.mjs",
+      "node_modules/es-toolkit/dist/compat/util/toFinite.mjs",
+      "node_modules/es-toolkit/dist/compat/math/range.mjs",
+      "node_modules/recharts/es6/state/selectors/dataSelectors.js",
+      "node_modules/recharts/es6/util/isDomainSpecifiedByUser.js",
+      "node_modules/decimal.js-light/decimal.js",
+      "node_modules/recharts/es6/util/scale/util/arithmetic.js",
+      "node_modules/recharts/es6/util/scale/getNiceTickValues.js",
+      "node_modules/recharts/es6/state/selectors/rootPropsSelectors.js",
+      "node_modules/recharts/es6/zIndex/DefaultZIndexes.js",
+      "node_modules/recharts/es6/polar/defaultPolarAngleAxisProps.js",
+      "node_modules/recharts/es6/polar/defaultPolarRadiusAxisProps.js",
+      "node_modules/recharts/es6/state/selectors/combiners/combineAxisRangeWithReverse.js",
+      "node_modules/recharts/es6/util/getAxisTypeBasedOnLayout.js",
+      "node_modules/recharts/es6/state/selectors/polarAxisSelectors.js",
+      "node_modules/recharts/es6/state/selectors/pickAxisType.js",
+      "node_modules/recharts/es6/state/selectors/pickAxisId.js",
+      "node_modules/recharts/es6/util/stacks/getStackSeriesIdentifier.js",
+      "node_modules/recharts/es6/state/selectors/combiners/combineDisplayedStackedData.js",
+      "node_modules/recharts/es6/state/types/StackedGraphicalItem.js",
+      "node_modules/recharts/es6/state/selectors/numberDomainEqualityCheck.js",
+      "node_modules/recharts/es6/state/selectors/arrayEqualityCheck.js",
+      "node_modules/recharts/es6/state/selectors/selectTooltipAxisType.js",
+      "node_modules/recharts/es6/state/selectors/selectTooltipAxisId.js",
+      "node_modules/recharts/es6/util/scale/RechartsScale.js",
+      "node_modules/recharts/es6/state/selectors/combiners/combineCheckedDomain.js",
+      "node_modules/d3-array/src/ascending.js",
+      "node_modules/d3-array/src/descending.js",
+      "node_modules/d3-array/src/bisector.js",
+      "node_modules/d3-array/src/number.js",
+      "node_modules/d3-array/src/bisect.js",
+      "node_modules/internmap/src/index.js",
+      "node_modules/d3-array/src/sort.js",
+      "node_modules/d3-array/src/ticks.js",
+      "node_modules/d3-array/src/max.js",
+      "node_modules/d3-array/src/min.js",
+      "node_modules/d3-array/src/quickselect.js",
+      "node_modules/d3-array/src/quantile.js",
+      "node_modules/d3-array/src/range.js",
+      "node_modules/d3-scale/src/init.js",
+      "node_modules/d3-scale/src/ordinal.js",
+      "node_modules/d3-scale/src/band.js",
+      "node_modules/d3-color/src/define.js",
+      "node_modules/d3-color/src/color.js",
+      "node_modules/d3-interpolate/src/basis.js",
+      "node_modules/d3-interpolate/src/basisClosed.js",
+      "node_modules/d3-interpolate/src/constant.js",
+      "node_modules/d3-interpolate/src/color.js",
+      "node_modules/d3-interpolate/src/rgb.js",
+      "node_modules/d3-interpolate/src/numberArray.js",
+      "node_modules/d3-interpolate/src/array.js",
+      "node_modules/d3-interpolate/src/date.js",
+      "node_modules/d3-interpolate/src/number.js",
+      "node_modules/d3-interpolate/src/object.js",
+      "node_modules/d3-interpolate/src/string.js",
+      "node_modules/d3-interpolate/src/value.js",
+      "node_modules/d3-interpolate/src/round.js",
+      "node_modules/d3-interpolate/src/piecewise.js",
+      "node_modules/d3-scale/src/constant.js",
+      "node_modules/d3-scale/src/number.js",
+      "node_modules/d3-scale/src/continuous.js",
+      "node_modules/d3-format/src/formatDecimal.js",
+      "node_modules/d3-format/src/exponent.js",
+      "node_modules/d3-format/src/formatGroup.js",
+      "node_modules/d3-format/src/formatNumerals.js",
+      "node_modules/d3-format/src/formatSpecifier.js",
+      "node_modules/d3-format/src/formatTrim.js",
+      "node_modules/d3-format/src/formatPrefixAuto.js",
+      "node_modules/d3-format/src/formatRounded.js",
+      "node_modules/d3-format/src/formatTypes.js",
+      "node_modules/d3-format/src/identity.js",
+      "node_modules/d3-format/src/locale.js",
+      "node_modules/d3-format/src/defaultLocale.js",
+      "node_modules/d3-format/src/precisionFixed.js",
+      "node_modules/d3-format/src/precisionPrefix.js",
+      "node_modules/d3-format/src/precisionRound.js",
+      "node_modules/d3-scale/src/tickFormat.js",
+      "node_modules/d3-scale/src/linear.js",
+      "node_modules/d3-scale/src/identity.js",
+      "node_modules/d3-scale/src/nice.js",
+      "node_modules/d3-scale/src/log.js",
+      "node_modules/d3-scale/src/symlog.js",
+      "node_modules/d3-scale/src/pow.js",
+      "node_modules/d3-scale/src/radial.js",
+      "node_modules/d3-scale/src/quantile.js",
+      "node_modules/d3-scale/src/quantize.js",
+      "node_modules/d3-scale/src/threshold.js",
+      "node_modules/d3-time/src/interval.js",
+      "node_modules/d3-time/src/millisecond.js",
+      "node_modules/d3-time/src/duration.js",
+      "node_modules/d3-time/src/second.js",
+      "node_modules/d3-time/src/minute.js",
+      "node_modules/d3-time/src/hour.js",
+      "node_modules/d3-time/src/day.js",
+      "node_modules/d3-time/src/week.js",
+      "node_modules/d3-time/src/month.js",
+      "node_modules/d3-time/src/year.js",
+      "node_modules/d3-time/src/ticks.js",
+      "node_modules/d3-time-format/src/locale.js",
+      "node_modules/d3-time-format/src/defaultLocale.js",
+      "node_modules/d3-scale/src/time.js",
+      "node_modules/d3-scale/src/utcTime.js",
+      "node_modules/d3-scale/src/sequential.js",
+      "node_modules/d3-scale/src/sequentialQuantile.js",
+      "node_modules/d3-scale/src/diverging.js",
+      "node_modules/victory-vendor/es/d3-scale.js",
+      "node_modules/recharts/es6/state/selectors/combiners/combineConfiguredScale.js",
+      "node_modules/recharts/es6/state/selectors/combiners/combineRealScaleType.js",
+      "node_modules/recharts/es6/util/scale/createCategoricalInverse.js",
+      "node_modules/recharts/es6/state/selectors/combiners/combineInverseScaleFunction.js",
+      "node_modules/recharts/es6/state/selectors/axisSelectors.js",
+      "node_modules/recharts/es6/state/selectors/selectTooltipEventType.js",
+      "node_modules/recharts/es6/state/selectors/combiners/combineActiveLabel.js",
+      "node_modules/recharts/es6/state/selectors/selectTooltipSettings.js",
+      "node_modules/recharts/es6/state/tooltipSlice.js",
+      "node_modules/recharts/es6/state/selectors/combiners/combineTooltipInteractionState.js",
+      "node_modules/recharts/es6/state/selectors/combiners/combineActiveTooltipIndex.js",
+      "node_modules/recharts/es6/state/selectors/combiners/combineCoordinateForDefaultIndex.js",
+      "node_modules/recharts/es6/state/selectors/combiners/combineTooltipPayloadConfigurations.js",
+      "node_modules/recharts/es6/state/selectors/selectTooltipPayloadSearcher.js",
+      "node_modules/recharts/es6/state/selectors/selectTooltipState.js",
+      "node_modules/recharts/es6/state/selectors/combiners/combineTooltipPayload.js",
+      "node_modules/recharts/es6/state/selectors/tooltipSelectors.js",
+      "node_modules/recharts/es6/context/useTooltipAxis.js",
+      "node_modules/recharts/es6/util/getActiveCoordinate.js",
+      "node_modules/recharts/es6/state/selectors/selectors.js",
+      "node_modules/recharts/es6/zIndex/zIndexSelectors.js",
+      "node_modules/recharts/es6/state/zIndexSlice.js",
+      "node_modules/recharts/es6/zIndex/ZIndexLayer.js",
+      "node_modules/recharts/es6/component/Cursor.js",
+      "node_modules/recharts/es6/context/tooltipPortalContext.js",
+      "node_modules/eventemitter3/index.js",
+      "node_modules/eventemitter3/index.mjs",
+      "node_modules/recharts/es6/util/Events.js",
+      "node_modules/recharts/es6/state/optionsSlice.js",
+      "node_modules/recharts/es6/synchronisation/syncSelectors.js",
+      "node_modules/recharts/es6/state/chartDataSlice.js",
+      "node_modules/recharts/es6/synchronisation/useChartSynchronisation.js",
+      "node_modules/recharts/es6/component/Tooltip.js",
+      "node_modules/recharts/es6/util/LRUCache.js",
+      "node_modules/recharts/es6/util/DOMUtils.js",
+      "node_modules/recharts/es6/util/ReduceCSSCalc.js",
+      "node_modules/recharts/es6/component/Text.js",
+      "node_modules/recharts/es6/component/Label.js",
+      "node_modules/recharts/es6/component/LabelList.js",
+      "node_modules/recharts/es6/state/polarAxisSlice.js",
+      "node_modules/recharts/es6/util/getClassNameFromUnknown.js",
+      "node_modules/react-is/cjs/react-is.production.js",
+      "node_modules/react-is/index.js",
+      "node_modules/recharts/es6/util/ReactUtils.js",
+      "node_modules/recharts/es6/util/ActiveShapeUtils.js",
+      "node_modules/recharts/es6/state/SetTooltipEntrySettings.js",
+      "node_modules/recharts/es6/state/SetLegendPayload.js",
+      "node_modules/recharts/es6/animation/matchBy.js",
+      "node_modules/recharts/es6/animation/useAnimationStartSnapshot.js",
+      "node_modules/recharts/es6/animation/AnimatedItems.js",
+      "node_modules/recharts/es6/util/useId.js",
+      "node_modules/recharts/es6/util/useUniqueId.js",
+      "node_modules/recharts/es6/context/RegisterGraphicalItemId.js",
+      "node_modules/recharts/es6/state/graphicalItemsSlice.js",
+      "node_modules/recharts/es6/state/SetGraphicalItem.js",
+      "node_modules/recharts/es6/state/cartesianAxisSlice.js",
+      "node_modules/recharts/es6/state/selectors/selectChartOffset.js",
+      "node_modules/recharts/es6/state/selectors/selectPlotArea.js",
+      "node_modules/recharts/es6/hooks.js",
+      "node_modules/recharts/es6/context/chartDataContext.js",
+      "node_modules/recharts/es6/state/brushSlice.js",
+      "node_modules/recharts/es6/util/CartesianUtils.js",
+      "node_modules/recharts/es6/state/referenceElementsSlice.js",
+      "node_modules/recharts/es6/container/ClipPathProvider.js",
+      "node_modules/es-toolkit/dist/function/noop.mjs",
+      "node_modules/es-toolkit/dist/predicate/isPlainObject.mjs",
+      "node_modules/es-toolkit/dist/predicate/isEqualWith.mjs",
+      "node_modules/es-toolkit/dist/predicate/isEqual.mjs",
+      "node_modules/recharts/es6/util/getEveryNth.js",
+      "node_modules/recharts/es6/util/TickUtils.js",
+      "node_modules/recharts/es6/cartesian/getEquidistantTicks.js",
+      "node_modules/recharts/es6/cartesian/getTicks.js",
+      "node_modules/recharts/es6/util/YAxisUtils.js",
+      "node_modules/recharts/es6/util/XAxisUtils.js",
+      "node_modules/recharts/es6/state/renderedTicksSlice.js",
+      "node_modules/recharts/es6/cartesian/CartesianAxis.js",
+      "node_modules/recharts/es6/theme/legacyTheme.js",
+      "node_modules/recharts/es6/theme/RechartsThemeContext.js",
+      "node_modules/recharts/es6/cartesian/CartesianGrid.js",
+      "node_modules/recharts/es6/state/errorBarSlice.js",
+      "node_modules/recharts/es6/context/ErrorBarContext.js",
+      "node_modules/recharts/es6/cartesian/GraphicalItemClipPath.js",
+      "node_modules/recharts/es6/util/axisPropsAreEqual.js",
+      "node_modules/recharts/es6/cartesian/XAxis.js",
+      "node_modules/recharts/es6/cartesian/YAxis.js",
+      "node_modules/recharts/es6/state/selectors/selectActivePropsFromChartPointer.js",
+      "node_modules/recharts/es6/util/getRelativeCoordinate.js",
+      "node_modules/recharts/es6/state/mouseEventsMiddleware.js",
+      "node_modules/recharts/es6/state/reduxDevtoolsJsonStringifyReplacer.js",
+      "node_modules/recharts/es6/state/rootPropsSlice.js",
+      "node_modules/recharts/es6/state/polarOptionsSlice.js",
+      "node_modules/recharts/es6/state/keyboardEventsMiddleware.js",
+      "node_modules/recharts/es6/util/createEventProxy.js",
+      "node_modules/recharts/es6/state/externalEventsMiddleware.js",
+      "node_modules/recharts/es6/state/selectors/touchSelectors.js",
+      "node_modules/recharts/es6/state/touchEventsMiddleware.js",
+      "node_modules/recharts/es6/state/eventSettingsSlice.js",
+      "node_modules/recharts/es6/state/store.js",
+      "node_modules/recharts/es6/state/RechartsStoreProvider.js",
+      "node_modules/recharts/es6/state/ReportMainChartProps.js",
+      "node_modules/recharts/es6/state/ReportChartProps.js",
+      "node_modules/recharts/es6/state/ReportEventSettings.js",
+      "node_modules/recharts/es6/zIndex/ZIndexPortal.js",
+      "node_modules/recharts/es6/container/RootSurface.js",
+      "node_modules/recharts/es6/util/useReportScale.js",
+      "node_modules/recharts/es6/chart/RechartsWrapper.js",
+      "node_modules/recharts/es6/chart/CategoricalChart.js",
+      "node_modules/recharts/es6/chart/CartesianChart.js"
+    ]
+  },
+  {
+    "fileName": "assets/ChildDetailPage-egQddmMw.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/parent/pages/Student/ChildDetailPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/ClassFormPage-DRUg9lIp.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/admin/pages/classes/ClassFormPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/ClassListPage-DB_Mkghz.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/principal/pages/students/ClassListPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/ClassPage-C6JEkqnL.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/admin/pages/classes/ClassPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/ClassViewPage-CAQodhBL.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/admin/pages/classes/ClassViewPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/ConfirmationModal-Q2v-enq9.js",
+    "isEntry": false,
+    "imports": [
+      "assets/jsx-runtime-CJllllml.js",
+      "assets/triangle-alert-B5QO3dta.js",
+      "assets/modal-CqbJ28xz.js"
+    ],
+    "modules": [
+      "src/shared/components/ConfirmationModal.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/CoursewareView-CPyX_VNg.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/parent/pages/Student/Academic/CoursewareView.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/DashboardUI-BsKzg927.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/jsx-runtime-CJllllml.js",
+      "assets/arrow-left-D2tfXTay.js",
+      "assets/chevron-down-CgegrbJ6.js",
+      "assets/minus-DeBLjXqx.js",
+      "assets/trending-down-2-I6P391.js",
+      "assets/trending-up-8Ec-1bKh.js",
+      "assets/SkeletonLoading-yH44wkWw.js",
+      "assets/LoadingRegion-Df9hq3O2.js"
+    ],
+    "modules": [
+      "src/features/profiles/shared/components/DashboardUI.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/EnrolledChildrenPage-BUBUaZ4-.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/parent/pages/EnrollledStudent/EnrolledChildrenPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/GradePage-CAYlPiLY.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/teacher/pages/grades/GradePage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/HelpSupportPage-Cp7b6BpV.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/admin/pages/help/HelpSupportPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/HolisticDomainTrendsPage-7KP8mWgE.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/teacher/pages/holistic/HolisticDomainTrendsPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/HolisticOverviewPage-Bk3m5Lew.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/teacher/pages/holistic/HolisticOverviewPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/HolisticPerformanceAnalyticsPage-LTvVpEvY.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/principal/pages/reports/HolisticPerformanceAnalyticsPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/LandingPage-chrmx9l9.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/Landing/LandingPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/LoadingRegion-Df9hq3O2.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/shared/loading/skeleton.css",
+      "src/shared/loading/reservations.ts",
+      "src/shared/loading/LoadingRegion.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/LoadingTable-CkuvouK-.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/jsx-runtime-CJllllml.js",
+      "assets/LoadingRegion-Df9hq3O2.js"
+    ],
+    "modules": [
+      "src/shared/loading/LoadingTable.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/ManageSubjectsPage-rdoz-78c.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/admin/pages/subjects/ManageSubjectsPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/ParentDashboardHome-DCFRy6fm.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/parent/pages/dashboard/ParentDashboardHome.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/PetQuizPage-WaqrR6s1.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/parent/pages/Student/Academic/PetQuizPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/PrincipalDashboardHome-VPX7b0id.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/principal/pages/dashboard/PrincipalDashboardHome.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/PrincipalGradeSheetPage-Dd7k2zo7.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/principal/pages/gradebooks/PrincipalGradeSheetPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/PrincipalGradebooksPage-TZP0L_vk.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/principal/pages/gradebooks/PrincipalGradebooksPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/PrincipalStudentsPage-DS6ZdTwj.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/principal/pages/students/PrincipalStudentsPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/PrincipalTeachersPage-DlYSjNrJ.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/principal/pages/teachers/PrincipalTeachersPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/SkeletonLoading-yH44wkWw.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/jsx-runtime-CJllllml.js",
+      "assets/LoadingRegion-Df9hq3O2.js"
+    ],
+    "modules": [
+      "node_modules/tailwind-merge/dist/bundle-mjs.mjs",
+      "src/shared/components/SkeletonLoading.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/SkeletonParagraph-cjSWqeI2.js",
+    "isEntry": false,
+    "imports": [
+      "assets/jsx-runtime-CJllllml.js",
+      "assets/SkeletonLoading-yH44wkWw.js",
+      "assets/LoadingRegion-Df9hq3O2.js"
+    ],
+    "modules": [
+      "src/shared/loading/SkeletonParagraph.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/StudentAvatar-I43AUbaH.js",
+    "isEntry": false,
+    "imports": [
+      "assets/jsx-runtime-CJllllml.js",
+      "assets/user-round-DS3Vdsx3.js"
+    ],
+    "modules": [
+      "src/shared/profile/components/avatars/student_boy.jpg",
+      "src/shared/profile/components/avatars/student_girl.jpg",
+      "src/shared/components/StudentAvatar.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/StudentDetailPage-DpvTq4aY.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/shared/components/StudentDetailPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/StudentDirectoryTable-DK3wY_5C.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/jsx-runtime-CJllllml.js",
+      "assets/SkeletonLoading-yH44wkWw.js",
+      "assets/StudentAvatar-I43AUbaH.js",
+      "assets/LoadingRegion-Df9hq3O2.js",
+      "assets/LoadingTable-CkuvouK-.js"
+    ],
+    "modules": [
+      "src/shared/components/StudentDirectoryTable.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/StudentFormPage-CuMYLSJV.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/admin/pages/studentrecords/StudentFormPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/StudentHolisticProfilePage-DarXf42y.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/teacher/pages/holistic/StudentHolisticProfilePage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/StudentRecordsPage-Bn5_ipe8.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/admin/pages/studentrecords/StudentRecordsPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/SubjectClassListPage-BIhUfuA5.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/teacher/pages/subjects/SubjectClassListPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/SubjectDetailPage-c9Y1P8l-.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/teacher/pages/subjects/detail/SubjectDetailPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/SubjectPage-BUXue8X-.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/teacher/pages/subjects/SubjectPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/SubjectRecordsPage-DObscYHm.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/teacher/pages/subjects/detail/SubjectRecordsPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/TeacherAttendancePage-B_EEJF-w.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/teacher/pages/attendance/TeacherAttendancePage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/TeacherAttendanceRecordsPage-DIa-kbg3.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/teacher/pages/attendance/TeacherAttendanceRecordsPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/TeacherDashboardHome-Dm2OZ0u9.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/teacher/pages/dashboard/TeacherDashboardHome.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/TopicSupportChoice-D1cBH-Vk.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/parent/pages/Student/Academic/TopicSupportChoice.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/UserFormPage-duVI3Y9-.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/admin/pages/usermanagement/UserFormPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/UserManagementPage-CaC-jU3d.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/admin/pages/usermanagement/UserManagementPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/UserViewPage-DDjTySMN.js",
+    "isEntry": false,
+    "imports": [
+      "assets/index-DNJPIDYG.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "src/features/profiles/admin/pages/usermanagement/UserViewPage.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/academicyear.service-CshyqqlM.js",
+    "isEntry": false,
+    "imports": [
+      "assets/api.config-qjE84KfK.js"
+    ],
+    "modules": [
+      "src/features/profiles/admin/pages/subjects/services/academicyear.service.ts"
+    ]
+  },
+  {
+    "fileName": "assets/api.config-qjE84KfK.js",
+    "isEntry": false,
+    "imports": [],
+    "modules": [
+      "src/config/api.config.ts"
+    ]
+  },
+  {
+    "fileName": "assets/arrow-left-D2tfXTay.js",
+    "isEntry": false,
+    "imports": [
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "node_modules/lucide-react/dist/esm/icons/arrow-left.js"
+    ]
+  },
+  {
+    "fileName": "assets/chart-column-D0tW75Kt.js",
+    "isEntry": false,
+    "imports": [
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "node_modules/lucide-react/dist/esm/icons/chart-column.js"
+    ]
+  },
+  {
+    "fileName": "assets/check-BMaRp4jY.js",
+    "isEntry": false,
+    "imports": [
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "node_modules/lucide-react/dist/esm/icons/check.js"
+    ]
+  },
+  {
+    "fileName": "assets/chevron-down-CgegrbJ6.js",
+    "isEntry": false,
+    "imports": [
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "node_modules/lucide-react/dist/esm/icons/chevron-down.js"
+    ]
+  },
+  {
+    "fileName": "assets/chunk-aKtaBQYM.js",
+    "isEntry": false,
+    "imports": [],
+    "modules": [
+      "\u0000rolldown/runtime.js"
+    ]
+  },
+  {
+    "fileName": "assets/circle-check-big-YVPbVMct.js",
+    "isEntry": false,
+    "imports": [
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "node_modules/lucide-react/dist/esm/icons/circle-check-big.js"
+    ]
+  },
+  {
+    "fileName": "assets/classes.service-G6eMozPB.js",
+    "isEntry": false,
+    "imports": [
+      "assets/api.config-qjE84KfK.js"
+    ],
+    "modules": [
+      "src/features/profiles/admin/pages/classes/services/classes.service.ts"
+    ]
+  },
+  {
+    "fileName": "assets/exceljs.min-BEz_Ja81.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js"
+    ],
+    "modules": [
+      "node_modules/exceljs/dist/exceljs.min.js"
+    ]
+  },
+  {
+    "fileName": "assets/html2canvas-B1hV9e2W.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js"
+    ],
+    "modules": [
+      "node_modules/html2canvas/dist/html2canvas.js"
+    ]
+  },
+  {
+    "fileName": "assets/index.es-CVWlLToJ.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/typeof-B5XbjTb1.js"
+    ],
+    "modules": [
+      "node_modules/core-js/internals/global-this.js",
+      "node_modules/core-js/internals/fails.js",
+      "node_modules/core-js/internals/descriptors.js",
+      "node_modules/core-js/internals/function-bind-native.js",
+      "node_modules/core-js/internals/function-call.js",
+      "node_modules/core-js/internals/object-property-is-enumerable.js",
+      "node_modules/core-js/internals/create-property-descriptor.js",
+      "node_modules/core-js/internals/function-uncurry-this.js",
+      "node_modules/core-js/internals/classof-raw.js",
+      "node_modules/core-js/internals/indexed-object.js",
+      "node_modules/core-js/internals/is-null-or-undefined.js",
+      "node_modules/core-js/internals/require-object-coercible.js",
+      "node_modules/core-js/internals/to-indexed-object.js",
+      "node_modules/core-js/internals/is-callable.js",
+      "node_modules/core-js/internals/is-object.js",
+      "node_modules/core-js/internals/get-built-in.js",
+      "node_modules/core-js/internals/object-is-prototype-of.js",
+      "node_modules/core-js/internals/environment-user-agent.js",
+      "node_modules/core-js/internals/environment-v8-version.js",
+      "node_modules/core-js/internals/symbol-constructor-detection.js",
+      "node_modules/core-js/internals/use-symbol-as-uid.js",
+      "node_modules/core-js/internals/is-symbol.js",
+      "node_modules/core-js/internals/try-to-string.js",
+      "node_modules/core-js/internals/a-callable.js",
+      "node_modules/core-js/internals/get-method.js",
+      "node_modules/core-js/internals/ordinary-to-primitive.js",
+      "node_modules/core-js/internals/is-pure.js",
+      "node_modules/core-js/internals/define-global-property.js",
+      "node_modules/core-js/internals/shared-store.js",
+      "node_modules/core-js/internals/shared.js",
+      "node_modules/core-js/internals/to-object.js",
+      "node_modules/core-js/internals/has-own-property.js",
+      "node_modules/core-js/internals/uid.js",
+      "node_modules/core-js/internals/well-known-symbol.js",
+      "node_modules/core-js/internals/to-primitive.js",
+      "node_modules/core-js/internals/to-property-key.js",
+      "node_modules/core-js/internals/document-create-element.js",
+      "node_modules/core-js/internals/ie8-dom-define.js",
+      "node_modules/core-js/internals/object-get-own-property-descriptor.js",
+      "node_modules/core-js/internals/v8-prototype-define-bug.js",
+      "node_modules/core-js/internals/an-object.js",
+      "node_modules/core-js/internals/object-define-property.js",
+      "node_modules/core-js/internals/create-non-enumerable-property.js",
+      "node_modules/core-js/internals/function-name.js",
+      "node_modules/core-js/internals/inspect-source.js",
+      "node_modules/core-js/internals/weak-map-basic-detection.js",
+      "node_modules/core-js/internals/shared-key.js",
+      "node_modules/core-js/internals/hidden-keys.js",
+      "node_modules/core-js/internals/internal-state.js",
+      "node_modules/core-js/internals/make-built-in.js",
+      "node_modules/core-js/internals/define-built-in.js",
+      "node_modules/core-js/internals/math-trunc.js",
+      "node_modules/core-js/internals/to-integer-or-infinity.js",
+      "node_modules/core-js/internals/to-absolute-index.js",
+      "node_modules/core-js/internals/to-length.js",
+      "node_modules/core-js/internals/length-of-array-like.js",
+      "node_modules/core-js/internals/array-includes.js",
+      "node_modules/core-js/internals/object-keys-internal.js",
+      "node_modules/core-js/internals/enum-bug-keys.js",
+      "node_modules/core-js/internals/object-get-own-property-names.js",
+      "node_modules/core-js/internals/object-get-own-property-symbols.js",
+      "node_modules/core-js/internals/own-keys.js",
+      "node_modules/core-js/internals/copy-constructor-properties.js",
+      "node_modules/core-js/internals/is-forced.js",
+      "node_modules/core-js/internals/export.js",
+      "node_modules/core-js/internals/environment.js",
+      "node_modules/core-js/internals/environment-is-node.js",
+      "node_modules/core-js/internals/path.js",
+      "node_modules/core-js/internals/function-uncurry-this-accessor.js",
+      "node_modules/core-js/internals/is-possible-prototype.js",
+      "node_modules/core-js/internals/a-possible-prototype.js",
+      "node_modules/core-js/internals/object-set-prototype-of.js",
+      "node_modules/core-js/internals/set-to-string-tag.js",
+      "node_modules/core-js/internals/define-built-in-accessor.js",
+      "node_modules/core-js/internals/set-species.js",
+      "node_modules/core-js/internals/an-instance.js",
+      "node_modules/core-js/internals/to-string-tag-support.js",
+      "node_modules/core-js/internals/classof.js",
+      "node_modules/core-js/internals/is-constructor.js",
+      "node_modules/core-js/internals/a-constructor.js",
+      "node_modules/core-js/internals/species-constructor.js",
+      "node_modules/core-js/internals/function-apply.js",
+      "node_modules/core-js/internals/function-uncurry-this-clause.js",
+      "node_modules/core-js/internals/function-bind-context.js",
+      "node_modules/core-js/internals/html.js",
+      "node_modules/core-js/internals/array-slice.js",
+      "node_modules/core-js/internals/validate-arguments-length.js",
+      "node_modules/core-js/internals/environment-is-ios.js",
+      "node_modules/core-js/internals/task.js",
+      "node_modules/core-js/internals/safe-get-built-in.js",
+      "node_modules/core-js/internals/queue.js",
+      "node_modules/core-js/internals/environment-is-ios-pebble.js",
+      "node_modules/core-js/internals/environment-is-webos-webkit.js",
+      "node_modules/core-js/internals/microtask.js",
+      "node_modules/core-js/internals/host-report-errors.js",
+      "node_modules/core-js/internals/perform.js",
+      "node_modules/core-js/internals/promise-native-constructor.js",
+      "node_modules/core-js/internals/promise-constructor-detection.js",
+      "node_modules/core-js/internals/new-promise-capability.js",
+      "node_modules/core-js/modules/es.promise.constructor.js",
+      "node_modules/core-js/internals/iterators.js",
+      "node_modules/core-js/internals/is-array-iterator-method.js",
+      "node_modules/core-js/internals/get-iterator-method-internal.js",
+      "node_modules/core-js/internals/get-iterator-internal.js",
+      "node_modules/core-js/internals/iterator-close.js",
+      "node_modules/core-js/internals/iterate.js",
+      "node_modules/core-js/internals/check-correctness-of-iteration.js",
+      "node_modules/core-js/internals/promise-statics-incorrect-iteration.js",
+      "node_modules/core-js/modules/es.promise.all.js",
+      "node_modules/core-js/modules/es.promise.catch.js",
+      "node_modules/core-js/modules/es.promise.race.js",
+      "node_modules/core-js/modules/es.promise.reject.js",
+      "node_modules/core-js/internals/promise-resolve.js",
+      "node_modules/core-js/modules/es.promise.resolve.js",
+      "node_modules/core-js/modules/es.promise.js",
+      "node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js",
+      "node_modules/core-js/internals/to-string.js",
+      "node_modules/core-js/internals/regexp-flags.js",
+      "node_modules/core-js/internals/regexp-sticky-helpers.js",
+      "node_modules/core-js/internals/object-keys.js",
+      "node_modules/core-js/internals/object-define-properties.js",
+      "node_modules/core-js/internals/object-create.js",
+      "node_modules/core-js/internals/regexp-unsupported-dot-all.js",
+      "node_modules/core-js/internals/regexp-unsupported-ncg.js",
+      "node_modules/core-js/internals/regexp-exec.js",
+      "node_modules/core-js/modules/es.regexp.exec.js",
+      "node_modules/core-js/internals/fix-regexp-well-known-symbol-logic.js",
+      "node_modules/core-js/internals/string-multibyte.js",
+      "node_modules/core-js/internals/advance-string-index.js",
+      "node_modules/core-js/internals/regexp-flags-detection.js",
+      "node_modules/core-js/internals/regexp-get-flags.js",
+      "node_modules/core-js/internals/regexp-exec-abstract.js",
+      "node_modules/core-js/modules/es.string.match.js",
+      "node_modules/core-js/internals/get-substitution.js",
+      "node_modules/core-js/modules/es.string.replace.js",
+      "node_modules/core-js/internals/is-regexp.js",
+      "node_modules/core-js/internals/not-a-regexp.js",
+      "node_modules/core-js/internals/correct-is-regexp-logic.js",
+      "node_modules/core-js/modules/es.string.starts-with.js",
+      "node_modules/core-js/internals/add-to-unscopables.js",
+      "node_modules/core-js/internals/correct-prototype-getter.js",
+      "node_modules/core-js/internals/object-get-prototype-of.js",
+      "node_modules/core-js/internals/iterators-core.js",
+      "node_modules/core-js/internals/iterator-create-constructor.js",
+      "node_modules/core-js/internals/iterator-define.js",
+      "node_modules/core-js/internals/create-iter-result-object.js",
+      "node_modules/core-js/modules/es.array.iterator.js",
+      "node_modules/core-js/internals/dom-iterables.js",
+      "node_modules/core-js/internals/dom-token-list-prototype.js",
+      "node_modules/core-js/modules/web.dom-collections.iterator.js",
+      "node_modules/@babel/runtime/helpers/esm/toPrimitive.js",
+      "node_modules/@babel/runtime/helpers/esm/toPropertyKey.js",
+      "node_modules/@babel/runtime/helpers/esm/defineProperty.js",
+      "node_modules/core-js/internals/array-reduce.js",
+      "node_modules/core-js/internals/array-method-is-strict.js",
+      "node_modules/core-js/modules/es.array.reduce.js",
+      "node_modules/core-js/modules/es.string.ends-with.js",
+      "node_modules/core-js/modules/es.string.split.js",
+      "node_modules/performance-now/lib/performance-now.js",
+      "node_modules/raf/index.js",
+      "node_modules/core-js/internals/whitespaces.js",
+      "node_modules/core-js/internals/string-trim.js",
+      "node_modules/core-js/internals/string-trim-forced.js",
+      "node_modules/core-js/modules/es.string.trim.js",
+      "node_modules/rgbcolor/index.js",
+      "node_modules/core-js/modules/es.array.index-of.js",
+      "node_modules/core-js/modules/es.string.includes.js",
+      "node_modules/core-js/internals/is-array.js",
+      "node_modules/core-js/modules/es.array.reverse.js",
+      "node_modules/svg-pathdata/lib/SVGPathData.module.js",
+      "node_modules/core-js/modules/es.regexp.to-string.js",
+      "node_modules/stackblur-canvas/dist/stackblur-es.js",
+      "node_modules/canvg/lib/index.es.js"
+    ]
+  },
+  {
+    "fileName": "assets/jspdf.es.min-z7X-bT7R.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/preload-helper-zJ_50EbN.js",
+      "assets/typeof-B5XbjTb1.js"
+    ],
+    "modules": [
+      "node_modules/fflate/esm/browser.js",
+      "node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js",
+      "node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js",
+      "node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js",
+      "node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js",
+      "node_modules/@babel/runtime/helpers/esm/nonIterableRest.js",
+      "node_modules/@babel/runtime/helpers/esm/slicedToArray.js",
+      "node_modules/iobuffer/lib-esm/text.js",
+      "node_modules/iobuffer/lib-esm/IOBuffer.js",
+      "node_modules/fast-png/node_modules/pako/dist/pako.esm.mjs",
+      "node_modules/fast-png/lib-esm/helpers/crc.js",
+      "node_modules/fast-png/lib-esm/helpers/unfilter.js",
+      "node_modules/fast-png/lib-esm/helpers/applyUnfilter.js",
+      "node_modules/fast-png/lib-esm/helpers/decodeInterlaceAdam7.js",
+      "node_modules/fast-png/lib-esm/helpers/decodeInterlaceNull.js",
+      "node_modules/fast-png/lib-esm/helpers/signature.js",
+      "node_modules/fast-png/lib-esm/helpers/text.js",
+      "node_modules/fast-png/lib-esm/internalTypes.js",
+      "node_modules/fast-png/lib-esm/PngDecoder.js",
+      "node_modules/fast-png/lib-esm/PngEncoder.js",
+      "node_modules/fast-png/lib-esm/types.js",
+      "node_modules/fast-png/lib-esm/index.js",
+      "node_modules/jspdf/dist/jspdf.es.min.js"
+    ]
+  },
+  {
+    "fileName": "assets/jsx-runtime-CJllllml.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/preload-helper-zJ_50EbN.js"
+    ],
+    "modules": [
+      "node_modules/react/cjs/react.production.js",
+      "node_modules/react/index.js",
+      "node_modules/react/cjs/react-compiler-runtime.production.js",
+      "node_modules/react/compiler-runtime.js",
+      "node_modules/react-router/dist/development/chunk-6CSD65Y2.mjs",
+      "node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.js",
+      "node_modules/lucide-react/dist/esm/shared/src/utils/toKebabCase.js",
+      "node_modules/lucide-react/dist/esm/shared/src/utils/toCamelCase.js",
+      "node_modules/lucide-react/dist/esm/shared/src/utils/toPascalCase.js",
+      "node_modules/lucide-react/dist/esm/defaultAttributes.js",
+      "node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.js",
+      "node_modules/lucide-react/dist/esm/context.js",
+      "node_modules/lucide-react/dist/esm/Icon.js",
+      "node_modules/lucide-react/dist/esm/createLucideIcon.js",
+      "src/shared/loading/RoutePreview.tsx",
+      "node_modules/react/cjs/react-jsx-runtime.production.js",
+      "node_modules/react/jsx-runtime.js"
+    ]
+  },
+  {
+    "fileName": "assets/loader-circle-Dvo5tvjg.js",
+    "isEntry": false,
+    "imports": [
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "node_modules/lucide-react/dist/esm/icons/loader-circle.js"
+    ]
+  },
+  {
+    "fileName": "assets/minus-DeBLjXqx.js",
+    "isEntry": false,
+    "imports": [
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "node_modules/lucide-react/dist/esm/icons/minus.js"
+    ]
+  },
+  {
+    "fileName": "assets/modal-CqbJ28xz.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/jsx-runtime-CJllllml.js",
+      "assets/react-dom-BjPNskWF.js"
+    ],
+    "modules": [
+      "node_modules/lucide-react/dist/esm/icons/x.js",
+      "src/shared/components/modal.tsx"
+    ]
+  },
+  {
+    "fileName": "assets/preload-helper-zJ_50EbN.js",
+    "isEntry": false,
+    "imports": [],
+    "modules": [
+      "\u0000vite/preload-helper.js"
+    ]
+  },
+  {
+    "fileName": "assets/purify.es-Bs0Imjnk.js",
+    "isEntry": false,
+    "imports": [],
+    "modules": [
+      "node_modules/dompurify/dist/purify.es.mjs"
+    ]
+  },
+  {
+    "fileName": "assets/react-dom-BjPNskWF.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "node_modules/react-dom/cjs/react-dom.production.js",
+      "node_modules/react-dom/index.js"
+    ]
+  },
+  {
+    "fileName": "assets/search-DRo8L1OT.js",
+    "isEntry": false,
+    "imports": [
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "node_modules/lucide-react/dist/esm/icons/search.js"
+    ]
+  },
+  {
+    "fileName": "assets/subjectGradeTemplate.service-BRn31rvl.js",
+    "isEntry": false,
+    "imports": [
+      "assets/api.config-qjE84KfK.js"
+    ],
+    "modules": [
+      "node_modules/xlsx/xlsx.mjs",
+      "src/features/profiles/admin/pages/subjects/services/gradeTemplateParser.service.ts",
+      "src/features/profiles/admin/pages/subjects/services/subjectGradeTemplate.service.ts"
+    ]
+  },
+  {
+    "fileName": "assets/trending-down-2-I6P391.js",
+    "isEntry": false,
+    "imports": [
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "node_modules/lucide-react/dist/esm/icons/trending-down.js"
+    ]
+  },
+  {
+    "fileName": "assets/trending-up-8Ec-1bKh.js",
+    "isEntry": false,
+    "imports": [
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "node_modules/lucide-react/dist/esm/icons/trending-up.js"
+    ]
+  },
+  {
+    "fileName": "assets/triangle-alert-B5QO3dta.js",
+    "isEntry": false,
+    "imports": [
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "node_modules/lucide-react/dist/esm/icons/triangle-alert.js"
+    ]
+  },
+  {
+    "fileName": "assets/typeof-B5XbjTb1.js",
+    "isEntry": false,
+    "imports": [],
+    "modules": [
+      "node_modules/@babel/runtime/helpers/esm/typeof.js"
+    ]
+  },
+  {
+    "fileName": "assets/upload-CN5lV3FZ.js",
+    "isEntry": false,
+    "imports": [
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "node_modules/lucide-react/dist/esm/icons/file-spreadsheet.js",
+      "node_modules/lucide-react/dist/esm/icons/upload.js"
+    ]
+  },
+  {
+    "fileName": "assets/user-Dl6EKG5o.js",
+    "isEntry": false,
+    "imports": [
+      "assets/chunk-aKtaBQYM.js",
+      "assets/jsx-runtime-CJllllml.js",
+      "assets/api.config-qjE84KfK.js"
+    ],
+    "modules": [
+      "src/features/profiles/admin/pages/usermanagement/services/user-record.service.ts",
+      "src/features/profiles/admin/pages/usermanagement/context/UsersContext.tsx",
+      "src/features/profiles/admin/pages/usermanagement/types/user.ts"
+    ]
+  },
+  {
+    "fileName": "assets/user-round-DS3Vdsx3.js",
+    "isEntry": false,
+    "imports": [
+      "assets/jsx-runtime-CJllllml.js"
+    ],
+    "modules": [
+      "node_modules/lucide-react/dist/esm/icons/user-round.js"
+    ]
+  }
+]

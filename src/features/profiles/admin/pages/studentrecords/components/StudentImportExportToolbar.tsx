@@ -8,11 +8,7 @@ import {
   Loader2,
 } from "lucide-react";
 import type { Student } from "../types/Students";
-import { studentService } from "./../services/student-record.service";
-import {
-  fetchGradeLevels,
-  fetchSectionByGrade,
-} from "./../services/grade-section.service";
+import {useStudents} from '../context/StudentsContext';
 import {
   parseStudentsExcelFile,
   exportStudentsToExcel,
@@ -44,6 +40,7 @@ export function StudentImportExportToolbar({
   textPrimary,
   textMuted,
 }: StudentImportExportToolbarProps) {
+  const {createRecord,fetchGrades:fetchGradeLevels,fetchSections:fetchSectionByGrade}=useStudents();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [result, setResult] = useState<ImportParseResult | null>(null);
   const [isParsing, setIsParsing] = useState(false);
@@ -191,7 +188,7 @@ export function StudentImportExportToolbar({
             section: sectionId ? String(sectionId) : undefined,
           };
 
-          const res = await studentService.addNewStudent(payload);
+          const res = await createRecord(payload);
           const newId = res?.data?.id ?? res?.id;
 
           saved.push({
@@ -243,7 +240,7 @@ export function StudentImportExportToolbar({
   // Compact, h-8/text-xs scale to match the search bar's dropdowns and Add button
   const buttonBase = darkMode
     ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-    : "border-[#E5E7EB] text-[#475569] hover:bg-[#F6F7FB]";
+    : "border-border-subtle text-[#475569] hover:bg-brand-light";
 
   return (
     <>
@@ -378,7 +375,7 @@ function ImportPreviewModal({
             onClick={onConfirm}
             disabled={result.valid.length === 0 || hasErrors || isSaving}
             title={hasErrors ? "Fix all row errors before importing" : undefined}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[#1D70D6] px-4 py-2 qed-type-button text-white disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-maroon hover:bg-maroon-light px-4 py-2 qed-type-button text-white disabled:opacity-50"
           >
             {isSaving && <Loader2 size={14} className="animate-spin" />}
             {isSaving

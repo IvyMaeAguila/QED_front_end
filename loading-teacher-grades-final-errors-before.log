@@ -1,0 +1,68 @@
+
+[WebServer] (node:34044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 2 tests using 1 worker
+
+(node:13484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/2] tests\teacher-grades-loading.spec.ts:22:1 › teacher submission history surfaces a term prerequisite error and retries
+  1) tests\teacher-grades-loading.spec.ts:22:1 › teacher submission history surfaces a term prerequisite error and retries 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('alert')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('alert') with timeout 5000ms
+      - waiting for getByRole('alert')
+
+
+      20 | for(const width of [375,1280])for(const dark of [false,true])for(const tab of ['Parent Visibility','Submission History'])test(`teacher grades ${tab} ${width} ${dark?'dark':'light'} known controls remain during prerequisite loads`,async({page})=>{await page.setViewportSize({width,height:1100});const release=await fixture(page,dark);await page.goto('/teacher/grades');await page.getByRole('button',{name:tab,exact:true}).click();const region=page.locator(tab==='Parent Visibility'?'[data-sk-region="teacher-grade-visibility:table-body"]':'[data-sk-region="teacher-grade-history"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');if(tab==='Parent Visibility'){await expect(page.getByRole('columnheader',{name:'Parent/Guardian',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Show to Parents',exact:true})).toBeVisible();}else await expect(page.getByRole('heading',{name:'Submission History',exact:true})).toBeVisible();await assertNoDataSpinner(page);const prefix=`loading-screenshots/teacher-grades-${tab.replaceAll(' ','-')}-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});release();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);if(tab==='Parent Visibility')await expect(page.getByText('Parent One',{exact:true})).toHaveCount(3);else await expect(page.getByText('Teacher One ·',{exact:false})).toBeVisible();await page.screenshot({path:prefix+'-loaded.png',fullPage:true});});
+      21 | test('teacher visibility retries a prerequisite error without an indefinite skeleton',async({page})=>{const release=await fixture(page);release.fail('terms');await page.goto('/teacher/grades');await page.getByRole('button',{name:'Parent Visibility',exact:true}).click();release();await expect(page.getByRole('alert')).toBeVisible();await expect(page.locator('[data-sk-primitive]')).toHaveCount(0);release.recover();await page.getByRole('button',{name:'Retry',exact:true}).click();await expect(page.getByText('Parent One',{exact:true})).toHaveCount(3);await expect(page.getByRole('alert')).toHaveCount(0);});
+    > 22 | test('teacher submission history surfaces a term prerequisite error and retries',async({page})=>{const release=await fixture(page);release.fail('terms');await page.goto('/teacher/grades');await page.getByRole('button',{name:'Submission History',exact:true}).click();await expect(page.locator('[data-sk-region="teacher-grade-history"]')).toHaveAttribute('data-sk-phase','revealed');release();await expect(page.getByRole('alert')).toBeVisible();expect(await page.locator('[data-sk-primitive]').count()).toBe(0);release.recover();await page.getByRole('button',{name:'Retry',exact:true}).click();await expect(page.getByText('Teacher One ·',{exact:false})).toBeVisible();});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                              ^
+      23 | test('teacher gradebook failure removes dependent placeholders immediately',async({page})=>{const release=await fixture(page);release.fail('gradebook');await page.goto('/teacher/grades');await expect(page.locator('[data-sk-region="teacher-grades-table:table-body"]')).toHaveAttribute('data-sk-phase','revealed');release();await expect(page.getByRole('alert')).toBeVisible();expect(await page.locator('[data-sk-primitive]').count()).toBe(0);await expect(page.getByText(/Not yet official · 0 subject/)).toHaveCount(0);});
+      24 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\teacher-grades-loading.spec.ts:22:430
+
+    Error Context: test-results\teacher-grades-loading-tea-75d2a-requisite-error-and-retries\error-context.md
+
+
+(node:34580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[2/2] tests\teacher-grades-loading.spec.ts:23:1 › teacher gradebook failure removes dependent placeholders immediately
+
+[WebServer] 2:30:58 PM [vite] (client) [console.error] Failed to load advisory gradebook: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:14:38)
+[WebServer]     at async fetchAdvisoryGradebook (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:29:15)
+  2) tests\teacher-grades-loading.spec.ts:23:1 › teacher gradebook failure removes dependent placeholders immediately 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 9
+
+      21 | test('teacher visibility retries a prerequisite error without an indefinite skeleton',async({page})=>{const release=await fixture(page);release.fail('terms');await page.goto('/teacher/grades');await page.getByRole('button',{name:'Parent Visibility',exact:true}).click();release();await expect(page.getByRole('alert')).toBeVisible();await expect(page.locator('[data-sk-primitive]')).toHaveCount(0);release.recover();await page.getByRole('button',{name:'Retry',exact:true}).click();await expect(page.getByText('Parent One',{exact:true})).toHaveCount(3);await expect(page.getByRole('alert')).toHaveCount(0);});
+      22 | test('teacher submission history surfaces a term prerequisite error and retries',async({page})=>{const release=await fixture(page);release.fail('terms');await page.goto('/teacher/grades');await page.getByRole('button',{name:'Submission History',exact:true}).click();await expect(page.locator('[data-sk-region="teacher-grade-history"]')).toHaveAttribute('data-sk-phase','revealed');release();await expect(page.getByRole('alert')).toBeVisible();expect(await page.locator('[data-sk-primitive]').count()).toBe(0);release.recover();await page.getByRole('button',{name:'Retry',exact:true}).click();await expect(page.getByText('Teacher One ·',{exact:false})).toBeVisible();});
+    > 23 | test('teacher gradebook failure removes dependent placeholders immediately',async({page})=>{const release=await fixture(page);release.fail('gradebook');await page.goto('/teacher/grades');await expect(page.locator('[data-sk-region="teacher-grades-table:table-body"]')).toHaveAttribute('data-sk-phase','revealed');release();await expect(page.getByRole('alert')).toBeVisible();expect(await page.locator('[data-sk-primitive]').count()).toBe(0);await expect(page.getByText(/Not yet official · 0 subject/)).toHaveCount(0);});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                 ^
+      24 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\teacher-grades-loading.spec.ts:23:433
+
+    Error Context: test-results\teacher-grades-loading-tea-fe5a0-nt-placeholders-immediately\error-context.md
+
+
+  2 failed
+    tests\teacher-grades-loading.spec.ts:22:1 › teacher submission history surfaces a term prerequisite error and retries 
+    tests\teacher-grades-loading.spec.ts:23:1 › teacher gradebook failure removes dependent placeholders immediately 

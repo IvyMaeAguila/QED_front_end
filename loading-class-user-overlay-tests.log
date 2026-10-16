@@ -1,0 +1,44 @@
+
+[WebServer] (node:8008) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23372) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 22 tests using 1 worker
+
+(node:28820) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/22] tests\admin-class-view.spec.ts:28:68 › class details 375 light: real actions, tabs and weekday headings
+[2/22] tests\admin-class-view.spec.ts:28:68 › class details 375 dark: real actions, tabs and weekday headings
+[3/22] tests\admin-class-view.spec.ts:28:68 › class details 1280 light: real actions, tabs and weekday headings
+[4/22] tests\admin-class-view.spec.ts:28:68 › class details 1280 dark: real actions, tabs and weekday headings
+[5/22] tests\admin-class-view.spec.ts:53:32 › class schedule 0 returned time slots retains original content
+[6/22] tests\admin-class-view.spec.ts:53:32 › class schedule 1 returned time slots retains original content
+[7/22] tests\admin-class-view.spec.ts:53:32 › class schedule 9 returned time slots retains original content
+[8/22] tests\admin-class-view.spec.ts:62:1 › class details error removes every reservation immediately and retries context loads
+
+[WebServer] 11:58:02 PM [vite] (client) [console.error] Error: Class temporarily unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+
+[WebServer] 11:58:02 PM [vite] (client) [console.error] Error: Class temporarily unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+[9/22] tests\admin-class-view.spec.ts:77:1 › class schedule auto-column classification observes native content width changes
+[10/22] tests\admin-class-view.spec.ts:90:1 › class roster auto-column classification observes native content width changes
+[11/22] tests\admin-class-view.spec.ts:104:35 › class schedule light: time cell shimmer fits its real tinted surface
+[12/22] tests\admin-class-view.spec.ts:104:35 › class schedule dark: time cell shimmer fits its real tinted surface
+[13/22] tests\user-details-loading.spec.ts:22:68 › user details 375 light: real field labels and actions
+[14/22] tests\user-details-loading.spec.ts:22:68 › user details 375 dark: real field labels and actions
+[15/22] tests\user-details-loading.spec.ts:22:68 › user details 1280 light: real field labels and actions
+[16/22] tests\user-details-loading.spec.ts:22:68 › user details 1280 dark: real field labels and actions
+[17/22] tests\user-details-loading.spec.ts:40:61 › ADMIN details preserve short and wrapping fields
+[18/22] tests\user-details-loading.spec.ts:40:61 › PRINCIPAL details preserve short and wrapping fields
+[19/22] tests\user-details-loading.spec.ts:40:61 › PARENT details preserve short and wrapping fields
+[20/22] tests\user-details-loading.spec.ts:52:1 › user details error removes shapes and retries the account request
+[21/22] tests\user-details-loading.spec.ts:64:1 › missing user uses the real not-found state only after the request
+[22/22] tests\user-details-loading.spec.ts:72:1 › teacher user details wait for the teacher ID mapping and preserve real profile controls
+  22 passed (59.0s)

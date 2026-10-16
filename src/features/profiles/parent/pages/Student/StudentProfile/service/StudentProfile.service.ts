@@ -1,3 +1,5 @@
+import { parentFetch } from '../../../../query/parentRequest';
+import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
 // services/studentProfile.service.ts
 // Location: Student/StudentProfile/services/studentProfile.service.ts
 
@@ -24,8 +26,8 @@ async function parseJsonSafely(response: Response): Promise<any | null> {
  * GET /api/students/:studentId
  * Maps 1:1 to modules/.../studentProfiles.controller.js -> getStudentProfile
  */
-export async function fetchStudentProfile(studentId: string): Promise<StudentProfileData> {
-  const response = await fetch(`${API_BASE}/${studentId}`, {
+export async function fetchStudentProfile(studentId: string, options?: ApiRequestOptions): Promise<StudentProfileData> {
+  const response = await parentFetch(`${API_BASE}/${studentId}`, options, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     credentials: "include",

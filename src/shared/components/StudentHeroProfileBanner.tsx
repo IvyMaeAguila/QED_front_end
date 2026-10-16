@@ -1,7 +1,11 @@
 import { CheckCircle2 } from "lucide-react";
 import type { ReactNode } from "react";
 
-const ACCENT = "#8B0D0D";
+import { LoadingRegion } from "../loading/LoadingRegion";
+import { SkeletonParagraph } from "../loading/SkeletonParagraph";
+import { SkeletonText } from "./SkeletonLoading";
+
+const ACCENT = "var(--color-maroon)";
 
 type MetricCard = {
   icon: ReactNode;
@@ -11,6 +15,8 @@ type MetricCard = {
 };
 
 type HeroProfileBannerProps = {
+  loading?: boolean;
+  fieldKey?: string;
   darkMode: boolean;
   initials: string;
   title: string;           // fullName for students, or teacher name, etc.
@@ -26,6 +32,8 @@ type HeroProfileBannerProps = {
 
 export function HeroProfileBanner({
   darkMode,
+  loading = false,
+  fieldKey = "student-hero",
   initials,
   title,
   subtitle,
@@ -50,21 +58,21 @@ export function HeroProfileBanner({
             className={`-mt-10 w-20 h-20 rounded-2xl shadow-md border-4 flex items-center justify-center shrink-0 z-10 ${
               darkMode ? "bg-slate-900 border-slate-900" : "bg-white border-white"
             }`}
-            style={{ color: ACCENT }}
+            style={{ color: "var(--brand-ink)" }}
           >
-            <span className="text-2xl font-black">{initials || "?"}</span>
+            <span className="text-2xl font-black"><LoadingRegion as="span" name="student-hero-initials" loading={loading} skeleton={<SkeletonText width="2ch" />}>{initials || "?"}</LoadingRegion></span>
           </div>
 
           <div className="mt-2 sm:mt-0">
-            <h1 className={`qed-type-page-title ${textPrimary}`}>{title}</h1>
-            <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>{subtitle}</p>
+            <h1 className={`qed-type-page-title ${textPrimary}`}><LoadingRegion as="span" name="student-hero-name" variable loading={loading} skeleton={<SkeletonParagraph field={`${fieldKey}:title`} />}><span data-sk-field={`${fieldKey}:title`} className="block">{title}</span></LoadingRegion></h1>
+            <p className={`qed-type-page-description mt-0.5 ${textMuted}`}><LoadingRegion as="span" name="student-hero-identifiers" variable loading={loading} skeleton={<SkeletonParagraph field={`${fieldKey}:subtitle`} width="28ch" />}><span data-sk-field={`${fieldKey}:subtitle`} className="block">{subtitle}</span></LoadingRegion></p>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2 items-center mt-2 sm:mt-0">
-          {pills.map((p) => (
+        <div className="flex flex-wrap gap-2 items-center mt-2 sm:mt-0" data-sk-region="studentheroprofilebanner-div-field-1">
+          {pills.map((p, index) => (
             <span
-              key={p.label}
+              key={index}
               className={`${pillBase} ${
                 p.className ??
                 (darkMode
@@ -72,7 +80,7 @@ export function HeroProfileBanner({
                   : "bg-slate-100 text-slate-700 border border-slate-200")
               }`}
             >
-              {p.label}
+              <LoadingRegion as="span" name={`student-hero-pill-${index}`} variable loading={loading} skeleton={<SkeletonParagraph field={`${fieldKey}:pill-${index}`} typical={index === 1 ? 1 : 2} width={index === 1 ? "6ch" : "22ch"} />}><span data-sk-field={`${fieldKey}:pill-${index}`}>{p.label}</span></LoadingRegion>
             </span>
           ))}
           {statusLabel && (

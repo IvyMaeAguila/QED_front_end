@@ -1,0 +1,24 @@
+{
+  "regions": [
+    {
+      "selector": "[data-sk-region=\"parent-profile-avatar\"]",
+      "box": {
+        "x": 297,
+        "y": 273.125,
+        "width": 160,
+        "height": 160
+      }
+    }
+  ],
+  "loadedBoxes": [
+    {
+      "x": 297,
+      "y": 244.25,
+      "width": 160,
+      "height": 160
+    }
+  ],
+  "shapePixels": 20086,
+  "outsidePixels": 0,
+  "outsideRatio": 0
+}

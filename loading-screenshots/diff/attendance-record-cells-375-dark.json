@@ -1,0 +1,39 @@
+{
+  "regions": [
+    {
+      "selector": ":nth-match([data-sk-region=\"attendance-present-cell\"], 1)",
+      "box": {
+        "x": 170,
+        "y": 554.5,
+        "width": 112,
+        "height": 45
+      }
+    },
+    {
+      "selector": ":nth-match([data-sk-region=\"attendance-status-cell\"], 1)",
+      "box": {
+        "x": 197,
+        "y": 554.5,
+        "width": 28,
+        "height": 45
+      }
+    }
+  ],
+  "loadedBoxes": [
+    {
+      "x": 170,
+      "y": 554.5,
+      "width": 112,
+      "height": 45
+    },
+    {
+      "x": 197,
+      "y": 554.5,
+      "width": 28,
+      "height": 45
+    }
+  ],
+  "shapePixels": 312,
+  "outsidePixels": 0,
+  "outsideRatio": 0
+}

@@ -1,3 +1,5 @@
+import type {ApiRequestOptions} from '@shared/http/ApiRequestOptions';
+import {QueryHttpError} from '@shared/http/QueryHttpError';
 import { API_CONFIG } from '../../../../../../config/api.config';
 import type { GradeTemplateStructure } from "../../../../shared/grading/gradeTemplate.types";
 const BASE_URL = `${API_CONFIG.baseURL}/api/subject`;
@@ -18,7 +20,7 @@ export interface ActiveGradeTemplate {
 
 export async function uploadGradeTemplate(
   subjectId: number,
-  file: File
+  file: File, options:ApiRequestOptions={}
 ): Promise<ActiveGradeTemplate> {
   const formData = new FormData();
   formData.append("template", file);
@@ -26,25 +28,27 @@ export async function uploadGradeTemplate(
   const res = await fetch(`${BASE_URL}/uploadGradeTemplate/${subjectId}`, {
     method: "POST",
     credentials: "include", // required so the httpOnly auth cookie is sent
-    body: formData,
+    body: formData, signal:options.signal,
   });
+  if(res.status===401)options.onUnauthorized?.();
 
-  const json = await res.json();
+  const json = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
   if (!res.ok || !json.success) {
-    throw new Error(json.message ?? "Failed to upload grade template.");
+    throw new QueryHttpError(json.message ?? "Failed to upload grade template.",res.status);
   }
   return { ...json.data, file_name: json.data.file_name ?? json.data.fileName };
 }
 
 export async function getActiveGradeTemplate(
-  subjectId: number
+  subjectId: number, options:ApiRequestOptions={}
 ): Promise<ActiveGradeTemplate | null> {
   const res = await fetch(`${BASE_URL}/getActiveGradeTemplate/${subjectId}`, {
-    credentials: "include",
+    credentials: "include", signal:options.signal,
   });
-  const json = await res.json();
+  if(res.status===401)options.onUnauthorized?.();
+  const json = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
   if (!res.ok || !json.success) {
-    throw new Error(json.message ?? "Failed to load grade template.");
+    throw new QueryHttpError(json.message ?? "Failed to load grade template.",res.status);
   }
   return json.data;
 }

@@ -1,0 +1,46 @@
+
+[WebServer] (node:26324) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:40732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 2 tests using 1 worker
+
+(node:6800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/2] tests\subject-template-loading.spec.ts:66:35 › subject template light: fetched button label uses the actual maroon surface
+  1) tests\subject-template-loading.spec.ts:66:35 › subject template light: fetched button label uses the actual maroon surface 
+
+    Error: subject-template-light-button: base/surface contrast
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2
+    Received:    9.083320752126218
+
+       at design-pixels.ts:31
+
+      29 |   };
+      30 |   expect(ratio(base), `${name}: base/surface contrast`).toBeGreaterThanOrEqual(1.1);
+    > 31 |   expect(ratio(base), `${name}: base/surface contrast`).toBeLessThanOrEqual(2);
+         |                                                         ^
+      32 |   expect(ratio(shine), `${name}: shine/surface contrast`).toBeGreaterThanOrEqual(1.03);
+      33 | }
+      34 |
+        at checkRenderedContrast (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-pixels.ts:31:57)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\subject-template-loading.spec.ts:72:3
+
+    Error Context: test-results\subject-template-loading-s-e72ec-s-the-actual-maroon-surface\error-context.md
+
+
+(node:24172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[2/2] tests\subject-template-loading.spec.ts:66:35 › subject template dark: fetched button label uses the actual maroon surface
+  1 failed
+    tests\subject-template-loading.spec.ts:66:35 › subject template light: fetched button label uses the actual maroon surface 
+  1 passed (9.3s)

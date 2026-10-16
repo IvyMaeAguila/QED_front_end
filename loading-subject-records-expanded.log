@@ -1,0 +1,56 @@
+[WebServer] (node:29408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:10708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 18 tests using 1 worker
+
+(node:25032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\subject-records-loading.spec.ts:15:64 › subject records 375 light preserves known roster and headers (7.3s)
+  ok  2 tests\subject-records-loading.spec.ts:15:64 › subject records 375 dark preserves known roster and headers (2.0s)
+  ok  3 tests\subject-records-loading.spec.ts:15:64 › subject records 1280 light preserves known roster and headers (2.1s)
+  ok  4 tests\subject-records-loading.spec.ts:15:64 › subject records 1280 dark preserves known roster and headers (2.1s)
+[WebServer] 2:48:50 PM [vite] (client) [console.error] Failed to load records: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/subjects/services/subjectGrading.service.ts:12:9)
+[WebServer]     at async fetchItems (http://127.0.0.1:5187/src/features/profiles/teacher/pages/subjects/services/subjectGrading.service.ts:49:15)
+[WebServer]     at async Promise.all (index 0)
+  ok  5 tests\subject-records-loading.spec.ts:28:48 › subject records retries items without indefinite shapes (1.4s)
+[WebServer] 2:48:51 PM [vite] (client) [console.error] Failed to load records: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/subjects/services/subjectGrading.service.ts:12:9)
+[WebServer]     at async fetchScores (http://127.0.0.1:5187/src/features/profiles/teacher/pages/subjects/services/subjectGrading.service.ts:67:15)
+[WebServer]     at async Promise.all (index 1)
+  ok  6 tests\subject-records-loading.spec.ts:28:48 › subject records retries scores without indefinite shapes (1.3s)
+  ok  7 tests\subject-records-loading.spec.ts:28:48 › subject records retries weights without indefinite shapes (1.3s)
+  ok  8 tests\subject-records-loading.spec.ts:29:28 › subject records retains 0 known roster rows (1.2s)
+  ok  9 tests\subject-records-loading.spec.ts:29:28 › subject records retains 1 known roster rows (1.2s)
+  ok 10 tests\subject-records-loading.spec.ts:29:28 › subject records retains 9 known roster rows (1.3s)
+  ok 11 tests\subject-records-loading.spec.ts:30:32 › subject records light actual score surface pixels (1.9s)
+  ok 12 tests\subject-records-loading.spec.ts:30:32 › subject records dark actual score surface pixels (1.9s)
+  ok 13 tests\subject-records-loading.spec.ts:31:1 › subject records keeps native table markup valid (2.0s)
+  ok 14 tests\subject-records-loading.spec.ts:34:62 › subject holistic records 375 light keeps known table and domains (1.8s)
+  ok 15 tests\subject-records-loading.spec.ts:34:62 › subject holistic records 375 dark keeps known table and domains (1.9s)
+  ok 16 tests\subject-records-loading.spec.ts:34:62 › subject holistic records 1280 light keeps known table and domains (2.0s)
+  ok 17 tests\subject-records-loading.spec.ts:34:62 › subject holistic records 1280 dark keeps known table and domains (2.0s)
+  x  18 tests\subject-records-loading.spec.ts:41:1 › subject records auto columns vary with actual learner names (2.3s)
+
+
+  1) tests\subject-records-loading.spec.ts:41:1 › subject records auto columns vary with actual learner names 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      39 |  const region=page.locator('[data-sk-region="subject-holistic-records"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);const prefix=`loading-screenshots/teacher-subject-holistic-records-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});release();finish();await expect(region).toHaveAttribute('data-sk-phase','settled');await page.screenshot({path:prefix+'-loaded.png',fullPage:true});
+      40 | });
+    > 41 | test('subject records auto columns vary with actual learner names',async({page})=>{const widths:number[][]=[];for(const long of [false,true]){const release=await fixture(page,false,3,long);await page.goto('/teacher/subjects/1/records');release();const region=page.locator('[data-sk-region="subject-assessment-records"]');await expect(region).toHaveAttribute('data-sk-phase','settled');widths.push(await region.locator('tbody tr[data-sk-region="subject-record-student"]').first().locator('td').evaluateAll(els=>els.map(el=>el.getBoundingClientRect().width)));await page.unroute('**/api/**');await page.unroute('**/api/teacherGrading/**');await page.unroute('**/api/subject/getEffectiveWeights/**');}expect(widths[0].some((w,i)=>Math.abs(w-widths[1][i])>1)).toBe(true);});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ^
+      42 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\subject-records-loading.spec.ts:41:757
+
+    Error Context: test-results\subject-records-loading-su-46f16-y-with-actual-learner-names\error-context.md
+
+  1 failed
+    tests\subject-records-loading.spec.ts:41:1 › subject records auto columns vary with actual learner names 
+  17 passed (40.6s)

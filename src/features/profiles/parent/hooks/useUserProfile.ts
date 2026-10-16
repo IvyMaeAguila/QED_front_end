@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { getUserData, type UserData } from "../../parent/pages/dashboard/services/dashboard.service";
 
 export function useUserProfile() {

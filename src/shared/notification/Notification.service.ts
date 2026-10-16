@@ -70,29 +70,34 @@ const fromSocket = (n: SocketNotification): Notification => ({
   createdAt: n.createdAt,
 });
 
-async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+export interface NotificationRequestOptions { signal?: AbortSignal; onUnauthorized?: () => void }
+
+async function request<T>(path: string, options: RequestInit & NotificationRequestOptions = {}): Promise<T> {
   const res = await fetch(`${API_CONFIG.baseURL}${path}`, {
     credentials: "include",
     ...options,
   });
 
   if (!res.ok) {
-    throw new Error(`Request failed (${res.status}) - ${path}`);
+    if (res.status === 401 && !options.signal?.aborted) options.onUnauthorized?.();
+    const error = new Error(`Request failed (${res.status}) - ${path}`);
+    Object.assign(error, {status: res.status});
+    throw error;
   }
   return res.json() as Promise<T>;
 }
 
 export const notificationService = {
-  async getAll(userId: number | string): Promise<Notification[]> {
+  async getAll(userId: number | string, options: NotificationRequestOptions = {}): Promise<Notification[]> {
     const res = await request<{ success: boolean; data: RawNotification[] }>(
-      `/api/notification/${userId}`
+      `/api/notification/${userId}`, options
     );
     return res.data.map(fromApi);
   },
 
-  async markAsRead(id: number): Promise<void> {
+  async markAsRead(id: number, options: NotificationRequestOptions = {}): Promise<void> {
     await request<{ success: boolean }>(`/api/notification/${id}/read`, {
-      method: "PATCH",
+      method: "PATCH", ...options,
     });
   },
 
@@ -103,10 +108,10 @@ export const notificationService = {
     );
   },
 
-  async markAllAsRead(userId: number | string): Promise<void> {
+  async markAllAsRead(userId: number | string, options: NotificationRequestOptions = {}): Promise<void> {
   await request<{ success: boolean }>(
     `/api/notification/user/${userId}/read-all`,
-    { method: "PATCH" }
+    { method: "PATCH", ...options }
   );
 },
 

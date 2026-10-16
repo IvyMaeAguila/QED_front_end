@@ -15,8 +15,9 @@ import {
   type NewAssessmentType
 } from "../services/subject.service";
 
-interface SubjectsCatalogContextValue {
+export interface SubjectsCatalogContextValue {
   loading: boolean;
+  assessmentError: string | null;
   getSubjectNamesForGrade: (grade: GradeLevel) => string[];
   loadSubjectsForGrade: (grade: GradeLevel) => Promise<void>;
   assessmentTypes: NewAssessmentType[];
@@ -28,10 +29,11 @@ interface SubjectsCatalogContextValue {
 
 const SubjectsCatalogContext = createContext<SubjectsCatalogContextValue | undefined>(undefined);
 
-export function SubjectsCatalogProvider({ children }: { children: ReactNode }) {
+export function SubjectsCatalogProvider({ children,value:external }: { children: ReactNode;value?:SubjectsCatalogContextValue }) {
   const [subjectsByGrade, setSubjectsByGrade] = useState<Record<string, ElemSubjectRow[]>>({});
   const [assessmentTypes, setAssessmentTypes] = useState<NewAssessmentType[]>([]);
   const [loading, setLoading] = useState(false);
+  const [assessmentError, setAssessmentError] = useState<string | null>(null);
 
   const loadSubjectsForGrade = useCallback(async (grade: GradeLevel) => {
     setLoading(true);
@@ -49,6 +51,7 @@ export function SubjectsCatalogProvider({ children }: { children: ReactNode }) {
 
   const loadAssessmentTypes = useCallback(async () => {
     setLoading(true);
+    setAssessmentError(null);
     try {
       let types = (await getAssessmentTypes()).data ?? [];
 
@@ -90,6 +93,7 @@ export function SubjectsCatalogProvider({ children }: { children: ReactNode }) {
       );
     } catch (err) {
       console.error("Failed to load assessment types:", err);
+      setAssessmentError(err instanceof Error ? err.message : "Failed to load assessment types.");
       setAssessmentTypes([]);
     } finally {
       setLoading(false);
@@ -123,8 +127,9 @@ export function SubjectsCatalogProvider({ children }: { children: ReactNode }) {
 
   return (
     <SubjectsCatalogContext.Provider
-      value={{
+      value={external??{
         loading,
+        assessmentError,
         getSubjectNamesForGrade,
         loadSubjectsForGrade,
         assessmentTypes,

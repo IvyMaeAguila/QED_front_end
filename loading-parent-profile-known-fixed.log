@@ -1,0 +1,18 @@
+
+[WebServer] (node:24420) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:13412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+
+(node:22588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/4] tests\parent-detail-loading.spec.ts:32:62 › parent profile 375 light keeps known class and masks unknown avatar
+[2/4] tests\parent-detail-loading.spec.ts:32:62 › parent profile 375 dark keeps known class and masks unknown avatar
+[3/4] tests\parent-detail-loading.spec.ts:32:62 › parent profile 1280 light keeps known class and masks unknown avatar
+[4/4] tests\parent-detail-loading.spec.ts:32:62 › parent profile 1280 dark keeps known class and masks unknown avatar
+  4 passed (27.7s)

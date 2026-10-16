@@ -29,7 +29,7 @@ export function ConfirmDialog({
       variant={danger ? "danger" : "default"}
       darkMode={darkMode}
       zIndexClass="z-100"
-      panelClassName={`border-t-4 border-t-[#800000] shadow-card ${darkMode ? "bg-[#2A1A18]" : "bg-white"}`}
+      panelClassName={`border-t-4 border-t-maroon shadow-card ${darkMode ? "bg-panel-dark" : "bg-white"}`}
     />
   );
 }

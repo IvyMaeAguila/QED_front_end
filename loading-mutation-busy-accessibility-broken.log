@@ -1,0 +1,46 @@
+[WebServer] (node:36896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:25076) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:40796) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\loading.spec.ts:76:1 › aria busy, hidden reservation, delayed status and complete cleanup
+  1) tests\loading.spec.ts:76:1 › aria busy, hidden reservation, delayed status and complete cleanup 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('#test-region .sk-region')
+    Expected: "true"
+    Received: "false"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('#test-region .sk-region') with timeout 5000ms
+      - waiting for locator('#test-region .sk-region')
+        2 × locator resolved to <div aria-busy="false" class="sk-region " data-sk-phase="waiting" data-sk-region="field-_r_0_">…</div>
+          - unexpected value "false"
+        12 × locator resolved to <div aria-busy="false" class="sk-region " data-sk-phase="revealed" data-sk-region="field-_r_0_">…</div>
+           - unexpected value "false"
+
+
+      77 |   // Hold completion until the revealed state is inspected; observe t=0 in-browser
+      78 |   // rather than racing the 200ms delay with several driver round trips.
+    > 79 |   await go(page, "manual"); await expect(region(page)).toHaveAttribute("aria-busy", "true");
+         |                                                        ^
+      80 |   const initial = await page.evaluate(() => window.skEvents[0]);
+      81 |   expect(initial).toMatchObject({ phase: "waiting", busy: "true", hidden: "true", reservationVisibility: "hidden", statusCount: 0 });
+      82 |   await expect(page.locator("[data-sk-layer]")).toHaveAttribute("aria-hidden", "true");
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\loading.spec.ts:79:56
+
+    Error Context: test-results\loading-aria-busy-hidden-r-2a7da-status-and-complete-cleanup\error-context.md
+
+
+  1 failed
+    tests\loading.spec.ts:76:1 › aria busy, hidden reservation, delayed status and complete cleanup 

@@ -1,0 +1,22 @@
+
+[WebServer] (node:3096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:35836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 8 tests using 1 worker
+
+(node:21888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/8] tests\subject-template-loading.spec.ts:21:68 › subject template 375 light: upload frame is real before fetched metadata
+[2/8] tests\subject-template-loading.spec.ts:21:68 › subject template 375 dark: upload frame is real before fetched metadata
+[3/8] tests\subject-template-loading.spec.ts:21:68 › subject template 1280 light: upload frame is real before fetched metadata
+[4/8] tests\subject-template-loading.spec.ts:21:68 › subject template 1280 dark: upload frame is real before fetched metadata
+[5/8] tests\subject-template-loading.spec.ts:40:1 › subject template absent result keeps original upload operation
+[6/8] tests\subject-template-loading.spec.ts:52:1 › subject template error clears skeleton and retries existing service
+[7/8] tests\subject-template-loading.spec.ts:66:35 › subject template light: fetched button label uses the actual maroon surface
+[8/8] tests\subject-template-loading.spec.ts:66:35 › subject template dark: fetched button label uses the actual maroon surface
+  8 passed (20.7s)

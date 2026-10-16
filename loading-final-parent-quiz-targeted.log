@@ -1,0 +1,53 @@
+
+[WebServer] (node:8484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:8904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 23 tests using 1 worker
+
+(node:7028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/23] tests\parent-detail-loading.spec.ts:3:1 › parent detail keeps navigation and identity labels during linked-student fetch
+[2/23] tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 375 light keeps known challenges
+[3/23] tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 375 dark keeps known challenges
+[4/23] tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 1280 light keeps known challenges
+[5/23] tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 1280 dark keeps known challenges
+[6/23] tests\pet-quiz-loading.spec.ts:7:1 › pet intro keeps its known story visible while access loads
+[7/23] tests\pet-quiz-loading.spec.ts:8:1 › pet quiz state error clears shapes and retries
+
+[WebServer] 3:13:41 PM [vite] (client) [console.error] Failed to load intervention state: Error: Failed to fetch intervention state.
+[WebServer]     at Object.getInterventionState (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/petQuiz.service.ts:20:22)
+[WebServer]     at async init (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/PetQuizPage.tsx:122:19)
+[WebServer] 3:13:41 PM [vite] (client) [console.error] Failed to load intervention state: Error: Failed to fetch intervention state.
+[WebServer]     at Object.getInterventionState (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/petQuiz.service.ts:20:22)
+[WebServer]     at async init (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/PetQuizPage.tsx:122:19)
+
+[8/23] tests\pet-quiz-loading.spec.ts:9:62 › pet quiz question 375 light reserves real choices
+[9/23] tests\pet-quiz-loading.spec.ts:9:62 › pet quiz question 375 dark reserves real choices
+[10/23] tests\pet-quiz-loading.spec.ts:9:62 › pet quiz question 1280 light reserves real choices
+[11/23] tests\pet-quiz-loading.spec.ts:9:62 › pet quiz question 1280 dark reserves real choices
+[12/23] tests\pet-quiz-loading.spec.ts:11:99 › pet bonus Match 375 light
+[13/23] tests\pet-quiz-loading.spec.ts:11:99 › pet bonus Match 375 dark
+[14/23] tests\pet-quiz-loading.spec.ts:11:99 › pet bonus Match 1280 light
+[15/23] tests\pet-quiz-loading.spec.ts:11:99 › pet bonus Match 1280 dark
+[16/23] tests\pet-quiz-loading.spec.ts:11:99 › pet bonus Memory 375 light
+[17/23] tests\pet-quiz-loading.spec.ts:11:99 › pet bonus Memory 375 dark
+[18/23] tests\pet-quiz-loading.spec.ts:11:99 › pet bonus Memory 1280 light
+[19/23] tests\pet-quiz-loading.spec.ts:11:99 › pet bonus Memory 1280 dark
+[20/23] tests\pet-quiz-loading.spec.ts:14:32 › pet quiz rendered neutral pixels false
+[21/23] tests\pet-quiz-loading.spec.ts:14:32 › pet quiz rendered neutral pixels true
+[22/23] tests\pet-quiz-loading.spec.ts:15:36 › pet quiz failure replaces loading and retries
+
+[WebServer] 3:14:18 PM [vite] (client) [console.error] Failed to load quiz: Error: Failed to fetch quiz.
+[WebServer]     at Object.getQuiz (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/petQuiz.service.ts:28:10)
+[WebServer]     at async startFullRound (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/PetQuizPage.tsx:159:17)
+[23/23] tests\pet-quiz-loading.spec.ts:15:36 › pet bonus failure replaces loading and retries
+
+[WebServer] 3:14:19 PM [vite] (client) [console.error] Failed to load bonus game: Error: Failed to fetch bonus games.
+[WebServer]     at Object.getBonusGames (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/petQuiz.service.ts:86:10)
+[WebServer]     at async openBonus (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/PetQuizPage.tsx:192:19)
+  23 passed (58.5s)

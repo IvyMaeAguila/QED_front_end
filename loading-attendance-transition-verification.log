@@ -1,0 +1,143 @@
+
+[WebServer] (node:19108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:40132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 60 tests using 2 workers
+
+(node:24716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+(node:38304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/60] tests\attendance-records-loading.spec.ts:13:62 › attendance records 375 light keeps date headers and view controls real
+[2/60] tests\attendance-records-loading.spec.ts:13:62 › attendance records 375 light keeps date headers and view controls real
+[3/60] tests\attendance-records-loading.spec.ts:13:62 › attendance records 375 dark keeps date headers and view controls real
+[4/60] tests\attendance-records-loading.spec.ts:13:62 › attendance records 375 dark keeps date headers and view controls real
+[5/60] tests\attendance-records-loading.spec.ts:13:62 › attendance records 1280 light keeps date headers and view controls real
+[6/60] tests\attendance-records-loading.spec.ts:13:62 › attendance records 1280 light keeps date headers and view controls real
+[7/60] tests\attendance-records-loading.spec.ts:13:62 › attendance records 1280 dark keeps date headers and view controls real
+[8/60] tests\attendance-records-loading.spec.ts:13:62 › attendance records 1280 dark keeps date headers and view controls real
+[9/60] tests\attendance-records-loading.spec.ts:17:62 › attendance summary 375 light keeps labels and calendar dates real
+[10/60] tests\attendance-records-loading.spec.ts:17:62 › attendance summary 375 light keeps labels and calendar dates real
+[11/60] tests\attendance-records-loading.spec.ts:17:62 › attendance summary 375 dark keeps labels and calendar dates real
+[12/60] tests\attendance-records-loading.spec.ts:17:62 › attendance summary 375 dark keeps labels and calendar dates real
+[13/60] tests\attendance-records-loading.spec.ts:17:62 › attendance summary 1280 light keeps labels and calendar dates real
+[14/60] tests\attendance-records-loading.spec.ts:17:62 › attendance summary 1280 light keeps labels and calendar dates real
+[15/60] tests\attendance-records-loading.spec.ts:17:62 › attendance summary 1280 dark keeps labels and calendar dates real
+[16/60] tests\attendance-records-loading.spec.ts:17:62 › attendance summary 1280 dark keeps labels and calendar dates real
+[17/60] tests\attendance-records-loading.spec.ts:20:28 › attendance records preserves 0 actual roster rows
+[18/60] tests\attendance-records-loading.spec.ts:20:28 › attendance records preserves 0 actual roster rows
+[19/60] tests\attendance-records-loading.spec.ts:20:28 › attendance records preserves 1 actual roster rows
+[20/60] tests\attendance-records-loading.spec.ts:20:28 › attendance records preserves 1 actual roster rows
+[21/60] tests\attendance-records-loading.spec.ts:20:28 › attendance records preserves 9 actual roster rows
+[22/60] tests\attendance-records-loading.spec.ts:20:28 › attendance records preserves 9 actual roster rows
+[23/60] tests\attendance-records-loading.spec.ts:21:39 › attendance Month request error clears all shapes and retries
+[24/60] tests\attendance-records-loading.spec.ts:21:39 › attendance Month request error clears all shapes and retries
+
+[WebServer] 8:08:49 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+[WebServer] 8:08:49 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+
+
+[WebServer] 8:08:49 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+
+[WebServer] 8:08:49 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+[25/60] tests\attendance-records-loading.spec.ts:21:39 › attendance Summary request error clears all shapes and retries
+[26/60] tests\attendance-records-loading.spec.ts:21:39 › attendance Summary request error clears all shapes and retries
+
+[WebServer] 8:08:51 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+
+
+[WebServer] 8:08:51 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+[WebServer] 8:08:51 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+[WebServer] 8:08:51 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+[27/60] tests\attendance-records-loading.spec.ts:22:1 › attendance advisory error has a real retry
+
+[WebServer] 8:08:51 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+
+[WebServer] 8:08:51 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+
+[WebServer] 8:08:51 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+
+[WebServer] 8:08:51 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+[28/60] tests\attendance-records-loading.spec.ts:22:1 › attendance advisory error has a real retry
+[WebServer] 8:08:52 PM [vite] (client) [console.error] Failed to load advisory sections: Error: Failed to fetch advisory sections (500)
+[WebServer]     at fetchAdvisorySections (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:15:21)
+
+[WebServer] 8:08:52 PM [vite] (client) [console.error] Failed to load advisory sections: Error: Failed to fetch advisory sections (500)
+
+[WebServer]     at fetchAdvisorySections (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:15:21)
+[29/60] tests\attendance-records-loading.spec.ts:23:32 › attendance term fast refetch preserves rows
+[30/60] tests\attendance-records-loading.spec.ts:23:32 › attendance term fast refetch preserves rows
+[31/60] tests\attendance-records-loading.spec.ts:23:32 › attendance term slow refetch preserves rows
+[32/60] tests\attendance-records-loading.spec.ts:23:32 › attendance term slow refetch preserves rows
+[33/60] tests\attendance-records-loading.spec.ts:24:1 › attendance marking keeps the original cycle and save payload
+[34/60] tests\attendance-records-loading.spec.ts:24:1 › attendance marking keeps the original cycle and save payload
+[35/60] tests\attendance-records-loading.spec.ts:25:32 › attendance light summary numeric surfaces retain contrast
+[36/60] tests\attendance-records-loading.spec.ts:25:32 › attendance light summary numeric surfaces retain contrast
+[37/60] tests\attendance-records-loading.spec.ts:25:32 › attendance dark summary numeric surfaces retain contrast
+[38/60] tests\attendance-records-loading.spec.ts:25:32 › attendance dark summary numeric surfaces retain contrast
+[39/60] tests\attendance-records-loading.spec.ts:28:1 › attendance native fixed columns do not vary across roster names or counts
+[40/60] tests\attendance-records-loading.spec.ts:28:1 › attendance native fixed columns do not vary across roster names or counts
+(node:15256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[41/60] tests\attendance-records-loading.spec.ts:13:62 › attendance records 375 light keeps date headers and view controls real
+[42/60] tests\attendance-records-loading.spec.ts:13:62 › attendance records 375 dark keeps date headers and view controls real
+[43/60] tests\attendance-records-loading.spec.ts:13:62 › attendance records 1280 light keeps date headers and view controls real
+[44/60] tests\attendance-records-loading.spec.ts:13:62 › attendance records 1280 dark keeps date headers and view controls real
+[45/60] tests\attendance-records-loading.spec.ts:17:62 › attendance summary 375 light keeps labels and calendar dates real
+[46/60] tests\attendance-records-loading.spec.ts:17:62 › attendance summary 375 dark keeps labels and calendar dates real
+[47/60] tests\attendance-records-loading.spec.ts:17:62 › attendance summary 1280 light keeps labels and calendar dates real
+[48/60] tests\attendance-records-loading.spec.ts:17:62 › attendance summary 1280 dark keeps labels and calendar dates real
+[49/60] tests\attendance-records-loading.spec.ts:20:28 › attendance records preserves 0 actual roster rows
+[50/60] tests\attendance-records-loading.spec.ts:20:28 › attendance records preserves 1 actual roster rows
+[51/60] tests\attendance-records-loading.spec.ts:20:28 › attendance records preserves 9 actual roster rows
+[52/60] tests\attendance-records-loading.spec.ts:21:39 › attendance Month request error clears all shapes and retries
+
+[WebServer] 8:09:35 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+[WebServer] 8:09:35 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+
+[53/60] tests\attendance-records-loading.spec.ts:21:39 › attendance Summary request error clears all shapes and retries
+
+[WebServer] 8:09:36 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+
+[WebServer] 8:09:36 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+[WebServer] 8:09:36 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+
+[WebServer] 8:09:36 PM [vite] (client) [console.error] Failed to load attendance: Error: Failed to fetch attendance (500)
+[WebServer]     at fetchAdvisoryAttendance (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:24:21)
+[54/60] tests\attendance-records-loading.spec.ts:22:1 › attendance advisory error has a real retry
+
+[WebServer] 8:09:38 PM [vite] (client) [console.error] Failed to load advisory sections: Error: Failed to fetch advisory sections (500)
+[WebServer]     at fetchAdvisorySections (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:15:21)
+[55/60] tests\attendance-records-loading.spec.ts:23:32 › attendance term fast refetch preserves rows
+[56/60] tests\attendance-records-loading.spec.ts:23:32 › attendance term slow refetch preserves rows
+[57/60] tests\attendance-records-loading.spec.ts:24:1 › attendance marking keeps the original cycle and save payload
+[58/60] tests\attendance-records-loading.spec.ts:25:32 › attendance light summary numeric surfaces retain contrast
+[59/60] tests\attendance-records-loading.spec.ts:25:32 › attendance dark summary numeric surfaces retain contrast
+[60/60] tests\attendance-records-loading.spec.ts:28:1 › attendance native fixed columns do not vary across roster names or counts
+  60 passed (1.6m)

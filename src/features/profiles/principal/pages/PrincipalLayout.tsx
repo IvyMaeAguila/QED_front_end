@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import { RouteSkeleton } from "@shared/loading/RouteSkeleton";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "@shared/components/Sidebar";
@@ -17,8 +19,8 @@ export function PrincipalLayout({ onLogout }: PrincipalLayoutProps) {
 
   const theme: AdminThemeContext = {
     darkMode,
-    panelBg: darkMode ? "bg-[#2A1A18]" : "bg-white",
-    panelBorder: darkMode ? "border-[#543632]" : "border-[#E5E7EB]",
+    panelBg: darkMode ? "bg-panel-dark" : "bg-white",
+    panelBorder: darkMode ? "border-border-dark" : "border-border-subtle",
     textPrimary: darkMode ? "text-white" : "text-[#111827]",
     textMuted: darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]",
   };
@@ -60,7 +62,7 @@ export function PrincipalLayout({ onLogout }: PrincipalLayoutProps) {
         <Header onMenuClick={() => setSidebarOpen(true)} onLogout={onLogout} showNotifications/>
 
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">
-          <Outlet context={theme} />
+          <Suspense fallback={<RouteSkeleton outletContext={theme} />}><Outlet context={theme} /></Suspense>
         </main>
       </div>
     </div>

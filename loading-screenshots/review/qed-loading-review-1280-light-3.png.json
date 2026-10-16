@@ -1,0 +1,14 @@
+{
+  "leftToRight": [
+    "admin-users",
+    "attendance-records",
+    "attendance-summary",
+    "courseware",
+    "domain-trends",
+    "holistic-overview",
+    "holistic-profile",
+    "landing"
+  ],
+  "top": "skeleton",
+  "bottom": "loaded"
+}

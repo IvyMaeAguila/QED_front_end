@@ -1,0 +1,42 @@
+[WebServer] (node:23228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:15692) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:30020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\user-details-loading.spec.ts:22:68 › user details 375 light: real field labels and actions
+  1) tests\user-details-loading.spec.ts:22:68 › user details 375 light: real field labels and actions 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Full Name', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Full Name', { exact: true }) with timeout 5000ms
+      - waiting for getByText('Full Name', { exact: true })
+
+
+      24 |   const release = await userFixture(page, dark);
+      25 |   await page.goto("/admin/users/parent/1");
+    > 26 |   await expect(page.getByText("Full Name", { exact: true })).toBeVisible();
+         |                                                              ^
+      27 |   await expect(page.getByRole("button", { name: "Edit User", exact: true })).toBeVisible();
+      28 |   await expect(page.getByText("Parent account details", { exact: true })).toBeVisible();
+      29 |   await expect(page.getByText(/No user found/)).toHaveCount(0);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\user-details-loading.spec.ts:26:62
+
+    Error Context: test-results\user-details-loading-user--628b8-al-field-labels-and-actions\error-context.md
+
+
+  1 failed
+    tests\user-details-loading.spec.ts:22:68 › user details 375 light: real field labels and actions 

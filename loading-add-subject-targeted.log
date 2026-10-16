@@ -1,0 +1,72 @@
+[WebServer] (node:4252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:32048) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners (5.2s)
+(node:23320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 tests\add-subject-loading.spec.ts:14:62 › add subject 375 dark keeps known form real without data spinners (1.0s)
+  ok 3 tests\add-subject-loading.spec.ts:14:62 › add subject 1280 light keeps known form real without data spinners (919ms)
+  ok 4 tests\add-subject-loading.spec.ts:14:62 › add subject 1280 dark keeps known form real without data spinners (871ms)
+  ok 5 tests\add-subject-loading.spec.ts:18:46 › add subject year failure exposes retry and preserves local input (1.3s)
+  ok 6 tests\add-subject-loading.spec.ts:18:46 › add subject grade failure exposes retry and preserves local input (1.3s)
+[WebServer] 9:41:52 AM [vite] (client) [console.error] Failed to load assessment types: Error: Failed to fetch assessment types: 500
+[WebServer]     at getAssessmentTypes (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subject.service.ts:76:9)
+[WebServer]     at async http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/context/SubjectsCatalogContext.tsx:40:17
+[WebServer] 9:41:52 AM [vite] (client) [console.error] Failed to load assessment types: Error: Failed to fetch assessment types: 500
+[WebServer]     at getAssessmentTypes (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subject.service.ts:76:9)
+[WebServer]     at async http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/context/SubjectsCatalogContext.tsx:40:17
+  ok 7 tests\add-subject-loading.spec.ts:18:46 › add subject catalog failure exposes retry and preserves local input (1.3s)
+  ok 8 tests\add-subject-loading.spec.ts:21:1 › non-graded subject retains its original endpoint and creation payload (1.4s)
+
+
+  1) tests\add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Array [
+        Object {
+          "height": 24,
+          "width": 221,
+          "x": 105,
+    -     "y": 177,
+    +     "y": 156,
+        },
+        Object {
+          "height": 40,
+          "width": 243,
+          "x": 66,
+    -     "y": 455,
+    +     "y": 434,
+        },
+        Object {
+          "height": 40,
+          "width": 243,
+          "x": 66,
+    -     "y": 533,
+    +     "y": 512,
+        },
+      ]
+
+      14 | for(const width of [375,1280])for(const dark of [false,true])test(`add subject ${width} ${dark?'dark':'light'} keeps known form real without data spinners`,async({page})=>{
+      15 |  await page.setViewportSize({width,height:1100});const release=await fixture(page,dark);await page.goto('/admin/subjects/new');await expect(page.getByRole('heading',{name:'Add New Subject',exact:true})).toBeVisible();await expect(page.getByText('Subject Name',{exact:true})).toBeVisible();await assertNoDataSpinner(page);await expect(page.locator('main [data-sk-primitive]')).toHaveCount(0);
+    > 16 |  const boxes=()=>page.locator('main h1, main input, main select').evaluateAll(elements=>elements.map(element=>{const r=element.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height};}));const before=await boxes();fs.mkdirSync('loading-screenshots',{recursive:true});const prefix=`loading-screenshots/admin-add-subject-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});release();await expect(page.locator('main select')).toBeEnabled();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);expect(await boxes()).toEqual(before);await page.screenshot({path:prefix+'-loaded.png',fullPage:true});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ^
+      17 | });
+      18 | for(const kind of ['year','grade','catalog'])test(`add subject ${kind} failure exposes retry and preserves local input`,async({page})=>{
+      19 |  const release=await fixture(page,false);release.fail(kind);await page.goto('/admin/subjects/new');release();await expect(page.getByRole('alert')).toBeVisible();await expect(page.locator('main [data-sk-primitive]')).toHaveCount(0);release.recover();await page.getByRole('button',{name:'Retry',exact:true}).click();await expect(page.getByRole('alert')).toHaveCount(0);await page.locator('main select').selectOption('Grade 1');await page.getByPlaceholder('e.g. Filipino, MAPEH').fill('Language Arts');await page.getByRole('button',{name:'Continue',exact:true}).click();await expect(page.getByRole('button',{name:'Non-graded',exact:true})).toBeVisible();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\add-subject-loading.spec.ts:16:600
+
+    Error Context: test-results\add-subject-loading-add-su-13dd7--real-without-data-spinners\error-context.md
+
+  1 failed
+    tests\add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners 
+  7 passed (17.4s)

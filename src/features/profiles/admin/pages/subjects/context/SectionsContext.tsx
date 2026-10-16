@@ -1,5 +1,6 @@
+import {mapSectionRow} from "../types/serverRowMappers";
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
-import { type Section, GRADE_LEVEL_IDS, GRADE_LEVEL_BY_ID } from "../types/types";
+import { type Section, GRADE_LEVEL_IDS } from "../types/types";
 import type { GradeLevel } from "../types/types";
 import {
   fetchSectionsByGrade,
@@ -7,12 +8,11 @@ import {
   updateSection,
   deleteSection,
   fetchSectionIdsUsedByClasses,
-  type SectionRow,
 } from "../services/section.service";
 
 type AddSectionResult = { ok: true } | { ok: false; error: string };
 
-interface SectionsContextValue {
+export interface SectionsContextValue {
   sections: Section[];
   loading: boolean;
   sectionIdsUsedByClasses: Set<string>;
@@ -26,15 +26,7 @@ interface SectionsContextValue {
 
 const SectionsContext = createContext<SectionsContextValue | undefined>(undefined);
 
-function mapRow(row: SectionRow): Section {
-  return {
-    id: String(row.id),
-    gradeLevel: GRADE_LEVEL_BY_ID[Number(row.grade_level_id)] ?? (row.grade_level_id as unknown as GradeLevel),
-    name: row.section_name,
-  };
-}
-
-export function SectionsProvider({ children }: { children: ReactNode }) {
+export function SectionsProvider({ children,value:external }: { children: ReactNode;value?:SectionsContextValue }) {
   const [sections, setSections] = useState<Section[]>([]);
   const [, setLoadedGrades] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(false);
@@ -45,7 +37,7 @@ export function SectionsProvider({ children }: { children: ReactNode }) {
     try {
       const gradeId = GRADE_LEVEL_IDS[grade];
       const rows = await fetchSectionsByGrade(String(gradeId));
-      const mapped = rows.map(mapRow);
+      const mapped = rows.map(mapSectionRow);
       setSections((prev) => [...prev.filter((s) => s.gradeLevel !== grade), ...mapped]);
       setLoadedGrades((prev) => new Set(prev).add(grade));
     } catch (err) {
@@ -81,7 +73,7 @@ export function SectionsProvider({ children }: { children: ReactNode }) {
     try {
       const gradeId = GRADE_LEVEL_IDS[grade];
       const row = await createSection(String(gradeId), trimmed);
-      setSections((prev) => [...prev, mapRow(row)]);
+      setSections((prev) => [...prev, mapSectionRow(row)]);
       return { ok: true };
     } catch (err) {
       return { ok: false, error: err instanceof Error ? err.message : "Failed to add section." };
@@ -102,7 +94,7 @@ export function SectionsProvider({ children }: { children: ReactNode }) {
 
     try {
       const row = await updateSection(id, trimmed);
-      const updated = mapRow(row);
+      const updated = mapSectionRow(row);
       setSections((prev) => prev.map((s) => (s.id === id ? updated : s)));
       return { ok: true };
     } catch (err) {
@@ -128,7 +120,7 @@ export function SectionsProvider({ children }: { children: ReactNode }) {
 
   return (
     <SectionsContext.Provider
-      value={{
+      value={external??{
         sections,
         loading,
         sectionIdsUsedByClasses,

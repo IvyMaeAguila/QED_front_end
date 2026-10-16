@@ -1,0 +1,64 @@
+
+[WebServer] (node:27000) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12700) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 3 tests using 1 worker
+
+(node:38552) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/3] tests\bootstrap-loading.spec.ts:49:1 › bootstrap reduced motion has no running animation
+
+(node:13884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[2/3] tests\bootstrap-loading.spec.ts:49:1 › bootstrap reduced motion has no running animation
+  1) tests\bootstrap-loading.spec.ts:49:1 › bootstrap reduced motion has no running animation ──────
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 16
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "name": undefined,
+    +     "target": "<img alt=\"\" class=\"qed-bootstrap-logo\" src=\"/src/assets/images/QED_Logo.png\">",
+    +     "timing": Object {
+    +       "delay": 0,
+    +       "direction": "normal",
+    +       "duration": 0.01,
+    +       "easing": "ease",
+    +       "endDelay": 0,
+    +       "fill": "backwards",
+    +       "iterationStart": 0,
+    +       "iterations": 1,
+    +     },
+    +   },
+    + ]
+
+      55 |     target: ((a.effect as KeyframeEffect)?.target as Element)?.outerHTML,
+      56 |     timing: a.effect?.getTiming(),
+    > 57 |   })))).toEqual([]);
+         |         ^
+      58 |   release(); releaseData();
+      59 | });
+      60 | test("bootstrap busy and status follow reveal, minimum duration, and DOM cleanup", async ({ page }) => {
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bootstrap-loading.spec.ts:57:9
+
+    Error Context: test-results\bootstrap-loading-bootstra-b86c3-on-has-no-running-animation-repeat1\error-context.md
+
+
+
+(node:38232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[3/3] tests\bootstrap-loading.spec.ts:49:1 › bootstrap reduced motion has no running animation
+  1 failed
+    tests\bootstrap-loading.spec.ts:49:1 › bootstrap reduced motion has no running animation ───────
+  2 passed (26.0s)

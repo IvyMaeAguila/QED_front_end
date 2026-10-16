@@ -8,6 +8,6 @@ export const COLORS = {
   late: "#d97706",
   ink: "#1f2937",
   sub: "#6b7280",
-  line: "#e5e7eb",
+  line: "var(--border-subtle)",
   panel: "#f7f7f8",
 };

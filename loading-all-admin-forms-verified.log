@@ -1,0 +1,114 @@
+[WebServer] (node:30708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13496) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 61 tests using 1 worker
+
+(node:37004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners (5.9s)
+  ok  2 tests\add-subject-loading.spec.ts:14:62 › add subject 375 dark keeps known form real without data spinners (1.9s)
+  ok  3 tests\add-subject-loading.spec.ts:14:62 › add subject 1280 light keeps known form real without data spinners (2.0s)
+  ok  4 tests\add-subject-loading.spec.ts:14:62 › add subject 1280 dark keeps known form real without data spinners (2.0s)
+  ok  5 tests\add-subject-loading.spec.ts:19:46 › add subject year failure exposes retry and preserves local input (1.3s)
+  ok  6 tests\add-subject-loading.spec.ts:19:46 › add subject grade failure exposes retry and preserves local input (1.3s)
+[WebServer] 9:50:30 AM [vite] (client) [console.error] Failed to load assessment types: Error: Failed to fetch assessment types: 500
+[WebServer]     at getAssessmentTypes (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subject.service.ts:76:9)
+[WebServer]     at async http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/context/SubjectsCatalogContext.tsx:40:17
+[WebServer] 9:50:30 AM [vite] (client) [console.error] Failed to load assessment types: Error: Failed to fetch assessment types: 500
+[WebServer]     at getAssessmentTypes (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subject.service.ts:76:9)
+[WebServer]     at async http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/context/SubjectsCatalogContext.tsx:40:17
+  ok  7 tests\add-subject-loading.spec.ts:19:46 › add subject catalog failure exposes retry and preserves local input (1.3s)
+  ok  8 tests\add-subject-loading.spec.ts:22:1 › non-graded subject retains its original endpoint and creation payload (1.4s)
+  ok  9 tests\class-form-loading.spec.ts:11:62 › class edit 375 light keeps original fields and schedule controls (1.7s)
+  ok 10 tests\class-form-loading.spec.ts:11:62 › class edit 375 dark keeps original fields and schedule controls (2.1s)
+  ok 11 tests\class-form-loading.spec.ts:11:62 › class edit 1280 light keeps original fields and schedule controls (2.1s)
+  ok 12 tests\class-form-loading.spec.ts:11:62 › class edit 1280 dark keeps original fields and schedule controls (2.3s)
+  ok 13 tests\class-form-loading.spec.ts:15:28 › class edit retains 0 actual schedule periods (734ms)
+  ok 14 tests\class-form-loading.spec.ts:15:28 › class edit retains 1 actual schedule periods (742ms)
+  ok 15 tests\class-form-loading.spec.ts:15:28 › class edit retains 8 actual schedule periods (819ms)
+[WebServer] 9:50:43 AM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+[WebServer] 9:50:43 AM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+  ok 16 tests\class-form-loading.spec.ts:16:85 › class form retries record failure (1.3s)
+[WebServer] 9:50:45 AM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchGradeLevels (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:20:15)
+[WebServer] 9:50:45 AM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchGradeLevels (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:20:15)
+  ok 17 tests\class-form-loading.spec.ts:16:85 › class form retries gradeLevels failure (1.2s)
+[WebServer] 9:50:46 AM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchAllTeachers (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:43:15)
+[WebServer] 9:50:46 AM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchAllTeachers (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:43:15)
+  ok 18 tests\class-form-loading.spec.ts:16:85 › class form retries teacher/all failure (1.2s)
+[WebServer] 9:50:47 AM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchSectionsByGrade (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:30:15)
+  ok 19 tests\class-form-loading.spec.ts:16:85 › class form retries sections failure (1.3s)
+[WebServer] 9:50:48 AM [vite] (client) [console.error] Error: Class data unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchSubjectsByGrade (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:48:15)
+  ok 20 tests\class-form-loading.spec.ts:16:85 › class form retries getSubByGrade failure (1.3s)
+  ok 21 tests\class-form-loading.spec.ts:17:62 › class new 375 light preserves known empty values (768ms)
+  ok 22 tests\class-form-loading.spec.ts:17:62 › class new 375 dark preserves known empty values (780ms)
+  ok 23 tests\class-form-loading.spec.ts:17:62 › class new 1280 light preserves known empty values (930ms)
+  ok 24 tests\class-form-loading.spec.ts:17:62 › class new 1280 dark preserves known empty values (942ms)
+  ok 25 tests\class-form-loading.spec.ts:18:1 › class edit saves the original mapped schedule payload (1.2s)
+  ok 26 tests\class-form-loading.spec.ts:19:32 › class form light input surface pixels (1.9s)
+  ok 27 tests\class-form-loading.spec.ts:19:32 › class form dark input surface pixels (1.9s)
+  ok 28 tests\class-form-loading.spec.ts:20:32 › class adviser light disabled control surface pixels (1.9s)
+  ok 29 tests\class-form-loading.spec.ts:20:32 › class adviser dark disabled control surface pixels (2.0s)
+  ok 30 tests\student-form-loading.spec.ts:11:62 › student edit 375 light keeps actual fields while the record loads (1.8s)
+  ok 31 tests\student-form-loading.spec.ts:11:62 › student edit 375 dark keeps actual fields while the record loads (2.1s)
+  ok 32 tests\student-form-loading.spec.ts:11:62 › student edit 1280 light keeps actual fields while the record loads (2.2s)
+  ok 33 tests\student-form-loading.spec.ts:11:62 › student edit 1280 dark keeps actual fields while the record loads (2.3s)
+  ok 34 tests\student-form-loading.spec.ts:21:1 › student edit error clears all shapes and retries the record request (1.6s)
+  ok 35 tests\student-form-loading.spec.ts:25:1 › student not found is rendered only after a completed empty response (706ms)
+  ok 36 tests\student-form-loading.spec.ts:28:62 › student new 375 light keeps known input and workflow real (799ms)
+  ok 37 tests\student-form-loading.spec.ts:28:62 › student new 375 dark keeps known input and workflow real (845ms)
+  ok 38 tests\student-form-loading.spec.ts:28:62 › student new 1280 light keeps known input and workflow real (986ms)
+  ok 39 tests\student-form-loading.spec.ts:28:62 › student new 1280 dark keeps known input and workflow real (857ms)
+[WebServer] 9:51:16 AM [vite] (client) [console.error] Error in gradeService: Error: Failed to fetch grade levels: Internal Server Error
+[WebServer]     at fetchGradeLevels (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/services/grade-section.service.ts:7:10)
+[WebServer]     at async loadGrades (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/StudentFormPage.tsx:99:18)
+[WebServer] 9:51:16 AM [vite] (client) [console.error] Error in gradeService: Error: Failed to fetch grade levels: Internal Server Error
+[WebServer]     at fetchGradeLevels (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/services/grade-section.service.ts:7:10)
+[WebServer]     at async loadGrades (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/StudentFormPage.tsx:99:18)
+[WebServer] 9:51:17 AM [vite] (client) [console.error] Error in sectionService: Error: Failed to fetch sections: Internal Server Error
+[WebServer]     at fetchSectionByGrade (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/services/grade-section.service.ts:21:10)
+[WebServer]     at async loadSections (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/StudentFormPage.tsx:128:18)
+[WebServer] 9:51:17 AM [vite] (client) [console.error] Failed loading sections: Error: Failed to fetch sections: Internal Server Error
+[WebServer]     at fetchSectionByGrade (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/services/grade-section.service.ts:21:10)
+[WebServer]     at async loadSections (http://127.0.0.1:5187/src/features/profiles/admin/pages/studentrecords/StudentFormPage.tsx:128:18)
+  ok 40 tests\student-form-loading.spec.ts:32:1 › placement errors are retryable without losing edited student fields (1.4s)
+  ok 41 tests\student-form-loading.spec.ts:35:1 › student edit retains the existing update endpoint and payload (1.5s)
+  ok 42 tests\student-form-loading.spec.ts:38:32 › student input light contrast and shimmer pixels (2.5s)
+  ok 43 tests\student-form-loading.spec.ts:38:32 › student input dark contrast and shimmer pixels (1.7s)
+  ok 44 tests\student-form-loading.spec.ts:41:1 › single-line form controls remain fixed across short and long student values (1.7s)
+  ok 45 tests\user-form-loading.spec.ts:10:62 › edit user 375 light keeps real form labels and controls (1.8s)
+  ok 46 tests\user-form-loading.spec.ts:10:62 › edit user 375 dark keeps real form labels and controls (1.7s)
+  ok 47 tests\user-form-loading.spec.ts:10:62 › edit user 1280 light keeps real form labels and controls (2.2s)
+  ok 48 tests\user-form-loading.spec.ts:10:62 › edit user 1280 dark keeps real form labels and controls (2.3s)
+  ok 49 tests\user-form-loading.spec.ts:24:1 › edit user failure clears value placeholders and retries accounts (864ms)
+  ok 50 tests\user-form-loading.spec.ts:29:1 › edit user not found waits for the accounts result (660ms)
+  ok 51 tests\user-form-loading.spec.ts:33:62 › new user 375 light renders known fields and workflow immediately (788ms)
+  ok 52 tests\user-form-loading.spec.ts:33:62 › new user 375 dark renders known fields and workflow immediately (823ms)
+  ok 53 tests\user-form-loading.spec.ts:33:62 › new user 1280 light renders known fields and workflow immediately (1.0s)
+  ok 54 tests\user-form-loading.spec.ts:33:62 › new user 1280 dark renders known fields and workflow immediately (989ms)
+  ok 55 tests\user-form-loading.spec.ts:40:1 › editing a loaded user preserves the existing endpoint and payload (771ms)
+  ok 56 tests\user-form-loading.spec.ts:47:1 › new principal optional conflict reserves wrapping text then shrinks once without resetting input (1.9s)
+  ok 57 tests\user-form-loading.spec.ts:52:32 › principal conflict light reserves visible paragraph bars on warning surface (1.5s)
+  ok 58 tests\user-form-loading.spec.ts:52:32 › principal conflict dark reserves visible paragraph bars on warning surface (1.5s)
+  ok 59 tests\user-form-loading.spec.ts:58:32 › edit user light values contrast against actual input surface (1.7s)
+  ok 60 tests\user-form-loading.spec.ts:58:32 › edit user dark values contrast against actual input surface (1.5s)
+  ok 61 tests\user-form-loading.spec.ts:62:1 › pending user selects never show a fallback selected value behind the skeleton (1.1s)
+
+  61 passed (1.6m)

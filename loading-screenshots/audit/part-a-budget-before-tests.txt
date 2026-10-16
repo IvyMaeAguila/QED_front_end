@@ -1,0 +1,36 @@
+
+Running 2 tests using 1 worker
+
+  x  1 tests\bundle-budget.spec.ts:4:1 › production entry and eager dependency closure stay within the fixed plus 10% budget (137ms)
+  ok 2 tests\bundle-budget.spec.ts:9:1 › registry guard rejects an eager page import and accepts the restored metadata (42ms)
+
+
+  1) tests\bundle-budget.spec.ts:4:1 › production entry and eager dependency closure stay within the fixed plus 10% budget 
+
+    Error: Entry gzip 481009 exceeds 112153
+
+       at ..\scripts\check-bundle-budget.mjs:29
+
+      27 |   const entrySize = measured.get(entry.fileName);
+      28 |   const entryClosure = total(publicFiles);
+    > 29 |   if (entrySize.gzipBytes > budget.entryGzipBytes) throw new Error(`Entry gzip ${entrySize.gzipBytes} exceeds ${budget.entryGzipBytes}`);
+         |                                                          ^
+      30 |   if (entryClosure.gzipBytes > budget.entryEagerClosureGzipBytes) throw new Error(`Entry eager closure gzip ${entryClosure.gzipBytes} exceeds ${budget.entryEagerClosureGzipBytes}`);
+      31 |   const protectedModules = [...publicFiles].flatMap(file => measured.get(file).modules).filter(module => /features\/profiles\/(admin|teacher|principal|parent)\/pages\/.*\.tsx$/.test(module) && !module.endsWith('/settings/context/SettingsContext.tsx'));
+      32 |   if (protectedModules.length) throw new Error('Protected code in public entry closure: ' + protectedModules.join(', '));
+        at inspectBuild (C:\Users\Mavys\Downloads\QED_System\QED_front_end\scripts\check-bundle-budget.mjs:29:58)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bundle-budget.spec.ts:5:18
+
+    Error Context: test-results\bundle-budget-production-e-62ce2-in-the-fixed-plus-10-budget\error-context.md
+
+  1 failed
+    tests\bundle-budget.spec.ts:4:1 › production entry and eager dependency closure stay within the fixed plus 10% budget 
+  1 passed (4.7s)
+[WebServer] (node:10904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:13996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

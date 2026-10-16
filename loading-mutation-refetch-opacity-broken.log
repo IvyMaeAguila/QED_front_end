@@ -1,0 +1,44 @@
+[WebServer] (node:28836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:37968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:39248) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\finishing-contract.spec.ts:25:1 › table refetch keeps old rows until delay then dims without a spinner
+  1) tests\finishing-contract.spec.ts:25:1 › table refetch keeps old rows until delay then dims without a spinner 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator: locator('[data-sk-auto-columns]').locator('[data-sk-stale]')
+    Expected: "0.6"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveCSS" locator('[data-sk-auto-columns]').locator('[data-sk-stale]') with timeout 5000ms
+      - waiting for locator('[data-sk-auto-columns]').locator('[data-sk-stale]')
+        7 × locator resolved to <tbody inert="" data-sk-stale="" class="sk-layer ">…</tbody>
+          - unexpected value "1"
+
+
+      37 |   await expect(page.getByText("Existing Teacher", { exact: true })).toBeVisible();
+      38 |   await expect(region).toHaveAttribute("data-sk-phase", "dimmed");
+    > 39 |   await expect(region.locator("[data-sk-stale]")).toHaveCSS("opacity", "0.6");
+         |                                                   ^
+      40 |   await expect(region.locator("[data-sk-layer]")).toHaveCount(0);
+      41 |   release(); await expect(region).toHaveAttribute("data-sk-phase", "settled");
+      42 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\finishing-contract.spec.ts:39:51
+
+    Error Context: test-results\finishing-contract-table-r-d95ff-then-dims-without-a-spinner\error-context.md
+
+
+  1 failed
+    tests\finishing-contract.spec.ts:25:1 › table refetch keeps old rows until delay then dims without a spinner 

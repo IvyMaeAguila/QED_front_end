@@ -1,0 +1,514 @@
+[
+  {
+    "file": "loading-add-subject-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners "
+    ]
+  },
+  {
+    "file": "loading-attendance-records-before.log",
+    "summaries": [
+      "2 failed"
+    ],
+    "failedTitles": [
+      "attendance-records-loading.spec.ts:13:62 › attendance records 375 light keeps date headers and view controls real ",
+      "attendance-records-loading.spec.ts:17:62 › attendance summary 375 light keeps labels and calendar dates real "
+    ]
+  },
+  {
+    "file": "loading-bootstrap-before.log",
+    "summaries": [
+      "5 failed",
+      "2 passed (49.8s)"
+    ],
+    "failedTitles": [
+      "bootstrap-loading.spec.ts:30:1 › bootstrap 60ms never shows the brand loader or status ──",
+      "bootstrap-loading.spec.ts:37:1 › revealed bootstrap animates only the real logo opacity, never rotation ",
+      "bootstrap-loading.spec.ts:55:1 › bootstrap busy and status follow reveal, minimum duration, and DOM cleanup ",
+      "bootstrap-loading.spec.ts:79:34 › lazy route 375: registered composition inside real shell with stable surroundings ",
+      "bootstrap-loading.spec.ts:79:34 › lazy route 1280: registered composition inside real shell with stable surroundings "
+    ]
+  },
+  {
+    "file": "loading-class-adviser-contrast-before.log",
+    "summaries": [
+      "1 failed",
+      "1 passed (10.3s)"
+    ],
+    "failedTitles": [
+      "class-form-loading.spec.ts:20:32 › class adviser light disabled control surface pixels ──"
+    ]
+  },
+  {
+    "file": "loading-class-details-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "admin-class-view.spec.ts:17:68 › class details 1280 light: real actions, tabs and weekday headings "
+    ]
+  },
+  {
+    "file": "loading-class-error-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "admin-class-view.spec.ts:60:1 › class details error removes every reservation immediately and retries context loads "
+    ]
+  },
+  {
+    "file": "loading-class-form-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "class-form-loading.spec.ts:11:62 › class edit 375 light keeps original fields and schedule controls "
+    ]
+  },
+  {
+    "file": "loading-class-form-static-prefix-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "class-form-loading.spec.ts:21:1 › class form keeps the known Updating prefix real before record data arrives "
+    ]
+  },
+  {
+    "file": "loading-courseware-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "courseware-loading.spec.ts:20:68 › courseware 1280 light: real learning frame before fetched leaves "
+    ]
+  },
+  {
+    "file": "loading-design-contract-before.log",
+    "summaries": [
+      "6 failed",
+      "2 passed (1.0m)"
+    ],
+    "failedTitles": [
+      "design-contract.spec.ts:12:40 › light: pixel area survives all four shimmer phases on every surface ",
+      "design-contract.spec.ts:12:40 › dark: pixel area survives all four shimmer phases on every surface ",
+      "design-contract.spec.ts:17:68 › teacher 375 light: static content and spinner guard ─────",
+      "design-contract.spec.ts:17:68 › teacher 375 dark: static content and spinner guard ──────",
+      "design-contract.spec.ts:17:68 › teacher 1280 light: static content and spinner guard ────",
+      "design-contract.spec.ts:17:68 › teacher 1280 dark: static content and spinner guard ─────"
+    ]
+  },
+  {
+    "file": "loading-domain-trends-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "domain-trends-loading.spec.ts:14:62 › domain trends 375 light keeps domains and chart shell real "
+    ]
+  },
+  {
+    "file": "loading-final-guards-before.log",
+    "summaries": [
+      "2 failed"
+    ],
+    "failedTitles": [
+      "design-contract.spec.ts:6:1 › skeleton CSS has token-only colors ────────────────────────",
+      "route-coverage.spec.ts:30:1 › every real route must register its own loading composition "
+    ]
+  },
+  {
+    "file": "loading-final-new-tests-before.log",
+    "summaries": [
+      "89 failed"
+    ],
+    "failedTitles": [
+      "parent-detail-loading.spec.ts:5:1 › parent detail keeps navigation and identity labels during linked-student fetch ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail overview 375 light preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail overview 375 dark preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail overview 1280 light preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail overview 1280 dark preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail academic 375 light preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail academic 375 dark preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail academic 1280 light preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail academic 1280 dark preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail holistic 375 light preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail holistic 375 dark preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail holistic 1280 light preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail holistic 1280 dark preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail progressReport 375 light preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail progressReport 375 dark preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail progressReport 1280 light preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail progressReport 1280 dark preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail studentProfile 375 light preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail studentProfile 375 dark preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail studentProfile 1280 light preserves real layout ",
+      "parent-detail-loading.spec.ts:32:91 › parent detail studentProfile 1280 dark preserves real layout ",
+      "parent-detail-loading.spec.ts:41:103 › parent variable academic 0 items and wrapping ───",
+      "parent-detail-loading.spec.ts:41:103 › parent variable holistic 0 items and wrapping ───",
+      "parent-detail-loading.spec.ts:41:103 › parent variable progressReport 0 items and wrapping ",
+      "parent-detail-loading.spec.ts:41:103 › parent variable studentProfile 0 items and wrapping ",
+      "parent-detail-loading.spec.ts:41:103 › parent variable academic 1 items and wrapping ───",
+      "parent-detail-loading.spec.ts:41:103 › parent variable holistic 1 items and wrapping ───",
+      "parent-detail-loading.spec.ts:41:103 › parent variable progressReport 1 items and wrapping ",
+      "parent-detail-loading.spec.ts:41:103 › parent variable studentProfile 1 items and wrapping ",
+      "parent-detail-loading.spec.ts:41:103 › parent variable academic 9 items and wrapping ───",
+      "parent-detail-loading.spec.ts:41:103 › parent variable holistic 9 items and wrapping ───",
+      "parent-detail-loading.spec.ts:41:103 › parent variable progressReport 9 items and wrapping ",
+      "parent-detail-loading.spec.ts:41:103 › parent variable studentProfile 9 items and wrapping ",
+      "parent-detail-loading.spec.ts:44:1 › locked parent report settles into unavailable state without endless shapes ",
+      "parent-detail-loading.spec.ts:48:30 › parent overview reserves variable frame before reveal and swaps once ",
+      "parent-detail-loading.spec.ts:48:30 › parent academic reserves variable frame before reveal and swaps once ",
+      "parent-detail-loading.spec.ts:48:30 › parent holistic reserves variable frame before reveal and swaps once ",
+      "parent-detail-loading.spec.ts:48:30 › parent progressReport reserves variable frame before reveal and swaps once ",
+      "parent-detail-loading.spec.ts:48:30 › parent studentProfile reserves variable frame before reveal and swaps once ",
+      "parent-detail-loading.spec.ts:78:32 › parent rendered pixels and fixed attendance overlay false ",
+      "parent-detail-loading.spec.ts:78:32 › parent rendered pixels and fixed attendance overlay true ",
+      "parent-detail-loading.spec.ts:86:178 › parent academic fetch failure clears shapes and retries ",
+      "parent-detail-loading.spec.ts:86:178 › parent holistic fetch failure clears shapes and retries ",
+      "parent-detail-loading.spec.ts:86:178 › parent progressReport fetch failure clears shapes and retries ",
+      "parent-detail-loading.spec.ts:86:178 › parent studentProfile fetch failure clears shapes and retries ",
+      "parent-detail-loading.spec.ts:90:1 › parent report auto-column marking reflects measured native content variation ",
+      "parent-detail-loading.spec.ts:99:1 › parent report repeat visit restores native column reservations within 2px ",
+      "pet-quiz-loading.spec.ts:6:62 › pet quiz road 375 light keeps known challenges ─────────",
+      "pet-quiz-loading.spec.ts:6:62 › pet quiz road 375 dark keeps known challenges ──────────",
+      "pet-quiz-loading.spec.ts:6:62 › pet quiz road 1280 light keeps known challenges ────────",
+      "pet-quiz-loading.spec.ts:6:62 › pet quiz road 1280 dark keeps known challenges ─────────",
+      "pet-quiz-loading.spec.ts:7:1 › pet intro keeps its known story visible while access loads ",
+      "pet-quiz-loading.spec.ts:8:1 › pet quiz state error clears shapes and retries ──────────",
+      "pet-quiz-loading.spec.ts:9:62 › pet quiz question 375 light reserves real choices ──────",
+      "pet-quiz-loading.spec.ts:9:62 › pet quiz question 375 dark reserves real choices ───────",
+      "pet-quiz-loading.spec.ts:9:62 › pet quiz question 1280 light reserves real choices ─────",
+      "pet-quiz-loading.spec.ts:9:62 › pet quiz question 1280 dark reserves real choices ──────",
+      "pet-quiz-loading.spec.ts:11:99 › pet bonus Match 375 light ─────────────────────────────",
+      "pet-quiz-loading.spec.ts:11:99 › pet bonus Match 375 dark ──────────────────────────────",
+      "pet-quiz-loading.spec.ts:11:99 › pet bonus Match 1280 light ────────────────────────────",
+      "pet-quiz-loading.spec.ts:11:99 › pet bonus Match 1280 dark ─────────────────────────────",
+      "pet-quiz-loading.spec.ts:11:99 › pet bonus Memory 375 light ────────────────────────────",
+      "pet-quiz-loading.spec.ts:11:99 › pet bonus Memory 375 dark ─────────────────────────────",
+      "pet-quiz-loading.spec.ts:11:99 › pet bonus Memory 1280 light ───────────────────────────",
+      "pet-quiz-loading.spec.ts:11:99 › pet bonus Memory 1280 dark ────────────────────────────",
+      "pet-quiz-loading.spec.ts:14:32 › pet quiz rendered neutral pixels false ────────────────",
+      "pet-quiz-loading.spec.ts:14:32 › pet quiz rendered neutral pixels true ─────────────────",
+      "pet-quiz-loading.spec.ts:15:36 › pet quiz failure replaces loading and retries ─────────",
+      "pet-quiz-loading.spec.ts:15:36 › pet bonus failure replaces loading and retries ────────",
+      "removed-loading-guard.spec.ts:9:1 › removed splash and duplicate advisory skeleton cannot be reintroduced ",
+      "subject-records-loading.spec.ts:15:64 › subject records 375 light preserves known roster and headers ",
+      "subject-records-loading.spec.ts:15:64 › subject records 375 dark preserves known roster and headers ",
+      "subject-records-loading.spec.ts:15:64 › subject records 1280 light preserves known roster and headers ",
+      "subject-records-loading.spec.ts:15:64 › subject records 1280 dark preserves known roster and headers ",
+      "subject-records-loading.spec.ts:28:48 › subject records retries items without indefinite shapes ",
+      "subject-records-loading.spec.ts:28:48 › subject records retries scores without indefinite shapes ",
+      "subject-records-loading.spec.ts:28:48 › subject records retries weights without indefinite shapes ",
+      "subject-records-loading.spec.ts:29:28 › subject records retains 0 known roster rows ────",
+      "subject-records-loading.spec.ts:29:28 › subject records retains 1 known roster rows ────",
+      "subject-records-loading.spec.ts:29:28 › subject records retains 9 known roster rows ────",
+      "subject-records-loading.spec.ts:30:32 › subject records light actual score surface pixels ",
+      "subject-records-loading.spec.ts:30:32 › subject records dark actual score surface pixels ",
+      "subject-records-loading.spec.ts:31:1 › subject records keeps native table markup valid ─",
+      "subject-records-loading.spec.ts:34:62 › subject holistic records 375 light keeps known table and domains ",
+      "subject-records-loading.spec.ts:34:62 › subject holistic records 375 dark keeps known table and domains ",
+      "subject-records-loading.spec.ts:34:62 › subject holistic records 1280 light keeps known table and domains ",
+      "subject-records-loading.spec.ts:34:62 › subject holistic records 1280 dark keeps known table and domains ",
+      "subject-records-loading.spec.ts:41:1 › subject records auto columns vary with actual learner names ",
+      "subject-records-loading.spec.ts:43:1 › subject records repeats cached native leaf columns within 2px "
+    ]
+  },
+  {
+    "file": "loading-final-save-modal-before.log",
+    "summaries": [
+      "5 failed"
+    ],
+    "failedTitles": [
+      "student-form-loading.spec.ts:35:1 › student edit retains the existing update endpoint and payload ",
+      "subject-edit-modal-loading.spec.ts:6:62 › edit subject template 375 light settles errors and retries ",
+      "subject-edit-modal-loading.spec.ts:6:62 › edit subject template 375 dark settles errors and retries ",
+      "subject-edit-modal-loading.spec.ts:6:62 › edit subject template 1280 light settles errors and retries ",
+      "subject-edit-modal-loading.spec.ts:6:62 › edit subject template 1280 dark settles errors and retries "
+    ]
+  },
+  {
+    "file": "loading-finishing-before.log",
+    "summaries": [
+      "3 failed",
+      "2 passed (25.3s)"
+    ],
+    "failedTitles": [
+      "finishing-contract.spec.ts:6:1 › session identity and fixed attendance labels are real before dashboard fetch ",
+      "finishing-contract.spec.ts:15:1 › attendance skeleton retains the real ring chart shape ─",
+      "finishing-contract.spec.ts:25:1 › table refetch keeps old rows until delay then dims without a spinner "
+    ]
+  },
+  {
+    "file": "loading-grade-sheet-term-before.log",
+    "summaries": [
+      "2 failed"
+    ],
+    "failedTitles": [
+      "principal-grade-sheet-loading.spec.ts:28:32 › grade sheet light term value has a measurable placeholder ",
+      "principal-grade-sheet-loading.spec.ts:28:32 › grade sheet dark term value has a measurable placeholder "
+    ]
+  },
+  {
+    "file": "loading-holistic-analytics-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "holistic-analytics-loading.spec.ts:21:68 › holistic analytics 375 light: headers, legend and controls stay real "
+    ]
+  },
+  {
+    "file": "loading-holistic-metric-width-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "holistic-analytics-loading.spec.ts:39:1 › holistic metric name and detail bars have measurable widths "
+    ]
+  },
+  {
+    "file": "loading-holistic-overview-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "holistic-overview-loading.spec.ts:11:62 › holistic overview 375 light keeps roster headers and filters real "
+    ]
+  },
+  {
+    "file": "loading-holistic-profile-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "holistic-profile-loading.spec.ts:11:62 › holistic profile 375 light known snapshot shell remains real "
+    ]
+  },
+  {
+    "file": "loading-inline-flow-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "principal-gradebooks.spec.ts:56:1 › inline school year preserves the original paragraph flow "
+    ]
+  },
+  {
+    "file": "loading-parent-detail-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "parent-detail-loading.spec.ts:3:1 › parent detail keeps navigation and identity labels during linked-student fetch "
+    ]
+  },
+  {
+    "file": "loading-parent-profile-known-before.log",
+    "summaries": [
+      "4 failed"
+    ],
+    "failedTitles": [
+      "parent-detail-loading.spec.ts:32:62 › parent profile 375 light keeps known class and masks unknown avatar ",
+      "parent-detail-loading.spec.ts:32:62 › parent profile 375 dark keeps known class and masks unknown avatar ",
+      "parent-detail-loading.spec.ts:32:62 › parent profile 1280 light keeps known class and masks unknown avatar ",
+      "parent-detail-loading.spec.ts:32:62 › parent profile 1280 dark keeps known class and masks unknown avatar "
+    ]
+  },
+  {
+    "file": "loading-pet-quiz-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "pet-quiz-loading.spec.ts:6:62 › pet quiz road 375 light keeps known challenges ──────────"
+    ]
+  },
+  {
+    "file": "loading-principal-dashboard-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "principal-dashboard-loading.spec.ts:6:62 › principal dashboard 375 light keeps known shell "
+    ]
+  },
+  {
+    "file": "loading-principal-grade-sheet-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "principal-grade-sheet-loading.spec.ts:13:62 › grade sheet 375 light keeps known controls and headers real "
+    ]
+  },
+  {
+    "file": "loading-principal-spinner-guard-before.log",
+    "summaries": [],
+    "failedTitles": []
+  },
+  {
+    "file": "loading-student-details-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "student-details-loading.spec.ts:25:68 › student details 375 light: real labels, baseline chart and controls "
+    ]
+  },
+  {
+    "file": "loading-student-directory-classification-before.log",
+    "summaries": [
+      "1 failed",
+      "4 passed (15.2s)"
+    ],
+    "failedTitles": [
+      "advisory-roster.spec.ts:36:1 › student directory classification observes native columns across short/long names "
+    ]
+  },
+  {
+    "file": "loading-student-form-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "student-form-loading.spec.ts:11:62 › student edit 375 light keeps actual fields while the record loads "
+    ]
+  },
+  {
+    "file": "loading-student-review-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "student-form-loading.spec.ts:35:1 › student edit retains the existing update endpoint and payload "
+    ]
+  },
+  {
+    "file": "loading-subject-analytics-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "subject-analytics-loading.spec.ts:4:68 › subject analytics 375 light: real ranking frames and controls "
+    ]
+  },
+  {
+    "file": "loading-subject-edit-modal-before.log",
+    "summaries": [
+      "4 failed"
+    ],
+    "failedTitles": [
+      "subject-edit-modal-loading.spec.ts:5:62 › edit subject template 375 light settles errors and retries ",
+      "subject-edit-modal-loading.spec.ts:5:62 › edit subject template 375 dark settles errors and retries ",
+      "subject-edit-modal-loading.spec.ts:5:62 › edit subject template 1280 light settles errors and retries ",
+      "subject-edit-modal-loading.spec.ts:5:62 › edit subject template 1280 dark settles errors and retries "
+    ]
+  },
+  {
+    "file": "loading-subject-holistic-records-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "subject-records-loading.spec.ts:34:62 › subject holistic records 375 light keeps known table and domains "
+    ]
+  },
+  {
+    "file": "loading-subject-records-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "subject-records-loading.spec.ts:15:64 › subject records 375 light preserves known roster and headers "
+    ]
+  },
+  {
+    "file": "loading-subject-template-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "subject-template-loading.spec.ts:21:68 › subject template 1280 light: upload frame is real before fetched metadata "
+    ]
+  },
+  {
+    "file": "loading-teacher-grades-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "teacher-grades-loading.spec.ts:6:62 › teacher grades 375 light keeps real headers and controls "
+    ]
+  },
+  {
+    "file": "loading-teacher-grades-final-errors-before.log",
+    "summaries": [
+      "2 failed"
+    ],
+    "failedTitles": [
+      "teacher-grades-loading.spec.ts:22:1 › teacher submission history surfaces a term prerequisite error and retries ",
+      "teacher-grades-loading.spec.ts:23:1 › teacher gradebook failure removes dependent placeholders immediately "
+    ]
+  },
+  {
+    "file": "loading-teacher-subject-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "teacher-subject-loading.spec.ts:23:66 › teacher subject 375 light keeps real score sheet and controls "
+    ]
+  },
+  {
+    "file": "loading-template-contrast-before.log",
+    "summaries": [
+      "1 failed",
+      "1 passed (9.3s)"
+    ],
+    "failedTitles": [
+      "subject-template-loading.spec.ts:66:35 › subject template light: fetched button label uses the actual maroon surface "
+    ]
+  },
+  {
+    "file": "loading-user-details-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "user-details-loading.spec.ts:22:68 › user details 375 light: real field labels and actions "
+    ]
+  },
+  {
+    "file": "loading-user-form-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "user-form-loading.spec.ts:10:62 › edit user 375 light keeps real form labels and controls "
+    ]
+  },
+  {
+    "file": "loading-user-form-select-before.log",
+    "summaries": [
+      "1 failed"
+    ],
+    "failedTitles": [
+      "user-form-loading.spec.ts:62:1 › pending user selects never show a fallback selected value behind the skeleton "
+    ]
+  },
+  {
+    "file": "loading-user-form-warning-before.log",
+    "summaries": [
+      "2 failed"
+    ],
+    "failedTitles": [
+      "user-form-loading.spec.ts:52:32 › principal conflict light reserves visible paragraph bars on warning surface ",
+      "user-form-loading.spec.ts:52:32 › principal conflict dark reserves visible paragraph bars on warning surface "
+    ]
+  }
+]

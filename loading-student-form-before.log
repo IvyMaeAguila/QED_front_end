@@ -1,0 +1,39 @@
+[WebServer] (node:30644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:7204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:19764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\student-form-loading.spec.ts:11:62 › student edit 375 light keeps actual fields while the record loads (7.5s)
+
+
+  1) tests\student-form-loading.spec.ts:11:62 › student edit 375 light keeps actual fields while the record loads 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Edit Student Record', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Edit Student Record', exact: true }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: 'Edit Student Record', exact: true })
+
+
+      10 | }
+      11 | for(const width of [375,1280])for(const dark of [false,true])test(`student edit ${width} ${dark?'dark':'light'} keeps actual fields while the record loads`,async({page})=>{
+    > 12 |  await page.setViewportSize({width,height:1100});const release=await fixture(page,dark);await page.goto('/admin/students/1/edit');await expect(page.getByRole('heading',{name:'Edit Student Record',exact:true})).toBeVisible();
+         |                                                                                                                                                                                                                   ^
+      13 |  for(const label of ['Student ID','LRN','Last Name','First Name','Middle Name','Gender'])await expect(page.locator('main').getByText(label,{exact:true})).toBeVisible();await expect(page.getByText(/No student found/)).toHaveCount(0);
+      14 |  await expect(page.locator('[data-sk-region="student-form-studentId"]')).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+      15 |  const verify=await captureFixedOverlay(page,`admin-student-edit-${width}-${dark?'dark':'light'}`,['studentId','lrn','lastName','firstName','middleName','gender'].map(field=>`[data-sk-region="student-form-${field}"]`));
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\student-form-loading.spec.ts:12:211
+
+    Error Context: test-results\student-form-loading-stude-39d9f-elds-while-the-record-loads\error-context.md
+
+  1 failed
+    tests\student-form-loading.spec.ts:11:62 › student edit 375 light keeps actual fields while the record loads 

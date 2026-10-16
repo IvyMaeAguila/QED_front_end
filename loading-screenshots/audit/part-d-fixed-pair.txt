@@ -1,0 +1,49 @@
+[WebServer] (node:5708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:27804) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 20 tests using 1 worker
+
+(node:11884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.4s)
+  ok  2 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (3.9s)
+(node:28508) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  3 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.9s)
+  ok  4 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (2.9s)
+(node:36224) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.4s)
+  ok  6 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (2.1s)
+(node:33380) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  7 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.1s)
+  ok  8 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (2.4s)
+(node:31432) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.3s)
+  ok 10 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (3.1s)
+(node:32612) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 11 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.6s)
+  ok 12 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (2.9s)
+(node:37180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 13 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.7s)
+  ok 14 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (3.0s)
+(node:32588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 15 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.4s)
+  ok 16 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (3.0s)
+(node:23312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 17 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.5s)
+  ok 18 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (3.0s)
+(node:37288) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 19 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (2.4s)
+  ok 20 tests\teacher-subjects.spec.ts:26:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (3.1s)
+
+  20 passed (1.7m)

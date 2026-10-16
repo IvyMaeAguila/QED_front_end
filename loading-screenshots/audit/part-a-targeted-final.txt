@@ -1,0 +1,27 @@
+[WebServer] (node:16160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12780) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 16 tests using 1 worker
+
+(node:18472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\bootstrap-loading.spec.ts:31:1 › bootstrap 60ms never shows the brand loader or status (7.3s)
+  ok  2 tests\bootstrap-loading.spec.ts:68:1 › revealed bootstrap animates only the real logo opacity, never rotation (948ms)
+  ok  3 tests\bootstrap-loading.spec.ts:79:1 › bootstrap reduced motion has no running animation (472ms)
+  ok  4 tests\bootstrap-loading.spec.ts:90:1 › bootstrap busy and status follow reveal, minimum duration, and DOM cleanup (1.3s)
+  ok  5 tests\bootstrap-loading.spec.ts:106:1 › protected components and page requests never render before auth resolves (1.3s)
+  ok  6 tests\bootstrap-loading.spec.ts:114:34 › lazy route 375: registered composition inside real shell with stable surroundings (763ms)
+  ok  7 tests\bootstrap-loading.spec.ts:114:34 › lazy route 1280: registered composition inside real shell with stable surroundings (781ms)
+  ok  8 tests\bundle-budget.spec.ts:4:1 › production entry and eager dependency closure stay within the fixed plus 10% budget (138ms)
+  ok  9 tests\bundle-budget.spec.ts:9:1 › registry guard rejects an eager page import and accepts the restored metadata (20ms)
+  ok 10 tests\role-bundles.spec.ts:7:1 › public login requests no protected role code (207ms)
+  ok 11 tests\role-bundles.spec.ts:14:65 › TEACHER login requests only its own role code (755ms)
+  ok 12 tests\role-bundles.spec.ts:14:65 › ADMIN login requests only its own role code (699ms)
+  ok 13 tests\role-bundles.spec.ts:14:65 › PRINCIPAL login requests only its own role code (716ms)
+  ok 14 tests\role-bundles.spec.ts:14:65 › PARENT login requests only its own role code (645ms)
+  ok 15 tests\role-bundles.spec.ts:22:1 › a 1500ms role import uses bootstrap then the real shell and registered skeleton (2.2s)
+  ok 16 tests\role-bundles.spec.ts:44:1 › chart skeletons retain bars, line and radar while the heavy chart chunk is unavailable (670ms)
+
+  16 passed (23.2s)

@@ -1,0 +1,118 @@
+
+[WebServer] (node:16932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:23256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 30 tests using 2 workers
+
+(node:29560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:12548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+[2/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+  1) tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data 
+
+    Error: fast fixture elapsed time in the browser
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 200
+    Received:   220
+
+       at fixtures\refetch.ts:34
+
+      32 |     const durations = await page.evaluate(() => (window as unknown as { skFetchDurations: number[] }).skFetchDurations);
+      33 |     expect(durations.length, "the fast refetch must actually issue its API request").toBeGreaterThan(0);
+    > 34 |     for (const duration of durations) expect(duration, "fast fixture elapsed time in the browser").toBeLessThan(200);
+         |                                                                                                    ^
+      35 |   };
+      36 | }
+      37 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\fixtures\refetch.ts:34:100
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\domain-trends-loading.spec.ts:30:2
+
+    Error Context: test-results\domain-trends-loading-doma-55d8b-tch-preserves-previous-data\error-context.md
+
+
+[3/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+(node:25308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[4/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[5/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+
+(node:15668) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[6/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+
+(node:30056) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[7/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[8/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[9/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+[10/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+
+(node:18484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[11/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+
+(node:19988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[12/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[13/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[14/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+[15/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+
+(node:39100) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[16/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+
+(node:35568) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[17/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[18/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[19/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+[20/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+
+(node:20404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+(node:31580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+[21/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+[22/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[23/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[24/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+[25/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+
+(node:33788) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[26/30] tests\attendance-records-loading.spec.ts:24:32 › attendance term fast refetch preserves rows
+
+(node:21640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[27/30] tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data
+[28/30] tests\holistic-overview-loading.spec.ts:16:32 › holistic overview fast refetch preserves rows
+[29/30] tests\principal-grade-sheet-loading.spec.ts:33:1 › grade sheet fast term refetch never dims or reveals placeholders
+[30/30] tests\teacher-grades-loading.spec.ts:14:32 › teacher grades fast term refetch preserves old rows
+  1 failed
+    tests\domain-trends-loading.spec.ts:26:32 › domain trends fast term refetch preserves previous data 
+  29 passed (46.4s)

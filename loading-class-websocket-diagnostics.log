@@ -1,0 +1,146 @@
+[WebServer] (node:11348) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:32344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:7028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Class navigation http://127.0.0.1:5187/admin/classes/1
+Class console [vite] connecting...
+Class websocket {"type":"connected"}
+Class console [vite] connected.
+Class navigation http://127.0.0.1:5187/admin/classes/1
+Class websocket {"type":"full-reload"}
+Class navigation http://127.0.0.1:5187/admin/classes/1
+Class console [vite] connecting...
+Class websocket {"type":"connected"}
+Class console [vite] connected.
+  ok 1 tests\admin-class-view.spec.ts:37:68 › class details 375 light: real actions, tabs and weekday headings (6.2s)
+Class navigation http://127.0.0.1:5187/admin/classes/1
+Class console [vite] connecting...
+Class websocket {"type":"connected"}
+Class console [vite] connected.
+Class navigation http://127.0.0.1:5187/admin/classes/1
+Class websocket {"type":"full-reload"}
+Class navigation http://127.0.0.1:5187/admin/classes/1
+Class console [vite] connecting...
+Class websocket {"type":"connected"}
+Class console [vite] connected.
+Class click diagnostics: []
+  x  2 tests\admin-class-view.spec.ts:37:68 › class details 375 dark: real actions, tabs and weekday headings (7.1s)
+(node:19876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Class navigation http://127.0.0.1:5187/admin/classes/1
+Class console [vite] connecting...
+Class websocket {"type":"connected"}
+Class console [vite] connected.
+Class navigation http://127.0.0.1:5187/admin/classes/1
+Class websocket {"type":"full-reload"}
+Class navigation http://127.0.0.1:5187/admin/classes/1
+Class console [vite] connecting...
+Class websocket {"type":"connected"}
+Class console [vite] connected.
+Class click diagnostics: []
+  x  3 tests\admin-class-view.spec.ts:37:68 › class details 1280 light: real actions, tabs and weekday headings (7.7s)
+(node:40436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Class navigation http://127.0.0.1:5187/admin/classes/1
+Class console [vite] connecting...
+Class websocket {"type":"connected"}
+Class console [vite] connected.
+Class navigation http://127.0.0.1:5187/admin/classes/1
+Class websocket {"type":"full-reload"}
+Class navigation http://127.0.0.1:5187/admin/classes/1
+Class console [vite] connecting...
+Class websocket {"type":"connected"}
+Class console [vite] connected.
+Class click diagnostics: []
+  x  4 tests\admin-class-view.spec.ts:37:68 › class details 1280 dark: real actions, tabs and weekday headings (7.7s)
+
+
+  1) tests\admin-class-view.spec.ts:37:68 › class details 375 dark: real actions, tabs and weekday headings 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByPlaceholder('Search student...')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByPlaceholder('Search student...') with timeout 5000ms
+      - waiting for getByPlaceholder('Search student...')
+
+
+      59 |   await verifyOverlay();
+      60 |   await page.getByRole("tab", { name: /Class list/ }).click();
+    > 61 |   await expect(page.getByPlaceholder("Search student...")).toBeVisible();
+         |                                                            ^
+      62 |   await expect(page.locator('[data-sk-region="student-directory-row"]')).toHaveCount(3);
+      63 | });
+      64 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-class-view.spec.ts:61:60
+
+    Error Context: test-results\admin-class-view-class-det-6ddbc-s-tabs-and-weekday-headings\error-context.md
+
+  2) tests\admin-class-view.spec.ts:37:68 › class details 1280 light: real actions, tabs and weekday headings 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByPlaceholder('Search student...')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByPlaceholder('Search student...') with timeout 5000ms
+      - waiting for getByPlaceholder('Search student...')
+        - waiting for navigation to finish...
+        - navigated to "http://127.0.0.1:5187/admin/classes/1"
+
+
+      59 |   await verifyOverlay();
+      60 |   await page.getByRole("tab", { name: /Class list/ }).click();
+    > 61 |   await expect(page.getByPlaceholder("Search student...")).toBeVisible();
+         |                                                            ^
+      62 |   await expect(page.locator('[data-sk-region="student-directory-row"]')).toHaveCount(3);
+      63 | });
+      64 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-class-view.spec.ts:61:60
+
+    Error Context: test-results\admin-class-view-class-det-2366c-s-tabs-and-weekday-headings\error-context.md
+
+  3) tests\admin-class-view.spec.ts:37:68 › class details 1280 dark: real actions, tabs and weekday headings 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByPlaceholder('Search student...')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByPlaceholder('Search student...') with timeout 5000ms
+      - waiting for getByPlaceholder('Search student...')
+        - waiting for navigation to finish...
+        - navigated to "http://127.0.0.1:5187/admin/classes/1"
+
+
+      59 |   await verifyOverlay();
+      60 |   await page.getByRole("tab", { name: /Class list/ }).click();
+    > 61 |   await expect(page.getByPlaceholder("Search student...")).toBeVisible();
+         |                                                            ^
+      62 |   await expect(page.locator('[data-sk-region="student-directory-row"]')).toHaveCount(3);
+      63 | });
+      64 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-class-view.spec.ts:61:60
+
+    Error Context: test-results\admin-class-view-class-det-8e070-s-tabs-and-weekday-headings\error-context.md
+
+  3 failed
+    tests\admin-class-view.spec.ts:37:68 › class details 375 dark: real actions, tabs and weekday headings 
+    tests\admin-class-view.spec.ts:37:68 › class details 1280 light: real actions, tabs and weekday headings 
+    tests\admin-class-view.spec.ts:37:68 › class details 1280 dark: real actions, tabs and weekday headings 
+  1 passed (33.5s)

@@ -1,0 +1,68 @@
+[WebServer] (node:38160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:27456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:27432) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\attendance-records-loading.spec.ts:13:62 › attendance records 375 light keeps date headers and view controls real (9.7s)
+(node:16520) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 tests\attendance-records-loading.spec.ts:17:62 › attendance summary 375 light keeps labels and calendar dates real (6.2s)
+
+
+  1) tests\attendance-records-loading.spec.ts:13:62 › attendance records 375 light keeps date headers and view controls real 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: 'Month', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('button', { name: 'Month', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Month', exact: true })
+
+
+      12 | }
+      13 | for(const width of [375,1280])for(const dark of [false,true])test(`attendance records ${width} ${dark?'dark':'light'} keeps date headers and view controls real`,async({page})=>{
+    > 14 |  await page.setViewportSize({width,height:1100});const request=await fixture(page,dark);await page.goto(url);await expect(page.getByRole('heading',{name:'Attendance Records',exact:true}).first()).toBeVisible();await expect(page.getByRole('button',{name:'Month',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Summary',exact:true})).toBeVisible();await expect(page.getByRole('columnheader',{name:'Student',exact:true})).toBeVisible();await expect(page.getByText('October 2026',{exact:true})).toBeVisible();request.sections();await expect(page.getByText('Ana Cruz 1',{exact:true})).toBeVisible();await expect(page.locator('[data-sk-region="attendance-records-table"]')).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+         |                                                                                                                                                                                                                                                                                    ^
+      15 |  const headers=await page.locator('thead th').evaluateAll(elements=>elements.map(element=>{const box=element.getBoundingClientRect();return {x:box.x,width:box.width};}));const prefix=`loading-screenshots/attendance-records-${width}-${dark?'dark':'light'}`;fs.mkdirSync('loading-screenshots',{recursive:true});await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});request.data();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);await expect(page.locator('[data-sk-region="attendance-record-row"]')).toHaveCount(3);const loaded=await page.locator('thead th').evaluateAll(elements=>elements.map(element=>{const box=element.getBoundingClientRect();return {x:box.x,width:box.width};}));expect(loaded).toHaveLength(headers.length);headers.forEach((box,i)=>{expect(Math.abs(box.x-loaded[i].x)).toBeLessThanOrEqual(1);expect(Math.abs(box.width-loaded[i].width)).toBeLessThanOrEqual(1);});await page.screenshot({path:prefix+'-loaded.png',fullPage:true});
+      16 | });
+      17 | for(const width of [375,1280])for(const dark of [false,true])test(`attendance summary ${width} ${dark?'dark':'light'} keeps labels and calendar dates real`,async({page})=>{
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\attendance-records-loading.spec.ts:14:276
+
+    Error Context: test-results\attendance-records-loading-cdf14-ders-and-view-controls-real\error-context.md
+
+  2) tests\attendance-records-loading.spec.ts:17:62 › attendance summary 375 light keeps labels and calendar dates real 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Absences this month', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Absences this month', { exact: true }) with timeout 5000ms
+      - waiting for getByText('Absences this month', { exact: true })
+
+
+      16 | });
+      17 | for(const width of [375,1280])for(const dark of [false,true])test(`attendance summary ${width} ${dark?'dark':'light'} keeps labels and calendar dates real`,async({page})=>{
+    > 18 |  await page.setViewportSize({width,height:1100});const request=await fixture(page,dark);await page.goto(url);request.sections();await page.getByRole('button',{name:'Summary',exact:true}).click();await expect(page.getByRole('heading',{name:'Monthly Summary',exact:true})).toBeVisible();await expect(page.getByText('Absences this month',{exact:true})).toBeVisible();await expect(page.getByText('Sun',{exact:true})).toBeVisible();await expect(page.getByText('School days',{exact:true})).toBeVisible();await expect(page.locator('[data-sk-region="attendance-month-summary"]')).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);const verify=await captureFixedOverlay(page,`attendance-summary-${width}-${dark?'dark':'light'}`,['School days','Present','Absent','Late / Excused'].map(label=>`[data-sk-region="attendance-summary-value-${label}"]`));const prefix=`loading-screenshots/attendance-summary-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});request.data();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);await expect(page.getByText('Ana Cruz 2',{exact:true})).toBeVisible();await verify();await page.screenshot({path:prefix+'-loaded.png',fullPage:true});
+         |                                                                                                                                                                                                                                                                                                                                                               ^
+      19 | });
+      20 | for(const count of [0,1,9])test(`attendance records preserves ${count} actual roster rows`,async({page})=>{const request=await fixture(page,false,count,count===9);await page.goto(url);request.all();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);await expect(page.locator('[data-sk-region="attendance-record-row"]')).toHaveCount(count);if(!count)await expect(page.getByText('No students enrolled yet.',{exact:true})).toBeVisible();});
+      21 | for(const view of ['Month','Summary'])test(`attendance ${view} request error clears all shapes and retries`,async({page})=>{const request=await fixture(page,false);request.fail('attendance');await page.goto(url);request.sections();if(view==='Summary')await page.getByRole('button',{name:'Summary',exact:true}).click();request.data();await expect(page.getByRole('alert')).toBeVisible();await expect(page.locator('[data-sk-primitive]')).toHaveCount(0);request.recover();await page.getByRole('button',{name:'Retry',exact:true}).click();await expect(page.getByRole('alert')).toHaveCount(0);await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);});
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\attendance-records-loading.spec.ts:18:351
+
+    Error Context: test-results\attendance-records-loading-7a013-els-and-calendar-dates-real\error-context.md
+
+  2 failed
+    tests\attendance-records-loading.spec.ts:13:62 › attendance records 375 light keeps date headers and view controls real 
+    tests\attendance-records-loading.spec.ts:17:62 › attendance summary 375 light keeps labels and calendar dates real 

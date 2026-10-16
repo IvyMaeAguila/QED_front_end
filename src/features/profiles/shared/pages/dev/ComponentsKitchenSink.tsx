@@ -86,7 +86,7 @@ export function ComponentKitchenSink() {
 
   return (
     <div
-      className={`min-h-screen p-8 sm:p-12 transition-colors font-sans ${darkMode ? "bg-[#0B0F17]" : "bg-[#F3F2F2]"}`}
+      className={`min-h-screen p-8 sm:p-12 transition-colors font-sans ${darkMode ? "bg-[#0B0F17]" : "bg-brand-light"}`}
     >
       <div className="max-w-5xl mx-auto flex flex-col gap-10">
         {/* Page header + light/dark toggle */}
@@ -125,14 +125,14 @@ export function ComponentKitchenSink() {
           </div>
         </KitchenSinkSection>
 
-        {/* Gradients */}
-        <KitchenSinkSection title="Gradient Utilities" textMuted={textMuted}>
+        {/* Solid primary surfaces */}
+        <KitchenSinkSection title="Solid Primary Surfaces" textMuted={textMuted}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="rounded-2xl h-24 flex items-center justify-center text-white text-xs font-bold uppercase tracking-wide bg-maroon-gradient shadow-panel">
-              bg-maroon-gradient (135deg)
+            <div className="rounded-2xl h-24 flex items-center justify-center text-white text-xs font-bold uppercase tracking-wide bg-maroon shadow-panel">
+              bg-maroon
             </div>
-            <div className="rounded-2xl h-24 flex items-center justify-center text-white text-xs font-bold uppercase tracking-wide bg-maroon-gradient-vertical shadow-primary">
-              bg-maroon-gradient-vertical (180deg)
+            <div className="rounded-2xl h-24 flex items-center justify-center text-white text-xs font-bold uppercase tracking-wide bg-maroon shadow-primary">
+              bg-maroon
             </div>
           </div>
         </KitchenSinkSection>
@@ -152,7 +152,7 @@ export function ComponentKitchenSink() {
         {/* Glass utilities */}
         <KitchenSinkSection title="Glass Utilities" textMuted={textMuted}>
           <div
-            className="rounded-2xl p-8 grid grid-cols-1 sm:grid-cols-2 gap-4 bg-maroon-gradient"
+            className="rounded-2xl p-8 grid grid-cols-1 sm:grid-cols-2 gap-4 bg-maroon"
           >
             <div className={`rounded-2xl p-5 ${darkMode ? "glass-dark" : "glass"}`}>
               <p className="text-xs font-bold uppercase tracking-wide text-white">
@@ -227,7 +227,7 @@ export function ComponentKitchenSink() {
             <OverviewCard
               label="Spotlight"
               value="1,280"
-              sub="One per page, maroon gradient"
+              sub="One per page, solid maroon"
               icon={GraduationCap}
               variant="spotlight"
               panelBg={panelBg}

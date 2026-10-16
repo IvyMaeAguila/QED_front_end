@@ -1,0 +1,710 @@
+[WebServer] (node:25348) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 300 tests using 1 worker
+
+(node:12948) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x    1 tests\admin-class-view.spec.ts:28:68 › class details 375 light: real actions, tabs and weekday headings (10.1s)
+(node:40160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x    2 tests\admin-class-view.spec.ts:28:68 › class details 375 dark: real actions, tabs and weekday headings (7.3s)
+(node:25364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x    3 tests\admin-class-view.spec.ts:28:68 › class details 1280 light: real actions, tabs and weekday headings (7.9s)
+(node:6872) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok   4 tests\admin-class-view.spec.ts:28:68 › class details 1280 dark: real actions, tabs and weekday headings (4.2s)
+  ok   5 tests\admin-class-view.spec.ts:53:32 › class schedule 0 returned time slots retains original content (827ms)
+  ok   6 tests\admin-class-view.spec.ts:53:32 › class schedule 1 returned time slots retains original content (823ms)
+  ok   7 tests\admin-class-view.spec.ts:53:32 › class schedule 9 returned time slots retains original content (769ms)
+[WebServer] 9:24:49 AM [vite] (client) [console.error] Error: Class temporarily unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+[WebServer] 9:24:49 AM [vite] (client) [console.error] Error: Class temporarily unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:14:9)
+[WebServer]     at async fetchClasses (http://127.0.0.1:5187/src/features/profiles/admin/pages/classes/services/classes.service.ts:97:15)
+  ok   8 tests\admin-class-view.spec.ts:62:1 › class details error removes every reservation immediately and retries context loads (1.4s)
+  ok   9 tests\admin-class-view.spec.ts:77:1 › class schedule auto-column classification observes native content width changes (1.4s)
+  ok  10 tests\admin-class-view.spec.ts:90:1 › class roster auto-column classification observes native content width changes (1.5s)
+  ok  11 tests\admin-class-view.spec.ts:104:35 › class schedule light: time cell shimmer fits its real tinted surface (2.0s)
+  ok  12 tests\admin-class-view.spec.ts:104:35 › class schedule dark: time cell shimmer fits its real tinted surface (2.2s)
+  ok  13 tests\admin-loading.spec.ts:38:196 › /admin 375px light: real shell and loading composition (1.9s)
+  ok  14 tests\admin-loading.spec.ts:38:196 › /admin 375px dark: real shell and loading composition (1.9s)
+  ok  15 tests\admin-loading.spec.ts:38:196 › /admin 1280px light: real shell and loading composition (2.0s)
+  ok  16 tests\admin-loading.spec.ts:38:196 › /admin 1280px dark: real shell and loading composition (2.0s)
+  ok  17 tests\admin-loading.spec.ts:38:196 › /admin/classes 375px light: real shell and loading composition (2.1s)
+  ok  18 tests\admin-loading.spec.ts:38:196 › /admin/classes 375px dark: real shell and loading composition (1.8s)
+  ok  19 tests\admin-loading.spec.ts:38:196 › /admin/classes 1280px light: real shell and loading composition (1.9s)
+  ok  20 tests\admin-loading.spec.ts:38:196 › /admin/classes 1280px dark: real shell and loading composition (1.9s)
+  ok  21 tests\admin-loading.spec.ts:38:196 › /admin/users 375px light: real shell and loading composition (1.6s)
+  ok  22 tests\admin-loading.spec.ts:38:196 › /admin/users 375px dark: real shell and loading composition (1.8s)
+  ok  23 tests\admin-loading.spec.ts:38:196 › /admin/users 1280px light: real shell and loading composition (1.7s)
+  ok  24 tests\admin-loading.spec.ts:38:196 › /admin/users 1280px dark: real shell and loading composition (1.9s)
+  ok  25 tests\admin-loading.spec.ts:38:196 › /admin/students 375px light: real shell and loading composition (2.1s)
+  ok  26 tests\admin-loading.spec.ts:38:196 › /admin/students 375px dark: real shell and loading composition (1.8s)
+  ok  27 tests\admin-loading.spec.ts:38:196 › /admin/students 1280px light: real shell and loading composition (1.9s)
+  ok  28 tests\admin-loading.spec.ts:38:196 › /admin/students 1280px dark: real shell and loading composition (1.9s)
+  ok  29 tests\admin-loading.spec.ts:38:196 › /admin/academic-year 375px light: real shell and loading composition (1.8s)
+  ok  30 tests\admin-loading.spec.ts:38:196 › /admin/academic-year 375px dark: real shell and loading composition (1.8s)
+  ok  31 tests\admin-loading.spec.ts:38:196 › /admin/academic-year 1280px light: real shell and loading composition (1.9s)
+  ok  32 tests\admin-loading.spec.ts:38:196 › /admin/academic-year 1280px dark: real shell and loading composition (1.9s)
+  ok  33 tests\admin-loading.spec.ts:38:196 › /admin/subjects 375px light: real shell and loading composition (2.7s)
+  ok  34 tests\admin-loading.spec.ts:38:196 › /admin/subjects 375px dark: real shell and loading composition (1.8s)
+  ok  35 tests\admin-loading.spec.ts:38:196 › /admin/subjects 1280px light: real shell and loading composition (1.9s)
+  ok  36 tests\admin-loading.spec.ts:38:196 › /admin/subjects 1280px dark: real shell and loading composition (2.0s)
+  ok  37 tests\admin-loading.spec.ts:59:48 › users directory AUTO-COLUMN classification is supported by measured fixtures (2.5s)
+  ok  38 tests\admin-loading.spec.ts:59:48 › students directory AUTO-COLUMN classification is supported by measured fixtures (1.3s)
+  ok  39 tests\admin-loading.spec.ts:73:2 › academic term auto-column classification requires observed variation (1.3s)
+  ok  40 tests\advisory-roster.spec.ts:17:68 › advisory roster 375 light: real labels, actions and table (1.8s)
+  ok  41 tests\advisory-roster.spec.ts:17:68 › advisory roster 375 dark: real labels, actions and table (1.8s)
+  ok  42 tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 light: real labels, actions and table (1.9s)
+  ok  43 tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 dark: real labels, actions and table (1.9s)
+  ok  44 tests\advisory-roster.spec.ts:36:1 › student directory classification observes native columns across short/long names (1.2s)
+  ok  45 tests\auto-columns.spec.ts:9:32 › auto columns: 0 rows, one swap, stable shell and cached repeat (2.5s)
+  ok  46 tests\auto-columns.spec.ts:9:32 › auto columns: 1 rows, one swap, stable shell and cached repeat (4.1s)
+  ok  47 tests\auto-columns.spec.ts:9:32 › auto columns: 9 rows, one swap, stable shell and cached repeat (4.0s)
+  ok  48 tests\auto-columns.spec.ts:44:1 › auto-column classification requires observed data-dependent widths (455ms)
+  ok  49 tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 375px light: real month and shared event rows (2.2s)
+  ok  50 tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 375px dark: real month and shared event rows (1.7s)
+  ok  51 tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 1280px light: real month and shared event rows (1.9s)
+  ok  52 tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 1280px dark: real month and shared event rows (1.9s)
+  ok  53 tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 375px light: real month and shared event rows (1.7s)
+  ok  54 tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 375px dark: real month and shared event rows (1.7s)
+  ok  55 tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 1280px light: real month and shared event rows (1.8s)
+  ok  56 tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 1280px dark: real month and shared event rows (1.8s)
+  ok  57 tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 375px light: real month and shared event rows (1.8s)
+  ok  58 tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 375px dark: real month and shared event rows (2.8s)
+  ok  59 tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 1280px light: real month and shared event rows (1.9s)
+  ok  60 tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 1280px dark: real month and shared event rows (1.9s)
+  ok  61 tests\calendar-loading.spec.ts:6:70 › PARENT calendar 375px light: real month and shared event rows (1.8s)
+  ok  62 tests\calendar-loading.spec.ts:6:70 › PARENT calendar 375px dark: real month and shared event rows (1.8s)
+  ok  63 tests\calendar-loading.spec.ts:6:70 › PARENT calendar 1280px light: real month and shared event rows (1.9s)
+  ok  64 tests\calendar-loading.spec.ts:6:70 › PARENT calendar 1280px dark: real month and shared event rows (1.8s)
+  ok  65 tests\courseware-loading.spec.ts:21:68 › courseware 375 light: real learning frame before fetched leaves (1.9s)
+  ok  66 tests\courseware-loading.spec.ts:21:68 › courseware 375 dark: real learning frame before fetched leaves (1.8s)
+  ok  67 tests\courseware-loading.spec.ts:21:68 › courseware 1280 light: real learning frame before fetched leaves (1.9s)
+  ok  68 tests\courseware-loading.spec.ts:21:68 › courseware 1280 dark: real learning frame before fetched leaves (2.0s)
+  ok  69 tests\courseware-loading.spec.ts:44:32 › courseware 0 resources preserves empty/short/long content (671ms)
+  ok  70 tests\courseware-loading.spec.ts:44:32 › courseware 1 resources preserves empty/short/long content (785ms)
+  ok  71 tests\courseware-loading.spec.ts:44:32 › courseware 9 resources preserves empty/short/long content (3.5s)
+[WebServer] 9:26:51 AM [vite] (client) [console.error] Failed to load courseware: Error: Unavailable
+[WebServer]     at getCourseware (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/courseware.service.ts:11:9)
+[WebServer]     at async load (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/CoursewareView.tsx:204:20)
+[WebServer] 9:26:51 AM [vite] (client) [console.error] Failed to load courseware: Error: Unavailable
+[WebServer]     at getCourseware (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/courseware.service.ts:11:9)
+[WebServer]     at async load (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/CoursewareView.tsx:204:20)
+  ok  72 tests\courseware-loading.spec.ts:55:1 › courseware error ends reservation and retries the same request (756ms)
+  ok  73 tests\courseware-loading.spec.ts:69:35 › courseware light: actual hero and thumbnail surfaces keep visible shimmer (2.3s)
+  ok  74 tests\courseware-loading.spec.ts:69:35 › courseware dark: actual hero and thumbnail surfaces keep visible shimmer (2.2s)
+  ok  75 tests\design-contract.spec.ts:6:1 › skeleton CSS has token-only colors (1ms)
+  ok  76 tests\design-contract.spec.ts:12:40 › light: pixel area survives all four shimmer phases on every surface (2.4s)
+  ok  77 tests\design-contract.spec.ts:12:40 › dark: pixel area survives all four shimmer phases on every surface (2.2s)
+  ok  78 tests\design-contract.spec.ts:17:68 › teacher 375 light: static content and spinner guard (2.0s)
+  ok  79 tests\design-contract.spec.ts:17:68 › teacher 375 dark: static content and spinner guard (1.9s)
+  ok  80 tests\design-contract.spec.ts:17:68 › teacher 1280 light: static content and spinner guard (1.7s)
+  ok  81 tests\design-contract.spec.ts:17:68 › teacher 1280 dark: static content and spinner guard (1.7s)
+  ok  82 tests\design-contract.spec.ts:32:1 › negative control: shine blending into the surface is caught by the pixel guard (484ms)
+  ok  83 tests\design-contract.spec.ts:44:1 › negative control: a hard shimmer edge is caught independently of visible area (491ms)
+  ok  84 tests\directory-loading.spec.ts:7:70 › /principal/teachers 375px light: real controls and screenshots (1.8s)
+  ok  85 tests\directory-loading.spec.ts:7:70 › /principal/teachers 375px dark: real controls and screenshots (1.7s)
+  ok  86 tests\directory-loading.spec.ts:7:70 › /principal/teachers 1280px light: real controls and screenshots (1.9s)
+  ok  87 tests\directory-loading.spec.ts:7:70 › /principal/teachers 1280px dark: real controls and screenshots (1.8s)
+  ok  88 tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 375px light: real controls and screenshots (2.1s)
+  ok  89 tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 375px dark: real controls and screenshots (1.7s)
+  ok  90 tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 1280px light: real controls and screenshots (1.8s)
+  ok  91 tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 1280px dark: real controls and screenshots (1.8s)
+  ok  92 tests\directory-loading.spec.ts:7:70 › /principal/students 375px light: real controls and screenshots (1.8s)
+  ok  93 tests\directory-loading.spec.ts:7:70 › /principal/students 375px dark: real controls and screenshots (1.7s)
+  ok  94 tests\directory-loading.spec.ts:7:70 › /principal/students 1280px light: real controls and screenshots (1.8s)
+  ok  95 tests\directory-loading.spec.ts:7:70 › /principal/students 1280px dark: real controls and screenshots (1.8s)
+  x   96 tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 375px light: real controls and screenshots (1.7s)
+(node:19260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   97 tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 375px dark: real controls and screenshots (1.8s)
+(node:35324) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   98 tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 1280px light: real controls and screenshots (1.9s)
+(node:9872) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   99 tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 1280px dark: real controls and screenshots (2.8s)
+(node:23848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  100 tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 375px light: real controls and screenshots (1.9s)
+(node:23028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  101 tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 375px dark: real controls and screenshots (1.8s)
+(node:2240) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  102 tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 1280px light: real controls and screenshots (1.9s)
+(node:33728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  103 tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 1280px dark: real controls and screenshots (1.9s)
+(node:7056) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 104 tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 375px light: real controls and screenshots (1.8s)
+  ok 105 tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 375px dark: real controls and screenshots (1.7s)
+  ok 106 tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 1280px light: real controls and screenshots (1.8s)
+  ok 107 tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 1280px dark: real controls and screenshots (1.8s)
+  ok 108 tests\directory-loading.spec.ts:7:70 › /parent 375px light: real controls and screenshots (2.1s)
+  ok 109 tests\directory-loading.spec.ts:7:70 › /parent 375px dark: real controls and screenshots (1.8s)
+  ok 110 tests\directory-loading.spec.ts:7:70 › /parent 1280px light: real controls and screenshots (1.8s)
+  ok 111 tests\directory-loading.spec.ts:7:70 › /parent 1280px dark: real controls and screenshots (1.8s)
+  ok 112 tests\directory-loading.spec.ts:29:1 › principal directory auto-column classification requires observed variation (1.2s)
+  ok 113 tests\finishing-contract.spec.ts:6:1 › session identity and fixed attendance labels are real before dashboard fetch (679ms)
+  ok 114 tests\finishing-contract.spec.ts:15:1 › attendance skeleton retains the real ring chart shape (710ms)
+  ok 115 tests\finishing-contract.spec.ts:25:1 › table refetch keeps old rows until delay then dims without a spinner (915ms)
+  ok 116 tests\finishing-contract.spec.ts:44:40 › light: shine is distinct from every surface (219ms)
+  ok 117 tests\finishing-contract.spec.ts:44:40 › dark: shine is distinct from every surface (210ms)
+  ok 118 tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 375 light: headers, legend and controls stay real (1.6s)
+  ok 119 tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 375 dark: headers, legend and controls stay real (2.8s)
+  ok 120 tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 1280 light: headers, legend and controls stay real (2.8s)
+  ok 121 tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 1280 dark: headers, legend and controls stay real (2.6s)
+  ok 122 tests\holistic-analytics-loading.spec.ts:41:1 › holistic metric name and detail bars have measurable widths (1.8s)
+  ok 123 tests\holistic-analytics-loading.spec.ts:53:32 › holistic analytics 0 returned rows preserve empty, short and wrapping results (692ms)
+  ok 124 tests\holistic-analytics-loading.spec.ts:53:32 › holistic analytics 1 returned rows preserve empty, short and wrapping results (692ms)
+  ok 125 tests\holistic-analytics-loading.spec.ts:53:32 › holistic analytics 9 returned rows preserve empty, short and wrapping results (682ms)
+  ok 126 tests\holistic-analytics-loading.spec.ts:67:1 › holistic analytics errors clear all shapes and retry options and scores (1.3s)
+  ok 127 tests\holistic-analytics-loading.spec.ts:80:35 › holistic analytics light: actual card and heatmap surfaces retain shimmer pixels (2.4s)
+  ok 128 tests\holistic-analytics-loading.spec.ts:80:35 › holistic analytics dark: actual card and heatmap surfaces retain shimmer pixels (2.5s)
+  ok 129 tests\loading.spec.ts:7:1 › 60ms never reveals a skeleton (288ms)
+  ok 130 tests\loading.spec.ts:11:1 › 320ms reveals after 200ms and reserves at least 400ms (1.1s)
+  ok 131 tests\loading.spec.ts:20:1 › 1500ms begins showing content within 150ms of data (2.1s)
+  ok 132 tests\loading.spec.ts:24:1 › fixed region retains height and has zero CLS (1.6s)
+  ok 133 tests\loading.spec.ts:30:3 › variable list, data size 0: one swap, stable surroundings (1.9s)
+  ok 134 tests\loading.spec.ts:30:3 › variable list, data size 2: one swap, stable surroundings (1.8s)
+  ok 135 tests\loading.spec.ts:30:3 › variable list, data size 9: one swap, stable surroundings (1.8s)
+  ok 136 tests\loading.spec.ts:30:3 › variable text, data size 1: one swap, stable surroundings (1.8s)
+  ok 137 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (1.8s)
+  ok 138 tests\loading.spec.ts:30:3 › variable text, data size 24: one swap, stable surroundings (1.8s)
+  ok 139 tests\loading.spec.ts:49:1 › animation properties, shimmer duration and shared easing (1.1s)
+  ok 140 tests\loading.spec.ts:59:1 › different mount times share shimmer phase (1.1s)
+  ok 141 tests\loading.spec.ts:64:30 › 5 items use exact stagger policy (1.1s)
+  ok 142 tests\loading.spec.ts:64:30 › 12 items use exact stagger policy (1.1s)
+  ok 143 tests\loading.spec.ts:68:1 › reduced motion has no shimmer or fade wait (1.3s)
+  ok 144 tests\loading.spec.ts:76:1 › aria busy, hidden reservation, delayed status and complete cleanup (1.8s)
+  ok 145 tests\loading.spec.ts:85:1 › error removes skeleton and retry reloads (2.5s)
+  ok 146 tests\loading.spec.ts:92:1 › negative control catches wrong fixed height and CLS (1.6s)
+  ok 147 tests\loading.spec.ts:97:1 › negative control catches unsynchronized shimmer (1.1s)
+  ok 148 tests\loading.spec.ts:102:1 › skeleton CSS uses tokens for every color (1ms)
+  ok 149 tests\loading.spec.ts:107:40 › light: neutral contrast on every surface (273ms)
+  ok 150 tests\loading.spec.ts:107:40 › dark: neutral contrast on every surface (256ms)
+  ok 151 tests\loading.spec.ts:116:1 › text line metrics and adjacent widths (245ms)
+  ok 152 tests\overlay-contract.spec.ts:6:73 › fixed overlay 375 light: shared field keeps its matching box (2.9s)
+  ok 153 tests\overlay-contract.spec.ts:6:73 › fixed overlay 375 dark: shared field keeps its matching box (3.0s)
+  ok 154 tests\overlay-contract.spec.ts:6:73 › fixed overlay 1280 light: shared field keeps its matching box (3.2s)
+  ok 155 tests\overlay-contract.spec.ts:6:73 › fixed overlay 1280 dark: shared field keeps its matching box (3.2s)
+  ok 156 tests\overlay-contract.spec.ts:15:1 › fixed overlay rejects a shape extending outside its matching loaded field (3.1s)
+  ok 157 tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 375 light: real shell and existing cards (2.2s)
+  ok 158 tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 375 dark: real shell and existing cards (1.9s)
+  ok 159 tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 1280 light: real shell and existing cards (1.9s)
+  ok 160 tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 1280 dark: real shell and existing cards (1.8s)
+  ok 161 tests\principal-gradebooks.spec.ts:40:1 › repeat gradebook visit displays cached cards and school year immediately (1.4s)
+  ok 162 tests\principal-gradebooks.spec.ts:56:1 › inline school year preserves the original paragraph flow (673ms)
+  ok 163 tests\refetch-contract.spec.ts:33:1 › 60ms refetch never dims or mounts visible skeleton rows (674ms)
+  ok 164 tests\refetch-contract.spec.ts:45:1 › slow refetch dims old rows, then falls back after two seconds without moving surroundings (3.3s)
+  ok 165 tests\refetch-contract.spec.ts:66:1 › refetch after empty results uses initial skeleton reservation (1.5s)
+  ok 166 tests\removed-loading-guard.spec.ts:9:1 › removed splash and duplicate advisory skeleton cannot be reintroduced (181ms)
+  x  167 tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition (24ms)
+(node:17964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 168 tests\static-routes.spec.ts:6:68 › topic support 375 light: known quest choices render immediately (823ms)
+  ok 169 tests\static-routes.spec.ts:6:68 › topic support 375 dark: known quest choices render immediately (726ms)
+  ok 170 tests\static-routes.spec.ts:6:68 › topic support 1280 light: known quest choices render immediately (862ms)
+  ok 171 tests\static-routes.spec.ts:6:68 › topic support 1280 dark: known quest choices render immediately (866ms)
+  ok 172 tests\static-routes.spec.ts:25:141 › ADMIN help 375 light: known page remains real (819ms)
+  ok 173 tests\static-routes.spec.ts:25:141 › ADMIN help 375 dark: known page remains real (764ms)
+  ok 174 tests\static-routes.spec.ts:25:141 › ADMIN help 1280 light: known page remains real (793ms)
+  ok 175 tests\static-routes.spec.ts:25:141 › ADMIN help 1280 dark: known page remains real (805ms)
+  ok 176 tests\static-routes.spec.ts:25:141 › PRINCIPAL help 375 light: known page remains real (796ms)
+  ok 177 tests\static-routes.spec.ts:25:141 › PRINCIPAL help 375 dark: known page remains real (704ms)
+  ok 178 tests\static-routes.spec.ts:25:141 › PRINCIPAL help 1280 light: known page remains real (782ms)
+  ok 179 tests\static-routes.spec.ts:25:141 › PRINCIPAL help 1280 dark: known page remains real (754ms)
+  ok 180 tests\static-routes.spec.ts:25:141 › TEACHER help 375 light: known page remains real (743ms)
+  ok 181 tests\static-routes.spec.ts:25:141 › TEACHER help 375 dark: known page remains real (779ms)
+  ok 182 tests\static-routes.spec.ts:25:141 › TEACHER help 1280 light: known page remains real (964ms)
+  ok 183 tests\static-routes.spec.ts:25:141 › TEACHER help 1280 dark: known page remains real (1.0s)
+  ok 184 tests\static-routes.spec.ts:25:141 › PARENT help 375 light: known page remains real (859ms)
+  ok 185 tests\static-routes.spec.ts:25:141 › PARENT help 375 dark: known page remains real (739ms)
+  ok 186 tests\static-routes.spec.ts:25:141 › PARENT help 1280 light: known page remains real (857ms)
+  ok 187 tests\static-routes.spec.ts:25:141 › PARENT help 1280 dark: known page remains real (835ms)
+  ok 188 tests\static-routes.spec.ts:44:105 › / 375 light: static public page needs no invented skeleton (1.4s)
+  ok 189 tests\static-routes.spec.ts:44:105 › / 375 dark: static public page needs no invented skeleton (852ms)
+  ok 190 tests\static-routes.spec.ts:44:105 › / 1280 light: static public page needs no invented skeleton (1.0s)
+  ok 191 tests\static-routes.spec.ts:44:105 › / 1280 dark: static public page needs no invented skeleton (986ms)
+  ok 192 tests\static-routes.spec.ts:44:105 › /login 375 light: static public page needs no invented skeleton (691ms)
+  ok 193 tests\static-routes.spec.ts:44:105 › /login 375 dark: static public page needs no invented skeleton (692ms)
+  ok 194 tests\static-routes.spec.ts:44:105 › /login 1280 light: static public page needs no invented skeleton (828ms)
+  ok 195 tests\static-routes.spec.ts:44:105 › /login 1280 dark: static public page needs no invented skeleton (836ms)
+  ok 196 tests\student-details-loading.spec.ts:25:68 › student details 375 light: real labels, baseline chart and controls (2.1s)
+  ok 197 tests\student-details-loading.spec.ts:25:68 › student details 375 dark: real labels, baseline chart and controls (1.8s)
+  ok 198 tests\student-details-loading.spec.ts:25:68 › student details 1280 light: real labels, baseline chart and controls (1.9s)
+  ok 199 tests\student-details-loading.spec.ts:25:68 › student details 1280 dark: real labels, baseline chart and controls (1.9s)
+  ok 200 tests\student-details-loading.spec.ts:42:32 › student details 0 scheduled subjects preserve native rows and known status (713ms)
+  ok 201 tests\student-details-loading.spec.ts:42:32 › student details 1 scheduled subjects preserve native rows and known status (671ms)
+  ok 202 tests\student-details-loading.spec.ts:42:32 › student details 9 scheduled subjects preserve native rows and known status (692ms)
+  ok 203 tests\student-details-loading.spec.ts:52:1 › student details failure removes all placeholders and retries the original context request (1.3s)
+  ok 204 tests\student-details-loading.spec.ts:64:1 › student details not-found state waits for the student request (660ms)
+  ok 205 tests\student-details-loading.spec.ts:72:1 › student performance AUTO-COLUMN classification requires native width variation (1.2s)
+  ok 206 tests\subject-analytics-loading.spec.ts:21:68 › subject analytics 375 light: real ranking frames and controls (2.0s)
+  ok 207 tests\subject-analytics-loading.spec.ts:21:68 › subject analytics 375 dark: real ranking frames and controls (2.3s)
+  ok 208 tests\subject-analytics-loading.spec.ts:21:68 › subject analytics 1280 light: real ranking frames and controls (2.9s)
+  ok 209 tests\subject-analytics-loading.spec.ts:21:68 › subject analytics 1280 dark: real ranking frames and controls (2.8s)
+  ok 210 tests\subject-analytics-loading.spec.ts:43:35 › subject priority light: track placeholder fits its actual surface (2.4s)
+  ok 211 tests\subject-analytics-loading.spec.ts:43:35 › subject priority dark: track placeholder fits its actual surface (2.0s)
+  ok 212 tests\subject-analytics-loading.spec.ts:53:32 › subject analytics 0 subjects preserve the real empty, short and full ranking states (799ms)
+  ok 213 tests\subject-analytics-loading.spec.ts:53:32 › subject analytics 1 subjects preserve the real empty, short and full ranking states (816ms)
+  ok 214 tests\subject-analytics-loading.spec.ts:53:32 › subject analytics 9 subjects preserve the real empty, short and full ranking states (958ms)
+  ok 215 tests\subject-analytics-loading.spec.ts:67:1 › subject analytics failure removes placeholders and retries all report requests (1.4s)
+  ok 216 tests\subject-analytics-loading.spec.ts:80:35 › subject analytics fast term refetch preserves the old ranking (1.5s)
+  ok 217 tests\subject-analytics-loading.spec.ts:80:35 › subject analytics slow term refetch preserves the old ranking (4.0s)
+  ok 218 tests\subject-analytics-loading.spec.ts:112:35 › subject analytics light: native chart bars and priority text use scoped neutral pixels (2.2s)
+  ok 219 tests\subject-analytics-loading.spec.ts:112:35 › subject analytics dark: native chart bars and priority text use scoped neutral pixels (2.2s)
+  ok 220 tests\subject-class-list.spec.ts:17:68 › subject roster 375 light: real controls, shared table rows and screenshots (1.8s)
+  ok 221 tests\subject-class-list.spec.ts:17:68 › subject roster 375 dark: real controls, shared table rows and screenshots (1.8s)
+  ok 222 tests\subject-class-list.spec.ts:17:68 › subject roster 1280 light: real controls, shared table rows and screenshots (1.9s)
+  ok 223 tests\subject-class-list.spec.ts:17:68 › subject roster 1280 dark: real controls, shared table rows and screenshots (1.9s)
+  ok 224 tests\subject-class-list.spec.ts:39:1 › subject roster auto-column classification is supported by native width changes (1.2s)
+  ok 225 tests\subject-class-list.spec.ts:52:32 › subject roster 0 results uses the real empty/short/long table (639ms)
+  ok 226 tests\subject-class-list.spec.ts:52:32 › subject roster 1 results uses the real empty/short/long table (638ms)
+  ok 227 tests\subject-class-list.spec.ts:52:32 › subject roster 9 results uses the real empty/short/long table (647ms)
+  ok 228 tests\subject-template-loading.spec.ts:21:68 › subject template 375 light: upload frame is real before fetched metadata (1.7s)
+  ok 229 tests\subject-template-loading.spec.ts:21:68 › subject template 375 dark: upload frame is real before fetched metadata (1.7s)
+  ok 230 tests\subject-template-loading.spec.ts:21:68 › subject template 1280 light: upload frame is real before fetched metadata (1.8s)
+  ok 231 tests\subject-template-loading.spec.ts:21:68 › subject template 1280 dark: upload frame is real before fetched metadata (1.8s)
+  ok 232 tests\subject-template-loading.spec.ts:40:1 › subject template absent result keeps original upload operation (692ms)
+  ok 233 tests\subject-template-loading.spec.ts:52:1 › subject template error clears skeleton and retries existing service (723ms)
+  ok 234 tests\subject-template-loading.spec.ts:66:35 › subject template light: fetched button label uses the actual maroon surface (1.6s)
+  ok 235 tests\subject-template-loading.spec.ts:66:35 › subject template dark: fetched button label uses the actual maroon surface (1.6s)
+  ok 236 tests\teacher-attendance.spec.ts:23:68 › teacher attendance 375 light: staged fetches keep real controls and table (1.8s)
+  ok 237 tests\teacher-attendance.spec.ts:23:68 › teacher attendance 375 dark: staged fetches keep real controls and table (1.8s)
+  ok 238 tests\teacher-attendance.spec.ts:23:68 › teacher attendance 1280 light: staged fetches keep real controls and table (1.9s)
+  ok 239 tests\teacher-attendance.spec.ts:23:68 › teacher attendance 1280 dark: staged fetches keep real controls and table (1.8s)
+  ok 240 tests\teacher-attendance.spec.ts:46:1 › attendance column classification is justified by long returned names (1.2s)
+  ok 241 tests\teacher-attendance.spec.ts:59:1 › attendance loading migration preserves the marking request (708ms)
+  ok 242 tests\teacher-dashboard.spec.ts:6:68 › teacher dashboard 375px light: real route, stable stat geometry and screenshots (1.6s)
+  ok 243 tests\teacher-dashboard.spec.ts:6:68 › teacher dashboard 375px dark: real route, stable stat geometry and screenshots (1.8s)
+  ok 244 tests\teacher-dashboard.spec.ts:6:68 › teacher dashboard 1280px light: real route, stable stat geometry and screenshots (1.9s)
+  ok 245 tests\teacher-dashboard.spec.ts:6:68 › teacher dashboard 1280px dark: real route, stable stat geometry and screenshots (1.7s)
+  ok 246 tests\teacher-dashboard.spec.ts:34:1 › classification rejects fixed regions whose loaded height depends on data size (3.1s)
+  ok 247 tests\teacher-dashboard.spec.ts:48:88 › teacher wrapping name classification: 3 characters (724ms)
+  ok 248 tests\teacher-dashboard.spec.ts:48:88 › teacher wrapping name classification: 15 characters (731ms)
+  ok 249 tests\teacher-dashboard.spec.ts:48:88 › teacher wrapping name classification: 200 characters (1.9s)
+  ok 250 tests\teacher-subject-loading.spec.ts:23:66 › teacher subject 375 light keeps real score sheet and controls (2.0s)
+  ok 251 tests\teacher-subject-loading.spec.ts:23:66 › teacher subject 375 dark keeps real score sheet and controls (1.7s)
+  ok 252 tests\teacher-subject-loading.spec.ts:23:66 › teacher subject 1280 light keeps real score sheet and controls (1.9s)
+  ok 253 tests\teacher-subject-loading.spec.ts:23:66 › teacher subject 1280 dark keeps real score sheet and controls (1.8s)
+  ok 254 tests\teacher-subject-loading.spec.ts:40:30 › teacher subject 0 students keeps original empty and full rosters (2.0s)
+  ok 255 tests\teacher-subject-loading.spec.ts:40:30 › teacher subject 1 students keeps original empty and full rosters (2.0s)
+  ok 256 tests\teacher-subject-loading.spec.ts:40:30 › teacher subject 9 students keeps original empty and full rosters (2.1s)
+[WebServer] 9:31:39 AM [vite] (client) [console.error] Failed to load subject info: Error: Class unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/subjects/services/subjectGrading.service.ts:12:9)
+[WebServer]     at async fetchSubjectSectionInfo (http://127.0.0.1:5187/src/features/profiles/teacher/pages/subjects/services/subjectGrading.service.ts:39:15)
+[WebServer]     at async Promise.allSettled (index 0)
+[WebServer]     at async loadAll (http://127.0.0.1:5187/src/features/profiles/teacher/pages/subjects/detail/SubjectDetailPage.tsx:221:82)
+  ok 257 tests\teacher-subject-loading.spec.ts:49:1 › teacher subject record failure clears placeholders and retries its real requests (1.3s)
+  ok 258 tests\teacher-subject-loading.spec.ts:57:66 › teacher holistic 375 light keeps actual rating controls and domain headers (2.2s)
+  ok 259 tests\teacher-subject-loading.spec.ts:57:66 › teacher holistic 375 dark keeps actual rating controls and domain headers (2.2s)
+  ok 260 tests\teacher-subject-loading.spec.ts:57:66 › teacher holistic 1280 light keeps actual rating controls and domain headers (2.4s)
+  ok 261 tests\teacher-subject-loading.spec.ts:57:66 › teacher holistic 1280 dark keeps actual rating controls and domain headers (2.4s)
+  ok 262 tests\teacher-subject-loading.spec.ts:71:1 › teacher grading tables are auto-column only because native widths vary with returned names (2.0s)
+  ok 263 tests\teacher-subject-loading.spec.ts:85:1 › teacher score saving retains the existing request payload and working-item handoff (1.2s)
+  ok 264 tests\teacher-subject-loading.spec.ts:93:34 › teacher score sheet light placeholders stay visible on header and row surfaces (2.4s)
+  ok 265 tests\teacher-subject-loading.spec.ts:93:34 › teacher score sheet dark placeholders stay visible on header and row surfaces (2.5s)
+  ok 266 tests\teacher-subject-loading.spec.ts:103:1 › teacher working table reuses measured pending column widths on repeat load (2.7s)
+  ok 267 tests\teacher-subjects.spec.ts:25:68 › teacher subjects 375px light: real shell, card geometry and screenshots (1.2s)
+  ok 268 tests\teacher-subjects.spec.ts:25:68 › teacher subjects 375px dark: real shell, card geometry and screenshots (816ms)
+  ok 269 tests\teacher-subjects.spec.ts:25:68 › teacher subjects 1280px light: real shell, card geometry and screenshots (1.7s)
+  ok 270 tests\teacher-subjects.spec.ts:25:68 › teacher subjects 1280px dark: real shell, card geometry and screenshots (1.1s)
+  ok 271 tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 0 rows, stable actions and filters (1.8s)
+  ok 272 tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 1 rows, stable actions and filters (1.7s)
+  ok 273 tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 9 rows, stable actions and filters (1.8s)
+  ok 274 tests\user-details-loading.spec.ts:22:68 › user details 375 light: real field labels and actions (1.9s)
+  ok 275 tests\user-details-loading.spec.ts:22:68 › user details 375 dark: real field labels and actions (1.8s)
+  ok 276 tests\user-details-loading.spec.ts:22:68 › user details 1280 light: real field labels and actions (1.9s)
+  ok 277 tests\user-details-loading.spec.ts:22:68 › user details 1280 dark: real field labels and actions (1.9s)
+  ok 278 tests\user-details-loading.spec.ts:40:61 › ADMIN details preserve short and wrapping fields (1.2s)
+  ok 279 tests\user-details-loading.spec.ts:40:61 › PRINCIPAL details preserve short and wrapping fields (1.2s)
+  ok 280 tests\user-details-loading.spec.ts:40:61 › PARENT details preserve short and wrapping fields (1.2s)
+  ok 281 tests\user-details-loading.spec.ts:52:1 › user details error removes shapes and retries the account request (1.3s)
+  ok 282 tests\user-details-loading.spec.ts:64:1 › missing user uses the real not-found state only after the request (645ms)
+  ok 283 tests\user-details-loading.spec.ts:72:1 › teacher user details wait for the teacher ID mapping and preserve real profile controls (1.7s)
+  ok 284 tests\user-form-loading.spec.ts:10:62 › edit user 375 light keeps real form labels and controls (2.1s)
+  ok 285 tests\user-form-loading.spec.ts:10:62 › edit user 375 dark keeps real form labels and controls (2.4s)
+  ok 286 tests\user-form-loading.spec.ts:10:62 › edit user 1280 light keeps real form labels and controls (2.7s)
+  ok 287 tests\user-form-loading.spec.ts:10:62 › edit user 1280 dark keeps real form labels and controls (3.0s)
+  ok 288 tests\user-form-loading.spec.ts:24:1 › edit user failure clears value placeholders and retries accounts (1.3s)
+  ok 289 tests\user-form-loading.spec.ts:29:1 › edit user not found waits for the accounts result (697ms)
+  ok 290 tests\user-form-loading.spec.ts:33:62 › new user 375 light renders known fields and workflow immediately (794ms)
+  ok 291 tests\user-form-loading.spec.ts:33:62 › new user 375 dark renders known fields and workflow immediately (797ms)
+  ok 292 tests\user-form-loading.spec.ts:33:62 › new user 1280 light renders known fields and workflow immediately (872ms)
+  ok 293 tests\user-form-loading.spec.ts:33:62 › new user 1280 dark renders known fields and workflow immediately (844ms)
+  ok 294 tests\user-form-loading.spec.ts:40:1 › editing a loaded user preserves the existing endpoint and payload (735ms)
+  ok 295 tests\user-form-loading.spec.ts:47:1 › new principal optional conflict reserves wrapping text then shrinks once without resetting input (1.7s)
+  ok 296 tests\user-form-loading.spec.ts:52:32 › principal conflict light reserves visible paragraph bars on warning surface (1.4s)
+  ok 297 tests\user-form-loading.spec.ts:52:32 › principal conflict dark reserves visible paragraph bars on warning surface (1.4s)
+  ok 298 tests\user-form-loading.spec.ts:58:32 › edit user light values contrast against actual input surface (1.8s)
+  ok 299 tests\user-form-loading.spec.ts:58:32 › edit user dark values contrast against actual input surface (2.1s)
+  ok 300 tests\user-form-loading.spec.ts:62:1 › pending user selects never show a fallback selected value behind the skeleton (1.3s)
+
+
+  1) tests\admin-class-view.spec.ts:28:68 › class details 375 light: real actions, tabs and weekday headings 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByPlaceholder('Search student...')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByPlaceholder('Search student...') with timeout 5000ms
+      - waiting for getByPlaceholder('Search student...')
+
+
+      47 |   await verifyOverlay();
+      48 |   await page.getByRole("tab", { name: /Class list/ }).click();
+    > 49 |   await expect(page.getByPlaceholder("Search student...")).toBeVisible();
+         |                                                            ^
+      50 |   await expect(page.locator('[data-sk-region="student-directory-row"]')).toHaveCount(3);
+      51 | });
+      52 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-class-view.spec.ts:49:60
+
+    Error Context: test-results\admin-class-view-class-det-a71f0-s-tabs-and-weekday-headings\error-context.md
+
+  2) tests\admin-class-view.spec.ts:28:68 › class details 375 dark: real actions, tabs and weekday headings 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByPlaceholder('Search student...')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByPlaceholder('Search student...') with timeout 5000ms
+      - waiting for getByPlaceholder('Search student...')
+
+
+      47 |   await verifyOverlay();
+      48 |   await page.getByRole("tab", { name: /Class list/ }).click();
+    > 49 |   await expect(page.getByPlaceholder("Search student...")).toBeVisible();
+         |                                                            ^
+      50 |   await expect(page.locator('[data-sk-region="student-directory-row"]')).toHaveCount(3);
+      51 | });
+      52 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-class-view.spec.ts:49:60
+
+    Error Context: test-results\admin-class-view-class-det-6ddbc-s-tabs-and-weekday-headings\error-context.md
+
+  3) tests\admin-class-view.spec.ts:28:68 › class details 1280 light: real actions, tabs and weekday headings 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByPlaceholder('Search student...')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByPlaceholder('Search student...') with timeout 5000ms
+      - waiting for getByPlaceholder('Search student...')
+        - waiting for "http://127.0.0.1:5187/admin/classes/1" navigation to finish...
+        - navigated to "http://127.0.0.1:5187/admin/classes/1"
+
+
+      47 |   await verifyOverlay();
+      48 |   await page.getByRole("tab", { name: /Class list/ }).click();
+    > 49 |   await expect(page.getByPlaceholder("Search student...")).toBeVisible();
+         |                                                            ^
+      50 |   await expect(page.locator('[data-sk-region="student-directory-row"]')).toHaveCount(3);
+      51 | });
+      52 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-class-view.spec.ts:49:60
+
+    Error Context: test-results\admin-class-view-class-det-2366c-s-tabs-and-weekday-headings\error-context.md
+
+  4) tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 375px light: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 16,
+    -   "y": 156.5,
+    +   "y": 138,
+      }
+
+      21 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      22 |     release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 23 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      24 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      25 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      26 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:23:40
+
+    Error Context: test-results\directory-loading--princip-7d3f8-al-controls-and-screenshots\error-context.md
+
+  5) tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 375px dark: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 16,
+    -   "y": 156.5,
+    +   "y": 138,
+      }
+
+      21 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      22 |     release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 23 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      24 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      25 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      26 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:23:40
+
+    Error Context: test-results\directory-loading--princip-d0265-al-controls-and-screenshots\error-context.md
+
+  6) tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 1280px light: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 264,
+    -   "y": 163.6875,
+    +   "y": 134.6875,
+      }
+
+      21 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      22 |     release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 23 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      24 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      25 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      26 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:23:40
+
+    Error Context: test-results\directory-loading--princip-8c9de-al-controls-and-screenshots\error-context.md
+
+  7) tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 1280px dark: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 264,
+    -   "y": 163.6875,
+    +   "y": 134.6875,
+      }
+
+      21 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      22 |     release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 23 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      24 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      25 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      26 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:23:40
+
+    Error Context: test-results\directory-loading--princip-e5507-al-controls-and-screenshots\error-context.md
+
+  8) tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 375px light: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 16,
+    -   "y": 156.5,
+    +   "y": 138,
+      }
+
+      21 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      22 |     release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 23 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      24 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      25 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      26 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:23:40
+
+    Error Context: test-results\directory-loading--princip-8672d-al-controls-and-screenshots\error-context.md
+
+  9) tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 375px dark: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 16,
+    -   "y": 156.5,
+    +   "y": 138,
+      }
+
+      21 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      22 |     release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 23 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      24 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      25 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      26 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:23:40
+
+    Error Context: test-results\directory-loading--princip-a600b-al-controls-and-screenshots\error-context.md
+
+  10) tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 1280px light: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 264,
+    -   "y": 163.6875,
+    +   "y": 134.6875,
+      }
+
+      21 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      22 |     release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 23 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      24 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      25 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      26 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:23:40
+
+    Error Context: test-results\directory-loading--princip-ac098-al-controls-and-screenshots\error-context.md
+
+  11) tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 1280px dark: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 264,
+    -   "y": 163.6875,
+    +   "y": 134.6875,
+      }
+
+      21 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      22 |     release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 23 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      24 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      25 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      26 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:23:40
+
+    Error Context: test-results\directory-loading--princip-05ed5-al-controls-and-screenshots\error-context.md
+
+  12) tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition 
+
+    Error: Routes still requiring migration and real-route verification:
+    /admin/students/new
+    /admin/students/:studentId/edit
+    /admin/classes/new
+    /admin/classes/:classId/edit
+    /admin/subjects/new
+    /principal
+    /principal/students/class/:classId
+    /principal/students/grade/:gradeId
+    /principal/holistic-performance-analytics
+    /principal/gradebooks/:grade
+    /teacher/attendance/records
+    /teacher/subjects/:subjectId/records
+    /teacher/grades
+    /teacher/holistic
+    /teacher/holistic/:studentId
+    /teacher/holistic/domain-trends
+    /parent/students/:studentId
+    /parent/students/:studentId/topics/:topicId/quiz
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 20
+
+    - Array []
+    + Array [
+    +   "/admin/students/new",
+    +   "/admin/students/:studentId/edit",
+    +   "/admin/classes/new",
+    +   "/admin/classes/:classId/edit",
+    +   "/admin/subjects/new",
+    +   "/principal",
+    +   "/principal/students/class/:classId",
+    +   "/principal/students/grade/:gradeId",
+    +   "/principal/holistic-performance-analytics",
+    +   "/principal/gradebooks/:grade",
+    +   "/teacher/attendance/records",
+    +   "/teacher/subjects/:subjectId/records",
+    +   "/teacher/grades",
+    +   "/teacher/holistic",
+    +   "/teacher/holistic/:studentId",
+    +   "/teacher/holistic/domain-trends",
+    +   "/parent/students/:studentId",
+    +   "/parent/students/:studentId/topics/:topicId/quiz",
+    + ]
+
+      32 |   expect(routes.length).toBeGreaterThan(0);
+      33 |   const uncovered = routes.filter(route => !(route in routeSkeletons));
+    > 34 |   expect(uncovered, `Routes still requiring migration and real-route verification:\n${uncovered.join("\n")}`).toEqual([]);
+         |                                                                                                               ^
+      35 | });
+      36 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\route-coverage.spec.ts:34:111
+
+    Error Context: test-results\route-coverage-every-real--4a050-its-own-loading-composition\error-context.md
+
+  12 failed
+    tests\admin-class-view.spec.ts:28:68 › class details 375 light: real actions, tabs and weekday headings 
+    tests\admin-class-view.spec.ts:28:68 › class details 375 dark: real actions, tabs and weekday headings 
+    tests\admin-class-view.spec.ts:28:68 › class details 1280 light: real actions, tabs and weekday headings 
+    tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 375px light: real controls and screenshots 
+    tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 375px dark: real controls and screenshots 
+    tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 1280px light: real controls and screenshots 
+    tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 1280px dark: real controls and screenshots 
+    tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 375px light: real controls and screenshots 
+    tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 375px dark: real controls and screenshots 
+    tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 1280px light: real controls and screenshots 
+    tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 1280px dark: real controls and screenshots 
+    tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition ─
+  288 passed (8.7m)

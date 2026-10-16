@@ -1,0 +1,69 @@
+{
+  "regions": [
+    {
+      "selector": "[data-sk-region=\"domain-trend-score-cognitive\"]",
+      "box": {
+        "x": 335,
+        "y": 511.640625,
+        "width": 25.875,
+        "height": 18
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"domain-trend-score-emotional\"]",
+      "box": {
+        "x": 586,
+        "y": 511.640625,
+        "width": 25.875,
+        "height": 18
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"domain-trend-score-behavioral\"]",
+      "box": {
+        "x": 837,
+        "y": 511.640625,
+        "width": 25.875,
+        "height": 18
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"domain-trend-score-social\"]",
+      "box": {
+        "x": 1088,
+        "y": 511.640625,
+        "width": 25.875,
+        "height": 18
+      }
+    }
+  ],
+  "loadedBoxes": [
+    {
+      "x": 335,
+      "y": 463.140625,
+      "width": 25.59375,
+      "height": 18
+    },
+    {
+      "x": 586,
+      "y": 463.140625,
+      "width": 25.59375,
+      "height": 18
+    },
+    {
+      "x": 837,
+      "y": 463.140625,
+      "width": 25.59375,
+      "height": 18
+    },
+    {
+      "x": 1088,
+      "y": 463.140625,
+      "width": 25.59375,
+      "height": 18
+    }
+  ],
+  "shapePixels": 1100,
+  "outsidePixels": 0,
+  "outsideRatio": 0
+}

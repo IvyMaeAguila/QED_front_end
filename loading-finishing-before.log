@@ -1,0 +1,102 @@
+[WebServer] (node:31752) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:32916) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+(node:23548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\finishing-contract.spec.ts:6:1 › session identity and fixed attendance labels are real before dashboard fetch (8.3s)
+(node:20280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 tests\finishing-contract.spec.ts:15:1 › attendance skeleton retains the real ring chart shape (5.3s)
+(node:18712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 tests\finishing-contract.spec.ts:25:1 › table refetch keeps old rows until delay then dims without a spinner (5.5s)
+(node:35940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 tests\finishing-contract.spec.ts:44:40 › light: shine is distinct from every surface (295ms)
+  ok 5 tests\finishing-contract.spec.ts:44:40 › dark: shine is distinct from every surface (213ms)
+
+
+  1) tests\finishing-contract.spec.ts:6:1 › session identity and fixed attendance labels are real before dashboard fetch 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /Good .*, Marie Dela Cruz!/ })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: /Good .*, Marie Dela Cruz!/ }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: /Good .*, Marie Dela Cruz!/ })
+
+
+       7 |   const release = await mockTeacher(page, false);
+       8 |   await page.goto("/teacher");
+    >  9 |   await expect(page.getByRole("heading", { name: /Good .*, Marie Dela Cruz!/ })).toBeVisible();
+         |                                                                                  ^
+      10 |   for (const label of ["Status", "Students", "Share", "Present", "Late", "Absent", "Present rate"])
+      11 |     await expect(page.getByText(label, { exact: true }).last()).toBeVisible();
+      12 |   release();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\finishing-contract.spec.ts:9:82
+
+    Error Context: test-results\finishing-contract-session-b2187-real-before-dashboard-fetch\error-context.md
+
+  2) tests\finishing-contract.spec.ts:15:1 › attendance skeleton retains the real ring chart shape ─
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('[data-sk-chart="ring"]')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-sk-chart="ring"]') with timeout 5000ms
+      - waiting for locator('[data-sk-chart="ring"]')
+
+
+      17 |   await page.goto("/teacher");
+      18 |   const chart = page.locator('[data-sk-chart="ring"]');
+    > 19 |   await expect(chart).toBeVisible();
+         |                       ^
+      20 |   await expect(chart.locator('[data-sk-primitive="block"]')).toHaveCSS("mask-image", /radial-gradient/);
+      21 |   release(); await expect(page.locator("[data-sk-layer]")).toHaveCount(0);
+      22 |   await expect(chart.locator("svg circle").first()).toHaveAttribute("fill", "none");
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\finishing-contract.spec.ts:19:23
+
+    Error Context: test-results\finishing-contract-attenda-7f8b2-s-the-real-ring-chart-shape\error-context.md
+
+  3) tests\finishing-contract.spec.ts:25:1 › table refetch keeps old rows until delay then dims without a spinner 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Existing Teacher', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Existing Teacher', { exact: true }) with timeout 5000ms
+      - waiting for getByText('Existing Teacher', { exact: true })
+
+
+      35 |   gate = new Promise<void>(resolve => { release = resolve; });
+      36 |   await page.getByRole("button", { name: "Refresh", exact: true }).click();
+    > 37 |   await expect(page.getByText("Existing Teacher", { exact: true })).toBeVisible();
+         |                                                                     ^
+      38 |   await expect(region).toHaveAttribute("data-sk-phase", "dimmed");
+      39 |   await expect(region.locator("[data-sk-stale]")).toHaveCSS("opacity", "0.6");
+      40 |   await expect(region.locator("[data-sk-layer]")).toHaveCount(0);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\finishing-contract.spec.ts:37:69
+
+    Error Context: test-results\finishing-contract-table-r-d95ff-then-dims-without-a-spinner\error-context.md
+
+  3 failed
+    tests\finishing-contract.spec.ts:6:1 › session identity and fixed attendance labels are real before dashboard fetch 
+    tests\finishing-contract.spec.ts:15:1 › attendance skeleton retains the real ring chart shape ──
+    tests\finishing-contract.spec.ts:25:1 › table refetch keeps old rows until delay then dims without a spinner 
+  2 passed (25.3s)

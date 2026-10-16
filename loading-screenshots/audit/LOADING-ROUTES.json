@@ -1,0 +1,2007 @@
+[
+  {
+    "route": "/",
+    "registered": true,
+    "component": "LandingPage",
+    "prefix": "landing",
+    "files": [
+      "landing-375-light-skeleton.png",
+      "landing-375-light-loaded.png",
+      "landing-375-dark-skeleton.png",
+      "landing-375-dark-loaded.png",
+      "landing-1280-light-skeleton.png",
+      "landing-1280-light-loaded.png",
+      "landing-1280-dark-skeleton.png",
+      "landing-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "landing-content",
+        "classification": "STATIC",
+        "reason": "All sections and illustrative preview data are bundled locally; no page data request",
+        "count": "Real immediately"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/login",
+    "registered": true,
+    "component": "LoginPanel",
+    "prefix": "login",
+    "files": [
+      "login-375-light-skeleton.png",
+      "login-375-light-loaded.png",
+      "login-375-dark-skeleton.png",
+      "login-375-dark-loaded.png",
+      "login-1280-light-skeleton.png",
+      "login-1280-light-loaded.png",
+      "login-1280-dark-skeleton.png",
+      "login-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "login-content",
+        "classification": "STATIC",
+        "reason": "Form controls and institutional branding are known; login is a preserved user-triggered action",
+        "count": "Real immediately"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin",
+    "registered": true,
+    "component": "AdminDashboardHome",
+    "prefix": "admin",
+    "files": [
+      "admin-375-light-skeleton.png",
+      "admin-375-light-loaded.png",
+      "admin-375-dark-skeleton.png",
+      "admin-375-dark-loaded.png",
+      "admin-1280-light-skeleton.png",
+      "admin-1280-light-loaded.png",
+      "admin-1280-dark-skeleton.png",
+      "admin-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "counts",
+        "classification": "FIXED-SIZE",
+        "reason": "Single-line numeric values in existing stat tiles",
+        "count": "Four static tiles"
+      },
+      {
+        "name": "login plot",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing h-52 plot independent of returned series",
+        "count": "Cache then viewport for placeholder bars"
+      },
+      {
+        "name": "login summaries",
+        "classification": "VARIABLE",
+        "reason": "Returned labels and period names may wrap",
+        "count": "Three summaries, typical two lines"
+      },
+      {
+        "name": "audit rows",
+        "classification": "AUTO-COLUMN",
+        "reason": "Native automatic column layout changes with actor, action and endpoint content",
+        "count": "Page size 20 capped to viewport and six rows; column widths cached per filtered view"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin/students",
+    "registered": true,
+    "component": "StudentRecordsPage",
+    "prefix": "admin-students",
+    "files": [
+      "admin-students-375-light-skeleton.png",
+      "admin-students-375-light-loaded.png",
+      "admin-students-375-dark-skeleton.png",
+      "admin-students-375-dark-loaded.png",
+      "admin-students-1280-light-skeleton.png",
+      "admin-students-1280-light-loaded.png",
+      "admin-students-1280-dark-skeleton.png",
+      "admin-students-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "desktop student records",
+        "classification": "AUTO-COLUMN",
+        "reason": "Measured native column widths vary across student identity and section fixtures",
+        "count": "Grade/gender/search view; cached count then viewport"
+      },
+      {
+        "name": "mobile student records",
+        "classification": "VARIABLE",
+        "reason": "Returned count and optional grade/section metadata",
+        "count": "Cached count then viewport"
+      },
+      {
+        "name": "student avatars",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing 28px circular image independent of student data",
+        "count": "One per record"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin/students/new",
+    "registered": true,
+    "component": "StudentFormPage",
+    "prefix": "admin-student-new",
+    "files": [
+      "admin-student-new-375-light-skeleton.png",
+      "admin-student-new-375-light-loaded.png",
+      "admin-student-new-375-dark-skeleton.png",
+      "admin-student-new-375-dark-loaded.png",
+      "admin-student-new-1280-light-skeleton.png",
+      "admin-student-new-1280-light-loaded.png",
+      "admin-student-new-1280-dark-skeleton.png",
+      "admin-student-new-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "student inputs and placement controls",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing native single-line inputs/selects retain their geometry across short and long values; empty new-student values are known immediately",
+        "count": "Existing six identity fields and two placement controls"
+      },
+      {
+        "name": "placement errors and review values",
+        "classification": "VARIABLE",
+        "reason": "Optional request errors and wrapping review text depend on returned or entered content",
+        "count": "Existing workflow fields; errors appear only on failure"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin/students/:studentId/edit",
+    "registered": true,
+    "component": "StudentFormPage",
+    "prefix": "admin-student-edit",
+    "files": [
+      "admin-student-edit-375-light-skeleton.png",
+      "admin-student-edit-375-light-loaded.png",
+      "admin-student-edit-375-dark-skeleton.png",
+      "admin-student-edit-375-dark-loaded.png",
+      "admin-student-edit-1280-light-skeleton.png",
+      "admin-student-edit-1280-light-loaded.png",
+      "admin-student-edit-1280-dark-skeleton.png",
+      "admin-student-edit-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "student identity values",
+        "classification": "FIXED-SIZE",
+        "reason": "Original single-line native inputs/select retain their dimensions across short and long fetched values",
+        "count": "Six existing identity fields"
+      },
+      {
+        "name": "record subtitle",
+        "classification": "VARIABLE",
+        "reason": "Returned external student number may wrap in the existing description; database route ID cannot substitute for it",
+        "count": "One inline value in the existing sentence"
+      },
+      {
+        "name": "placement choices",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing native select controls have data-independent geometry",
+        "count": "Two existing selects; only unknown selected values are skeletonized"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin/users",
+    "registered": true,
+    "component": "UserManagementPage",
+    "prefix": "admin-users",
+    "files": [
+      "admin-users-375-light-skeleton.png",
+      "admin-users-375-light-loaded.png",
+      "admin-users-375-dark-skeleton.png",
+      "admin-users-375-dark-loaded.png",
+      "admin-users-1280-light-skeleton.png",
+      "admin-users-1280-light-loaded.png",
+      "admin-users-1280-dark-skeleton.png",
+      "admin-users-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "desktop accounts",
+        "classification": "AUTO-COLUMN",
+        "reason": "Native automatic columns vary across short and long names/email fixtures",
+        "count": "Cache per role/status/search view then viewport"
+      },
+      {
+        "name": "mobile accounts",
+        "classification": "VARIABLE",
+        "reason": "Returned account count and wrapping names/emails",
+        "count": "Cache per role/status/search view then viewport; typical two lines for wrapping fields"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin/users/new",
+    "registered": true,
+    "component": "UserFormPage",
+    "prefix": "admin-user-new",
+    "files": [
+      "admin-user-new-375-light-skeleton.png",
+      "admin-user-new-375-light-loaded.png",
+      "admin-user-new-375-dark-skeleton.png",
+      "admin-user-new-375-dark-loaded.png",
+      "admin-user-new-1280-light-skeleton.png",
+      "admin-user-new-1280-light-loaded.png",
+      "admin-user-new-1280-dark-skeleton.png",
+      "admin-user-new-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "account form controls",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing single-line input/select controls retain their own height and grid width independent of fetched values",
+        "count": "Real field shells; placeholders only for edited account values, route-known role remains real"
+      },
+      {
+        "name": "optional active-principal warning",
+        "classification": "VARIABLE",
+        "reason": "Presence and wrapping warning text depend on returned accounts",
+        "count": "Cached field lines then typical three; one collapse if absent"
+      },
+      {
+        "name": "title, labels, workflow, actions and new-account input",
+        "classification": "STATIC",
+        "reason": "Bundled definitions, route ID/role and locally entered values",
+        "count": "Real immediately; account data seeds edit values once without resetting dirty input"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin/users/:role/:userId",
+    "registered": true,
+    "component": "UserViewPage",
+    "prefix": "admin-user-details",
+    "files": [
+      "admin-user-details-375-light-skeleton.png",
+      "admin-user-details-375-light-loaded.png",
+      "admin-user-details-375-dark-skeleton.png",
+      "admin-user-details-375-dark-loaded.png",
+      "admin-user-details-1280-light-skeleton.png",
+      "admin-user-details-1280-light-loaded.png",
+      "admin-user-details-1280-dark-skeleton.png",
+      "admin-user-details-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "account identity and fields",
+        "classification": "VARIABLE",
+        "reason": "Fetched names, email and contact fields can wrap; unknown height remains variable",
+        "count": "Cached field lines, otherwise two for names/email, one for short dates/enums"
+      },
+      {
+        "name": "field labels, role and account actions",
+        "classification": "STATIC",
+        "reason": "Labels and route role are known; actions retain existing layout and wait for data",
+        "count": "Real immediately"
+      },
+      {
+        "name": "teacher profile",
+        "classification": "VARIABLE",
+        "reason": "Reuses the teacher profile composition, gated on user-to-teacher ID mapping",
+        "count": "Same shared profile/schedule/roster caches and classifications"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin/users/:role/:userId/edit",
+    "registered": true,
+    "component": "UserFormPage",
+    "prefix": "admin-user-edit",
+    "files": [
+      "admin-user-edit-375-light-skeleton.png",
+      "admin-user-edit-375-light-loaded.png",
+      "admin-user-edit-375-dark-skeleton.png",
+      "admin-user-edit-375-dark-loaded.png",
+      "admin-user-edit-1280-light-skeleton.png",
+      "admin-user-edit-1280-light-loaded.png",
+      "admin-user-edit-1280-dark-skeleton.png",
+      "admin-user-edit-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "account form controls",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing single-line input/select controls retain their own height and grid width independent of fetched values",
+        "count": "Real field shells; placeholders only for edited account values, route-known role remains real"
+      },
+      {
+        "name": "optional active-principal warning",
+        "classification": "VARIABLE",
+        "reason": "Presence and wrapping warning text depend on returned accounts",
+        "count": "Cached field lines then typical three; one collapse if absent"
+      },
+      {
+        "name": "title, labels, workflow, actions and new-account input",
+        "classification": "STATIC",
+        "reason": "Bundled definitions, route ID/role and locally entered values",
+        "count": "Real immediately; account data seeds edit values once without resetting dirty input"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin/classes",
+    "registered": true,
+    "component": "ClassesPage",
+    "prefix": "admin-classes",
+    "files": [
+      "admin-classes-375-light-skeleton.png",
+      "admin-classes-375-light-loaded.png",
+      "admin-classes-375-dark-skeleton.png",
+      "admin-classes-375-dark-loaded.png",
+      "admin-classes-1280-light-skeleton.png",
+      "admin-classes-1280-light-loaded.png",
+      "admin-classes-1280-dark-skeleton.png",
+      "admin-classes-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "class collection",
+        "classification": "VARIABLE",
+        "reason": "Returned class count and optional metadata",
+        "count": "Cache per grade/search view then viewport"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin/classes/new",
+    "registered": true,
+    "component": "ClassFormPage",
+    "prefix": "admin-class-new",
+    "files": [
+      "admin-class-new-375-light-skeleton.png",
+      "admin-class-new-375-light-loaded.png",
+      "admin-class-new-375-dark-skeleton.png",
+      "admin-class-new-375-dark-loaded.png",
+      "admin-class-new-1280-light-skeleton.png",
+      "admin-class-new-1280-light-loaded.png",
+      "admin-class-new-1280-dark-skeleton.png",
+      "admin-class-new-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "class creation fields",
+        "classification": "FIXED-SIZE",
+        "reason": "Original single-line native controls and adviser combobox; empty local values are known before fetch",
+        "count": "Existing workflow fields"
+      },
+      {
+        "name": "schedule periods and review",
+        "classification": "VARIABLE",
+        "reason": "User-added period count and review text vary; the existing schedule row renderer is shared",
+        "count": "Actual local period count"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin/classes/:classId",
+    "registered": true,
+    "component": "ClassViewPage",
+    "prefix": "admin-class-details",
+    "files": [
+      "admin-class-details-375-light-skeleton.png",
+      "admin-class-details-375-light-loaded.png",
+      "admin-class-details-375-dark-skeleton.png",
+      "admin-class-details-375-dark-loaded.png",
+      "admin-class-details-1280-light-skeleton.png",
+      "admin-class-details-1280-light-loaded.png",
+      "admin-class-details-1280-dark-skeleton.png",
+      "admin-class-details-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "class and adviser identity, optional contacts",
+        "classification": "VARIABLE",
+        "reason": "Names and class labels wrap; contact fields may be absent",
+        "count": "Cached field lines, otherwise two; original contact layout"
+      },
+      {
+        "name": "profile avatar and stats",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing responsive circular avatar and single-line truncated stat cells",
+        "count": "One avatar and three stats"
+      },
+      {
+        "name": "class schedule",
+        "classification": "AUTO-COLUMN",
+        "reason": "Native schedule column widths measurably vary with subject and teacher text",
+        "count": "Time-slot count cache capped to viewport; measured column cache then header/typical metrics"
+      },
+      {
+        "name": "student directory",
+        "classification": "AUTO-COLUMN",
+        "reason": "Long student names measurably expand the native Student column",
+        "count": "Class/search/filter count and measured column caches then viewport/typical metrics"
+      },
+      {
+        "name": "page title, actions, tabs and weekday labels",
+        "classification": "STATIC",
+        "reason": "Bundled controls and weekday meanings",
+        "count": "Real immediately"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin/classes/:classId/edit",
+    "registered": true,
+    "component": "ClassFormPage",
+    "prefix": "admin-class-edit",
+    "files": [
+      "admin-class-edit-375-light-skeleton.png",
+      "admin-class-edit-375-light-loaded.png",
+      "admin-class-edit-375-dark-skeleton.png",
+      "admin-class-edit-375-dark-loaded.png",
+      "admin-class-edit-1280-light-skeleton.png",
+      "admin-class-edit-1280-light-loaded.png",
+      "admin-class-edit-1280-dark-skeleton.png",
+      "admin-class-edit-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "class description",
+        "classification": "VARIABLE",
+        "reason": "Fetched grade/section text can wrap; the known Updating prefix remains real",
+        "count": "Cached field lines then typical two"
+      },
+      {
+        "name": "class identity controls",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing single-line inputs/selects and adviser combobox dimensions are independent of returned values",
+        "count": "Four original identity controls"
+      },
+      {
+        "name": "schedule periods",
+        "classification": "VARIABLE",
+        "reason": "Returned period count may be zero or exceed the reservation",
+        "count": "Per-class count cache then viewport, using existing approximately 200px rows"
+      },
+      {
+        "name": "period controls",
+        "classification": "FIXED-SIZE",
+        "reason": "Original native time fields, selects, teacher combobox and weekday controls retain their dimensions",
+        "count": "Same controls in each shared period renderer"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin/subjects",
+    "registered": true,
+    "component": "ManageSubjectsPage",
+    "prefix": "admin-subjects",
+    "files": [
+      "admin-subjects-375-light-skeleton.png",
+      "admin-subjects-375-light-loaded.png",
+      "admin-subjects-375-dark-skeleton.png",
+      "admin-subjects-375-dark-loaded.png",
+      "admin-subjects-1280-light-skeleton.png",
+      "admin-subjects-1280-light-loaded.png",
+      "admin-subjects-1280-dark-skeleton.png",
+      "admin-subjects-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "subject groups and assignments",
+        "classification": "VARIABLE",
+        "reason": "Returned group/card count and optional group headers",
+        "count": "Grade/section/search/teacher/status/grouping view cache then viewport"
+      },
+      {
+        "name": "assignment shell",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing 218px shell with single-line truncated leaves; no new constraints added",
+        "count": "One per assignment"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin/subjects/new",
+    "registered": true,
+    "component": "AddSubjectPage",
+    "prefix": "admin-add-subject",
+    "files": [
+      "admin-add-subject-375-light-skeleton.png",
+      "admin-add-subject-375-light-loaded.png",
+      "admin-add-subject-375-dark-skeleton.png",
+      "admin-add-subject-375-dark-loaded.png",
+      "admin-add-subject-1280-light-skeleton.png",
+      "admin-add-subject-1280-light-loaded.png",
+      "admin-add-subject-1280-dark-skeleton.png",
+      "admin-add-subject-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "subject creation fields",
+        "classification": "FIXED-SIZE",
+        "reason": "Initial fields are known local values in existing native controls; fetched school year and assessment IDs are not displayed, so no invented skeleton is rendered",
+        "count": "Original workflow controls"
+      },
+      {
+        "name": "prerequisite errors",
+        "classification": "VARIABLE",
+        "reason": "Optional school-year, grade-choice or assessment-catalog errors may wrap; retry uses the shared engine",
+        "count": "Only actual failures"
+      },
+      {
+        "name": "template preview and review",
+        "classification": "VARIABLE",
+        "reason": "User-selected file preview and entered text vary in length; upload/action progress is preserved",
+        "count": "Original parsed template fields"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin/subjects/:subjectId",
+    "registered": true,
+    "component": "AdminSubjectDetailPage",
+    "prefix": "subject-template",
+    "files": [
+      "subject-template-375-light-skeleton.png",
+      "subject-template-375-light-loaded.png",
+      "subject-template-375-dark-skeleton.png",
+      "subject-template-375-dark-loaded.png",
+      "subject-template-1280-light-skeleton.png",
+      "subject-template-1280-light-loaded.png",
+      "subject-template-1280-dark-skeleton.png",
+      "subject-template-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "subject template metadata and weight summary",
+        "classification": "VARIABLE",
+        "reason": "Current template is optional; intrinsic filename width and summary wrapping depend on returned values",
+        "count": "Existing one-line truncated filename; existing summary typography and field layout"
+      },
+      {
+        "name": "template instructions and upload controls",
+        "classification": "STATIC",
+        "reason": "Upload instructions, icon and drop target are bundled; replacement label depends on template presence",
+        "count": "Real immediately; only the conditional button label is a placeholder"
+      },
+      {
+        "name": "upload button",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing full-width control with single-line label",
+        "count": "One, disabled until metadata is ready"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin/academic-year",
+    "registered": true,
+    "component": "AcademicYearPage",
+    "prefix": "admin-academic-year",
+    "files": [
+      "admin-academic-year-375-light-skeleton.png",
+      "admin-academic-year-375-light-loaded.png",
+      "admin-academic-year-375-dark-skeleton.png",
+      "admin-academic-year-375-dark-loaded.png",
+      "admin-academic-year-1280-light-skeleton.png",
+      "admin-academic-year-1280-light-loaded.png",
+      "admin-academic-year-1280-dark-skeleton.png",
+      "admin-academic-year-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "academic year fields",
+        "classification": "VARIABLE",
+        "reason": "Optional dates and returned labels may wrap",
+        "count": "Four fields; typical one line for year/date/enum values"
+      },
+      {
+        "name": "unconfigured terms notice",
+        "classification": "VARIABLE",
+        "reason": "Optional notice is absent for configured terms and wraps when present",
+        "count": "Typical two lines; shrink when absent"
+      },
+      {
+        "name": "term table",
+        "classification": "AUTO-COLUMN",
+        "reason": "Measured native column widths vary with returned term names",
+        "count": "Active-year view cache then viewport; column cache then header/typical metrics"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin/calendar",
+    "registered": true,
+    "component": "CalendarPage",
+    "prefix": "admin-calendar",
+    "files": [
+      "admin-calendar-375-light-skeleton.png",
+      "admin-calendar-375-light-loaded.png",
+      "admin-calendar-375-dark-skeleton.png",
+      "admin-calendar-375-dark-loaded.png",
+      "admin-calendar-1280-light-skeleton.png",
+      "admin-calendar-1280-light-loaded.png",
+      "admin-calendar-1280-dark-skeleton.png",
+      "admin-calendar-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "event collections",
+        "classification": "VARIABLE",
+        "reason": "Returned dates, group headings and event count",
+        "count": "Selected-day / expanded view count cache then viewport; month grid and controls real"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/admin/help",
+    "registered": true,
+    "component": "HelpSupportPage",
+    "prefix": "admin-help",
+    "files": [
+      "admin-help-375-light-skeleton.png",
+      "admin-help-375-light-loaded.png",
+      "admin-help-375-dark-skeleton.png",
+      "admin-help-375-dark-loaded.png",
+      "admin-help-1280-light-skeleton.png",
+      "admin-help-1280-light-loaded.png",
+      "admin-help-1280-dark-skeleton.png",
+      "admin-help-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "help-content",
+        "classification": "STATIC",
+        "reason": "Role-specific FAQ, support contacts and resource copy are bundled locally",
+        "count": "Real immediately"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/principal",
+    "registered": true,
+    "component": "PrincipalDashboardHome",
+    "prefix": "principal-dashboard",
+    "files": [
+      "principal-dashboard-375-light-skeleton.png",
+      "principal-dashboard-375-light-loaded.png",
+      "principal-dashboard-375-dark-skeleton.png",
+      "principal-dashboard-375-dark-loaded.png",
+      "principal-dashboard-1280-light-skeleton.png",
+      "principal-dashboard-1280-light-loaded.png",
+      "principal-dashboard-1280-dark-skeleton.png",
+      "principal-dashboard-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "welcome and school year",
+        "classification": "VARIABLE",
+        "reason": "Session name and client date are known; fetched term/year labels may wrap",
+        "count": "One label each"
+      },
+      {
+        "name": "KPI values",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing block numeric lines; static tile labels remain real",
+        "count": "Five existing tiles"
+      },
+      {
+        "name": "attendance and academic plots",
+        "classification": "FIXED-SIZE",
+        "reason": "Original Recharts plot heights 220/240px independent of returned data",
+        "count": "Grade-count cache then three capped to viewport; three typical term points"
+      },
+      {
+        "name": "subject performance and rankings",
+        "classification": "VARIABLE",
+        "reason": "Returned count and wrapping fetched subject/grade labels",
+        "count": "View count cache then three capped to viewport"
+      },
+      {
+        "name": "holistic radar and rubric",
+        "classification": "VARIABLE",
+        "reason": "Empty-state height differs; interpretation paragraphs depend on score",
+        "count": "Four known domain labels; cached lines then two typical lines"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/principal/students",
+    "registered": true,
+    "component": "PrincipalStudentsPage",
+    "prefix": "principal-students",
+    "files": [
+      "principal-students-375-light-skeleton.png",
+      "principal-students-375-light-loaded.png",
+      "principal-students-375-dark-skeleton.png",
+      "principal-students-375-dark-loaded.png",
+      "principal-students-1280-light-skeleton.png",
+      "principal-students-1280-light-loaded.png",
+      "principal-students-1280-dark-skeleton.png",
+      "principal-students-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "grade overview",
+        "classification": "VARIABLE",
+        "reason": "Returned grade/section count and optional section filter",
+        "count": "Per-search/grade/section count cache then viewport"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/principal/students/class/:classId",
+    "registered": true,
+    "component": "ClassListPage",
+    "prefix": "principal-students-class-1",
+    "files": [
+      "principal-students-class-1-375-light-skeleton.png",
+      "principal-students-class-1-375-light-loaded.png",
+      "principal-students-class-1-375-dark-skeleton.png",
+      "principal-students-class-1-375-dark-loaded.png",
+      "principal-students-class-1-1280-light-skeleton.png",
+      "principal-students-class-1-1280-light-loaded.png",
+      "principal-students-class-1-1280-dark-skeleton.png",
+      "principal-students-class-1-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "class header and roster",
+        "classification": "VARIABLE",
+        "reason": "Wrapping fetched grade/adviser/room text and returned roster count; existing centered Back is variable-aligned with fixed dimensions",
+        "count": "Cached header lines then two/three; cached roster count then viewport"
+      },
+      {
+        "name": "roster columns",
+        "classification": "AUTO-COLUMN",
+        "reason": "Shared StudentDirectoryTable native columns vary with student names",
+        "count": "View column cache then header and typical metrics"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/principal/students/grade/:gradeId",
+    "registered": true,
+    "component": "ClassListPage",
+    "prefix": "principal-students-grade-1",
+    "files": [
+      "principal-students-grade-1-375-light-skeleton.png",
+      "principal-students-grade-1-375-light-loaded.png",
+      "principal-students-grade-1-375-dark-skeleton.png",
+      "principal-students-grade-1-375-dark-loaded.png",
+      "principal-students-grade-1-1280-light-skeleton.png",
+      "principal-students-grade-1-1280-light-loaded.png",
+      "principal-students-grade-1-1280-dark-skeleton.png",
+      "principal-students-grade-1-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "grade header and roster",
+        "classification": "VARIABLE",
+        "reason": "Optional fetched section/adviser/room fields and returned roster count; existing Back alignment follows variable header once",
+        "count": "Cached header lines then two/three; cached roster count then viewport"
+      },
+      {
+        "name": "roster columns",
+        "classification": "AUTO-COLUMN",
+        "reason": "Shared StudentDirectoryTable native columns vary with names",
+        "count": "View column cache then header and typical metrics"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/principal/teachers",
+    "registered": true,
+    "component": "PrincipalTeachersPage",
+    "prefix": "principal-teachers",
+    "files": [
+      "principal-teachers-375-light-skeleton.png",
+      "principal-teachers-375-light-loaded.png",
+      "principal-teachers-375-dark-skeleton.png",
+      "principal-teachers-375-dark-loaded.png",
+      "principal-teachers-1280-light-skeleton.png",
+      "principal-teachers-1280-light-loaded.png",
+      "principal-teachers-1280-dark-skeleton.png",
+      "principal-teachers-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "teacher directory",
+        "classification": "AUTO-COLUMN",
+        "reason": "Measured native columns vary with teacher names and advisory assignments; optional room chips and rows affect height",
+        "count": "Search/advisory/gender view; column cache then typical metrics; row cache then viewport"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/principal/teachers/:teacherId",
+    "registered": true,
+    "component": "TeacherSchedulePage",
+    "prefix": "principal-teachers-1",
+    "files": [
+      "principal-teachers-1-375-light-skeleton.png",
+      "principal-teachers-1-375-light-loaded.png",
+      "principal-teachers-1-375-dark-skeleton.png",
+      "principal-teachers-1-375-dark-loaded.png",
+      "principal-teachers-1-1280-light-skeleton.png",
+      "principal-teachers-1-1280-light-loaded.png",
+      "principal-teachers-1-1280-dark-skeleton.png",
+      "principal-teachers-1-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "profile identity",
+        "classification": "VARIABLE",
+        "reason": "Returned names and school year subtitle can wrap",
+        "count": "Last known field line count, otherwise two lines"
+      },
+      {
+        "name": "profile avatar",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing responsive circular avatar dimensions",
+        "count": "One"
+      },
+      {
+        "name": "profile statistics",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing single-line truncated values",
+        "count": "Three"
+      },
+      {
+        "name": "daily schedule and section rosters",
+        "classification": "VARIABLE",
+        "reason": "Returned day, section and student counts plus wrapping room metadata",
+        "count": "Per-teacher view count cache capped to viewport"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/principal/reports",
+    "registered": true,
+    "component": "AnalyticsPage",
+    "prefix": "principal-subject-analytics",
+    "files": [
+      "principal-subject-analytics-375-light-skeleton.png",
+      "principal-subject-analytics-375-light-loaded.png",
+      "principal-subject-analytics-375-dark-skeleton.png",
+      "principal-subject-analytics-375-dark-loaded.png",
+      "principal-subject-analytics-1280-light-skeleton.png",
+      "principal-subject-analytics-1280-light-loaded.png",
+      "principal-subject-analytics-1280-dark-skeleton.png",
+      "principal-subject-analytics-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "report highlights",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing single-line truncated values and details in four static metric cards",
+        "count": "Four real metric cards, placeholders only for fetched values/details"
+      },
+      {
+        "name": "whole-school bar ranking and leaders",
+        "classification": "VARIABLE",
+        "reason": "Subject count determines plot height, optional leaders and wrapping metadata",
+        "count": "Per-term count cache capped to viewport; native bar chart with neutral bar/axis-label primitives"
+      },
+      {
+        "name": "per-grade ranking and optional podium",
+        "classification": "VARIABLE",
+        "reason": "Returned rank count and wrapping grade metadata; original top-three/full-list behavior",
+        "count": "Per-term/filter count cache then viewport; loaded list never capped"
+      },
+      {
+        "name": "priority focus",
+        "classification": "VARIABLE",
+        "reason": "Empty results, returned subject count and wrapping score metadata",
+        "count": "Cached count capped to existing maximum three priorities"
+      },
+      {
+        "name": "tabs, headings, selected term and grade controls",
+        "classification": "STATIC",
+        "reason": "Bundled titles and locally selected values known before requests",
+        "count": "Real immediately; fetched filter options join on success"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/principal/holistic-performance-analytics",
+    "registered": true,
+    "component": "HolisticPerformanceAnalyticsPage",
+    "prefix": "principal-holistic-analytics",
+    "files": [
+      "principal-holistic-analytics-375-light-skeleton.png",
+      "principal-holistic-analytics-375-light-loaded.png",
+      "principal-holistic-analytics-375-dark-skeleton.png",
+      "principal-holistic-analytics-375-dark-loaded.png",
+      "principal-holistic-analytics-1280-light-skeleton.png",
+      "principal-holistic-analytics-1280-light-loaded.png",
+      "principal-holistic-analytics-1280-dark-skeleton.png",
+      "principal-holistic-analytics-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "metric values",
+        "classification": "FIXED-SIZE",
+        "reason": "Original single-line metric value blocks independent of returned scores",
+        "count": "Four known domain metrics"
+      },
+      {
+        "name": "heatmap and metric details",
+        "classification": "VARIABLE",
+        "reason": "Returned row count and wrapping labels/detail text",
+        "count": "Cached view rows then viewport; cached paragraph lines then typical two"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/principal/gradebooks",
+    "registered": true,
+    "component": "PrincipalGradebooksPage",
+    "prefix": "principal-gradebooks",
+    "files": [
+      "principal-gradebooks-375-light-skeleton.png",
+      "principal-gradebooks-375-light-loaded.png",
+      "principal-gradebooks-375-dark-skeleton.png",
+      "principal-gradebooks-375-dark-loaded.png",
+      "principal-gradebooks-1280-light-skeleton.png",
+      "principal-gradebooks-1280-light-loaded.png",
+      "principal-gradebooks-1280-dark-skeleton.png",
+      "principal-gradebooks-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "school year",
+        "classification": "VARIABLE",
+        "reason": "Fetched label may wrap; cached school year renders immediately",
+        "count": "Single date label; existing typography"
+      },
+      {
+        "name": "gradebook collection",
+        "classification": "VARIABLE",
+        "reason": "Returned grade/section count and optional grouping headings",
+        "count": "Filtered/grouped view count cache then viewport; existing service cache shown immediately"
+      },
+      {
+        "name": "assignment card shell",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing shared 218px card shell with truncated single-line leaves",
+        "count": "One per returned section"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/principal/gradebooks/:grade",
+    "registered": true,
+    "component": "PrincipalGradeSheetPage",
+    "prefix": "principal-grade-sheet",
+    "files": [
+      "principal-grade-sheet-375-light-skeleton.png",
+      "principal-grade-sheet-375-light-loaded.png",
+      "principal-grade-sheet-375-dark-skeleton.png",
+      "principal-grade-sheet-375-dark-loaded.png",
+      "principal-grade-sheet-1280-light-skeleton.png",
+      "principal-grade-sheet-1280-light-loaded.png",
+      "principal-grade-sheet-1280-dark-skeleton.png",
+      "principal-grade-sheet-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "section and school-year fields",
+        "classification": "VARIABLE",
+        "reason": "Fetched section and year text may wrap or be absent",
+        "count": "Cached field lines then typical two/one"
+      },
+      {
+        "name": "summary values",
+        "classification": "FIXED-SIZE",
+        "reason": "Single-line numeric leaves in the original three stat cells",
+        "count": "Three known labels"
+      },
+      {
+        "name": "term selector",
+        "classification": "VARIABLE",
+        "reason": "Original native selector width follows returned term labels; loaded width variation is tested",
+        "count": "Cached native width then typical five characters; pending reservation only"
+      },
+      {
+        "name": "grouped grade sheet",
+        "classification": "AUTO-COLUMN",
+        "reason": "Native columns vary with subject headers and student names; returned subjects, gender groups and students also affect height",
+        "count": "View-specific column/count caches then header/typical metrics and viewport"
+      },
+      {
+        "name": "student avatars",
+        "classification": "FIXED-SIZE",
+        "reason": "Original 28px circular avatars independent of identity",
+        "count": "One per returned row"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/principal/calendar",
+    "registered": true,
+    "component": "CalendarPage",
+    "prefix": "principal-calendar",
+    "files": [
+      "principal-calendar-375-light-skeleton.png",
+      "principal-calendar-375-light-loaded.png",
+      "principal-calendar-375-dark-skeleton.png",
+      "principal-calendar-375-dark-loaded.png",
+      "principal-calendar-1280-light-skeleton.png",
+      "principal-calendar-1280-light-loaded.png",
+      "principal-calendar-1280-dark-skeleton.png",
+      "principal-calendar-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "event collections",
+        "classification": "VARIABLE",
+        "reason": "Returned dates, group headings and event count",
+        "count": "Selected-day / expanded view count cache then viewport; month grid and controls real"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/principal/help",
+    "registered": true,
+    "component": "HelpSupportPage",
+    "prefix": "principal-help",
+    "files": [
+      "principal-help-375-light-skeleton.png",
+      "principal-help-375-light-loaded.png",
+      "principal-help-375-dark-skeleton.png",
+      "principal-help-375-dark-loaded.png",
+      "principal-help-1280-light-skeleton.png",
+      "principal-help-1280-light-loaded.png",
+      "principal-help-1280-dark-skeleton.png",
+      "principal-help-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "help-content",
+        "classification": "STATIC",
+        "reason": "Role-specific FAQ, support contacts and resource copy are bundled locally",
+        "count": "Real immediately"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/teacher",
+    "registered": true,
+    "component": "TeacherDashboardHome",
+    "prefix": "teacher-dashboard",
+    "files": [
+      "teacher-dashboard-375-light-skeleton.png",
+      "teacher-dashboard-375-light-loaded.png",
+      "teacher-dashboard-375-dark-skeleton.png",
+      "teacher-dashboard-375-dark-loaded.png",
+      "teacher-dashboard-1280-light-skeleton.png",
+      "teacher-dashboard-1280-light-loaded.png",
+      "teacher-dashboard-1280-dark-skeleton.png",
+      "teacher-dashboard-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "welcome",
+        "classification": "VARIABLE",
+        "reason": "Session-known name remains real and can wrap; the original card centers its content",
+        "count": "Real session identity; no invented name placeholder"
+      },
+      {
+        "name": "stat tiles",
+        "classification": "FIXED-SIZE",
+        "reason": "Static labels and single-line numeric values; grid owns tile width",
+        "count": "Three static tiles"
+      },
+      {
+        "name": "attendance body",
+        "classification": "VARIABLE",
+        "reason": "Empty/no-advisory state can replace the distribution",
+        "count": "Three static statuses when data exists"
+      },
+      {
+        "name": "attendance plot",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing 192/208px dimensions independent of counts",
+        "count": "One plot within the variable body"
+      },
+      {
+        "name": "weekly timetable",
+        "classification": "VARIABLE",
+        "reason": "Empty results, out-of-hours sessions and optional details",
+        "count": "Last known session count, capped to viewport; otherwise 3–6"
+      },
+      {
+        "name": "activities",
+        "classification": "VARIABLE",
+        "reason": "Returned event count and optional metadata",
+        "count": "Last known count, capped to viewport; otherwise 3–6"
+      },
+      {
+        "name": "holidays",
+        "classification": "VARIABLE",
+        "reason": "Returned event count and optional metadata",
+        "count": "Last known count, capped to viewport; otherwise 3–6"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/teacher/attendance",
+    "registered": true,
+    "component": "TeacherAttendancePage",
+    "prefix": "teacher-attendance",
+    "files": [
+      "teacher-attendance-375-light-skeleton.png",
+      "teacher-attendance-375-light-loaded.png",
+      "teacher-attendance-375-dark-skeleton.png",
+      "teacher-attendance-375-dark-loaded.png",
+      "teacher-attendance-1280-light-skeleton.png",
+      "teacher-attendance-1280-light-loaded.png",
+      "teacher-attendance-1280-dark-skeleton.png",
+      "teacher-attendance-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "advisory identity and optional closed-term notice",
+        "classification": "VARIABLE",
+        "reason": "Fetched section name wraps and closed-term notice may be absent",
+        "count": "Cached field lines, otherwise two for section and three for notice"
+      },
+      {
+        "name": "attendance roster",
+        "classification": "AUTO-COLUMN",
+        "reason": "Long-name fixture measurably changes the native Student column; existing No and Status widths are retained",
+        "count": "Per-class/search row count cache, then viewport; measured pixel-width cache then header/typical metrics"
+      },
+      {
+        "name": "student avatar",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing 28px circular avatar",
+        "count": "One per student"
+      },
+      {
+        "name": "date, actions, column and gender labels, status legend",
+        "classification": "STATIC",
+        "reason": "Client date and fixed controls/enum labels are known before both sequential requests",
+        "count": "Real immediately"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/teacher/attendance/records",
+    "registered": true,
+    "component": "TeacherAttendanceRecordsPage",
+    "prefix": "attendance-records",
+    "files": [
+      "attendance-records-375-light-skeleton.png",
+      "attendance-records-375-light-loaded.png",
+      "attendance-records-375-dark-skeleton.png",
+      "attendance-records-375-dark-loaded.png",
+      "attendance-records-1280-light-skeleton.png",
+      "attendance-records-1280-light-loaded.png",
+      "attendance-records-1280-dark-skeleton.png",
+      "attendance-records-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "section description and advisory tabs",
+        "classification": "VARIABLE",
+        "reason": "Fetched section text can wrap, and optional advisory labels determine native button widths",
+        "count": "Cached lines then typical two; cached advisory count then typical two"
+      },
+      {
+        "name": "roster and absence lists",
+        "classification": "VARIABLE",
+        "reason": "Returned student/absence counts and optional groups vary",
+        "count": "Cached section/term/month counts then viewport with original row metrics"
+      },
+      {
+        "name": "attendance table columns",
+        "classification": "FIXED-SIZE",
+        "reason": "Original 180px student, 28px day, 112px term and 76px summary column definitions are preserved and tested across names/counts",
+        "count": "Actual client-side month day count"
+      },
+      {
+        "name": "term selector and notice",
+        "classification": "VARIABLE",
+        "reason": "Fetched native option labels determine selector width; optional term availability notice can wrap",
+        "count": "Cached native width then typical seven characters; typical three notice lines"
+      },
+      {
+        "name": "monthly numeric summaries",
+        "classification": "FIXED-SIZE",
+        "reason": "Original four numeric value blocks stay single-line in existing stat tiles",
+        "count": "Four static labels"
+      },
+      {
+        "name": "monthly date cells",
+        "classification": "VARIABLE",
+        "reason": "Original min-height calendar cells can grow when optional status chips wrap",
+        "count": "Client dates real; cached status line counts then typical two"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/teacher/subjects",
+    "registered": true,
+    "component": "SubjectsPage",
+    "prefix": "teacher-subjects",
+    "files": [
+      "teacher-subjects-375-light-skeleton.png",
+      "teacher-subjects-375-light-loaded.png",
+      "teacher-subjects-375-dark-skeleton.png",
+      "teacher-subjects-375-dark-loaded.png",
+      "teacher-subjects-1280-light-skeleton.png",
+      "teacher-subjects-1280-light-loaded.png",
+      "teacher-subjects-1280-dark-skeleton.png",
+      "teacher-subjects-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "subject collection",
+        "classification": "VARIABLE",
+        "reason": "Returned item count, group headings and optional sections",
+        "count": "Last known filtered view count, capped to viewport; otherwise 3–6"
+      },
+      {
+        "name": "assignment card shell",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing 218px shell and responsive grid width",
+        "count": "One shell per returned item"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/teacher/subjects/:subjectId",
+    "registered": true,
+    "component": "SubjectDetailPage",
+    "prefix": "teacher-subject",
+    "files": [
+      "teacher-subject-375-light-skeleton.png",
+      "teacher-subject-375-light-loaded.png",
+      "teacher-subject-375-dark-skeleton.png",
+      "teacher-subject-375-dark-loaded.png",
+      "teacher-subject-1280-light-skeleton.png",
+      "teacher-subject-1280-light-loaded.png",
+      "teacher-subject-1280-dark-skeleton.png",
+      "teacher-subject-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "subject identity",
+        "classification": "VARIABLE",
+        "reason": "Fetched subject title can wrap",
+        "count": "Cached line count, otherwise two; client school year remains real"
+      },
+      {
+        "name": "working assessment and holistic tables",
+        "classification": "AUTO-COLUMN",
+        "reason": "Native column widths measurably change across short and long returned student names",
+        "count": "Cached row/item counts then viewport rows and one typical working item; measured pending widths before header/typical metrics"
+      },
+      {
+        "name": "student avatars and score controls",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing 28px avatars and 56 by 28px numeric controls",
+        "count": "One avatar and existing score controls per reserved row"
+      },
+      {
+        "name": "tabs, search, legends, actions, rating numbers and domain headers",
+        "classification": "STATIC",
+        "reason": "Bundled labels and locally known controls",
+        "count": "Real immediately; mutation controls wait for their data"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/teacher/subjects/:subjectId/records",
+    "registered": true,
+    "component": "SubjectRecordsPage",
+    "prefix": "teacher-subject-records",
+    "files": [
+      "teacher-subject-records-375-light-skeleton.png",
+      "teacher-subject-records-375-light-loaded.png",
+      "teacher-subject-records-375-dark-skeleton.png",
+      "teacher-subject-records-375-dark-loaded.png",
+      "teacher-subject-records-1280-light-skeleton.png",
+      "teacher-subject-records-1280-light-loaded.png",
+      "teacher-subject-records-1280-dark-skeleton.png",
+      "teacher-subject-records-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "assessment and weekly records",
+        "classification": "AUTO-COLUMN",
+        "reason": "Native leaf columns vary with long learner names; original multi-level header spans and column minimums retained",
+        "count": "Column pixel cache by subject/term/month then actual header and typical content; known roster rendered immediately"
+      },
+      {
+        "name": "optional groups and descriptors",
+        "classification": "VARIABLE",
+        "reason": "Configured template groups, recorded weeks, optional warnings and wrapping descriptors determine layout",
+        "count": "Cached line counts then two; known client month supplies typical weekly structure"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/teacher/subjects/:subjectSectionId/students",
+    "registered": true,
+    "component": "SubjectClassListPage",
+    "prefix": "teacher-subject-class-list",
+    "files": [
+      "teacher-subject-class-list-375-light-skeleton.png",
+      "teacher-subject-class-list-375-light-loaded.png",
+      "teacher-subject-class-list-375-dark-skeleton.png",
+      "teacher-subject-class-list-375-dark-loaded.png",
+      "teacher-subject-class-list-1280-light-skeleton.png",
+      "teacher-subject-class-list-1280-light-loaded.png",
+      "teacher-subject-class-list-1280-dark-skeleton.png",
+      "teacher-subject-class-list-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "subject identity and summary",
+        "classification": "VARIABLE",
+        "reason": "Fetched subject/section names and summary text may wrap",
+        "count": "Per-field cached lines, otherwise two for subject and section"
+      },
+      {
+        "name": "subject-class-roster",
+        "classification": "AUTO-COLUMN",
+        "reason": "Native column widths measurably vary across short/long student names and IDs",
+        "count": "Per-subject/search row count cache then viewport; column cache then header/typical metrics"
+      },
+      {
+        "name": "student avatar",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing 28px circular student avatar",
+        "count": "One per student row"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/teacher/grades",
+    "registered": true,
+    "component": "GradesPage",
+    "prefix": "teacher-grades",
+    "files": [
+      "teacher-grades-375-light-skeleton.png",
+      "teacher-grades-375-light-loaded.png",
+      "teacher-grades-375-dark-skeleton.png",
+      "teacher-grades-375-dark-loaded.png",
+      "teacher-grades-1280-light-skeleton.png",
+      "teacher-grades-1280-light-loaded.png",
+      "teacher-grades-1280-dark-skeleton.png",
+      "teacher-grades-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "gradebook and visibility tables",
+        "classification": "AUTO-COLUMN",
+        "reason": "Measured native widths change across actual student/subject content fixtures; original min widths and overflow remain",
+        "count": "Class/term/filter/search view cache then viewport; header/typical column metrics then cached pixel widths"
+      },
+      {
+        "name": "student avatars",
+        "classification": "FIXED-SIZE",
+        "reason": "Original 28px circular avatars in both table renderers",
+        "count": "One per student"
+      },
+      {
+        "name": "class metadata, status and filters",
+        "classification": "VARIABLE",
+        "reason": "Fetched class/term text, optional section filter, timestamp and completeness badge",
+        "count": "Known cached values real; unknown wrapping class name two typical lines"
+      },
+      {
+        "name": "submission history",
+        "classification": "VARIABLE",
+        "reason": "Returned count, optional submitter and wrapping labels",
+        "count": "Cached view count then viewport"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/teacher/holistic",
+    "registered": true,
+    "component": "HolisticOverviewPage",
+    "prefix": "holistic-overview",
+    "files": [
+      "holistic-overview-375-light-skeleton.png",
+      "holistic-overview-375-light-loaded.png",
+      "holistic-overview-375-dark-skeleton.png",
+      "holistic-overview-375-dark-loaded.png",
+      "holistic-overview-1280-light-skeleton.png",
+      "holistic-overview-1280-light-loaded.png",
+      "holistic-overview-1280-dark-skeleton.png",
+      "holistic-overview-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "holistic roster",
+        "classification": "AUTO-COLUMN",
+        "reason": "Original native widths vary with student names, evaluation remarks and trend labels; rows/groups also depend on returned data",
+        "count": "Section/term/filter/search column and row caches then header/typical metrics and viewport"
+      },
+      {
+        "name": "student avatar",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing 28px avatar independent of returned identity",
+        "count": "One per roster row"
+      },
+      {
+        "name": "term control",
+        "classification": "FIXED-SIZE",
+        "reason": "Original responsive full-width 28px selector shell",
+        "count": "One unknown selected term value"
+      },
+      {
+        "name": "advisory labels and numeric filter metadata",
+        "classification": "VARIABLE",
+        "reason": "Optional advisory count, native label widths and inline numeric count widths can change surrounding wrapping",
+        "count": "Cached advisory count then typical two; numeric leaves only"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/teacher/holistic/:studentId",
+    "registered": true,
+    "component": "StudentHolisticProfilePage",
+    "prefix": "holistic-profile",
+    "files": [
+      "holistic-profile-375-light-skeleton.png",
+      "holistic-profile-375-light-loaded.png",
+      "holistic-profile-375-dark-skeleton.png",
+      "holistic-profile-375-dark-loaded.png",
+      "holistic-profile-1280-light-skeleton.png",
+      "holistic-profile-1280-light-loaded.png",
+      "holistic-profile-1280-dark-skeleton.png",
+      "holistic-profile-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "student identity",
+        "classification": "VARIABLE",
+        "reason": "Fetched optional identity and grade/section fields; cached identity renders immediately",
+        "count": "Typical identity fields; no new truncation"
+      },
+      {
+        "name": "initials",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing 56px rounded initials block",
+        "count": "One"
+      },
+      {
+        "name": "domain interpretations and gauges",
+        "classification": "VARIABLE",
+        "reason": "Wrapping interpretation text, optional no-evaluation state, marker positions depend on scores",
+        "count": "Four known domains; cached paragraph line counts then three lines"
+      },
+      {
+        "name": "subject breakdown",
+        "classification": "VARIABLE",
+        "reason": "Returned subject count, wrapping names and optional trends/recommendations",
+        "count": "Student/term view cache then two typical cards"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/teacher/holistic/domain-trends",
+    "registered": true,
+    "component": "HolisticDomainTrendsPage",
+    "prefix": "domain-trends",
+    "files": [
+      "domain-trends-375-light-skeleton.png",
+      "domain-trends-375-light-loaded.png",
+      "domain-trends-375-dark-skeleton.png",
+      "domain-trends-375-dark-loaded.png",
+      "domain-trends-1280-light-skeleton.png",
+      "domain-trends-1280-light-loaded.png",
+      "domain-trends-1280-dark-skeleton.png",
+      "domain-trends-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "advisory and subject tabs",
+        "classification": "VARIABLE",
+        "reason": "Fetched item counts and native button widths depend on returned labels",
+        "count": "Last known counts per section/term; typical two"
+      },
+      {
+        "name": "term control",
+        "classification": "FIXED-SIZE",
+        "reason": "Original responsive full-width, 32px native selector shell",
+        "count": "One selected value"
+      },
+      {
+        "name": "domain score leaves",
+        "classification": "FIXED-SIZE",
+        "reason": "Original single-line, one-decimal rubric scores with fixed font metrics",
+        "count": "Four known domains"
+      },
+      {
+        "name": "composite, rubric labels, deltas and explanations",
+        "classification": "VARIABLE",
+        "reason": "Optional values and wrapping computed narrative/interpretation text change content height",
+        "count": "Field line caches then typical three; optional labels skeleton normally"
+      },
+      {
+        "name": "weekly progression plot",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing h-80 plot dimensions; date ticks are fetched, Y axis and legend are known",
+        "count": "Four line silhouettes; cached week count then typical three ticks"
+      },
+      {
+        "name": "results body",
+        "classification": "VARIABLE",
+        "reason": "No advisory/no weeks can replace the original sections with an empty state",
+        "count": "Original shared section renderer"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/teacher/students/:studentId",
+    "registered": true,
+    "component": "StudentDetailPage",
+    "prefix": "teacher-student-details",
+    "files": [
+      "teacher-student-details-375-light-skeleton.png",
+      "teacher-student-details-375-light-loaded.png",
+      "teacher-student-details-375-dark-skeleton.png",
+      "teacher-student-details-375-dark-loaded.png",
+      "teacher-student-details-1280-light-skeleton.png",
+      "teacher-student-details-1280-light-loaded.png",
+      "teacher-student-details-1280-dark-skeleton.png",
+      "teacher-student-details-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "student identity and personal/guardian fields",
+        "classification": "VARIABLE",
+        "reason": "Names, addresses, optional fields and class labels wrap",
+        "count": "Cached field line counts, otherwise two; short dates/enums one"
+      },
+      {
+        "name": "initials avatar",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing 80px rounded-square wrapper",
+        "count": "One initials leaf in the real avatar surface"
+      },
+      {
+        "name": "academic schedule",
+        "classification": "AUTO-COLUMN",
+        "reason": "Native Subject and Assigned Teacher widths measurably change with returned text",
+        "count": "Cached count capped to viewport; measured widths then header/typical metrics"
+      },
+      {
+        "name": "metrics, baseline holistic chart, labels and actions",
+        "classification": "STATIC",
+        "reason": "Metrics and baseline chart are bundled constants",
+        "count": "Real immediately, including status and performance row enums"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/teacher/advisory",
+    "registered": true,
+    "component": "AdvisoryRosterPage",
+    "prefix": "teacher-advisory-roster",
+    "files": [
+      "teacher-advisory-roster-375-light-skeleton.png",
+      "teacher-advisory-roster-375-light-loaded.png",
+      "teacher-advisory-roster-375-dark-skeleton.png",
+      "teacher-advisory-roster-375-dark-loaded.png",
+      "teacher-advisory-roster-1280-light-skeleton.png",
+      "teacher-advisory-roster-1280-light-loaded.png",
+      "teacher-advisory-roster-1280-dark-skeleton.png",
+      "teacher-advisory-roster-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "advisory section and count summary",
+        "classification": "VARIABLE",
+        "reason": "Fetched section text can wrap and section tabs are optional",
+        "count": "Cached field lines, otherwise typical two; real title/export/search/filter"
+      },
+      {
+        "name": "student directory",
+        "classification": "AUTO-COLUMN",
+        "reason": "Long-name fixture measurably expands native Student column by 1040px; existing overflow is preserved",
+        "count": "Route/query/filter count cache then viewport; loaded pixel-width cache then header/typical metrics"
+      },
+      {
+        "name": "student avatar",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing 32px circular avatar",
+        "count": "One per student"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/teacher/calendar",
+    "registered": true,
+    "component": "CalendarPageView",
+    "prefix": "teacher-calendar",
+    "files": [
+      "teacher-calendar-375-light-skeleton.png",
+      "teacher-calendar-375-light-loaded.png",
+      "teacher-calendar-375-dark-skeleton.png",
+      "teacher-calendar-375-dark-loaded.png",
+      "teacher-calendar-1280-light-skeleton.png",
+      "teacher-calendar-1280-light-loaded.png",
+      "teacher-calendar-1280-dark-skeleton.png",
+      "teacher-calendar-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "event collections",
+        "classification": "VARIABLE",
+        "reason": "Returned dates, group headings and event count",
+        "count": "Selected-day / expanded view count cache then viewport; month grid and controls real"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/teacher/help",
+    "registered": true,
+    "component": "HelpSupportPage",
+    "prefix": "teacher-help",
+    "files": [
+      "teacher-help-375-light-skeleton.png",
+      "teacher-help-375-light-loaded.png",
+      "teacher-help-375-dark-skeleton.png",
+      "teacher-help-375-dark-loaded.png",
+      "teacher-help-1280-light-skeleton.png",
+      "teacher-help-1280-light-loaded.png",
+      "teacher-help-1280-dark-skeleton.png",
+      "teacher-help-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "help-content",
+        "classification": "STATIC",
+        "reason": "Role-specific FAQ, support contacts and resource copy are bundled locally",
+        "count": "Real immediately"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/parent",
+    "registered": true,
+    "component": "ParentDashboardHome",
+    "prefix": "parent",
+    "files": [
+      "parent-375-light-skeleton.png",
+      "parent-375-light-loaded.png",
+      "parent-375-dark-skeleton.png",
+      "parent-375-dark-loaded.png",
+      "parent-1280-light-skeleton.png",
+      "parent-1280-light-loaded.png",
+      "parent-1280-dark-skeleton.png",
+      "parent-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "session greeting and calendar date",
+        "classification": "STATIC",
+        "reason": "Auth identity and client-side date are known before dashboard requests",
+        "count": "Real immediately"
+      },
+      {
+        "name": "student cards",
+        "classification": "VARIABLE",
+        "reason": "Returned count, optional adviser and wrapping section statistics",
+        "count": "Grid/list view count cache capped to viewport"
+      },
+      {
+        "name": "attendance updates",
+        "classification": "VARIABLE",
+        "reason": "Returned count, optional times and wrapping messages",
+        "count": "View count and per-message line cache; otherwise typical three lines"
+      },
+      {
+        "name": "school events",
+        "classification": "VARIABLE",
+        "reason": "Returned activity/holiday count and optional metadata",
+        "count": "Per-kind count cache then viewport"
+      },
+      {
+        "name": "optional linking guide and stretched date card",
+        "classification": "VARIABLE",
+        "reason": "Guide presence depends on linked children; existing grid stretches adjacent date surface",
+        "count": "Preserve existing conditional layout; known guide content real"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/parent/enrolled-children",
+    "registered": true,
+    "component": "EnrolledChildrenPage",
+    "prefix": "parent-enrolled-children",
+    "files": [
+      "parent-enrolled-children-375-light-skeleton.png",
+      "parent-enrolled-children-375-light-loaded.png",
+      "parent-enrolled-children-375-dark-skeleton.png",
+      "parent-enrolled-children-375-dark-loaded.png",
+      "parent-enrolled-children-1280-light-skeleton.png",
+      "parent-enrolled-children-1280-light-loaded.png",
+      "parent-enrolled-children-1280-dark-skeleton.png",
+      "parent-enrolled-children-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "linked students",
+        "classification": "VARIABLE",
+        "reason": "Returned student count and optional collection footer",
+        "count": "Cached child count then viewport"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/parent/students/:studentId",
+    "registered": true,
+    "component": "ChildDetailPage",
+    "prefix": "parent-detail-overview",
+    "files": [
+      "parent-detail-overview-375-light-skeleton.png",
+      "parent-detail-overview-375-light-loaded.png",
+      "parent-detail-overview-375-dark-skeleton.png",
+      "parent-detail-overview-375-dark-loaded.png",
+      "parent-detail-overview-1280-light-skeleton.png",
+      "parent-detail-overview-1280-light-loaded.png",
+      "parent-detail-overview-1280-dark-skeleton.png",
+      "parent-detail-overview-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "identity and profile fields",
+        "classification": "VARIABLE",
+        "reason": "Linked identity and optional birth/address/LRN fields wrap or may be absent; cached linked identity and school year remain real",
+        "count": "Cached field lines then two; address two"
+      },
+      {
+        "name": "profile avatar",
+        "classification": "FIXED-SIZE",
+        "reason": "Original responsive 144px/160px circular avatar; unknown gender image is masked, known class and identity remain real",
+        "count": "One avatar; pixel contrast and fixed overlay checked in both themes and widths"
+      },
+      {
+        "name": "attendance ring",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing 168px square chart independent of returned counts",
+        "count": "One ring and three known semantic status rows"
+      },
+      {
+        "name": "term line plot",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing plot fills its original 420px-minimum panel; known term labels and 70–100 axis",
+        "count": "Three known terms"
+      },
+      {
+        "name": "academic and holistic lists",
+        "classification": "VARIABLE",
+        "reason": "Returned activity, concern, schedule, subject counts and wrapping interpretations change height",
+        "count": "View count cache then viewport; cached paragraph lines then two/three"
+      },
+      {
+        "name": "report tables",
+        "classification": "AUTO-COLUMN",
+        "reason": "Native learning area/month widths were observed to vary across short and wrapping-content fixtures",
+        "count": "Native header/typical metrics then cached pixel widths; repeat visit within 2px"
+      },
+      {
+        "name": "term average ring",
+        "classification": "FIXED-SIZE",
+        "reason": "Original 140px SVG chart viewport",
+        "count": "One ring"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/parent/students/:studentId/topics/:topicId/support",
+    "registered": true,
+    "component": "TopicSupportChoice",
+    "prefix": "topic-support",
+    "files": [
+      "topic-support-375-light-skeleton.png",
+      "topic-support-375-light-loaded.png",
+      "topic-support-375-dark-skeleton.png",
+      "topic-support-375-dark-loaded.png",
+      "topic-support-1280-light-skeleton.png",
+      "topic-support-1280-light-loaded.png",
+      "topic-support-1280-dark-skeleton.png",
+      "topic-support-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "topic-support-content",
+        "classification": "STATIC",
+        "reason": "Quest choices, illustrations and instructions are bundled; route IDs only construct navigation targets",
+        "count": "Real immediately"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/parent/students/:studentId/topics/:topicId/courseware",
+    "registered": true,
+    "component": "CoursewareView",
+    "prefix": "courseware",
+    "files": [
+      "courseware-375-light-skeleton.png",
+      "courseware-375-light-loaded.png",
+      "courseware-375-dark-skeleton.png",
+      "courseware-375-dark-loaded.png",
+      "courseware-1280-light-skeleton.png",
+      "courseware-1280-light-loaded.png",
+      "courseware-1280-dark-skeleton.png",
+      "courseware-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "lesson title and markdown body",
+        "classification": "VARIABLE",
+        "reason": "Generated titles, markdown headings/bullets/paragraphs, optional warnings and line counts depend on content",
+        "count": "Cached document structure and field line counts; otherwise viewport paragraphs with typical three lines"
+      },
+      {
+        "name": "video collection",
+        "classification": "VARIABLE",
+        "reason": "Returned deduplicated video count and title wrapping; player only appears on user selection",
+        "count": "Cached count capped to viewport, otherwise typical viewport count"
+      },
+      {
+        "name": "video image aspect",
+        "classification": "FIXED-SIZE",
+        "reason": "Existing aspect-video wrapper independent of fetched content",
+        "count": "One per video"
+      },
+      {
+        "name": "quest banner instructions and steps",
+        "classification": "STATIC",
+        "reason": "Lesson instructions and step meanings are bundled locally",
+        "count": "Real immediately, including during resource generation"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/parent/students/:studentId/topics/:topicId/quiz",
+    "registered": true,
+    "component": "PetQuizPage",
+    "prefix": "parent-pet-quiz",
+    "files": [
+      "parent-pet-quiz-375-light-skeleton.png",
+      "parent-pet-quiz-375-light-loaded.png",
+      "parent-pet-quiz-375-dark-skeleton.png",
+      "parent-pet-quiz-375-dark-loaded.png",
+      "parent-pet-quiz-1280-light-skeleton.png",
+      "parent-pet-quiz-1280-light-loaded.png",
+      "parent-pet-quiz-1280-dark-skeleton.png",
+      "parent-pet-quiz-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "challenge nodes",
+        "classification": "FIXED-SIZE",
+        "reason": "Original 84px controls keep their dimensions while unknown access icons load",
+        "count": "Three known difficulty nodes and two known bonus nodes"
+      },
+      {
+        "name": "question and matching text",
+        "classification": "VARIABLE",
+        "reason": "Returned question, choice, and pair text wraps; questions and pair counts vary",
+        "count": "Cached question/pair counts then three capped to viewport; question three lines and choices/pairs two"
+      },
+      {
+        "name": "memory cards",
+        "classification": "VARIABLE",
+        "reason": "Returned deck count changes grid height; each existing aspect-square face remains fixed for its column",
+        "count": "Cached pair count then three capped to viewport"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/parent/calendar",
+    "registered": true,
+    "component": "CalendarPageView",
+    "prefix": "parent-calendar",
+    "files": [
+      "parent-calendar-375-light-skeleton.png",
+      "parent-calendar-375-light-loaded.png",
+      "parent-calendar-375-dark-skeleton.png",
+      "parent-calendar-375-dark-loaded.png",
+      "parent-calendar-1280-light-skeleton.png",
+      "parent-calendar-1280-light-loaded.png",
+      "parent-calendar-1280-dark-skeleton.png",
+      "parent-calendar-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "event collections",
+        "classification": "VARIABLE",
+        "reason": "Returned dates, group headings and event count",
+        "count": "Selected-day / expanded view count cache then viewport; month grid and controls real"
+      }
+    ],
+    "missing": []
+  },
+  {
+    "route": "/parent/help",
+    "registered": true,
+    "component": "HelpSupportPage",
+    "prefix": "parent-help",
+    "files": [
+      "parent-help-375-light-skeleton.png",
+      "parent-help-375-light-loaded.png",
+      "parent-help-375-dark-skeleton.png",
+      "parent-help-375-dark-loaded.png",
+      "parent-help-1280-light-skeleton.png",
+      "parent-help-1280-light-loaded.png",
+      "parent-help-1280-dark-skeleton.png",
+      "parent-help-1280-dark-loaded.png"
+    ],
+    "regions": [
+      {
+        "name": "help-content",
+        "classification": "STATIC",
+        "reason": "Role-specific FAQ, support contacts and resource copy are bundled locally",
+        "count": "Real immediately"
+      }
+    ],
+    "missing": []
+  }
+]

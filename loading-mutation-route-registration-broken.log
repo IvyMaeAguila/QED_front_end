@@ -1,0 +1,35 @@
+[WebServer] (node:1576) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:22592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:32056) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition
+  1) tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "TeacherDashboardHomeComposition"
+    Received: undefined
+
+      35 |   const views = fs.readFileSync("src/shared/loading/routeViews.tsx", "utf8");
+      36 |   for (const entry of Object.values(routeSkeletons)) {
+    > 37 |     expect(entry.skeleton).toBe(`${entry.component}Composition`);
+         |                            ^
+      38 |     expect(views).toContain(`import { ${entry.skeleton} }`);
+      39 |     expect(views).toContain(`  ${entry.skeleton},`);
+      40 |   }
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\route-coverage.spec.ts:37:28
+
+    Error Context: test-results\route-coverage-every-real--4a050-its-own-loading-composition\error-context.md
+
+
+  1 failed
+    tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition ─

@@ -6,9 +6,10 @@ import type { DetailStudent } from "./../GlobalTypes/types";
 export function useStudentDetail(): {
   student: DetailStudent | undefined;
   studentId: string | undefined;
+  loading: boolean; error: string | null; retry: () => void;
 } {
   const { studentId } = useParams<{ studentId: string }>();
-  const { students } = useParentDashboard();
+  const { students, isLoadingStudents, studentsError, refetchStudents } = useParentDashboard();
 
   const raw = students.find((s) => String(s.id) === studentId);
 
@@ -24,5 +25,5 @@ export function useStudentDetail(): {
       }
     : undefined;
 
-  return { student, studentId };
+  return { student, studentId, loading: isLoadingStudents, error: studentsError, retry: refetchStudents };
 }

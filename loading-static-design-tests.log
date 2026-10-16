@@ -1,0 +1,72 @@
+
+[WebServer] (node:19836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 32 tests using 1 worker
+
+
+(node:17036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/32] tests\design-contract.spec.ts:6:1 › skeleton CSS has token-only colors
+[2/32] tests\design-contract.spec.ts:12:40 › light: pixel area survives all four shimmer phases on every surface
+[3/32] tests\design-contract.spec.ts:12:40 › dark: pixel area survives all four shimmer phases on every surface
+[4/32] tests\design-contract.spec.ts:17:68 › teacher 375 light: static content and spinner guard
+[5/32] tests\design-contract.spec.ts:17:68 › teacher 375 dark: static content and spinner guard
+[6/32] tests\design-contract.spec.ts:17:68 › teacher 1280 light: static content and spinner guard
+[7/32] tests\design-contract.spec.ts:17:68 › teacher 1280 dark: static content and spinner guard
+[8/32] tests\design-contract.spec.ts:32:1 › negative control: shine blending into the surface is caught by the pixel guard
+  1) tests\design-contract.spec.ts:32:1 › negative control: shine blending into the surface is caught by the pixel guard 
+
+    Error: guard must reject a washed-out shape
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      36 |   let caught = false;
+      37 |   try { await checkShimmerPixels(shape, "negative-blended-shine"); } catch { caught = true; }
+    > 38 |   expect(caught, "guard must reject a washed-out shape").toBe(true);
+         |                                                          ^
+      39 | });
+      40 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-contract.spec.ts:38:58
+
+    Error Context: test-results\design-contract-negative-c-b9410-s-caught-by-the-pixel-guard\error-context.md
+
+
+(node:20328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[9/32] tests\static-routes.spec.ts:6:141 › ADMIN help 375 light: known page remains real
+[10/32] tests\static-routes.spec.ts:6:141 › ADMIN help 375 dark: known page remains real
+[11/32] tests\static-routes.spec.ts:6:141 › ADMIN help 1280 light: known page remains real
+[12/32] tests\static-routes.spec.ts:6:141 › ADMIN help 1280 dark: known page remains real
+[13/32] tests\static-routes.spec.ts:6:141 › PRINCIPAL help 375 light: known page remains real
+[14/32] tests\static-routes.spec.ts:6:141 › PRINCIPAL help 375 dark: known page remains real
+[15/32] tests\static-routes.spec.ts:6:141 › PRINCIPAL help 1280 light: known page remains real
+[16/32] tests\static-routes.spec.ts:6:141 › PRINCIPAL help 1280 dark: known page remains real
+[17/32] tests\static-routes.spec.ts:6:141 › TEACHER help 375 light: known page remains real
+[18/32] tests\static-routes.spec.ts:6:141 › TEACHER help 375 dark: known page remains real
+[19/32] tests\static-routes.spec.ts:6:141 › TEACHER help 1280 light: known page remains real
+[20/32] tests\static-routes.spec.ts:6:141 › TEACHER help 1280 dark: known page remains real
+[21/32] tests\static-routes.spec.ts:6:141 › PARENT help 375 light: known page remains real
+[22/32] tests\static-routes.spec.ts:6:141 › PARENT help 375 dark: known page remains real
+[23/32] tests\static-routes.spec.ts:6:141 › PARENT help 1280 light: known page remains real
+[24/32] tests\static-routes.spec.ts:6:141 › PARENT help 1280 dark: known page remains real
+[25/32] tests\static-routes.spec.ts:25:105 › / 375 light: static public page needs no invented skeleton
+[26/32] tests\static-routes.spec.ts:25:105 › / 375 dark: static public page needs no invented skeleton
+[27/32] tests\static-routes.spec.ts:25:105 › / 1280 light: static public page needs no invented skeleton
+[28/32] tests\static-routes.spec.ts:25:105 › / 1280 dark: static public page needs no invented skeleton
+[29/32] tests\static-routes.spec.ts:25:105 › /login 375 light: static public page needs no invented skeleton
+[30/32] tests\static-routes.spec.ts:25:105 › /login 375 dark: static public page needs no invented skeleton
+[31/32] tests\static-routes.spec.ts:25:105 › /login 1280 light: static public page needs no invented skeleton
+[32/32] tests\static-routes.spec.ts:25:105 › /login 1280 dark: static public page needs no invented skeleton
+  1 failed
+    tests\design-contract.spec.ts:32:1 › negative control: shine blending into the surface is caught by the pixel guard 
+  31 passed (41.6s)

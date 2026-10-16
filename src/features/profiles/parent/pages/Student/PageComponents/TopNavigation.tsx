@@ -21,7 +21,7 @@ interface TabNavProps {
 export function TabNav({ active, onChange, darkMode, textPrimary, textMuted }: TabNavProps) {
   return (
     <div
-      className={`flex items-stretch gap-1 overflow-x-auto rounded-xl p-1.5 ${darkMode ? "bg-white/5" : "bg-[#F1F2F4]"}`}
+      className={`flex items-stretch gap-1 overflow-x-auto rounded-xl p-1.5 ${darkMode ? "bg-white/5" : "bg-brand-light"}`}
     >
       {TABS.map((tab) => {
         const isActive = tab.key === active;

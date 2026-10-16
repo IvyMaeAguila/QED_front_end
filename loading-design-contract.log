@@ -1,0 +1,96 @@
+
+[WebServer] (node:6056) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:38860) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 8 tests using 1 worker
+
+(node:16732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/8] tests\design-contract.spec.ts:6:1 › skeleton CSS has token-only colors
+[2/8] tests\design-contract.spec.ts:12:40 › light: pixel area survives all four shimmer phases on every surface
+[3/8] tests\design-contract.spec.ts:12:40 › dark: pixel area survives all four shimmer phases on every surface
+[4/8] tests\design-contract.spec.ts:17:68 › teacher 375 light: static content and spinner guard
+[5/8] tests\design-contract.spec.ts:17:68 › teacher 375 dark: static content and spinner guard
+[6/8] tests\design-contract.spec.ts:17:68 › teacher 1280 light: static content and spinner guard
+  1) tests\design-contract.spec.ts:17:68 › teacher 1280 light: static content and spinner guard ────
+
+    Error: static text absent/unreadable before fetch: weeklyschedule-scroll-across-to-view-all-weekdays-select-a-c Scroll across to view all weekdays. Select a class for details.
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      26 |   const loaded = await staticText(page);
+      27 |   expect(loaded.length).toBeGreaterThan(10);
+    > 28 |   for (const item of loaded) expect(pending.some(prior => prior.name === item.name && prior.text === item.text && prior.readable), `static text absent/unreadable before fetch: ${item.name} ${item.text}`).toBe(true);
+         |                                                                                                                                                                                                             ^
+      29 |   await expect(page.getByRole("heading", { name: /Good .*, Marie Dela Cruz!/ })).toBeVisible();
+      30 | });
+      31 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-contract.spec.ts:28:205
+
+    Error Context: test-results\design-contract-teacher-12-8a905-c-content-and-spinner-guard\error-context.md
+
+
+
+(node:28792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[7/8] tests\design-contract.spec.ts:17:68 › teacher 1280 dark: static content and spinner guard
+  2) tests\design-contract.spec.ts:17:68 › teacher 1280 dark: static content and spinner guard ─────
+
+    Error: static text absent/unreadable before fetch: weeklyschedule-scroll-across-to-view-all-weekdays-select-a-c Scroll across to view all weekdays. Select a class for details.
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      26 |   const loaded = await staticText(page);
+      27 |   expect(loaded.length).toBeGreaterThan(10);
+    > 28 |   for (const item of loaded) expect(pending.some(prior => prior.name === item.name && prior.text === item.text && prior.readable), `static text absent/unreadable before fetch: ${item.name} ${item.text}`).toBe(true);
+         |                                                                                                                                                                                                             ^
+      29 |   await expect(page.getByRole("heading", { name: /Good .*, Marie Dela Cruz!/ })).toBeVisible();
+      30 | });
+      31 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-contract.spec.ts:28:205
+
+    Error Context: test-results\design-contract-teacher-12-d5bb6-c-content-and-spinner-guard\error-context.md
+
+
+(node:31396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[8/8] tests\design-contract.spec.ts:32:1 › negative control: shine blending into the surface is caught by the pixel guard
+  3) tests\design-contract.spec.ts:32:1 › negative control: shine blending into the surface is caught by the pixel guard 
+
+    Error: guard must reject a washed-out shape
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      36 |   let caught = false;
+      37 |   try { await checkShimmerPixels(shape, "negative-blended-shine"); } catch { caught = true; }
+    > 38 |   expect(caught, "guard must reject a washed-out shape").toBe(true);
+         |                                                          ^
+      39 | });
+      40 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-contract.spec.ts:38:58
+
+    Error Context: test-results\design-contract-negative-c-b9410-s-caught-by-the-pixel-guard\error-context.md
+
+
+  3 failed
+    tests\design-contract.spec.ts:17:68 › teacher 1280 light: static content and spinner guard ─────
+    tests\design-contract.spec.ts:17:68 › teacher 1280 dark: static content and spinner guard ──────
+    tests\design-contract.spec.ts:32:1 › negative control: shine blending into the surface is caught by the pixel guard 
+  5 passed (20.4s)

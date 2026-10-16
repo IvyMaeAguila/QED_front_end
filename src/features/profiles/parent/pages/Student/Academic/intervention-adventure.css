@@ -1,0 +1,57 @@
+/* Only the intervention routes opt into this adventure theme. */
+.intervention-adventure { --adventure-ink: #25345b; }
+.intervention-adventure > svg { min-height: 100%; }
+.intervention-adventure .adventure-banner {
+  background: linear-gradient(120deg, #6738b8, #4346ad 58%, #166b83);
+  border: 2px solid #ffffff80;
+  border-radius: 26px;
+  box-shadow: 0 6px 0 #352b75, 0 14px 28px #33377220;
+}
+.intervention-adventure .adventure-banner p { color: #fff; }
+.intervention-adventure .adventure-choice {
+  min-height: 240px;
+  border: 2px solid #fff;
+  background: linear-gradient(145deg, #fff, #f2eaff);
+  padding: 28px;
+  overflow: hidden;
+}
+.intervention-adventure .adventure-choice:nth-child(2) { background: linear-gradient(145deg, #fff, #dbfaf0); }
+.intervention-adventure .adventure-choice::after {
+  content: '✦'; position: absolute; right: 16px; top: 48px;
+  color: #d2b5f4; font-size: 76px; line-height: 1; transform: rotate(12deg);
+  pointer-events: none;
+}
+.intervention-adventure .adventure-choice:nth-child(2)::after { color: #93dfcb; }
+.intervention-adventure .adventure-choice p { position: relative; z-index: 1; color: #35425f; }
+.intervention-adventure .adventure-choice p.font-black { font-size: 28px; color: #25345b; }
+.intervention-adventure button:focus-visible { outline: 3px solid #6d28d9; outline-offset: 5px; }
+.intervention-adventure .adventure-choice:hover { transform: translateY(-4px); }
+.intervention-adventure .adventure-paragraph {
+  background: #fffdf5; color: #35425f; border: 1px solid #e8dfbd;
+  border-left: 5px solid #e9b643; border-radius: 16px;
+  padding: 20px 24px; box-shadow: 0 4px 0 #d9d6bc55;
+}
+.intervention-adventure .adventure-lesson-title {
+  background: linear-gradient(100deg, #166b83, #267f9b);
+  border-radius: 18px; box-shadow: 0 4px 0 #164f6b;
+}
+.intervention-adventure [data-sk-region="learning-video"] { border: 2px solid #fff; border-radius: 20px; box-shadow: 0 5px 0 #4092aa55; }
+.intervention-adventure [data-sk-region="learning-page-header"] { backdrop-filter: blur(12px); }
+.adventure-night .adventure-choice { background: linear-gradient(145deg, #302b50, #26394d); border-color: #79709b; }
+.adventure-night .adventure-choice:nth-child(2) { background: linear-gradient(145deg, #243d48, #26394d); }
+.adventure-night .adventure-choice p, .adventure-night .adventure-choice p.font-black { color: #f4f0ff; }
+.adventure-night .adventure-paragraph { background: #25334b; color: #eeeafa; border-color: #58627a; border-left-color: #e9b643; }
+.adventure-night .adventure-paragraph li { color: #eeeafa; }
+@media (max-width: 480px) {
+  .intervention-adventure .adventure-choice { min-height: 200px; padding: 22px; }
+  .intervention-adventure .adventure-paragraph { padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .intervention-adventure *, .intervention-adventure *::after { animation: none !important; transition: none !important; }
+}
+.intervention-adventure .adventure-doodles { display: none; }
+.intervention-adventure .adventure-question {
+  padding: 22px; border: 2px solid #fff; border-radius: 26px;
+  background: #fffdf5; color: #25345b; box-shadow: 0 6px 0 #9dbae0, 0 14px 30px #294b7020;
+}
+.intervention-adventure .adventure-question > p.font-bold { padding: 12px 0; }

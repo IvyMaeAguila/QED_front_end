@@ -1,0 +1,29 @@
+[WebServer] (node:23656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:8408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 18 tests using 1 worker
+
+(node:22480) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\principal-grade-sheet-loading.spec.ts:13:62 › grade sheet 375 light keeps known controls and headers real (6.1s)
+  ok  2 tests\principal-grade-sheet-loading.spec.ts:13:62 › grade sheet 375 dark keeps known controls and headers real (2.1s)
+  ok  3 tests\principal-grade-sheet-loading.spec.ts:13:62 › grade sheet 1280 light keeps known controls and headers real (2.6s)
+  ok  4 tests\principal-grade-sheet-loading.spec.ts:13:62 › grade sheet 1280 dark keeps known controls and headers real (3.0s)
+  ok  5 tests\principal-grade-sheet-loading.spec.ts:17:28 › grade sheet preserves 0 actual student rows (866ms)
+  ok  6 tests\principal-grade-sheet-loading.spec.ts:17:28 › grade sheet preserves 1 actual student rows (749ms)
+  ok  7 tests\principal-grade-sheet-loading.spec.ts:17:28 › grade sheet preserves 9 actual student rows (732ms)
+  ok  8 tests\principal-grade-sheet-loading.spec.ts:18:44 › grade sheet retries period errors (1.3s)
+  ok  9 tests\principal-grade-sheet-loading.spec.ts:18:44 › grade sheet retries book errors (1.3s)
+  ok 10 tests\principal-grade-sheet-loading.spec.ts:18:44 › grade sheet retries year errors (1.3s)
+  ok 11 tests\principal-grade-sheet-loading.spec.ts:19:1 › default term lookup keeps the grade sheet shell visible and then selects the server default (766ms)
+  ok 12 tests\principal-grade-sheet-loading.spec.ts:20:1 › unsubmitted term keeps the original unavailable modal and selected term (1.2s)
+  ok 13 tests\principal-grade-sheet-loading.spec.ts:21:1 › grade sheet native columns vary with actual returned content (2.3s)
+  ok 14 tests\principal-grade-sheet-loading.spec.ts:22:32 › grade sheet light actual table surface pixels (1.7s)
+  ok 15 tests\principal-grade-sheet-loading.spec.ts:22:32 › grade sheet dark actual table surface pixels (1.8s)
+  ok 16 tests\principal-grade-sheet-loading.spec.ts:23:1 › grade sheet repeat view reuses measured native columns and slow refetch retains rows (7.0s)
+  ok 17 tests\principal-grade-sheet-loading.spec.ts:28:32 › grade sheet light term value has a measurable placeholder (1.7s)
+  ok 18 tests\principal-grade-sheet-loading.spec.ts:28:32 › grade sheet dark term value has a measurable placeholder (1.9s)
+
+  18 passed (42.0s)

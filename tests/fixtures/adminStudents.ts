@@ -1,0 +1,13 @@
+import {expect,type Page} from '@playwright/test';
+import {mockAdminDashboard} from './adminDashboard';
+import {requestLedger} from './requestLedger';
+export const studentRow={id:1,grade_level_id:1,section_id:1,student_number:'A23-0001',learner_reference_number:'123456789012',first_name:'Ana',last_name:'Fixture',middle_name:'',gender:'Female',grade_level_name:'Grade 1',section_name:'Maroon'};
+// Synthetic records only; actual browser providers, transports, authentication lifecycle and Query cache.
+export async function mockAdminStudents(page:Page,holdAuth=false){
+ const auth=await mockAdminDashboard(page,false,holdAuth),ledger=requestLedger(page,p=>p==='/api/student/allStudents');
+ const state={rows:[structuredClone(studentRow)],status:200,calls:0,writes:[] as {path:string;method:string;payload:unknown}[],writeStatus:200,options:[] as string[],gate:Promise.resolve(),release:()=>{},writeGate:Promise.resolve(),releaseWrite:()=>{}};
+ await page.route('**/api/student/allStudents',async route=>{state.calls++;ledger.intercept(route.request());const status=state.status,rows=structuredClone(state.rows);await state.gate;await route.fulfill({status,json:status===200?{data:rows}:{message:`Synthetic students ${status}`}});});
+ await page.route(/\/api\/student\/(?:addNewStudent|updateStudent\/\d+|deleteStudent\/\d+)$/,async route=>{const path=new URL(route.request().url()).pathname,payload=route.request().postData()?route.request().postDataJSON():null,status=state.writeStatus;state.writes.push({path,method:route.request().method(),payload});await state.writeGate;if(status!==200)return route.fulfill({status,json:{message:'Synthetic write failed'}});if(path.includes('addNewStudent'))state.rows.push({...studentRow,id:2,first_name:'Created'});else if(path.includes('updateStudent'))state.rows[0]={...state.rows[0],first_name:'Changed'};else state.rows=[];return route.fulfill({json:{success:true,data:{id:2}}});});
+ await page.route('**/api/gradeLevel/**',route=>{state.options.push(new URL(route.request().url()).pathname+new URL(route.request().url()).search);return route.fulfill({json:route.request().url().includes('getGradeLevels')?[{id:1,grade_level:'Grade 1'}]:[{id:1,section_name:'Maroon',grade_level:'Grade 1'}]});});
+ return {...auth,state,ledger,hold(){state.gate=new Promise<void>(r=>state.release=r);},release(){state.release();state.gate=Promise.resolve();},holdWrite(){state.writeGate=new Promise<void>(r=>state.releaseWrite=r);},releaseWrite(){state.releaseWrite();state.writeGate=Promise.resolve();},async settled(){await expect.poll(()=>ledger.snapshot().every(r=>r.terminal!==undefined)).toBe(true);}};
+}

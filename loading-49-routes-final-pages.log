@@ -1,0 +1,82 @@
+
+[WebServer] (node:7360) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33512) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 52 tests using 1 worker
+
+(node:10456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/52] tests\principal-dashboard-loading.spec.ts:6:62 › principal dashboard 375 light keeps known shell
+[2/52] tests\principal-dashboard-loading.spec.ts:6:62 › principal dashboard 375 dark keeps known shell
+[3/52] tests\principal-dashboard-loading.spec.ts:6:62 › principal dashboard 1280 light keeps known shell
+[4/52] tests\principal-dashboard-loading.spec.ts:6:62 › principal dashboard 1280 dark keeps known shell
+[5/52] tests\principal-dashboard-loading.spec.ts:7:28 › principal dashboard preserves 0 actual grades
+[6/52] tests\principal-dashboard-loading.spec.ts:7:28 › principal dashboard preserves 1 actual grades
+[7/52] tests\principal-dashboard-loading.spec.ts:7:28 › principal dashboard preserves 9 actual grades
+[8/52] tests\principal-dashboard-loading.spec.ts:8:40 › principal dashboard retries dashboard
+[9/52] tests\principal-dashboard-loading.spec.ts:8:40 › principal dashboard retries year
+[10/52] tests\principal-dashboard-loading.spec.ts:9:1 › principal dashboard ranking controls preserve loaded behavior
+[11/52] tests\principal-dashboard-loading.spec.ts:11:32 › principal dashboard light spotlight contrast and pixel shape
+[12/52] tests\principal-dashboard-loading.spec.ts:11:32 › principal dashboard dark spotlight contrast and pixel shape
+[13/52] tests\principal-dashboard-loading.spec.ts:12:1 › principal dashboard charts retain bar line and radar shapes
+[14/52] tests\principal-dashboard-loading.spec.ts:14:62 › principal dashboard 375 light lower sections retain known labels and geometry
+[15/52] tests\principal-dashboard-loading.spec.ts:14:62 › principal dashboard 375 dark lower sections retain known labels and geometry
+[16/52] tests\principal-dashboard-loading.spec.ts:14:62 › principal dashboard 1280 light lower sections retain known labels and geometry
+[17/52] tests\principal-dashboard-loading.spec.ts:14:62 › principal dashboard 1280 dark lower sections retain known labels and geometry
+[18/52] tests\principal-dashboard-loading.spec.ts:16:1 › principal dashboard pending rankings mask fetched names grades and scores
+[19/52] tests\principal-dashboard-loading.spec.ts:18:1 › principal dashboard preserves the client-known intervention stub before fetch
+[20/52] tests\removed-loading-guard.spec.ts:9:1 › removed splash and duplicate advisory skeleton cannot be reintroduced
+[21/52] tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 375 light keeps real headers and controls
+[22/52] tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 375 dark keeps real headers and controls
+[23/52] tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 1280 light keeps real headers and controls
+[24/52] tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 1280 dark keeps real headers and controls
+[25/52] tests\teacher-grades-loading.spec.ts:7:28 › teacher grades preserves 0 actual students
+[26/52] tests\teacher-grades-loading.spec.ts:7:28 › teacher grades preserves 1 actual students
+[27/52] tests\teacher-grades-loading.spec.ts:7:28 › teacher grades preserves 9 actual students
+[28/52] tests\teacher-grades-loading.spec.ts:8:52 › teacher grades retries terms
+[29/52] tests\teacher-grades-loading.spec.ts:8:52 › teacher grades retries sections
+[30/52] tests\teacher-grades-loading.spec.ts:8:52 › teacher grades retries gradebook
+
+[WebServer] 2:33:41 PM [vite] (client) [console.error] Failed to load advisory gradebook: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:14:38)
+[WebServer]     at async fetchAdvisoryGradebook (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:29:15)
+[31/52] tests\teacher-grades-loading.spec.ts:9:1 › teacher grades preserves visibility and history tabs
+[32/52] tests\teacher-grades-loading.spec.ts:11:1 › teacher grades and visibility have valid native table markup
+[33/52] tests\teacher-grades-loading.spec.ts:12:1 › teacher grades native automatic columns vary across real content
+[34/52] tests\teacher-grades-loading.spec.ts:13:32 › teacher grades fast term refetch preserves old rows
+[35/52] tests\teacher-grades-loading.spec.ts:13:32 › teacher grades slow term refetch preserves old rows
+[36/52] tests\teacher-grades-loading.spec.ts:14:54 › teacher grades retries visibility independently
+
+[WebServer] 2:33:55 PM [vite] (client) [console.error] Failed to load grade visibility: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:14:38)
+[WebServer]     at async fetchGradeVisibility (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:60:15)
+[WebServer] 2:33:55 PM [vite] (client) [console.error] Failed to load grade visibility: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:14:38)
+[WebServer]     at async fetchGradeVisibility (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:60:15)
+
+[37/52] tests\teacher-grades-loading.spec.ts:14:54 › teacher grades retries logs independently
+[38/52] tests\teacher-grades-loading.spec.ts:14:54 › teacher grades retries submission independently
+[39/52] tests\teacher-grades-loading.spec.ts:16:1 › teacher grades pending class summary never reports an unfetched zero roster
+[40/52] tests\teacher-grades-loading.spec.ts:17:1 › teacher grades repeated term reserves cached native widths within two pixels
+[41/52] tests\teacher-grades-loading.spec.ts:19:1 › teacher visibility native automatic columns vary across real content
+[42/52] tests\teacher-grades-loading.spec.ts:20:122 › teacher grades Parent Visibility 375 light known controls remain during prerequisite loads
+[43/52] tests\teacher-grades-loading.spec.ts:20:122 › teacher grades Submission History 375 light known controls remain during prerequisite loads
+[44/52] tests\teacher-grades-loading.spec.ts:20:122 › teacher grades Parent Visibility 375 dark known controls remain during prerequisite loads
+[45/52] tests\teacher-grades-loading.spec.ts:20:122 › teacher grades Submission History 375 dark known controls remain during prerequisite loads
+[46/52] tests\teacher-grades-loading.spec.ts:20:122 › teacher grades Parent Visibility 1280 light known controls remain during prerequisite loads
+[47/52] tests\teacher-grades-loading.spec.ts:20:122 › teacher grades Submission History 1280 light known controls remain during prerequisite loads
+[48/52] tests\teacher-grades-loading.spec.ts:20:122 › teacher grades Parent Visibility 1280 dark known controls remain during prerequisite loads
+[49/52] tests\teacher-grades-loading.spec.ts:20:122 › teacher grades Submission History 1280 dark known controls remain during prerequisite loads
+[50/52] tests\teacher-grades-loading.spec.ts:21:1 › teacher visibility retries a prerequisite error without an indefinite skeleton
+[51/52] tests\teacher-grades-loading.spec.ts:22:1 › teacher submission history surfaces a term prerequisite error and retries
+[52/52] tests\teacher-grades-loading.spec.ts:23:1 › teacher gradebook failure removes dependent placeholders immediately
+[WebServer] 2:34:30 PM [vite] (client) [console.error] Failed to load advisory gradebook: Error: Records unavailable
+
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:14:38)
+[WebServer]     at async fetchAdvisoryGradebook (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:29:15)
+  52 passed (1.8m)

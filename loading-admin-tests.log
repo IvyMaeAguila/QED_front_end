@@ -1,0 +1,28 @@
+[WebServer] (node:32204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 17 tests using 1 worker
+
+(node:27852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\admin-loading.spec.ts:32:153 › /admin 375px light: real shell and loading composition (4.8s)
+  ok  2 tests\admin-loading.spec.ts:32:153 › /admin 375px dark: real shell and loading composition (2.4s)
+  ok  3 tests\admin-loading.spec.ts:32:153 › /admin 1280px light: real shell and loading composition (3.0s)
+  ok  4 tests\admin-loading.spec.ts:32:153 › /admin 1280px dark: real shell and loading composition (3.2s)
+  ok  5 tests\admin-loading.spec.ts:32:153 › /admin/classes 375px light: real shell and loading composition (2.4s)
+  ok  6 tests\admin-loading.spec.ts:32:153 › /admin/classes 375px dark: real shell and loading composition (2.4s)
+  ok  7 tests\admin-loading.spec.ts:32:153 › /admin/classes 1280px light: real shell and loading composition (2.4s)
+  ok  8 tests\admin-loading.spec.ts:32:153 › /admin/classes 1280px dark: real shell and loading composition (2.5s)
+  ok  9 tests\admin-loading.spec.ts:32:153 › /admin/users 375px light: real shell and loading composition (2.4s)
+  ok 10 tests\admin-loading.spec.ts:32:153 › /admin/users 375px dark: real shell and loading composition (2.4s)
+  ok 11 tests\admin-loading.spec.ts:32:153 › /admin/users 1280px light: real shell and loading composition (2.5s)
+  ok 12 tests\admin-loading.spec.ts:32:153 › /admin/users 1280px dark: real shell and loading composition (2.4s)
+  ok 13 tests\admin-loading.spec.ts:32:153 › /admin/students 375px light: real shell and loading composition (2.4s)
+  ok 14 tests\admin-loading.spec.ts:32:153 › /admin/students 375px dark: real shell and loading composition (2.4s)
+  ok 15 tests\admin-loading.spec.ts:32:153 › /admin/students 1280px light: real shell and loading composition (2.5s)
+  ok 16 tests\admin-loading.spec.ts:32:153 › /admin/students 1280px dark: real shell and loading composition (2.5s)
+  ok 17 tests\admin-loading.spec.ts:53:1 › user directory AUTO-COLUMN classification is supported by measured fixtures (1.1s)
+
+  17 passed (46.9s)

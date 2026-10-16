@@ -53,6 +53,7 @@ export class LoginFrequencyServiceError extends Error {
 export async function getLoginFrequency(
   period: LoginFrequencyPeriod,
   signal?: AbortSignal,
+  onUnauthorized?: () => void,
 ): Promise<LoginFrequencyResponse> {
   let response: Response;
   try {
@@ -70,6 +71,7 @@ export async function getLoginFrequency(
     throw new LoginFrequencyServiceError("Network error while fetching login frequency.");
   }
 
+  if (response.status === 401) onUnauthorized?.();
   if (!response.ok) {
     let message = `Failed to fetch login frequency (${response.status})`;
     try {

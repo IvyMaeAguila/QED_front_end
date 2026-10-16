@@ -13,49 +13,49 @@ import { ArrowUpRight, Brain, Heart, ListChecks, UsersRound } from "lucide-react
 
 const FEATURES = [
   {
-    icon: <UsersIcon color="#800000" />,
+    icon: <UsersIcon color="var(--color-maroon)" />,
     eyebrow: "Student records",
     title: "Student Information Management",
     description: "Organize and maintain student profiles and records.",
   },
   {
-    icon: <BookOpenIcon color="#800000" />,
+    icon: <BookOpenIcon color="var(--color-maroon)" />,
     eyebrow: "Academic progress",
     title: "Academic Management",
     description: "Manage subjects, grades, assessments, and learning progress.",
   },
   {
-    icon: <UserRoundCheckIcon color="#800000" />,
+    icon: <UserRoundCheckIcon color="var(--color-maroon)" />,
     eyebrow: "Daily attendance",
     title: "Attendance Tracking",
     description: "Record and monitor student attendance efficiently.",
   },
   {
-    icon: <AlertIcon color="#800000" />,
+    icon: <AlertIcon color="var(--color-maroon)" />,
     eyebrow: "Learning intervention",
     title: "Topic-Based Intervention",
     description: "Identify specific learning topics where students need additional support.",
   },
   {
-    icon: <CheckedIcon color="#800000" />,
+    icon: <CheckedIcon color="var(--color-maroon)" />,
     eyebrow: "Family connection",
     title: "Parent Access",
     description: "Allow parents to monitor relevant academic and attendance information.",
   },
   {
-    icon: <EditIcon color="#800000" />,
+    icon: <EditIcon color="var(--color-maroon)" />,
     eyebrow: "Teacher tools",
     title: "Teacher Tools",
     description: "Give teachers tools for assessment, attendance, and student monitoring.",
   },
   {
-    icon: <DataChartsIcon color="#800000" />,
+    icon: <DataChartsIcon color="var(--color-maroon)" />,
     eyebrow: "School insights",
     title: "Reports & Analytics",
     description: "Present summarized student performance and school data.",
   },
   {
-    icon: <StudentMonIcon color="#800000" />,
+    icon: <StudentMonIcon color="var(--color-maroon)" />,
     eyebrow: "Role-based access",
     title: "Role-Based Access",
     description: "Give every user access appropriate to their responsibilities.",
@@ -67,7 +67,7 @@ export const FeatureSection = () => (
       <div className="mx-auto max-w-[1200px]">
         <Reveal className="mb-8 flex flex-col gap-3 border-b border-[#DED9D3] pb-6 sm:mb-9 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#800000]">The QED platform</p>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink">The QED platform</p>
             <h2 className="mt-2 max-w-2xl font-sans text-3xl font-bold leading-tight text-[#211819] sm:text-4xl">Everything your school needs, working together.</h2>
           </div>
           <p className="max-w-md text-sm leading-6 text-[#62595A]">
@@ -77,7 +77,7 @@ export const FeatureSection = () => (
 
         <Reveal className="mb-5">
           <article className="relative grid overflow-hidden rounded-3xl border border-[#E5D6D3] bg-[#FFF9F7] shadow-sm lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="relative overflow-hidden bg-[#650000] px-6 py-7 text-white sm:px-8 sm:py-9">
+            <div className="relative overflow-hidden bg-maroon-light px-6 py-7 text-white sm:px-8 sm:py-9">
               <div aria-hidden="true" className="absolute -right-12 -top-16 h-48 w-48 rounded-full border-[24px] border-white/[0.06]" />
               <div className="relative max-w-xl">
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.15em] text-[#F2D6AE]">
@@ -97,10 +97,10 @@ export const FeatureSection = () => (
 
             <div className="grid grid-cols-1 gap-3 p-5 sm:grid-cols-2 sm:p-6">
               {[
-                { name: "Cognitive", detail: "Thinking and understanding", Icon: Brain, color: "text-[#4779B8]", tint: "bg-[#EDF4FC]" },
-                { name: "Emotional", detail: "Motivation and confidence", Icon: Heart, color: "text-[#BB5660]", tint: "bg-[#FCEFF0]" },
-                { name: "Behavioral", detail: "Focus and self-management", Icon: ListChecks, color: "text-[#A77622]", tint: "bg-[#FBF5E8]" },
-                { name: "Social", detail: "Collaboration and connection", Icon: UsersRound, color: "text-[#468273]", tint: "bg-[#EDF7F3]" },
+                { name: "Cognitive", detail: "Thinking and understanding", Icon: Brain, color: "text-chart-cognitive", tint: "bg-chart-cognitive/10" },
+                { name: "Emotional", detail: "Motivation and confidence", Icon: Heart, color: "text-chart-emotional", tint: "bg-chart-emotional/10" },
+                { name: "Behavioral", detail: "Focus and self-management", Icon: ListChecks, color: "text-chart-behavioral", tint: "bg-chart-behavioral/10" },
+                { name: "Social", detail: "Collaboration and connection", Icon: UsersRound, color: "text-chart-social", tint: "bg-chart-social/10" },
               ].map(({ name, detail, Icon, color, tint }) => (
                 <div key={name} className="flex min-h-[82px] items-center gap-3 rounded-2xl border border-[#ECE4E0] bg-white px-4 py-3">
                   <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${tint} ${color}`}>

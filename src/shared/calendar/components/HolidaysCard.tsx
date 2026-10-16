@@ -1,3 +1,6 @@
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { SkeletonText } from "@shared/components/SkeletonLoading";
+import { rememberRows, skeletonRows } from "@shared/loading/reservations";
 import { CalendarHeart, Maximize2 } from "lucide-react";
 import { HOLIDAY_TYPE_LABELS, type CalendarHoliday, type CalendarTheme } from "../types/Calendar";
 import { groupHolidaysByMonth } from "../utils/Groupings";
@@ -5,6 +8,10 @@ import { toISODate } from "../data";
 import { EntryRowActions } from "./EntryRowsAction";
 
 interface HolidaysCardProps extends CalendarTheme {
+  loading?: boolean;
+  error?: unknown;
+  retry?: () => void;
+  view?: string;
   holidays: CalendarHoliday[];
   onExpand: () => void;
   /** Ang buwan na kasalukuyang tinitingnan sa MonthGrid (viewDate) */
@@ -14,6 +21,10 @@ interface HolidaysCardProps extends CalendarTheme {
 }
 
 interface HolidayGroupListProps {
+  loading?: boolean;
+  error?: unknown;
+  retry?: () => void;
+  view?: string;
   holidays: CalendarHoliday[];
   darkMode: boolean;
   textMuted: string;
@@ -51,11 +62,13 @@ function isToday(dateStr: string): boolean {
 
 function HolidayRow({
   holiday,
+  loading = false,
   darkMode = false,
   onEdit,
   onDelete,
 }: {
   holiday: CalendarHoliday;
+  loading?: boolean;
   darkMode?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -73,24 +86,24 @@ function HolidayRow({
     <div
       className={`flex items-center gap-3 rounded-lg p-2.5 ${
         happeningToday
-          ? "bg-maroon-dark"
+          ? "bg-maroon-dark sk-surface-brand"
           : darkMode
             ? "bg-[#241614]"
             : "bg-surface/60"
       }`}
     >
       <div
-        className={`flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg text-maroon-dark shadow-sm ${
-          darkMode ? "bg-[#2A1A18]" : "bg-white"
+        className={`sk-surface-card flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg text-maroon-dark shadow-sm ${
+          darkMode ? "bg-panel-dark" : "bg-white"
         }`}
       >
-        <span className="text-base font-extrabold leading-none">{day}</span>
-        <span className="text-xs font-bold uppercase leading-none">
-          {monthAbbr}
+        <span className="text-base font-extrabold leading-none" data-sk-region="holidayscard-span-field-1">{loading ? <SkeletonText width="2ch" /> : day}</span>
+        <span className="text-xs font-bold uppercase leading-none" data-sk-region="holidayscard-span-field-2">
+          {loading ? <SkeletonText width="3ch" /> : monthAbbr}
         </span>
       </div>
 
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1" data-sk-region="holidayscard-div-field-3">
         <p
           className={`truncate text-xs font-semibold ${
             happeningToday
@@ -98,9 +111,9 @@ function HolidayRow({
               : darkMode
                 ? "text-gray-200"
                 : "text-gray-800"
-          }`}
+          }`} data-sk-region="holidayscard-p-field-4"
         >
-          {holiday.title}
+          {loading ? <SkeletonText width="16ch" /> : holiday.title}
         </p>
         {holiday.type && (
           <p
@@ -110,9 +123,9 @@ function HolidayRow({
                 : darkMode
                   ? "text-gray-500"
                   : "text-gray-500"
-            }`}
+            }`} data-sk-region="holidayscard-p-field-5"
           >
-            {HOLIDAY_TYPE_LABELS[holiday.type]}
+            {loading ? <SkeletonText width="12ch" /> : HOLIDAY_TYPE_LABELS[holiday.type]}
           </p>
         )}
       </div>
@@ -120,8 +133,8 @@ function HolidayRow({
       {showActions && (
         <EntryRowActions
           darkMode={darkMode}
-          onEdit={safeOnEdit}
-          onDelete={safeOnDelete}
+          onEdit={() => { if (!loading) safeOnEdit(); }}
+          onDelete={() => { if (!loading) safeOnDelete(); }}
           highlighted={happeningToday}
         />
       )}
@@ -131,30 +144,34 @@ function HolidayRow({
 
 export function HolidayGroupList({
   holidays,
+  loading = false, error, retry, view = "calendar-holidays",
   darkMode,
   textMuted,
   onEdit,
   onDelete,
   emptyMessage = "No holidays yet.",
 }: HolidayGroupListProps) {
-  const grouped = groupHolidaysByMonth(holidays);
+  const renderGroups = (pending: boolean) => {
+    const rows: CalendarHoliday[] = pending ? Array.from({ length: skeletonRows(view, undefined, 64) }, (_, index) => ({ id: -index - 1, title: "", date: new Date().toISOString().slice(0, 10), type: "regular" })) : holidays;
+  const grouped = groupHolidaysByMonth(rows);
 
   if (grouped.length === 0) {
     return <p className={`py-2 text-xs ${textMuted}`}>{emptyMessage}</p>;
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3" data-sk-region="holidayscard-div-field-6">
       {grouped.map(({ month, items }) => (
         <div key={month} className="mb-3">
-          <p className={`mb-1.5 text-xs font-semibold ${textMuted}`}>
-            {month}
+          <p className={`mb-1.5 text-xs font-semibold ${textMuted}`} data-sk-region="holidayscard-p-field-7">
+            {pending ? <SkeletonText width="14ch" /> : month}
           </p>
           <div className="flex flex-col gap-2">
             {items.map((h) => (
               <HolidayRow
                 key={h.id}
                 holiday={h}
+                loading={pending}
                 darkMode={darkMode}
                 onEdit={onEdit ? () => onEdit(h) : undefined}
                 onDelete={onDelete ? () => onDelete(h) : undefined}
@@ -165,10 +182,13 @@ export function HolidayGroupList({
       ))}
     </div>
   );
+  };
+  return <LoadingRegion name={view + "-rows"} loading={loading} error={error} retry={retry} variable retainPrevious hasContent={holidays.length > 0} skeleton={null} frame={renderGroups} onSettled={() => rememberRows(view, holidays.length)}>{null}</LoadingRegion>;
 }
 
 export function HolidaysCard({
   holidays,
+  loading = false, error, retry,
   onExpand,
   viewDate,
   selectedDate,
@@ -186,7 +206,7 @@ export function HolidaysCard({
     <div className={`rounded-[12px] p-5 shadow-card ${panelBg}`}>
       <div className="mb-3 flex items-center justify-between">
         <div>
-          <p className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textMuted}`}>
+          <p className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textMuted}`} data-sk-region="holidayscard-holidays" data-sk-static="">
             <CalendarHeart size={14} className="text-maroon-dark" />
             Holidays
           </p>
@@ -198,7 +218,7 @@ export function HolidaysCard({
           className={`flex h-7 w-7 items-center justify-center rounded-lg transition-colors ${
             darkMode
               ? "text-[#D1D5DB] hover:bg-white/10"
-              : "text-[#374151] hover:bg-[#F6F7FB]"
+              : "text-[#374151] hover:bg-brand-light"
           }`}
         >
           <Maximize2 size={14} />
@@ -208,6 +228,7 @@ export function HolidaysCard({
       <div className="max-h-96 overflow-y-auto pr-1">
         {/* No onEdit/onDelete here — actions only appear in the expanded modal */}
         <HolidayGroupList
+          loading={loading} error={error} retry={retry} view={"calendar-holidays" + (selectedDate?.toISOString().slice(0,10) ?? viewDate?.toISOString().slice(0,7) ?? "current")}
           holidays={visibleHolidays}
           darkMode={darkMode}
           textMuted={textMuted}
@@ -217,3 +238,5 @@ export function HolidaysCard({
     </div>
   );
 }
+
+

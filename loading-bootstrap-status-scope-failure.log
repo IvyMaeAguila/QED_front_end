@@ -1,0 +1,46 @@
+
+[WebServer] (node:40348) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 7 tests using 1 worker
+
+(node:10828) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/7] tests\bootstrap-loading.spec.ts:30:1 › bootstrap 60ms never shows the brand loader or status
+[2/7] tests\bootstrap-loading.spec.ts:37:1 › revealed bootstrap animates only the real logo opacity, never rotation
+[3/7] tests\bootstrap-loading.spec.ts:48:1 › bootstrap reduced motion has no running animation
+[4/7] tests\bootstrap-loading.spec.ts:55:1 › bootstrap busy and status follow reveal, minimum duration, and DOM cleanup
+  1) tests\bootstrap-loading.spec.ts:55:1 › bootstrap busy and status follow reveal, minimum duration, and DOM cleanup 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 7
+
+      64 |   const done = evidence.find(x => x.busy === "false")!;
+      65 |   expect(done.time - visible.time).toBeGreaterThanOrEqual(390);
+    > 66 |   for (const frame of evidence) if (!frame.visible) expect(frame.status).toBe(0);
+         |                                                                          ^
+      67 |   await expect(page.locator('[data-bootstrap-loader], .qed-wrap')).toHaveCount(0);
+      68 |   await expect(root).toHaveAttribute("aria-busy", "false");
+      69 |   releaseData();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bootstrap-loading.spec.ts:66:74
+
+    Error Context: test-results\bootstrap-loading-bootstra-b3c52-um-duration-and-DOM-cleanup\error-context.md
+
+
+
+(node:38040) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[5/7] tests\bootstrap-loading.spec.ts:71:1 › protected components and page requests never render before auth resolves
+[6/7] tests\bootstrap-loading.spec.ts:79:34 › lazy route 375: registered composition inside real shell with stable surroundings
+[7/7] tests\bootstrap-loading.spec.ts:79:34 › lazy route 1280: registered composition inside real shell with stable surroundings
+  1 failed
+    tests\bootstrap-loading.spec.ts:55:1 › bootstrap busy and status follow reveal, minimum duration, and DOM cleanup 
+  6 passed (34.7s)

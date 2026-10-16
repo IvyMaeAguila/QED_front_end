@@ -10,10 +10,10 @@ export function GenderBadge({ gender, darkMode }: GenderBadgeProps) {
 
   const classes = isMale
     ? darkMode
-      ? "bg-[#8B0D0D25] text-[#5B9BE0]"
+      ? "bg-maroon/[0.1451] text-[#5B9BE0]"
       : "bg-[#EAF2FF] text-[#1D70D6]"
     : darkMode
-      ? "bg-[#8B0D0D25] text-[#E5799F]"
+      ? "bg-maroon/[0.1451] text-[#E5799F]"
       : "bg-[#FCE7F1] text-[#C2255C]";
 
   return (

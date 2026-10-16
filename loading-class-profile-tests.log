@@ -1,0 +1,42 @@
+
+[WebServer] (node:37500) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:7776) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 28 tests using 1 worker
+
+
+(node:13324) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/28] tests\admin-class-view.spec.ts:17:68 › class details 375 light: real actions, tabs and weekday headings
+[2/28] tests\admin-class-view.spec.ts:17:68 › class details 375 dark: real actions, tabs and weekday headings
+[3/28] tests\admin-class-view.spec.ts:17:68 › class details 1280 light: real actions, tabs and weekday headings
+[4/28] tests\admin-class-view.spec.ts:17:68 › class details 1280 dark: real actions, tabs and weekday headings
+[5/28] tests\admin-class-view.spec.ts:38:1 › class schedule auto-column classification observes native content width changes
+[6/28] tests\admin-class-view.spec.ts:51:35 › class schedule light: time cell shimmer fits its real tinted surface
+[7/28] tests\admin-class-view.spec.ts:51:35 › class schedule dark: time cell shimmer fits its real tinted surface
+[8/28] tests\directory-loading.spec.ts:7:70 › /principal/teachers 375px light: real controls and screenshots
+[9/28] tests\directory-loading.spec.ts:7:70 › /principal/teachers 375px dark: real controls and screenshots
+[10/28] tests\directory-loading.spec.ts:7:70 › /principal/teachers 1280px light: real controls and screenshots
+[11/28] tests\directory-loading.spec.ts:7:70 › /principal/teachers 1280px dark: real controls and screenshots
+[12/28] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 375px light: real controls and screenshots
+[13/28] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 375px dark: real controls and screenshots
+[14/28] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 1280px light: real controls and screenshots
+[15/28] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 1280px dark: real controls and screenshots
+[16/28] tests\directory-loading.spec.ts:7:70 › /principal/students 375px light: real controls and screenshots
+[17/28] tests\directory-loading.spec.ts:7:70 › /principal/students 375px dark: real controls and screenshots
+[18/28] tests\directory-loading.spec.ts:7:70 › /principal/students 1280px light: real controls and screenshots
+[19/28] tests\directory-loading.spec.ts:7:70 › /principal/students 1280px dark: real controls and screenshots
+[20/28] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 375px light: real controls and screenshots
+[21/28] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 375px dark: real controls and screenshots
+[22/28] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 1280px light: real controls and screenshots
+[23/28] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 1280px dark: real controls and screenshots
+[24/28] tests\directory-loading.spec.ts:7:70 › /parent 375px light: real controls and screenshots
+[25/28] tests\directory-loading.spec.ts:7:70 › /parent 375px dark: real controls and screenshots
+[26/28] tests\directory-loading.spec.ts:7:70 › /parent 1280px light: real controls and screenshots
+[27/28] tests\directory-loading.spec.ts:7:70 › /parent 1280px dark: real controls and screenshots
+[28/28] tests\directory-loading.spec.ts:29:1 › principal directory auto-column classification requires observed variation
+  28 passed (1.0m)

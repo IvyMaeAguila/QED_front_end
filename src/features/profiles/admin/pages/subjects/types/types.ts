@@ -95,13 +95,13 @@ export interface SubjectsTheme {
   textMuted: string;
 }
 
-export const ACCENT = "#8B0D0D";
+export const ACCENT = "var(--color-maroon)";
 export const SCHOOL_YEAR = "2026–2027";
 
 export const PALETTE = {
-  gradientFrom: "#550000",
-  gradientTo: "#9D0000",
-  white: "#F2F4F7",
+  gradientFrom: "var(--color-maroon)",
+  gradientTo: "var(--brand-secondary)",
+  white: "var(--brand-light)",
   goldMuted: "#9C8248",
   gray: "#9CA3AF",
 };

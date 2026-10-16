@@ -1,0 +1,54 @@
+
+[WebServer] (node:13260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5112) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 40 tests using 1 worker
+
+(node:15128) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/40] tests\auto-columns.spec.ts:9:32 › auto columns: 0 rows, one swap, stable shell and cached repeat
+[2/40] tests\auto-columns.spec.ts:9:32 › auto columns: 1 rows, one swap, stable shell and cached repeat
+[3/40] tests\auto-columns.spec.ts:9:32 › auto columns: 9 rows, one swap, stable shell and cached repeat
+[4/40] tests\auto-columns.spec.ts:44:1 › auto-column classification requires observed data-dependent widths
+[5/40] tests\loading.spec.ts:7:1 › 60ms never reveals a skeleton
+[6/40] tests\loading.spec.ts:11:1 › 320ms reveals after 200ms and reserves at least 400ms
+[7/40] tests\loading.spec.ts:20:1 › 1500ms begins showing content within 150ms of data
+[8/40] tests\loading.spec.ts:24:1 › fixed region retains height and has zero CLS
+[9/40] tests\loading.spec.ts:30:3 › variable list, data size 0: one swap, stable surroundings
+[10/40] tests\loading.spec.ts:30:3 › variable list, data size 2: one swap, stable surroundings
+[11/40] tests\loading.spec.ts:30:3 › variable list, data size 9: one swap, stable surroundings
+[12/40] tests\loading.spec.ts:30:3 › variable text, data size 1: one swap, stable surroundings
+[13/40] tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings
+[14/40] tests\loading.spec.ts:30:3 › variable text, data size 24: one swap, stable surroundings
+[15/40] tests\loading.spec.ts:49:1 › animation properties, shimmer duration and shared easing
+[16/40] tests\loading.spec.ts:59:1 › different mount times share shimmer phase
+[17/40] tests\loading.spec.ts:64:30 › 5 items use exact stagger policy
+[18/40] tests\loading.spec.ts:64:30 › 12 items use exact stagger policy
+[19/40] tests\loading.spec.ts:68:1 › reduced motion has no shimmer or fade wait
+[20/40] tests\loading.spec.ts:76:1 › aria busy, hidden reservation, delayed status and complete cleanup
+[21/40] tests\loading.spec.ts:85:1 › error removes skeleton and retry reloads
+[22/40] tests\loading.spec.ts:92:1 › negative control catches wrong fixed height and CLS
+[23/40] tests\loading.spec.ts:97:1 › negative control catches unsynchronized shimmer
+[24/40] tests\loading.spec.ts:102:1 › skeleton CSS uses tokens for every color
+[25/40] tests\loading.spec.ts:107:40 › light: neutral contrast on every surface
+[26/40] tests\loading.spec.ts:107:40 › dark: neutral contrast on every surface
+[27/40] tests\loading.spec.ts:116:1 › text line metrics and adjacent widths
+[28/40] tests\refetch-contract.spec.ts:33:1 › 60ms refetch never dims or mounts visible skeleton rows
+[29/40] tests\refetch-contract.spec.ts:45:1 › slow refetch dims old rows, then falls back after two seconds without moving surroundings
+[30/40] tests\refetch-contract.spec.ts:66:1 › refetch after empty results uses initial skeleton reservation
+[31/40] tests\student-details-loading.spec.ts:25:68 › student details 375 light: real labels, baseline chart and controls
+[32/40] tests\student-details-loading.spec.ts:25:68 › student details 375 dark: real labels, baseline chart and controls
+[33/40] tests\student-details-loading.spec.ts:25:68 › student details 1280 light: real labels, baseline chart and controls
+[34/40] tests\student-details-loading.spec.ts:25:68 › student details 1280 dark: real labels, baseline chart and controls
+[35/40] tests\student-details-loading.spec.ts:42:32 › student details 0 scheduled subjects preserve native rows and known status
+[36/40] tests\student-details-loading.spec.ts:42:32 › student details 1 scheduled subjects preserve native rows and known status
+[37/40] tests\student-details-loading.spec.ts:42:32 › student details 9 scheduled subjects preserve native rows and known status
+[38/40] tests\student-details-loading.spec.ts:52:1 › student details failure removes all placeholders and retries the original context request
+[39/40] tests\student-details-loading.spec.ts:64:1 › student details not-found state waits for the student request
+[40/40] tests\student-details-loading.spec.ts:72:1 › student performance AUTO-COLUMN classification requires native width variation
+  40 passed (1.3m)

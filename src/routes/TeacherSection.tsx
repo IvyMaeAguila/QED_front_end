@@ -1,19 +1,18 @@
 import { useAuth } from "../features/auth/context/authContext";
 import { TeacherLayout } from "../features/profiles/teacher/pages/TeacherLayout";
-import { ClassesProvider } from "../features/profiles/admin/pages/classes/context/ClassesContext";
-import { TeachersProvider } from "../features/profiles/admin/pages/classes/context/TeachersContext";
-import { StudentsProvider } from "../features/profiles/admin/pages/studentrecords/context/StudentsContext";
+import {TeacherScheduleProviders} from '../features/profiles/teacher/query/TeacherScheduleProviders';
+import { TeacherStudentsProvider } from "../features/profiles/teacher/query/TeacherStudentsProvider";
+import {useLocation} from 'react-router-dom';
 
 export function TeacherSection() {
-  const { logout } = useAuth(); // ✅ idagdag
+  const { logout } = useAuth();
+  const {pathname}=useLocation();
 
   return (
-    <StudentsProvider>
-      <TeachersProvider>
-        <ClassesProvider>
+    <TeacherStudentsProvider navigationKey={pathname}>
+      <TeacherScheduleProviders>
           <TeacherLayout onLogout={logout} />
-        </ClassesProvider>
-      </TeachersProvider>
-    </StudentsProvider>
+      </TeacherScheduleProviders>
+    </TeacherStudentsProvider>
   );
 }

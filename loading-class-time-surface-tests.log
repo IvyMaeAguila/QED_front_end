@@ -1,0 +1,42 @@
+
+[WebServer] (node:5396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26568) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 2 tests using 1 worker
+
+(node:25732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/2] tests\admin-class-view.spec.ts:51:35 › class schedule light: time cell shimmer fits its real tinted surface
+[2/2] tests\admin-class-view.spec.ts:51:35 › class schedule dark: time cell shimmer fits its real tinted surface
+  1) tests\admin-class-view.spec.ts:51:35 › class schedule dark: time cell shimmer fits its real tinted surface 
+
+    Error: class-schedule-dark-time: base/surface contrast
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2
+    Received:    2.025510780243271
+
+       at design-pixels.ts:31
+
+      29 |   };
+      30 |   expect(ratio(base), `${name}: base/surface contrast`).toBeGreaterThanOrEqual(1.1);
+    > 31 |   expect(ratio(base), `${name}: base/surface contrast`).toBeLessThanOrEqual(2);
+         |                                                         ^
+      32 |   expect(ratio(shine), `${name}: shine/surface contrast`).toBeGreaterThanOrEqual(1.03);
+      33 | }
+      34 |
+        at checkRenderedContrast (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-pixels.ts:31:57)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-class-view.spec.ts:57:3
+
+    Error Context: test-results\admin-class-view-class-sch-edb1d-its-its-real-tinted-surface\error-context.md
+
+
+  1 failed
+    tests\admin-class-view.spec.ts:51:35 › class schedule dark: time cell shimmer fits its real tinted surface 
+  1 passed (11.3s)

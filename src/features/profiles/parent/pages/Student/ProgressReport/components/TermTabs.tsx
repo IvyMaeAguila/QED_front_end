@@ -24,10 +24,10 @@ export function TermTabs({ active, onChange, darkMode }: TermTabsProps) {
             onClick={() => onChange(t)}
             className={`flex-1 whitespace-nowrap rounded-md px-3 py-1.5 text-center text-xs font-semibold transition-colors ${
               isActive
-                ? "bg-[#8B0D0D] text-white"
+                ? "bg-maroon text-white"
                 : darkMode
                   ? "bg-white/5 text-[#9CA3AF] hover:text-white"
-                  : "bg-[#F1F2F4] text-[#6B7280] hover:text-[#374151]"
+                  : "bg-brand-light text-[#6B7280] hover:text-[#374151]"
             }`}
           >
             {label}

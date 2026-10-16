@@ -1,0 +1,14 @@
+{
+  "pages": [
+    "teacher-dashboard",
+    "teacher-subject",
+    "admin",
+    "holistic-profile",
+    "teacher-grades",
+    "principal-dashboard",
+    "parent-detail-overview",
+    "parent-pet-quiz"
+  ],
+  "top": "skeleton",
+  "bottom": "loaded"
+}

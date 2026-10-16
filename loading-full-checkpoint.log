@@ -1,0 +1,684 @@
+
+[WebServer] (node:24584) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 196 tests using 1 worker
+
+
+(node:20136) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/196] tests\admin-loading.spec.ts:38:196 › /admin 375px light: real shell and loading composition
+  1) tests\admin-loading.spec.ts:38:196 › /admin 375px light: real shell and loading composition ───
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 21,
+        "width": 125,
+        "x": 37,
+    -   "y": 650,
+    +   "y": 638,
+      }
+
+      50 |   await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      51 |   release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 52 |   expect(await page.getByRole("heading", { name: title, exact: true }).boundingBox()).toEqual(before);
+         |                                                                                       ^
+      53 |   await expect(page.getByRole("alert")).toHaveCount(0);
+      54 |   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      55 |   expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-loading.spec.ts:52:87
+
+    Error Context: test-results\admin-loading--admin-375px-3311b-ell-and-loading-composition\error-context.md
+
+
+
+(node:32440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[2/196] tests\admin-loading.spec.ts:38:196 › /admin 375px dark: real shell and loading composition
+  2) tests\admin-loading.spec.ts:38:196 › /admin 375px dark: real shell and loading composition ────
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 21,
+        "width": 125,
+        "x": 37,
+    -   "y": 650,
+    +   "y": 638,
+      }
+
+      50 |   await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      51 |   release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 52 |   expect(await page.getByRole("heading", { name: title, exact: true }).boundingBox()).toEqual(before);
+         |                                                                                       ^
+      53 |   await expect(page.getByRole("alert")).toHaveCount(0);
+      54 |   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      55 |   expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-loading.spec.ts:52:87
+
+    Error Context: test-results\admin-loading--admin-375px-b11e1-ell-and-loading-composition\error-context.md
+
+
+
+(node:38300) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[3/196] tests\admin-loading.spec.ts:38:196 › /admin 1280px light: real shell and loading composition
+  3) tests\admin-loading.spec.ts:38:196 › /admin 1280px light: real shell and loading composition ──
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 21,
+        "width": 440.984375,
+        "x": 285,
+    -   "y": 301,
+    +   "y": 298,
+      }
+
+      50 |   await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      51 |   release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 52 |   expect(await page.getByRole("heading", { name: title, exact: true }).boundingBox()).toEqual(before);
+         |                                                                                       ^
+      53 |   await expect(page.getByRole("alert")).toHaveCount(0);
+      54 |   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      55 |   expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-loading.spec.ts:52:87
+
+    Error Context: test-results\admin-loading--admin-1280p-558ff-ell-and-loading-composition\error-context.md
+
+
+
+
+(node:2188) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[4/196] tests\admin-loading.spec.ts:38:196 › /admin 1280px dark: real shell and loading composition
+  4) tests\admin-loading.spec.ts:38:196 › /admin 1280px dark: real shell and loading composition ───
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 21,
+        "width": 440.984375,
+        "x": 285,
+    -   "y": 301,
+    +   "y": 298,
+      }
+
+      50 |   await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      51 |   release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 52 |   expect(await page.getByRole("heading", { name: title, exact: true }).boundingBox()).toEqual(before);
+         |                                                                                       ^
+      53 |   await expect(page.getByRole("alert")).toHaveCount(0);
+      54 |   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      55 |   expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-loading.spec.ts:52:87
+
+    Error Context: test-results\admin-loading--admin-1280p-f12aa-ell-and-loading-composition\error-context.md
+
+
+
+(node:16580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[5/196] tests\admin-loading.spec.ts:38:196 › /admin/classes 375px light: real shell and loading composition
+[6/196] tests\admin-loading.spec.ts:38:196 › /admin/classes 375px dark: real shell and loading composition
+[7/196] tests\admin-loading.spec.ts:38:196 › /admin/classes 1280px light: real shell and loading composition
+[8/196] tests\admin-loading.spec.ts:38:196 › /admin/classes 1280px dark: real shell and loading composition
+[9/196] tests\admin-loading.spec.ts:38:196 › /admin/users 375px light: real shell and loading composition
+[10/196] tests\admin-loading.spec.ts:38:196 › /admin/users 375px dark: real shell and loading composition
+[11/196] tests\admin-loading.spec.ts:38:196 › /admin/users 1280px light: real shell and loading composition
+[12/196] tests\admin-loading.spec.ts:38:196 › /admin/users 1280px dark: real shell and loading composition
+[13/196] tests\admin-loading.spec.ts:38:196 › /admin/students 375px light: real shell and loading composition
+[14/196] tests\admin-loading.spec.ts:38:196 › /admin/students 375px dark: real shell and loading composition
+[15/196] tests\admin-loading.spec.ts:38:196 › /admin/students 1280px light: real shell and loading composition
+[16/196] tests\admin-loading.spec.ts:38:196 › /admin/students 1280px dark: real shell and loading composition
+[17/196] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 375px light: real shell and loading composition
+[18/196] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 375px dark: real shell and loading composition
+[19/196] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 1280px light: real shell and loading composition
+[20/196] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 1280px dark: real shell and loading composition
+[21/196] tests\admin-loading.spec.ts:38:196 › /admin/subjects 375px light: real shell and loading composition
+[22/196] tests\admin-loading.spec.ts:38:196 › /admin/subjects 375px dark: real shell and loading composition
+[23/196] tests\admin-loading.spec.ts:38:196 › /admin/subjects 1280px light: real shell and loading composition
+[24/196] tests\admin-loading.spec.ts:38:196 › /admin/subjects 1280px dark: real shell and loading composition
+[25/196] tests\admin-loading.spec.ts:59:48 › users directory AUTO-COLUMN classification is supported by measured fixtures
+[26/196] tests\admin-loading.spec.ts:59:48 › students directory AUTO-COLUMN classification is supported by measured fixtures
+[27/196] tests\admin-loading.spec.ts:73:2 › academic term auto-column classification requires observed variation
+[28/196] tests\advisory-roster.spec.ts:17:68 › advisory roster 375 light: real labels, actions and table
+[29/196] tests\advisory-roster.spec.ts:17:68 › advisory roster 375 dark: real labels, actions and table
+[30/196] tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 light: real labels, actions and table
+[31/196] tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 dark: real labels, actions and table
+[32/196] tests\advisory-roster.spec.ts:36:1 › student directory classification observes native columns across short/long names
+[33/196] tests\auto-columns.spec.ts:9:32 › auto columns: 0 rows, one swap, stable shell and cached repeat
+[34/196] tests\auto-columns.spec.ts:9:32 › auto columns: 1 rows, one swap, stable shell and cached repeat
+[35/196] tests\auto-columns.spec.ts:9:32 › auto columns: 9 rows, one swap, stable shell and cached repeat
+[36/196] tests\auto-columns.spec.ts:44:1 › auto-column classification requires observed data-dependent widths
+[37/196] tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 375px light: real month and shared event rows
+[38/196] tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 375px dark: real month and shared event rows
+[39/196] tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 1280px light: real month and shared event rows
+[40/196] tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 1280px dark: real month and shared event rows
+[41/196] tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 375px light: real month and shared event rows
+[42/196] tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 375px dark: real month and shared event rows
+[43/196] tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 1280px light: real month and shared event rows
+[44/196] tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 1280px dark: real month and shared event rows
+[45/196] tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 375px light: real month and shared event rows
+[46/196] tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 375px dark: real month and shared event rows
+[47/196] tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 1280px light: real month and shared event rows
+[48/196] tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 1280px dark: real month and shared event rows
+[49/196] tests\calendar-loading.spec.ts:6:70 › PARENT calendar 375px light: real month and shared event rows
+[50/196] tests\calendar-loading.spec.ts:6:70 › PARENT calendar 375px dark: real month and shared event rows
+[51/196] tests\calendar-loading.spec.ts:6:70 › PARENT calendar 1280px light: real month and shared event rows
+[52/196] tests\calendar-loading.spec.ts:6:70 › PARENT calendar 1280px dark: real month and shared event rows
+[53/196] tests\courseware-loading.spec.ts:21:68 › courseware 375 light: real learning frame before fetched leaves
+[54/196] tests\courseware-loading.spec.ts:21:68 › courseware 375 dark: real learning frame before fetched leaves
+[55/196] tests\courseware-loading.spec.ts:21:68 › courseware 1280 light: real learning frame before fetched leaves
+[56/196] tests\courseware-loading.spec.ts:21:68 › courseware 1280 dark: real learning frame before fetched leaves
+[57/196] tests\courseware-loading.spec.ts:44:32 › courseware 0 resources preserves empty/short/long content
+[58/196] tests\courseware-loading.spec.ts:44:32 › courseware 1 resources preserves empty/short/long content
+[59/196] tests\courseware-loading.spec.ts:44:32 › courseware 9 resources preserves empty/short/long content
+[60/196] tests\courseware-loading.spec.ts:55:1 › courseware error ends reservation and retries the same request
+
+[WebServer] 11:26:35 PM [vite] (client) [console.error] Failed to load courseware: Error: Unavailable
+[WebServer]     at getCourseware (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/courseware.service.ts:11:9)
+[WebServer]     at async load (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/CoursewareView.tsx:204:20)
+[WebServer] 11:26:35 PM [vite] (client) [console.error] Failed to load courseware: Error: Unavailable
+[WebServer]     at getCourseware (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/courseware.service.ts:11:9)
+[WebServer]     at async load (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/CoursewareView.tsx:204:20)
+
+[61/196] tests\courseware-loading.spec.ts:69:35 › courseware light: actual hero and thumbnail surfaces keep visible shimmer
+[62/196] tests\courseware-loading.spec.ts:69:35 › courseware dark: actual hero and thumbnail surfaces keep visible shimmer
+[63/196] tests\design-contract.spec.ts:6:1 › skeleton CSS has token-only colors
+[64/196] tests\design-contract.spec.ts:12:40 › light: pixel area survives all four shimmer phases on every surface
+[65/196] tests\design-contract.spec.ts:12:40 › dark: pixel area survives all four shimmer phases on every surface
+[66/196] tests\design-contract.spec.ts:17:68 › teacher 375 light: static content and spinner guard
+[67/196] tests\design-contract.spec.ts:17:68 › teacher 375 dark: static content and spinner guard
+[68/196] tests\design-contract.spec.ts:17:68 › teacher 1280 light: static content and spinner guard
+[69/196] tests\design-contract.spec.ts:17:68 › teacher 1280 dark: static content and spinner guard
+[70/196] tests\design-contract.spec.ts:32:1 › negative control: shine blending into the surface is caught by the pixel guard
+[71/196] tests\design-contract.spec.ts:44:1 › negative control: a hard shimmer edge is caught independently of visible area
+[72/196] tests\directory-loading.spec.ts:7:70 › /principal/teachers 375px light: real controls and screenshots
+[73/196] tests\directory-loading.spec.ts:7:70 › /principal/teachers 375px dark: real controls and screenshots
+[74/196] tests\directory-loading.spec.ts:7:70 › /principal/teachers 1280px light: real controls and screenshots
+[75/196] tests\directory-loading.spec.ts:7:70 › /principal/teachers 1280px dark: real controls and screenshots
+[76/196] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 375px light: real controls and screenshots
+[77/196] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 375px dark: real controls and screenshots
+[78/196] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 1280px light: real controls and screenshots
+[79/196] tests\directory-loading.spec.ts:7:70 › /principal/teachers/1 1280px dark: real controls and screenshots
+[80/196] tests\directory-loading.spec.ts:7:70 › /principal/students 375px light: real controls and screenshots
+[81/196] tests\directory-loading.spec.ts:7:70 › /principal/students 375px dark: real controls and screenshots
+[82/196] tests\directory-loading.spec.ts:7:70 › /principal/students 1280px light: real controls and screenshots
+[83/196] tests\directory-loading.spec.ts:7:70 › /principal/students 1280px dark: real controls and screenshots
+[84/196] tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 375px light: real controls and screenshots
+  5) tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 375px light: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 16,
+    -   "y": 160.5,
+    +   "y": 138,
+      }
+
+      21 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      22 |     release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 23 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      24 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      25 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      26 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:23:40
+
+    Error Context: test-results\directory-loading--princip-7d3f8-al-controls-and-screenshots\error-context.md
+
+
+(node:18260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[85/196] tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 375px dark: real controls and screenshots
+  6) tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 375px dark: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 16,
+    -   "y": 160.5,
+    +   "y": 138,
+      }
+
+      21 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      22 |     release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 23 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      24 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      25 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      26 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:23:40
+
+    Error Context: test-results\directory-loading--princip-d0265-al-controls-and-screenshots\error-context.md
+
+
+(node:33848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[86/196] tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 1280px light: real controls and screenshots
+  7) tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 1280px light: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 264,
+    -   "y": 167.6875,
+    +   "y": 134.6875,
+      }
+
+      21 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      22 |     release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 23 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      24 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      25 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      26 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:23:40
+
+    Error Context: test-results\directory-loading--princip-8c9de-al-controls-and-screenshots\error-context.md
+
+
+(node:13332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[87/196] tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 1280px dark: real controls and screenshots
+  8) tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 1280px dark: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 264,
+    -   "y": 167.6875,
+    +   "y": 134.6875,
+      }
+
+      21 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      22 |     release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 23 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      24 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      25 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      26 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:23:40
+
+    Error Context: test-results\directory-loading--princip-e5507-al-controls-and-screenshots\error-context.md
+
+
+
+(node:17436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[88/196] tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 375px light: real controls and screenshots
+  9) tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 375px light: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 16,
+    -   "y": 160.5,
+    +   "y": 138,
+      }
+
+      21 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      22 |     release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 23 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      24 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      25 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      26 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:23:40
+
+    Error Context: test-results\directory-loading--princip-8672d-al-controls-and-screenshots\error-context.md
+
+
+
+(node:38240) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[89/196] tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 375px dark: real controls and screenshots
+  10) tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 375px dark: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 16,
+    -   "y": 160.5,
+    +   "y": 138,
+      }
+
+      21 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      22 |     release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 23 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      24 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      25 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      26 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:23:40
+
+    Error Context: test-results\directory-loading--princip-a600b-al-controls-and-screenshots\error-context.md
+
+
+
+(node:12132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[90/196] tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 1280px light: real controls and screenshots
+  11) tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 1280px light: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 264,
+    -   "y": 167.6875,
+    +   "y": 134.6875,
+      }
+
+      21 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      22 |     release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 23 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      24 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      25 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      26 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:23:40
+
+    Error Context: test-results\directory-loading--princip-ac098-al-controls-and-screenshots\error-context.md
+
+
+
+(node:29964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[91/196] tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 1280px dark: real controls and screenshots
+  12) tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 1280px dark: real controls and screenshots 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "height": 44,
+        "width": 44,
+        "x": 264,
+    -   "y": 167.6875,
+    +   "y": 134.6875,
+      }
+
+      21 |     await page.screenshot({ path: `${prefix}-skeleton.png`, fullPage: true });
+      22 |     release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0); await expect(page.locator("[data-sk-layer], [data-sk-frame]")).toHaveCount(0);
+    > 23 |     expect(await anchor.boundingBox()).toEqual(before);
+         |                                        ^
+      24 |     await expect(page.getByRole("alert")).toHaveCount(0);
+      25 |     await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
+      26 |     expect(errors).toEqual([]);
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\directory-loading.spec.ts:23:40
+
+    Error Context: test-results\directory-loading--princip-05ed5-al-controls-and-screenshots\error-context.md
+
+
+(node:15064) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[92/196] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 375px light: real controls and screenshots
+[93/196] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 375px dark: real controls and screenshots
+[94/196] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 1280px light: real controls and screenshots
+[95/196] tests\directory-loading.spec.ts:7:70 › /parent/enrolled-children 1280px dark: real controls and screenshots
+[96/196] tests\directory-loading.spec.ts:7:70 › /parent 375px light: real controls and screenshots
+[97/196] tests\directory-loading.spec.ts:7:70 › /parent 375px dark: real controls and screenshots
+[98/196] tests\directory-loading.spec.ts:7:70 › /parent 1280px light: real controls and screenshots
+[99/196] tests\directory-loading.spec.ts:7:70 › /parent 1280px dark: real controls and screenshots
+[100/196] tests\directory-loading.spec.ts:29:1 › principal directory auto-column classification requires observed variation
+[101/196] tests\finishing-contract.spec.ts:6:1 › session identity and fixed attendance labels are real before dashboard fetch
+[102/196] tests\finishing-contract.spec.ts:15:1 › attendance skeleton retains the real ring chart shape
+[103/196] tests\finishing-contract.spec.ts:25:1 › table refetch keeps old rows until delay then dims without a spinner
+[104/196] tests\finishing-contract.spec.ts:44:40 › light: shine is distinct from every surface
+[105/196] tests\finishing-contract.spec.ts:44:40 › dark: shine is distinct from every surface
+[106/196] tests\loading.spec.ts:7:1 › 60ms never reveals a skeleton
+[107/196] tests\loading.spec.ts:11:1 › 320ms reveals after 200ms and reserves at least 400ms
+[108/196] tests\loading.spec.ts:20:1 › 1500ms begins showing content within 150ms of data
+[109/196] tests\loading.spec.ts:24:1 › fixed region retains height and has zero CLS
+[110/196] tests\loading.spec.ts:30:3 › variable list, data size 0: one swap, stable surroundings
+[111/196] tests\loading.spec.ts:30:3 › variable list, data size 2: one swap, stable surroundings
+[112/196] tests\loading.spec.ts:30:3 › variable list, data size 9: one swap, stable surroundings
+[113/196] tests\loading.spec.ts:30:3 › variable text, data size 1: one swap, stable surroundings
+[114/196] tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings
+[115/196] tests\loading.spec.ts:30:3 › variable text, data size 24: one swap, stable surroundings
+[116/196] tests\loading.spec.ts:49:1 › animation properties, shimmer duration and shared easing
+[117/196] tests\loading.spec.ts:59:1 › different mount times share shimmer phase
+[118/196] tests\loading.spec.ts:64:30 › 5 items use exact stagger policy
+[119/196] tests\loading.spec.ts:64:30 › 12 items use exact stagger policy
+[120/196] tests\loading.spec.ts:68:1 › reduced motion has no shimmer or fade wait
+[121/196] tests\loading.spec.ts:76:1 › aria busy, hidden reservation, delayed status and complete cleanup
+[122/196] tests\loading.spec.ts:85:1 › error removes skeleton and retry reloads
+[123/196] tests\loading.spec.ts:92:1 › negative control catches wrong fixed height and CLS
+[124/196] tests\loading.spec.ts:97:1 › negative control catches unsynchronized shimmer
+[125/196] tests\loading.spec.ts:102:1 › skeleton CSS uses tokens for every color
+[126/196] tests\loading.spec.ts:107:40 › light: neutral contrast on every surface
+[127/196] tests\loading.spec.ts:107:40 › dark: neutral contrast on every surface
+[128/196] tests\loading.spec.ts:116:1 › text line metrics and adjacent widths
+[129/196] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 375 light: real shell and existing cards
+[130/196] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 375 dark: real shell and existing cards
+[131/196] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 1280 light: real shell and existing cards
+[132/196] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 1280 dark: real shell and existing cards
+[133/196] tests\principal-gradebooks.spec.ts:40:1 › repeat gradebook visit displays cached cards and school year immediately
+[134/196] tests\principal-gradebooks.spec.ts:56:1 › inline school year preserves the original paragraph flow
+[135/196] tests\refetch-contract.spec.ts:33:1 › 60ms refetch never dims or mounts visible skeleton rows
+[136/196] tests\refetch-contract.spec.ts:45:1 › slow refetch dims old rows, then falls back after two seconds without moving surroundings
+[137/196] tests\refetch-contract.spec.ts:66:1 › refetch after empty results uses initial skeleton reservation
+[138/196] tests\removed-loading-guard.spec.ts:9:1 › removed splash and duplicate advisory skeleton cannot be reintroduced
+[139/196] tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition
+  13) tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition 
+
+    Error: Routes still requiring migration and real-route verification:
+    /admin/students/new
+    /admin/students/:studentId/edit
+    /admin/users/new
+    /admin/users/:role/:userId
+    /admin/users/:role/:userId/edit
+    /admin/classes/new
+    /admin/classes/:classId
+    /admin/classes/:classId/edit
+    /admin/subjects/new
+    /admin/subjects/:subjectId
+    /principal
+    /principal/students/class/:classId
+    /principal/students/grade/:gradeId
+    /principal/reports
+    /principal/holistic-performance-analytics
+    /principal/gradebooks/:grade
+    /teacher/attendance/records
+    /teacher/subjects/:subjectId
+    /teacher/subjects/:subjectId/records
+    /teacher/grades
+    /teacher/holistic
+    /teacher/holistic/:studentId
+    /teacher/holistic/domain-trends
+    /teacher/students/:studentId
+    /parent/students/:studentId
+    /parent/students/:studentId/topics/:topicId/quiz
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 28
+
+    - Array []
+    + Array [
+    +   "/admin/students/new",
+    +   "/admin/students/:studentId/edit",
+    +   "/admin/users/new",
+    +   "/admin/users/:role/:userId",
+    +   "/admin/users/:role/:userId/edit",
+    +   "/admin/classes/new",
+    +   "/admin/classes/:classId",
+    +   "/admin/classes/:classId/edit",
+    +   "/admin/subjects/new",
+    +   "/admin/subjects/:subjectId",
+    +   "/principal",
+    +   "/principal/students/class/:classId",
+    +   "/principal/students/grade/:gradeId",
+    +   "/principal/reports",
+    +   "/principal/holistic-performance-analytics",
+    +   "/principal/gradebooks/:grade",
+    +   "/teacher/attendance/records",
+    +   "/teacher/subjects/:subjectId",
+    +   "/teacher/subjects/:subjectId/records",
+    +   "/teacher/grades",
+    +   "/teacher/holistic",
+    +   "/teacher/holistic/:studentId",
+    +   "/teacher/holistic/domain-trends",
+    +   "/teacher/students/:studentId",
+    +   "/parent/students/:studentId",
+    +   "/parent/students/:studentId/topics/:topicId/quiz",
+    + ]
+
+      32 |   expect(routes.length).toBeGreaterThan(0);
+      33 |   const uncovered = routes.filter(route => !(route in routeSkeletons));
+    > 34 |   expect(uncovered, `Routes still requiring migration and real-route verification:\n${uncovered.join("\n")}`).toEqual([]);
+         |                                                                                                               ^
+      35 | });
+      36 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\route-coverage.spec.ts:34:111
+
+    Error Context: test-results\route-coverage-every-real--4a050-its-own-loading-composition\error-context.md
+
+
+(node:2256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[140/196] tests\static-routes.spec.ts:6:68 › topic support 375 light: known quest choices render immediately
+[141/196] tests\static-routes.spec.ts:6:68 › topic support 375 dark: known quest choices render immediately
+[142/196] tests\static-routes.spec.ts:6:68 › topic support 1280 light: known quest choices render immediately
+[143/196] tests\static-routes.spec.ts:6:68 › topic support 1280 dark: known quest choices render immediately
+[144/196] tests\static-routes.spec.ts:25:141 › ADMIN help 375 light: known page remains real
+[145/196] tests\static-routes.spec.ts:25:141 › ADMIN help 375 dark: known page remains real
+[146/196] tests\static-routes.spec.ts:25:141 › ADMIN help 1280 light: known page remains real
+[147/196] tests\static-routes.spec.ts:25:141 › ADMIN help 1280 dark: known page remains real
+[148/196] tests\static-routes.spec.ts:25:141 › PRINCIPAL help 375 light: known page remains real
+[149/196] tests\static-routes.spec.ts:25:141 › PRINCIPAL help 375 dark: known page remains real
+[150/196] tests\static-routes.spec.ts:25:141 › PRINCIPAL help 1280 light: known page remains real
+[151/196] tests\static-routes.spec.ts:25:141 › PRINCIPAL help 1280 dark: known page remains real
+[152/196] tests\static-routes.spec.ts:25:141 › TEACHER help 375 light: known page remains real
+[153/196] tests\static-routes.spec.ts:25:141 › TEACHER help 375 dark: known page remains real
+[154/196] tests\static-routes.spec.ts:25:141 › TEACHER help 1280 light: known page remains real
+[155/196] tests\static-routes.spec.ts:25:141 › TEACHER help 1280 dark: known page remains real
+[156/196] tests\static-routes.spec.ts:25:141 › PARENT help 375 light: known page remains real
+[157/196] tests\static-routes.spec.ts:25:141 › PARENT help 375 dark: known page remains real
+[158/196] tests\static-routes.spec.ts:25:141 › PARENT help 1280 light: known page remains real
+[159/196] tests\static-routes.spec.ts:25:141 › PARENT help 1280 dark: known page remains real
+[160/196] tests\static-routes.spec.ts:44:105 › / 375 light: static public page needs no invented skeleton
+[161/196] tests\static-routes.spec.ts:44:105 › / 375 dark: static public page needs no invented skeleton
+[162/196] tests\static-routes.spec.ts:44:105 › / 1280 light: static public page needs no invented skeleton
+[163/196] tests\static-routes.spec.ts:44:105 › / 1280 dark: static public page needs no invented skeleton
+[164/196] tests\static-routes.spec.ts:44:105 › /login 375 light: static public page needs no invented skeleton
+[165/196] tests\static-routes.spec.ts:44:105 › /login 375 dark: static public page needs no invented skeleton
+[166/196] tests\static-routes.spec.ts:44:105 › /login 1280 light: static public page needs no invented skeleton
+[167/196] tests\static-routes.spec.ts:44:105 › /login 1280 dark: static public page needs no invented skeleton
+[168/196] tests\subject-class-list.spec.ts:17:68 › subject roster 375 light: real controls, shared table rows and screenshots
+[169/196] tests\subject-class-list.spec.ts:17:68 › subject roster 375 dark: real controls, shared table rows and screenshots
+[170/196] tests\subject-class-list.spec.ts:17:68 › subject roster 1280 light: real controls, shared table rows and screenshots
+[171/196] tests\subject-class-list.spec.ts:17:68 › subject roster 1280 dark: real controls, shared table rows and screenshots
+[172/196] tests\subject-class-list.spec.ts:39:1 › subject roster auto-column classification is supported by native width changes
+[173/196] tests\subject-class-list.spec.ts:52:32 › subject roster 0 results uses the real empty/short/long table
+[174/196] tests\subject-class-list.spec.ts:52:32 › subject roster 1 results uses the real empty/short/long table
+[175/196] tests\subject-class-list.spec.ts:52:32 › subject roster 9 results uses the real empty/short/long table
+[176/196] tests\teacher-attendance.spec.ts:23:68 › teacher attendance 375 light: staged fetches keep real controls and table
+[177/196] tests\teacher-attendance.spec.ts:23:68 › teacher attendance 375 dark: staged fetches keep real controls and table
+[178/196] tests\teacher-attendance.spec.ts:23:68 › teacher attendance 1280 light: staged fetches keep real controls and table
+[179/196] tests\teacher-attendance.spec.ts:23:68 › teacher attendance 1280 dark: staged fetches keep real controls and table
+[180/196] tests\teacher-attendance.spec.ts:46:1 › attendance column classification is justified by long returned names
+[181/196] tests\teacher-attendance.spec.ts:59:1 › attendance loading migration preserves the marking request
+[182/196] tests\teacher-dashboard.spec.ts:6:68 › teacher dashboard 375px light: real route, stable stat geometry and screenshots
+[183/196] tests\teacher-dashboard.spec.ts:6:68 › teacher dashboard 375px dark: real route, stable stat geometry and screenshots
+[184/196] tests\teacher-dashboard.spec.ts:6:68 › teacher dashboard 1280px light: real route, stable stat geometry and screenshots
+[185/196] tests\teacher-dashboard.spec.ts:6:68 › teacher dashboard 1280px dark: real route, stable stat geometry and screenshots
+[186/196] tests\teacher-dashboard.spec.ts:34:1 › classification rejects fixed regions whose loaded height depends on data size
+[187/196] tests\teacher-dashboard.spec.ts:48:88 › teacher wrapping name classification: 3 characters
+[188/196] tests\teacher-dashboard.spec.ts:48:88 › teacher wrapping name classification: 15 characters
+[189/196] tests\teacher-dashboard.spec.ts:48:88 › teacher wrapping name classification: 200 characters
+[190/196] tests\teacher-subjects.spec.ts:25:68 › teacher subjects 375px light: real shell, card geometry and screenshots
+[191/196] tests\teacher-subjects.spec.ts:25:68 › teacher subjects 375px dark: real shell, card geometry and screenshots
+[192/196] tests\teacher-subjects.spec.ts:25:68 › teacher subjects 1280px light: real shell, card geometry and screenshots
+[193/196] tests\teacher-subjects.spec.ts:25:68 › teacher subjects 1280px dark: real shell, card geometry and screenshots
+[194/196] tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 0 rows, stable actions and filters
+[195/196] tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 1 rows, stable actions and filters
+[196/196] tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 9 rows, stable actions and filters
+  13 failed
+    tests\admin-loading.spec.ts:38:196 › /admin 375px light: real shell and loading composition ────
+    tests\admin-loading.spec.ts:38:196 › /admin 375px dark: real shell and loading composition ─────
+    tests\admin-loading.spec.ts:38:196 › /admin 1280px light: real shell and loading composition ───
+    tests\admin-loading.spec.ts:38:196 › /admin 1280px dark: real shell and loading composition ────
+    tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 375px light: real controls and screenshots 
+    tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 375px dark: real controls and screenshots 
+    tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 1280px light: real controls and screenshots 
+    tests\directory-loading.spec.ts:7:70 › /principal/students/class/1 1280px dark: real controls and screenshots 
+    tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 375px light: real controls and screenshots 
+    tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 375px dark: real controls and screenshots 
+    tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 1280px light: real controls and screenshots 
+    tests\directory-loading.spec.ts:7:70 › /principal/students/grade/1 1280px dark: real controls and screenshots 
+    tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition ─
+  183 passed (5.4m)

@@ -1,0 +1,46 @@
+
+[WebServer] (node:2036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26936) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 32 tests using 1 worker
+
+
+(node:8564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/32] tests\admin-class-view.spec.ts:17:68 › class details 375 light: real actions, tabs and weekday headings
+[2/32] tests\admin-class-view.spec.ts:17:68 › class details 375 dark: real actions, tabs and weekday headings
+[3/32] tests\admin-class-view.spec.ts:17:68 › class details 1280 light: real actions, tabs and weekday headings
+[4/32] tests\admin-class-view.spec.ts:17:68 › class details 1280 dark: real actions, tabs and weekday headings
+[5/32] tests\admin-class-view.spec.ts:38:1 › class schedule auto-column classification observes native content width changes
+[6/32] tests\admin-loading.spec.ts:38:196 › /admin 375px light: real shell and loading composition
+[7/32] tests\admin-loading.spec.ts:38:196 › /admin 375px dark: real shell and loading composition
+[8/32] tests\admin-loading.spec.ts:38:196 › /admin 1280px light: real shell and loading composition
+[9/32] tests\admin-loading.spec.ts:38:196 › /admin 1280px dark: real shell and loading composition
+[10/32] tests\admin-loading.spec.ts:38:196 › /admin/classes 375px light: real shell and loading composition
+[11/32] tests\admin-loading.spec.ts:38:196 › /admin/classes 375px dark: real shell and loading composition
+[12/32] tests\admin-loading.spec.ts:38:196 › /admin/classes 1280px light: real shell and loading composition
+[13/32] tests\admin-loading.spec.ts:38:196 › /admin/classes 1280px dark: real shell and loading composition
+[14/32] tests\admin-loading.spec.ts:38:196 › /admin/users 375px light: real shell and loading composition
+[15/32] tests\admin-loading.spec.ts:38:196 › /admin/users 375px dark: real shell and loading composition
+[16/32] tests\admin-loading.spec.ts:38:196 › /admin/users 1280px light: real shell and loading composition
+[17/32] tests\admin-loading.spec.ts:38:196 › /admin/users 1280px dark: real shell and loading composition
+[18/32] tests\admin-loading.spec.ts:38:196 › /admin/students 375px light: real shell and loading composition
+[19/32] tests\admin-loading.spec.ts:38:196 › /admin/students 375px dark: real shell and loading composition
+[20/32] tests\admin-loading.spec.ts:38:196 › /admin/students 1280px light: real shell and loading composition
+[21/32] tests\admin-loading.spec.ts:38:196 › /admin/students 1280px dark: real shell and loading composition
+[22/32] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 375px light: real shell and loading composition
+[23/32] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 375px dark: real shell and loading composition
+[24/32] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 1280px light: real shell and loading composition
+[25/32] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 1280px dark: real shell and loading composition
+[26/32] tests\admin-loading.spec.ts:38:196 › /admin/subjects 375px light: real shell and loading composition
+[27/32] tests\admin-loading.spec.ts:38:196 › /admin/subjects 375px dark: real shell and loading composition
+[28/32] tests\admin-loading.spec.ts:38:196 › /admin/subjects 1280px light: real shell and loading composition
+[29/32] tests\admin-loading.spec.ts:38:196 › /admin/subjects 1280px dark: real shell and loading composition
+[30/32] tests\admin-loading.spec.ts:59:48 › users directory AUTO-COLUMN classification is supported by measured fixtures
+[31/32] tests\admin-loading.spec.ts:59:48 › students directory AUTO-COLUMN classification is supported by measured fixtures
+[32/32] tests\admin-loading.spec.ts:73:2 › academic term auto-column classification requires observed variation
+  32 passed (1.2m)

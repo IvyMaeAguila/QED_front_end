@@ -1,0 +1,168 @@
+
+> qed@0.0.0 build
+> tsc -b && vite build && node scripts/check-bundle-budget.mjs
+
+vite v8.0.16 building client environment for production...
+[2K
+transforming...✓ 2968 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                      1.19 kB │ gzip:   0.53 kB
+dist/assets/teacher_man-D2IHo3qb.jpg                                39.79 kB
+dist/assets/teacher_women-BtNb_XgO.jpg                              47.66 kB
+dist/assets/pet-idle-LUrSbWCu.png                                   57.30 kB
+dist/assets/pet-happy-jsx4FRO3.png                                  61.32 kB
+dist/assets/pet-hungry-DCzrhxZH.png                                 62.34 kB
+dist/assets/EUC-BZZDGRxc.webp                                       62.85 kB
+dist/assets/student_girl-Bxex1pWD.jpg                               69.67 kB
+dist/assets/student_boy-D_Ov4XJ-.jpg                                70.67 kB
+dist/bundle-audit.json                                             105.95 kB │ gzip:  12.43 kB
+dist/assets/admin_hat-B0JzeJgD.png                                 144.10 kB
+dist/assets/QED_Logo-qUfJaevn.png                                  201.89 kB
+dist/assets/male-white-shirt-DQVcP321.png                          345.70 kB
+dist/assets/female-pink-hair-CLXdWWEL.png                          347.74 kB
+dist/assets/male-beard-BSZX62A5.png                                356.81 kB
+dist/assets/male-tie-6mSAnyx6.png                                  357.41 kB
+dist/assets/female-braid-DDG4kGY3.png                              362.03 kB
+dist/assets/female-brown-hair-Sgn4xrSN.png                         363.74 kB
+dist/assets/DepEd-unJspnWB.png                                     516.11 kB
+dist/assets/index-DMrwbaqa.css                                     189.03 kB │ gzip:  30.61 kB
+dist/assets/DepEd-B95_2pMl.js                                        0.11 kB │ gzip:   0.12 kB
+dist/assets/QED_Logo-CsCr7MaE.js                                     0.11 kB │ gzip:   0.13 kB
+dist/assets/pet-idle-DUyGvZst.js                                     0.12 kB │ gzip:   0.13 kB
+dist/assets/typeof-Cuy9Y9sM.js                                       0.33 kB │ gzip:   0.21 kB
+dist/assets/ClassPage-DdWcOWRc.js                                    0.35 kB │ gzip:   0.27 kB
+dist/assets/UserViewPage-BpNwHMNo.js                                 0.35 kB │ gzip:   0.27 kB
+dist/assets/ClassViewPage-C7kOdY3n.js                                0.35 kB │ gzip:   0.27 kB
+dist/assets/HelpSupportPage-BuvZJfx9.js                              0.35 kB │ gzip:   0.27 kB
+dist/assets/AnalyticsPage-_zgGJLnp.js                                0.35 kB │ gzip:   0.27 kB
+dist/assets/ClassListPage-C1XEf93Q.js                                0.35 kB │ gzip:   0.27 kB
+dist/assets/AdminDashboardHome-CQ9mi7XW.js                           0.36 kB │ gzip:   0.28 kB
+dist/assets/StudentRecordsPage-s9SlCiNR.js                           0.36 kB │ gzip:   0.28 kB
+dist/assets/UserManagementPage-BwHeHLGH.js                           0.36 kB │ gzip:   0.28 kB
+dist/assets/StudentDetailPage-C_eR4Ay5.js                            0.36 kB │ gzip:   0.27 kB
+dist/assets/AdvisoryRosterPage-FGMfNIQW.js                           0.36 kB │ gzip:   0.27 kB
+dist/assets/EnrolledChildrenPage-BxNgTobt.js                         0.36 kB │ gzip:   0.28 kB
+dist/assets/PrincipalStudentsPage-BtIWKqdd.js                        0.36 kB │ gzip:   0.27 kB
+dist/assets/PrincipalTeachersPage-CALba-1a.js                        0.36 kB │ gzip:   0.27 kB
+dist/assets/PrincipalGradebooksPage-BQOYjNXc.js                      0.36 kB │ gzip:   0.28 kB
+dist/assets/TeacherAttendanceRecordsPage-DEOf0y_W.js                 0.37 kB │ gzip:   0.28 kB
+dist/assets/HolisticPerformanceAnalyticsPage-Cgvyadrj.js             0.37 kB │ gzip:   0.29 kB
+dist/assets/TopicSupportChoice-DrNO_4sj.js                           0.38 kB │ gzip:   0.29 kB
+dist/assets/ParentDashboardHome-BZq9JauP.js                          0.38 kB │ gzip:   0.29 kB
+dist/assets/role-eager-admin-teacher-CCaAbY-2.js                     0.44 kB │ gzip:   0.27 kB
+dist/assets/AcademicYearPage-DdGGtJIi.js                             0.60 kB │ gzip:   0.40 kB
+dist/assets/ManageSubjectsPage-BFK4LhS2.js                           0.75 kB │ gzip:   0.49 kB
+dist/assets/ChildDetailPage-Du24kebM.js                              0.75 kB │ gzip:   0.49 kB
+dist/assets/admin_hat-E7baY_zC.js                                    0.80 kB │ gzip:   0.41 kB
+dist/assets/SubjectPage-CJUs_wFY.js                                  0.80 kB │ gzip:   0.51 kB
+dist/assets/UserFormPage-Sm-8z-Zg.js                                 0.82 kB │ gzip:   0.51 kB
+dist/assets/CoursewareView-BVZliibO.js                               0.88 kB │ gzip:   0.57 kB
+dist/assets/PrincipalDashboardHome-B63aYD7w.js                       0.91 kB │ gzip:   0.58 kB
+dist/assets/AdminSubjectDetailPage-B_vOCKer.js                       1.00 kB │ gzip:   0.62 kB
+dist/assets/rolldown-runtime-BVpWp9h4.js                             1.12 kB │ gzip:   0.63 kB
+dist/assets/index-C2RZ-o3l.js                                        1.13 kB │ gzip:   0.62 kB
+dist/assets/SubjectClassListPage-aOEYHq1R.js                         1.13 kB │ gzip:   0.67 kB
+dist/assets/PrincipalGradeSheetPage-ClFa-3S_.js                      1.14 kB │ gzip:   0.65 kB
+dist/assets/TeacherAttendancePage-CiOPX1rz.js                        1.14 kB │ gzip:   0.66 kB
+dist/assets/CalendarPage-WDGhcIH-.js                                 1.17 kB │ gzip:   0.67 kB
+dist/assets/CalendarPageView-Cul-dr8D.js                             1.17 kB │ gzip:   0.67 kB
+dist/assets/PetQuizPage--n1p8lLv.js                                  1.19 kB │ gzip:   0.69 kB
+dist/assets/AddSubjectPage-B7dUAtn5.js                               1.42 kB │ gzip:   0.83 kB
+dist/assets/TeacherDashboardHome-CBsflZNu.js                         1.51 kB │ gzip:   0.84 kB
+dist/assets/HolisticOverviewPage-BDRLGixu.js                         1.53 kB │ gzip:   0.83 kB
+dist/assets/StudentFormPage-B-XzlPch.js                              1.60 kB │ gzip:   0.82 kB
+dist/assets/StudentHolisticProfilePage-DxpZ19vr.js                   1.60 kB │ gzip:   0.85 kB
+dist/assets/SubjectRecordsPage-Cj40ckd3.js                           1.72 kB │ gzip:   0.99 kB
+dist/assets/HolisticDomainTrendsPage-B5DAEV0Y.js                     1.80 kB │ gzip:   0.97 kB
+dist/assets/ClassFormPage-BI-xauDy.js                                2.08 kB │ gzip:   0.88 kB
+dist/assets/role-eager-teacher-parent-DJ2ljvc_.js                    3.07 kB │ gzip:   1.21 kB
+dist/assets/GradePage-DVp1HLYq.js                                    3.49 kB │ gzip:   1.60 kB
+dist/assets/SubjectDetailPage-CdQOWlc9.js                            3.67 kB │ gzip:   1.81 kB
+dist/assets/role-eager-principal-parent-CrhatEGg.js                  5.57 kB │ gzip:   2.01 kB
+dist/assets/role-eager-teacher-principal-parent-BiAe1hSl.js          7.42 kB │ gzip:   3.32 kB
+dist/assets/role-eager-admin-teacher-principal-D8KK4vSN.js          26.77 kB │ gzip:   9.29 kB
+dist/assets/purify.es-BeygbgRa.js                                   27.32 kB │ gzip:  10.73 kB
+dist/assets/role-eager-admin-principal-CkE5vfXW.js                  43.52 kB │ gzip:  13.85 kB
+dist/assets/public-app-Cukd_puC.js                                 111.79 kB │ gzip:  31.76 kB
+dist/assets/role-eager-admin-teacher-principal-parent-BZiV_MRf.js  114.93 kB │ gzip:  35.18 kB
+dist/assets/index.es-K0S7_9Yf.js                                   151.91 kB │ gzip:  49.14 kB
+dist/assets/role-eager-principal-BOTzWw0u.js                       170.17 kB │ gzip:  51.54 kB
+dist/assets/html2canvas-DSeaDk1q.js                                199.57 kB │ gzip:  46.79 kB
+dist/assets/role-eager-admin-wHR_I391.js                           287.99 kB │ gzip:  85.58 kB
+dist/assets/public-vendor-LhP3KStT.js                              313.06 kB │ gzip: 101.20 kB
+dist/assets/role-eager-parent-D1CsFKHf.js                          337.34 kB │ gzip: 101.88 kB
+dist/assets/role-eager-teacher-Bov8UJHT.js                         375.23 kB │ gzip: 110.00 kB
+dist/assets/jspdf.es.min-spci6Ppq.js                               401.35 kB │ gzip: 131.10 kB
+dist/assets/xlsx-RwVob2QH.js                                       425.29 kB │ gzip: 141.81 kB
+dist/assets/LoadedChart-Bc89OAiU.js                                585.84 kB │ gzip: 163.58 kB
+dist/assets/exceljs.min-CkXmzuLA.js                                929.92 kB │ gzip: 256.48 kB
+
+[PLUGIN_TIMINGS] Your build spent significant time in plugins. Here is a breakdown:
+  - qed-eager-role-groups (61%)
+  - @rolldown/plugin-babel (37%)
+See https://rolldown.rs/options/checks#plugintimings for more details.
+
+✓ built in 19.51s
+{
+  "compression": "node:zlib gzip, default level 6; bytes, not rounded Vite estimates",
+  "budget": {
+    "entryGzipBytes": 112153,
+    "entryEagerClosureGzipBytes": 135349
+  },
+  "entry": {
+    "fileName": "assets/index-C2RZ-o3l.js",
+    "rawBytes": 1132,
+    "gzipBytes": 626
+  },
+  "entryEagerClosure": {
+    "rawBytes": 427223,
+    "gzipBytes": 133116
+  },
+  "roles": {
+    "ADMIN": {
+      "fileName": "assets/role-eager-admin-wHR_I391.js",
+      "chunk": {
+        "rawBytes": 287992,
+        "gzipBytes": 84832
+      },
+      "eagerDownloadBeyondPublic": {
+        "rawBytes": 474462,
+        "gzipBytes": 143321
+      }
+    },
+    "TEACHER": {
+      "fileName": "assets/role-eager-teacher-Bov8UJHT.js",
+      "chunk": {
+        "rawBytes": 375232,
+        "gzipBytes": 109090
+      },
+      "eagerDownloadBeyondPublic": {
+        "rawBytes": 528674,
+        "gzipBytes": 158379
+      }
+    },
+    "PRINCIPAL": {
+      "fileName": "assets/role-eager-principal-BOTzWw0u.js",
+      "chunk": {
+        "rawBytes": 170179,
+        "gzipBytes": 50924
+      },
+      "eagerDownloadBeyondPublic": {
+        "rawBytes": 369205,
+        "gzipBytes": 114445
+      }
+    },
+    "PARENT": {
+      "fileName": "assets/role-eager-parent-D1CsFKHf.js",
+      "chunk": {
+        "rawBytes": 337348,
+        "gzipBytes": 100712
+      },
+      "eagerDownloadBeyondPublic": {
+        "rawBytes": 469391,
+        "gzipBytes": 142774
+      }
+    }
+  }
+}

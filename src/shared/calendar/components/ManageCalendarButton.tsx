@@ -44,7 +44,7 @@ export function ManageCalendarButton({
               <PartyPopper size={16} style={{ color: ACCENT }} />
               Activities
             </button>
-            <div className={`h-px ${darkMode ? "bg-[#374151]" : "bg-[#E5E7EB]"}`} />
+            <div className={`h-px ${darkMode ? "bg-[#374151]" : "bg-border-border-subtle"}`} />
             <button
               onClick={() => {
                 setOpen(false);

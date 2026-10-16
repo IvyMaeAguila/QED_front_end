@@ -1,4 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
+import { AccountSelect } from "@shared/components/AccountSelect";
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { useState, useMemo } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { Pencil, Loader2, AlertCircle, Plus, Trash2 } from "lucide-react";
 import { useTeachers } from "../../classes/context/TeachersContext";
 import { formatTeacherName } from "../../classes/types/Teacher";
@@ -18,10 +21,11 @@ import {
   DEFAULT_ASSESSMENT_TYPES,
 } from "../types/assessmentTypes";
 import {
-  getActiveGradeTemplate,
   type ActiveGradeTemplate,
 } from "../services/subjectGradeTemplate.service";
-import { fetchAllSchoolYears, type SchoolYearRow } from "../services/academicyear.service";
+import type { ParsedGradeTemplate } from "../services/gradeTemplateParser.service";
+import { type SchoolYearRow } from "../services/academicyear.service";
+import {useAdminSubjectOperations} from '../../../query/AdminSubjectOperations';
 
 interface EditSubjectModalProps extends SubjectsTheme {
   subject: Subject;
@@ -43,10 +47,16 @@ export function EditSubjectModal({
   onClose,
   onSave,
   onManageSections,
-  saving = false,
+  saving: parentSaving = false,
   error = null,
   ...theme
 }: EditSubjectModalProps) {
+  const {fetchTemplate:getActiveGradeTemplate,uploadTemplate:uploadGradeTemplate,fetchYears:fetchAllSchoolYears}=useAdminSubjectOperations();
+  const [savingTemplate, setSavingTemplate] = useState(false);
+  const [processingTemplate, setProcessingTemplate] = useState(false);
+  const [pendingTemplate, setPendingTemplate] = useState<{ file: File; preview: ParsedGradeTemplate } | null>(null);
+  const [saveTemplateError, setSaveTemplateError] = useState<string | null>(null);
+  const saving = parentSaving || savingTemplate;
   const { teachers } = useTeachers();
   const { getSectionsForGrade, loadSectionsForGrade } = useSections();
   const { assessmentTypes, loadAssessmentTypes, loading: loadingCatalog } =
@@ -66,7 +76,9 @@ export function EditSubjectModal({
   // Official DepEd .xlsx grade template — separate from the manual weight
   // rows above; once uploaded, becomes the source of truth for this subject.
   const [activeTemplate, setActiveTemplate] = useState<ActiveGradeTemplate | null>(null);
-  const [loadingTemplate, setLoadingTemplate] = useState(false);
+  const [loadingTemplate, setLoadingTemplate] = useState(Boolean(Number(subject.subjectId ?? subject.id)));
+  const [templateError, setTemplateError] = useState<string | null>(null);
+  const [templateAttempt, setTemplateAttempt] = useState(0);
   const [schoolYears, setSchoolYears] = useState<SchoolYearRow[]>([]);
 
   useEffect(() => {
@@ -79,7 +91,7 @@ export function EditSubjectModal({
       .then((rows) => { if (active) setSchoolYears(rows); })
       .catch((err) => console.error("Failed to load school years:", err));
     return () => { active = false; };
-  }, []);
+  }, [fetchAllSchoolYears]);
 
   useEffect(() => {
     void loadAssessmentTypes();
@@ -88,26 +100,31 @@ export function EditSubjectModal({
   useEffect(() => {
     const numericSubjectId = Number(subject.subjectId ?? subject.id);
     if (!numericSubjectId || isNaN(numericSubjectId)) return;
-
+    let active = true;
     setLoadingTemplate(true);
+    setTemplateError(null);
     getActiveGradeTemplate(numericSubjectId)
-      .then(setActiveTemplate)
+      .then((template) => { if (active) setActiveTemplate(template); })
       .catch((err) => {
+        if (!active) return;
         console.error("Failed to load active grade template:", err);
         setActiveTemplate(null);
+        setTemplateError(err instanceof Error ? err.message : "Failed to load active grade template.");
       })
-      .finally(() => setLoadingTemplate(false));
-  }, [subject.subjectId, subject.id]);
+      .finally(() => { if (active) setLoadingTemplate(false); });
+    return () => { active = false; };
+  }, [subject.subjectId, subject.id, templateAttempt,getActiveGradeTemplate]);
 
+  // Preview pending weights locally; persist only through Save Changes.
   // A saved template is authoritative for a graded subject. Keep the legacy
   // manual weight rows in sync so the normal Save Changes validation and API
   // payload remain valid, while preserving the assessment type IDs.
   useEffect(() => {
-    if (!activeTemplate || assessmentTypes.length === 0) return;
+    if ((!activeTemplate && !pendingTemplate) || assessmentTypes.length === 0) return;
     const templateWeights = [
-      activeTemplate.wwWeightPercent,
-      activeTemplate.ptWeightPercent,
-      activeTemplate.examWeightPercent,
+      pendingTemplate?.preview.ww.weightPercent ?? activeTemplate!.wwWeightPercent,
+      pendingTemplate?.preview.pt.weightPercent ?? activeTemplate!.ptWeightPercent,
+      pendingTemplate?.preview.examWeightPercent ?? activeTemplate!.examWeightPercent,
     ];
     const rows = DEFAULT_ASSESSMENT_TYPES.map((defaultType, index) => {
       const category = assessmentTypes.find(
@@ -124,7 +141,7 @@ export function EditSubjectModal({
     if (rows.every((row) => row !== null)) {
       setWeights(rows as WeightDistributionItem[]);
     }
-  }, [activeTemplate, assessmentTypes]);
+  }, [activeTemplate, pendingTemplate, assessmentTypes]);
 
   const gradeSections = getSectionsForGrade(gradeLevel);
   const sectionOptions =
@@ -175,8 +192,8 @@ export function EditSubjectModal({
 
   const inputClasses = `w-full h-10 px-3 rounded-lg border text-sm font-semibold outline-none transition-colors ${
     darkMode
-      ? "bg-[#0B1120] border-[#374151] text-white focus:border-[#8B0D0D]"
-      : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#8B0D0D]"
+      ? "bg-[#0B1120] border-[#374151] text-white focus:border-maroon-light"
+      : "bg-brand-light border-border-subtle text-[#111827] focus:border-maroon-light"
   }`;
   const disabledInputClasses = `${inputClasses} opacity-60 cursor-not-allowed`;
   const labelClasses = `block text-xs font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
@@ -207,25 +224,38 @@ export function EditSubjectModal({
     onClose();
   }
 
-  function handleSave() {
-    if (saving || !weightsValid || !name.trim() || !section.trim() || !schoolYear) return;
-    void onSave({
-      name: name.trim(),
-      gradeLevel,
-      schoolYear,
-      teacherId: teacherId || null,
-      section,
-      status: subject.status,
-      isGraded,
-      weightDistribution: isGraded ? weights : [],
-    });
+  async function handleSave() {
+    if (saving || processingTemplate || !weightsValid || !name.trim() || !section.trim() || !schoolYear) return;
+    setSavingTemplate(true);
+    setSaveTemplateError(null);
+    try {
+      if (isGraded && pendingTemplate) {
+        const saved = await uploadGradeTemplate(Number(subject.subjectId ?? subject.id), pendingTemplate.file);
+        setActiveTemplate(saved);
+        setPendingTemplate(null);
+      }
+      await onSave({
+        name: name.trim(),
+        gradeLevel,
+        schoolYear,
+        teacherId: teacherId || null,
+        section,
+        status: subject.status,
+        isGraded,
+        weightDistribution: isGraded ? weights : [],
+      });
+    } catch (err) {
+      setSaveTemplateError(err instanceof Error ? err.message : "Could not save changes.");
+    } finally {
+      setSavingTemplate(false);
+    }
   }
 
   return (
     <ModalShell
       title="Edit Subject"
       icon={Pencil}
-      onClose={onClose}
+      onClose={handleClose}
       closeDisabled={saving}
       size="xl"
       {...theme}
@@ -235,7 +265,7 @@ export function EditSubjectModal({
         new subject.
       </p>
 
-      {error && (
+      {(error || saveTemplateError) && (
         <div
           className={`flex items-start gap-2 rounded-lg border px-3 py-2.5 text-xs font-semibold lg:col-span-2 ${
             darkMode
@@ -244,7 +274,7 @@ export function EditSubjectModal({
           }`}
         >
           <AlertCircle size={14} className="mt-0.5 shrink-0" />
-          <span>{error}</span>
+          <span>{saveTemplateError || error}</span>
         </div>
       )}
 
@@ -258,17 +288,17 @@ export function EditSubjectModal({
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className={labelClasses}>Grade Level</label>
-          <select value={gradeLevel} onChange={(e) => {
+          <AccountSelect data-account-select="" value={gradeLevel} onChange={(e) => {
             const nextGrade = e.target.value as Subject["gradeLevel"];
             setGradeLevel(nextGrade);
             if (nextGrade !== gradeLevel) setSection("");
           }} disabled={saving} className={saving ? disabledInputClasses : inputClasses}>
             {GRADE_LEVELS.map((grade) => <option key={grade} value={grade}>{grade}</option>)}
-          </select>
+          </AccountSelect>
         </div>
         <div>
           <label className={labelClasses}>Section</label>
-          <select
+          <AccountSelect data-account-select=""
             value={section}
             onChange={(e) => setSection(e.target.value)}
             disabled={saving}
@@ -280,14 +310,14 @@ export function EditSubjectModal({
                 {s.name}
               </option>
             ))}
-          </select>
+          </AccountSelect>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className={labelClasses}>Assigned Teacher</label>
-          <select
+          <AccountSelect data-account-select=""
             value={teacherId}
             onChange={(e) => setTeacherId(e.target.value)}
             disabled={saving}
@@ -299,21 +329,21 @@ export function EditSubjectModal({
                 {formatTeacherName(t)}
               </option>
             ))}
-          </select>
+          </AccountSelect>
         </div>
         <div>
           <label className={labelClasses}>School Year</label>
-          <select value={schoolYear} onChange={(e) => setSchoolYear(e.target.value)} disabled={saving} className={saving ? disabledInputClasses : inputClasses}>
+          <AccountSelect data-account-select="" value={schoolYear} onChange={(e) => setSchoolYear(e.target.value)} disabled={saving} className={saving ? disabledInputClasses : inputClasses}>
             {[...new Set([subject.schoolYear, ...schoolYears.map((year) => year.school_year)])].filter(Boolean).map((year) => (
               <option key={year} value={year}>{year}</option>
             ))}
-          </select>
+          </AccountSelect>
         </div>
       </div>
 
       <div>
         <label className={labelClasses}>Type</label>
-        <select
+        <AccountSelect data-account-select=""
           value={isGraded ? "graded" : "non-graded"}
           onChange={(e) => setIsGraded(e.target.value === "graded")}
           disabled={saving}
@@ -321,7 +351,7 @@ export function EditSubjectModal({
         >
           <option value="graded">Graded</option>
           <option value="non-graded">Non-Graded</option>
-        </select>
+        </AccountSelect>
       </div>
       </div>
 {isGraded && (
@@ -329,7 +359,7 @@ export function EditSubjectModal({
           className={`rounded-[12px] border p-3 space-y-2.5 ${
             darkMode
               ? "border-[#374151] bg-[#0B1120]/60"
-              : "border-[#E5E7EB] bg-[#F8FAFC]"
+              : "border-border-subtle bg-brand-light"
           }`}
         >
           <div className="flex items-center justify-between">
@@ -365,12 +395,12 @@ export function EditSubjectModal({
 
             return (
               <div key={row.id} className="flex items-center gap-2">
-                <select
+                <AccountSelect data-account-select=""
                   value={row.assessmentType}
                   onChange={(e) =>
                     updateRow(row.id, { assessmentType: e.target.value })
                   }
-                  disabled={saving || loadingCatalog || Boolean(activeTemplate)}
+                  disabled={saving || loadingCatalog || Boolean(activeTemplate || pendingTemplate)}
                   className={`${
                     saving ? disabledInputClasses : inputClasses
                   } flex-1`}
@@ -396,7 +426,7 @@ export function EditSubjectModal({
                       {t.assessmentName}
                     </option>
                   ))}
-                </select>
+                </AccountSelect>
 
                 <div className="relative w-24 shrink-0">
                   <input
@@ -412,7 +442,7 @@ export function EditSubjectModal({
                         ),
                       })
                     }
-                    disabled={saving || Boolean(activeTemplate)}
+                    disabled={saving || Boolean(activeTemplate || pendingTemplate)}
                     placeholder="0"
                     className={`${
                       saving ? disabledInputClasses : inputClasses
@@ -428,12 +458,12 @@ export function EditSubjectModal({
                 <button
                   type="button"
                   onClick={() => removeRow(row.id)}
-                  disabled={saving || Boolean(activeTemplate)}
+                  disabled={saving || Boolean(activeTemplate || pendingTemplate)}
                   title="Remove"
                   className={`h-10 w-10 shrink-0 rounded-lg border inline-flex items-center justify-center transition-colors disabled:opacity-50 ${
                     darkMode
                       ? "border-[#374151] text-[#F87171] hover:bg-white/10"
-                      : "border-[#E5E7EB] text-[#B91C1C] hover:bg-[#FEF2F2]"
+                      : "border-border-subtle text-[#B91C1C] hover:bg-[#FEF2F2]"
                   }`}
                 >
                   <Trash2 size={14} />
@@ -445,7 +475,7 @@ export function EditSubjectModal({
           <button
             type="button"
             onClick={addRow}
-            disabled={saving || Boolean(activeTemplate) || allTypesUsed || assessmentTypes.length === 0}
+            disabled={saving || Boolean(activeTemplate || pendingTemplate) || allTypesUsed || assessmentTypes.length === 0}
             className={`w-full h-9 rounded-lg border border-dashed text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
               darkMode
                 ? "border-[#374151] text-[#D1D5DB] hover:bg-white/5"
@@ -460,19 +490,21 @@ export function EditSubjectModal({
 
       {isGraded && (
       <div className="space-y-4">
-        {loadingTemplate ? (
-          <div className={`flex items-center gap-2 text-xs font-semibold ${textMuted}`}>
-            <Loader2 size={14} className="animate-spin" />
-            Checking for an official grade template…
-          </div>
-        ) : (
+        <LoadingRegion name="edit-subject-template" loading={loadingTemplate} error={templateError} retry={() => setTemplateAttempt(attempt => attempt + 1)} variable skeleton={null} frame={(pending) => (
           <SubjectGradeTemplateSection
+            loading={pending}
             subjectId={Number(subject.subjectId ?? subject.id)}
             darkMode={darkMode}
             activeTemplate={activeTemplate}
             onTemplateUpdated={setActiveTemplate}
+            disabled={saving}
+            onProcessingChange={setProcessingTemplate}
+            onTemplateSelected={(file, preview) => {
+              setPendingTemplate({ file, preview });
+              setSaveTemplateError(null);
+            }}
           />
-        )}
+        )}>{null}</LoadingRegion>
       </div>
       )}
 
@@ -483,16 +515,16 @@ export function EditSubjectModal({
           className={`h-10 w-full rounded-lg border px-5 text-xs font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto ${
             darkMode
               ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-              : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+              : "border-border-subtle text-[#374151] hover:bg-brand-light"
           }`}
         >
           Cancel
         </button>
         <button
           onClick={handleSave}
-          disabled={saving || !weightsValid || !name.trim() || !section.trim() || !schoolYear}
+          disabled={saving || processingTemplate || !weightsValid || !name.trim() || !section.trim() || !schoolYear}
           className={`inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg px-5 text-xs font-bold text-white transition-opacity sm:w-auto ${
-            saving || !weightsValid || !name.trim() || !section.trim() || !schoolYear
+            saving || processingTemplate || !weightsValid || !name.trim() || !section.trim() || !schoolYear
               ? "opacity-50 cursor-not-allowed"
               : "hover:opacity-90"
           }`}

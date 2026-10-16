@@ -1,0 +1,63 @@
+[WebServer] (node:37148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:22840) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 22 tests using 1 worker
+
+(node:11712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\domain-trends-loading.spec.ts:14:62 › domain trends 375 light keeps domains and chart shell real (6.6s)
+  ok  2 tests\domain-trends-loading.spec.ts:14:62 › domain trends 375 dark keeps domains and chart shell real (1.8s)
+  ok  3 tests\domain-trends-loading.spec.ts:14:62 › domain trends 1280 light keeps domains and chart shell real (2.6s)
+  ok  4 tests\domain-trends-loading.spec.ts:14:62 › domain trends 1280 dark keeps domains and chart shell real (2.4s)
+  ok  5 tests\domain-trends-loading.spec.ts:18:28 › domain trends preserves 0 actual weeks and empty state (1.2s)
+  ok  6 tests\domain-trends-loading.spec.ts:18:28 › domain trends preserves 1 actual weeks and empty state (1.2s)
+  ok  7 tests\domain-trends-loading.spec.ts:18:28 › domain trends preserves 9 actual weeks and empty state (1.3s)
+  ok  8 tests\domain-trends-loading.spec.ts:19:51 › domain trends retries terms failure and clears placeholders (1.5s)
+[WebServer] 10:15:51 AM [vite] (client) [console.error] Failed to load advisory sections: Error: Failed to fetch advisory sections (500)
+[WebServer]     at fetchAdvisorySections (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:15:21)
+  ok  9 tests\domain-trends-loading.spec.ts:19:51 › domain trends retries advisories failure and clears placeholders (1.4s)
+  ok 10 tests\domain-trends-loading.spec.ts:19:51 › domain trends retries trends failure and clears placeholders (1.4s)
+  ok 11 tests\domain-trends-loading.spec.ts:20:32 › domain trends light neutral score and colored composite contrast (2.5s)
+  ok 12 tests\domain-trends-loading.spec.ts:20:32 › domain trends dark neutral score and colored composite contrast (2.4s)
+  ok 13 tests\domain-trends-loading.spec.ts:21:1 › domain chart placeholder preserves the line-chart silhouette (2.0s)
+  ok 14 tests\domain-trends-loading.spec.ts:22:1 › domain subject selection and legend toggles keep their existing behavior (1.5s)
+  ok 15 tests\domain-trends-loading.spec.ts:23:1 › domain trends no-advisory result settles to its existing empty state (1.2s)
+  ok 16 tests\domain-trends-loading.spec.ts:25:32 › domain trends fast term refetch preserves previous data (1.8s)
+  ok 17 tests\domain-trends-loading.spec.ts:25:32 › domain trends slow term refetch preserves previous data (4.3s)
+  ok 18 tests\domain-trends-loading.spec.ts:31:32 › domain trends light line shimmer retains its entire silhouette (2.2s)
+  x  19 tests\domain-trends-loading.spec.ts:31:32 › domain trends dark line shimmer retains its entire silhouette (1.9s)
+(node:31412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 20 tests\domain-trends-loading.spec.ts:32:28 › domain trends 1 subject tabs preserve native wrapping (1.9s)
+  ok 21 tests\domain-trends-loading.spec.ts:32:28 › domain trends 2 subject tabs preserve native wrapping (1.8s)
+  ok 22 tests\domain-trends-loading.spec.ts:32:28 › domain trends 9 subject tabs preserve native wrapping (1.9s)
+
+
+  1) tests\domain-trends-loading.spec.ts:31:32 › domain trends dark line shimmer retains its entire silhouette 
+
+    Error: domain-trend-line-dark: visible area at 0%
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 0.9
+    Received:    0.8863705275924803
+
+       at design-pixels.ts:59
+
+      57 |     const frame = PNG.sync.read(buffer);
+      58 |     const visibleArea = mask.reduce((sum, included, index) => sum + Number(included && distinguishable(frame, blank, index)), 0);
+    > 59 |     expect(visibleArea / staticArea, `${name}: visible area at ${phase * 100}%`).toBeGreaterThanOrEqual(.9);
+         |                                                                                  ^
+      60 |     // Ignore the outside silhouette; an interior sweep must have feathered edges.
+      61 |     let maximumJump = 0;
+      62 |     for (let y = 1; y < frame.height - 1; y++) for (let x = 2; x < frame.width - 2; x++) {
+        at checkShimmerPixels (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-pixels.ts:59:82)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\domain-trends-loading.spec.ts:31:293
+
+    Error Context: test-results\domain-trends-loading-doma-57829-tains-its-entire-silhouette\error-context.md
+
+  1 failed
+    tests\domain-trends-loading.spec.ts:31:32 › domain trends dark line shimmer retains its entire silhouette 
+  21 passed (51.4s)

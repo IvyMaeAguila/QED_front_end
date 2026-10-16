@@ -1,0 +1,37 @@
+[WebServer] (node:18676) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:19440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:13728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\teacher-dashboard.spec.ts:34:1 › classification rejects fixed regions whose loaded height depends on data size
+  1) tests\teacher-dashboard.spec.ts:34:1 › classification rejects fixed regions whose loaded height depends on data size 
+
+    Error: teacher/stat/Advisory Students incorrectly classified fixed
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 82
+    Received: 160
+
+      43 |   }
+      44 |   expect(Object.keys(heights[0]).length).toBe(4);
+    > 45 |   for (const key of Object.keys(heights[0])) for (const result of heights) expect(result[key], `${key} incorrectly classified fixed`).toBe(heights[0][key]);
+         |                                                                                                                                       ^
+      46 | });
+      47 |
+      48 | for (const name of ["Ana", "Marie Dela Cruz", "Maria Alexandra Isabella " .repeat(8)]) test(`teacher wrapping name classification: ${name.length} characters`, async ({ page }) => {
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\teacher-dashboard.spec.ts:45:135
+
+    Error Context: test-results\teacher-dashboard-classifi-5589a-height-depends-on-data-size\error-context.md
+
+
+  1 failed
+    tests\teacher-dashboard.spec.ts:34:1 › classification rejects fixed regions whose loaded height depends on data size 

@@ -1,0 +1,14 @@
+{
+  "leftToRight": [
+    "parent-enrolled-children",
+    "parent-help",
+    "parent-pet-quiz",
+    "parent-pet-quiz-Match",
+    "parent-pet-quiz-Memory",
+    "parent-pet-quiz-question",
+    "principal-calendar",
+    "principal-dashboard"
+  ],
+  "top": "skeleton",
+  "bottom": "loaded"
+}

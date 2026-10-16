@@ -1,0 +1,14 @@
+{
+  "leftToRight": [
+    "principal-grade-sheet",
+    "principal-gradebooks",
+    "principal-help",
+    "principal-holistic-analytics",
+    "principal-students",
+    "principal-students-class-1",
+    "principal-students-grade-1",
+    "principal-subject-analytics"
+  ],
+  "top": "skeleton",
+  "bottom": "loaded"
+}

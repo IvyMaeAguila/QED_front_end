@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 
 export function useIsMobile(breakpoint = 1024) {
   const [isMobile, setIsMobile] = useState(

@@ -1,0 +1,69 @@
+{
+  "regions": [
+    {
+      "selector": "[data-sk-region=\"domain-trend-score-cognitive\"]",
+      "box": {
+        "x": 87,
+        "y": 683.5,
+        "width": 25.875,
+        "height": 18
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"domain-trend-score-emotional\"]",
+      "box": {
+        "x": 87,
+        "y": 768.5,
+        "width": 25.875,
+        "height": 18
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"domain-trend-score-behavioral\"]",
+      "box": {
+        "x": 87,
+        "y": 853.5,
+        "width": 25.875,
+        "height": 18
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"domain-trend-score-social\"]",
+      "box": {
+        "x": 87,
+        "y": 938.5,
+        "width": 25.875,
+        "height": 18
+      }
+    }
+  ],
+  "loadedBoxes": [
+    {
+      "x": 87,
+      "y": 638.5,
+      "width": 25.59375,
+      "height": 18
+    },
+    {
+      "x": 87,
+      "y": 721.5,
+      "width": 25.59375,
+      "height": 18
+    },
+    {
+      "x": 87,
+      "y": 804.5,
+      "width": 25.59375,
+      "height": 18
+    },
+    {
+      "x": 87,
+      "y": 887.5,
+      "width": 25.59375,
+      "height": 18
+    }
+  ],
+  "shapePixels": 1096,
+  "outsidePixels": 0,
+  "outsideRatio": 0
+}

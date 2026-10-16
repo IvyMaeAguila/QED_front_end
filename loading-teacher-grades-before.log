@@ -1,0 +1,42 @@
+
+[WebServer] (node:12008) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4224) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:18004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/1] tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 375 light keeps real headers and controls
+  1) tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 375 light keeps real headers and controls 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('columnheader', { name: 'Student', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('columnheader', { name: 'Student', exact: true }) with timeout 5000ms
+      - waiting for getByRole('columnheader', { name: 'Student', exact: true })
+
+
+      4 | import fs from 'node:fs';
+      5 | async function fixture(page:Page,dark=false,count=3,long=false){const context=await mockDirectory(page,'TEACHER',dark);let finish!:()=>void;const gate=new Promise<void>(r=>{finish=r;});let failed='';const name=long?'Maria Alexandra Isabella '.repeat(7):'Ana';const subjects=[{subjectSectionId:'1',subjectId:1,subjectName:long?'Mathematics and quantitative reasoning '.repeat(5):'Mathematics',submitted:true,isOwnAdvisory:true},{subjectSectionId:'2',subjectId:2,subjectName:'Reading',submitted:true,isOwnAdvisory:true}];const students=Array.from({length:count},(_,i)=>({studentId:String(i+1),firstName:name,lastName:'Cruz'+i,middleName:null,gender:i%2?'F':'M',grades:{'1':{status:'submitted',termGrade:90,average:90,isOwnAdvisory:true},'2':{status:'submitted',termGrade:88,average:88,isOwnAdvisory:true}},overallAverage:89}));await page.route('**/api/gradingPeriods',async route=>{await gate;await route.fulfill({status:failed==='terms'?500:200,json:failed==='terms'?{success:false,message:'Terms unavailable'}:{success:true,data:[{id:'1',termNumber:1,termLabel:'Term 1',isActive:true},{id:'2',termNumber:2,termLabel:'Term 2',isActive:false}]}});});await page.route('**/api/advisoryGrading/**',async route=>{await gate;const endpoint=new URL(route.request().url()).pathname.split('/').pop();let data:unknown=[];if(endpoint==='sections')data=[{classId:'1',sectionName:'Maroon',gradeLevel:'Grade 1'}];if(endpoint==='gradebook')data={sectionName:'Maroon',gradeLevel:'Grade 1',subjects,students};if(endpoint==='submission')data={submitted:false,submittedAt:null};if(endpoint==='logs')data=[{id:1,type:'advisory',label:'Maroon',submittedByName:'Teacher One',submittedAt:'2026-10-09T08:00:00Z'}];if(endpoint==='visibility')data={students:students.map(s=>({...s,parentName:'Parent One',parentContactNumber:'09123456789',isVisible:true,updatedAt:'2026-10-09T08:00:00Z'}))};await route.fulfill({status:failed===endpoint?500:200,json:failed===endpoint?{success:false,message:'Records unavailable'}:{success:true,data}});});return Object.assign(()=>{context();finish();},{fail:(kind:string)=>{failed=kind;},recover:()=>{failed='';}});}
+    > 6 | for(const width of [375,1280])for(const dark of [false,true])test(`teacher grades ${width} ${dark?'dark':'light'} keeps real headers and controls`,async({page})=>{await page.setViewportSize({width,height:1100});const release=await fixture(page,dark);await page.goto('/teacher/grades');await expect(page.getByRole('columnheader',{name:'Student',exact:true})).toBeVisible();await expect(page.getByRole('columnheader',{name:'Overall Average',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Export CSV',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Parent Visibility',exact:true})).toBeVisible();await expect(page.locator('[data-sk-region="teacher-grades-table:table-body"]')).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);fs.mkdirSync('loading-screenshots',{recursive:true});const prefix=`loading-screenshots/teacher-grades-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});release();await expect(page.locator('[data-sk-region="teacher-grade-row"]')).toHaveCount(3);await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);await page.screenshot({path:prefix+'-loaded.png',fullPage:true});});
+        |                                                                                                                                                                                                                                                                                                                                                                       ^
+      7 | for(const count of [0,1,9])test(`teacher grades preserves ${count} actual students`,async({page})=>{const release=await fixture(page,false,count,count===9);await page.goto('/teacher/grades');release();await expect(page.getByRole('columnheader',{name:'Student',exact:true})).toBeVisible();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);await expect(page.locator('[data-sk-region="teacher-grade-row"]')).toHaveCount(count);});
+      8 | for(const kind of ['terms','sections','gradebook'])test(`teacher grades retries ${kind}`,async({page})=>{const release=await fixture(page,false);release.fail(kind);await page.goto('/teacher/grades');release();await expect(page.getByRole('alert').first()).toBeVisible();release.recover();await page.getByRole('button',{name:'Retry',exact:true}).first().click();await expect(page.locator('[data-sk-region="teacher-grade-row"]')).toHaveCount(3);await expect(page.getByRole('alert')).toHaveCount(0);});
+      9 | test('teacher grades preserves visibility and history tabs',async({page})=>{const release=await fixture(page);await page.goto('/teacher/grades');release();await expect(page.locator('[data-sk-region="teacher-grade-row"]')).toHaveCount(3);await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);await page.getByRole('button',{name:'Parent Visibility',exact:true}).click();await expect(page.getByRole('columnheader',{name:'Parent/Guardian',exact:true})).toBeVisible();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);await expect(page.getByText('Parent One',{exact:true})).toHaveCount(3);await page.getByRole('button',{name:'Submission History',exact:true}).click();await expect(page.getByText('Teacher One ·',{exact:false})).toBeVisible();});
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\teacher-grades-loading.spec.ts:6:359
+
+    Error Context: test-results\teacher-grades-loading-tea-b00a7-s-real-headers-and-controls\error-context.md
+
+
+  1 failed
+    tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 375 light keeps real headers and controls 

@@ -1,0 +1,26 @@
+[WebServer] (node:24400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:20256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 15 tests using 1 worker
+
+(node:12128) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\admin-loading.spec.ts:38:196 › /admin/academic-year 375px light: real shell and loading composition (8.2s)
+  ok  2 tests\admin-loading.spec.ts:38:196 › /admin/academic-year 375px dark: real shell and loading composition (2.6s)
+  ok  3 tests\admin-loading.spec.ts:38:196 › /admin/academic-year 1280px light: real shell and loading composition (3.4s)
+  ok  4 tests\admin-loading.spec.ts:38:196 › /admin/academic-year 1280px dark: real shell and loading composition (3.3s)
+  ok  5 tests\admin-loading.spec.ts:38:196 › /admin/subjects 375px light: real shell and loading composition (3.5s)
+  ok  6 tests\admin-loading.spec.ts:38:196 › /admin/subjects 375px dark: real shell and loading composition (2.7s)
+  ok  7 tests\admin-loading.spec.ts:38:196 › /admin/subjects 1280px light: real shell and loading composition (2.8s)
+  ok  8 tests\admin-loading.spec.ts:38:196 › /admin/subjects 1280px dark: real shell and loading composition (3.5s)
+  ok  9 tests\admin-loading.spec.ts:59:48 › users directory AUTO-COLUMN classification is supported by measured fixtures (2.8s)
+  ok 10 tests\admin-loading.spec.ts:59:48 › students directory AUTO-COLUMN classification is supported by measured fixtures (2.1s)
+  ok 11 tests\admin-loading.spec.ts:73:2 › academic term auto-column classification requires observed variation (1.6s)
+  ok 12 tests\auto-columns.spec.ts:9:32 › auto columns: 0 rows, one swap, stable shell and cached repeat (2.8s)
+  ok 13 tests\auto-columns.spec.ts:9:32 › auto columns: 1 rows, one swap, stable shell and cached repeat (2.8s)
+  ok 14 tests\auto-columns.spec.ts:9:32 › auto columns: 9 rows, one swap, stable shell and cached repeat (2.6s)
+  ok 15 tests\auto-columns.spec.ts:44:1 › auto-column classification requires observed data-dependent widths (680ms)
+
+  15 passed (53.0s)

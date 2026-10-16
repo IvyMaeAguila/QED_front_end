@@ -1,163 +1,60 @@
 import type { GradeLevelSummary, ClassList } from "../data/types";
-import { fetchActiveAcademicYear } from "../../../../admin/pages/subjects/services/academicyear.service";
 import { API_CONFIG } from '../../../../../../config/api.config';
+import { QueryHttpError } from "@shared/http/QueryHttpError";
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/student`;
 
-// ---------- Grade Levels Cache ----------
-let gradeLevelsCache: GradeLevelSummary[] | null = null;
-
-export function getCachedGradeLevels(): GradeLevelSummary[] | null {
-  return gradeLevelsCache;
-}
-
-export function clearGradeLevelsCache(): void {
-  gradeLevelsCache = null;
-}
-
-export async function getGradeLevels(
-  options: { forceRefresh?: boolean } = {}
-): Promise<GradeLevelSummary[]> {
-  const { forceRefresh = false } = options;
-
-  if (!forceRefresh && gradeLevelsCache !== null) {
-    return gradeLevelsCache;
-  }
-
+// Overview responses are cached exclusively by TanStack Query.
+export async function getGradeLevels(signal?: AbortSignal): Promise<GradeLevelSummary[]> {
   const res = await fetch(`${BASE_URL}/grade-levels`, {
-    credentials: "include",
+    credentials: "include", signal,
   });
 
   if (!res.ok) {
-    throw new Error(`Failed to fetch grade levels (${res.status})`);
+    throw new QueryHttpError(`Failed to fetch grade levels (${res.status})`, res.status);
   }
 
-  const data: GradeLevelSummary[] = await res.json();
-  gradeLevelsCache = data;
-  return data;
+  return res.json();
 }
 
-// ---------- Class List Cache (keyed by classId) ----------
-// Cached value can be `null` (a real "not found" result), so we use a
-// separate Set to track which classIds have been fetched at least once —
-// this lets us distinguish "not cached yet" from "cached as not found."
-const classListCache = new Map<number, ClassList | null>();
-const fetchedClassIds = new Set<number>();
-
-export function getCachedClassList(classId: number): ClassList | null | undefined {
-  if (!fetchedClassIds.has(classId)) return undefined;
-  return classListCache.get(classId) ?? null;
-}
-
-export function clearClassListCache(classId?: number): void {
-  if (classId !== undefined) {
-    classListCache.delete(classId);
-    fetchedClassIds.delete(classId);
-  } else {
-    classListCache.clear();
-    fetchedClassIds.clear();
-  }
-}
-
-// Returns null (never throws) when there's no class record for the
-// classId — the page treats that as a "not found" state, not an error
-// state, since a bad/stale id in the URL isn't a failed request.
-// Roster defaults to [] naturally since the backend maps an empty
-// row set to an empty array.
-export async function getClassList(
-  classId: number,
-  options: { forceRefresh?: boolean } = {}
-): Promise<ClassList | null> {
-  const { forceRefresh = false } = options;
-
-  if (!forceRefresh && fetchedClassIds.has(classId)) {
-    return classListCache.get(classId) ?? null;
-  }
-
-  const res = await fetch(
-    `${BASE_URL}/class-list/${classId}`,
-    { credentials: "include" }
-  );
-
-  if (res.status === 404) {
-    classListCache.set(classId, null);
-    fetchedClassIds.add(classId);
-    return null;
-  }
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch class list (${res.status})`);
-  }
-
-  const data: ClassList = await res.json();
-  classListCache.set(classId, data);
-  fetchedClassIds.add(classId);
-  return data;
-}
-
-// ---------- Unassigned Class List Cache (keyed by gradeId) ----------
-const unassignedClassListCache = new Map<number, ClassList | null>();
-const fetchedGradeIds = new Set<number>();
-
-export function getCachedUnassignedClassList(gradeId: number): ClassList | null | undefined {
-  if (!fetchedGradeIds.has(gradeId)) return undefined;
-  return unassignedClassListCache.get(gradeId) ?? null;
-}
-
-export function clearUnassignedClassListCache(gradeId?: number): void {
-  if (gradeId !== undefined) {
-    unassignedClassListCache.delete(gradeId);
-    fetchedGradeIds.delete(gradeId);
-  } else {
-    unassignedClassListCache.clear();
-    fetchedGradeIds.clear();
-  }
-}
-
-export async function getUnassignedClassList(
-  gradeId: number,
-  options: { forceRefresh?: boolean } = {}
-): Promise<ClassList | null> {
-  const { forceRefresh = false } = options;
-
-  if (!forceRefresh && fetchedGradeIds.has(gradeId)) {
-    return unassignedClassListCache.get(gradeId) ?? null;
-  }
-
-  const res = await fetch(`${BASE_URL}/grade/${gradeId}/unassigned`, {
-    credentials: "include",
+export async function getOverviewSchoolYear(signal?: AbortSignal): Promise<string> {
+  const response = await fetch(`${API_CONFIG.baseURL}/api/academic-year/getAcademicYear`, {
+    credentials: "include", signal,
   });
-
-  if (res.status === 404) {
-    unassignedClassListCache.set(gradeId, null);
-    fetchedGradeIds.add(gradeId);
-    return null;
-  }
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch class list (${res.status})`);
-  }
-
-  const data: ClassList = await res.json();
-  unassignedClassListCache.set(gradeId, data);
-  fetchedGradeIds.add(gradeId);
-  return data;
+  if (!response.ok) throw new QueryHttpError("Failed to fetch academic year.", response.status);
+  const json = await response.json();
+  if (!json.data) throw new Error(json.message || "Failed to fetch academic year.");
+  return json.data.label;
 }
 
-// ---------- School Year Cache ----------
-let schoolYearCache: string | null = null;
-
-export async function getSchoolYear(): Promise<string> {
-  if (schoolYearCache) return schoolYearCache;
-  const academicYear = await fetchActiveAcademicYear();
-  schoolYearCache = academicYear.label;
-  return schoolYearCache;
+// Roster keys need the active year ID as well as its display label.
+export async function getRosterAcademicYear(signal?: AbortSignal): Promise<{ id: number; label: string }> {
+  const response = await fetch(`${API_CONFIG.baseURL}/api/academic-year/getAcademicYear`, {
+    credentials: "include", signal,
+  });
+  if (!response.ok) throw new QueryHttpError("Failed to fetch academic year.", response.status);
+  const json = await response.json();
+  if (!json.data || json.data.id == null) throw new Error(json.message || "Failed to fetch academic year.");
+  return { id: json.data.id, label: json.data.label };
 }
 
-// ---------- Utility: clear all caches ----------
-export function clearAllStudentCaches(): void {
-  clearGradeLevelsCache();
-  clearClassListCache();
-  clearUnassignedClassListCache();
-  schoolYearCache = null;
+// Stateless transport also used by the existing teacher-profile roster reader.
+// A 404 is a successful null result, never an ordinary request error.
+export async function getClassList(classId: number, signal?: AbortSignal): Promise<ClassList | null> {
+  const res = await fetch(`${BASE_URL}/class-list/${classId}`, { credentials: "include", signal });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new QueryHttpError(`Failed to fetch class list (${res.status})`, res.status);
+  return res.json();
+}
+
+export async function getUnassignedClassList(gradeId: number, signal?: AbortSignal): Promise<ClassList | null> {
+  const res = await fetch(`${BASE_URL}/grade/${gradeId}/unassigned`, { credentials: "include", signal });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new QueryHttpError(`Failed to fetch class list (${res.status})`, res.status);
+  return res.json();
+}
+
+// Retain the transport interface without a competing school-year service cache.
+export async function getSchoolYear(signal?: AbortSignal): Promise<string> {
+  return getOverviewSchoolYear(signal);
 }

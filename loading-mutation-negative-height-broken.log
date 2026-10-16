@@ -1,0 +1,35 @@
+[WebServer] (node:20996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:30328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:14984) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\loading.spec.ts:96:1 › negative control catches wrong fixed height and CLS
+  1) tests\loading.spec.ts:96:1 › negative control catches wrong fixed height and CLS ──────────────
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 1
+    Received:   1
+
+       96 | test("negative control catches wrong fixed height and CLS", async ({ page }) => {
+       97 |   await go(page, "latency=1200&mismatch"); await settled(page);
+    >  98 |   expect(await page.evaluate(() => new Set(window.skEvents.map(e => e.height)).size)).toBeGreaterThan(1);
+          |                                                                                       ^
+       99 |   expect(await page.evaluate(() => window.skShifts.reduce((sum, e) => sum + e.value, 0))).toBeGreaterThan(0);
+      100 | });
+      101 | test("negative control catches unsynchronized shimmer", async ({ page }) => {
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\loading.spec.ts:98:87
+
+    Error Context: test-results\loading-negative-control-catches-wrong-fixed-height-and-CLS\error-context.md
+
+
+  1 failed
+    tests\loading.spec.ts:96:1 › negative control catches wrong fixed height and CLS ───────────────

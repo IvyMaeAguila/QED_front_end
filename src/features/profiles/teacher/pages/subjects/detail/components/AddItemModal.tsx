@@ -1,4 +1,8 @@
-import { useEffect, useState } from "react";
+import {useContext} from 'react';
+import {TeacherAcademicQueryContext,useTeacherAcademicServices} from '../../../../query/TeacherAcademicQueryContext';
+import { AccountSelect } from "@shared/components/AccountSelect";
+import { useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { Calendar, Tag, Plus, ListChecks } from "lucide-react";
 import { ModalBody, ModalFooter, ModalFrame, ModalHeader } from "@shared/components/modal";
 import {
@@ -10,7 +14,7 @@ import {
   type ExamType,
   type GradeItem,
 } from "../types/Grading";
-import { createTopic, fetchTopics, type Topic } from "../../services/subjectGrading.service";
+import type {Topic} from "../../services/subjectGrading.service";
 import type { TemplateDomain } from "../../../../../shared/grading/gradeTemplate.types";
 
 
@@ -51,6 +55,9 @@ export function AddItemModal({
   const [date, setDate] = useState(initialItem?.date ?? todayISO());
   const [templateDomainId, setTemplateDomainId] = useState(initialItem?.templateDomainId ?? templateDomains[0]?.id ?? "");
 
+  const port=useContext(TeacherAcademicQueryContext);
+  const queryManaged=port!==null;
+  const {grading:{createTopic,fetchTopics}}=useTeacherAcademicServices();
   const [topics, setTopics] = useState<Topic[]>([]);
   const [topicsLoading, setTopicsLoading] = useState(true);
   const [selectedTopicId, setSelectedTopicId] = useState<string>(initialItem?.topicId ?? "");
@@ -64,6 +71,7 @@ export function AddItemModal({
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
+    if(queryManaged)return;
     if (isExam) {
       setTopicsLoading(false);
       return;
@@ -75,7 +83,7 @@ export function AddItemModal({
       })
       .catch((err) => console.error("Failed to load topics:", err))
       .finally(() => setTopicsLoading(false));
-  }, [subjectSectionId, isExam]);
+  }, [subjectSectionId, isExam,queryManaged,fetchTopics]);
 
   async function handleCreateTopicInline() {
     const name = newTopicName.trim();
@@ -139,13 +147,14 @@ export function AddItemModal({
   }
 
   const fieldRow = `flex h-10 w-full items-center gap-2.5 rounded-lg border px-3 outline-none transition-colors ${
-    darkMode ? "border-white/10 bg-white/5" : "border-black/10 bg-[#F8FAFC]"
+    darkMode ? "border-white/10 bg-white/5" : "border-black/10 bg-brand-light"
   }`;
   const inputBare = `flex-1 bg-transparent outline-none ${
     darkMode ? "text-white placeholder:text-[#6B7280]" : "text-[#111827] placeholder:text-[#9CA3AF]"
   }`;
 
-  return (
+  return (<>{port&&<port.TopicsEffects {...{subjectId:subjectSectionId,enabled:!isExam,setTopics,setLoading:setTopicsLoading,setError,setNewTopicMode}}/>}
+{(
     <ModalFrame shellVariant={darkMode ? "dark" : "standard"} onClose={onClose} size="md" zIndexClass="z-[1000]" ariaLabel={`${isEdit ? "Edit" : "Add"} ${ASSESSMENT_TAB_LABELS[tab]}`}>
         <ModalHeader
           title={subjectName}
@@ -171,7 +180,7 @@ export function AddItemModal({
           {isExam && (
             <label className={fieldRow}>
               <ListChecks size={13} className={textMuted} />
-              <select
+              <AccountSelect data-account-select="" data-dropdown-dark={darkMode}
                 value={examType}
                 onChange={(e) => setExamType(e.target.value as ExamType)}
                 className={`flex-1 bg-transparent outline-none ${textPrimary}`}
@@ -181,16 +190,16 @@ export function AddItemModal({
                     {t} — {EXAM_TYPE_LABELS[t]}
                   </option>
                 ))}
-              </select>
+              </AccountSelect>
             </label>
           )}
 
           {!isExam && templateDomains.length > 1 && (
             <label className={`${fieldRow} justify-between`}>
               <span className={`qed-type-label ${textMuted}`}>Template domain</span>
-              <select value={templateDomainId} onChange={(e) => setTemplateDomainId(e.target.value)} className={`${inputBare} text-right`}>
+              <AccountSelect data-account-select="" data-dropdown-dark={darkMode} value={templateDomainId} onChange={(e) => setTemplateDomainId(e.target.value)} className={`${inputBare} text-right`}>
                 {templateDomains.map((domain) => <option key={domain.id} value={domain.id}>{domain.label} ({domain.weightPercent}%)</option>)}
-              </select>
+              </AccountSelect>
             </label>
           )}
 
@@ -211,7 +220,7 @@ export function AddItemModal({
                 <button
                   onClick={handleCreateTopicInline}
                   disabled={creatingTopic || !newTopicName.trim()}
-                  className="shrink-0 rounded-md bg-[#800000] px-2 py-1 qed-type-button text-white transition-colors hover:bg-[#650000] disabled:opacity-40"
+                  className="shrink-0 rounded-md bg-maroon px-2 py-1 qed-type-button text-white transition-colors hover:bg-maroon-light disabled:opacity-40"
                 >
                   Save
                 </button>
@@ -227,7 +236,7 @@ export function AddItemModal({
             ) : (
               <div className={fieldRow}>
                 <Tag size={13} className={textMuted} />
-                <select
+                <AccountSelect data-account-select="" data-dropdown-dark={darkMode}
                   value={selectedTopicId}
                   onChange={(e) => setSelectedTopicId(e.target.value)}
                   className={`flex-1 bg-transparent outline-none ${textPrimary}`}
@@ -241,7 +250,7 @@ export function AddItemModal({
                       {t.topicName}
                     </option>
                   ))}
-                </select>
+                </AccountSelect>
                 <button
                   onClick={() => setNewTopicMode(true)}
                   className={`flex shrink-0 items-center gap-1 qed-type-button ${textMuted}`}
@@ -275,11 +284,11 @@ export function AddItemModal({
           <button
             onClick={handleConfirm}
             disabled={submitting}
-            className="flex h-10 w-full items-center justify-center rounded-lg bg-[#800000] qed-type-button text-white transition-colors hover:bg-[#650000] disabled:opacity-60"
+            className="flex h-10 w-full items-center justify-center rounded-lg bg-maroon qed-type-button text-white transition-colors hover:bg-maroon-light disabled:opacity-60"
           >
             {submitting ? "Saving..." : isEdit ? "Save Changes" : "Confirm"}
           </button>
         </ModalFooter>
     </ModalFrame>
-  );
+  )}</>);
 }

@@ -32,8 +32,8 @@
 // }: AxisCardProps) {
 //   const textareaClasses = `w-full px-2.5 py-2 rounded-lg border text-xs font-semibold outline-none transition-colors resize-none ${
 //     darkMode
-//       ? "bg-[#2A1A18] border-[#543632] text-white focus:border-[#6B0000]"
-//       : "bg-[#F8FAFC] border-[#E5E7EB] text-[#111827] focus:border-[#6B0000]"
+//       ? "bg-panel-dark border-border-dark text-white focus:border-maroon-light"
+//       : "bg-brand-light border-border-subtle text-[#111827] focus:border-maroon-light"
 //   }`;
 
 //   return (
@@ -41,7 +41,7 @@
 //       <div className="flex items-center gap-2.5">
 //         <span
 //           className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-//           style={{ background: darkMode ? `${accent}33` : `${accent}1A`, color: accent }}
+//           style={{ background: darkMode ? `color-mix(in srgb, ${accent} 20%, transparent)` : `${accent}1A`, color: accent }}
 //         >
 //           <Icon size={16} />
 //         </span>

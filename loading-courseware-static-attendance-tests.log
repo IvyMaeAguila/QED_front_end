@@ -1,0 +1,64 @@
+
+[WebServer] (node:39272) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:31632) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 42 tests using 1 worker
+
+
+(node:16548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/42] tests\courseware-loading.spec.ts:21:68 › courseware 375 light: real learning frame before fetched leaves
+[2/42] tests\courseware-loading.spec.ts:21:68 › courseware 375 dark: real learning frame before fetched leaves
+[3/42] tests\courseware-loading.spec.ts:21:68 › courseware 1280 light: real learning frame before fetched leaves
+[4/42] tests\courseware-loading.spec.ts:21:68 › courseware 1280 dark: real learning frame before fetched leaves
+[5/42] tests\courseware-loading.spec.ts:44:32 › courseware 0 resources preserves empty/short/long content
+[6/42] tests\courseware-loading.spec.ts:44:32 › courseware 1 resources preserves empty/short/long content
+[7/42] tests\courseware-loading.spec.ts:44:32 › courseware 9 resources preserves empty/short/long content
+[8/42] tests\courseware-loading.spec.ts:55:1 › courseware error ends reservation and retries the same request
+[WebServer] 11:22:59 PM [vite] (client) [console.error] Failed to load courseware: Error: Unavailable
+
+[WebServer]     at getCourseware (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/courseware.service.ts:11:9)
+[WebServer]     at async load (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/CoursewareView.tsx:204:20)
+[WebServer] 11:22:59 PM [vite] (client) [console.error] Failed to load courseware: Error: Unavailable
+[WebServer]     at getCourseware (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/courseware.service.ts:11:9)
+[WebServer]     at async load (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/CoursewareView.tsx:204:20)
+
+[9/42] tests\static-routes.spec.ts:6:68 › topic support 375 light: known quest choices render immediately
+[10/42] tests\static-routes.spec.ts:6:68 › topic support 375 dark: known quest choices render immediately
+[11/42] tests\static-routes.spec.ts:6:68 › topic support 1280 light: known quest choices render immediately
+[12/42] tests\static-routes.spec.ts:6:68 › topic support 1280 dark: known quest choices render immediately
+[13/42] tests\static-routes.spec.ts:25:141 › ADMIN help 375 light: known page remains real
+[14/42] tests\static-routes.spec.ts:25:141 › ADMIN help 375 dark: known page remains real
+[15/42] tests\static-routes.spec.ts:25:141 › ADMIN help 1280 light: known page remains real
+[16/42] tests\static-routes.spec.ts:25:141 › ADMIN help 1280 dark: known page remains real
+[17/42] tests\static-routes.spec.ts:25:141 › PRINCIPAL help 375 light: known page remains real
+[18/42] tests\static-routes.spec.ts:25:141 › PRINCIPAL help 375 dark: known page remains real
+[19/42] tests\static-routes.spec.ts:25:141 › PRINCIPAL help 1280 light: known page remains real
+[20/42] tests\static-routes.spec.ts:25:141 › PRINCIPAL help 1280 dark: known page remains real
+[21/42] tests\static-routes.spec.ts:25:141 › TEACHER help 375 light: known page remains real
+[22/42] tests\static-routes.spec.ts:25:141 › TEACHER help 375 dark: known page remains real
+[23/42] tests\static-routes.spec.ts:25:141 › TEACHER help 1280 light: known page remains real
+[24/42] tests\static-routes.spec.ts:25:141 › TEACHER help 1280 dark: known page remains real
+[25/42] tests\static-routes.spec.ts:25:141 › PARENT help 375 light: known page remains real
+[26/42] tests\static-routes.spec.ts:25:141 › PARENT help 375 dark: known page remains real
+[27/42] tests\static-routes.spec.ts:25:141 › PARENT help 1280 light: known page remains real
+[28/42] tests\static-routes.spec.ts:25:141 › PARENT help 1280 dark: known page remains real
+[29/42] tests\static-routes.spec.ts:44:105 › / 375 light: static public page needs no invented skeleton
+[30/42] tests\static-routes.spec.ts:44:105 › / 375 dark: static public page needs no invented skeleton
+[31/42] tests\static-routes.spec.ts:44:105 › / 1280 light: static public page needs no invented skeleton
+[32/42] tests\static-routes.spec.ts:44:105 › / 1280 dark: static public page needs no invented skeleton
+[33/42] tests\static-routes.spec.ts:44:105 › /login 375 light: static public page needs no invented skeleton
+[34/42] tests\static-routes.spec.ts:44:105 › /login 375 dark: static public page needs no invented skeleton
+[35/42] tests\static-routes.spec.ts:44:105 › /login 1280 light: static public page needs no invented skeleton
+[36/42] tests\static-routes.spec.ts:44:105 › /login 1280 dark: static public page needs no invented skeleton
+[37/42] tests\teacher-attendance.spec.ts:23:68 › teacher attendance 375 light: staged fetches keep real controls and table
+[38/42] tests\teacher-attendance.spec.ts:23:68 › teacher attendance 375 dark: staged fetches keep real controls and table
+[39/42] tests\teacher-attendance.spec.ts:23:68 › teacher attendance 1280 light: staged fetches keep real controls and table
+[40/42] tests\teacher-attendance.spec.ts:23:68 › teacher attendance 1280 dark: staged fetches keep real controls and table
+[41/42] tests\teacher-attendance.spec.ts:46:1 › attendance column classification is justified by long returned names
+[42/42] tests\teacher-attendance.spec.ts:59:1 › attendance loading migration preserves the marking request
+  42 passed (53.0s)

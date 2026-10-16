@@ -1,3 +1,6 @@
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
+import { skeletonRows, rememberRows } from "@shared/loading/reservations";
 import { useState } from "react";
 import { Clock } from "lucide-react";
 import type { ScheduleDay } from "../types/types";
@@ -29,13 +32,14 @@ function ClassScheduleContent({ theme, student }: ClassScheduleProps) {
     ? "bg-white/[0.03] hover:bg-white/[0.06] border-white/[0.06]"
     : "bg-white hover:bg-gray-50 border-gray-100";
 
-  const { items, loading, error } = useClassSchedule();
+  const { items, loading, error, retry } = useClassSchedule();
 
   const [selectedDay, setSelectedDay] = useState<DayFilter>("All");
 
   const filteredItems =
     selectedDay === "All" ? items : items.filter((item) => item.days.includes(selectedDay));
 
+  const view = `parent-schedule:${student.id}:${selectedDay}`;
   const activeChip = darkMode
     ? "bg-red-400 text-black"
     : "bg-red-800 text-white";
@@ -67,35 +71,31 @@ function ClassScheduleContent({ theme, student }: ClassScheduleProps) {
         ))}
       </div>
 
-      {loading ? (
-        <p className={`mt-4 text-center text-xs ${textMuted}`}>Loading schedule...</p>
-      ) : error ? (
-        <p className={`mt-4 text-center text-xs text-red-500`}>{error}</p>
-      ) : (
+      <LoadingRegion name="parent-class-schedule" loading={loading} error={error} retry={retry} variable retainPrevious hasContent={filteredItems.length > 0} skeleton={null} onSettled={() => rememberRows(view, filteredItems.length)} frame={(pending) => (
         <ul className="mt-3 flex flex-col gap-2">
-          {filteredItems.length === 0 ? (
+          {!pending && filteredItems.length === 0 ? (
             <li className={`rounded-lg py-4 text-center text-xs ${textMuted}`}>
               Walang schedule para sa {selectedDay}.
             </li>
           ) : (
-            filteredItems.map((item) => (
+            (pending ? Array.from({length:skeletonRows(view)},(_,i)=>({id:String(i),subject:"",teacher:"",startTime:"",endTime:"",days:[]})) : filteredItems).map((item) => (
               <li
                 key={item.id}
                 className={`flex items-center justify-between gap-3 rounded-lg border py-2.5 px-3.5 transition-colors ${cardBg}`}
               >
                 <div className="min-w-0">
                   <p className={`truncate text-sm font-semibold ${textPrimary}`}>
-                    {item.subject}
+                    {pending ? <SkeletonParagraph field={view+":subject:"+item.id} typical={1} width="14ch" /> : <span data-sk-field={view+":subject:"+item.id}>{item.subject}</span>}
                   </p>
-                  <p className={`truncate text-xs ${textMuted}`}>{item.teacher}</p>
+                  <p className={`truncate text-xs ${textMuted}`}>{pending ? <SkeletonParagraph field={view+":teacher:"+item.id} typical={1} width="12ch" /> : <span data-sk-field={view+":teacher:"+item.id}>{item.teacher}</span>}</p>
                 </div>
                 <div className="shrink-0 text-right">
                   <p className={`whitespace-nowrap text-xs font-semibold ${textPrimary}`}>
-                    {item.startTime} - {item.endTime}
+                    {pending ? <SkeletonParagraph field={view+":time:"+item.id} typical={1} width="10ch" /> : <span data-sk-field={view+":time:"+item.id}>{item.startTime} - {item.endTime}</span>}
                   </p>
                   {selectedDay === "All" && (
                     <p className={`mt-0.5 truncate text-xs ${textMuted}`}>
-                      {item.days.join(" · ")}
+                      {pending ? <SkeletonParagraph field={view+":days:"+item.id} typical={1} width="10ch" /> : <span data-sk-field={view+":days:"+item.id}>{item.days.join(" · ")}</span>}
                     </p>
                   )}
                 </div>
@@ -103,7 +103,7 @@ function ClassScheduleContent({ theme, student }: ClassScheduleProps) {
             ))
           )}
         </ul>
-      )}
+      )}>{null}</LoadingRegion>
     </div>
   );
 }

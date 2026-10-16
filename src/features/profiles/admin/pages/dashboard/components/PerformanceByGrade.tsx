@@ -20,12 +20,12 @@ export function PerformanceByGrade({
 }: PerformanceByGradeProps) {
   return (
     <section className={`mt-5 rounded-xl border shadow-sm overflow-hidden ${panelBg} ${panelBorder}`}>
-      <div className="bg-[#8B0D0D] px-5 py-4 flex justify-between items-center">
+      <div className="bg-maroon px-5 py-4 flex justify-between items-center">
         <div>
           <h3 className="text-white font-bold">Performance by Grade Level</h3>
           <p className="text-xs text-white/70 mt-1">Academic & holistic status per grade</p>
         </div>
-        <div className="w-10 h-10 rounded-xl bg-[#C98A2B] flex items-center justify-center text-white shrink-0">
+        <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white shrink-0">
           <BookOpen size={19} />
         </div>
       </div>
@@ -48,7 +48,7 @@ export function PerformanceByGrade({
       <div className="hidden md:block overflow-x-auto">
         <table className="teacher-user-table w-full text-sm">
           <thead>
-            <tr className={darkMode ? "bg-[#0B1120]" : "bg-[#F8FAFC]"}>
+            <tr className={darkMode ? "bg-[#0B1120]" : "bg-brand-light"}>
               {["Grade", "Academic", "Holistic", "Students", "Trend", "Status", ""].map((h) => (
                 <th
                   key={h}
@@ -67,10 +67,10 @@ export function PerformanceByGrade({
                 <tr key={grade} className={`border-t ${panelBorder} hover:bg-black/2 transition-colors`}>
                   <td className={`px-5 py-4 font-extrabold ${textPrimary}`}>{grade}</td>
                   <td className="px-5 py-4">
-                    <MiniBar value={academic} color="#8B0D0D" dark={darkMode} />
+                    <MiniBar value={academic} color="var(--chart-primary)" dark={darkMode} />
                   </td>
                   <td className="px-5 py-4">
-                    <MiniBar value={holistic} color="#1D70D6" dark={darkMode} />
+                    <MiniBar value={holistic} color="var(--chart-cognitive)" dark={darkMode} />
                   </td>
                   <td className={`px-5 py-4 font-semibold ${textPrimary}`}>
                     {enrolled}/{capacity}
@@ -78,7 +78,7 @@ export function PerformanceByGrade({
                   <td className="px-5 py-4">
                     <span
                       className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold"
-                      style={{ background: darkMode ? `${t.color}25` : t.bg, color: t.color }}
+                      style={{ background: darkMode ? `color-mix(in srgb, ${t.color} 14.51%, transparent)` : t.bg, color: t.color }}
                     >
                       <t.Icon size={12} />
                       {trend}
@@ -87,7 +87,7 @@ export function PerformanceByGrade({
                   <td className="px-5 py-4">
                     <span
                       className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold"
-                      style={{ background: darkMode ? `${status.color}25` : status.bg, color: status.color }}
+                      style={{ background: darkMode ? `color-mix(in srgb, ${status.color} 14.51%, transparent)` : status.bg, color: status.color }}
                     >
                       <span className="w-1.5 h-1.5 rounded-full" style={{ background: status.dot }} />
                       {status.label}
@@ -98,7 +98,7 @@ export function PerformanceByGrade({
                       className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-bold transition-colors ${
                         darkMode
                           ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-                          : "border-[#E5E7EB] text-[#64748B] hover:bg-[#F6F7FB]"
+                          : "border-border-subtle text-[#64748B] hover:bg-brand-light"
                       }`}
                     >
                       <Eye size={13} />
@@ -122,7 +122,7 @@ export function PerformanceByGrade({
                 <h4 className={`font-extrabold text-base ${textPrimary}`}>{grade}</h4>
                 <span
                   className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold"
-                  style={{ background: darkMode ? `${status.color}25` : status.bg, color: status.color }}
+                  style={{ background: darkMode ? `color-mix(in srgb, ${status.color} 14.51%, transparent)` : status.bg, color: status.color }}
                 >
                   <span className="w-1.5 h-1.5 rounded-full" style={{ background: status.dot }} />
                   {status.label}
@@ -132,11 +132,11 @@ export function PerformanceByGrade({
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <p className={`text-xs font-bold uppercase mb-1 ${textMuted}`}>Academic</p>
-                  <MiniBar value={academic} color="#8B0D0D" dark={darkMode} />
+                  <MiniBar value={academic} color="var(--chart-primary)" dark={darkMode} />
                 </div>
                 <div>
                   <p className={`text-xs font-bold uppercase mb-1 ${textMuted}`}>Holistic</p>
-                  <MiniBar value={holistic} color="#1D70D6" dark={darkMode} />
+                  <MiniBar value={holistic} color="var(--chart-cognitive)" dark={darkMode} />
                 </div>
               </div>
 
@@ -149,7 +149,7 @@ export function PerformanceByGrade({
                 </span>
                 <span
                   className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold"
-                  style={{ background: darkMode ? `${t.color}25` : t.bg, color: t.color }}
+                  style={{ background: darkMode ? `color-mix(in srgb, ${t.color} 14.51%, transparent)` : t.bg, color: t.color }}
                 >
                   <t.Icon size={12} />
                   {trend}
@@ -160,7 +160,7 @@ export function PerformanceByGrade({
                 className={`w-full inline-flex items-center justify-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-bold transition-colors ${
                   darkMode
                     ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-                    : "border-[#E5E7EB] text-[#64748B] hover:bg-[#F6F7FB]"
+                    : "border-border-subtle text-[#64748B] hover:bg-brand-light"
                 }`}
               >
                 <Eye size={13} />

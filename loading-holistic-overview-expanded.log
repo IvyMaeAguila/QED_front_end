@@ -1,0 +1,30 @@
+[WebServer] (node:13112) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 17 tests using 1 worker
+
+(node:35664) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\holistic-overview-loading.spec.ts:11:62 › holistic overview 375 light keeps roster headers and filters real (5.6s)
+  ok  2 tests\holistic-overview-loading.spec.ts:11:62 › holistic overview 375 dark keeps roster headers and filters real (2.2s)
+  ok  3 tests\holistic-overview-loading.spec.ts:11:62 › holistic overview 1280 light keeps roster headers and filters real (2.1s)
+  ok  4 tests\holistic-overview-loading.spec.ts:11:62 › holistic overview 1280 dark keeps roster headers and filters real (2.1s)
+  ok  5 tests\holistic-overview-loading.spec.ts:12:28 › holistic overview preserves 0 returned students (1.2s)
+  ok  6 tests\holistic-overview-loading.spec.ts:12:28 › holistic overview preserves 1 returned students (1.2s)
+  ok  7 tests\holistic-overview-loading.spec.ts:12:28 › holistic overview preserves 9 returned students (1.2s)
+  ok  8 tests\holistic-overview-loading.spec.ts:13:53 › holistic overview retries terms errors without losing search (846ms)
+[WebServer] 10:36:03 AM [vite] (client) [console.error] Failed to load advisory sections: Error: Failed to fetch advisory sections (500)
+[WebServer]     at fetchAdvisorySections (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:15:21)
+  ok  9 tests\holistic-overview-loading.spec.ts:13:53 › holistic overview retries advisories errors without losing search (841ms)
+  ok 10 tests\holistic-overview-loading.spec.ts:13:53 › holistic overview retries overview errors without losing search (2.1s)
+  ok 11 tests\holistic-overview-loading.spec.ts:14:1 › holistic overview native columns vary with actual student and trend labels (2.2s)
+  ok 12 tests\holistic-overview-loading.spec.ts:15:32 › holistic overview fast refetch preserves rows (1.5s)
+  ok 13 tests\holistic-overview-loading.spec.ts:15:32 › holistic overview slow refetch preserves rows (4.1s)
+  ok 14 tests\holistic-overview-loading.spec.ts:16:32 › holistic overview light actual table surface contrast (1.9s)
+  ok 15 tests\holistic-overview-loading.spec.ts:16:32 › holistic overview dark actual table surface contrast (1.8s)
+  ok 16 tests\holistic-overview-loading.spec.ts:17:1 › holistic overview local search and level filters preserve their calculations (839ms)
+  ok 17 tests\holistic-overview-loading.spec.ts:18:1 › holistic overview repeat term skeleton uses cached native widths (7.1s)
+
+  17 passed (42.5s)

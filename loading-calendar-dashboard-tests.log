@@ -1,0 +1,35 @@
+[WebServer] (node:22644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 24 tests using 1 worker
+
+(node:13172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 375px light: real month and shared event rows (10.0s)
+  ok  2 tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 375px dark: real month and shared event rows (1.7s)
+  ok  3 tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 1280px light: real month and shared event rows (1.8s)
+  ok  4 tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 1280px dark: real month and shared event rows (1.8s)
+  ok  5 tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 375px light: real month and shared event rows (1.8s)
+  ok  6 tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 375px dark: real month and shared event rows (1.8s)
+  ok  7 tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 1280px light: real month and shared event rows (1.8s)
+  ok  8 tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 1280px dark: real month and shared event rows (1.8s)
+  ok  9 tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 375px light: real month and shared event rows (1.7s)
+  ok 10 tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 375px dark: real month and shared event rows (1.8s)
+  ok 11 tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 1280px light: real month and shared event rows (1.8s)
+  ok 12 tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 1280px dark: real month and shared event rows (1.8s)
+  ok 13 tests\calendar-loading.spec.ts:6:70 › PARENT calendar 375px light: real month and shared event rows (1.7s)
+  ok 14 tests\calendar-loading.spec.ts:6:70 › PARENT calendar 375px dark: real month and shared event rows (1.7s)
+  ok 15 tests\calendar-loading.spec.ts:6:70 › PARENT calendar 1280px light: real month and shared event rows (1.6s)
+  ok 16 tests\calendar-loading.spec.ts:6:70 › PARENT calendar 1280px dark: real month and shared event rows (1.9s)
+  ok 17 tests\teacher-dashboard.spec.ts:6:68 › teacher dashboard 375px light: real route, stable stat geometry and screenshots (5.1s)
+  ok 18 tests\teacher-dashboard.spec.ts:6:68 › teacher dashboard 375px dark: real route, stable stat geometry and screenshots (2.5s)
+  ok 19 tests\teacher-dashboard.spec.ts:6:68 › teacher dashboard 1280px light: real route, stable stat geometry and screenshots (2.6s)
+  ok 20 tests\teacher-dashboard.spec.ts:6:68 › teacher dashboard 1280px dark: real route, stable stat geometry and screenshots (2.5s)
+  ok 21 tests\teacher-dashboard.spec.ts:34:1 › classification rejects fixed regions whose loaded height depends on data size (2.0s)
+  ok 22 tests\teacher-dashboard.spec.ts:48:88 › teacher wrapping name classification: 3 characters (737ms)
+  ok 23 tests\teacher-dashboard.spec.ts:48:88 › teacher wrapping name classification: 15 characters (723ms)
+  ok 24 tests\teacher-dashboard.spec.ts:48:88 › teacher wrapping name classification: 200 characters (735ms)
+
+  24 passed (57.9s)

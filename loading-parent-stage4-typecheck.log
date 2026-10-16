@@ -1,0 +1,6 @@
+src/features/profiles/parent/pages/Student/Holistic/HoisticWeeklyReportTab.tsx(58,12): error TS2322: Type '{ loading: boolean; viewKey: string; history: HistoryEntry[] | undefined; subjects: SubjectHolisticSnapshot[] | undefined; termKey: string | number; ... 4 more ...; riskLevel: RiskLevel; } | { ...; }' is not assignable to type 'IntrinsicAttributes & WholeChildSnapshotProps'.
+  Property 'riskLevel' is missing in type '{ loading: boolean; viewKey: string; history: HistoryEntry[] | undefined; subjects: SubjectHolisticSnapshot[] | undefined; termKey: string | number; student: DetailStudent; domainAverages: { ...; }; evaluationCount: number; lastEvaluation: null; }' but required in type 'WholeChildSnapshotProps'.
+src/features/profiles/parent/pages/Student/Overview/components/HolisticAverage.tsx(140,15): error TS18047: 'snapshot' is possibly 'null'.
+src/features/profiles/parent/pages/Student/ProgressReport/components/AttendanceRecordCard.tsx(37,21): error TS2322: Type 'Element' is not assignable to type 'Key | null | undefined'.
+src/features/profiles/parent/pages/Student/ProgressReport/components/PeriodicRatingCard.tsx(24,19): error TS2322: Type 'Element' is not assignable to type 'Key | null | undefined'.
+src/features/profiles/parent/pages/Student/ProgressReport/ProgessReportTab.tsx(83,74): error TS2304: Cannot find name 'loading'.

@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { createPortal } from "react-dom";
 import { Bell, CheckCircle2, ClipboardX, Info, XCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +26,7 @@ const TYPE_ICON: Record<NotificationType, typeof Info> = {
 const TYPE_COLOR: Record<NotificationType, { light: string; dark: string }> = {
   info: { light: "text-blue-700", dark: "text-blue-400" },
   success: { light: "text-green-700", dark: "text-green-400" },
-  warning: { light: "text-[#6B0000]", dark: "text-[#F87171]" },
+  warning: { light: "text-amber-700", dark: "text-amber-400" },
   error: { light: "text-red-700", dark: "text-red-400" },
 };
 
@@ -197,12 +198,12 @@ export function NotificationBell() {
   const activeTab = TABS.find((t) => t.key === tab)!;
 
   const panelBg = darkMode ? "bg-[#111827]" : "bg-white";
-  const panelBorder = darkMode ? "border-[#374151]" : "border-[#E5E7EB]";
+  const panelBorder = darkMode ? "border-[#374151]" : "border-border-subtle";
   const text = darkMode ? "text-white" : "text-[#111827]";
   const muted = darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]";
   const divider = darkMode ? "border-[#1F2937]" : "border-[#D1D5DB]";
-  const hover = darkMode ? "hover:bg-[#1F2937]/60" : "hover:bg-[#F9FAFB]";
-  const tabsWrap = darkMode ? "bg-[#1F2937]" : "bg-[#F0F0F0]";
+  const hover = darkMode ? "hover:bg-[#1F2937]/60" : "hover:bg-brand-light";
+  const tabsWrap = darkMode ? "bg-[#1F2937]" : "bg-brand-light";
   const tabActive = darkMode
     ? "bg-[#374151] text-white shadow-sm"
     : "bg-white text-[#111827] shadow-sm";
@@ -210,13 +211,13 @@ export function NotificationBell() {
     ? "text-[#9CA3AF] hover:text-white"
     : "text-[#9CA3AF] hover:text-[#6B7280]";
   const bubble = darkMode
-    ? "bg-[#1F2937] text-[#E5E7EB]"
+    ? "bg-[#1F2937] text-border-border-subtle"
     : "bg-[#E9E9E9] text-[#111827]";
-  const iconWrap = darkMode ? "bg-[#1F2937]" : "bg-[#F3F4F6]";
+  const iconWrap = darkMode ? "bg-[#1F2937]" : "bg-surface";
   // nabasa na: mas mapusyaw na kahon at text
   const readBubble = darkMode
     ? "bg-[#1F2937]/50 text-[#9CA3AF]"
-    : "bg-[#F3F4F6] text-[#6B7280]";
+    : "bg-surface text-[#6B7280]";
 
   return (
     <div className="relative" ref={ref}>
@@ -226,8 +227,8 @@ export function NotificationBell() {
         aria-label="Notifications"
         aria-expanded={open}
         className={`relative p-2 rounded-full transition-colors ${
-          darkMode ? "hover:bg-[#6d6e6e3f]" : "hover:bg-[#F3F4F6]"
-        } text-[#6B0000]`}
+          darkMode ? "hover:bg-[#6d6e6e3f]" : "hover:bg-surface"
+        } text-brand-ink`}
       >
         <Bell size={21} />
         {unreadCount > 0 && (

@@ -35,7 +35,7 @@ export function ExtracurricularActivitiesCard({
               <li
                 key={activity.id}
                 className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-3 ${panelBorder} ${
-                  darkMode ? "bg-white/5" : "bg-[#F9FAFB]"
+                  darkMode ? "bg-white/5" : "bg-brand-light"
                 }`}
               >
                 <span className={`text-sm font-bold uppercase tracking-wide ${textPrimary}`}>

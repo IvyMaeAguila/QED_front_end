@@ -1,0 +1,124 @@
+
+[WebServer] (node:18616) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:34212) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 51 tests using 1 worker
+
+
+(node:39256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/51] tests\parent-detail-loading.spec.ts:5:1 › parent detail keeps navigation and identity labels during linked-student fetch
+[2/51] tests\parent-detail-loading.spec.ts:32:62 › parent profile 375 light keeps known class and masks unknown avatar
+[3/51] tests\parent-detail-loading.spec.ts:32:62 › parent profile 375 dark keeps known class and masks unknown avatar
+  1) tests\parent-detail-loading.spec.ts:32:62 › parent profile 375 dark keeps known class and masks unknown avatar 
+
+    Error: parent-profile-avatar-375-true: base/surface contrast
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2
+    Received:    8.35158696476656
+
+       at design-pixels.ts:31
+
+      29 |   };
+      30 |   expect(ratio(base), `${name}: base/surface contrast`).toBeGreaterThanOrEqual(1.1);
+    > 31 |   expect(ratio(base), `${name}: base/surface contrast`).toBeLessThanOrEqual(2);
+         |                                                         ^
+      32 |   expect(ratio(shine), `${name}: shine/surface contrast`).toBeGreaterThanOrEqual(1.03);
+      33 | }
+      34 |
+        at checkRenderedContrast (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-pixels.ts:31:57)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\parent-detail-loading.spec.ts:37:3
+
+    Error Context: test-results\parent-detail-loading-pare-4f920-ss-and-masks-unknown-avatar\error-context.md
+
+
+
+(node:9872) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[4/51] tests\parent-detail-loading.spec.ts:32:62 › parent profile 1280 light keeps known class and masks unknown avatar
+[5/51] tests\parent-detail-loading.spec.ts:32:62 › parent profile 1280 dark keeps known class and masks unknown avatar
+  2) tests\parent-detail-loading.spec.ts:32:62 › parent profile 1280 dark keeps known class and masks unknown avatar 
+
+    Error: parent-profile-avatar-1280-true: base/surface contrast
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2
+    Received:    8.35158696476656
+
+       at design-pixels.ts:31
+
+      29 |   };
+      30 |   expect(ratio(base), `${name}: base/surface contrast`).toBeGreaterThanOrEqual(1.1);
+    > 31 |   expect(ratio(base), `${name}: base/surface contrast`).toBeLessThanOrEqual(2);
+         |                                                         ^
+      32 |   expect(ratio(shine), `${name}: shine/surface contrast`).toBeGreaterThanOrEqual(1.03);
+      33 | }
+      34 |
+        at checkRenderedContrast (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-pixels.ts:31:57)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\parent-detail-loading.spec.ts:37:3
+
+    Error Context: test-results\parent-detail-loading-pare-998eb-ss-and-masks-unknown-avatar\error-context.md
+
+
+(node:2984) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[6/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail overview 375 light preserves real layout
+[7/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail overview 375 dark preserves real layout
+[8/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail overview 1280 light preserves real layout
+[9/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail overview 1280 dark preserves real layout
+[10/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail academic 375 light preserves real layout
+[11/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail academic 375 dark preserves real layout
+[12/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail academic 1280 light preserves real layout
+[13/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail academic 1280 dark preserves real layout
+[14/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail holistic 375 light preserves real layout
+[15/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail holistic 375 dark preserves real layout
+[16/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail holistic 1280 light preserves real layout
+[17/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail holistic 1280 dark preserves real layout
+[18/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail progressReport 375 light preserves real layout
+[19/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail progressReport 375 dark preserves real layout
+[20/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail progressReport 1280 light preserves real layout
+[21/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail progressReport 1280 dark preserves real layout
+[22/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail studentProfile 375 light preserves real layout
+[23/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail studentProfile 375 dark preserves real layout
+[24/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail studentProfile 1280 light preserves real layout
+[25/51] tests\parent-detail-loading.spec.ts:41:91 › parent detail studentProfile 1280 dark preserves real layout
+[26/51] tests\parent-detail-loading.spec.ts:50:103 › parent variable academic 0 items and wrapping
+[27/51] tests\parent-detail-loading.spec.ts:50:103 › parent variable holistic 0 items and wrapping
+[28/51] tests\parent-detail-loading.spec.ts:50:103 › parent variable progressReport 0 items and wrapping
+[29/51] tests\parent-detail-loading.spec.ts:50:103 › parent variable studentProfile 0 items and wrapping
+[30/51] tests\parent-detail-loading.spec.ts:50:103 › parent variable academic 1 items and wrapping
+[31/51] tests\parent-detail-loading.spec.ts:50:103 › parent variable holistic 1 items and wrapping
+[32/51] tests\parent-detail-loading.spec.ts:50:103 › parent variable progressReport 1 items and wrapping
+[33/51] tests\parent-detail-loading.spec.ts:50:103 › parent variable studentProfile 1 items and wrapping
+[34/51] tests\parent-detail-loading.spec.ts:50:103 › parent variable academic 9 items and wrapping
+[35/51] tests\parent-detail-loading.spec.ts:50:103 › parent variable holistic 9 items and wrapping
+[36/51] tests\parent-detail-loading.spec.ts:50:103 › parent variable progressReport 9 items and wrapping
+[37/51] tests\parent-detail-loading.spec.ts:50:103 › parent variable studentProfile 9 items and wrapping
+[38/51] tests\parent-detail-loading.spec.ts:53:1 › locked parent report settles into unavailable state without endless shapes
+[39/51] tests\parent-detail-loading.spec.ts:57:30 › parent overview reserves variable frame before reveal and swaps once
+[40/51] tests\parent-detail-loading.spec.ts:57:30 › parent academic reserves variable frame before reveal and swaps once
+[41/51] tests\parent-detail-loading.spec.ts:57:30 › parent holistic reserves variable frame before reveal and swaps once
+[42/51] tests\parent-detail-loading.spec.ts:57:30 › parent progressReport reserves variable frame before reveal and swaps once
+[43/51] tests\parent-detail-loading.spec.ts:57:30 › parent studentProfile reserves variable frame before reveal and swaps once
+[44/51] tests\parent-detail-loading.spec.ts:87:32 › parent rendered pixels and fixed attendance overlay false
+[45/51] tests\parent-detail-loading.spec.ts:87:32 › parent rendered pixels and fixed attendance overlay true
+[46/51] tests\parent-detail-loading.spec.ts:95:178 › parent academic fetch failure clears shapes and retries
+[47/51] tests\parent-detail-loading.spec.ts:95:178 › parent holistic fetch failure clears shapes and retries
+[48/51] tests\parent-detail-loading.spec.ts:95:178 › parent progressReport fetch failure clears shapes and retries
+[49/51] tests\parent-detail-loading.spec.ts:95:178 › parent studentProfile fetch failure clears shapes and retries
+[50/51] tests\parent-detail-loading.spec.ts:99:1 › parent report auto-column marking reflects measured native content variation
+[51/51] tests\parent-detail-loading.spec.ts:108:1 › parent report repeat visit restores native column reservations within 2px
+  2 failed
+    tests\parent-detail-loading.spec.ts:32:62 › parent profile 375 dark keeps known class and masks unknown avatar 
+    tests\parent-detail-loading.spec.ts:32:62 › parent profile 1280 dark keeps known class and masks unknown avatar 
+  49 passed (2.6m)

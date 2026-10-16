@@ -1,0 +1,36 @@
+[WebServer] (node:13092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:24176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:27416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\auto-columns.spec.ts:44:1 › auto-column classification requires observed data-dependent widths
+  1) tests\auto-columns.spec.ts:44:1 › auto-column classification requires observed data-dependent widths 
+
+    Error: AUTO-COLUMN classification must be justified by measured width changes
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      51 |     await page.unroute("**/api/audit-logs?**");
+      52 |   }
+    > 53 |   expect(results[0].some((width, index) => Math.abs(width - results[1][index]) > 1), "AUTO-COLUMN classification must be justified by measured width changes").toBe(true);
+         |                                                                                                                                                                ^
+      54 | });
+      55 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\auto-columns.spec.ts:53:160
+
+    Error Context: test-results\auto-columns-auto-column-c-cce52-erved-data-dependent-widths\error-context.md
+
+
+  1 failed
+    tests\auto-columns.spec.ts:44:1 › auto-column classification requires observed data-dependent widths 

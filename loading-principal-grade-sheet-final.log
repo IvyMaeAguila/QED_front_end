@@ -1,0 +1,62 @@
+[WebServer] (node:34464) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33824) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 20 tests using 1 worker
+
+(node:12952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\principal-grade-sheet-loading.spec.ts:13:62 › grade sheet 375 light keeps known controls and headers real (5.4s)
+  ok  2 tests\principal-grade-sheet-loading.spec.ts:13:62 › grade sheet 375 dark keeps known controls and headers real (2.2s)
+  ok  3 tests\principal-grade-sheet-loading.spec.ts:13:62 › grade sheet 1280 light keeps known controls and headers real (2.7s)
+  ok  4 tests\principal-grade-sheet-loading.spec.ts:13:62 › grade sheet 1280 dark keeps known controls and headers real (2.5s)
+  ok  5 tests\principal-grade-sheet-loading.spec.ts:17:28 › grade sheet preserves 0 actual student rows (695ms)
+  ok  6 tests\principal-grade-sheet-loading.spec.ts:17:28 › grade sheet preserves 1 actual student rows (687ms)
+  ok  7 tests\principal-grade-sheet-loading.spec.ts:17:28 › grade sheet preserves 9 actual student rows (704ms)
+  ok  8 tests\principal-grade-sheet-loading.spec.ts:18:44 › grade sheet retries period errors (1.3s)
+  ok  9 tests\principal-grade-sheet-loading.spec.ts:18:44 › grade sheet retries book errors (1.3s)
+  ok 10 tests\principal-grade-sheet-loading.spec.ts:18:44 › grade sheet retries year errors (1.2s)
+  ok 11 tests\principal-grade-sheet-loading.spec.ts:19:1 › default term lookup keeps the grade sheet shell visible and then selects the server default (711ms)
+  ok 12 tests\principal-grade-sheet-loading.spec.ts:20:1 › unsubmitted term keeps the original unavailable modal and selected term (1.2s)
+  ok 13 tests\principal-grade-sheet-loading.spec.ts:21:1 › grade sheet native columns vary with actual returned content (2.2s)
+  ok 14 tests\principal-grade-sheet-loading.spec.ts:22:32 › grade sheet light actual table surface pixels (1.7s)
+  ok 15 tests\principal-grade-sheet-loading.spec.ts:22:32 › grade sheet dark actual table surface pixels (1.7s)
+  ok 16 tests\principal-grade-sheet-loading.spec.ts:23:1 › grade sheet repeat view reuses measured native columns and slow refetch retains rows (7.2s)
+  ok 17 tests\principal-grade-sheet-loading.spec.ts:28:32 › grade sheet light term value has a measurable placeholder (1.7s)
+  ok 18 tests\principal-grade-sheet-loading.spec.ts:28:32 › grade sheet dark term value has a measurable placeholder (1.6s)
+  ok 19 tests\principal-grade-sheet-loading.spec.ts:32:1 › grade sheet fast term refetch never dims or reveals placeholders (1.2s)
+  x  20 tests\principal-grade-sheet-loading.spec.ts:37:1 › intrinsic term selector stays variable and its loaded width follows actual labels (5.3s)
+
+
+  1) tests\principal-grade-sheet-loading.spec.ts:37:1 › intrinsic term selector stays variable and its loaded width follows actual labels 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('[data-sk-region="grade-sheet-term"]')
+    Expected: "true"
+    Received: ""
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('[data-sk-region="grade-sheet-term"]') with timeout 5000ms
+      - waiting for locator('[data-sk-region="grade-sheet-term"]')
+        - locator resolved to <div aria-busy="true" data-sk-variable="" data-sk-phase="waiting" class="sk-region h-full" data-sk-region="grade-sheet-term">…</div>
+        9 × unexpected value ""
+          - locator resolved to <div aria-busy="true" data-sk-variable="" class="sk-region h-full" data-sk-phase="revealed" data-sk-region="grade-sheet-term">…</div>
+        - unexpected value ""
+
+
+      36 | });
+      37 | test('intrinsic term selector stays variable and its loaded width follows actual labels',async({page})=>{
+    > 38 |  const widths:number[]=[];for(const label of ['Term 1','First academic grading period']){const release=await fixture(page,false,3,false,false,label);await page.goto(url);const region=page.locator('[data-sk-region="grade-sheet-term"]');await expect(region).toHaveAttribute('data-sk-variable','true');release();await expect(region).toHaveAttribute('data-sk-phase','settled');const select=page.getByRole('combobox',{name:'Select grading term',exact:true});widths.push((await select.boundingBox())!.width);expect(await select.evaluate(element=>(element as HTMLElement).style.minWidth)).toBe('');await page.unroute('**/api/**');await page.unroute('**/api/gradesheets/**');await page.unroute('**/api/academic-year/getAcademicYear');}expect(widths[1]-widths[0]).toBeGreaterThan(10);
+         |                                                                                                                                                                                                                                                                 ^
+      39 | });
+      40 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\principal-grade-sheet-loading.spec.ts:38:257
+
+    Error Context: test-results\principal-grade-sheet-load-22cd2-width-follows-actual-labels\error-context.md
+
+  1 failed
+    tests\principal-grade-sheet-loading.spec.ts:37:1 › intrinsic term selector stays variable and its loaded width follows actual labels 
+  19 passed (46.7s)

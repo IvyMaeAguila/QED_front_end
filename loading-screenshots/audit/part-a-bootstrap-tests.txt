@@ -1,0 +1,41 @@
+[WebServer] (node:36176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:37580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 7 tests using 1 worker
+
+(node:11644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\bootstrap-loading.spec.ts:31:1 › bootstrap 60ms never shows the brand loader or status (2.3s)
+(node:13516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 tests\bootstrap-loading.spec.ts:38:1 › revealed bootstrap animates only the real logo opacity, never rotation (812ms)
+  ok 3 tests\bootstrap-loading.spec.ts:49:1 › bootstrap reduced motion has no running animation (597ms)
+  ok 4 tests\bootstrap-loading.spec.ts:60:1 › bootstrap busy and status follow reveal, minimum duration, and DOM cleanup (1.4s)
+  ok 5 tests\bootstrap-loading.spec.ts:76:1 › protected components and page requests never render before auth resolves (1.3s)
+  ok 6 tests\bootstrap-loading.spec.ts:84:34 › lazy route 375: registered composition inside real shell with stable surroundings (873ms)
+  ok 7 tests\bootstrap-loading.spec.ts:84:34 › lazy route 1280: registered composition inside real shell with stable surroundings (970ms)
+
+
+  1) tests\bootstrap-loading.spec.ts:31:1 › bootstrap 60ms never shows the brand loader or status ──
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      32 |   const { releaseData } = await bootstrap(page, true);
+      33 |   await expect(page.getByRole("heading", { name: /Good .*, Marie Dela Cruz!/ })).toBeVisible();
+    > 34 |   expect(await page.evaluate(() => (window as unknown as { bootstrapFrames: { visible: boolean; status: number }[] }).bootstrapFrames.some(x => x.visible || x.status))).toBe(false);
+         |                                                                                                                                                                          ^
+      35 |   await expect(page.locator('[data-bootstrap-loader], .qed-wrap')).toHaveCount(0);
+      36 |   releaseData();
+      37 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bootstrap-loading.spec.ts:34:170
+
+    Error Context: test-results\bootstrap-loading-bootstra-8e2ef--the-brand-loader-or-status\error-context.md
+
+  1 failed
+    tests\bootstrap-loading.spec.ts:31:1 › bootstrap 60ms never shows the brand loader or status ───
+  6 passed (34.5s)

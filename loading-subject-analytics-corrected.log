@@ -1,0 +1,20 @@
+
+[WebServer] (node:3100) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 6 tests using 1 worker
+
+(node:26304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/6] tests\subject-analytics-loading.spec.ts:20:68 › subject analytics 375 light: real ranking frames and controls
+[2/6] tests\subject-analytics-loading.spec.ts:20:68 › subject analytics 375 dark: real ranking frames and controls
+[3/6] tests\subject-analytics-loading.spec.ts:20:68 › subject analytics 1280 light: real ranking frames and controls
+[4/6] tests\subject-analytics-loading.spec.ts:20:68 › subject analytics 1280 dark: real ranking frames and controls
+[5/6] tests\subject-analytics-loading.spec.ts:42:35 › subject priority light: track placeholder fits its actual surface
+[6/6] tests\subject-analytics-loading.spec.ts:42:35 › subject priority dark: track placeholder fits its actual surface
+  6 passed (26.7s)

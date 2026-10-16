@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import petIdle from "./assets/pet-idle.png";
 import petHungry from "./assets/pet-hungry.png";
 import petHappy from "./assets/pet-happy.png";
@@ -91,7 +92,7 @@ export default function QedPet({ state, onSettled, className = "" }: QedPetProps
       <div
         className="absolute bottom-3 w-45 h-5.5 rounded-full pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse at center, rgba(0,0,0,0.16), transparent 70%)",
+          background: "rgba(0,0,0,0.12)",
           animation: shadowAnimFor(state),
         }}
       />

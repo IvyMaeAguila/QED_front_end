@@ -1,0 +1,36 @@
+
+[WebServer] (node:38708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:20260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:38524) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\principal-gradebooks.spec.ts:56:1 › inline school year preserves the original paragraph flow
+  1) tests\principal-gradebooks.spec.ts:56:1 › inline school year preserves the original paragraph flow 
+
+    Error: an inline loader must not insert a new paragraph line
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 1
+    Received:    21
+
+      69 |     return { prefixTop, valueTop: range.getBoundingClientRect().top };
+      70 |   });
+    > 71 |   expect(Math.abs(lines.prefixTop - lines.valueTop), "an inline loader must not insert a new paragraph line").toBeLessThanOrEqual(1);
+         |                                                                                                               ^
+      72 | });
+      73 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\principal-gradebooks.spec.ts:71:111
+
+    Error Context: test-results\principal-gradebooks-inlin-bdf9d-the-original-paragraph-flow\error-context.md
+
+
+  1 failed
+    tests\principal-gradebooks.spec.ts:56:1 › inline school year preserves the original paragraph flow 

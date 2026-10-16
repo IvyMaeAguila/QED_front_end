@@ -1,0 +1,39 @@
+[WebServer] (node:4692) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:28320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:28336) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\teacher-subject-loading.spec.ts:23:66 › teacher subject 375 light keeps real score sheet and controls (8.2s)
+
+
+  1) tests\teacher-subject-loading.spec.ts:23:66 › teacher subject 375 light keeps real score sheet and controls 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Score Sheet', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Score Sheet', { exact: true }) with timeout 5000ms
+      - waiting for getByText('Score Sheet', { exact: true })
+
+
+      24 |   await page.setViewportSize({width,height:1000}); const release = await fixture(page,dark);
+      25 |   await page.goto('/teacher/subjects/1');
+    > 26 |   await expect(page.getByText('Score Sheet',{exact:true})).toBeVisible();
+         |                                                            ^
+      27 |   await expect(page.getByRole('button',{name:'Full Records',exact:true})).toBeVisible();
+      28 |   await expect(page.getByText('90% and up',{exact:true})).toBeVisible();
+      29 |   await expect(page.getByRole('columnheader',{name:'Student',exact:true})).toBeVisible();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\teacher-subject-loading.spec.ts:26:60
+
+    Error Context: test-results\teacher-subject-loading-te-16f1f-al-score-sheet-and-controls\error-context.md
+
+  1 failed
+    tests\teacher-subject-loading.spec.ts:23:66 › teacher subject 375 light keeps real score sheet and controls 

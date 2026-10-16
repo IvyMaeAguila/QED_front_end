@@ -1,14 +1,8 @@
 import type { UserProfile, Role } from "../../../shared/profile/types/types";
 import { API_CONFIG } from '../../../config/api.config';
+import { preloadRole } from "../../../routes/roleModules";
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/auth`;
-
-export interface RegisterPayload {
-  userName: string;
-  password: string;
-  role: string;
-  userId?: string | number;
-}
 
 export interface LoginPayload {
   userName: string;
@@ -77,20 +71,6 @@ export const AuthService = {
     return data.profile;
   },
 
-  async registerUser(payload: RegisterPayload) {
-    const response = await fetch(`${BASE_URL}/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(payload),
-    });
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to add new user credentials");
-    }
-    return response.json();
-  },
-
   async login(payload: LoginPayload): Promise<LoginResponse> {
     const response = await fetch(`${BASE_URL}/login`, {
       method: "POST",
@@ -105,6 +85,7 @@ export const AuthService = {
       throw new Error(data?.message || "Invalid User ID or password.");
     }
 
+    preloadRole(data.user.role);
     return {
       ...mapToUserProfile(data.user),
       token: data.user.token,
@@ -131,6 +112,7 @@ export const AuthService = {
       return null;
     }
 
+    preloadRole(data.user.role);
     return {
       ...mapToUserProfile(data.user),
       mustChangePassword: !!data.user.mustChangePassword,

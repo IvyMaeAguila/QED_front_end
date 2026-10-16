@@ -1,0 +1,34 @@
+{
+  "stage": "current",
+  "profile": {
+    "latencyMs": 150,
+    "downloadBitsPerSecond": 1600000,
+    "uploadBitsPerSecond": 750000,
+    "cpuSlowdown": 4,
+    "dataResponseDelayMs": 320,
+    "samples": 3,
+    "coldBrowserContexts": true
+  },
+  "samples": [
+    {
+      "loginVisibleMs": 3869.300000011921,
+      "loginToSkeletonMs": 5064.5,
+      "loginToDataMs": 5684.700000047684
+    },
+    {
+      "loginVisibleMs": 3813,
+      "loginToSkeletonMs": 4599.699999988079,
+      "loginToDataMs": 5882.699999988079
+    },
+    {
+      "loginVisibleMs": 3776.099999964237,
+      "loginToSkeletonMs": 5207.800000011921,
+      "loginToDataMs": 5803.400000035763
+    }
+  ],
+  "median": {
+    "loginVisibleMs": 3813,
+    "loginToSkeletonMs": 5064.5,
+    "loginToDataMs": 5803.400000035763
+  }
+}

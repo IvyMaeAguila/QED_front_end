@@ -1,0 +1,67 @@
+
+[WebServer] (node:22272) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 12 tests using 1 worker
+
+(node:23604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/12] tests\design-contract.spec.ts:6:1 › skeleton CSS has token-only colors
+[2/12] tests\design-contract.spec.ts:12:40 › light: pixel area survives all four shimmer phases on every surface
+[3/12] tests\design-contract.spec.ts:12:40 › dark: pixel area survives all four shimmer phases on every surface
+[4/12] tests\design-contract.spec.ts:17:68 › teacher 375 light: static content and spinner guard
+[5/12] tests\design-contract.spec.ts:17:68 › teacher 375 dark: static content and spinner guard
+[6/12] tests\design-contract.spec.ts:17:68 › teacher 1280 light: static content and spinner guard
+[7/12] tests\design-contract.spec.ts:17:68 › teacher 1280 dark: static content and spinner guard
+[8/12] tests\design-contract.spec.ts:32:1 › negative control: shine blending into the surface is caught by the pixel guard
+[9/12] tests\design-contract.spec.ts:44:1 › negative control: a hard shimmer edge is caught independently of visible area
+[10/12] tests\refetch-contract.spec.ts:31:1 › 60ms refetch never dims or mounts visible skeleton rows
+[11/12] tests\refetch-contract.spec.ts:43:1 › slow refetch dims old rows, then falls back after two seconds without moving surroundings
+  1) tests\refetch-contract.spec.ts:43:1 › slow refetch dims old rows, then falls back after two seconds without moving surroundings 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+    @@ -11,12 +11,12 @@
+        },
+        Object {
+          "bottom": 85.890625,
+          "height": 17.5,
+          "left": 24,
+    -     "right": 109.1875,
+    +     "right": 115.46875,
+          "top": 68.390625,
+    -     "width": 85.1875,
+    +     "width": 91.46875,
+          "x": 24,
+          "y": 68.390625,
+        },
+      ]
+
+      57 |   fixture.finish();
+      58 |   await expect(fixture.region).toHaveAttribute("data-sk-phase", "settled");
+    > 59 |   expect(await page.locator("[data-static]").evaluateAll(elements => elements.map(element => element.getBoundingClientRect().toJSON()))).toEqual(above);
+         |                                                                                                                                          ^
+      60 |   expect(await page.locator("[data-beside]").boundingBox()).toEqual(beside);
+      61 |   await expect(fixture.region.locator("[data-sk-layer], [role=status], [data-sk-primitive]")).toHaveCount(0);
+      62 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\refetch-contract.spec.ts:59:138
+
+    Error Context: test-results\refetch-contract-slow-refe-06062-without-moving-surroundings\error-context.md
+
+
+
+(node:23444) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[12/12] tests\refetch-contract.spec.ts:64:1 › refetch after empty results uses initial skeleton reservation
+  1 failed
+    tests\refetch-contract.spec.ts:43:1 › slow refetch dims old rows, then falls back after two seconds without moving surroundings 
+  11 passed (26.2s)

@@ -9,6 +9,7 @@ interface GradeSheetSummaryProps {
   textPrimary: string;
   textMuted: string;
   darkMode: boolean;
+  loading?: boolean;
 }
 
 export function GradeSheetSummary({
@@ -20,11 +21,13 @@ export function GradeSheetSummary({
   textPrimary,
   textMuted,
   darkMode,
+  loading = false,
 }: GradeSheetSummaryProps) {
   return (
     <MiniStatRow panelBg={panelBg} panelBorder={panelBorder}>
       <MiniStat
         label="Total Students"
+        loading={loading} region="grade-sheet-stat-Total Students"
         value={totalStudents.toString()}
         textPrimary={textPrimary}
         textMuted={textMuted}
@@ -33,6 +36,7 @@ export function GradeSheetSummary({
       />
       <MiniStat
         label="Male"
+        loading={loading} region="grade-sheet-stat-Male"
         value={maleCount.toString()}
         textPrimary={textPrimary}
         textMuted={textMuted}
@@ -40,6 +44,7 @@ export function GradeSheetSummary({
       />
       <MiniStat
         label="Female"
+        loading={loading} region="grade-sheet-stat-Female"
         value={femaleCount.toString()}
         textPrimary={textPrimary}
         textMuted={textMuted}

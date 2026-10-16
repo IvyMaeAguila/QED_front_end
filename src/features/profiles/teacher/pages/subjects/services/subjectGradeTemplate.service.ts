@@ -1,3 +1,5 @@
+import type {TeacherRequestOptions} from '../../../query/teacherQueryScope';
+import {QueryHttpError} from '@shared/http/QueryHttpError';
 // features/profiles/teacher/.../services/subjectGradeTemplate.service.ts
 
 import { API_CONFIG } from '../../../../../../config/api.config';
@@ -60,10 +62,13 @@ export interface EffectiveWeights {
 export async function getEffectiveWeightsSafe(
   subjectSectionId: number,
   gradingPeriodId?: string,
+  request:TeacherRequestOptions={},
 ): Promise<EffectiveWeights | undefined> {
   try {
     const periodQuery = gradingPeriodId ? `?gradingPeriodId=${encodeURIComponent(gradingPeriodId)}` : "";
-    const res = await authedFetch(`${BASE_URL}/getEffectiveWeights/${subjectSectionId}${periodQuery}`);
+    const res = await authedFetch(`${BASE_URL}/getEffectiveWeights/${subjectSectionId}${periodQuery}`,{signal:request.signal});
+    if(res.status===401)request.onUnauthorized?.();
+    if([401,403].includes(res.status))throw new QueryHttpError("Could not load grading rules.",res.status);
     const contentType = res.headers.get("content-type") ?? "";
     if (!contentType.includes("application/json")) return undefined;
 
@@ -71,6 +76,7 @@ export async function getEffectiveWeightsSafe(
     if (!res.ok || !json.success) return undefined;
     return json.data ?? undefined;
   } catch (err) {
+    if(request.signal?.aborted||err instanceof QueryHttpError)throw err;
     console.error("Failed to load effective weights:", err);
     return undefined;
   }
@@ -97,6 +103,9 @@ export async function downloadGradeRecordExport(subjectSectionId: string, gradin
     let message = "Could not create the official grade record export.";
     try { const json = await res.json(); message = json.message ?? message; } catch { /* keep fallback */ }
     throw new Error(message);
+  }
+  if (!(res.headers.get("content-type") ?? "").includes("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+    throw new Error("The server did not return an Excel workbook. Please try again or contact the administrator.");
   }
   const disposition = res.headers.get("content-disposition") ?? "";
   const fileName = disposition.match(/filename="?([^";]+)"?/i)?.[1] ?? `QED-TERM-${gradingPeriodId}.xlsx`;

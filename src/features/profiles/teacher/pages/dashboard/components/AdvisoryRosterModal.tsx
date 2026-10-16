@@ -48,7 +48,7 @@
 //             <p className={`text-xs font-semibold ${textMuted}`}>Advisory students</p>
 //           </div>
 //         </div>
-//         <span className="rounded-lg px-2.5 py-1 text-xs font-black" style={{ backgroundColor: `${color}20`, color }}>
+//         <span className="rounded-lg px-2.5 py-1 text-xs font-black" style={{ backgroundColor: `color-mix(in srgb, ${color} 12.55%, transparent)`, color }}>
 //           {students.length}
 //         </span>
 //       </div>
@@ -56,7 +56,7 @@
 //       <div className={`divide-y ${darkMode ? "divide-white/10" : "divide-black/6"}`}>
 //         {students.map((student) => (
 //           <div key={student.id} className={`flex items-center gap-3 px-5 py-3.5 ${darkMode ? "hover:bg-white/[0.035]" : "hover:bg-black/[0.012]"} transition-colors`}>
-//             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${color}20`, color }}>
+//             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `color-mix(in srgb, ${color} 12.55%, transparent)`, color }}>
 //               <span className="text-xs font-black">{student.name.slice(0, 1).toUpperCase()}</span>
 //             </span>
 //             <div className="min-w-0">
@@ -108,7 +108,7 @@
 //       >
 //         <div className={`flex items-center justify-between gap-4 border-b px-5 py-5 sm:px-6 ${panelBorder}`}>
 //           <div className="flex items-center gap-3">
-//             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ backgroundColor: "#6B0000" }}>
+//             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ backgroundColor: "var(--color-maroon)" }}>
 //               <Users size={18} />
 //             </span>
 //             <div>
@@ -122,7 +122,7 @@
 //             type="button"
 //             onClick={onClose}
 //             aria-label="Close roster"
-//             className={`flex h-9 w-9 items-center justify-center rounded-xl transition-colors ${darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#64748B] hover:bg-[#F6F7FB]"}`}
+//             className={`flex h-9 w-9 items-center justify-center rounded-xl transition-colors ${darkMode ? "text-[#D1D5DB] hover:bg-white/10" : "text-[#64748B] hover:bg-brand-light"}`}
 //           >
 //             <X size={18} />
 //           </button>
@@ -131,11 +131,11 @@
 //         <div className="overflow-y-auto p-5 sm:p-6">
 //           <div className="mb-6 grid grid-cols-3 gap-3 sm:gap-4">
 //             {[
-//               { label: "Total", value: total, color: "#6B0000", background: "#F8EDEE" },
+//               { label: "Total", value: total, color: "var(--brand-ink)", background: "var(--brand-soft)" },
 //               { label: "Male", value: male.length, color: "#1D70D6", background: "#EAF2FF" },
 //               { label: "Female", value: female.length, color: "#C2255C", background: "#FCE7F1" },
 //             ].map((stat) => (
-//               <div key={stat.label} className="rounded-xl border p-3 sm:p-4" style={{ backgroundColor: darkMode ? `${stat.color}22` : stat.background, borderColor: `${stat.color}45` }}>
+//               <div key={stat.label} className="rounded-xl border p-3 sm:p-4" style={{ backgroundColor: darkMode ? `color-mix(in srgb, ${stat.color} 13.33%, transparent)` : stat.background, borderColor: `color-mix(in srgb, ${stat.color} 27.06%, transparent)` }}>
 //                 <p className={`text-xs font-bold ${textMuted}`}>{stat.label}</p>
 //                 <p className={`mt-1 text-2xl font-black tabular-nums ${textPrimary}`}>{stat.value}</p>
 //               </div>

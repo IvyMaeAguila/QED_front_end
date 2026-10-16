@@ -1,5 +1,6 @@
 // src/features/auth/context/authContext.tsx
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useRef, useCallback } from "react";
+import { nextQuerySession } from "@shared/query/sessionQueries";
 import { LogOut } from "lucide-react";
 import Modal from "../../../shared/components/modal";
 import type { UserProfile } from "../../../shared/profile/types/types";
@@ -10,6 +11,8 @@ type AuthContextType = {
   user: UserProfile | null;
   isLoading: boolean;
   mustChangePassword: boolean;
+  sessionScope: number;
+  expireSession: (expectedScope: number) => void;
   // Cookie-based na ang auth, kaya optional na lang ang token (hindi na ito sine-save)
   login: (
     user: UserProfile,
@@ -24,31 +27,65 @@ type AuthContextType = {
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const [user, setUserState] = useState<UserProfile | null>(null);
+  const identity = useRef<string | null>(null);
+  const [sessionScope, setSessionScope] = useState(nextQuerySession);
+  const scopeRef = useRef(sessionScope);
+  const resetSession = useCallback(() => {
+    const next = nextQuerySession();
+    scopeRef.current = next;
+    setSessionScope(next);
+    return next;
+  }, []);
+  const setUser = useCallback((next: UserProfile | null) => {
+    const nextIdentity = next ? `${next.role}:${next.id}` : null;
+    if (identity.current !== nextIdentity) resetSession();
+    identity.current = nextIdentity;
+    setUserState(next);
+  }, [resetSession]);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // true muna habang chine-check
   const [mustChangePassword, setMustChangePassword] = useState(false);
 
+  const expireSession = useCallback((expectedScope: number) => {
+    // An old request must never expire a newer login.
+    if (scopeRef.current !== expectedScope) return;
+    resetSession();
+    setUser(null);
+    setMustChangePassword(false);
+  }, [resetSession, setUser]);
+
   useEffect(() => {
+    let cancelled = false;
+    const scope = scopeRef.current;
     async function rehydrate() {
       try {
         // Kung walang valid na cookie, dapat null ang ibalik ng getMe()
         const me = await AuthService.getMe();
+        if (cancelled || scopeRef.current !== scope) return;
         if (me) {
           setMustChangePassword(me.mustChangePassword);
           try {
-            setUser(await profileService.getMyProfile());
+            const profile = await profileService.getMyProfile();
+            if (!cancelled && scopeRef.current === scope) {
+              identity.current = `${profile.role}:${profile.id}`;
+              setUserState(profile);
+            }
           } catch {
-            setUser(me); // fallback kung pumalya ang /user-profile
+            if (!cancelled && scopeRef.current === scope) {
+              identity.current = `${me.role}:${me.id}`;
+              setUserState(me);
+            }
           }
         }
       } catch (error) {
         console.error("Failed to restore session:", error);
       } finally {
-        setIsLoading(false);
+        if (!cancelled && scopeRef.current === scope) setIsLoading(false);
       }
     }
     rehydrate();
+    return () => { cancelled = true; };
   }, []);
 
   async function login(
@@ -56,12 +93,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     _token?: string,
     mustChangePassword = false,
   ) {
+    const scope = resetSession();
+    identity.current = null;
+    setUserState(null);
+    setIsLoading(true);
     // Na-set na ng backend ang cookie sa login response, kaya walang localStorage dito
     setMustChangePassword(mustChangePassword);
     try {
-      setUser(await profileService.getMyProfile());
+      const profile = await profileService.getMyProfile();
+      if (scopeRef.current === scope) {
+        identity.current = `${profile.role}:${profile.id}`;
+        setUserState(profile);
+      }
     } catch {
-      setUser(user); // fallback sa data galing login response
+      if (scopeRef.current === scope) {
+        identity.current = `${user.role}:${user.id}`;
+        setUserState(user);
+      }
+    } finally {
+      if (scopeRef.current === scope) setIsLoading(false);
     }
   }
 
@@ -71,14 +121,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function confirmLogout() {
     setLogoutModalOpen(false);
+    const scope = resetSession();
+    // Gate requests while the backend clears its HttpOnly cookie.
+    setIsLoading(true);
     try {
       // httpOnly ang cookie, hindi ito mabubura ng JS. Backend ang dapat mag-clear.
       await AuthService.logout();
     } catch (error) {
       console.error("Logout request failed:", error);
+    } finally {
+      if (scopeRef.current === scope) {
+        setUser(null);
+        setMustChangePassword(false);
+        setIsLoading(false);
+      }
     }
-    setUser(null);
-    setMustChangePassword(false);
   }
 
   function clearMustChangePassword() {
@@ -91,6 +148,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         isLoading,
         mustChangePassword,
+        sessionScope,
+        expireSession,
         login,
         logout,
         setUser,

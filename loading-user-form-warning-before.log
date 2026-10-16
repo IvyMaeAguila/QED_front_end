@@ -1,0 +1,54 @@
+[WebServer] (node:32740) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:23536) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\user-form-loading.spec.ts:52:32 › principal conflict light reserves visible paragraph bars on warning surface (4.1s)
+(node:34704) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 tests\user-form-loading.spec.ts:52:32 › principal conflict dark reserves visible paragraph bars on warning surface (974ms)
+
+
+  1) tests\user-form-loading.spec.ts:52:32 › principal conflict light reserves visible paragraph bars on warning surface 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 40
+    Received:   0
+
+      53 |  const release=await accounts(page,dark);await page.goto('/admin/users/new');await expect(page.getByRole('heading',{name:'Add New User Account',exact:true})).toBeVisible();
+      54 |  await page.getByRole('region',{name:'User account form'}).locator('select').first().selectOption('PRINCIPAL');const region=page.locator('[data-sk-region="principal-conflict-notice"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');
+    > 55 |  const bars=region.locator('[data-sk-primitive="text"]');await expect(bars).toHaveCount(3);expect((await bars.first().boundingBox())!.width).toBeGreaterThan(40);
+         |                                                                                                                                              ^
+      56 |  await checkRenderedContrast(bars.first(),`principal-conflict-${dark?'dark':'light'}`);await checkShimmerPixels(bars.first(),`principal-conflict-${dark?'dark':'light'}`);release();
+      57 | });
+      58 | for(const dark of [false,true])test(`edit user ${dark?'dark':'light'} values contrast against actual input surface`,async({page})=>{
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\user-form-loading.spec.ts:55:142
+
+    Error Context: test-results\user-form-loading-principa-357ba-aph-bars-on-warning-surface\error-context.md
+
+  2) tests\user-form-loading.spec.ts:52:32 › principal conflict dark reserves visible paragraph bars on warning surface 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 40
+    Received:   0
+
+      53 |  const release=await accounts(page,dark);await page.goto('/admin/users/new');await expect(page.getByRole('heading',{name:'Add New User Account',exact:true})).toBeVisible();
+      54 |  await page.getByRole('region',{name:'User account form'}).locator('select').first().selectOption('PRINCIPAL');const region=page.locator('[data-sk-region="principal-conflict-notice"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');
+    > 55 |  const bars=region.locator('[data-sk-primitive="text"]');await expect(bars).toHaveCount(3);expect((await bars.first().boundingBox())!.width).toBeGreaterThan(40);
+         |                                                                                                                                              ^
+      56 |  await checkRenderedContrast(bars.first(),`principal-conflict-${dark?'dark':'light'}`);await checkShimmerPixels(bars.first(),`principal-conflict-${dark?'dark':'light'}`);release();
+      57 | });
+      58 | for(const dark of [false,true])test(`edit user ${dark?'dark':'light'} values contrast against actual input surface`,async({page})=>{
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\user-form-loading.spec.ts:55:142
+
+    Error Context: test-results\user-form-loading-principa-24b04-aph-bars-on-warning-surface\error-context.md
+
+  2 failed
+    tests\user-form-loading.spec.ts:52:32 › principal conflict light reserves visible paragraph bars on warning surface 
+    tests\user-form-loading.spec.ts:52:32 › principal conflict dark reserves visible paragraph bars on warning surface 

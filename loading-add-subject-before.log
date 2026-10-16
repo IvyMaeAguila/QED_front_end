@@ -1,0 +1,42 @@
+[WebServer] (node:2068) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33752) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:40524) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners (5.5s)
+
+
+  1) tests\add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners 
+
+    Error: data-loading spinner/text outside preserved actions
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "<p role=\"status\" class=\"text-sm text-[#6B7280]\">Loading active school year...</p>",
+    + ]
+
+       at design-pixels.ts:90
+
+      88 |     return [...patterns, ...loadingText].map(element => element.outerHTML.slice(0, 240));
+      89 |   });
+    > 90 |   expect(failures, "data-loading spinner/text outside preserved actions").toEqual([]);
+         |                                                                           ^
+      91 | }
+      92 |
+      93 | /** Fixed shapes are compared within the same real region. Its origin can move once
+        at assertNoDataSpinner (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-pixels.ts:90:75)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\add-subject-loading.spec.ts:15:290
+
+    Error Context: test-results\add-subject-loading-add-su-13dd7--real-without-data-spinners\error-context.md
+
+  1 failed
+    tests\add-subject-loading.spec.ts:14:62 › add subject 375 light keeps known form real without data spinners 

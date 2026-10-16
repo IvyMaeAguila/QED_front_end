@@ -1,0 +1,40 @@
+[WebServer] (node:16316) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:15292) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:6728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\overlay-contract.spec.ts:6:73 › fixed overlay 375 light: shared field keeps its matching box
+  1) tests\overlay-contract.spec.ts:6:73 › fixed overlay 375 light: shared field keeps its matching box 
+
+    Error: harness-375-light: fixed shape pixels outside the matching loaded box
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 0.02
+    Received:    0.2151029748283753
+
+       at design-pixels.ts:150
+
+      148 |     fs.writeFileSync(`loading-screenshots/diff/${name}.png`, PNG.sync.write(loaded));
+      149 |     fs.writeFileSync(`loading-screenshots/diff/${name}.json`, JSON.stringify({ regions, loadedBoxes, shapePixels: pixels.length, outsidePixels: outside, outsideRatio: outside / pixels.length }, null, 2));
+    > 150 |     expect(outside / pixels.length, `${name}: fixed shape pixels outside the matching loaded box`).toBeLessThanOrEqual(.02);
+          |                                                                                                    ^
+      151 |     for (const [index, region] of regions.entries()) for (const dimension of ["width", "height"] as const) expect(Math.abs(region.box[dimension] - loadedBoxes[index][dimension]), `${name}: fixed ${dimension} ${region.selector}`).toBeLessThanOrEqual(1);
+      152 |   };
+      153 | }
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\design-pixels.ts:150:100
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\overlay-contract.spec.ts:12:3
+
+    Error Context: test-results\overlay-contract-fixed-ove-f00f2-ield-keeps-its-matching-box\error-context.md
+
+
+  1 failed
+    tests\overlay-contract.spec.ts:6:73 › fixed overlay 375 light: shared field keeps its matching box 

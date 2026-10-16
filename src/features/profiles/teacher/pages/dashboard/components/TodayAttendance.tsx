@@ -1,6 +1,9 @@
-import { ClipboardCheck, UserCheck, UserX, Clock3 } from "lucide-react";
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { Skeleton, SkeletonText } from "@shared/components/SkeletonLoading";
+import { ClipboardCheck } from "lucide-react";
 
 interface TodayAttendanceProps {
+  loading?: boolean;
   present: number;
   absent: number;
   late: number;
@@ -9,9 +12,12 @@ interface TodayAttendanceProps {
   textPrimary: string;
   darkMode: boolean;
   onViewFull?: () => void;
+  hasAdvisoryStudents?: boolean;
+  recordedCount?: number;
 }
 
 export function TodayAttendance({
+  loading = false,
   present,
   absent,
   late,
@@ -20,37 +26,31 @@ export function TodayAttendance({
   textPrimary,
   darkMode,
   onViewFull,
+  hasAdvisoryStudents = true,
+  recordedCount,
 }: TodayAttendanceProps) {
-  const total = Math.max(1, present + absent + late);
-  const rate = Math.round((present / total) * 100);
+  const total = present + absent + late;
+  const rate = total > 0 ? Math.round((present / total) * 100) : 0;
+  const mutedColor = darkMode ? "#B8AAA6" : "#6B7280";
 
   const groups = [
     {
       key: "present",
       count: present,
       label: "Present",
-      Icon: UserCheck,
-      solid: "#48BB78",
-      soft: darkMode ? "rgba(72,187,120,0.15)" : "#EAFAF0",
-      text: darkMode ? "#86D989" : "#1F5C22",
+      solid: darkMode ? "#69BC92" : "#2F8F5B",
     },
     {
       key: "late",
       count: late,
       label: "Late",
-      Icon: Clock3,
-      solid: "#ED8936",
-      soft: darkMode ? "rgba(237,137,54,0.15)" : "#FFF4E9",
-      text: darkMode ? "#F8C97C" : "#7A4A10",
+      solid: darkMode ? "#E0B45D" : "#B7791F",
     },
     {
       key: "absent",
       count: absent,
       label: "Absent",
-      Icon: UserX,
-      solid: "#F56565",
-      soft: darkMode ? "rgba(245,101,101,0.15)" : "#FDECEC",
-      text: darkMode ? "#F7A0A0" : "#7A1010",
+      solid: darkMode ? "#E08780" : "#C2413C",
     },
   ];
 
@@ -58,45 +58,24 @@ export function TodayAttendance({
   const circumference = 2 * Math.PI * radius;
   let cursor = 0;
   const segments = groups.map((g) => {
-    const fraction = g.count / total;
+    const fraction = total > 0 ? g.count / total : 0;
     const dash = fraction * circumference;
     const offset = -cursor;
     cursor += dash;
     return { ...g, dash, offset };
   });
 
-  return (
-    <div
-      className={`h-full flex flex-col rounded-[12px] border overflow-hidden ${panelBg} ${panelBorder}`}
-      style={{ boxShadow: "0 4px 20px -2px rgba(0,0,0,0.05), 0 2px 10px -2px rgba(0,0,0,0.03)" }}
-    >
-      <div className={`flex items-center justify-between gap-3 border-b px-4 py-4 sm:px-6 ${panelBorder}`}>
-        <div className="flex min-w-0 items-center gap-2.5">
-          <ClipboardCheck size={16} className="shrink-0" style={{ color: "#8B0D0D" }} />
-          <h2 className={`text-base font-bold ${textPrimary}`}>Today&apos;s Attendance</h2>
-        </div>
-        {onViewFull && (
-          <button
-            onClick={onViewFull}
-            className="shrink-0 text-xs font-bold uppercase tracking-wider hover:underline sm:text-xs"
-            style={{ color: "#8B0D0D" }}
-          >
-            Full Report
-          </button>
-        )}
-      </div>
-
-      <div className="flex flex-1 flex-col items-center gap-5 p-4 sm:gap-6 sm:p-6 md:flex-row">
-        {/* Attendance ring */}
-        <div className="relative h-32 w-32 shrink-0 sm:h-36 sm:w-36">
-          <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+  const renderBody = (skeleton: boolean) => (<div className="grid grid-cols-1 items-center gap-6 p-4 sm:grid-cols-2 sm:p-6">
+        <div className="flex min-w-0 flex-col items-center justify-center gap-3 py-2">
+        <div data-sk-chart="ring" data-sk-region="attendance-plot" data-sk-fixed-region="teacher/attendance/plot" className="relative h-48 w-48 sm:h-52 sm:w-52">
+          {skeleton ? <Skeleton className="sk-ring h-full w-full rounded-full"/> : <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90" role="img" aria-label={`Attendance distribution: ${present} present, ${late} late, ${absent} absent`}>
             <circle
               cx="50"
               cy="50"
               r={radius}
               fill="none"
-              stroke={darkMode ? "rgba(255,255,255,0.06)" : "#F1F5F9"}
-              strokeWidth="10"
+              stroke={darkMode ? "rgba(255,255,255,0.06)" : "var(--brand-light)"}
+              strokeWidth="9"
             />
             {segments.map(
               (s) =>
@@ -108,72 +87,80 @@ export function TodayAttendance({
                     r={radius}
                     fill="none"
                     stroke={s.solid}
-                    strokeWidth="10"
-                    strokeLinecap="round"
+                    strokeWidth="9"
+                    strokeLinecap="butt"
                     strokeDasharray={`${s.dash} ${circumference - s.dash}`}
                     strokeDashoffset={s.offset}
-                    style={{ transition: "stroke-dasharray 0.6s ease, stroke-dashoffset 0.6s ease" }}
                   />
                 )
             )}
-          </svg>
+          </svg>}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className={`text-3xl font-black ${textPrimary}`}>{rate}%</span>
+            <span data-sk-region="attendance-rate" className={`text-[36px] font-bold leading-none tracking-tight tabular-nums ${textPrimary}`}>{skeleton ? <SkeletonText width="4ch" /> : `${rate}%`}</span>
             <span
-              className="text-xs font-bold uppercase tracking-[0.12em] mt-0.5"
-              style={{ color: darkMode ? "rgba(255,255,255,0.4)" : "#94A3B8" }}
+              className="mt-2 text-xs font-medium"
+              style={{ color: mutedColor }} data-sk-region="todayattendance-present-rate" data-sk-static=""
             >
               Present rate
             </span>
           </div>
         </div>
+        <p className="text-xs" style={{ color: mutedColor }} data-sk-region="todayattendance-p-field-3">{skeleton ? <SkeletonText width="12rem"/> : <>Attendance summary · {total} {total === 1 ? "student" : "students"}</>}</p>
+        </div>
 
-        {/* Breakdown list */}
-        <div className="flex-1 w-full flex flex-col gap-3">
+        <div className="min-w-0">
+          <div data-sk-region="attendance-table-header" className={`grid grid-cols-[2fr_1fr_1fr] border-b pb-3 text-xs font-medium ${panelBorder}`} style={{ color: mutedColor }}>
+            <span data-sk-region="todayattendance-status" data-sk-static="">Status</span>
+            <span className="text-right" data-sk-region="todayattendance-students" data-sk-static="">Students</span>
+            <span className="text-right" data-sk-region="todayattendance-share" data-sk-static="">Share</span>
+          </div>
+          <dl aria-label="Attendance counts" data-sk-region="todayattendance-dl-field-4">
           {groups.map((g) => {
-            const pct = Math.round((g.count / total) * 100);
+            const pct = total > 0 ? Math.round((g.count / total) * 100) : 0;
             return (
               <div
                 key={g.key}
-                className={`flex items-center gap-3 rounded-[12px] border p-3 transition-colors sm:gap-3.5 sm:p-3.5 ${panelBorder}`}
-                style={{ background: darkMode ? "rgba(255,255,255,0.02)" : "#FBFCFD" }}
+                data-sk-region={`attendance-row-${g.key}`}
+                className={`grid grid-cols-[2fr_1fr_1fr] items-center border-b py-4 last:border-b-0 ${panelBorder}`}
               >
-                <div
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
-                  style={{ background: g.soft }}
-                >
-                  <g.Icon size={15} style={{ color: g.solid }} />
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-baseline justify-between gap-2">
-                    <p className={`text-sm font-bold ${textPrimary}`}>{g.label}</p>
-                    <p className={`text-base font-black shrink-0 ${textPrimary}`}>
-                      {String(g.count).padStart(2, "0")}
-                    </p>
-                  </div>
-                  <div
-                    className="mt-1.5 w-full h-1 rounded-full overflow-hidden"
-                    style={{ background: darkMode ? "rgba(255,255,255,0.08)" : "#E5E7EB" }}
-                  >
-                    <div
-                      className="h-full rounded-full"
-                      style={{ width: `${pct}%`, background: g.solid, transition: "width 0.6s ease" }}
-                    />
-                  </div>
-                </div>
-
-                <span
-                  className="text-xs font-bold shrink-0 w-9 text-right"
-                  style={{ color: g.text }}
-                >
-                  {pct}%
-                </span>
+                <dt className={`text-sm font-medium ${textPrimary}`}>
+                  <span className="inline-flex items-center gap-2.5">
+                    <span aria-hidden="true" className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: g.solid }} />
+                    {g.label}
+                  </span>
+                </dt>
+                <dd className={`text-right text-2xl font-semibold leading-none tabular-nums ${textPrimary}`} data-sk-region="todayattendance-dd-field-5"><span className="sr-only" data-sk-region="todayattendance-students-" data-sk-static="">Students: </span>{skeleton ? <SkeletonText className="ml-auto" width="2ch"/> : g.count}</dd>
+                <dd className="text-right text-sm tabular-nums" style={{ color: mutedColor }} data-sk-region="todayattendance-dd-field-6"><span className="sr-only" data-sk-region="todayattendance-share-" data-sk-static="">Share: </span>{skeleton ? <SkeletonText className="ml-auto" width="3ch"/> : `${pct}%`}</dd>
               </div>
             );
           })}
+          </dl>
         </div>
+      </div>);
+
+  return (
+    <div
+      className={`h-full flex flex-col rounded-[12px] border overflow-hidden ${panelBg} ${panelBorder}`}
+      style={{ boxShadow: "0 4px 20px -2px rgba(0,0,0,0.05), 0 2px 10px -2px rgba(0,0,0,0.03)" }}
+    >
+      <div className={`flex items-center justify-between gap-3 border-b px-4 py-4 sm:px-6 ${panelBorder}`}>
+        <div className="flex min-w-0 items-center gap-2.5">
+          <ClipboardCheck size={16} className="shrink-0 text-maroon dark:text-brand-light" />
+          <h2 className={`text-base font-bold ${textPrimary}`} data-sk-region="todayattendance-today-apos-s-attendance" data-sk-static="">Today&apos;s Attendance</h2>
+        </div>
+        {onViewFull && (
+          <button
+            type="button"
+            onClick={onViewFull}
+            className="shrink-0 text-xs font-semibold uppercase tracking-wider text-maroon hover:underline dark:text-brand-light" data-sk-region="todayattendance-full-report" data-sk-static=""
+          >
+            Full Report
+          </button>
+        )}
       </div>
+
+      <LoadingRegion name="attendance-body" loading={loading} variable skeleton={null} frame={pending => pending || total > 0 ? renderBody(pending) : <p className={`p-6 text-sm ${textPrimary}`}>{!hasAdvisoryStudents ? "No advisory class assigned for attendance." : recordedCount ? "Attendance recorded; no present, absent, or late entries today." : "Attendance not recorded today."}</p>}>{null}</LoadingRegion>
+
     </div>
   );
 }

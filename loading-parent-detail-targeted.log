@@ -1,0 +1,48 @@
+
+[WebServer] (node:30336) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14040) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 34 tests using 1 worker
+
+(node:22648) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/34] tests\parent-detail-loading.spec.ts:5:1 › parent detail keeps navigation and identity labels during linked-student fetch
+[2/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail overview 375 light preserves real layout
+[3/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail overview 375 dark preserves real layout
+[4/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail overview 1280 light preserves real layout
+[5/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail overview 1280 dark preserves real layout
+[6/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail academic 375 light preserves real layout
+[7/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail academic 375 dark preserves real layout
+[8/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail academic 1280 light preserves real layout
+[9/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail academic 1280 dark preserves real layout
+[10/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail holistic 375 light preserves real layout
+[11/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail holistic 375 dark preserves real layout
+[12/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail holistic 1280 light preserves real layout
+[13/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail holistic 1280 dark preserves real layout
+[14/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail progressReport 375 light preserves real layout
+[15/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail progressReport 375 dark preserves real layout
+[16/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail progressReport 1280 light preserves real layout
+[17/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail progressReport 1280 dark preserves real layout
+[18/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail studentProfile 375 light preserves real layout
+[19/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail studentProfile 375 dark preserves real layout
+[20/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail studentProfile 1280 light preserves real layout
+[21/34] tests\parent-detail-loading.spec.ts:32:91 › parent detail studentProfile 1280 dark preserves real layout
+[22/34] tests\parent-detail-loading.spec.ts:41:103 › parent variable academic 0 items and wrapping
+[23/34] tests\parent-detail-loading.spec.ts:41:103 › parent variable holistic 0 items and wrapping
+[24/34] tests\parent-detail-loading.spec.ts:41:103 › parent variable progressReport 0 items and wrapping
+[25/34] tests\parent-detail-loading.spec.ts:41:103 › parent variable studentProfile 0 items and wrapping
+[26/34] tests\parent-detail-loading.spec.ts:41:103 › parent variable academic 1 items and wrapping
+[27/34] tests\parent-detail-loading.spec.ts:41:103 › parent variable holistic 1 items and wrapping
+[28/34] tests\parent-detail-loading.spec.ts:41:103 › parent variable progressReport 1 items and wrapping
+[29/34] tests\parent-detail-loading.spec.ts:41:103 › parent variable studentProfile 1 items and wrapping
+[30/34] tests\parent-detail-loading.spec.ts:41:103 › parent variable academic 9 items and wrapping
+[31/34] tests\parent-detail-loading.spec.ts:41:103 › parent variable holistic 9 items and wrapping
+[32/34] tests\parent-detail-loading.spec.ts:41:103 › parent variable progressReport 9 items and wrapping
+[33/34] tests\parent-detail-loading.spec.ts:41:103 › parent variable studentProfile 9 items and wrapping
+[34/34] tests\parent-detail-loading.spec.ts:44:1 › locked parent report settles into unavailable state without endless shapes
+  34 passed (1.3m)

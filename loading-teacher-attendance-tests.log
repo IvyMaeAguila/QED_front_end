@@ -1,0 +1,20 @@
+
+[WebServer] (node:31032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:37784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 6 tests using 1 worker
+
+
+(node:40508) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/6] tests\teacher-attendance.spec.ts:23:68 › teacher attendance 375 light: staged fetches keep real controls and table
+[2/6] tests\teacher-attendance.spec.ts:23:68 › teacher attendance 375 dark: staged fetches keep real controls and table
+[3/6] tests\teacher-attendance.spec.ts:23:68 › teacher attendance 1280 light: staged fetches keep real controls and table
+[4/6] tests\teacher-attendance.spec.ts:23:68 › teacher attendance 1280 dark: staged fetches keep real controls and table
+[5/6] tests\teacher-attendance.spec.ts:46:1 › attendance column classification is justified by long returned names
+[6/6] tests\teacher-attendance.spec.ts:59:1 › attendance loading migration preserves the marking request
+  6 passed (17.7s)

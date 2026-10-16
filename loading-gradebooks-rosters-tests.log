@@ -1,0 +1,32 @@
+
+[WebServer] (node:26928) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:28060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 18 tests using 1 worker
+
+(node:10644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/18] tests\advisory-roster.spec.ts:17:68 › advisory roster 375 light: real labels, actions and table
+[2/18] tests\advisory-roster.spec.ts:17:68 › advisory roster 375 dark: real labels, actions and table
+[3/18] tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 light: real labels, actions and table
+[4/18] tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 dark: real labels, actions and table
+[5/18] tests\advisory-roster.spec.ts:36:1 › student directory classification observes native columns across short/long names
+[6/18] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 375 light: real shell and existing cards
+[7/18] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 375 dark: real shell and existing cards
+[8/18] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 1280 light: real shell and existing cards
+[9/18] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 1280 dark: real shell and existing cards
+[10/18] tests\principal-gradebooks.spec.ts:40:1 › repeat gradebook visit displays cached cards and school year immediately
+[11/18] tests\subject-class-list.spec.ts:17:68 › subject roster 375 light: real controls, shared table rows and screenshots
+[12/18] tests\subject-class-list.spec.ts:17:68 › subject roster 375 dark: real controls, shared table rows and screenshots
+[13/18] tests\subject-class-list.spec.ts:17:68 › subject roster 1280 light: real controls, shared table rows and screenshots
+[14/18] tests\subject-class-list.spec.ts:17:68 › subject roster 1280 dark: real controls, shared table rows and screenshots
+[15/18] tests\subject-class-list.spec.ts:39:1 › subject roster auto-column classification is supported by native width changes
+[16/18] tests\subject-class-list.spec.ts:52:32 › subject roster 0 results uses the real empty/short/long table
+[17/18] tests\subject-class-list.spec.ts:52:32 › subject roster 1 results uses the real empty/short/long table
+[18/18] tests\subject-class-list.spec.ts:52:32 › subject roster 9 results uses the real empty/short/long table
+  18 passed (35.6s)

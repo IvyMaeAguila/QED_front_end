@@ -31,7 +31,7 @@ export default function AdminFeedbackModal({
           title={title}
           onClose={onClose}
           closeDarkMode={darkMode}
-          leading={icon ? <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#8B0D0D]/10 text-[#8B0D0D]">{icon}</span> : undefined}
+          leading={icon ? <span className="flex h-8 w-8 items-center justify-center rounded-full bg-maroon/10 text-brand-ink">{icon}</span> : undefined}
           className="items-center"
         />
         <ModalBody className="px-5 py-4">

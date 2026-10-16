@@ -8,9 +8,9 @@ export function HeroCard() {
   return (
     <div className="relative w-full max-w-135 mx-auto">
       {/* glow ring behind card */}
-      <div className="absolute -inset-4 bg-[#800000]/10 rounded-3xl blur-xl" />
+      <div className="absolute -inset-4 bg-maroon/10 rounded-3xl blur-xl" />
 
-      <div className="relative bg-linear-to-b from-[#550000] to-[#bb0000] rounded-2xl p-4 shadow-2xl">
+      <div className="relative bg-maroon rounded-2xl p-4 shadow-2xl">
         <div className="bg-white rounded-2xl p-6 flex flex-col items-center gap-5">
           <LogoComponent size="lg" />
           <div className="text-center">
@@ -22,9 +22,9 @@ export function HeroCard() {
             </p>
           </div>
           <div className="flex flex-col gap-2 w-full">
-            <FeatureTag label="Academic Monitoring" bgColor="bg-[#F1EFEC]" dotColor="bg-[#800000]" />
-            <FeatureTag label="Holistic Evaluation" bgColor="bg-[#F1EFEC]" dotColor="bg-[#800000]" />
-            <FeatureTag label="Real-Time Analytics" bgColor="bg-[#F1EFEC]" dotColor="bg-[#800000]" />
+            <FeatureTag label="Academic Monitoring" bgColor="bg-brand-light" dotColor="bg-maroon" />
+            <FeatureTag label="Holistic Evaluation" bgColor="bg-brand-light" dotColor="bg-maroon" />
+            <FeatureTag label="Real-Time Analytics" bgColor="bg-brand-light" dotColor="bg-maroon" />
           </div>
         </div>
       </div>
@@ -44,7 +44,7 @@ export function FeatureCard({
   description: string;
 }) {
   return (
-    <div className="group bg-white border border-[rgba(102,102,102,0.15)] rounded-xl shadow-sm p-6 flex flex-col gap-4 hover:shadow-xl hover:-translate-y-1.5 hover:border-[#bb0000]/20 transition-all duration-300">
+    <div className="group bg-white border border-[rgba(102,102,102,0.15)] rounded-xl shadow-sm p-6 flex flex-col gap-4 hover:shadow-xl hover:-translate-y-1.5 hover:border-maroon-light/20 transition-all duration-300">
       <div
         className={`w-16 h-16 ${iconBg} rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-md`}
       >
@@ -70,7 +70,7 @@ export function CompactFeatureCard({
   description: string;
 }) {
   return (
-    <div className="group bg-white border border-[rgba(102,102,102,0.12)] rounded-xl shadow-sm p-5 flex flex-col gap-3 hover:shadow-lg hover:-translate-y-1 hover:border-[#bb0000]/20 transition-all duration-300">
+    <div className="group bg-white border border-[rgba(102,102,102,0.12)] rounded-xl shadow-sm p-5 flex flex-col gap-3 hover:shadow-lg hover:-translate-y-1 hover:border-maroon-light/20 transition-all duration-300">
       <div
         className={`w-11 h-11 ${iconBg} rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300 [&_svg]:w-5 [&_svg]:h-5`}
       >
@@ -95,7 +95,7 @@ export function PillarCard({
 }) {
   return (
     <div className="flex flex-col items-center text-center gap-3 p-6">
-      <div className="w-14 h-14 rounded-full bg-[#550000]/8 flex items-center justify-center [&_svg]:w-6 [&_svg]:h-6 [&_svg]:text-[#550000]">
+      <div className="w-14 h-14 rounded-full bg-maroon/8 flex items-center justify-center [&_svg]:w-6 [&_svg]:h-6 [&_svg]:text-brand-ink">
         {icon}
       </div>
       <p className="text-base font-semibold text-black font-sans">{title}</p>
@@ -115,7 +115,7 @@ export function RoleCard({
 }) {
   return (
     <div className="h-full min-h-[235px] bg-white border border-[rgba(102,102,102,0.12)] rounded-xl p-6 flex flex-col gap-3">
-      <div className="w-12 h-12 rounded-xl bg-linear-to-br from-[#550000] to-[#bb0000] flex items-center justify-center [&_svg]:w-5 [&_svg]:h-5 [&_svg]:text-white">
+      <div className="w-12 h-12 rounded-xl bg-maroon flex items-center justify-center [&_svg]:w-5 [&_svg]:h-5 [&_svg]:text-white">
         {icon}
       </div>
       <p className="text-base font-bold text-black font-sans">{role}</p>

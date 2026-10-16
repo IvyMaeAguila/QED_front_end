@@ -25,8 +25,8 @@
 //                 selected
 //                   ? "text-white shadow-sm scale-[1.03]"
 //                   : darkMode
-//                   ? "border-[#543632] text-[#D1D5DB] hover:bg-white/5"
-//                   : "border-[#E5E7EB] text-[#374151] hover:bg-[#F6F7FB]"
+//                   ? "border-border-dark text-[#D1D5DB] hover:bg-white/5"
+//                   : "border-border-subtle text-[#374151] hover:bg-brand-light"
 //               }`}
 //               style={selected ? { background: l.color, borderColor: l.color } : undefined}
 //             >

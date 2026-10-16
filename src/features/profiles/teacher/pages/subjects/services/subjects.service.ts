@@ -1,4 +1,6 @@
 import { API_CONFIG } from '../../../../../../config/api.config';
+import { QueryHttpError } from '@shared/http/QueryHttpError';
+import type { TeacherRequestOptions } from '../../../query/teacherQueryScope';
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/mySubjects`;
 
@@ -38,19 +40,21 @@ function mapAssignedSubjectRow(row: AssignedSubjectRow): AssignedSubject {
 }
 
 export const assignedSubjectsService = {
-  async getAssignedSubjects(): Promise<AssignedSubject[]> {
+  async getAssignedSubjects(options?: TeacherRequestOptions): Promise<AssignedSubject[]> {
     const response = await fetch(`${BASE_URL}/subjects`, {
       method: "GET",
       credentials: "include",
+      signal: options?.signal,
     });
 
     if (response.status === 401) {
-      throw new Error("Unauthorized: kailangan mag-login muna.");
+      if (!options?.signal?.aborted) options?.onUnauthorized?.();
+      throw new QueryHttpError("Unauthorized: kailangan mag-login muna.", 401);
     }
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Failed to fetch assigned subjects");
+      throw new QueryHttpError(errorData.message || "Failed to fetch assigned subjects", response.status);
     }
 
     const json = await response.json();

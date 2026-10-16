@@ -1,0 +1,99 @@
+{
+  "regions": [
+    {
+      "selector": "[data-sk-region=\"student-form-studentId\"]",
+      "box": {
+        "x": 586,
+        "y": 277.390625,
+        "width": 302,
+        "height": 40
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"student-form-lrn\"]",
+      "box": {
+        "x": 904,
+        "y": 277.390625,
+        "width": 302,
+        "height": 40
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"student-form-lastName\"]",
+      "box": {
+        "x": 586,
+        "y": 359.390625,
+        "width": 302,
+        "height": 40
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"student-form-firstName\"]",
+      "box": {
+        "x": 904,
+        "y": 359.390625,
+        "width": 302,
+        "height": 40
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"student-form-middleName\"]",
+      "box": {
+        "x": 586,
+        "y": 441.390625,
+        "width": 302,
+        "height": 40
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"student-form-gender\"]",
+      "box": {
+        "x": 904,
+        "y": 441.390625,
+        "width": 302,
+        "height": 40
+      }
+    }
+  ],
+  "loadedBoxes": [
+    {
+      "x": 586,
+      "y": 275.390625,
+      "width": 302,
+      "height": 40
+    },
+    {
+      "x": 904,
+      "y": 275.390625,
+      "width": 302,
+      "height": 40
+    },
+    {
+      "x": 586,
+      "y": 357.390625,
+      "width": 302,
+      "height": 40
+    },
+    {
+      "x": 904,
+      "y": 357.390625,
+      "width": 302,
+      "height": 40
+    },
+    {
+      "x": 586,
+      "y": 439.390625,
+      "width": 302,
+      "height": 40
+    },
+    {
+      "x": 904,
+      "y": 439.390625,
+      "width": 302,
+      "height": 40
+    }
+  ],
+  "shapePixels": 6003,
+  "outsidePixels": 0,
+  "outsideRatio": 0
+}

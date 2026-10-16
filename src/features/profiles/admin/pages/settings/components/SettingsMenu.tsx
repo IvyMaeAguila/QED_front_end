@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { createPortal } from "react-dom";
 import { Settings, X, Moon, Sun, Bell, Info, Pencil, Check, Landmark } from "lucide-react";
 import { useSettings } from "../context/SettingsContext";
@@ -115,12 +116,12 @@ export function SettingsMenu() {
   }
 
   const mutedText = darkMode ? "text-[#9CA3AF]" : "text-[#6B7280]";
-  const borderColor = darkMode ? "border-[#1F2937]" : "border-[#EEF0F3]";
+  const borderColor = darkMode ? "border-[#1F2937]" : "border-border-subtle";
   const labelClasses = `text-xs font-semibold uppercase tracking-wider ${mutedText}`;
   const sectionBorder = `pt-4 border-t space-y-2.5 ${borderColor}`;
 
   const rowBase = `w-full h-10 px-3 rounded-lg border flex items-center justify-between transition-colors ${
-    darkMode ? "bg-[#0B1120] border-[#2A3441]" : "bg-[#FAFBFC] border-[#E3E6EA]"
+    darkMode ? "bg-[#0B1120] border-[#2A3441]" : "bg-brand-light border-border-subtle"
   }`;
 
   const drawer = (
@@ -154,7 +155,7 @@ export function SettingsMenu() {
                 darkMode ? "bg-white/10" : "bg-[#F3E9E9]"
               }`}
             >
-              <Settings size={16} className={darkMode ? "text-white" : "text-[#6B0000]"} />
+              <Settings size={16} className={darkMode ? "text-white" : "text-brand-ink"} />
             </div>
             <p
               className={`text-base font-semibold ${darkMode ? "text-white" : "text-[#111827]"}`}
@@ -211,7 +212,7 @@ export function SettingsMenu() {
                 <button
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={commitAcronym}
-                  className="w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] hover:bg-[#6B0000]/10 transition-colors"
+                  className="w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-brand-ink hover:bg-maroon-light/10 transition-colors"
                   title="Save"
                 >
                   <Check size={14} />
@@ -224,7 +225,7 @@ export function SettingsMenu() {
                 </span>
                 <button
                   onClick={() => setEditingAcronym(true)}
-                  className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] transition-colors ${
+                  className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-brand-ink transition-colors ${
                     darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
                   }`}
                   title="Edit school acronym"
@@ -252,7 +253,7 @@ export function SettingsMenu() {
                 <button
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={commitName}
-                  className="w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] hover:bg-[#6B0000]/10 transition-colors"
+                  className="w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-brand-ink hover:bg-maroon-light/10 transition-colors"
                   title="Save"
                 >
                   <Check size={14} />
@@ -265,7 +266,7 @@ export function SettingsMenu() {
                 </span>
                 <button
                   onClick={() => setEditingName(true)}
-                  className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-[#6B0000] transition-colors ${
+                  className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-brand-ink transition-colors ${
                     darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
                   }`}
                   title="Edit school name"
@@ -325,7 +326,7 @@ export function SettingsMenu() {
     <div ref={ref}>
       <button
         onClick={() => setOpen((v) => !v)}
-        className={`hidden sm:flex w-9 h-9 items-center justify-center rounded-full transition-colors shrink-0 text-[#6B0000] ${
+        className={`hidden sm:flex w-9 h-9 items-center justify-center rounded-full transition-colors shrink-0 text-brand-ink ${
           darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
         }`}
         title="Settings"

@@ -1,0 +1,42 @@
+[WebServer] (node:37920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12808) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:8796) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\finishing-contract.spec.ts:6:1 › session identity and fixed attendance labels are real before dashboard fetch
+  1) tests\finishing-contract.spec.ts:6:1 › session identity and fixed attendance labels are real before dashboard fetch 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /Good .*, Marie Dela Cruz!/ })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: /Good .*, Marie Dela Cruz!/ }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: /Good .*, Marie Dela Cruz!/ })
+
+
+       7 |   const release = await mockTeacher(page, false);
+       8 |   await page.goto("/teacher");
+    >  9 |   await expect(page.getByRole("heading", { name: /Good .*, Marie Dela Cruz!/ })).toBeVisible();
+         |                                                                                  ^
+      10 |   for (const label of ["Status", "Students", "Share", "Present", "Late", "Absent", "Present rate"])
+      11 |     await expect(page.getByText(label, { exact: true }).last()).toBeVisible();
+      12 |   release();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\finishing-contract.spec.ts:9:82
+
+    Error Context: test-results\finishing-contract-session-b2187-real-before-dashboard-fetch\error-context.md
+
+
+  1 failed
+    tests\finishing-contract.spec.ts:6:1 › session identity and fixed attendance labels are real before dashboard fetch 

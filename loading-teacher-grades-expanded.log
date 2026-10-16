@@ -1,0 +1,176 @@
+
+[WebServer] (node:40552) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:20816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 18 tests using 1 worker
+
+
+(node:21604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/18] tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 375 light keeps real headers and controls
+[2/18] tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 375 dark keeps real headers and controls
+[3/18] tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 1280 light keeps real headers and controls
+[4/18] tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 1280 dark keeps real headers and controls
+[5/18] tests\teacher-grades-loading.spec.ts:7:28 › teacher grades preserves 0 actual students
+[6/18] tests\teacher-grades-loading.spec.ts:7:28 › teacher grades preserves 1 actual students
+[7/18] tests\teacher-grades-loading.spec.ts:7:28 › teacher grades preserves 9 actual students
+[8/18] tests\teacher-grades-loading.spec.ts:8:52 › teacher grades retries terms
+[9/18] tests\teacher-grades-loading.spec.ts:8:52 › teacher grades retries sections
+[10/18] tests\teacher-grades-loading.spec.ts:8:52 › teacher grades retries gradebook
+[WebServer] 2:16:04 PM [vite] (client) [console.error] Failed to load advisory gradebook: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:14:38)
+[WebServer]     at async fetchAdvisoryGradebook (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:29:15)
+
+[11/18] tests\teacher-grades-loading.spec.ts:9:1 › teacher grades preserves visibility and history tabs
+
+[WebServer] 2:16:06 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <table>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <main className="relative f...">
+[WebServer]       <Outlet context={{darkMode:false, ...}}>
+[WebServer]         <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]           <GradesPage>
+[WebServer]             <div className="w-full min...">
+[WebServer]               <div className="w-full spa...">
+[WebServer]                 <div>
+[WebServer]                 <ParentVisibilitySection gradingPeriodId="1" classId="1" termLabel="Term 1" darkMode={false} ...>
+[WebServer]                   <section className="overflow-h..." aria-label="Parent gra...">
+[WebServer]                     <div>
+[WebServer]                     <div className="overflow-x...">
+[WebServer]                       <LoadingTable name="teacher-gr..." staticRows={true} view="teacher-gr..." loading={true} ...>
+[WebServer]                         <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} ...>
+[WebServer]                           <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." ...>
+[WebServer]                             <div className="relative">
+[WebServer] >                             <table ref={{current:null}} className="teacher-user-table w-full min-w-max text-sm">
+[WebServer]                                 <colgroup>
+[WebServer] >                               {"            "}
+[WebServer]                                 ...
+[WebServer]                                 ...
+[WebServer] 
+[12/18] tests\teacher-grades-loading.spec.ts:11:1 › teacher grades and visibility have valid native table markup
+
+[WebServer] 2:16:10 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <table>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <main className="relative f...">
+[WebServer]       <Outlet context={{darkMode:false, ...}}>
+[WebServer]         <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]           <GradesPage>
+[WebServer]             <div className="w-full min...">
+[WebServer]               <div className="w-full spa...">
+[WebServer]                 <div>
+[WebServer]                 <ParentVisibilitySection gradingPeriodId="1" classId="1" termLabel="Term 1" darkMode={false} ...>
+[WebServer]                   <section className="overflow-h..." aria-label="Parent gra...">
+[WebServer]                     <div>
+[WebServer]                     <div className="overflow-x...">
+[WebServer]                       <LoadingTable name="teacher-gr..." staticRows={true} view="teacher-gr..." loading={true} ...>
+[WebServer]                         <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} ...>
+[WebServer]                           <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." ...>
+[WebServer]                             <div className="relative">
+[WebServer] >                             <table ref={{current:null}} className="teacher-user-table w-full min-w-max text-sm">
+[WebServer]                                 <colgroup>
+[WebServer] >                               {"            "}
+[WebServer]                                 ...
+[WebServer]                                 ...
+[WebServer] 
+  1) tests\teacher-grades-loading.spec.ts:11:1 › teacher grades and visibility have valid native table markup 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 27
+
+    - Array []
+    + Array [
+    +   "In HTML, whitespace text nodes cannot be a child of <%s>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+    + This will cause a hydration error.%s table 
+    +
+    +   ...
+    +     <main className=\"relative f...\">
+    +       <Outlet context={{darkMode:false, ...}}>
+    +         <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+    +           <GradesPage>
+    +             <div className=\"w-full min...\">
+    +               <div className=\"w-full spa...\">
+    +                 <div>
+    +                 <ParentVisibilitySection gradingPeriodId=\"1\" classId=\"1\" termLabel=\"Term 1\" darkMode={false} ...>
+    +                   <section className=\"overflow-h...\" aria-label=\"Parent gra...\">
+    +                     <div>
+    +                     <div className=\"overflow-x...\">
+    +                       <LoadingTable name=\"teacher-gr...\" staticRows={true} view=\"teacher-gr...\" loading={true} ...>
+    +                         <LoadingRegion name=\"teacher-gr...\" loading={true} error={null} retry={function retry} ...>
+    +                           <div ref={function t27} className=\"sk-region ...\" data-sk-region=\"teacher-gr...\" ...>
+    +                             <div className=\"relative\">
+    + >                             <table ref={{current:null}} className=\"teacher-user-table w-full min-w-max text-sm\">
+    +                                 <colgroup>
+    + >                               {\"            \"}
+    +                                 ...
+    +                                 ...
+    + ",
+    + ]
+
+       9 | test('teacher grades preserves visibility and history tabs',async({page})=>{const release=await fixture(page);await page.goto('/teacher/grades');release();await expect(page.locator('[data-sk-region="teacher-grade-row"]')).toHaveCount(3);await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);await page.getByRole('button',{name:'Parent Visibility',exact:true}).click();await expect(page.getByRole('columnheader',{name:'Parent/Guardian',exact:true})).toBeVisible();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);await expect(page.getByText('Parent One',{exact:true})).toHaveCount(3);await page.getByRole('button',{name:'Submission History',exact:true}).click();await expect(page.getByText('Teacher One ·',{exact:false})).toBeVisible();});
+      10 |
+    > 11 | test('teacher grades and visibility have valid native table markup',async({page})=>{const errors:string[]=[];page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});const release=await fixture(page);await page.goto('/teacher/grades');await expect(page.locator('[data-sk-region="teacher-grades-table:table-body"]')).toHaveAttribute('data-sk-phase','revealed');release();await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);await page.getByRole('button',{name:'Parent Visibility',exact:true}).click();await expect(page.getByText('Parent One',{exact:true})).toHaveCount(3);expect(errors.filter(message=>/cannot be a child|cannot contain|hydration error|whitespace text nodes/.test(message))).toEqual([]);});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ^
+      12 | test('teacher grades native automatic columns vary across real content',async({page})=>{const widths:number[][]=[];for(const long of [false,true]){const release=await fixture(page,false,3,long);await page.goto('/teacher/grades');release();const region=page.locator('[data-sk-region="teacher-grades-table:table-body"]');await expect(region).toHaveAttribute('data-sk-phase','settled');widths.push(await region.locator('thead th').evaluateAll(elements=>elements.map(element=>element.getBoundingClientRect().width)));await page.unroute('**/api/**');await page.unroute('**/api/gradingPeriods');await page.unroute('**/api/advisoryGrading/**');}expect(widths[0].some((width,i)=>Math.abs(width-widths[1][i])>1)).toBe(true);});
+      13 | for(const slow of [false,true])test(`teacher grades ${slow?'slow':'fast'} term refetch preserves old rows`,async({page})=>{const release=await fixture(page);await page.goto('/teacher/grades');release();const region=page.locator('[data-sk-region="teacher-grades-table:table-body"]');await expect(region).toHaveAttribute('data-sk-phase','settled');await region.evaluate(element=>{const phases:string[]=[];(window as unknown as {gradePhases:string[]}).gradePhases=phases;new MutationObserver(()=>phases.push(element.getAttribute('data-sk-phase')??'')).observe(element,{attributes:true,attributeFilter:['data-sk-phase']});});release.hold();await page.getByRole('button',{name:'Term: Term 1',exact:true}).click();await page.getByRole('option',{name:'Term 2',exact:true}).click();if(slow){await expect(region).toHaveAttribute('data-sk-phase','dimmed');await expect(region.locator('[data-sk-stale]')).toHaveCSS('opacity','0.6');await expect(region.locator('[data-sk-region="teacher-grade-row"]')).toHaveCount(3);await expect(region).toHaveAttribute('data-sk-phase','revealed');release.releaseData();}else setTimeout(release.releaseData,60);await expect(region).toHaveAttribute('data-sk-phase','settled');if(!slow){const phases=await page.evaluate(()=>(window as unknown as {gradePhases:string[]}).gradePhases);expect(phases).not.toContain('dimmed');expect(phases).not.toContain('revealed');}await assertNoDataSpinner(page);});
+      14 | for(const kind of ['visibility','logs','submission'])test(`teacher grades retries ${kind} independently`,async({page})=>{const release=await fixture(page);release.fail(kind);await page.goto('/teacher/grades');release();await expect(page.locator('[data-sk-region="teacher-grades-table:table-body"]')).toHaveAttribute('data-sk-phase','settled');if(kind==='visibility')await page.getByRole('button',{name:'Parent Visibility',exact:true}).click();if(kind==='logs')await page.getByRole('button',{name:'Submission History',exact:true}).click();await expect(page.getByRole('alert')).toBeVisible();release.recover();await page.getByRole('button',{name:'Retry',exact:true}).click();await expect(page.getByRole('alert')).toHaveCount(0);await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);});
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\teacher-grades-loading.spec.ts:11:742
+
+    Error Context: test-results\teacher-grades-loading-tea-fd6eb-e-valid-native-table-markup\error-context.md
+
+
+
+(node:7300) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[13/18] tests\teacher-grades-loading.spec.ts:12:1 › teacher grades native automatic columns vary across real content
+[14/18] tests\teacher-grades-loading.spec.ts:13:32 › teacher grades fast term refetch preserves old rows
+[15/18] tests\teacher-grades-loading.spec.ts:13:32 › teacher grades slow term refetch preserves old rows
+[16/18] tests\teacher-grades-loading.spec.ts:14:54 › teacher grades retries visibility independently
+
+[WebServer] 2:16:24 PM [vite] (client) [console.error] In HTML, whitespace text nodes cannot be a child of <table>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+[WebServer] This will cause a hydration error.
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <main className="relative f...">
+[WebServer]       <Outlet context={{darkMode:false, ...}}>
+[WebServer]         <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+[WebServer]           <GradesPage>
+[WebServer]             <div className="w-full min...">
+[WebServer]               <div className="w-full spa...">
+[WebServer]                 <div>
+[WebServer]                 <ParentVisibilitySection gradingPeriodId="1" classId="1" termLabel="Term 1" darkMode={false} ...>
+[WebServer]                   <section className="overflow-h..." aria-label="Parent gra...">
+[WebServer]                     <div>
+[WebServer]                     <div className="overflow-x...">
+[WebServer]                       <LoadingTable name="teacher-gr..." staticRows={true} view="teacher-gr..." loading={true} ...>
+[WebServer]                         <LoadingRegion name="teacher-gr..." loading={true} error={null} retry={function retry} ...>
+[WebServer]                           <div ref={function t27} className="sk-region ..." data-sk-region="teacher-gr..." ...>
+[WebServer]                             <div className="relative">
+[WebServer] >                             <table ref={{current:null}} className="teacher-user-table w-full min-w-max text-sm">
+[WebServer]                                 <colgroup>
+[WebServer] >                               {"            "}
+[WebServer]                                 ...
+[WebServer]                                 ...
+[WebServer] 
+[WebServer] 2:16:24 PM [vite] (client) [console.error] Failed to load grade visibility: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:14:38)
+[WebServer]     at async fetchGradeVisibility (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:60:15)
+
+[WebServer] 2:16:24 PM [vite] (client) [console.error] Failed to load grade visibility: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:14:38)
+[WebServer]     at async fetchGradeVisibility (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:60:15)
+
+[17/18] tests\teacher-grades-loading.spec.ts:14:54 › teacher grades retries logs independently
+[18/18] tests\teacher-grades-loading.spec.ts:14:54 › teacher grades retries submission independently
+  1 failed
+    tests\teacher-grades-loading.spec.ts:11:1 › teacher grades and visibility have valid native table markup 
+  17 passed (56.2s)

@@ -1,0 +1,42 @@
+
+[WebServer] (node:38224) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+
+(node:27472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/1] tests\student-details-loading.spec.ts:25:68 › student details 375 light: real labels, baseline chart and controls
+  1) tests\student-details-loading.spec.ts:25:68 › student details 375 light: real labels, baseline chart and controls 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: 'Back to Students', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('button', { name: 'Back to Students', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Back to Students', exact: true })
+
+
+      27 |   const release = await studentFixture(page, dark);
+      28 |   await page.goto("/teacher/students/1");
+    > 29 |   await expect(page.getByRole("button", { name: "Back to Students", exact: true })).toBeVisible();
+         |                                                                                     ^
+      30 |   await expect(page.getByRole("heading", { name: "Personal Information", exact: true })).toBeVisible();
+      31 |   await expect(page.getByText("No records yet", { exact: true })).toBeVisible();
+      32 |   await expect(page.locator('.sk-region[aria-busy="true"]').first()).toHaveAttribute("data-sk-phase", "revealed");
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\student-details-loading.spec.ts:29:85
+
+    Error Context: test-results\student-details-loading-st-e364e-baseline-chart-and-controls\error-context.md
+
+
+  1 failed
+    tests\student-details-loading.spec.ts:25:68 › student details 375 light: real labels, baseline chart and controls 

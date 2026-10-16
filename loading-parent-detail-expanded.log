@@ -1,0 +1,113 @@
+
+[WebServer] (node:4688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 47 tests using 1 worker
+
+
+(node:35472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/47] tests\parent-detail-loading.spec.ts:5:1 › parent detail keeps navigation and identity labels during linked-student fetch
+[2/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail overview 375 light preserves real layout
+[3/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail overview 375 dark preserves real layout
+[4/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail overview 1280 light preserves real layout
+[5/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail overview 1280 dark preserves real layout
+[6/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail academic 375 light preserves real layout
+[7/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail academic 375 dark preserves real layout
+[8/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail academic 1280 light preserves real layout
+[9/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail academic 1280 dark preserves real layout
+[10/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail holistic 375 light preserves real layout
+[11/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail holistic 375 dark preserves real layout
+[12/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail holistic 1280 light preserves real layout
+[13/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail holistic 1280 dark preserves real layout
+[14/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail progressReport 375 light preserves real layout
+[15/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail progressReport 375 dark preserves real layout
+[16/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail progressReport 1280 light preserves real layout
+[17/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail progressReport 1280 dark preserves real layout
+[18/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail studentProfile 375 light preserves real layout
+[19/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail studentProfile 375 dark preserves real layout
+[20/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail studentProfile 1280 light preserves real layout
+[21/47] tests\parent-detail-loading.spec.ts:32:91 › parent detail studentProfile 1280 dark preserves real layout
+[22/47] tests\parent-detail-loading.spec.ts:41:103 › parent variable academic 0 items and wrapping
+[23/47] tests\parent-detail-loading.spec.ts:41:103 › parent variable holistic 0 items and wrapping
+[24/47] tests\parent-detail-loading.spec.ts:41:103 › parent variable progressReport 0 items and wrapping
+[25/47] tests\parent-detail-loading.spec.ts:41:103 › parent variable studentProfile 0 items and wrapping
+[26/47] tests\parent-detail-loading.spec.ts:41:103 › parent variable academic 1 items and wrapping
+[27/47] tests\parent-detail-loading.spec.ts:41:103 › parent variable holistic 1 items and wrapping
+[28/47] tests\parent-detail-loading.spec.ts:41:103 › parent variable progressReport 1 items and wrapping
+[29/47] tests\parent-detail-loading.spec.ts:41:103 › parent variable studentProfile 1 items and wrapping
+[30/47] tests\parent-detail-loading.spec.ts:41:103 › parent variable academic 9 items and wrapping
+[31/47] tests\parent-detail-loading.spec.ts:41:103 › parent variable holistic 9 items and wrapping
+[32/47] tests\parent-detail-loading.spec.ts:41:103 › parent variable progressReport 9 items and wrapping
+[33/47] tests\parent-detail-loading.spec.ts:41:103 › parent variable studentProfile 9 items and wrapping
+[34/47] tests\parent-detail-loading.spec.ts:44:1 › locked parent report settles into unavailable state without endless shapes
+[35/47] tests\parent-detail-loading.spec.ts:48:30 › parent overview reserves variable frame before reveal and swaps once
+[36/47] tests\parent-detail-loading.spec.ts:48:30 › parent academic reserves variable frame before reveal and swaps once
+[37/47] tests\parent-detail-loading.spec.ts:48:30 › parent holistic reserves variable frame before reveal and swaps once
+[38/47] tests\parent-detail-loading.spec.ts:48:30 › parent progressReport reserves variable frame before reveal and swaps once
+  1) tests\parent-detail-loading.spec.ts:48:30 › parent progressReport reserves variable frame before reveal and swaps once 
+
+    Error: parent-periodic-table: at most one final geometry
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 1
+    Received:    3
+
+      68 |     const pending=list.filter(s=>['waiting','revealed'].includes(s.phase));for(const sample of pending)expect(sample.rect,`${name}: pending layout remains frozen`).toEqual(waiting.rect);
+      69 |     const swaps=list.filter(s=>['swapping','settled'].includes(s.phase));const distinct=swaps.filter((s,i)=>!i||s.rect.some((v,j)=>Math.abs(v-swaps[i-1].rect[j])>1));
+    > 70 |     expect(distinct.length,`${name}: at most one final geometry`).toBeLessThanOrEqual(1);
+         |                                                                   ^
+      71 |   }
+      72 |   expect(reservations).toBeGreaterThan(0);
+      73 | });
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\parent-detail-loading.spec.ts:70:67
+
+    Error Context: test-results\parent-detail-loading-pare-2e0d9-efore-reveal-and-swaps-once\error-context.md
+
+
+
+(node:16048) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[39/47] tests\parent-detail-loading.spec.ts:48:30 › parent studentProfile reserves variable frame before reveal and swaps once
+[40/47] tests\parent-detail-loading.spec.ts:75:32 › parent rendered pixels and fixed attendance overlay false
+[41/47] tests\parent-detail-loading.spec.ts:75:32 › parent rendered pixels and fixed attendance overlay true
+[42/47] tests\parent-detail-loading.spec.ts:83:178 › parent academic fetch failure clears shapes and retries
+[43/47] tests\parent-detail-loading.spec.ts:83:178 › parent holistic fetch failure clears shapes and retries
+[44/47] tests\parent-detail-loading.spec.ts:83:178 › parent progressReport fetch failure clears shapes and retries
+[45/47] tests\parent-detail-loading.spec.ts:83:178 › parent studentProfile fetch failure clears shapes and retries
+[46/47] tests\parent-detail-loading.spec.ts:87:1 › parent report auto-column marking reflects measured native content variation
+  2) tests\parent-detail-loading.spec.ts:87:1 › parent report auto-column marking reflects measured native content variation 
+
+    Error: expect(received).toHaveLength(expected)
+
+    Expected length: 2
+    Received length: 0
+    Received array:  []
+
+      90 |     runs.push(await page.locator('[data-sk-auto-columns] table:not([data-sk-outgoing])').evaluateAll(tables=>tables.map(t=>Array.from(t.querySelectorAll('thead tr:first-child th')).map(c=>c.getBoundingClientRect().width))));await page.close();
+      91 |   }
+    > 92 |   expect(runs[0]).toHaveLength(2);expect(runs[1]).toHaveLength(2);
+         |                   ^
+      93 |   runs[0].forEach((widths,index)=>expect(runs[1][index].some((w,i)=>Math.abs(w-widths[i])>1),`table ${index} must actually vary to qualify AUTO-COLUMN`).toBe(true));
+      94 | });
+      95 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\parent-detail-loading.spec.ts:92:19
+
+    Error Context: test-results\parent-detail-loading-pare-c1549-ed-native-content-variation\error-context.md
+
+
+(node:29304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[47/47] tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition
+  2 failed
+    tests\parent-detail-loading.spec.ts:48:30 › parent progressReport reserves variable frame before reveal and swaps once 
+    tests\parent-detail-loading.spec.ts:87:1 › parent report auto-column marking reflects measured native content variation 
+  45 passed (1.6m)

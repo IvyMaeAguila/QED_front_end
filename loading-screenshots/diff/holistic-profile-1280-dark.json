@@ -1,0 +1,24 @@
+{
+  "regions": [
+    {
+      "selector": "[data-sk-region=\"holistic-profile-initials\"]",
+      "box": {
+        "x": 288,
+        "y": 223.390625,
+        "width": 56,
+        "height": 56
+      }
+    }
+  ],
+  "loadedBoxes": [
+    {
+      "x": 288,
+      "y": 223.390625,
+      "width": 56,
+      "height": 56
+    }
+  ],
+  "shapePixels": 2940,
+  "outsidePixels": 0,
+  "outsideRatio": 0
+}

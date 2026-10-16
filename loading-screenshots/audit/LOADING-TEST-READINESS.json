@@ -1,0 +1,303 @@
+{
+  "reason": "Require real shell and completed lazy handoff before unchanged page-data assertions. Bootstrap and lazy-gate tests remain independent.",
+  "files": [
+    {
+      "file": "tests/admin-class-view.spec.ts",
+      "navigations": 6
+    },
+    {
+      "file": "tests/admin-loading.spec.ts",
+      "navigations": 3
+    },
+    {
+      "file": "tests/advisory-roster.spec.ts",
+      "navigations": 2
+    },
+    {
+      "file": "tests/attendance-records-loading.spec.ts",
+      "navigations": 9
+    },
+    {
+      "file": "tests/auto-columns.spec.ts",
+      "navigations": 2
+    },
+    {
+      "file": "tests/calendar-loading.spec.ts",
+      "navigations": 1
+    },
+    {
+      "file": "tests/class-form-loading.spec.ts",
+      "navigations": 8
+    },
+    {
+      "file": "tests/courseware-loading.spec.ts",
+      "navigations": 4
+    },
+    {
+      "file": "tests/design-contract.spec.ts",
+      "navigations": 4
+    },
+    {
+      "file": "tests/directory-loading.spec.ts",
+      "navigations": 2
+    },
+    {
+      "file": "tests/domain-trends-loading.spec.ts",
+      "navigations": 10
+    },
+    {
+      "file": "tests/finishing-contract.spec.ts",
+      "navigations": 4
+    },
+    {
+      "file": "tests/holistic-analytics-loading.spec.ts",
+      "navigations": 5
+    },
+    {
+      "file": "tests/holistic-overview-loading.spec.ts",
+      "navigations": 8
+    },
+    {
+      "file": "tests/holistic-profile-loading.spec.ts",
+      "navigations": 8
+    },
+    {
+      "file": "tests/overlay-contract.spec.ts",
+      "navigations": 2
+    },
+    {
+      "file": "tests/parent-detail-loading.spec.ts",
+      "navigations": 10
+    },
+    {
+      "file": "tests/pet-quiz-loading.spec.ts",
+      "navigations": 7
+    },
+    {
+      "file": "tests/principal-dashboard-loading.spec.ts",
+      "navigations": 9
+    },
+    {
+      "file": "tests/principal-grade-sheet-loading.spec.ts",
+      "navigations": 11
+    },
+    {
+      "file": "tests/principal-gradebooks.spec.ts",
+      "navigations": 3
+    },
+    {
+      "file": "tests/refetch-contract.spec.ts",
+      "navigations": 1
+    },
+    {
+      "file": "tests/static-routes.spec.ts",
+      "navigations": 3
+    },
+    {
+      "file": "tests/student-details-loading.spec.ts",
+      "navigations": 5
+    },
+    {
+      "file": "tests/student-form-loading.spec.ts",
+      "navigations": 8
+    },
+    {
+      "file": "tests/subject-analytics-loading.spec.ts",
+      "navigations": 6
+    },
+    {
+      "file": "tests/subject-class-list.spec.ts",
+      "navigations": 3
+    },
+    {
+      "file": "tests/subject-edit-modal-loading.spec.ts",
+      "navigations": 1
+    },
+    {
+      "file": "tests/subject-records-loading.spec.ts",
+      "navigations": 8
+    },
+    {
+      "file": "tests/subject-template-loading.spec.ts",
+      "navigations": 4
+    },
+    {
+      "file": "tests/teacher-attendance.spec.ts",
+      "navigations": 3
+    },
+    {
+      "file": "tests/teacher-dashboard.spec.ts",
+      "navigations": 3
+    },
+    {
+      "file": "tests/teacher-grades-loading.spec.ts",
+      "navigations": 15
+    },
+    {
+      "file": "tests/teacher-subject-loading.spec.ts",
+      "navigations": 8
+    },
+    {
+      "file": "tests/teacher-subjects.spec.ts",
+      "navigations": 2
+    },
+    {
+      "file": "tests/user-details-loading.spec.ts",
+      "navigations": 5
+    },
+    {
+      "file": "tests/user-form-loading.spec.ts",
+      "navigations": 9
+    }
+  ],
+  "existingAssertionsPreserved": [
+    {
+      "file": "tests/admin-class-view.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/admin-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/advisory-roster.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/attendance-records-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/auto-columns.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/calendar-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/class-form-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/courseware-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/design-contract.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/directory-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/domain-trends-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/finishing-contract.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/holistic-analytics-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/holistic-overview-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/holistic-profile-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/overlay-contract.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/parent-detail-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/pet-quiz-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/principal-dashboard-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/principal-grade-sheet-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/principal-gradebooks.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/refetch-contract.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/static-routes.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/student-details-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/student-form-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/subject-analytics-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/subject-class-list.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/subject-edit-modal-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/subject-records-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/subject-template-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/teacher-attendance.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/teacher-dashboard.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/teacher-grades-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/teacher-subject-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/teacher-subjects.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/user-details-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    },
+    {
+      "file": "tests/user-form-loading.spec.ts",
+      "unchangedAfterRemovingAddedReadiness": true
+    }
+  ]
+}

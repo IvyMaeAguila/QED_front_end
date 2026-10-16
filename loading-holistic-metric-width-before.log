@@ -1,0 +1,44 @@
+
+[WebServer] (node:40636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:22568) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:27812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\holistic-analytics-loading.spec.ts:39:1 › holistic metric name and detail bars have measurable widths
+  1) tests\holistic-analytics-loading.spec.ts:39:1 › holistic metric name and detail bars have measurable widths 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  locator('[data-sk-region="report-metric-value-2"] [data-sk-primitive]')
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-sk-region="report-metric-value-2"] [data-sk-primitive]') with timeout 5000ms
+      - waiting for locator('[data-sk-region="report-metric-value-2"] [data-sk-primitive]')
+        14 × locator resolved to <span aria-hidden="true" data-sk-primitive="text" class="sk-primitive sk-text">…</span>
+           - unexpected value "hidden"
+
+
+      43 |   for (const selector of ['[data-sk-region="report-metric-value-2"]', '[data-sk-region="report-metric-detail-3"]']) {
+      44 |     const shape = page.locator(`${selector} [data-sk-primitive]`);
+    > 45 |     await expect(shape).toBeVisible();
+         |                         ^
+      46 |     expect((await shape.boundingBox())!.width).toBeGreaterThan(0);
+      47 |   }
+      48 |   release();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\holistic-analytics-loading.spec.ts:45:25
+
+    Error Context: test-results\holistic-analytics-loading-3b6a2-bars-have-measurable-widths\error-context.md
+
+
+  1 failed
+    tests\holistic-analytics-loading.spec.ts:39:1 › holistic metric name and detail bars have measurable widths 

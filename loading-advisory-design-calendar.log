@@ -1,0 +1,48 @@
+
+[WebServer] (node:30596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23348) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 34 tests using 1 worker
+
+
+(node:37056) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/34] tests\advisory-roster.spec.ts:17:68 › advisory roster 375 light: real labels, actions and table
+[2/34] tests\advisory-roster.spec.ts:17:68 › advisory roster 375 dark: real labels, actions and table
+[3/34] tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 light: real labels, actions and table
+[4/34] tests\advisory-roster.spec.ts:17:68 › advisory roster 1280 dark: real labels, actions and table
+[5/34] tests\advisory-roster.spec.ts:36:1 › student directory classification observes native columns across short/long names
+[6/34] tests\auto-columns.spec.ts:9:32 › auto columns: 0 rows, one swap, stable shell and cached repeat
+[7/34] tests\auto-columns.spec.ts:9:32 › auto columns: 1 rows, one swap, stable shell and cached repeat
+[8/34] tests\auto-columns.spec.ts:9:32 › auto columns: 9 rows, one swap, stable shell and cached repeat
+[9/34] tests\auto-columns.spec.ts:44:1 › auto-column classification requires observed data-dependent widths
+[10/34] tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 375px light: real month and shared event rows
+[11/34] tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 375px dark: real month and shared event rows
+[12/34] tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 1280px light: real month and shared event rows
+[13/34] tests\calendar-loading.spec.ts:6:70 › ADMIN calendar 1280px dark: real month and shared event rows
+[14/34] tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 375px light: real month and shared event rows
+[15/34] tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 375px dark: real month and shared event rows
+[16/34] tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 1280px light: real month and shared event rows
+[17/34] tests\calendar-loading.spec.ts:6:70 › PRINCIPAL calendar 1280px dark: real month and shared event rows
+[18/34] tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 375px light: real month and shared event rows
+[19/34] tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 375px dark: real month and shared event rows
+[20/34] tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 1280px light: real month and shared event rows
+[21/34] tests\calendar-loading.spec.ts:6:70 › TEACHER calendar 1280px dark: real month and shared event rows
+[22/34] tests\calendar-loading.spec.ts:6:70 › PARENT calendar 375px light: real month and shared event rows
+[23/34] tests\calendar-loading.spec.ts:6:70 › PARENT calendar 375px dark: real month and shared event rows
+[24/34] tests\calendar-loading.spec.ts:6:70 › PARENT calendar 1280px light: real month and shared event rows
+[25/34] tests\calendar-loading.spec.ts:6:70 › PARENT calendar 1280px dark: real month and shared event rows
+[26/34] tests\design-contract.spec.ts:6:1 › skeleton CSS has token-only colors
+[27/34] tests\design-contract.spec.ts:12:40 › light: pixel area survives all four shimmer phases on every surface
+[28/34] tests\design-contract.spec.ts:12:40 › dark: pixel area survives all four shimmer phases on every surface
+[29/34] tests\design-contract.spec.ts:17:68 › teacher 375 light: static content and spinner guard
+[30/34] tests\design-contract.spec.ts:17:68 › teacher 375 dark: static content and spinner guard
+[31/34] tests\design-contract.spec.ts:17:68 › teacher 1280 light: static content and spinner guard
+[32/34] tests\design-contract.spec.ts:17:68 › teacher 1280 dark: static content and spinner guard
+[33/34] tests\design-contract.spec.ts:32:1 › negative control: shine blending into the surface is caught by the pixel guard
+[34/34] tests\design-contract.spec.ts:44:1 › negative control: a hard shimmer edge is caught independently of visible area
+  34 passed (1.2m)

@@ -1,0 +1,162 @@
+
+[WebServer] (node:4560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 4 tests using 1 worker
+
+(node:26880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/4] tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 375 light settles errors and retries
+
+[WebServer] 7:18:17 PM [vite] (client) [console.error] Failed to load active grade template: Error: Template unavailable
+[WebServer]     at getActiveGradeTemplate (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subjectGradeTemplate.service.ts:25:9)
+[WebServer] 7:18:17 PM [vite] (client) [console.error] Failed to load active grade template: Error: Template unavailable
+[WebServer]     at getActiveGradeTemplate (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subjectGradeTemplate.service.ts:25:9)
+
+  1) tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 375 light settles errors and retries 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('[data-sk-region="edit-subject-template"]').getByRole('alert')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-sk-region="edit-subject-template"]').getByRole('alert') with timeout 5000ms
+      - waiting for locator('[data-sk-region="edit-subject-template"]').getByRole('alert')
+
+
+      15 |   await page.goto('/admin/subjects');await page.getByRole('button',{name:'Edit',exact:true}).first().click();
+      16 |   const region=page.locator('[data-sk-region="edit-subject-template"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+    > 17 |   finish();await expect(region.getByRole('alert')).toBeVisible();await expect(region.locator('[data-sk-primitive]')).toHaveCount(0);
+         |                                                    ^
+      18 |   failed=false;await region.getByRole('button',{name:'Retry',exact:true}).click();await expect(region).toHaveAttribute('data-sk-phase','settled');await expect(region.getByRole('alert')).toHaveCount(0);expect(requests).toBe(2);
+      19 | });
+      20 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\subject-edit-modal-loading.spec.ts:17:52
+
+    Error Context: test-results\subject-edit-modal-loading-e8108--settles-errors-and-retries\error-context.md
+
+
+
+(node:26180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[2/4] tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 375 dark settles errors and retries
+
+[WebServer] 7:18:25 PM [vite] (client) [console.error] Failed to load active grade template: Error: Template unavailable
+[WebServer]     at getActiveGradeTemplate (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subjectGradeTemplate.service.ts:25:9)
+[WebServer] 7:18:25 PM [vite] (client) [console.error] Failed to load active grade template: Error: Template unavailable
+[WebServer]     at getActiveGradeTemplate (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subjectGradeTemplate.service.ts:25:9)
+
+  2) tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 375 dark settles errors and retries 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('[data-sk-region="edit-subject-template"]').getByRole('alert')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-sk-region="edit-subject-template"]').getByRole('alert') with timeout 5000ms
+      - waiting for locator('[data-sk-region="edit-subject-template"]').getByRole('alert')
+
+
+      15 |   await page.goto('/admin/subjects');await page.getByRole('button',{name:'Edit',exact:true}).first().click();
+      16 |   const region=page.locator('[data-sk-region="edit-subject-template"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+    > 17 |   finish();await expect(region.getByRole('alert')).toBeVisible();await expect(region.locator('[data-sk-primitive]')).toHaveCount(0);
+         |                                                    ^
+      18 |   failed=false;await region.getByRole('button',{name:'Retry',exact:true}).click();await expect(region).toHaveAttribute('data-sk-phase','settled');await expect(region.getByRole('alert')).toHaveCount(0);expect(requests).toBe(2);
+      19 | });
+      20 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\subject-edit-modal-loading.spec.ts:17:52
+
+    Error Context: test-results\subject-edit-modal-loading-2c5cb--settles-errors-and-retries\error-context.md
+
+
+
+(node:14004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[3/4] tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 1280 light settles errors and retries
+
+[WebServer] 7:18:32 PM [vite] (client) [console.error] Failed to load active grade template: Error: Template unavailable
+[WebServer]     at getActiveGradeTemplate (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subjectGradeTemplate.service.ts:25:9)
+[WebServer] 7:18:32 PM [vite] (client) [console.error] Failed to load active grade template: Error: Template unavailable
+[WebServer]     at getActiveGradeTemplate (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subjectGradeTemplate.service.ts:25:9)
+
+  3) tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 1280 light settles errors and retries 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('[data-sk-region="edit-subject-template"]').getByRole('alert')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-sk-region="edit-subject-template"]').getByRole('alert') with timeout 5000ms
+      - waiting for locator('[data-sk-region="edit-subject-template"]').getByRole('alert')
+
+
+      15 |   await page.goto('/admin/subjects');await page.getByRole('button',{name:'Edit',exact:true}).first().click();
+      16 |   const region=page.locator('[data-sk-region="edit-subject-template"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+    > 17 |   finish();await expect(region.getByRole('alert')).toBeVisible();await expect(region.locator('[data-sk-primitive]')).toHaveCount(0);
+         |                                                    ^
+      18 |   failed=false;await region.getByRole('button',{name:'Retry',exact:true}).click();await expect(region).toHaveAttribute('data-sk-phase','settled');await expect(region.getByRole('alert')).toHaveCount(0);expect(requests).toBe(2);
+      19 | });
+      20 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\subject-edit-modal-loading.spec.ts:17:52
+
+    Error Context: test-results\subject-edit-modal-loading-510ca--settles-errors-and-retries\error-context.md
+
+
+
+(node:39124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[4/4] tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 1280 dark settles errors and retries
+
+[WebServer] 7:18:40 PM [vite] (client) [console.error] Failed to load active grade template: Error: Template unavailable
+[WebServer]     at getActiveGradeTemplate (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subjectGradeTemplate.service.ts:25:9)
+[WebServer] 7:18:40 PM [vite] (client) [console.error] Failed to load active grade template: Error: Template unavailable
+[WebServer]     at getActiveGradeTemplate (http://127.0.0.1:5187/src/features/profiles/admin/pages/subjects/services/subjectGradeTemplate.service.ts:25:9)
+
+  4) tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 1280 dark settles errors and retries 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('[data-sk-region="edit-subject-template"]').getByRole('alert')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-sk-region="edit-subject-template"]').getByRole('alert') with timeout 5000ms
+      - waiting for locator('[data-sk-region="edit-subject-template"]').getByRole('alert')
+
+
+      15 |   await page.goto('/admin/subjects');await page.getByRole('button',{name:'Edit',exact:true}).first().click();
+      16 |   const region=page.locator('[data-sk-region="edit-subject-template"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+    > 17 |   finish();await expect(region.getByRole('alert')).toBeVisible();await expect(region.locator('[data-sk-primitive]')).toHaveCount(0);
+         |                                                    ^
+      18 |   failed=false;await region.getByRole('button',{name:'Retry',exact:true}).click();await expect(region).toHaveAttribute('data-sk-phase','settled');await expect(region.getByRole('alert')).toHaveCount(0);expect(requests).toBe(2);
+      19 | });
+      20 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\subject-edit-modal-loading.spec.ts:17:52
+
+    Error Context: test-results\subject-edit-modal-loading-78dba--settles-errors-and-retries\error-context.md
+
+
+  4 failed
+    tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 375 light settles errors and retries 
+    tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 375 dark settles errors and retries 
+    tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 1280 light settles errors and retries 
+    tests\subject-edit-modal-loading.spec.ts:5:62 › edit subject template 1280 dark settles errors and retries 

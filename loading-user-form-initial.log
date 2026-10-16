@@ -1,0 +1,130 @@
+[WebServer] (node:12932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11368) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:32176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\user-form-loading.spec.ts:10:62 › edit user 375 light keeps real form labels and controls (3.8s)
+(node:21592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 tests\user-form-loading.spec.ts:10:62 › edit user 375 dark keeps real form labels and controls (802ms)
+(node:15048) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 tests\user-form-loading.spec.ts:10:62 › edit user 1280 light keeps real form labels and controls (853ms)
+(node:33656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 tests\user-form-loading.spec.ts:10:62 › edit user 1280 dark keeps real form labels and controls (794ms)
+
+
+  1) tests\user-form-loading.spec.ts:10:62 › edit user 375 light keeps real form labels and controls 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Role', { exact: true })
+    Expected: visible
+    Error: strict mode violation: getByText('Role', { exact: true }) resolved to 2 elements:
+        1) <label class="block text-xs font-bold uppercase tracking-wide mb-1.5 text-[#6B7280]">Role</label> aka getByRole('region', { name: 'User account form' }).getByText('Role')
+        2) <p class="text-xs font-semibold uppercase tracking-wider text-[#6B7280] leading-none shrink-0">Role</p> aka getByRole('dialog').getByText('Role')
+
+    Call log:
+      - Expect "toBeVisible" getByText('Role', { exact: true }) with timeout 5000ms
+      - waiting for getByText('Role', { exact: true })
+
+
+      11 |  await page.setViewportSize({width,height:1000});const release=await accounts(page,dark);await page.goto('/admin/users/parent/1/edit');
+      12 |  await expect(page.getByRole('heading',{name:'Edit User Record',exact:true})).toBeVisible();
+    > 13 |  for(const label of ['Last Name','First Name','M.I.','Role','Gender','Email Address','Contact Number','Status'])await expect(page.getByText(label,{exact:true})).toBeVisible();
+         |                                                                                                                                                                  ^
+      14 |  await expect(page.getByRole('button',{name:'Save Changes',exact:true})).toBeVisible();await expect(page.getByText(/No user found/)).toHaveCount(0);
+      15 |  await expect(page.locator('.sk-region[aria-busy="true"]').first()).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+      16 |  fs.mkdirSync('loading-screenshots',{recursive:true});const prefix=`loading-screenshots/admin-user-edit-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\user-form-loading.spec.ts:13:162
+
+    Error Context: test-results\user-form-loading-edit-use-821dc-al-form-labels-and-controls\error-context.md
+
+  2) tests\user-form-loading.spec.ts:10:62 › edit user 375 dark keeps real form labels and controls 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Role', { exact: true })
+    Expected: visible
+    Error: strict mode violation: getByText('Role', { exact: true }) resolved to 2 elements:
+        1) <label class="block text-xs font-bold uppercase tracking-wide mb-1.5 text-[#9CA3AF]">Role</label> aka getByRole('region', { name: 'User account form' }).getByText('Role')
+        2) <p class="text-xs font-semibold uppercase tracking-wider text-[#9CA3AF] leading-none shrink-0">Role</p> aka getByRole('dialog').getByText('Role')
+
+    Call log:
+      - Expect "toBeVisible" getByText('Role', { exact: true }) with timeout 5000ms
+      - waiting for getByText('Role', { exact: true })
+
+
+      11 |  await page.setViewportSize({width,height:1000});const release=await accounts(page,dark);await page.goto('/admin/users/parent/1/edit');
+      12 |  await expect(page.getByRole('heading',{name:'Edit User Record',exact:true})).toBeVisible();
+    > 13 |  for(const label of ['Last Name','First Name','M.I.','Role','Gender','Email Address','Contact Number','Status'])await expect(page.getByText(label,{exact:true})).toBeVisible();
+         |                                                                                                                                                                  ^
+      14 |  await expect(page.getByRole('button',{name:'Save Changes',exact:true})).toBeVisible();await expect(page.getByText(/No user found/)).toHaveCount(0);
+      15 |  await expect(page.locator('.sk-region[aria-busy="true"]').first()).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+      16 |  fs.mkdirSync('loading-screenshots',{recursive:true});const prefix=`loading-screenshots/admin-user-edit-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\user-form-loading.spec.ts:13:162
+
+    Error Context: test-results\user-form-loading-edit-use-ffd87-al-form-labels-and-controls\error-context.md
+
+  3) tests\user-form-loading.spec.ts:10:62 › edit user 1280 light keeps real form labels and controls 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Role', { exact: true })
+    Expected: visible
+    Error: strict mode violation: getByText('Role', { exact: true }) resolved to 2 elements:
+        1) <label class="block text-xs font-bold uppercase tracking-wide mb-1.5 text-[#6B7280]">Role</label> aka getByRole('region', { name: 'User account form' }).getByText('Role')
+        2) <p class="text-xs font-semibold uppercase tracking-wider text-[#6B7280] leading-none shrink-0">Role</p> aka getByRole('dialog').getByText('Role')
+
+    Call log:
+      - Expect "toBeVisible" getByText('Role', { exact: true }) with timeout 5000ms
+      - waiting for getByText('Role', { exact: true })
+
+
+      11 |  await page.setViewportSize({width,height:1000});const release=await accounts(page,dark);await page.goto('/admin/users/parent/1/edit');
+      12 |  await expect(page.getByRole('heading',{name:'Edit User Record',exact:true})).toBeVisible();
+    > 13 |  for(const label of ['Last Name','First Name','M.I.','Role','Gender','Email Address','Contact Number','Status'])await expect(page.getByText(label,{exact:true})).toBeVisible();
+         |                                                                                                                                                                  ^
+      14 |  await expect(page.getByRole('button',{name:'Save Changes',exact:true})).toBeVisible();await expect(page.getByText(/No user found/)).toHaveCount(0);
+      15 |  await expect(page.locator('.sk-region[aria-busy="true"]').first()).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+      16 |  fs.mkdirSync('loading-screenshots',{recursive:true});const prefix=`loading-screenshots/admin-user-edit-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\user-form-loading.spec.ts:13:162
+
+    Error Context: test-results\user-form-loading-edit-use-bad0f-al-form-labels-and-controls\error-context.md
+
+  4) tests\user-form-loading.spec.ts:10:62 › edit user 1280 dark keeps real form labels and controls 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Role', { exact: true })
+    Expected: visible
+    Error: strict mode violation: getByText('Role', { exact: true }) resolved to 2 elements:
+        1) <label class="block text-xs font-bold uppercase tracking-wide mb-1.5 text-[#9CA3AF]">Role</label> aka getByRole('region', { name: 'User account form' }).getByText('Role')
+        2) <p class="text-xs font-semibold uppercase tracking-wider text-[#9CA3AF] leading-none shrink-0">Role</p> aka getByRole('dialog').getByText('Role')
+
+    Call log:
+      - Expect "toBeVisible" getByText('Role', { exact: true }) with timeout 5000ms
+      - waiting for getByText('Role', { exact: true })
+
+
+      11 |  await page.setViewportSize({width,height:1000});const release=await accounts(page,dark);await page.goto('/admin/users/parent/1/edit');
+      12 |  await expect(page.getByRole('heading',{name:'Edit User Record',exact:true})).toBeVisible();
+    > 13 |  for(const label of ['Last Name','First Name','M.I.','Role','Gender','Email Address','Contact Number','Status'])await expect(page.getByText(label,{exact:true})).toBeVisible();
+         |                                                                                                                                                                  ^
+      14 |  await expect(page.getByRole('button',{name:'Save Changes',exact:true})).toBeVisible();await expect(page.getByText(/No user found/)).toHaveCount(0);
+      15 |  await expect(page.locator('.sk-region[aria-busy="true"]').first()).toHaveAttribute('data-sk-phase','revealed');await assertNoDataSpinner(page);
+      16 |  fs.mkdirSync('loading-screenshots',{recursive:true});const prefix=`loading-screenshots/admin-user-edit-${width}-${dark?'dark':'light'}`;await page.screenshot({path:prefix+'-skeleton.png',fullPage:true});
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\user-form-loading.spec.ts:13:162
+
+    Error Context: test-results\user-form-loading-edit-use-7960e-al-form-labels-and-controls\error-context.md
+
+  4 failed
+    tests\user-form-loading.spec.ts:10:62 › edit user 375 light keeps real form labels and controls 
+    tests\user-form-loading.spec.ts:10:62 › edit user 375 dark keeps real form labels and controls ─
+    tests\user-form-loading.spec.ts:10:62 › edit user 1280 light keeps real form labels and controls 
+    tests\user-form-loading.spec.ts:10:62 › edit user 1280 dark keeps real form labels and controls 

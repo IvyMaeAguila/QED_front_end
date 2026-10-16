@@ -1,0 +1,24 @@
+{
+  "regions": [
+    {
+      "selector": ":nth-match([data-sk-region=\"holistic-overview-avatar\"], 1)",
+      "box": {
+        "x": 33,
+        "y": 549.5,
+        "width": 28,
+        "height": 28
+      }
+    }
+  ],
+  "loadedBoxes": [
+    {
+      "x": 33,
+      "y": 543.5,
+      "width": 28,
+      "height": 28
+    }
+  ],
+  "shapePixels": 638,
+  "outsidePixels": 0,
+  "outsideRatio": 0
+}

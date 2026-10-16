@@ -1,0 +1,54 @@
+{
+  "regions": [
+    {
+      "selector": "[data-sk-region=\"class-form-gradeLevelId\"]",
+      "box": {
+        "x": 33,
+        "y": 276,
+        "width": 309,
+        "height": 40
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"class-form-section\"]",
+      "box": {
+        "x": 33,
+        "y": 354,
+        "width": 309,
+        "height": 40
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"class-form-room\"]",
+      "box": {
+        "x": 33,
+        "y": 514,
+        "width": 309,
+        "height": 40
+      }
+    }
+  ],
+  "loadedBoxes": [
+    {
+      "x": 33,
+      "y": 234,
+      "width": 309,
+      "height": 40
+    },
+    {
+      "x": 33,
+      "y": 312,
+      "width": 309,
+      "height": 40
+    },
+    {
+      "x": 33,
+      "y": 472,
+      "width": 309,
+      "height": 40
+    }
+  ],
+  "shapePixels": 2302,
+  "outsidePixels": 0,
+  "outsideRatio": 0
+}

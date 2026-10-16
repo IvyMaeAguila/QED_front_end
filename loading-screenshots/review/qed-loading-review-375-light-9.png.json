@@ -1,0 +1,9 @@
+{
+  "leftToRight": [
+    "teacher-subject-records",
+    "teacher-subjects",
+    "topic-support"
+  ],
+  "top": "skeleton",
+  "bottom": "loaded"
+}

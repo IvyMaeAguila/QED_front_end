@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
-import { useEffect, useId, useRef } from "react";
+import { useId, useRef } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { createPortal } from "react-dom";
 
 export type ModalSize = "sm" | "narrow" | "compact" | "md" | "lg" | "wide" | "xl" | "full";
@@ -236,7 +237,7 @@ export function ModalHeader({
   return (
     <header className={`qed-modal-header ${closeDarkMode ? "qed-modal-header--dark" : ""} flex shrink-0 items-center justify-between gap-4 ${className}`}>
       <div className="flex min-w-0 items-start gap-3">
-        {leading && <span className="qed-modal-leading" style={{ color: closeDarkMode ? "#ffffff" : "#800000" }}>{leading}</span>}
+        {leading && <span className="qed-modal-leading" style={{ color: closeDarkMode ? "#ffffff" : "var(--color-maroon)" }}>{leading}</span>}
         <div className="min-w-0">
           <h2 id={titleId} style={{ color: closeDarkMode ? "#ffffff" : "#111827" }} className={`qed-type-modal-title ${titleClassName}`}>{title}</h2>
           {subtitle && <p id={subtitleId} style={{ color: closeDarkMode ? "#9CA3AF" : "#6B7280" }} className={`qed-type-modal-subtitle ${subtitleClassName}`}>{subtitle}</p>}

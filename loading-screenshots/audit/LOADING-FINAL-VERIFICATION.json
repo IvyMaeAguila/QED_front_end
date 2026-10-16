@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-10",
+  "branch": "codex/finish-loading-verification",
+  "build": "passed (26.48s)",
+  "buildLog": "loading-decision-build.log",
+  "suiteCommand": "npx playwright test --reporter=line --workers=1",
+  "summary": "594 passed (20.5m)",
+  "specFiles": 42,
+  "retries": 0,
+  "skipped": 0,
+  "finalLog": "loading-decision-final-suite.log",
+  "logSha256": "EFF4D1F0ACA2656FE50EE387A388E292B990BD56E1752766F17C9989B9CA43F9",
+  "frozenInputFiles": 566,
+  "changedInputs": [],
+  "mutationFamilies": 28,
+  "allMutationsRejectedAndRestored": true,
+  "screenshots": {
+    "groups": 67,
+    "mainFiles": 536,
+    "missing": 0,
+    "wrongDimensions": 0,
+    "reviewedPriorityPages": 8,
+    "contactSheets": 4
+  },
+  "pushed": false,
+  "deployed": false
+}

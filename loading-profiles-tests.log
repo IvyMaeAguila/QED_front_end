@@ -1,0 +1,24 @@
+[WebServer] (node:18496) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:34412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 13 tests using 1 worker
+
+(node:40860) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\directory-loading.spec.ts:31:70 › /principal/teachers 375px light: real controls and screenshots (8.7s)
+  ok  2 tests\directory-loading.spec.ts:31:70 › /principal/teachers 375px dark: real controls and screenshots (2.7s)
+  ok  3 tests\directory-loading.spec.ts:31:70 › /principal/teachers 1280px light: real controls and screenshots (2.9s)
+  ok  4 tests\directory-loading.spec.ts:31:70 › /principal/teachers 1280px dark: real controls and screenshots (2.7s)
+  ok  5 tests\directory-loading.spec.ts:31:70 › /principal/teachers/1 375px light: real controls and screenshots (3.0s)
+  ok  6 tests\directory-loading.spec.ts:31:70 › /principal/teachers/1 375px dark: real controls and screenshots (2.6s)
+  ok  7 tests\directory-loading.spec.ts:31:70 › /principal/teachers/1 1280px light: real controls and screenshots (2.7s)
+  ok  8 tests\directory-loading.spec.ts:31:70 › /principal/teachers/1 1280px dark: real controls and screenshots (2.7s)
+  ok  9 tests\directory-loading.spec.ts:31:70 › /parent/enrolled-children 375px light: real controls and screenshots (2.6s)
+  ok 10 tests\directory-loading.spec.ts:31:70 › /parent/enrolled-children 375px dark: real controls and screenshots (2.6s)
+  ok 11 tests\directory-loading.spec.ts:31:70 › /parent/enrolled-children 1280px light: real controls and screenshots (2.7s)
+  ok 12 tests\directory-loading.spec.ts:31:70 › /parent/enrolled-children 1280px dark: real controls and screenshots (2.7s)
+  ok 13 tests\directory-loading.spec.ts:50:1 › principal directory auto-column classification requires observed variation (1.5s)
+
+  13 passed (47.3s)

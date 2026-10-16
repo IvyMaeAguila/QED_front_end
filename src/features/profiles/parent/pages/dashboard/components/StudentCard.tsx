@@ -1,3 +1,4 @@
+import { Skeleton, SkeletonAvatar, SkeletonText } from "@shared/components/SkeletonLoading";
 import { memo, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
@@ -6,6 +7,7 @@ import type { CardViewMode, PerformanceStatus, Student } from "../types/student"
 
 interface StudentCardProps {
   student: Student;
+  loading?: boolean;
   view: CardViewMode;
   onView?: (student: Student) => void;
   darkMode?: boolean;
@@ -91,9 +93,11 @@ function getScore(student: Student): number | null {
 
 const StatusBadge = memo(function StatusBadge({
   status,
+  loading = false,
   darkMode = false,
 }: {
   status: PerformanceStatus;
+  loading?: boolean;
   darkMode?: boolean;
 }) {
   const style = STATUS_STYLES[resolveStatus(status)];
@@ -101,25 +105,27 @@ const StatusBadge = memo(function StatusBadge({
 
   return (
     <span
-      className={`inline-flex w-fit shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-bold ${theme.bg} ${theme.text}`}
+      className={`inline-flex w-fit shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-bold ${theme.bg} ${theme.text}`} data-sk-region="studentcard-span-field-1"
     >
-      <span
+      {loading ? <SkeletonAvatar className="h-1.5 w-1.5" /> : <span
         aria-hidden="true"
         className="h-1.5 w-1.5 rounded-full"
         style={{ backgroundColor: style.accent }}
-      />
-      {style.label}
+      />}
+      {loading ? <SkeletonText width="10ch" /> : style.label}
     </span>
   );
 });
 
 function ScoreBar({
   score,
+  loading = false,
   accent,
   trackClass,
   className = "",
 }: {
   score: number | null;
+  loading?: boolean;
   accent: string;
   trackClass: string;
   className?: string;
@@ -130,23 +136,25 @@ function ScoreBar({
       aria-label={
         score === null ? "No score yet" : `Overall score ${score} percent`
       }
-      className={`h-1.5 w-full overflow-hidden rounded-full ${trackClass} ${className}`}
+      className={`h-1.5 w-full overflow-hidden rounded-full ${trackClass} ${className}`} data-sk-region="studentcard-div-field-2"
     >
-      <div
-        className="h-full rounded-full transition-[width] duration-500 motion-reduce:transition-none"
+      {loading ? <Skeleton className="h-full w-full rounded-full" /> : <div
+        className="h-full rounded-full"
         style={{ width: `${score ?? 0}%`, backgroundColor: accent }}
-      />
+      />}
     </div>
   );
 }
 
 function Stat({
   value,
+  loading = false,
   label,
   textPrimary,
   textMuted,
 }: {
   value: string;
+  loading?: boolean;
   label: string;
   textPrimary: string;
   textMuted: string;
@@ -155,9 +163,9 @@ function Stat({
     <div className="flex min-w-0 flex-col items-center text-center">
       <span
         className={`wrap-break-word text-sm font-black leading-tight tabular-nums ${textPrimary}`}
-        title={value}
+        title={value} data-sk-region="studentcard-span-field-3"
       >
-        {value}
+        {loading ? <SkeletonText width="5ch" /> : value}
       </span>
       <p
         className={`mt-1 text-xs font-bold uppercase tracking-widest ${textMuted}`}
@@ -174,6 +182,7 @@ function Stat({
 
 function StudentCard({
   student,
+  loading = false,
   view,
   onView,
   darkMode = false,
@@ -210,54 +219,55 @@ function StudentCard({
   if (view === "list") {
     return (
       <article
-        className={`flex items-center gap-3 rounded-xl2 border p-4 shadow-card transition-shadow hover:shadow-panel sm:gap-4 ${t.panelBg} ${t.panelBorder}`}
+        className={`flex items-center gap-3 rounded-xl2 border p-4 shadow-card transition-shadow hover:shadow-panel sm:gap-4 ${t.panelBg} ${t.panelBorder}`} data-sk-region="studentcard-article-field-4"
       >
-        <StudentAvatar gender={student.gender} name={student.fullName ?? ""} />
+        {loading ? <SkeletonAvatar className="h-7 w-7" /> : <StudentAvatar gender={student.gender} name={student.fullName ?? ""} />}
 
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1" data-sk-region="studentcard-div-field-5">
           <p
             className={`truncate text-sm font-bold ${t.textPrimary}`}
-            title={student.fullName}
+            title={student.fullName} data-sk-region="studentcard-p-field-6"
           >
-            {student.fullName}
+            {loading ? <SkeletonText width="16ch" /> : student.fullName}
           </p>
-          <p className={`mt-0.5 truncate text-xs ${t.textMuted}`}>
-            {gradeSection}
+          <p className={`mt-0.5 truncate text-xs ${t.textMuted}`} data-sk-region="studentcard-p-field-7">
+            {loading ? <SkeletonText width="12ch" /> : gradeSection}
           </p>
           {student.adviser && (
-            <p className={`truncate text-xs ${t.textMuted}`}>
-              {student.adviser}
+            <p className={`truncate text-xs ${t.textMuted}`} data-sk-region="studentcard-p-field-8">
+              {loading ? <SkeletonText width="10ch" /> : student.adviser}
             </p>
           )}
           {/* Small screens: badge + score under the details */}
           <div className="mt-1.5 flex items-center gap-2 sm:hidden">
-            <StatusBadge status={status} darkMode={darkMode} />
+            <StatusBadge loading={loading} status={status} darkMode={darkMode} />
             <span
-              className={`text-xs font-black tabular-nums ${t.textPrimary}`}
+              className={`text-xs font-black tabular-nums ${t.textPrimary}`} data-sk-region="studentcard-span-field-9"
             >
-              {scoreText}
+              {loading ? <SkeletonText width="4ch" /> : scoreText}
             </span>
           </div>
         </div>
 
         <div className="hidden sm:block">
-          <StatusBadge status={status} darkMode={darkMode} />
+          <StatusBadge loading={loading} status={status} darkMode={darkMode} />
         </div>
 
         <div className="hidden w-28 shrink-0 flex-col gap-1.5 sm:flex">
           <div className="flex items-baseline justify-between">
             <span
-              className={`text-xs font-bold uppercase tracking-widest ${t.textMuted}`}
+              className={`text-xs font-bold uppercase tracking-widest ${t.textMuted}`} data-sk-region="studentcard-score" data-sk-static=""
             >
               Score
             </span>
             <span
-              className={`text-sm font-black tabular-nums ${t.textPrimary}`}
+              className={`text-sm font-black tabular-nums ${t.textPrimary}`} data-sk-region="studentcard-span-field-10"
             >
-              {scoreText}
+              {loading ? <SkeletonText width="4ch" /> : scoreText}
             </span>
           </div>
           <ScoreBar
+            loading={loading}
             score={score}
             accent={statusStyle.accent}
             trackClass={t.barTrack}
@@ -266,9 +276,10 @@ function StudentCard({
 
         <button
           type="button"
+          disabled={loading}
           onClick={handleView}
           aria-label={viewLabel}
-          className={`shrink-0 rounded-lg bg-maroon-dark px-5 py-2 text-xs font-bold text-white transition-colors hover:bg-maroon ${focusClasses}`}
+          className={`shrink-0 rounded-lg bg-maroon-dark px-5 py-2 text-xs font-bold text-white transition-colors hover:bg-maroon ${focusClasses}`} data-sk-region="studentcard-view" data-sk-static=""
         >
           View
         </button>
@@ -281,45 +292,37 @@ function StudentCard({
     <article
       className={`flex flex-col rounded-xl2 border p-3 shadow-card transition-shadow hover:shadow-panel ${t.panelBg} ${t.panelBorder}`}
     >
-      {/* Banner: the system's maroon gradient with a soft highlight */}
+      {/* Banner: the system's solid maroon */}
       <div
         aria-hidden="true"
-        className="relative h-24 overflow-hidden rounded-xl2 bg-maroon-gradient"
-      >
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage:
-              "radial-gradient(at 85% 8%, rgba(255,255,255,.22) 0, transparent 55%), radial-gradient(at 8% 100%, rgba(0,0,0,.28) 0, transparent 60%)",
-          }}
-        />
-      </div>
+        className="relative h-24 overflow-hidden rounded-xl2 bg-maroon"
+      />
 
       <div className="px-2">
         <div
-          className={`relative z-10 -mt-8 h-16 w-16 overflow-hidden rounded-full ring-4 ${t.avatarRing} *:h-full *:w-full`}
+          className={`relative z-10 -mt-8 h-16 w-16 overflow-hidden rounded-full ring-4 ${t.avatarRing} *:h-full *:w-full`} data-sk-region="studentcard-div-field-11"
         >
-          <StudentAvatar gender={student.gender} name={student.fullName ?? ""} />
+          {loading ? <SkeletonAvatar className="h-full w-full" /> : <StudentAvatar gender={student.gender} name={student.fullName ?? ""} />}
         </div>
 
         <div className="mt-2 flex items-start justify-between gap-3">
-          <div className="min-w-0">
+          <div className="min-w-0" data-sk-region="studentcard-div-field-12">
             <p
               className={`truncate text-base font-bold ${t.textPrimary}`}
-              title={student.fullName}
+              title={student.fullName} data-sk-region="studentcard-p-field-13"
             >
-              {student.fullName}
+              {loading ? <SkeletonText width="16ch" /> : student.fullName}
             </p>
             {student.adviser && (
               <p
                 className={`truncate text-xs ${t.textMuted}`}
-                title={student.adviser}
+                title={student.adviser} data-sk-region="studentcard-p-field-14"
               >
-                {student.adviser}
+                {loading ? <SkeletonText width="10ch" /> : student.adviser}
               </p>
             )}
           </div>
-          <StatusBadge status={status} darkMode={darkMode} />
+          <StatusBadge loading={loading} status={status} darkMode={darkMode} />
         </div>
 
         {/* Key facts */}
@@ -327,12 +330,14 @@ function StudentCard({
           className={`mt-3 grid grid-cols-3 gap-2 border-t pt-3 ${t.panelBorder}`}
         >
           <Stat
+            loading={loading}
             value={scoreText}
             label="Score"
             textPrimary={t.textPrimary}
             textMuted={t.textMuted}
           />
           <Stat
+            loading={loading}
             value={
               student.gradeLevel
                 ? String(student.gradeLevel).replace(/^grade\s*/i, "") || "–"
@@ -343,6 +348,7 @@ function StudentCard({
             textMuted={t.textMuted}
           />
           <Stat
+            loading={loading}
             value={student.section ? String(student.section) : "–"}
             label="Section"
             textPrimary={t.textPrimary}
@@ -351,6 +357,7 @@ function StudentCard({
         </div>
 
         <ScoreBar
+            loading={loading}
           score={score}
           accent={statusStyle.accent}
           trackClass={t.barTrack}
@@ -361,9 +368,10 @@ function StudentCard({
       {/* Primary action */}
       <button
         type="button"
-        onClick={handleView}
+        disabled={loading}
+          onClick={handleView}
         aria-label={viewLabel}
-        className={`group mt-4 flex w-full items-center gap-3 rounded-lg bg-maroon-gradient p-1.5 text-white shadow-primary transition hover:brightness-110 ${focusClasses}`}
+        className={`group mt-4 flex w-full items-center gap-3 rounded-lg bg-maroon p-1.5 text-white shadow-primary transition hover:brightness-110 ${focusClasses}`}
       >
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-maroon-dark">
           <ArrowRight
@@ -372,7 +380,7 @@ function StudentCard({
             className="transition-transform group-hover:translate-x-0.5 motion-reduce:transform-none"
           />
         </span>
-        <span className="flex-1 pr-9 text-center text-xs font-bold uppercase tracking-wide">
+        <span className="flex-1 pr-9 text-center text-xs font-bold uppercase tracking-wide" data-sk-region="studentcard-view-profile" data-sk-static="">
           View profile
         </span>
       </button>
@@ -381,3 +389,5 @@ function StudentCard({
 }
 
 export default memo(StudentCard);
+
+

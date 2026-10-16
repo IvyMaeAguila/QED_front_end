@@ -1,3 +1,5 @@
+import { Skeleton, SkeletonText } from "@shared/components/SkeletonLoading";
+import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 import { ClipboardList } from "lucide-react";
 import type { AdminThemeContext } from "../../../../../admin/pages/AdminLayout";
 import { TERMS, type TermFilter, type TermAverageEntry } from "../types/types";
@@ -6,6 +8,7 @@ import type { DetailStudent } from "../../GlobalTypes/types";
 
 interface TermAverageCardProps {
   entries: TermAverageEntry[];
+  loading?: boolean;
   selectedTerm: TermFilter;
   theme: AdminThemeContext;
   student: DetailStudent;
@@ -24,7 +27,7 @@ function computeGwa(entries: TermAverageEntry[]): number | null {
   return Math.round((nums.reduce((a, b) => a + b, 0) / nums.length) * 100) / 100;
 }
 
-export function TermAverageCard({ entries, selectedTerm, theme, student }: TermAverageCardProps) {
+export function TermAverageCard({ entries, selectedTerm, theme, student, loading = false }: TermAverageCardProps) {
   const { darkMode, panelBg, panelBorder, textMuted } = theme;
 
   const isOverall = selectedTerm === "OVERALL";
@@ -64,8 +67,8 @@ export function TermAverageCard({ entries, selectedTerm, theme, student }: TermA
       />
 
       <div className="flex flex-col items-center justify-center flex-1">
-        <svg width="140" height="140" viewBox="0 0 140 140">
-          <circle cx="70" cy="70" r={radius} fill="none" stroke={darkMode ? "#1F2937" : "#F1F2F4"} strokeWidth="10" />
+        <div className="relative" data-sk-region="parent-report-average-ring">{loading ? <div className="relative h-[140px] w-[140px]"><Skeleton className="absolute inset-0 h-full w-full" style={{ maskImage: "radial-gradient(closest-side, var(--sk-transparent) 70%, var(--sk-mask) 70% 84.285714%, var(--sk-transparent) 84.285714%)" }} /><span className="absolute inset-0 flex items-center justify-center text-2xl font-bold"><SkeletonText width="4ch" /></span></div> : <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle cx="70" cy="70" r={radius} fill="none" stroke={darkMode ? "#1F2937" : "var(--brand-light)"} strokeWidth="10" />
           {displayAverage !== null && (
             <circle
               cx="70"
@@ -90,8 +93,8 @@ export function TermAverageCard({ entries, selectedTerm, theme, student }: TermA
           >
             {displayAverage !== null ? `${displayAverage}%` : "—"}
           </text>
-        </svg>
-        <p className={`mt-1 text-sm font-semibold ${textMuted}`}>{label}</p>
+        </svg>}</div>
+        <p className={`mt-1 text-sm font-semibold ${textMuted}`}>{loading ? <SkeletonParagraph field="parent-average-label" typical={2} width="18ch" /> : <span data-sk-field="parent-average-label">{label}</span>}</p>
       </div>
     </div>
   );

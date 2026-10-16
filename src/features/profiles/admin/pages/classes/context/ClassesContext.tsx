@@ -1,15 +1,21 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback,useContext, useMemo, useRef,useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import type { ReactNode } from "react";
 import type { SchoolClass } from "../types/Class";
-import { fetchClasses, deleteClassApi, type ClassRecord } from "../services/classes.service";
+import { fetchClasses,createClass,updateClassApi, deleteClassApi, type ClassRecord } from "../services/classes.service";
 
-interface ClassesContextValue {
+export interface ClassesContextValue {
   classes: SchoolClass[];
   loading: boolean;
   error: string | null;
   getClass: (id: string) => SchoolClass | undefined;
   deleteClass: (id: string) => Promise<void>;
   refreshClasses: () => void;
+  createClass:typeof createClass;
+  updateClass:typeof updateClassApi;
+  activateQueries:()=>void;
+  serverRows:ClassRecord[];
+  serverUpdatedAt:number;
 }
 
 const ClassesContext = createContext<ClassesContextValue | undefined>(undefined);
@@ -48,21 +54,34 @@ function mapRecordToSchoolClass(c: ClassRecord): SchoolClass & { studentCount: n
   };
 }
 
-export function ClassesProvider({ children }: { children: ReactNode }) {
-  const [classes, setClasses] = useState<SchoolClass[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export interface ClassesReader {data:ClassRecord[];loading:boolean;error:string|null;retry:()=>void;}
+const noop=()=>{};
+const allowBootstrap=()=>true;
+export function ClassesProvider({ children,reader,operations,activateQueries=noop,bootstrapEnabled=true,isBootstrapCurrent=allowBootstrap }: { children: ReactNode;reader?:ClassesReader;operations?:Pick<ClassesContextValue,'deleteClass'|'createClass'|'updateClass'>;activateQueries?:()=>void;bootstrapEnabled?:boolean;isBootstrapCurrent?:()=>boolean }) {
+  const [localClasses, setClasses] = useState<ClassRecord[]>([]);
+  const [localLoading, setLoading] = useState(true);
+  const [localError, setError] = useState<string | null>(null);
   const [reloadFlag, setReloadFlag] = useState(0);
+  const [serverUpdatedAt,setServerUpdatedAt]=useState(0),activated=useRef(false);
+  const activate=useCallback(()=>{activated.current=true;activateQueries();},[activateQueries]);
 
+  const external=!!reader;
+  const classes=useMemo(()=>(reader?.data??localClasses).map(mapRecordToSchoolClass),[reader?.data,localClasses]);
+  const loading=reader?.loading??localLoading;
+  const error=reader?reader.error:localError;
   useEffect(() => {
+    if(external){setClasses(previous=>previous.length?[]:previous);return;}
+    if(!bootstrapEnabled||activated.current||!isBootstrapCurrent())return;
+    const controller=new AbortController();
     let active = true;
     setLoading(true);
-    fetchClasses()
+    setError(null);
+    fetchClasses({signal:controller.signal})
       .then((data) => {
-        if (active) setClasses(data.map(mapRecordToSchoolClass));
+        if (active) {setClasses(data);setServerUpdatedAt(Date.now());}
       })
       .catch((err) => {
-        console.error(err);
+        if(!controller.signal.aborted)console.error(err);
         if (active) setError("Failed to load classes.");
       })
       .finally(() => {
@@ -70,22 +89,26 @@ export function ClassesProvider({ children }: { children: ReactNode }) {
       });
     return () => {
       active = false;
+      controller.abort();
     };
-  }, [reloadFlag]);
+  }, [reloadFlag,external,bootstrapEnabled,isBootstrapCurrent]);
 
   const value = useMemo<ClassesContextValue>(
     () => ({
       classes,
       loading,
       error,
+      createClass,updateClass:updateClassApi,activateQueries:activate,serverRows:reader?.data??localClasses,serverUpdatedAt,
       getClass: (id) => classes.find((c) => c.id === id),
       deleteClass: async (id) => {
+        if(external)throw new Error("Teacher class context is read-only.");
         await deleteClassApi(id);
-        setClasses((prev) => prev.filter((c) => c.id !== id));
+        setClasses((prev) => prev.filter((c) => String(c.id) !== id));
       },
-      refreshClasses: () => setReloadFlag((f) => f + 1),
+      refreshClasses: () => {if(reader)reader.retry();else setReloadFlag((f) => f + 1);},
+      ...operations,
     }),
-    [classes, loading, error]
+    [classes, loading, error,external,reader,operations,activate,localClasses,serverUpdatedAt]
   );
 
   return <ClassesContext.Provider value={value}>{children}</ClassesContext.Provider>;

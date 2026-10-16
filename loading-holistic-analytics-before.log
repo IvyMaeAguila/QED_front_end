@@ -1,0 +1,42 @@
+
+[WebServer] (node:4532) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:38468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:39712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 375 light: headers, legend and controls stay real
+  1) tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 375 light: headers, legend and controls stay real 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Development overview', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Development overview', exact: true }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: 'Development overview', exact: true })
+
+
+      23 |   const release = await analyticsFixture(page, dark);
+      24 |   await page.goto("/principal/holistic-performance-analytics");
+    > 25 |   await expect(page.getByRole("heading", { name: "Development overview", exact: true })).toBeVisible();
+         |                                                                                          ^
+      26 |   await expect(page.getByText("Excellent", { exact: true })).toBeVisible();
+      27 |   await expect(page.getByText("Hover over or focus a score to see its meaning.", { exact: true })).toBeVisible();
+      28 |   await expect(page.locator('.sk-region[aria-busy="true"]').first()).toHaveAttribute("data-sk-phase", "revealed");
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\holistic-analytics-loading.spec.ts:25:90
+
+    Error Context: test-results\holistic-analytics-loading-23f2f-gend-and-controls-stay-real\error-context.md
+
+
+  1 failed
+    tests\holistic-analytics-loading.spec.ts:21:68 › holistic analytics 375 light: headers, legend and controls stay real 

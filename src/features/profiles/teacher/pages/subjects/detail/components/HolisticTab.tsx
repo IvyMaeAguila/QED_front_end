@@ -1,4 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { SkeletonText, SkeletonAvatar } from "@shared/components/SkeletonLoading";
+import { skeletonRows, rememberRows, rememberColumns, useColumnReservation } from "@shared/loading/reservations";
+import { useMemo, useRef, useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { ClipboardList, Search, Sparkles } from "lucide-react";
 import { StudentAvatar } from "@shared/components/StudentAvatar";
 import type { RosterStudent } from "../data";
@@ -11,9 +15,10 @@ import {
 
 type GenderedStudent = RosterStudent & { gender?: "M" | "F" };
 
-const ACCENT = "#6B0000";
 
 interface HolisticTabProps {
+  loading?: boolean;
+  view?: string;
   roster: GenderedStudent[];
   ratings: HolisticMap;
   weekStartDate: string;
@@ -45,6 +50,8 @@ function formatWeekRange(weekStartISO: string): string {
 }
 
 export function HolisticTab({
+  loading = false,
+  view = "holistic-working",
   roster,
   ratings,
   weekStartDate,
@@ -77,36 +84,36 @@ export function HolisticTab({
     return g === "F" || g === "FEMALE";
   }
 
-  const grouped = useMemo(() => {
-    const female = filtered.filter((s) => isFemale(s));
-    const male = filtered.filter((s) => !isFemale(s));
-    return { male, female };
-  }, [filtered]);
-
-  const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
+const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
   const groupBand = `px-4 py-1.5 text-xs font-black uppercase tracking-wider ${
-    darkMode ? "bg-white/10" : "bg-[#F1F2F4]"
+    darkMode ? "bg-white/10" : "bg-brand-light"
   } ${textPrimary}`;
-  const columnCount = 1 + HOLISTIC_COLUMNS.length;
 
-  function renderStudentRow(student: GenderedStudent) {
+  const columnCount = 1 + HOLISTIC_COLUMNS.length;
+  const tableRoot = useRef<HTMLDivElement>(null);
+  const rowCount = skeletonRows(view, undefined, 44);
+  const pendingRoster: GenderedStudent[] = Array.from({ length: rowCount }, (_, index) => ({ id: `pending-${index}`, name: "", gender: index < Math.ceil(rowCount / 2) ? "M" : "F" }));
+  const columnLabels = [{ label: "Student", typical: "Student full name" }, ...HOLISTIC_COLUMNS.map(column => ({ label: column.label, typical: column.description }))];
+  const columnWidths = useColumnReservation(view, columnLabels, loading);
+  function renderStudentRow(student: GenderedStudent, pending = false) {
     return (
       <tr
         key={student.id}
+        data-sk-region="holistic-student-row" data-sk-variable=""
         className={`border-t ${darkMode ? "border-white/10" : "border-black/10"}`}
       >
         <td
-          className={`sticky left-0 z-10 px-4 py-2 ${darkMode ? "bg-[#2A1A18]" : "bg-white"}`}
+          className={`sticky left-0 z-10 px-4 py-2 ${darkMode ? "bg-panel-dark" : "bg-white"}`}
         >
           <div className="flex min-w-0 items-center gap-2.5">
-            <StudentAvatar gender={student.gender} name={student.name} />
+            <span data-sk-region="student-avatar" className="inline-flex h-7 w-7 shrink-0">{pending ? <SkeletonAvatar className="h-7 w-7" /> : <StudentAvatar gender={student.gender} name={student.name} />}</span>
             <span className={`truncate text-xs font-bold ${textPrimary}`}>
-              {student.name}
+              {pending ? <SkeletonText className={Number(student.id.split("-").at(-1)) % 2 === 0 ? "w-[14ch]" : "w-[11ch]"} /> : student.name}
             </span>
           </div>
         </td>
         {HOLISTIC_COLUMNS.map((col) => {
-          const current = ratings[student.id]?.[col.key] ?? null;
+          const current = pending ? null : ratings[student.id]?.[col.key] ?? null;
           return (
             <td key={col.key} className="px-3 py-2">
               <div className="flex items-center justify-center gap-1">
@@ -118,8 +125,8 @@ export function HolisticTab({
                       <button
                         key={level.value}
                         type="button"
-                        disabled={locked}
-                        aria-disabled={locked}
+                        disabled={locked || pending}
+                        aria-disabled={locked || pending}
                         aria-pressed={selected}
                         aria-label={`Rate ${student.name} ${level.label} for ${col.label}`}
                         onClick={() => {
@@ -131,7 +138,7 @@ export function HolisticTab({
                             ? "text-white"
                             : darkMode
                               ? "bg-white/10 text-[#9CA3AF] hover:bg-white/15"
-                              : "bg-[#F3F4F6] text-[#9CA3AF] hover:bg-black/10"
+                              : "bg-surface text-[#9CA3AF] hover:bg-black/10"
                         }`}
                         style={
                           selected ? { backgroundColor: level.color } : undefined
@@ -147,6 +154,68 @@ export function HolisticTab({
         })}
       </tr>
     );
+  }
+
+  function renderTable(pending: boolean) {
+    const visibleRoster = pending ? pendingRoster : filtered;
+    const grouped = { male: visibleRoster.filter(student => !isFemale(student)), female: visibleRoster.filter(isFemale) };
+    return (!pending && filtered.length === 0 ? (
+          <p className={`px-4 py-5 text-center text-xs font-medium ${textMuted}`}>
+            No students found matching "{search}".
+          </p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table data-sk-region="holistic-table" className="teacher-user-table w-full min-w-max text-sm">
+              {pending && <colgroup>{columnWidths.map((width, index) => <col key={index} style={{ width }} />)}</colgroup>}
+              <thead>
+                <tr className={darkMode ? "bg-white/5" : "bg-brand-light"}>
+                  <th
+                    className={`sticky left-0 z-10 min-w-56 px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${
+                      darkMode ? "bg-panel-dark" : "bg-brand-light"
+                    } ${textMuted}`}
+                  >
+                    Student
+                  </th>
+                  {HOLISTIC_COLUMNS.map((col) => (
+                    <th key={col.key} className="min-w-32 px-3 py-2 text-center">
+                      <p className={`text-xs font-black ${textPrimary}`}>
+                        {col.label}
+                      </p>
+                      <p
+                        className={`mt-0.5 text-xs font-semibold ${textMuted}`}
+                      >
+                        {col.description}
+                      </p>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {grouped.male.length > 0 && (
+                  <>
+                    <tr>
+                      <td colSpan={columnCount} className={groupBand}>
+                        Male
+                      </td>
+                    </tr>
+                    {grouped.male.map((student) => renderStudentRow(student, pending))}
+                  </>
+                )}
+
+                {grouped.female.length > 0 && (
+                  <>
+                    <tr>
+                      <td colSpan={columnCount} className={groupBand}>
+                        Female
+                      </td>
+                    </tr>
+                    {grouped.female.map((student) => renderStudentRow(student, pending))}
+                  </>
+                )}
+              </tbody>
+            </table>
+          </div>
+        ));
   }
 
   return (
@@ -191,8 +260,8 @@ export function HolisticTab({
           />
 
           <button
-            onClick={onOpenRecords}
-            className={`flex h-8 items-center gap-1.5 rounded-lg border bg-[#800000] px-3 text-xs font-extrabold text-white transition-colors hover:bg-[#650000] ${
+            disabled={loading} onClick={onOpenRecords}
+            className={`flex h-8 items-center gap-1.5 rounded-lg border bg-maroon px-3 text-xs font-extrabold text-white transition-colors hover:bg-maroon-light ${
               darkMode ? "border-white/10" : "border-black/10"
             }`}
           >
@@ -210,12 +279,11 @@ export function HolisticTab({
             <p
               className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textPrimary}`}
             >
-              <Sparkles size={13} style={{ color: ACCENT }} />
+              <Sparkles size={13} style={{ color: "var(--brand-ink)" }} />
               This Week's Ratings
             </p>
             <p className={`truncate text-xs font-medium ${textMuted}`}>
-              · {formatWeekRange(weekStartDate)} · {filtered.length} student
-              {filtered.length === 1 ? "" : "s"}
+              <LoadingRegion as="span" loading={loading} name="holistic-metadata" skeleton={<SkeletonText className="w-[24ch]" />}>{<>· {formatWeekRange(weekStartDate)} · {filtered.length} student{filtered.length === 1 ? "" : "s"}</>}</LoadingRegion>
             </p>
           </div>
 
@@ -226,62 +294,7 @@ export function HolisticTab({
           )}
         </div>
 
-        {filtered.length === 0 ? (
-          <p className={`px-4 py-5 text-center text-xs font-medium ${textMuted}`}>
-            No students found matching "{search}".
-          </p>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="teacher-user-table w-full min-w-max text-sm">
-              <thead>
-                <tr className={darkMode ? "bg-white/5" : "bg-[#F8FAFC]"}>
-                  <th
-                    className={`sticky left-0 z-10 min-w-56 px-4 py-2 text-left text-xs font-black uppercase tracking-wider ${
-                      darkMode ? "bg-[#2A1A18]" : "bg-[#F8FAFC]"
-                    } ${textMuted}`}
-                  >
-                    Student
-                  </th>
-                  {HOLISTIC_COLUMNS.map((col) => (
-                    <th key={col.key} className="min-w-32 px-3 py-2 text-center">
-                      <p className={`text-xs font-black ${textPrimary}`}>
-                        {col.label}
-                      </p>
-                      <p
-                        className={`mt-0.5 text-xs font-semibold ${textMuted}`}
-                      >
-                        {col.description}
-                      </p>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {grouped.male.length > 0 && (
-                  <>
-                    <tr>
-                      <td colSpan={columnCount} className={groupBand}>
-                        Male
-                      </td>
-                    </tr>
-                    {grouped.male.map((student) => renderStudentRow(student))}
-                  </>
-                )}
-
-                {grouped.female.length > 0 && (
-                  <>
-                    <tr>
-                      <td colSpan={columnCount} className={groupBand}>
-                        Female
-                      </td>
-                    </tr>
-                    {grouped.female.map((student) => renderStudentRow(student))}
-                  </>
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <div ref={tableRoot}><LoadingRegion loading={loading} variable autoColumns name="holistic-roster" retainPrevious hasContent={filtered.length > 0} skeleton={null} frame={renderTable} onSettled={() => { rememberRows(view, filtered.length); rememberColumns(view, tableRoot.current?.querySelector("table") ?? null); }}>{null}</LoadingRegion></div>
       </section>
 
       {toast && (

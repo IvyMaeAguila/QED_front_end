@@ -1,22 +1,28 @@
 import { API_CONFIG } from '../../../../../../config/api.config';
 import type { HolisticAxisKey, HolisticMap } from "../../subjects/detail/types/Grading";
+import type { TeacherRequestOptions } from "../../../query/teacherQueryScope";
+import { QueryHttpError } from "@shared/http/QueryHttpError";
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/teacherHolistic`;
 
 async function handleJsonResponse(res: Response) {
-  const data = await res.json();
+  const data = await res.json().catch(error => { if(!res.ok)throw new QueryHttpError('Request failed.',res.status);throw error; });
   if (!res.ok || !data.success) {
+    if(!res.ok)throw new QueryHttpError(data.message || "Request failed.",res.status);
     throw new Error(data.message || "Request failed.");
   }
   return data;
 }
 
-function authedFetch(path: string, init?: RequestInit) {
-  return fetch(`${BASE_URL}${path}`, {
+async function authedFetch(path: string, init?: RequestInit, options: TeacherRequestOptions = {}) {
+  const response = await fetch(`${BASE_URL}${path}`, {
     credentials: "include",
     headers: { "Content-Type": "application/json" },
     ...init,
+    signal: options.signal ?? init?.signal,
   });
+  if(response.status===401)options.onUnauthorized?.();
+  return response;
 }
 
 // ---------------------------------------------------------------------------
@@ -25,10 +31,11 @@ function authedFetch(path: string, init?: RequestInit) {
 
 export async function fetchHolistic(
   subjectSectionId: string,
-  options?: { allWeeks?: boolean }
+  options?: { allWeeks?: boolean },
+  request:TeacherRequestOptions={}
 ): Promise<{ data: HolisticMap; weekStartDate: string }> {
   const query = options?.allWeeks ? "?allWeeks=true" : "";
-  const res = await authedFetch(`/${subjectSectionId}${query}`);
+  const res = await authedFetch(`/${subjectSectionId}${query}`,undefined,request);
   const json = await handleJsonResponse(res);
   return { data: json.data, weekStartDate: json.weekStartDate };
 }
@@ -38,12 +45,13 @@ export async function saveHolistic(
   studentId: string,
   axis: HolisticAxisKey,
   value: number,
-  overrides?: { weekStartDate?: string; termNumber?: number }
+  overrides?: { weekStartDate?: string; termNumber?: number },
+  request:TeacherRequestOptions={}
 ): Promise<void> {
   const res = await authedFetch(`/${subjectSectionId}`, {
     method: "PUT",
     body: JSON.stringify({ studentId, axis, value, ...overrides }),
-  });
+  },request);
   await handleJsonResponse(res);
 }
 
@@ -75,8 +83,8 @@ export interface HolisticOverviewStudent {
   overall: HolisticTrend | null;
 }
 
-export async function fetchHolisticOverview(termNumber: number): Promise<HolisticOverviewStudent[]> {
-  const res = await authedFetch(`/overview?termNumber=${termNumber}`);
+export async function fetchHolisticOverview(termNumber: number, options: TeacherRequestOptions = {}): Promise<HolisticOverviewStudent[]> {
+  const res = await authedFetch(`/overview?termNumber=${termNumber}`, undefined, options);
   const data = await handleJsonResponse(res);
   return data.data;
 }
@@ -99,11 +107,12 @@ export type HolisticWeeklyMap = Record<string, StudentWeeklyHolisticRecord>;
 
 export async function fetchHolisticWeekly(
   subjectSectionId: string,
-  termNumber?: number
+  termNumber?: number,
+  request:TeacherRequestOptions={}
 ): Promise<{ data: HolisticWeeklyMap; weekStartDate: string }> {
   const params = new URLSearchParams({ allWeeks: "true" });
   if (termNumber !== undefined) params.set("termNumber", String(termNumber));
-  const res = await authedFetch(`/${subjectSectionId}?${params.toString()}`);
+  const res = await authedFetch(`/${subjectSectionId}?${params.toString()}`,undefined,request);
   const json = await handleJsonResponse(res);
   return { data: json.data, weekStartDate: json.weekStartDate };
 }
@@ -121,11 +130,13 @@ export interface GradingPeriod {
   isActive: boolean;
 }
 
-export async function fetchGradingPeriodsGlobal(): Promise<GradingPeriod[]> {
+export async function fetchGradingPeriodsGlobal(options: TeacherRequestOptions = {}): Promise<GradingPeriod[]> {
   const res = await fetch(GRADING_PERIODS_BASE_URL, {
     credentials: "include",
+    signal: options.signal,
     headers: { "Content-Type": "application/json" },
   });
+  if(res.status===401)options.onUnauthorized?.();
   const data = await handleJsonResponse(res);
   return data.data;
 }
@@ -177,9 +188,10 @@ export interface StudentHolisticProfile {
 
 export async function fetchStudentHolisticProfile(
   studentId: string,
-  termNumber: number
+  termNumber: number,
+  options: TeacherRequestOptions = {},
 ): Promise<StudentHolisticProfile> {
-  const res = await authedFetch(`/profile/${studentId}?termNumber=${termNumber}`);
+  const res = await authedFetch(`/profile/${studentId}?termNumber=${termNumber}`, undefined, options);
   const data = await handleJsonResponse(res);
   return data.data;
 }

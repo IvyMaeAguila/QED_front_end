@@ -1,0 +1,1 @@
+src/features/profiles/teacher/pages/subjects/detail/HolisticRecordsPage.tsx(2,10): error TS6133: 'SkeletonText' is declared but its value is never read.

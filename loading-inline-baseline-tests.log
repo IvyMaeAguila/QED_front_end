@@ -1,0 +1,54 @@
+
+[WebServer] (node:29428) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14660) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 40 tests using 1 worker
+
+(node:1084) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/40] tests\admin-loading.spec.ts:38:196 › /admin 375px light: real shell and loading composition
+[2/40] tests\admin-loading.spec.ts:38:196 › /admin 375px dark: real shell and loading composition
+[3/40] tests\admin-loading.spec.ts:38:196 › /admin 1280px light: real shell and loading composition
+[4/40] tests\admin-loading.spec.ts:38:196 › /admin 1280px dark: real shell and loading composition
+[5/40] tests\admin-loading.spec.ts:38:196 › /admin/classes 375px light: real shell and loading composition
+[6/40] tests\admin-loading.spec.ts:38:196 › /admin/classes 375px dark: real shell and loading composition
+[7/40] tests\admin-loading.spec.ts:38:196 › /admin/classes 1280px light: real shell and loading composition
+[8/40] tests\admin-loading.spec.ts:38:196 › /admin/classes 1280px dark: real shell and loading composition
+[9/40] tests\admin-loading.spec.ts:38:196 › /admin/users 375px light: real shell and loading composition
+[10/40] tests\admin-loading.spec.ts:38:196 › /admin/users 375px dark: real shell and loading composition
+[11/40] tests\admin-loading.spec.ts:38:196 › /admin/users 1280px light: real shell and loading composition
+[12/40] tests\admin-loading.spec.ts:38:196 › /admin/users 1280px dark: real shell and loading composition
+[13/40] tests\admin-loading.spec.ts:38:196 › /admin/students 375px light: real shell and loading composition
+[14/40] tests\admin-loading.spec.ts:38:196 › /admin/students 375px dark: real shell and loading composition
+[15/40] tests\admin-loading.spec.ts:38:196 › /admin/students 1280px light: real shell and loading composition
+[16/40] tests\admin-loading.spec.ts:38:196 › /admin/students 1280px dark: real shell and loading composition
+[17/40] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 375px light: real shell and loading composition
+[18/40] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 375px dark: real shell and loading composition
+[19/40] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 1280px light: real shell and loading composition
+[20/40] tests\admin-loading.spec.ts:38:196 › /admin/academic-year 1280px dark: real shell and loading composition
+[21/40] tests\admin-loading.spec.ts:38:196 › /admin/subjects 375px light: real shell and loading composition
+[22/40] tests\admin-loading.spec.ts:38:196 › /admin/subjects 375px dark: real shell and loading composition
+[23/40] tests\admin-loading.spec.ts:38:196 › /admin/subjects 1280px light: real shell and loading composition
+[24/40] tests\admin-loading.spec.ts:38:196 › /admin/subjects 1280px dark: real shell and loading composition
+[25/40] tests\admin-loading.spec.ts:59:48 › users directory AUTO-COLUMN classification is supported by measured fixtures
+[26/40] tests\admin-loading.spec.ts:59:48 › students directory AUTO-COLUMN classification is supported by measured fixtures
+[27/40] tests\admin-loading.spec.ts:73:2 › academic term auto-column classification requires observed variation
+[28/40] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 375 light: real shell and existing cards
+[29/40] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 375 dark: real shell and existing cards
+[30/40] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 1280 light: real shell and existing cards
+[31/40] tests\principal-gradebooks.spec.ts:17:68 › principal gradebooks 1280 dark: real shell and existing cards
+[32/40] tests\principal-gradebooks.spec.ts:40:1 › repeat gradebook visit displays cached cards and school year immediately
+[33/40] tests\principal-gradebooks.spec.ts:56:1 › inline school year preserves the original paragraph flow
+[34/40] tests\teacher-subjects.spec.ts:25:68 › teacher subjects 375px light: real shell, card geometry and screenshots
+[35/40] tests\teacher-subjects.spec.ts:25:68 › teacher subjects 375px dark: real shell, card geometry and screenshots
+[36/40] tests\teacher-subjects.spec.ts:25:68 › teacher subjects 1280px light: real shell, card geometry and screenshots
+[37/40] tests\teacher-subjects.spec.ts:25:68 › teacher subjects 1280px dark: real shell, card geometry and screenshots
+[38/40] tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 0 rows, stable actions and filters
+[39/40] tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 1 rows, stable actions and filters
+[40/40] tests\teacher-subjects.spec.ts:46:32 › teacher subjects variable result: 9 rows, stable actions and filters
+  40 passed (1.3m)

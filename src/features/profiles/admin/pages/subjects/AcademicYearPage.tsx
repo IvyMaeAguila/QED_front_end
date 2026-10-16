@@ -1,198 +1,22 @@
-import { useEffect, useState, useCallback } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
-import type { AdminThemeContext } from "../AdminLayout";
-import { AcademicYearCard } from "./components/AcademicYearCard";
-import { TermsTable } from "./components/TermsTable";
-import { EditAcademicYearModal } from "./components/EditAcademicYearModal";
-import { EditTermDatesModal } from "./components/EditTermDatesModal";
-import type { AcademicYear, SchoolYearStatus, Term } from "./types/academicyear";
-import {
-  fetchActiveAcademicYear,
-  addAcademicYear,
-  fetchTerms,
-  saveTerms as saveTermsRequest,
-  type TermInput,
-} from "./services/academicyear.service";
-
-export function AcademicYearPage() {
-  const theme = useOutletContext<AdminThemeContext>();
-  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
-  const navigate = useNavigate();
-
-  const [academicYear, setAcademicYear] = useState<AcademicYear | null>(null);
-  const [terms, setTerms] = useState<Term[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
-
-  const [editingYear, setEditingYear] = useState(false);
-  const [editingTerms, setEditingTerms] = useState(false);
-
-  const [savingYear, setSavingYear] = useState(false);
-  const [yearError, setYearError] = useState<string | null>(null);
-
-  const [savingTerms, setSavingTerms] = useState(false);
-  const [termsError, setTermsError] = useState<string | null>(null);
-
-  const loadAcademicYear = useCallback(async () => {
-    setLoading(true);
-    setLoadError(null);
-    try {
-      const year = await fetchActiveAcademicYear();
-      setAcademicYear(year);
-      const yearTerms = await fetchTerms(year.id);
-      setTerms(yearTerms);
-    } catch (err) {
-      console.error("Failed to load academic year:", err);
-      setLoadError(
-        err instanceof Error ? err.message : "Failed to load academic year.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    void loadAcademicYear();
-  }, [loadAcademicYear]);
-
-  async function saveAcademicYear(newYear: {
-    label: string;
-    status: SchoolYearStatus;
-  }) {
-    setSavingYear(true);
-    setYearError(null);
-    try {
-      await addAcademicYear(newYear);
-      // Full page reload so the new year, its freshly-seeded terms,
-      // and every dependent badge/status all reflect the fresh DB state.
-      window.location.reload();
-    } catch (err) {
-      console.error("Failed to add academic year:", err);
-      setYearError(
-        err instanceof Error ? err.message : "Failed to add academic year.",
-      );
-      setSavingYear(false);
-    }
-  }
-
-  async function saveTermDates(updatedTerms: TermInput[]) {
-    if (!academicYear) return;
-    setSavingTerms(true);
-    setTermsError(null);
-    try {
-      const saved = await saveTermsRequest(academicYear.id, updatedTerms);
-      setTerms(saved);
-      setEditingTerms(false);
-      const refreshedYear = await fetchActiveAcademicYear();
-      setAcademicYear(refreshedYear);
-    } catch (err) {
-      console.error("Failed to save term dates:", err);
-      setTermsError(
-        err instanceof Error ? err.message : "Failed to save term dates.",
-      );
-    } finally {
-      setSavingTerms(false);
-    }
-  }
-
-  // ── Shared design tokens (same as StudentFormPage) ──
-  const stateCardClasses = `rounded-[12px] border shadow-xs p-12 text-center transition-all ${panelBg} ${panelBorder}`;
-
-  return (
-    <div className="w-full min-h-full space-y-6 pb-12">
-      {/* Page header */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => navigate("/admin/subjects")}
-            aria-label="Go back to academics"
-            className="system-back-button"
-          >
-            <ArrowLeft />
-          </button>
-          <div>
-            <h1 className={`qed-type-page-title ${textPrimary}`}>
-              Academic Year
-            </h1>
-            <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
-              Manage school years, grading periods, and term settings.
-            </p>
-          </div>
-        </div>
-
-      </div>
-
-      {loading ? (
-        <div className={stateCardClasses}>
-          <p className={`text-sm font-semibold ${textMuted}`}>Loading...</p>
-        </div>
-      ) : loadError || !academicYear ? (
-        <div className={stateCardClasses}>
-          <p className="text-sm font-semibold text-[#B91C1C]">
-            {loadError ?? "No active academic year found."}
-          </p>
-        </div>
-      ) : (
-        <>
-          <AcademicYearCard
-            academicYear={academicYear}
-            darkMode={darkMode}
-            panelBg={panelBg}
-            panelBorder={panelBorder}
-            textPrimary={textPrimary}
-            textMuted={textMuted}
-            onEdit={() => setEditingYear(true)}
-          />
-
-          <TermsTable
-            terms={terms}
-            darkMode={darkMode}
-            panelBg={panelBg}
-            panelBorder={panelBorder}
-            textPrimary={textPrimary}
-            textMuted={textMuted}
-            onEdit={() => setEditingTerms(true)}
-          />
-
-          {editingYear && (
-            <EditAcademicYearModal
-              academicYear={academicYear}
-              darkMode={darkMode}
-              panelBg={panelBg}
-              panelBorder={panelBorder}
-              textPrimary={textPrimary}
-              textMuted={textMuted}
-              onClose={() => {
-                setEditingYear(false);
-                setYearError(null);
-              }}
-              onSave={saveAcademicYear}
-              saving={savingYear}
-              error={yearError}
-            />
-          )}
-
-          {editingTerms && (
-            <EditTermDatesModal
-              terms={terms}
-              darkMode={darkMode}
-              panelBg={panelBg}
-              panelBorder={panelBorder}
-              textPrimary={textPrimary}
-              textMuted={textMuted}
-              onClose={() => {
-                setEditingTerms(false);
-                setTermsError(null);
-              }}
-              onSave={saveTermDates}
-              saving={savingTerms}
-              error={termsError}
-            />
-          )}
-        </>
-      )}
-    </div>
-  );
+import {useCallback} from 'react';
+import {QueryClientProvider} from '@tanstack/react-query';
+import {queryClient} from '@shared/query/queryClient';
+import {useAdminReader} from '../../query/useAdminReader';
+import {useAdminWriter} from '../../query/useAdminWriter';
+import {useAdminFetch} from '../../query/useAdminFetch';
+import {AdminSessionBoundary} from '../../query/AdminSessionBoundary';
+import * as service from './services/academicyear.service';
+import {AcademicYearPageComposition,type AcademicYearData} from './AcademicYearPage.loading-view';
+export * from './AcademicYearPage.loading-view';
+const yearKey=['academic-year','active'] as const;
+const emptyTerms:service.TermRow[]=[];
+function AcademicYearQueries(){
+ const fetch=useAdminFetch(),year=useAdminReader(yearKey,service.fetchActiveAcademicYear,'Failed to load academic year.');
+ const id=year.data?.id,terms=useAdminReader(['academic-year','terms',id??null],o=>service.fetchTerms(id!,o),'Failed to fetch terms.',!!id);
+ const changed=useCallback((_data:unknown,_variables:unknown,key:readonly unknown[])=>{for(const resource of ['academic-year','subjects','class-options','templates'])void queryClient.invalidateQueries({queryKey:[...key,resource],refetchType:'none'});void queryClient.invalidateQueries({queryKey:[...key,'dashboard','audit'],refetchType:'none'});},[]);
+ const addYear=useAdminWriter(service.addAcademicYear,changed);
+ const saveTerms=useAdminWriter(({id,terms}:{id:number;terms:service.TermInput[]},o)=>service.saveTerms(id,terms,o),useCallback((saved:service.TermRow[],variables:{id:number},key:readonly unknown[])=>{queryClient.setQueryData([...key,'academic-year','terms',variables.id],saved);void queryClient.invalidateQueries({queryKey:[...key,...yearKey],refetchType:'none'});void queryClient.invalidateQueries({queryKey:[...key,'dashboard','audit'],refetchType:'none'});},[]));
+ const data:AcademicYearData={academicYear:year.data??null,terms:terms.data??emptyTerms,loading:year.loading||!!id&&terms.loading,error:year.error??(id?terms.error:null),retry:async()=>{await year.retry();if(id)await terms.retry();},addYear,saveTerms:(id,terms)=>saveTerms({id,terms}),refreshYear:()=>fetch(yearKey,service.fetchActiveAcademicYear)};
+ return <AcademicYearPageComposition data={data}/>;
 }
+export function AcademicYearPage(){return <AdminSessionBoundary resource="academic-year"><QueryClientProvider client={queryClient}><AcademicYearQueries/></QueryClientProvider></AdminSessionBoundary>;}

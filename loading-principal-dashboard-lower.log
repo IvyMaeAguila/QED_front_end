@@ -1,0 +1,18 @@
+
+[WebServer] (node:28636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:30808) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:40804) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/4] tests\principal-dashboard-loading.spec.ts:14:62 › principal dashboard 375 light lower sections retain known labels and geometry
+[2/4] tests\principal-dashboard-loading.spec.ts:14:62 › principal dashboard 375 dark lower sections retain known labels and geometry
+[3/4] tests\principal-dashboard-loading.spec.ts:14:62 › principal dashboard 1280 light lower sections retain known labels and geometry
+[4/4] tests\principal-dashboard-loading.spec.ts:14:62 › principal dashboard 1280 dark lower sections retain known labels and geometry
+  4 passed (27.7s)

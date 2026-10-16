@@ -75,7 +75,7 @@
 //         className={`w-full rounded-xl border px-3 py-2 text-sm font-semibold outline-none transition focus:ring-2 focus:ring-[#7A1212]/40 ${
 //           darkMode
 //             ? "border-white/10 bg-white/5 text-white placeholder:text-white/30"
-//             : "border-[#6B0000]/20 bg-white text-slate-900 placeholder:text-slate-400"
+//             : "border-maroon/20 bg-white text-slate-900 placeholder:text-slate-400"
 //         }`}
 //       />
 //     </Tile>
@@ -118,7 +118,7 @@
 
 //   const ghostBtn = darkMode
 //     ? "border-white/10 text-white/80 hover:bg-white/5"
-//     : "border-[#6B0000]/20 text-[#6B0000] hover:bg-[#6B0000]/5";
+//     : "border-maroon/20 text-brand-ink hover:bg-maroon-light/5";
 
 //   const gridClass = "grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 sm:p-5";
 
@@ -136,7 +136,7 @@
 //           >
 //             <ArrowLeft className="h-4 w-4" />
 //           </button>
-//           <UserRound className={`h-5 w-5 shrink-0 ${darkMode ? "text-red-400" : "text-[#6B0000]"}`} />
+//           <UserRound className={`h-5 w-5 shrink-0 ${darkMode ? "text-red-400" : "text-brand-ink"}`} />
 //           <p className={`min-w-0 truncate text-sm font-bold ${textPrimary}`}>Edit personal information</p>
 //         </div>
 

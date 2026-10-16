@@ -1,0 +1,27 @@
+[WebServer] (node:9336) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23264) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 10 tests using 1 worker
+
+(node:21240) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 375 light keeps known challenges (6.1s)
+  ok  2 tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 375 dark keeps known challenges (1.9s)
+  ok  3 tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 1280 light keeps known challenges (2.0s)
+  ok  4 tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 1280 dark keeps known challenges (2.0s)
+  ok  5 tests\pet-quiz-loading.spec.ts:7:1 › pet intro keeps its known story visible while access loads (714ms)
+[WebServer] 2:58:44 PM [vite] (client) [console.error] Failed to load intervention state: Error: Failed to fetch intervention state.
+[WebServer]     at Object.getInterventionState (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/petQuiz.service.ts:20:22)
+[WebServer]     at async init (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/PetQuizPage.tsx:128:21)
+[WebServer] 2:58:44 PM [vite] (client) [console.error] Failed to load intervention state: Error: Failed to fetch intervention state.
+[WebServer]     at Object.getInterventionState (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/petQuiz.service.ts:20:22)
+[WebServer]     at async init (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/PetQuizPage.tsx:128:21)
+  ok  6 tests\pet-quiz-loading.spec.ts:8:1 › pet quiz state error clears shapes and retries (1.3s)
+  ok  7 tests\pet-quiz-loading.spec.ts:9:62 › pet quiz question 375 light reserves real choices (2.4s)
+  ok  8 tests\pet-quiz-loading.spec.ts:9:62 › pet quiz question 375 dark reserves real choices (2.4s)
+  ok  9 tests\pet-quiz-loading.spec.ts:9:62 › pet quiz question 1280 light reserves real choices (2.6s)
+  ok 10 tests\pet-quiz-loading.spec.ts:9:62 › pet quiz question 1280 dark reserves real choices (2.0s)
+
+  10 passed (27.0s)

@@ -1,3 +1,5 @@
+import { QueryHttpError } from '@shared/http/QueryHttpError';
+import type { TeacherRequestOptions } from '../../../query/teacherQueryScope';
 import { API_CONFIG } from '../../../../../../config/api.config';
 import type { EventItem } from '../components/UpcomingEvents';
 
@@ -8,8 +10,6 @@ const BASE_URL = `${API_CONFIG.baseURL}/api/teacherDashboard`;
 
 export interface DashboardSummary {
   name: string;
-  classesToday: number;
-  pendingGrades: number;
 }
 
 export interface TeacherStats {
@@ -19,6 +19,8 @@ export interface TeacherStats {
 }
 
 export interface AttendanceSummary {
+  recordedCount?: number;
+  hasAdvisory?: boolean;
   present: number;
   absent: number;
   late: number;
@@ -34,6 +36,16 @@ export interface AgendaItem {
   timeLabel: string; 
 }
 
+export interface WeeklyScheduleItem extends AgendaItem {
+  dayOfWeek: string;
+}
+
+export async function fetchWeeklySchedule(options?: TeacherRequestOptions): Promise<WeeklyScheduleItem[]> {
+  const res = await fetch(`${BASE_URL}/schedule`, { credentials: "include", signal: options?.signal });
+  const data = await handleJsonResponse(res, options);
+  return data.data;
+}
+
 // Shape returned by the backend before we split the date into day/month
 interface RawUpcomingEvent {
   id: string | number;
@@ -43,10 +55,14 @@ interface RawUpcomingEvent {
   holidayType?: string;
 }
 
-async function handleJsonResponse(res: Response) {
-  const data = await res.json();
+async function handleJsonResponse(res: Response, options?: TeacherRequestOptions) {
+  if (res.status === 401 && !options?.signal?.aborted) options?.onUnauthorized?.();
+  const data = await res.json().catch(error => {
+    if (!res.ok) throw new QueryHttpError("Request failed.", res.status);
+    throw error;
+  });
   if (!res.ok || !data.success) {
-    throw new Error(data.message || "Request failed.");
+    throw new QueryHttpError(data.message || "Request failed.", res.status);
   }
   return data;
 }
@@ -59,39 +75,39 @@ function toDayMonth(dateStr: string) {
   return { day, month };
 }
 
-export async function fetchDashboardSummary(): Promise<DashboardSummary> {
+export async function fetchDashboardSummary(options?: TeacherRequestOptions): Promise<DashboardSummary> {
   const res = await fetch(`${BASE_URL}/summary`, {
-    credentials: "include",
+    credentials: "include", signal: options?.signal,
   });
 
-  const data = await handleJsonResponse(res);
+  const data = await handleJsonResponse(res, options);
   return data;
 }
 
-export async function fetchTeacherStats(): Promise<TeacherStats> {
+export async function fetchTeacherStats(options?: TeacherRequestOptions): Promise<TeacherStats> {
   const res = await fetch(`${BASE_URL}/stats`, {
-    credentials: "include",
+    credentials: "include", signal: options?.signal,
   });
 
-  const data = await handleJsonResponse(res);
+  const data = await handleJsonResponse(res, options);
   return data;
 }
 
-export async function fetchAttendanceSummary(): Promise<AttendanceSummary> {
+export async function fetchAttendanceSummary(options?: TeacherRequestOptions): Promise<AttendanceSummary> {
   const res = await fetch(`${BASE_URL}/attendance`, {
-    credentials: "include",
+    credentials: "include", signal: options?.signal,
   });
 
-  const data = await handleJsonResponse(res);
+  const data = await handleJsonResponse(res, options);
   return data;
 }
 
-export async function fetchUpcomingEvents(limit = 5): Promise<EventItem[]> {
+export async function fetchUpcomingEvents(limit = 5, options?: TeacherRequestOptions): Promise<EventItem[]> {
   const res = await fetch(`${BASE_URL}/upcoming?limit=${limit}`, {
-    credentials: "include",
+    credentials: "include", signal: options?.signal,
   });
 
-  const data = await handleJsonResponse(res);
+  const data = await handleJsonResponse(res, options);
   const rawEvents: RawUpcomingEvent[] = data.data;
 
   return rawEvents.map((event) => {
@@ -107,11 +123,11 @@ export async function fetchUpcomingEvents(limit = 5): Promise<EventItem[]> {
   });
 }
 
-export async function fetchTodaysAgenda(): Promise<AgendaItem[]> {
+export async function fetchTodaysAgenda(options?: TeacherRequestOptions): Promise<AgendaItem[]> {
   const res = await fetch(`${BASE_URL}/agenda`, {
-    credentials: "include",
+    credentials: "include", signal: options?.signal,
   });
 
-  const data = await handleJsonResponse(res);
+  const data = await handleJsonResponse(res, options);
   return data.data;
 }

@@ -1,0 +1,55 @@
+
+[WebServer] (node:15756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23624) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 13 tests using 1 worker
+
+(node:19200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/13] tests\parent-detail-loading.spec.ts:48:30 › parent overview reserves variable frame before reveal and swaps once
+[2/13] tests\parent-detail-loading.spec.ts:48:30 › parent academic reserves variable frame before reveal and swaps once
+[3/13] tests\parent-detail-loading.spec.ts:48:30 › parent holistic reserves variable frame before reveal and swaps once
+[4/13] tests\parent-detail-loading.spec.ts:48:30 › parent progressReport reserves variable frame before reveal and swaps once
+[5/13] tests\parent-detail-loading.spec.ts:48:30 › parent studentProfile reserves variable frame before reveal and swaps once
+[6/13] tests\parent-detail-loading.spec.ts:78:32 › parent rendered pixels and fixed attendance overlay false
+[7/13] tests\parent-detail-loading.spec.ts:78:32 › parent rendered pixels and fixed attendance overlay true
+[8/13] tests\parent-detail-loading.spec.ts:86:178 › parent academic fetch failure clears shapes and retries
+[9/13] tests\parent-detail-loading.spec.ts:86:178 › parent holistic fetch failure clears shapes and retries
+[10/13] tests\parent-detail-loading.spec.ts:86:178 › parent progressReport fetch failure clears shapes and retries
+[11/13] tests\parent-detail-loading.spec.ts:86:178 › parent studentProfile fetch failure clears shapes and retries
+[12/13] tests\parent-detail-loading.spec.ts:90:1 › parent report auto-column marking reflects measured native content variation
+  1) tests\parent-detail-loading.spec.ts:90:1 › parent report auto-column marking reflects measured native content variation 
+
+    Error: table 1 must actually vary to qualify AUTO-COLUMN
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      94 |   }
+      95 |   expect(runs[0]).toHaveLength(2);expect(runs[1]).toHaveLength(2);
+    > 96 |   runs[0].forEach((widths,index)=>expect(runs[1][index].some((w,i)=>Math.abs(w-widths[i])>1),`table ${index} must actually vary to qualify AUTO-COLUMN`).toBe(true));
+         |                                                                                                                                                          ^
+      97 | });
+      98 |
+      99 | test('parent report repeat visit restores native column reservations within 2px',async({page})=>{
+        at forEach (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\parent-detail-loading.spec.ts:96:154)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\parent-detail-loading.spec.ts:96:11
+
+    Error Context: test-results\parent-detail-loading-pare-c1549-ed-native-content-variation\error-context.md
+
+
+
+(node:35768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[13/13] tests\parent-detail-loading.spec.ts:99:1 › parent report repeat visit restores native column reservations within 2px
+  1 failed
+    tests\parent-detail-loading.spec.ts:90:1 › parent report auto-column marking reflects measured native content variation 
+  12 passed (38.2s)

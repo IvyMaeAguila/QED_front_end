@@ -1,0 +1,31 @@
+[WebServer] (node:39432) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:29456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:5204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\admin-loading.spec.ts:32:153 › /admin 1280px light: real shell and loading composition (30.1s)
+
+
+  1) tests\admin-loading.spec.ts:32:153 › /admin 1280px light: real shell and loading composition ──
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.waitForFunction: Test timeout of 30000ms exceeded.
+
+      38 |   await expect(page.getByRole("heading", { name: title, exact: true })).toBeVisible();
+      39 |   await expect(page.locator(".qed-splash")).toHaveCount(0);
+    > 40 |   await page.waitForFunction(() => [...document.querySelectorAll(".sk-region")].length > 0 && [...document.querySelectorAll(".sk-region")].every(e => e.getAttribute("data-sk-phase") === "revealed"));
+         |              ^
+      41 |   const before = await page.getByRole("heading", { name: title, exact: true }).boundingBox();
+      42 |   fs.mkdirSync("loading-screenshots", { recursive: true });
+      43 |   const prefix = `loading-screenshots/${route.slice(1).replaceAll("/", "-")}-${width}-${dark ? "dark" : "light"}`;
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\admin-loading.spec.ts:40:14
+
+    Error Context: test-results\admin-loading--admin-1280p-558ff-ell-and-loading-composition\error-context.md
+
+  1 failed
+    tests\admin-loading.spec.ts:32:153 › /admin 1280px light: real shell and loading composition ───

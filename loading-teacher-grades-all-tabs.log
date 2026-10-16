@@ -1,0 +1,56 @@
+
+[WebServer] (node:19112) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 30 tests using 1 worker
+
+(node:35960) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/30] tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 375 light keeps real headers and controls
+[2/30] tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 375 dark keeps real headers and controls
+[3/30] tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 1280 light keeps real headers and controls
+[4/30] tests\teacher-grades-loading.spec.ts:6:62 › teacher grades 1280 dark keeps real headers and controls
+[5/30] tests\teacher-grades-loading.spec.ts:7:28 › teacher grades preserves 0 actual students
+[6/30] tests\teacher-grades-loading.spec.ts:7:28 › teacher grades preserves 1 actual students
+[7/30] tests\teacher-grades-loading.spec.ts:7:28 › teacher grades preserves 9 actual students
+[8/30] tests\teacher-grades-loading.spec.ts:8:52 › teacher grades retries terms
+[9/30] tests\teacher-grades-loading.spec.ts:8:52 › teacher grades retries sections
+[10/30] tests\teacher-grades-loading.spec.ts:8:52 › teacher grades retries gradebook
+
+[WebServer] 2:20:22 PM [vite] (client) [console.error] Failed to load advisory gradebook: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:14:38)
+[WebServer]     at async fetchAdvisoryGradebook (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:29:15)
+[11/30] tests\teacher-grades-loading.spec.ts:9:1 › teacher grades preserves visibility and history tabs
+[12/30] tests\teacher-grades-loading.spec.ts:11:1 › teacher grades and visibility have valid native table markup
+[13/30] tests\teacher-grades-loading.spec.ts:12:1 › teacher grades native automatic columns vary across real content
+[14/30] tests\teacher-grades-loading.spec.ts:13:32 › teacher grades fast term refetch preserves old rows
+[15/30] tests\teacher-grades-loading.spec.ts:13:32 › teacher grades slow term refetch preserves old rows
+[16/30] tests\teacher-grades-loading.spec.ts:14:54 › teacher grades retries visibility independently
+
+[WebServer] 2:20:36 PM [vite] (client) [console.error] Failed to load grade visibility: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:14:38)
+[WebServer]     at async fetchGradeVisibility (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:60:15)
+
+[WebServer] 2:20:36 PM [vite] (client) [console.error] Failed to load grade visibility: Error: Records unavailable
+[WebServer]     at handleJsonResponse (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:14:38)
+[WebServer]     at async fetchGradeVisibility (http://127.0.0.1:5187/src/features/profiles/teacher/pages/grades/services/gradePage.service.ts:60:15)
+[17/30] tests\teacher-grades-loading.spec.ts:14:54 › teacher grades retries logs independently
+[18/30] tests\teacher-grades-loading.spec.ts:14:54 › teacher grades retries submission independently
+[19/30] tests\teacher-grades-loading.spec.ts:16:1 › teacher grades pending class summary never reports an unfetched zero roster
+[20/30] tests\teacher-grades-loading.spec.ts:17:1 › teacher grades repeated term reserves cached native widths within two pixels
+[21/30] tests\teacher-grades-loading.spec.ts:19:1 › teacher visibility native automatic columns vary across real content
+[22/30] tests\teacher-grades-loading.spec.ts:20:122 › teacher grades Parent Visibility 375 light known controls remain during prerequisite loads
+[23/30] tests\teacher-grades-loading.spec.ts:20:122 › teacher grades Submission History 375 light known controls remain during prerequisite loads
+[24/30] tests\teacher-grades-loading.spec.ts:20:122 › teacher grades Parent Visibility 375 dark known controls remain during prerequisite loads
+[25/30] tests\teacher-grades-loading.spec.ts:20:122 › teacher grades Submission History 375 dark known controls remain during prerequisite loads
+[26/30] tests\teacher-grades-loading.spec.ts:20:122 › teacher grades Parent Visibility 1280 light known controls remain during prerequisite loads
+[27/30] tests\teacher-grades-loading.spec.ts:20:122 › teacher grades Submission History 1280 light known controls remain during prerequisite loads
+[28/30] tests\teacher-grades-loading.spec.ts:20:122 › teacher grades Parent Visibility 1280 dark known controls remain during prerequisite loads
+[29/30] tests\teacher-grades-loading.spec.ts:20:122 › teacher grades Submission History 1280 dark known controls remain during prerequisite loads
+[30/30] tests\teacher-grades-loading.spec.ts:21:1 › teacher visibility retries a prerequisite error without an indefinite skeleton
+  30 passed (1.7m)

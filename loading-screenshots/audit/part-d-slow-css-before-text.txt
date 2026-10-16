@@ -1,0 +1,41 @@
+
+Running 1 test using 1 worker
+
+  x  1 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (7.8s)
+
+
+  1) tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings ────────
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('#test-region .sk-region')
+    Expected: "revealed"
+    Received: "settled"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('#test-region .sk-region') with timeout 5000ms
+      - waiting for locator('#test-region .sk-region')
+        14 × locator resolved to <div aria-busy="false" class="sk-region " data-sk-variable="" data-sk-phase="settled" data-sk-region="field-_r_0_">…</div>
+           - unexpected value "settled"
+
+
+      32 |     const before = await page.locator("[data-beside]").boundingBox();
+      33 |     const above = await page.locator("h1").boundingBox();
+    > 34 |     await expect(region(page)).toHaveAttribute("data-sk-phase", "revealed");
+         |                                ^
+      35 |     const columns = mode === "list" ? await page.locator("[data-column]").evaluateAll(es => es.slice(0, 2).map(e => ({ x: e.getBoundingClientRect().x, width: e.getBoundingClientRect().width }))) : [];
+      36 |     await settled(page);
+      37 |     expect(await page.locator("[data-beside]").boundingBox()).toEqual(before);
+        at C:\Users\Mavys\AppData\Local\Temp\qed-part-d\a94f3d0\tests\loading.spec.ts:34:32
+
+    Error Context: test-results\loading-variable-text-data-00cbf-ne-swap-stable-surroundings\error-context.md
+
+  1 failed
+    tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings ─────────
+[WebServer] (node:20832) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36868) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:27388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

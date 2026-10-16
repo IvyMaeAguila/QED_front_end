@@ -1,0 +1,42 @@
+[WebServer] (node:11032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:17068) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:12244) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\static-routes.spec.ts:6:68 › topic support 375 light: known quest choices render immediately
+  1) tests\static-routes.spec.ts:6:68 › topic support 375 light: known quest choices render immediately 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: /Study Quest Learn/ })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('button', { name: /Study Quest Learn/ }) with timeout 5000ms
+      - waiting for getByRole('button', { name: /Study Quest Learn/ })
+
+
+       9 |   await page.goto("/parent/students/1/topics/1/support");
+      10 |   await expect(page.getByRole("heading", { name: "How do we help today?", exact: true })).toBeVisible();
+    > 11 |   await expect(page.getByRole("button", { name: /Study Quest Learn/ })).toBeVisible();
+         |                                                                         ^
+      12 |   await expect(page.getByRole("button", { name: /Feed Your Pet Quiz/ })).toBeVisible();
+      13 |   const region = page.locator('[data-sk-region="topic-support-content"]');
+      14 |   const before = await region.boundingBox();
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\static-routes.spec.ts:11:73
+
+    Error Context: test-results\static-routes-topic-suppor-34618--choices-render-immediately\error-context.md
+
+
+  1 failed
+    tests\static-routes.spec.ts:6:68 › topic support 375 light: known quest choices render immediately 

@@ -1,0 +1,40 @@
+[WebServer] (node:25368) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:28012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:34968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\user-form-loading.spec.ts:62:1 › pending user selects never show a fallback selected value behind the skeleton (9.1s)
+
+
+  1) tests\user-form-loading.spec.ts:62:1 › pending user selects never show a fallback selected value behind the skeleton 
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator:  locator('[data-sk-region="user-form-status"]').locator('select')
+    Expected: ""
+    Received: "Active"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveValue" locator('[data-sk-region="user-form-status"]').locator('select') with timeout 5000ms
+      - waiting for locator('[data-sk-region="user-form-status"]').locator('select')
+        14 × locator resolved to <select disabled placeholder="" class="w-full h-10 px-3 rounded-lg border text-sm font-semibold outline-none transition-colors bg-brand-light border-border-subtle text-[#111827] focus:border-maroon-light">…</select>
+           - unexpected value "Active"
+
+
+      62 | test('pending user selects never show a fallback selected value behind the skeleton',async({page})=>{
+      63 |  const release=await accounts(page,false);await page.goto('/admin/users/parent/1/edit');const status=page.locator('[data-sk-region="user-form-status"]');await expect(status).toHaveAttribute('data-sk-phase','revealed');
+    > 64 |  await expect(status.locator('select')).toHaveValue('');await expect(page.locator('[data-sk-region="user-form-gender"] select')).toHaveValue('');release();
+         |                                         ^
+      65 | });
+      66 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\user-form-loading.spec.ts:64:41
+
+    Error Context: test-results\user-form-loading-pending--2c4b1-d-value-behind-the-skeleton\error-context.md
+
+  1 failed
+    tests\user-form-loading.spec.ts:62:1 › pending user selects never show a fallback selected value behind the skeleton 

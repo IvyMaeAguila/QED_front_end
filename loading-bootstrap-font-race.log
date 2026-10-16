@@ -1,0 +1,59 @@
+
+[WebServer] (node:15672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 9 tests using 1 worker
+
+
+(node:13120) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/9] tests\bootstrap-loading.spec.ts:30:1 › bootstrap 60ms never shows the brand loader or status
+[2/9] tests\bootstrap-loading.spec.ts:37:1 › revealed bootstrap animates only the real logo opacity, never rotation
+[3/9] tests\bootstrap-loading.spec.ts:48:1 › bootstrap reduced motion has no running animation
+[4/9] tests\bootstrap-loading.spec.ts:55:1 › bootstrap busy and status follow reveal, minimum duration, and DOM cleanup
+[5/9] tests\bootstrap-loading.spec.ts:72:1 › protected components and page requests never render before auth resolves
+[6/9] tests\bootstrap-loading.spec.ts:80:34 › lazy route 375: registered composition inside real shell with stable surroundings
+  1) tests\bootstrap-loading.spec.ts:80:34 › lazy route 375: registered composition inside real shell with stable surroundings 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -7,8 +7,8 @@
+        ],
+        Array [
+          0,
+          0,
+          375,
+    -     99,
+    +     105.671875,
+        ],
+      ]
+
+       96 |   releaseChunk();
+       97 |   await expect(page.locator('[data-route-skeleton]')).toHaveCount(0);
+    >  98 |   expect(await page.locator("header, aside").evaluateAll(elements => elements.map(e => { const r = e.getBoundingClientRect(); return [r.x, r.y, r.width, r.height]; }))).toEqual(positions);
+          |                                                                                                                                                                          ^
+       99 |   releaseData();
+      100 | });
+      101 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\bootstrap-loading.spec.ts:98:170
+
+    Error Context: test-results\bootstrap-loading-lazy-rou-5f557-ll-with-stable-surroundings\error-context.md
+
+
+
+(node:11680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[7/9] tests\bootstrap-loading.spec.ts:80:34 › lazy route 1280: registered composition inside real shell with stable surroundings
+[8/9] tests\removed-loading-guard.spec.ts:9:1 › removed splash and duplicate advisory skeleton cannot be reintroduced
+[9/9] tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition
+  1 failed
+    tests\bootstrap-loading.spec.ts:80:34 › lazy route 375: registered composition inside real shell with stable surroundings 
+  8 passed (35.7s)

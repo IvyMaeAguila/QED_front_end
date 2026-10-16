@@ -1,3 +1,5 @@
+import { parentFetch } from '../../../../query/parentRequest';
+import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
 import { API_CONFIG } from '../../../../../../../config/api.config';
 
 const API_BASE_URL = `${API_CONFIG.baseURL}/api/courseware`;
@@ -41,9 +43,10 @@ interface RawCoursewareResponse {
 
 export async function getCourseware(
   studentId: string | number,
-  topicId: string | number
+  topicId: string | number,
+  options?: ApiRequestOptions
 ): Promise<CoursewareResource> {
-  const response = await fetch(`${API_BASE_URL}/${studentId}/${topicId}`, {
+  const response = await parentFetch(`${API_BASE_URL}/${studentId}/${topicId}`, options, {
     method: "GET",
     credentials: "include",
     headers: {

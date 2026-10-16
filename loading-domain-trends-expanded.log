@@ -1,0 +1,28 @@
+[WebServer] (node:38736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:39308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 15 tests using 1 worker
+
+(node:896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\domain-trends-loading.spec.ts:14:62 › domain trends 375 light keeps domains and chart shell real (5.8s)
+  ok  2 tests\domain-trends-loading.spec.ts:14:62 › domain trends 375 dark keeps domains and chart shell real (2.0s)
+  ok  3 tests\domain-trends-loading.spec.ts:14:62 › domain trends 1280 light keeps domains and chart shell real (3.3s)
+  ok  4 tests\domain-trends-loading.spec.ts:14:62 › domain trends 1280 dark keeps domains and chart shell real (2.6s)
+  ok  5 tests\domain-trends-loading.spec.ts:18:28 › domain trends preserves 0 actual weeks and empty state (1.2s)
+  ok  6 tests\domain-trends-loading.spec.ts:18:28 › domain trends preserves 1 actual weeks and empty state (1.2s)
+  ok  7 tests\domain-trends-loading.spec.ts:18:28 › domain trends preserves 9 actual weeks and empty state (1.3s)
+  ok  8 tests\domain-trends-loading.spec.ts:19:51 › domain trends retries terms failure and clears placeholders (1.5s)
+[WebServer] 10:14:30 AM [vite] (client) [console.error] Failed to load advisory sections: Error: Failed to fetch advisory sections (500)
+[WebServer]     at fetchAdvisorySections (http://127.0.0.1:5187/src/features/profiles/teacher/pages/attendance/services/attendance.service.ts:15:21)
+  ok  9 tests\domain-trends-loading.spec.ts:19:51 › domain trends retries advisories failure and clears placeholders (1.5s)
+  ok 10 tests\domain-trends-loading.spec.ts:19:51 › domain trends retries trends failure and clears placeholders (1.5s)
+  ok 11 tests\domain-trends-loading.spec.ts:20:32 › domain trends light neutral score and colored composite contrast (2.9s)
+  ok 12 tests\domain-trends-loading.spec.ts:20:32 › domain trends dark neutral score and colored composite contrast (2.8s)
+  ok 13 tests\domain-trends-loading.spec.ts:21:1 › domain chart placeholder preserves the line-chart silhouette (968ms)
+  ok 14 tests\domain-trends-loading.spec.ts:22:1 › domain subject selection and legend toggles keep their existing behavior (1.6s)
+  ok 15 tests\domain-trends-loading.spec.ts:23:1 › domain trends no-advisory result settles to its existing empty state (1.2s)
+
+  15 passed (34.8s)

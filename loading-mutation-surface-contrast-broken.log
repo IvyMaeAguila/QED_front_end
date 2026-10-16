@@ -1,0 +1,37 @@
+[WebServer] (node:18268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:33864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:37916) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/1] tests\loading.spec.ts:111:40 › light: neutral contrast on every surface
+  1) tests\loading.spec.ts:111:40 › light: neutral contrast on every surface ───────────────────────
+
+    Error: card
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 1.1
+    Received:    1
+
+      116 |     return es.map(e => { const bg = luminance(getComputedStyle(e).backgroundColor); const base = luminance(getComputedStyle(e.querySelector("[data-sk-primitive]")!).backgroundColor); return { surface: (e as HTMLElement).dataset.surface, contrast: (Math.max(bg, base) + .05) / (Math.min(bg, base) + .05) }; });
+      117 |   });
+    > 118 |   for (const result of results) { expect(result.contrast, result.surface).toBeGreaterThanOrEqual(1.1); expect(result.contrast, result.surface).toBeLessThanOrEqual(2); }
+          |                                                                           ^
+      119 | });
+      120 | test("text line metrics and adjacent widths", async ({ page }) => {
+      121 |   await go(page, "latency=1500&mode=text");
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\loading.spec.ts:118:75
+
+    Error Context: test-results\loading-light-neutral-contrast-on-every-surface\error-context.md
+
+
+  1 failed
+    tests\loading.spec.ts:111:40 › light: neutral contrast on every surface ────────────────────────

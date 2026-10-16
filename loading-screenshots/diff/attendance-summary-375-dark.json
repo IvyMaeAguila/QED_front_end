@@ -1,0 +1,69 @@
+{
+  "regions": [
+    {
+      "selector": "[data-sk-region=\"attendance-summary-value-School days\"]",
+      "box": {
+        "x": 82,
+        "y": 443.5,
+        "width": 84.453125,
+        "height": 25
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"attendance-summary-value-Present\"]",
+      "box": {
+        "x": 228.5,
+        "y": 443.5,
+        "width": 53.328125,
+        "height": 25
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"attendance-summary-value-Absent\"]",
+      "box": {
+        "x": 72,
+        "y": 535.5,
+        "width": 47.5625,
+        "height": 25
+      }
+    },
+    {
+      "selector": "[data-sk-region=\"attendance-summary-value-Late / Excused\"]",
+      "box": {
+        "x": 228.5,
+        "y": 535.5,
+        "width": 96,
+        "height": 25
+      }
+    }
+  ],
+  "loadedBoxes": [
+    {
+      "x": 82,
+      "y": 443.5,
+      "width": 84.453125,
+      "height": 25
+    },
+    {
+      "x": 228.5,
+      "y": 443.5,
+      "width": 53.328125,
+      "height": 25
+    },
+    {
+      "x": 72,
+      "y": 535.5,
+      "width": 47.5625,
+      "height": 25
+    },
+    {
+      "x": 228.5,
+      "y": 535.5,
+      "width": 96,
+      "height": 25
+    }
+  ],
+  "shapePixels": 1734,
+  "outsidePixels": 0,
+  "outsideRatio": 0
+}

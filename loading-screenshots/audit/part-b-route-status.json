@@ -1,0 +1,391 @@
+{
+  "total": 55,
+  "unregistered": [],
+  "routes": [
+    {
+      "path": "/teacher/holistic",
+      "role": "TEACHER",
+      "component": "HolisticOverviewPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/teacher/attendance/records",
+      "role": "TEACHER",
+      "component": "TeacherAttendanceRecordsPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/teacher/holistic/domain-trends",
+      "role": "TEACHER",
+      "component": "HolisticDomainTrendsPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/principal/gradebooks/:grade",
+      "role": "PRINCIPAL",
+      "component": "PrincipalGradeSheetPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/admin/classes/new",
+      "role": "ADMIN",
+      "component": "ClassFormPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/admin/classes/:classId/edit",
+      "role": "ADMIN",
+      "component": "ClassFormPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/admin/subjects/new",
+      "role": "ADMIN",
+      "component": "AddSubjectPage",
+      "status": "COVERED WITH FAILURE",
+      "reason": "First 375px light case exceeded its unchanged 5s main visibility assertion during cold dev compilation; remaining seven cases in its file passed."
+    },
+    {
+      "path": "/admin/students/new",
+      "role": "ADMIN",
+      "component": "StudentFormPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/admin/students/:studentId/edit",
+      "role": "ADMIN",
+      "component": "StudentFormPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/admin/users/new",
+      "role": "ADMIN",
+      "component": "UserFormPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/admin/users/:role/:userId/edit",
+      "role": "ADMIN",
+      "component": "UserFormPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/teacher/subjects/:subjectId",
+      "role": "TEACHER",
+      "component": "SubjectDetailPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/principal/reports",
+      "role": "PRINCIPAL",
+      "component": "AnalyticsPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/teacher/students/:studentId",
+      "role": "TEACHER",
+      "component": "StudentDetailPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/admin/users/:role/:userId",
+      "role": "ADMIN",
+      "component": "UserViewPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/admin/classes/:classId",
+      "role": "ADMIN",
+      "component": "ClassViewPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/admin/subjects/:subjectId",
+      "role": "ADMIN",
+      "component": "AdminSubjectDetailPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/parent/students/:studentId/topics/:topicId/support",
+      "role": "PARENT",
+      "component": "TopicSupportChoice",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/parent/students/:studentId/topics/:topicId/courseware",
+      "role": "PARENT",
+      "component": "CoursewareView",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/teacher/attendance",
+      "role": "TEACHER",
+      "component": "TeacherAttendancePage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/principal/gradebooks",
+      "role": "PRINCIPAL",
+      "component": "PrincipalGradebooksPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/teacher/advisory",
+      "role": "TEACHER",
+      "component": "AdvisoryRosterPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/teacher/subjects/:subjectSectionId/students",
+      "role": "TEACHER",
+      "component": "SubjectClassListPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/",
+      "role": "PUBLIC",
+      "component": "LandingPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/login",
+      "role": "PUBLIC",
+      "component": "LoginPanel",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/admin/help",
+      "role": "ADMIN",
+      "component": "HelpSupportPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/principal/help",
+      "role": "PRINCIPAL",
+      "component": "HelpSupportPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/teacher/help",
+      "role": "TEACHER",
+      "component": "HelpSupportPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/parent/help",
+      "role": "PARENT",
+      "component": "HelpSupportPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/parent",
+      "role": "PARENT",
+      "component": "ParentDashboardHome",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/principal/students",
+      "role": "PRINCIPAL",
+      "component": "PrincipalStudentsPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/admin/calendar",
+      "role": "ADMIN",
+      "component": "CalendarPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/principal/calendar",
+      "role": "PRINCIPAL",
+      "component": "CalendarPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/teacher/calendar",
+      "role": "TEACHER",
+      "component": "CalendarPageView",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/parent/calendar",
+      "role": "PARENT",
+      "component": "CalendarPageView",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/principal/teachers/:teacherId",
+      "role": "PRINCIPAL",
+      "component": "TeacherSchedulePage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/admin/academic-year",
+      "role": "ADMIN",
+      "component": "AcademicYearPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/admin/subjects",
+      "role": "ADMIN",
+      "component": "ManageSubjectsPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/admin/students",
+      "role": "ADMIN",
+      "component": "StudentRecordsPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/principal/teachers",
+      "role": "PRINCIPAL",
+      "component": "PrincipalTeachersPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/parent/enrolled-children",
+      "role": "PARENT",
+      "component": "EnrolledChildrenPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/admin",
+      "role": "ADMIN",
+      "component": "AdminDashboardHome",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/admin/classes",
+      "role": "ADMIN",
+      "component": "ClassesPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/admin/users",
+      "role": "ADMIN",
+      "component": "UserManagementPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/teacher/subjects",
+      "role": "TEACHER",
+      "component": "SubjectsPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/teacher",
+      "role": "TEACHER",
+      "component": "TeacherDashboardHome",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/teacher/holistic/:studentId",
+      "role": "TEACHER",
+      "component": "StudentHolisticProfilePage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/principal",
+      "role": "PRINCIPAL",
+      "component": "PrincipalDashboardHome",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/teacher/grades",
+      "role": "TEACHER",
+      "component": "GradesPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/principal/students/class/:classId",
+      "role": "PRINCIPAL",
+      "component": "ClassListPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/principal/students/grade/:gradeId",
+      "role": "PRINCIPAL",
+      "component": "ClassListPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/principal/holistic-performance-analytics",
+      "role": "PRINCIPAL",
+      "component": "HolisticPerformanceAnalyticsPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/teacher/subjects/:subjectId/records",
+      "role": "TEACHER",
+      "component": "SubjectRecordsPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/parent/students/:studentId",
+      "role": "PARENT",
+      "component": "ChildDetailPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    },
+    {
+      "path": "/parent/students/:studentId/topics/:topicId/quiz",
+      "role": "PARENT",
+      "component": "PetQuizPage",
+      "status": "PASS",
+      "reason": "Registered route and associated suite coverage completed; exhaustive optional-region certification remains excluded."
+    }
+  ]
+}

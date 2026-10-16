@@ -1,0 +1,10 @@
+{
+  "scripts/audit-loading.mjs": "5d59d0f51eba6f3a2b906d0582e34ac92b8aa5e4b62c16f4dc9c027aff45b155",
+  "scripts/check-bundle-budget.mjs": "12f45bba3550eb660d2558541f176606b1b4dbcfd7e7d0ff599991df31708940",
+  "scripts/loading-input-hashes.mjs": "7a81c5261e08956c4ab4341e39dafebb18b92fe0dfbcc52b0ad47540938a2d97",
+  "scripts/measure-startup.mjs": "2da4dbb9cebcfdf439716ac4915a45e9819e751e03a1a92e435124ba0d02c03b",
+  "scripts/startup-harness.mjs": "1df4a009f5833eb4b169c6bf37f7237e539de1229d2b7cb033e495a73b1b5c3f",
+  "scripts/tag-loading-regions.mjs": "ec58c65b515602e76cdf66ccd2ec36e82349428110321e69b6707b89664161a2",
+  "scripts/verify-loading-mutations.mjs": "8d3a6ae2d0e4387833a4b6fef1d9b390bf51609135e0c9f28f7cf6d97791fb6e",
+  "scripts/verify-part-a-baseline.mjs": "47a0dcd4b5028deaae88383b79bc7db8c0d1ff442451e42d3aae82921f47a8f1"
+}

@@ -1,8 +1,10 @@
+import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { Users, GraduationCap, TrendingUp, AlertTriangle } from "lucide-react";
 import { OverviewCard } from "../../../../shared/components/DashboardUI";
 import type { OverviewData } from "../data/types";
 
 interface OverviewCardsProps {
+  loading?: boolean;
   overview: OverviewData;
   currentTermLabel: string;
   panelBg: string;
@@ -20,12 +22,13 @@ export function OverviewCards({
   textPrimary,
   textMuted,
   darkMode,
+  loading = false,
 }: OverviewCardsProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-5">
-      <OverviewCard
-        label="Total Students"
-        value={overview.totalStudents.toLocaleString()}
+    <div data-sk-region="principal-overview" className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-5">
+      <OverviewCard loading={loading}
+        label="Total Students" region="principal-kpi-total-students"
+        value={loading ? <SkeletonText width="4ch" /> : overview.totalStudents.toLocaleString()}
         sub="Currently enrolled"
         icon={GraduationCap}
         showIcon={false}
@@ -37,9 +40,9 @@ export function OverviewCards({
         textMuted={textMuted}
         darkMode={darkMode}
       />
-      <OverviewCard
-        label="Total Teachers"
-        value={overview.totalTeachers.toString()}
+      <OverviewCard loading={loading}
+        label="Total Teachers" region="principal-kpi-total-teachers"
+        value={loading ? <SkeletonText width="3ch" /> : overview.totalTeachers.toString()}
         sub="Active teachers"
         icon={Users}
         showIcon={false}
@@ -51,14 +54,14 @@ export function OverviewCards({
         textMuted={textMuted}
         darkMode={darkMode}
       />
-      <OverviewCard
-        label="Overall Attendance"
-        value={`${overview.attendance}%`}
-        sub={`${currentTermLabel} average`}
+      <OverviewCard loading={loading}
+        label="Overall Attendance" region="principal-kpi-overall-attendance"
+        value={loading ? <SkeletonText width="4ch" /> : `${overview.attendance}%`}
+        sub={<>{loading ? <SkeletonText width="6ch" className="inline-block align-top" /> : currentTermLabel} average</>}
         icon={TrendingUp}
         showIcon={false}
         compact
-        trend={overview.attendance >= 93 ? "up" : "down"}
+        trend={loading ? "flat" : overview.attendance >= 93 ? "up" : "down"}
         variant="primary"
         panelBg={panelBg}
         panelBorder={panelBorder}
@@ -66,14 +69,14 @@ export function OverviewCards({
         textMuted={textMuted}
         darkMode={darkMode}
       />
-      <OverviewCard
-        label="Academic Performance"
-        value={`${overview.academicPerf}%`}
-        sub={`${currentTermLabel} overall`}
+      <OverviewCard loading={loading}
+        label="Academic Performance" region="principal-kpi-academic-performance"
+        value={loading ? <SkeletonText width="4ch" /> : `${overview.academicPerf}%`}
+        sub={<>{loading ? <SkeletonText width="6ch" className="inline-block align-top" /> : currentTermLabel} overall</>}
         icon={TrendingUp}
         showIcon={false}
         compact
-        trend={overview.academicPerf >= 82 ? "up" : "down"}
+        trend={loading ? "flat" : overview.academicPerf >= 82 ? "up" : "down"}
         variant="primary"
         panelBg={panelBg}
         panelBorder={panelBorder}
@@ -81,8 +84,8 @@ export function OverviewCards({
         textMuted={textMuted}
         darkMode={darkMode}
       />
-      <OverviewCard
-        label="Needs Intervention"
+      <OverviewCard loading={false}
+        label="Needs Intervention" region="principal-kpi-needs-intervention"
         value={overview.needsIntervention.toString()}
         sub="Students flagged"
         icon={AlertTriangle}

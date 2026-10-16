@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { rememberRows } from "@shared/loading/reservations";
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import {lazy,Suspense} from "react";
+import {useRoutePreview} from "@shared/loading/RoutePreview";
 import { WholeChildSnapshot } from "./components/weeklyReport";
 import { SnapshotThemeProvider } from "./context/SnapshotThemeContext";
 import {
-  fetchStudentWeeklyEvaluation,
   type StudentWeeklyEvaluationResponse,
 } from "./service/weeklyHolistic.service";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
 import type { DetailStudent } from "../../Student/GlobalTypes/types";
 
-interface HolisticTabProps {
+export interface HolisticTabProps {
   /** Current grading term/period (termNumber). Change this when the term switches
    * (e.g. Term 1 → Term 2) — HolisticTab refetches and the date-button selection
    * resets automatically. */
@@ -17,34 +19,9 @@ interface HolisticTabProps {
   theme: AdminThemeContext;
 }
 
-export default function HolisticTab({ termKey, student, theme }: HolisticTabProps) {
-  const { textPrimary, textMuted, panelBorder } = theme;
-  const [data, setData] = useState<StudentWeeklyEvaluationResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-
-    fetchStudentWeeklyEvaluation(student.id, termKey)
-      .then((res) => {
-        if (!cancelled) setData(res);
-      })
-      .catch((err) => {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Failed to load holistic evaluation.");
-        }
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [student.id, termKey]);
+export function HolisticTabView({ termKey, student, theme,reader }: HolisticTabProps&{reader:{data?:StudentWeeklyEvaluationResponse;loading:boolean;error:string|null;retry:()=>void}}) {
+  const { textPrimary } = theme;
+  const data=reader.data,loading=reader.loading,error=reader.error;
 
   return (
     <div className="flex flex-col gap-4">
@@ -52,24 +29,20 @@ export default function HolisticTab({ termKey, student, theme }: HolisticTabProp
         Holistic Development
       </h1>
       <SnapshotThemeProvider value={theme}>
-        {loading ? (
-          <div className={`rounded-2xl border p-8 text-center text-sm font-semibold ${textMuted} ${panelBorder}`}>
-            Loading holistic evaluation…
-          </div>
-        ) : error ? (
-          <div className={`rounded-2xl border p-8 text-center text-sm font-semibold text-red-500 ${panelBorder}`}>
-            {error}
-          </div>
-        ) : (
+        <LoadingRegion name="parent-weekly-holistic" loading={loading} onSettled={() => rememberRows(`parent-weekly:${student.id}:${termKey}`,data?.subjects.length ?? 0)} error={error} retry={reader.retry} variable skeleton={null} frame={(pending) => (
           <WholeChildSnapshot
-            {...data!.current}
-            history={data!.history}
-            subjects={data!.subjects}
+            {...(data?.current ?? {domainAverages:{cognitive:null,emotional:null,behavioral:null,social:null},evaluationCount:0,lastEvaluation:null,riskLevel:"NONE" as const})}
+            loading={pending} viewKey={`parent-weekly:${student.id}:${termKey}`}
+            history={data?.history}
+            subjects={data?.subjects}
             termKey={termKey}
             student={student}
           />
-        )}
+        )}>{null}</LoadingRegion>
       </SnapshotThemeProvider>
     </div>
   );
 }
+
+const Queries=lazy(()=>import('../../../query/ParentWeeklyQueries'));
+export default function HolisticTab(props:HolisticTabProps){const preview=useRoutePreview();const fallback=<HolisticTabView {...props} reader={{loading:true,error:null,retry:()=>{}}}/>;return preview?fallback:<Suspense fallback={fallback}><Queries {...props}/></Suspense>;}

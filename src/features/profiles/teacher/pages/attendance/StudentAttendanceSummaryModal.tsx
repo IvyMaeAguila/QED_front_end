@@ -6,7 +6,7 @@ import {
   type GradingPeriod,
 } from "../subjects/detail/types/Grading";
 
-const ACCENT = "#6B0000";
+const ACCENT = "var(--color-maroon)";
 
 interface StudentAttendanceSummaryModalProps {
   student: RosterStudent;
@@ -70,7 +70,7 @@ export function StudentAttendanceSummaryModal({
 }: StudentAttendanceSummaryModalProps) {
   const cellBase = `px-3 py-2.5 text-center text-xs font-bold tabular-nums ${textPrimary}`;
   const headBase = `px-3 py-2.5 text-center text-xs font-extrabold uppercase tracking-wider ${textMuted}`;
-  const subtleBg = darkMode ? "bg-white/5" : "bg-[#F8FAFC]";
+  const subtleBg = darkMode ? "bg-white/5" : "bg-brand-light";
   const zebraBg = darkMode ? "bg-white/[0.02]" : "bg-black/[0.012]";
 
   // Precompute every term's month-by-month stats once, then derive the
@@ -190,7 +190,7 @@ export function StudentAttendanceSummaryModal({
               </p>
               <p
                 className="mt-1 text-2xl font-black tabular-nums"
-                style={{ color: ACCENT }}
+                style={{ color: "var(--brand-ink)" }}
               >
                 {overall.absent}
               </p>
@@ -247,7 +247,7 @@ export function StudentAttendanceSummaryModal({
                           ))}
                           <th
                             className={`${headBase} border-l ${panelBorder}`}
-                            style={{ color: ACCENT }}
+                            style={{ color: "var(--brand-ink)" }}
                           >
                             Total
                           </th>
@@ -267,7 +267,7 @@ export function StudentAttendanceSummaryModal({
                           ))}
                           <td
                             className={`${cellBase} border-l ${panelBorder} ${subtleBg}`}
-                            style={{ color: ACCENT }}
+                            style={{ color: "var(--brand-ink)" }}
                           >
                             {termClassDays}
                           </td>
@@ -285,7 +285,7 @@ export function StudentAttendanceSummaryModal({
                           ))}
                           <td
                             className={`${cellBase} border-l ${panelBorder} ${subtleBg}`}
-                            style={{ color: ACCENT }}
+                            style={{ color: "var(--brand-ink)" }}
                           >
                             {termPresent}
                           </td>
@@ -303,7 +303,7 @@ export function StudentAttendanceSummaryModal({
                           ))}
                           <td
                             className={`${cellBase} border-l ${panelBorder} ${subtleBg}`}
-                            style={{ color: ACCENT }}
+                            style={{ color: "var(--brand-ink)" }}
                           >
                             {termAbsent}
                           </td>

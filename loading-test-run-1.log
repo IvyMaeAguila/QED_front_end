@@ -1,0 +1,179 @@
+[WebServer] (node:39412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:15716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 32 tests using 1 worker
+
+(node:2272) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\loading.spec.ts:7:1 › 60ms never reveals a skeleton (334ms)
+  ok  2 tests\loading.spec.ts:11:1 › 320ms reveals after 200ms and reserves at least 400ms (1.1s)
+  ok  3 tests\loading.spec.ts:20:1 › 1500ms begins showing content within 150ms of data (2.1s)
+  ok  4 tests\loading.spec.ts:24:1 › fixed region retains height and has zero CLS (1.6s)
+  ok  5 tests\loading.spec.ts:30:3 › variable list, data size 0: one swap, stable surroundings (1.8s)
+  ok  6 tests\loading.spec.ts:30:3 › variable list, data size 2: one swap, stable surroundings (1.7s)
+  ok  7 tests\loading.spec.ts:30:3 › variable list, data size 9: one swap, stable surroundings (1.7s)
+  ok  8 tests\loading.spec.ts:30:3 › variable text, data size 1: one swap, stable surroundings (1.7s)
+  ok  9 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (1.7s)
+  ok 10 tests\loading.spec.ts:30:3 › variable text, data size 24: one swap, stable surroundings (1.8s)
+  ok 11 tests\loading.spec.ts:49:1 › animation properties, shimmer duration and shared easing (1.1s)
+  ok 12 tests\loading.spec.ts:59:1 › different mount times share shimmer phase (1.1s)
+  ok 13 tests\loading.spec.ts:64:30 › 5 items use exact stagger policy (1.1s)
+  ok 14 tests\loading.spec.ts:64:30 › 12 items use exact stagger policy (1.1s)
+  ok 15 tests\loading.spec.ts:68:1 › reduced motion has no shimmer or fade wait (1.3s)
+  ok 16 tests\loading.spec.ts:76:1 › aria busy, hidden reservation, delayed status and complete cleanup (1.8s)
+  ok 17 tests\loading.spec.ts:85:1 › error removes skeleton and retry reloads (2.5s)
+  ok 18 tests\loading.spec.ts:92:1 › negative control catches wrong fixed height and CLS (1.6s)
+  ok 19 tests\loading.spec.ts:97:1 › negative control catches unsynchronized shimmer (1.1s)
+  ok 20 tests\loading.spec.ts:102:1 › skeleton CSS uses tokens for every color (2ms)
+  ok 21 tests\loading.spec.ts:107:40 › light: neutral contrast on every surface (272ms)
+  ok 22 tests\loading.spec.ts:107:40 › dark: neutral contrast on every surface (254ms)
+  ok 23 tests\loading.spec.ts:116:1 › text line metrics and adjacent widths (256ms)
+  x  24 tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition (41ms)
+(node:19796) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 25 tests\teacher-dashboard.spec.ts:28:68 › teacher dashboard 375px light: real route, stable stat geometry and screenshots (5.1s)
+  ok 26 tests\teacher-dashboard.spec.ts:28:68 › teacher dashboard 375px dark: real route, stable stat geometry and screenshots (2.5s)
+  ok 27 tests\teacher-dashboard.spec.ts:28:68 › teacher dashboard 1280px light: real route, stable stat geometry and screenshots (2.7s)
+  ok 28 tests\teacher-dashboard.spec.ts:28:68 › teacher dashboard 1280px dark: real route, stable stat geometry and screenshots (2.6s)
+  ok 29 tests\teacher-dashboard.spec.ts:56:1 › classification rejects fixed regions whose loaded height depends on data size (2.0s)
+  ok 30 tests\teacher-dashboard.spec.ts:70:88 › teacher wrapping name classification: 3 characters (725ms)
+  ok 31 tests\teacher-dashboard.spec.ts:70:88 › teacher wrapping name classification: 15 characters (736ms)
+  ok 32 tests\teacher-dashboard.spec.ts:70:88 › teacher wrapping name classification: 200 characters (742ms)
+
+
+  1) tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition 
+
+    Error: Routes still requiring migration and real-route verification:
+    /
+    /login
+    /admin
+    /admin/students
+    /admin/students/new
+    /admin/students/:studentId/edit
+    /admin/users
+    /admin/users/new
+    /admin/users/:role/:userId
+    /admin/users/:role/:userId/edit
+    /admin/classes
+    /admin/classes/new
+    /admin/classes/:classId
+    /admin/classes/:classId/edit
+    /admin/subjects
+    /admin/subjects/new
+    /admin/subjects/:subjectId
+    /admin/academic-year
+    /admin/calendar
+    /admin/help
+    /principal
+    /principal/students
+    /principal/students/class/:classId
+    /principal/students/grade/:gradeId
+    /principal/teachers
+    /principal/teachers/:teacherId
+    /principal/reports
+    /principal/holistic-performance-analytics
+    /principal/gradebooks
+    /principal/gradebooks/:grade
+    /principal/calendar
+    /principal/help
+    /teacher/attendance
+    /teacher/attendance/records
+    /teacher/subjects
+    /teacher/subjects/:subjectId
+    /teacher/subjects/:subjectId/records
+    /teacher/subjects/:subjectSectionId/students
+    /teacher/grades
+    /teacher/holistic
+    /teacher/holistic/:studentId
+    /teacher/holistic/domain-trends
+    /teacher/students/:studentId
+    /teacher/advisory
+    /teacher/calendar
+    /teacher/help
+    /parent
+    /parent/enrolled-children
+    /parent/students/:studentId
+    /parent/students/:studentId/topics/:topicId/support
+    /parent/students/:studentId/topics/:topicId/courseware
+    /parent/students/:studentId/topics/:topicId/quiz
+    /parent/calendar
+    /parent/help
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 56
+
+    - Array []
+    + Array [
+    +   "/",
+    +   "/login",
+    +   "/admin",
+    +   "/admin/students",
+    +   "/admin/students/new",
+    +   "/admin/students/:studentId/edit",
+    +   "/admin/users",
+    +   "/admin/users/new",
+    +   "/admin/users/:role/:userId",
+    +   "/admin/users/:role/:userId/edit",
+    +   "/admin/classes",
+    +   "/admin/classes/new",
+    +   "/admin/classes/:classId",
+    +   "/admin/classes/:classId/edit",
+    +   "/admin/subjects",
+    +   "/admin/subjects/new",
+    +   "/admin/subjects/:subjectId",
+    +   "/admin/academic-year",
+    +   "/admin/calendar",
+    +   "/admin/help",
+    +   "/principal",
+    +   "/principal/students",
+    +   "/principal/students/class/:classId",
+    +   "/principal/students/grade/:gradeId",
+    +   "/principal/teachers",
+    +   "/principal/teachers/:teacherId",
+    +   "/principal/reports",
+    +   "/principal/holistic-performance-analytics",
+    +   "/principal/gradebooks",
+    +   "/principal/gradebooks/:grade",
+    +   "/principal/calendar",
+    +   "/principal/help",
+    +   "/teacher/attendance",
+    +   "/teacher/attendance/records",
+    +   "/teacher/subjects",
+    +   "/teacher/subjects/:subjectId",
+    +   "/teacher/subjects/:subjectId/records",
+    +   "/teacher/subjects/:subjectSectionId/students",
+    +   "/teacher/grades",
+    +   "/teacher/holistic",
+    +   "/teacher/holistic/:studentId",
+    +   "/teacher/holistic/domain-trends",
+    +   "/teacher/students/:studentId",
+    +   "/teacher/advisory",
+    +   "/teacher/calendar",
+    +   "/teacher/help",
+    +   "/parent",
+    +   "/parent/enrolled-children",
+    +   "/parent/students/:studentId",
+    +   "/parent/students/:studentId/topics/:topicId/support",
+    +   "/parent/students/:studentId/topics/:topicId/courseware",
+    +   "/parent/students/:studentId/topics/:topicId/quiz",
+    +   "/parent/calendar",
+    +   "/parent/help",
+    + ]
+
+      32 |   expect(routes.length).toBeGreaterThan(0);
+      33 |   const uncovered = routes.filter(route => !(route in routeSkeletons));
+    > 34 |   expect(uncovered, `Routes still requiring migration and real-route verification:\n${uncovered.join("\n")}`).toEqual([]);
+         |                                                                                                               ^
+      35 | });
+      36 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\route-coverage.spec.ts:34:111
+
+    Error Context: test-results\route-coverage-every-real--4a050-its-own-loading-composition\error-context.md
+
+  1 failed
+    tests\route-coverage.spec.ts:30:1 › every real route must register its own loading composition ─
+  31 passed (51.1s)

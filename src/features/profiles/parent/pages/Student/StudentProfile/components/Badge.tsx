@@ -12,8 +12,8 @@ interface BadgeProps {
 
 const VARIANT_CLASSES: Record<BadgeVariant, { light: string; dark: string }> = {
   neutral: {
-    light: "bg-[#F3F4F6] text-[#374151] border border-[#E5E7EB]",
-    dark: "bg-white/10 text-[#E5E7EB] border border-white/10",
+    light: "bg-surface text-[#374151] border border-border-subtle",
+    dark: "bg-white/10 text-border-border-subtle border border-white/10",
   },
   success: {
     light: "bg-[#ECFDF3] text-[#15803D] border border-[#BBF7D0]",

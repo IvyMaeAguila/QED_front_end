@@ -1,0 +1,52 @@
+
+[WebServer] (node:4324) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:39540) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 13 tests using 1 worker
+
+(node:38952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/13] tests\parent-detail-loading.spec.ts:48:30 › parent overview reserves variable frame before reveal and swaps once
+[2/13] tests\parent-detail-loading.spec.ts:48:30 › parent academic reserves variable frame before reveal and swaps once
+[3/13] tests\parent-detail-loading.spec.ts:48:30 › parent holistic reserves variable frame before reveal and swaps once
+[4/13] tests\parent-detail-loading.spec.ts:48:30 › parent progressReport reserves variable frame before reveal and swaps once
+[5/13] tests\parent-detail-loading.spec.ts:48:30 › parent studentProfile reserves variable frame before reveal and swaps once
+[6/13] tests\parent-detail-loading.spec.ts:78:32 › parent rendered pixels and fixed attendance overlay false
+[7/13] tests\parent-detail-loading.spec.ts:78:32 › parent rendered pixels and fixed attendance overlay true
+[8/13] tests\parent-detail-loading.spec.ts:86:178 › parent academic fetch failure clears shapes and retries
+[9/13] tests\parent-detail-loading.spec.ts:86:178 › parent holistic fetch failure clears shapes and retries
+[10/13] tests\parent-detail-loading.spec.ts:86:178 › parent progressReport fetch failure clears shapes and retries
+[11/13] tests\parent-detail-loading.spec.ts:86:178 › parent studentProfile fetch failure clears shapes and retries
+[12/13] tests\parent-detail-loading.spec.ts:90:1 › parent report auto-column marking reflects measured native content variation
+[13/13] tests\parent-detail-loading.spec.ts:99:1 › parent report repeat visit restores native column reservations within 2px
+  1) tests\parent-detail-loading.spec.ts:99:1 › parent report repeat visit restores native column reservations within 2px 
+
+    Error: table 1 column 0
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2
+    Received:    6.875
+
+      106 |   release.hold();await page.getByRole('button',{name:'Progress Report',exact:true}).click();await expect(report).toHaveAttribute('data-sk-phase','revealed');
+      107 |   const pending=await tables().evaluateAll(ts=>ts.map(t=>Array.from(t.querySelectorAll('thead tr:first-child th')).map(c=>c.getBoundingClientRect().width)));
+    > 108 |   expect(pending).toHaveLength(loaded.length);pending.forEach((ws,i)=>ws.forEach((w,j)=>expect(Math.abs(w-loaded[i][j]),`table ${i} column ${j}`).toBeLessThanOrEqual(2)));
+          |                                                                                                                                                   ^
+      109 |   release();await expect(report).toHaveAttribute('data-sk-phase','settled');
+      110 | });
+      111 |
+        at forEach (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\parent-detail-loading.spec.ts:108:147)
+        at forEach (C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\parent-detail-loading.spec.ts:108:74)
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\parent-detail-loading.spec.ts:108:55
+
+    Error Context: test-results\parent-detail-loading-pare-8fdeb-umn-reservations-within-2px\error-context.md
+
+
+  1 failed
+    tests\parent-detail-loading.spec.ts:99:1 › parent report repeat visit restores native column reservations within 2px 
+  12 passed (36.4s)

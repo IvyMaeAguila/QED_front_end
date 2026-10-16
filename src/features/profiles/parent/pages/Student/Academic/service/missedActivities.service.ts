@@ -1,3 +1,5 @@
+import { parentFetch } from '../../../../query/parentRequest';
+import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
 import { API_CONFIG } from '../../../../../../../config/api.config';
 
 import type { MissedActivity } from "../types/types";
@@ -43,8 +45,8 @@ function mapToMissedActivity(raw: RawMissedActivity): MissedActivity {
 }
 
 const MissedActivitiesService = {
-  async getMissedActivities(studentId: number | string): Promise<MissedActivity[]> {
-    const response = await fetch(`${API_BASE_URL}/${studentId}`, {
+  async getMissedActivities(studentId: number | string, options?: ApiRequestOptions): Promise<MissedActivity[]> {
+    const response = await parentFetch(`${API_BASE_URL}/${studentId}`, options, {
       method: "GET",
       credentials: "include",
     });

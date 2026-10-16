@@ -1,0 +1,329 @@
+import { Eye,EyeOff } from "lucide-react";
+import { useState } from "react";
+import { useLocation,useNavigate } from "react-router-dom";
+import { ForgotPasswordModal } from "../../shared/components/manage_password/ForgotPasswordModal";
+import { OtpVerificationModal } from "../../shared/components/manage_password/OtpVerificationModal";
+import { ResetPasswordModal } from "../../shared/components/manage_password/ResetPasswordModal";
+import { ModalCloseButton,ModalFrame } from "../../shared/components/modal";
+import Logo from "../../shared/images/QED_Logo.png";
+import { AuthService } from "../auth/services/authentication.service";
+import { PasswordIcon,UserIDIcon } from "./components/LoginIcon";
+import { useAuth } from "./context/authContext";
+
+interface LoginModalProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+function getRoleHome(role?: string): string {
+  switch (role?.toUpperCase()) {
+    case "ADMIN":
+      return "/admin";
+    case "PRINCIPAL":
+      return "/principal";
+    case "TEACHER":
+      return "/teacher";
+    case "PARENT":
+      return "/parent";
+    default:
+      return "/login";
+  }
+}
+
+// Kunin ang ?redirect= mula sa URL; tanggihan kung hindi ito internal path
+// (dapat nagsisimula sa "/" pero hindi "//") para maiwasan ang open redirect.
+function getSafeRedirect(search: string): string | null {
+  const params = new URLSearchParams(search);
+  const redirect = params.get("redirect");
+  if (redirect && redirect.startsWith("/") && !redirect.startsWith("//")) {
+    return redirect;
+  }
+  return null;
+}
+
+type ForgotPasswordStep = "closed" | "email" | "otp" | "reset";
+
+function useLoginPanelState({ open, onClose }: LoginModalProps) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
+
+  const [userName, setuserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Forgot password flow state
+  const [forgotStep, setForgotStep] = useState<ForgotPasswordStep>("closed");
+  const [resetUserName, setResetUserName] = useState("");
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetToken, setResetToken] = useState("");
+
+  if (!open) return { content: (null), scope: {  } };
+
+  const handleLogin = async () => {
+    setError(null);
+
+    if (!userName.trim() || !password.trim()) {
+      setError("Please enter both User ID and Password.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const user = await AuthService.login({
+        userName: userName.trim(),
+        password,
+      });
+
+      await login(user, user.token, user.mustChangePassword);
+
+      const redirectTo = getSafeRedirect(location.search);
+      navigate(redirectTo || getRoleHome(user.role));
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Login failed. Please check your credentials and try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") handleLogin();
+  };
+
+  return { content: ((
+    <>
+    <ModalFrame
+      shellVariant="specialized"
+      onClose={onClose}
+      size="compact"
+      zIndexClass="z-100"
+      ariaLabel="Institutional Login"
+      backdropClassName="px-4"
+      backdropStyle={{
+        backgroundColor: "rgba(10,10,15,0.6)",
+        backdropFilter: "blur(8px)",
+      }}
+      className="qed-login-modal relative max-w-105 overflow-hidden rounded-[12px] border-0 bg-white shadow-none"
+      panelStyle={{
+        boxShadow: "0 24px 64px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.1)",
+        animation: "modalIn 0.2s cubic-bezier(0.16,1,0.3,1)",
+      }}
+    >
+        {/* Top accent bar */}
+        <div className="h-1 w-full bg-maroon" />
+
+        {/* Close button */}
+        <ModalCloseButton
+          onClose={onClose}
+          className="absolute right-4 top-4 text-[#9d9d9d] hover:bg-[#f4f4f4] hover:text-black"
+        />
+
+        <div data-sk-region="login-content" className="px-10 pt-10 pb-10 flex flex-col">
+          {/* Logo + branding */}
+          <div className="flex flex-col items-center gap-3 mb-8">
+            <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-[12px] bg-[#d9d9d9] shadow-md">
+              <img
+                src={Logo}
+                alt="QED Logo"
+                className="w-[90%] h-[90%] object-cover"
+              />
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-black tracking-tight leading-none text-brand-ink">
+                QED
+              </p>
+              <p className="text-xs font-medium text-[#aaa] tracking-[0.18em] uppercase mt-0.5">
+                Quality Education
+              </p>
+            </div>
+          </div>
+
+          {/* Section label */}
+          <div className="mb-6 text-center">
+            <p className="text-[18px] font-semibold leading-[1.35] text-black">
+              Institutional Login
+            </p>
+            <p className="text-[13px] font-normal leading-[1.4] text-[#9d9d9d] mt-0.5">
+              Enter your credentials to continue
+            </p>
+          </div>
+
+          {/* Error message */}
+          {error && (
+            <div className="mb-4 px-3.5 py-2.5 rounded-lg bg-[#fdecec] border border-[#f5c2c2] text-[#a30000] text-xs font-medium text-center">
+              {error}
+            </div>
+          )}
+
+          {/* Fields */}
+          <div className="flex flex-col gap-4">
+            {/* Username */}
+            <div className="flex flex-col gap-1.5">
+              <label className="qed-type-label-compact text-gray-600 uppercase">
+                Username
+              </label>
+              <div className="relative">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#bbb]">
+                  <UserIDIcon color="#bbb" />
+                </span>
+                <input
+                  type="text"
+                  value={userName}
+                  onChange={(e) => setuserName(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="e.g. TC_maria.delacruz"
+                  className="w-full pl-12 pr-4 py-3 rounded-xl text-sm text-black bg-brand-light border border-transparent outline-none transition-all placeholder:text-[#ccc]"
+                  style={{ boxShadow: "none" }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.background = "#fff";
+                    e.currentTarget.style.borderColor = "color-mix(in srgb, var(--brand-primary) 35%, transparent)";
+                    e.currentTarget.style.boxShadow =
+                      "0 0 0 3px color-mix(in srgb, var(--brand-primary) 7%, transparent)";
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.background = "var(--brand-light)";
+                    e.currentTarget.style.borderColor = "transparent";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Password */}
+            <div className="flex flex-col gap-1.5">
+              <label className="qed-type-label-compact text-gray-600 uppercase">
+                Password
+              </label>
+              <div className="relative">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#bbb]">
+                  <PasswordIcon color="#bbb" />
+                </span>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="••••••••"
+                  className="w-full rounded-lg border border-transparent bg-brand-light py-3 pl-12 pr-11 text-sm text-black outline-none transition-all placeholder:text-[#ccc]"
+                  onFocus={(e) => {
+                    e.currentTarget.style.background = "#fff";
+                    e.currentTarget.style.borderColor = "color-mix(in srgb, var(--brand-primary) 35%, transparent)";
+                    e.currentTarget.style.boxShadow =
+                      "0 0 0 3px color-mix(in srgb, var(--brand-primary) 7%, transparent)";
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.background = "var(--brand-light)";
+                    e.currentTarget.style.borderColor = "transparent";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  tabIndex={-1}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#bbb] hover:text-gray-600 transition-colors"
+                  aria-label={showPassword ? "Show password" : "Hide password"}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Remember + Forgot */}
+          <div className="flex items-center justify-between mt-4">
+            <label className="flex items-center gap-2 cursor-pointer select-none group">
+              <input
+                type="checkbox"
+                className="w-3.5 h-3.5 accent-maroon cursor-pointer"
+              />
+              <span className="text-[13px] font-normal leading-[1.4] text-gray-600 group-hover:text-black transition-colors">
+                Remember me
+              </span>
+            </label>
+            <button
+              type="button"
+              onClick={() => setForgotStep("email")}
+              className="text-xs text-brand-ink hover:text-maroon-light font-medium transition-colors"
+            >
+              Forgot password?
+            </button>
+          </div>
+
+          {/* Login button */}
+          <button
+            disabled={loading}
+            className="mt-7 w-full rounded-lg py-3.5 qed-type-button text-white transition-opacity hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+            style={{
+              background: "var(--color-maroon)",
+              boxShadow: "0 4px 16px color-mix(in srgb, var(--brand-primary) 16%, transparent)",
+              transition: "opacity 0.15s, transform 0.1s",
+            }}
+            onClick={handleLogin}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+
+          {/* Footer note */}
+          <p className="text-center text-xs text-gray-500 mt-6 leading-relaxed">
+            For authorized personnel only. Unauthorized access
+            <br />
+            is prohibited and subject to disciplinary action.
+          </p>
+        </div>
+    </ModalFrame>
+
+      <style>{`
+        @keyframes modalIn {
+          from { opacity: 0; transform: scale(0.95) translateY(12px); }
+          to   { opacity: 1; transform: scale(1)    translateY(0); }
+        }
+      `}</style>
+
+      {/* Forgot password flow */}
+      {forgotStep === "email" && (
+        <ForgotPasswordModal
+          onClose={() => setForgotStep("closed")}
+          onOtpSent={(userName, email) => {
+            setResetUserName(userName);
+            setResetEmail(email);
+            setForgotStep("otp");
+          }}
+        />
+      )}
+      {forgotStep === "otp" && (
+        <OtpVerificationModal
+          userName={resetUserName}
+          email={resetEmail}
+          onClose={() => setForgotStep("closed")}
+          onResend={() => setForgotStep("email")}
+          onVerified={(token) => {
+            setResetToken(token);
+            setForgotStep("reset");
+          }}
+        />
+      )}
+      {forgotStep === "reset" && (
+        <ResetPasswordModal
+          resetToken={resetToken}
+          onClose={() => setForgotStep("closed")}
+          onSuccess={() => setForgotStep("closed")}
+        />
+      )}
+    </>
+  )), scope: {  } };
+}
+
+
+export type LoginPanelEffectScope = ReturnType<typeof useLoginPanelState>["scope"];
+export type LoginPanelRouteProps = Parameters<typeof useLoginPanelState>[0];
+export function LoginPanelComposition(props: LoginPanelRouteProps & { effects?: (scope: LoginPanelEffectScope) => import("react").ReactNode }) {
+ const state = useLoginPanelState(props);
+ return <>{props.effects?.(state.scope)}{state.content}</>;
+}

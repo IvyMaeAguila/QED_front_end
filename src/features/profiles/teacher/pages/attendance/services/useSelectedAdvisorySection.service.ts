@@ -1,14 +1,24 @@
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
+import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { useSearchParams } from "react-router-dom";
 import { fetchAdvisorySections, type AdvisorySection } from "./attendance.service";
+import { TeacherAdvisoryReaderContext } from "../../../query/TeacherAdvisoryReaderContext";
 
 export function useSelectedAdvisorySection() {
-  const [sections, setSections] = useState<AdvisorySection[] | null | undefined>(undefined);
-  const [error, setError] = useState<string | null>(null);
+  const reader = useContext(TeacherAdvisoryReaderContext);
+  const external = !!reader;
+  const [localSections, setSections] = useState<AdvisorySection[] | null | undefined>(undefined);
+  const [localError, setError] = useState<string | null>(null);
+  const sections = reader ? reader.data === undefined ? reader.loading || reader.error ? undefined : null : reader.data.length ? reader.data : null : localSections;
+  const error = reader ? reader.error : localError;
+  const [attempt, setAttempt] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
+    if (external) return;
     let cancelled = false;
+    setSections(undefined);
+    setError(null);
     fetchAdvisorySections()
       .then((secs) => {
         if (cancelled) return;
@@ -22,7 +32,7 @@ export function useSelectedAdvisorySection() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [attempt, external]);
 
   const requestedId = searchParams.get("classId");
   const section =
@@ -36,5 +46,5 @@ export function useSelectedAdvisorySection() {
     setSearchParams(next, { replace: true });
   }
 
-  return { sections, section, error, selectSection };
+  return { sections, section, error, selectSection, requestedClassId: requestedId, retry: reader?.retry ?? (() => setAttempt(value => value + 1)) };
 }

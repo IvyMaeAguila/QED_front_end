@@ -1,0 +1,38 @@
+[WebServer] (node:10992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:34140) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 27 tests using 1 worker
+
+(node:25316) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\auto-columns.spec.ts:9:32 › auto columns: 0 rows, one swap, stable shell and cached repeat (3.2s)
+  ok  2 tests\auto-columns.spec.ts:9:32 › auto columns: 1 rows, one swap, stable shell and cached repeat (2.6s)
+  ok  3 tests\auto-columns.spec.ts:9:32 › auto columns: 9 rows, one swap, stable shell and cached repeat (2.8s)
+  ok  4 tests\auto-columns.spec.ts:44:1 › auto-column classification requires observed data-dependent widths (568ms)
+  ok  5 tests\loading.spec.ts:7:1 › 60ms never reveals a skeleton (344ms)
+  ok  6 tests\loading.spec.ts:11:1 › 320ms reveals after 200ms and reserves at least 400ms (1.1s)
+  ok  7 tests\loading.spec.ts:20:1 › 1500ms begins showing content within 150ms of data (2.1s)
+  ok  8 tests\loading.spec.ts:24:1 › fixed region retains height and has zero CLS (1.6s)
+  ok  9 tests\loading.spec.ts:30:3 › variable list, data size 0: one swap, stable surroundings (1.8s)
+  ok 10 tests\loading.spec.ts:30:3 › variable list, data size 2: one swap, stable surroundings (1.9s)
+  ok 11 tests\loading.spec.ts:30:3 › variable list, data size 9: one swap, stable surroundings (1.9s)
+  ok 12 tests\loading.spec.ts:30:3 › variable text, data size 1: one swap, stable surroundings (2.0s)
+  ok 13 tests\loading.spec.ts:30:3 › variable text, data size 4: one swap, stable surroundings (1.9s)
+  ok 14 tests\loading.spec.ts:30:3 › variable text, data size 24: one swap, stable surroundings (1.7s)
+  ok 15 tests\loading.spec.ts:49:1 › animation properties, shimmer duration and shared easing (1.1s)
+  ok 16 tests\loading.spec.ts:59:1 › different mount times share shimmer phase (1.1s)
+  ok 17 tests\loading.spec.ts:64:30 › 5 items use exact stagger policy (1.1s)
+  ok 18 tests\loading.spec.ts:64:30 › 12 items use exact stagger policy (1.1s)
+  ok 19 tests\loading.spec.ts:68:1 › reduced motion has no shimmer or fade wait (1.3s)
+  ok 20 tests\loading.spec.ts:76:1 › aria busy, hidden reservation, delayed status and complete cleanup (1.8s)
+  ok 21 tests\loading.spec.ts:85:1 › error removes skeleton and retry reloads (3.0s)
+  ok 22 tests\loading.spec.ts:92:1 › negative control catches wrong fixed height and CLS (2.1s)
+  ok 23 tests\loading.spec.ts:97:1 › negative control catches unsynchronized shimmer (1.1s)
+  ok 24 tests\loading.spec.ts:102:1 › skeleton CSS uses tokens for every color (3ms)
+  ok 25 tests\loading.spec.ts:107:40 › light: neutral contrast on every surface (323ms)
+  ok 26 tests\loading.spec.ts:107:40 › dark: neutral contrast on every surface (1.1s)
+  ok 27 tests\loading.spec.ts:116:1 › text line metrics and adjacent widths (366ms)
+
+  27 passed (45.1s)

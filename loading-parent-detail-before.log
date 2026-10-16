@@ -1,0 +1,40 @@
+
+[WebServer] (node:15952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:7684) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+(node:40924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/1] tests\parent-detail-loading.spec.ts:3:1 › parent detail keeps navigation and identity labels during linked-student fetch
+  1) tests\parent-detail-loading.spec.ts:3:1 › parent detail keeps navigation and identity labels during linked-student fetch 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: 'Overview', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('button', { name: 'Overview', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Overview', exact: true })
+
+
+      1 | import {test,expect} from '@playwright/test';
+      2 | import {mockDirectory} from './fixtures/directory';
+    > 3 | test('parent detail keeps navigation and identity labels during linked-student fetch',async({page})=>{const release=await mockDirectory(page,'PARENT',false);await page.goto('/parent/students/1');await expect(page.getByRole('button',{name:'Overview',exact:true})).toBeVisible();await expect(page.getByText('Learner',{exact:true})).toBeVisible();await expect(page.locator('[data-sk-region="parent-student-identity"]')).toHaveAttribute('data-sk-phase','revealed');await expect(page.getByText(/couldn't find a student/)).toHaveCount(0);release();});
+        |                                                                                                                                                                                                                                                                        ^
+      4 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\parent-detail-loading.spec.ts:3:264
+
+    Error Context: test-results\parent-detail-loading-pare-6dcb2-during-linked-student-fetch\error-context.md
+
+
+  1 failed
+    tests\parent-detail-loading.spec.ts:3:1 › parent detail keeps navigation and identity labels during linked-student fetch 

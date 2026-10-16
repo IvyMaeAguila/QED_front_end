@@ -1,13 +1,7 @@
+import { SkeletonText } from "@shared/components/SkeletonLoading";
+import { PendingBar, PendingAxisTick } from "./PrincipalChartLoading";
 import { Users } from "lucide-react";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-} from "recharts";
+import { DeferredChart } from "@shared/loading/DeferredChart";
 import { SectionCard } from "../../../../shared/components/DashboardUI";
 import type {
   GradeAttendance,
@@ -15,6 +9,7 @@ import type {
 } from "../data/types";
 
 interface TodaysAttendanceSectionProps {
+  loading?: boolean;
   attendanceByGrade: GradeAttendance[];
   todaysAttendance: TodaysAttendance;
   panelBg: string;
@@ -240,7 +235,7 @@ function CustomTooltip({
             <span
               className="text-xs font-black"
               style={{
-                color: "var(--color-maroon)",
+                color: "var(--brand-ink)",
               }}
             >
               {data.attendance}%
@@ -267,7 +262,7 @@ function CustomTooltip({
           <span
             className="text-xs font-black"
             style={{
-              color: "var(--color-maroon)",
+              color: "var(--brand-ink)",
             }}
           >
             {data.attendance}%
@@ -292,6 +287,7 @@ export function TodaysAttendanceSection({
   darkMode,
   gridStroke,
   axisColor,
+  loading = false,
 }: TodaysAttendanceSectionProps) {
   const chartData: ChartData[] = attendanceByGrade.map(
     (item) => {
@@ -388,7 +384,7 @@ export function TodaysAttendanceSection({
             CHART
         ========================= */}
 
-        <div className="lg:col-span-3">
+        <div data-sk-region="principal-attendance-plot" className="lg:col-span-3">
           <div
             className="flex items-center justify-between mb-6 pb-2 border-b border-dashed"
             style={{
@@ -422,7 +418,7 @@ export function TodaysAttendanceSection({
             </span>
           </div>
 
-          <ResponsiveContainer
+          <DeferredChart loading={loading}>{({ ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip }) => (<ResponsiveContainer
             width="100%"
             height={220}
           >
@@ -439,11 +435,7 @@ export function TodaysAttendanceSection({
               {/* Grade Level */}
               <XAxis
                 dataKey="grade"
-                tick={{
-                  fill: axisColor,
-                  fontSize: 11,
-                  fontWeight: 700,
-                }}
+                tick={loading ? <PendingAxisTick /> : {fill:axisColor,fontSize:11,fontWeight:700}}
                 axisLine={{
                   stroke: gridStroke,
                 }}
@@ -476,19 +468,19 @@ export function TodaysAttendanceSection({
                 cursor={{
                   fill: darkMode
                     ? "rgba(255,255,255,0.06)"
-                    : "rgba(85,0,0,0.04)",
+                    : "color-mix(in srgb, var(--brand-primary) 4%, transparent)",
                 }}
               />
 
               {/* One bar per Grade Level */}
-              <Bar
+              <Bar isAnimationActive={!loading} shape={loading ? <PendingBar /> : undefined}
                 dataKey="attendance"
-                fill="var(--color-maroon)"
+                fill="var(--chart-primary)"
                 radius={[6, 6, 0, 0]}
                 maxBarSize={36}
               />
             </BarChart>
-          </ResponsiveContainer>
+          </ResponsiveContainer>)}</DeferredChart>
         </div>
 
         {/* =========================
@@ -513,7 +505,7 @@ export function TodaysAttendanceSection({
             <p
               className={`text-xl font-black tracking-tight tabular-nums mt-0.5 ${textPrimary}`}
             >
-              {todaysAttendance.present.toLocaleString()}
+              {loading ? <SkeletonText width="4ch" /> : todaysAttendance.present.toLocaleString()}
             </p>
           </div>
 
@@ -536,7 +528,7 @@ export function TodaysAttendanceSection({
             <p
               className={`text-xl font-black tracking-tight tabular-nums mt-0.5 ${textPrimary}`}
             >
-              {todaysAttendance.absent.toLocaleString()}
+              {loading ? <SkeletonText width="3ch" /> : todaysAttendance.absent.toLocaleString()}
             </p>
           </div>
 
@@ -562,7 +554,7 @@ export function TodaysAttendanceSection({
                 color: "var(--color-red)",
               }}
             >
-              {todaysAttendance.concerning}
+              {loading ? <SkeletonText width="2ch" /> : todaysAttendance.concerning}
             </p>
           </div>
         </div>

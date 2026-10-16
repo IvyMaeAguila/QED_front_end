@@ -1,0 +1,52 @@
+[WebServer] (node:37368) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:20536) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:38340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\principal-grade-sheet-loading.spec.ts:28:32 › grade sheet light term value has a measurable placeholder (4.7s)
+(node:39404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 tests\principal-grade-sheet-loading.spec.ts:28:32 › grade sheet dark term value has a measurable placeholder (1.3s)
+
+
+  1) tests\principal-grade-sheet-loading.spec.ts:28:32 › grade sheet light term value has a measurable placeholder 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 15
+    Received:   0
+
+      27 |
+      28 | for(const dark of [false,true])test(`grade sheet ${dark?'dark':'light'} term value has a measurable placeholder`,async({page})=>{
+    > 29 |  await fixture(page,dark);await page.goto(url);const region=page.locator('[data-sk-region="grade-sheet-term"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');const shape=region.locator('[data-sk-primitive]');const box=await shape.boundingBox();expect(box?.width??0).toBeGreaterThan(15);await checkRenderedContrast(shape,`grade-sheet-term-${dark?'dark':'light'}`);await checkShimmerPixels(shape,`grade-sheet-term-${dark?'dark':'light'}`);
+         |                                                                                                                                                                                                                                                                                              ^
+      30 | });
+      31 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\principal-grade-sheet-loading.spec.ts:29:286
+
+    Error Context: test-results\principal-grade-sheet-load-bf9bf-as-a-measurable-placeholder\error-context.md
+
+  2) tests\principal-grade-sheet-loading.spec.ts:28:32 › grade sheet dark term value has a measurable placeholder 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 15
+    Received:   0
+
+      27 |
+      28 | for(const dark of [false,true])test(`grade sheet ${dark?'dark':'light'} term value has a measurable placeholder`,async({page})=>{
+    > 29 |  await fixture(page,dark);await page.goto(url);const region=page.locator('[data-sk-region="grade-sheet-term"]');await expect(region).toHaveAttribute('data-sk-phase','revealed');const shape=region.locator('[data-sk-primitive]');const box=await shape.boundingBox();expect(box?.width??0).toBeGreaterThan(15);await checkRenderedContrast(shape,`grade-sheet-term-${dark?'dark':'light'}`);await checkShimmerPixels(shape,`grade-sheet-term-${dark?'dark':'light'}`);
+         |                                                                                                                                                                                                                                                                                              ^
+      30 | });
+      31 |
+        at C:\Users\Mavys\Downloads\QED_System\QED_front_end\tests\principal-grade-sheet-loading.spec.ts:29:286
+
+    Error Context: test-results\principal-grade-sheet-load-e85f2-as-a-measurable-placeholder\error-context.md
+
+  2 failed
+    tests\principal-grade-sheet-loading.spec.ts:28:32 › grade sheet light term value has a measurable placeholder 
+    tests\principal-grade-sheet-loading.spec.ts:28:32 › grade sheet dark term value has a measurable placeholder 

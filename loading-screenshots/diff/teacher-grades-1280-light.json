@@ -1,0 +1,24 @@
+{
+  "regions": [
+    {
+      "selector": "[data-sk-region=\"teacher-grades-table:table-body\"] tbody tr:nth-child(2) [data-sk-region=\"teacher-grade-avatar\"]",
+      "box": {
+        "x": 281,
+        "y": 472.953125,
+        "width": 28,
+        "height": 28
+      }
+    }
+  ],
+  "loadedBoxes": [
+    {
+      "x": 281,
+      "y": 456.765625,
+      "width": 28,
+      "height": 28
+    }
+  ],
+  "shapePixels": 648,
+  "outsidePixels": 0,
+  "outsideRatio": 0
+}

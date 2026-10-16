@@ -1,0 +1,23 @@
+
+[WebServer] (node:10104) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:38248) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:30716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/9] tests\overlay-contract.spec.ts:6:73 › fixed overlay 375 light: shared field keeps its matching box
+[2/9] tests\overlay-contract.spec.ts:6:73 › fixed overlay 375 dark: shared field keeps its matching box
+[3/9] tests\overlay-contract.spec.ts:6:73 › fixed overlay 1280 light: shared field keeps its matching box
+[4/9] tests\overlay-contract.spec.ts:6:73 › fixed overlay 1280 dark: shared field keeps its matching box
+[5/9] tests\overlay-contract.spec.ts:15:1 › fixed overlay rejects a shape extending outside its matching loaded field
+[6/9] tests\student-details-loading.spec.ts:25:68 › student details 375 light: real labels, baseline chart and controls
+[7/9] tests\student-details-loading.spec.ts:25:68 › student details 375 dark: real labels, baseline chart and controls
+[8/9] tests\student-details-loading.spec.ts:25:68 › student details 1280 light: real labels, baseline chart and controls
+[9/9] tests\student-details-loading.spec.ts:25:68 › student details 1280 dark: real labels, baseline chart and controls
+  9 passed (40.5s)

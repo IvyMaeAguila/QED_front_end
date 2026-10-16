@@ -1,0 +1,5 @@
+src/features/profiles/parent/pages/Student/Academic/components/InterventionSupport.tsx(93,46): error TS2345: Argument of type '{ id: string; topicId: number; concern: string; }' is not assignable to parameter of type 'InterventionFlag'.
+  Property 'severity' is missing in type '{ id: string; topicId: number; concern: string; }' but required in type 'InterventionFlag'.
+src/features/profiles/parent/pages/Student/ChildDetailPage.tsx(82,317): error TS2322: Type '{ theme: AdminThemeContext; student: DetailStudent; loading: boolean; }' is not assignable to type 'IntrinsicAttributes & ProgressReportTabProps'.
+  Property 'loading' does not exist on type 'IntrinsicAttributes & ProgressReportTabProps'.
+src/features/profiles/parent/pages/Student/Overview/components/HolisticAverage.tsx(140,15): error TS18047: 'snapshot' is possibly 'null'.

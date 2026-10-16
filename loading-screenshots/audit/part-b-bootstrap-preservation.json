@@ -1,0 +1,5 @@
+{
+  "allOtherBootstrapSourceUnchanged": true,
+  "zeroRequestAssertionExact": true,
+  "approvedChange": "Fast-bootstrap fixture setup only; all assertions remain"
+}

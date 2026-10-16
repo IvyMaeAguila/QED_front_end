@@ -1,0 +1,32 @@
+
+[WebServer] (node:40156) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 22 tests using 1 worker
+
+(node:40824) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/22] tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 375 light keeps known challenges
+[2/22] tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 375 dark keeps known challenges
+[3/22] tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 1280 light keeps known challenges
+[4/22] tests\pet-quiz-loading.spec.ts:6:62 › pet quiz road 1280 dark keeps known challenges
+[5/22] tests\pet-quiz-loading.spec.ts:7:1 › pet intro keeps its known story visible while access loads
+[6/22] tests\pet-quiz-loading.spec.ts:8:1 › pet quiz state error clears shapes and retries
+
+[WebServer] 3:05:00 PM [vite] (client) [console.error] Failed to load intervention state: Error: Failed to fetch intervention state.
+[WebServer]     at Object.getInterventionState (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/petQuiz.service.ts:20:22)
+[WebServer]     at async init (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/PetQuizPage.tsx:122:19)
+[WebServer] 3:05:00 PM [vite] (client) [console.error] Failed to load intervention state: Error: Failed to fetch intervention state.
+[WebServer]     at Object.getInterventionState (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/service/petQuiz.service.ts:20:22)
+[WebServer]     at async init (http://127.0.0.1:5187/src/features/profiles/parent/pages/Student/Academic/PetQuizPage.tsx:122:19)
+
+[7/22] tests\pet-quiz-loading.spec.ts:9:62 › pet quiz question 375 light reserves real choices
+[8/22] tests\pet-quiz-loading.spec.ts:9:62 › pet quiz question 375 dark reserves real choices
+[9/22] tests\pet-quiz-loading.spec.ts:9:62 › pet quiz question 1280 light reserves real choices
+[10/22] tests\pet-quiz-loading.spec.ts:9:62 › pet quiz question 1280 dark reserves real choices
+[11/22] tests\pet-quiz-loading.spec.ts:11:102 › pet bonus Matching 375 light
