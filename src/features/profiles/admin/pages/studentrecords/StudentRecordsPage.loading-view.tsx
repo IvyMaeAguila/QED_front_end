@@ -1,11 +1,11 @@
 import { UserPlus } from "lucide-react";
-import { useMemo,useState } from "react";
+import { lazy, Suspense, useMemo,useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import { useToast } from "../../../../../shared/context/ToastContext";
 import type { AdminThemeContext } from ".././AdminLayout";
 import { ConfirmDeleteModal } from "./components/ConfirmDeleteModal";
-import { StudentImportExportToolbar } from "./components/StudentImportExportToolbar";
+const StudentImportExportToolbar = lazy(() => import("./components/StudentImportExportToolbar").then(module => ({ default: module.StudentImportExportToolbar })));
 import { StudentSearchInput } from "./components/StudentSearchInput";
 import { Dropdown } from "./components/Studentsfilterbar";
 import { StudentsTable } from "./components/Studentstable";
@@ -99,6 +99,7 @@ function useStudentRecordsPageState() {
             onChange={setGenderFilter}
             darkMode={darkMode}
           />
+          <Suspense fallback={<span role="status" className={`inline-flex h-8 min-w-48 items-center text-xs ${textMuted}`}>Loading import/export tools…</span>}>
           <StudentImportExportToolbar
             filteredStudents={filtered}
             allStudentIds={students.map((s) => s.studentId)}
@@ -109,6 +110,7 @@ function useStudentRecordsPageState() {
             textPrimary={textPrimary}
             textMuted={textMuted}
           />
+          </Suspense>
           <button
             onClick={() => navigate("new")}
             className="h-8 px-3 rounded-lg text-xs font-extrabold text-white flex items-center gap-1.5 shrink-0 transition-colors hover:bg-maroon-light"
