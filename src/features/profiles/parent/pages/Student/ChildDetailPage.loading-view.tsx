@@ -1,3 +1,4 @@
+import { useExportProgress } from "@shared/components/useExportProgress";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { ArrowLeft,Download } from "lucide-react";
 import { useState } from "react";
@@ -32,6 +33,7 @@ function ProgressReportSection({
   student: DetailStudent;
 }) {
   const { data, loading, error, refetch, selectedTerm, selectedTermVisibility } = useProgressReport();
+  const { runExport, exportFeedback } = useExportProgress(theme.darkMode, "progress report", "PDF");
   const { downloading, handleDownload } = useFormalReportDownload({
     elementId: "formal-progress-report",
     fileName: `${data.meta.learner}-progress-report.pdf`,
@@ -57,6 +59,7 @@ function ProgressReportSection({
 
   return (
     <>
+      {exportFeedback}
       <div className="flex flex-col gap-1 mt-4 mb-2">
         <h1 className={`qed-type-page-title ${theme.textPrimary}`}>
           Progess Report
@@ -69,7 +72,7 @@ function ProgressReportSection({
 
           <button
             type="button"
-            onClick={handleDownload}
+            onClick={() => void runExport(handleDownload)}
             disabled={downloading || loading || isLocked || !!error}
             className="flex shrink-0 items-center gap-1.5 rounded-lg bg-maroon px-3 py-2 text-xs font-semibold text-white hover:opacity-90 disabled:opacity-50"
           >

@@ -1,3 +1,4 @@
+import { useExportProgress } from "@shared/components/useExportProgress";
 import {useContext,useRef,useLayoutEffect} from 'react';
 import {TeacherGradeQueryContext} from '../../query/TeacherGradeQueryContext';
 import { FilterDropdown } from "@shared/components/FilterDropdown";
@@ -178,7 +179,9 @@ function useGradesPageState() {
     }
   }
 
-  function handleExport() {
+  const { runExport, exportFeedback } = useExportProgress(darkMode, "gradebook", "CSV");
+  const handleExport = () => runExport(performExport);
+  function performExport() {
     if (!gradebook) return;
     const termLabel = terms.find((t) => t.id === selectedTermId)?.label ?? "term";
     downloadCSV(toCSV(gradebook), `${gradebook.sectionName || "advisory"}_${termLabel.replace(/\s+/g, "_")}_gradebook.csv`);
@@ -347,6 +350,7 @@ function useGradesPageState() {
 
   return { content: ((
     <div className="w-full min-h-full pb-12">
+      {exportFeedback}
       <div className="w-full space-y-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2.5">

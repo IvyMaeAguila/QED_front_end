@@ -1,6 +1,6 @@
 export async function generateFormalPDF(elementId: string, fileName: string) {
   const element = document.getElementById(elementId);
-  if (!element) return;
+  if (!element) throw new Error("The progress report is not ready. Please reload and try again.");
 
   const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
     import("jspdf"),

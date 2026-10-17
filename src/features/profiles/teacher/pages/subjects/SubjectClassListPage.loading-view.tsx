@@ -1,3 +1,4 @@
+import { useExportProgress } from "@shared/components/useExportProgress";
 import type { TeacherReader } from "../../query/TeacherReader";
 import type { SubjectClassList } from "./services/subjectClassList.service";
 import { SkeletonAvatar,SkeletonText } from "@shared/components/SkeletonLoading";
@@ -72,7 +73,9 @@ function useSubjectClassListPageState(reader?: TeacherReader<SubjectClassList>) 
   const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`;
   const displaySectionName = sectionName ? `${gradeLevel} · Section ${sectionName}` : gradeLevel;
 
-  const handleExport = async () => {
+  const { runExport, exportFeedback } = useExportProgress(darkMode, "class list", "Excel");
+  const handleExport = () => runExport(performExport);
+  const performExport = async () => {
     const { default: ExcelJSRuntime } = await import("exceljs");
     const workbook = new ExcelJSRuntime.Workbook();
     const sheet = workbook.addWorksheet("Class List");
@@ -150,6 +153,7 @@ function useSubjectClassListPageState(reader?: TeacherReader<SubjectClassList>) 
 
   return { content: ((
     <div className="w-full min-h-full pb-12">
+      {exportFeedback}
       {reader?.offline && reader.data && <div role="alert" className={`mb-4 rounded-xl border p-4 ${panelBg} ${panelBorder} ${textPrimary}`}>You're offline. Cached students remain available. Reconnect and try again.</div>}
       <div className="w-full space-y-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

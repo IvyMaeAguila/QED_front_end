@@ -1,3 +1,4 @@
+import { useExportProgress } from "@shared/components/useExportProgress";
 import { useMemo,useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
@@ -43,7 +44,9 @@ function useAdvisoryRosterPageState() {
       .sort(sortByName);
   }, [section, genderFilter, search]);
 
-  const handleExport = async () => {
+  const { runExport, exportFeedback } = useExportProgress(darkMode, "advisory roster", "Excel");
+  const handleExport = () => runExport(performExport);
+  const performExport = async () => {
     if (!section) return;
     const { default: ExcelJSRuntime } = await import("exceljs");
     const workbook = new ExcelJSRuntime.Workbook();
@@ -90,6 +93,7 @@ function useAdvisoryRosterPageState() {
   if (sectionError) {
     return { content: ((
       <div className="w-full space-y-6 pb-12">
+      {exportFeedback}
         <button onClick={() => navigate(-1)} className={`flex items-center gap-2 text-sm font-bold ${textMuted}`} data-sk-region="advisoryrosterpage-back" data-sk-static="">
           Back
         </button>
@@ -103,6 +107,7 @@ function useAdvisoryRosterPageState() {
   if (!loading && !section) {
     return { content: ((
       <div className="w-full space-y-6 pb-12">
+      {exportFeedback}
         <button onClick={() => navigate(-1)} className={`flex items-center gap-2 text-sm font-bold ${textMuted}`} data-sk-region="advisoryrosterpage-back" data-sk-static="">
           Back
         </button>
@@ -115,6 +120,7 @@ function useAdvisoryRosterPageState() {
 
   return { content: ((
     <div className="w-full space-y-6 pb-12">
+      {exportFeedback}
       <AdvisoryHeader
         loading={loading}
         darkMode={darkMode}

@@ -1,3 +1,4 @@
+import { useExportProgress } from "@shared/components/useExportProgress";
 import { useRef, useState } from "react";
 import {
   Upload,
@@ -41,6 +42,8 @@ export function StudentImportExportToolbar({
   textMuted,
 }: StudentImportExportToolbarProps) {
   const {createRecord,fetchGrades:fetchGradeLevels,fetchSections:fetchSectionByGrade}=useStudents();
+  const [exportLabel, setExportLabel] = useState("student list");
+  const { runExport, exportFeedback, exporting } = useExportProgress(darkMode, exportLabel, "Excel");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [result, setResult] = useState<ImportParseResult | null>(null);
   const [isParsing, setIsParsing] = useState(false);
@@ -244,6 +247,7 @@ export function StudentImportExportToolbar({
 
   return (
     <>
+      {exportFeedback}
       <input
         ref={fileInputRef}
         type="file"
@@ -260,15 +264,16 @@ export function StudentImportExportToolbar({
         {isParsing ? "Reading..." : "Import"}
       </button>
       <button
-        onClick={() => exportStudentsToExcel(filteredStudents)}
-        disabled={filteredStudents.length === 0}
+        onClick={() => { setExportLabel("student list"); void runExport(() => exportStudentsToExcel(filteredStudents)); }}
+        disabled={exporting || filteredStudents.length === 0}
         className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-bold transition-colors disabled:opacity-50 shrink-0 ${buttonBase}`}
       >
         <Download size={13} />
         Export
       </button>
       <button
-        onClick={() => downloadStudentImportTemplate()}
+        disabled={exporting}
+        onClick={() => { setExportLabel("import template"); void runExport(() => downloadStudentImportTemplate()); }}
         className={`inline-flex h-8 items-center gap-1 rounded-lg px-1.5 text-xs font-semibold underline shrink-0 ${textMuted}`}
       >
         <FileSpreadsheet size={12} />

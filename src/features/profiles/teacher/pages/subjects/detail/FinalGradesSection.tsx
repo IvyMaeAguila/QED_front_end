@@ -1,4 +1,6 @@
-import { Fragment, useContext } from 'react';
+import { Fragment, useContext, useRef, useState } from 'react';
+import { Download } from 'lucide-react';
+import { ClassRecordExportModal } from './ClassRecordExportModal';
 import { TeacherAcademicQueryContext } from '../../../query/TeacherAcademicQueryContext';
 import { useTeacherReader } from '../../../query/useTeacherReader';
 import { subjectKey } from '../../../query/teacherSubjectKeys';
@@ -36,13 +38,69 @@ export function FinalGradesSection({ subjectSectionId, selectedPeriod, ...theme 
   const loading = !ready || scores.loading || terms.some(term => term.period && (term.items.loading || term.weights.loading));
   const roster = ready ? academic?.info.data?.roster ?? [] : [];
   const selected = terms.find(term => term.period === selectedPeriod)?.weights.data;
+  const [exportState, setExportState] = useState<'idle' | 'loading' | 'success'>('idle');
+  const [exportError, setExportError] = useState('');
+  const exporting = useRef(false);
+  async function exportFinalGrades() {
+    if (exporting.current || loading || error) return;
+    exporting.current = true;
+    setExportError('');
+    setExportState('loading');
+    try {
+      const { Workbook } = await import('exceljs');
+      const workbook = new Workbook();
+      const sheet = workbook.addWorksheet('FINAL GRADES');
+      sheet.columns = [{ width: 8 }, { width: 40 }, ...Array.from({ length: 4 }, () => ({ width: 14 })), { width: 28 }, { width: 18 }];
+      sheet.addRow(['QED · Final Grades']);
+      sheet.mergeCells('A1:H1');
+      sheet.addRow(['No.', "Learner's Name", 'Term 1', 'Term 2', 'Term 3', 'Final Grade', 'Descriptor', 'Remark']);
+      for (const group of groupLearners(roster)) {
+        const header = sheet.addRow([group.label]);
+        sheet.mergeCells(header.number, 1, header.number, 8);
+        header.font = { bold: true };
+        group.students.forEach((student, index) => {
+          const grades = terms.map(term => term.period && term.weights.data && term.items.data
+            ? transmutedTermGrade(student.id, term.period, term.items.data, scores.data ?? {}, term.weights.data) : null);
+          const final = finalGrade(grades);
+          sheet.addRow([index + 1, student.name, ...grades, final, finalDescriptor(final, selected), '']);
+        });
+      }
+      for (const number of [1, 2]) {
+        const row = sheet.getRow(number);
+        row.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+        row.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF800000' } };
+        row.height = 26;
+      }
+      sheet.views = [{ state: 'frozen', ySplit: 2 }];
+      sheet.pageSetup = { orientation: 'landscape', fitToPage: true, fitToWidth: 1, fitToHeight: 0 };
+      const buffer = await workbook.xlsx.writeBuffer();
+      const url = URL.createObjectURL(new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `QED-FINAL-GRADES-${subjectSectionId}.xlsx`;
+      link.click();
+      URL.revokeObjectURL(url);
+      setExportState('success');
+    } catch (err) {
+      setExportState('idle');
+      setExportError(err instanceof Error ? err.message : 'Could not export final grades. Please try again.');
+    } finally {
+      exporting.current = false;
+    }
+  }
   return <section aria-label="Final Grades" className={`min-w-0 overflow-hidden rounded-2xl border shadow-sm ${theme.panelBg} ${theme.panelBorder}`}>
+    <ClassRecordExportModal state={exportState} darkMode={theme.darkMode} label="final grades" onClose={() => setExportState('idle')} />
     <div className={`flex flex-wrap items-center gap-3 border-b px-4 py-3 ${theme.panelBorder}`}>
       <h2 className={`text-sm font-bold ${theme.textPrimary}`}>Final Grades</h2>
       {ready && <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${theme.darkMode ? 'bg-white/5' : 'bg-black/[0.035]'} ${theme.textMuted}`}>
         {roster.length} student{roster.length === 1 ? '' : 's'}
       </span>}
+      <button type="button" onClick={() => void exportFinalGrades()} disabled={loading || !!error || !roster.length || exportState === 'loading'}
+        className={`ml-auto inline-flex min-h-9 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold disabled:opacity-50 ${theme.panelBorder} ${theme.textPrimary}`}>
+        <Download size={14} /> Export Final Grades
+      </button>
     </div>
+    {exportError && <p role="alert" className="px-4 py-3 text-sm text-red-600">{exportError}</p>}
     {error ? <p role="alert" className={`px-4 py-4 text-sm ${theme.textMuted}`}>{error} <button type="button" className="underline" onClick={() => {
       academic?.info.retry(); academic?.periods.retry(); scores.retry(); terms.forEach(term => { term.items.retry(); term.weights.retry(); });
     }}>Retry</button></p> : loading ? <p role="status" className={`px-4 py-4 text-sm ${theme.textMuted}`}>Loading final grades…</p> : <>

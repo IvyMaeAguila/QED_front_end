@@ -1,0 +1,23 @@
+import { test, expect } from '@playwright/test';
+for (const width of [375, 1280]) for (const dark of [false, true]) test(`shared export feedback ${width} ${dark}`, async ({ page }) => {
+  await page.setViewportSize({ width, height: 800 });
+  await page.goto(`/tests/export-feedback.html?dark=${dark}`);
+  await page.getByRole('button', { name: 'Export', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'Export progress report', exact: true });
+  await expect(dialog).toContainText('Preparing your progress report');
+  await page.evaluate(() => (window as any).start());
+  await expect.poll(() => page.evaluate(() => (window as any).calls)).toBe(1);
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeVisible();
+  const box = await dialog.boundingBox();
+  expect(box!.x).toBeGreaterThanOrEqual(0); expect(box!.x + box!.width).toBeLessThanOrEqual(width);
+  await page.screenshot({path:test.info().outputPath('loading.png')});
+  await page.evaluate(() => (window as any).release());
+  await expect(dialog).toContainText('Your PDF download has started');
+  await dialog.getByRole('button', {name:'Done',exact:true}).click();
+  await page.getByRole('button', {name:'Fail',exact:true}).click();
+  await expect(dialog).toContainText('Could not generate PDF');
+  await expect(dialog).not.toContainText('download has started');
+  await dialog.getByRole('button', {name:'Close',exact:true}).click();
+  await expect(dialog).toHaveCount(0);
+});

@@ -1,3 +1,4 @@
+import { ClassRecordExportModal } from "./ClassRecordExportModal";
 import { computeStudentGrade, computeGroupResult, studentTotals } from './utils/assessmentGradeCalculation';
 import {useTeacherAcademicServices} from '../../../query/TeacherAcademicQueryContext';
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
@@ -255,9 +256,14 @@ export function AssessmentRecordsSection({
         ? { enabled: true, categoryWeightPercent: weights.exam, components: [{ key: "ALL", label: "Examinations", weightPercent: 100 }] }
         : { enabled: false, categoryWeightPercent: 0, components: [] });
 
+  const [exportState, setExportState] = useState<"idle" | "loading" | "success">("idle");
+  const exportInFlight = useRef(false);
   async function exportClassRecord() {
+    if (exportInFlight.current) return;
+    exportInFlight.current = true;
     try {
       if (!term) throw new Error("Choose a grading period before exporting.");
+      setExportState("loading");
       const { buffer, fileName } = await downloadGradeRecordExport(subjectSectionId, term);
       const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
       const link = document.createElement("a");
@@ -265,6 +271,7 @@ export function AssessmentRecordsSection({
       link.download = fileName;
       link.click();
       URL.revokeObjectURL(link.href);
+      setExportState("success");
       const exportedTerm = fileName.match(/TERM-(\d+)/i)?.[1];
       setSnackbar({
         type: "success",
@@ -274,6 +281,9 @@ export function AssessmentRecordsSection({
       });
     } catch (err) {
       setSnackbar({ type: "error", message: err instanceof Error ? err.message : "Excel export failed." });
+      setExportState("idle");
+    } finally {
+      exportInFlight.current = false;
     }
   }
   const groups: ComponentColumnGroup[] = useMemo(() => {
@@ -665,6 +675,7 @@ export function AssessmentRecordsSection({
 
   return (
     <section ref={recordSection} className={cardClasses} aria-label={title}>
+      <ClassRecordExportModal state={exportState} darkMode={darkMode} onClose={() => setExportState("idle")} />
       <div className={`flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3 ${panelBorder}`}>
         <div className="flex flex-wrap items-center gap-3">
           <span className={`text-sm font-bold ${textPrimary}`}>Assessment records</span>
@@ -673,7 +684,7 @@ export function AssessmentRecordsSection({
           </span>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <button type="button" aria-label="Export DepEd Class Record" title="Export using the official DepEd template" onClick={() => void exportClassRecord()} disabled={loading} className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold transition-colors disabled:opacity-50 ${darkMode ? 'hover:bg-white/5' : 'hover:bg-black/[0.035]'} ${panelBorder} ${textPrimary}`}>
+          <button type="button" aria-label="Export DepEd Class Record" title="Export using the official DepEd template" onClick={() => void exportClassRecord()} disabled={loading || exportState === "loading"} className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold transition-colors disabled:opacity-50 ${darkMode ? 'hover:bg-white/5' : 'hover:bg-black/[0.035]'} ${panelBorder} ${textPrimary}`}>
             <Download size={14} /> Export Class Record
           </button>
           {toolbarAction}
