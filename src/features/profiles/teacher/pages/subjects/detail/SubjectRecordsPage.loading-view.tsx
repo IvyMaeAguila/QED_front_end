@@ -8,7 +8,7 @@ ArrowLeft,
 Check,
 Pencil,
 } from "lucide-react";
-import { useMemo,useState } from "react";
+import { lazy, Suspense, useMemo,useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
@@ -17,7 +17,6 @@ getEffectiveWeightsSafe,
 type EffectiveWeights,
 } from "../services/subjectGradeTemplate.service";
 import { AssessmentRecordsSection } from "./AssessmentRecordsPage";
-import { FinalGradesSection } from "./FinalGradesSection";
 import type { SubjectDetailTab } from "./components/TabNav";
 import type { RosterStudent } from "./data";
 import { HolisticRecordsSection } from "./HolisticRecordsPage";
@@ -28,6 +27,9 @@ HolisticMap,
 ScoreMap,
 } from "./types/Grading";
 
+
+// Keep query hooks out of the eager route preview and teacher layout bundle.
+const FinalGradesSection = lazy(() => import('./FinalGradesSection').then(module => ({ default: module.FinalGradesSection })));
 
 type GenderedStudent = RosterStudent & { gender?: "M" | "F" };
 
@@ -375,8 +377,12 @@ function useSubjectRecordsPageState() {
           </div>
         )}
 
-        {isAssessment && showFinalGrades && subjectId && <FinalGradesSection key={subjectId} subjectSectionId={subjectId} selectedPeriod={term}
-          darkMode={darkMode} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} />}
+        {isAssessment && showFinalGrades && subjectId && <Suspense fallback={
+          <section aria-label="Final Grades" className={`${cardClasses} px-4 py-4`}>
+            <p role="status" className={`text-sm ${textMuted}`}>Loading final grades…</p>
+          </section>
+        }><FinalGradesSection key={subjectId} subjectSectionId={subjectId} selectedPeriod={term}
+          darkMode={darkMode} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} /></Suspense>}
 
         {isAssessment && !showFinalGrades && subjectId && !loadError && (isLoadingRecords || !hasLoadedOnce || weights) && (
           <AssessmentRecordsSection
