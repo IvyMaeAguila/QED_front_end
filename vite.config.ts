@@ -13,6 +13,8 @@ const eagerGroups = new Map<string, string>();
 
 // https://vite.dev/config/
 export default defineConfig({
+  // Keep browser-test prebundles separate from an already running dev server.
+  cacheDir: process.env.QED_VITE_CACHE_DIR || 'node_modules/.vite',
   // Source acceptance runs against fixed inputs. Report/fixture writes can be
   // Tailwind watch dependencies and otherwise reload a page mid-assertion.
   // Normal interactive development retains Vite's default file watching.

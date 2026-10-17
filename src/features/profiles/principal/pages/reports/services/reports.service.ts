@@ -4,6 +4,22 @@ import { QueryHttpError } from "@shared/http/QueryHttpError";
 
 const BASE_URL = `${API_CONFIG.baseURL}/api`;
 
+export interface ExaminationAnalytics {
+  schoolYear: string | null;
+  summary: { count: number; students: number; mean: number | null; sd: number | null };
+  rows: { subjectId: number; subject: string; examination: string; students: number; count: number; mean: number | null; sd: number | null }[];
+  distribution: { interval: string; count: number }[];
+  options: { years: { id: string; label: string }[]; terms: string[]; sections: { id: string; label: string }[]; subjects: { id: string; label: string }[] };
+}
+export async function getExaminationAnalytics(filters: Record<string, string>, options: AnalyticsRequestOptions = {}): Promise<ExaminationAnalytics> {
+  const res = await request(`/reports/examination-performance?${new URLSearchParams(filters)}`, options);
+  if (!res.ok) throw new QueryHttpError(`Failed to fetch examination statistics (${res.status})`, res.status);
+  const json: ApiResponse<ExaminationAnalytics> = await res.json();
+  if (!json.success) throw new Error(json.message ?? 'Failed to fetch examination statistics');
+  if (!json.data?.summary || !json.data.options || !Array.isArray(json.data.rows) || !Array.isArray(json.data.distribution)) throw new Error('Invalid examination statistics response');
+  return json.data;
+}
+
 interface ApiResponse<T> {
   success: boolean;
   data: T;
