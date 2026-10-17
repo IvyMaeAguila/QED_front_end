@@ -6,7 +6,6 @@ import { ConfirmationModal } from "@shared/components/ConfirmationModal";
 import {
 ArrowLeft,
 Check,
-ClipboardList,
 Pencil,
 } from "lucide-react";
 import { useMemo,useState } from "react";
@@ -18,6 +17,7 @@ getEffectiveWeightsSafe,
 type EffectiveWeights,
 } from "../services/subjectGradeTemplate.service";
 import { AssessmentRecordsSection } from "./AssessmentRecordsPage";
+import { FinalGradesSection } from "./FinalGradesSection";
 import type { SubjectDetailTab } from "./components/TabNav";
 import type { RosterStudent } from "./data";
 import { HolisticRecordsSection } from "./HolisticRecordsPage";
@@ -83,6 +83,7 @@ function useSubjectRecordsPageState() {
   }:undefined,[raw,owned,info,infoError,periods]);
 
   const [term, setTerm] = useState(state?.selectedTerm ?? "");
+  const [showFinalGrades, setShowFinalGrades] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -262,9 +263,6 @@ function useSubjectRecordsPageState() {
         <div className="w-full space-y-6">
           <div className="flex items-start gap-2.5">
             {backButton}
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-maroon">
-              <ClipboardList size={28} />
-            </span>
             <div>
               <h1 className={`qed-type-page-title ${textPrimary}`}>
                 Records
@@ -297,17 +295,23 @@ function useSubjectRecordsPageState() {
   const uniqueMissingStudents = Array.from(
     new Map(pendingMissing.map((m) => [m.studentId, m.studentName])).values(),
   );
+  const editRecordsButton = (
+    <button type="button" onClick={handleDoneClick}
+      className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold transition-colors ${isEditing
+        ? 'border-transparent bg-maroon text-white hover:bg-maroon-light'
+        : `${panelBorder} ${textPrimary} ${darkMode ? 'hover:bg-white/5' : 'hover:bg-black/[0.035]'}`}`}>
+      {isEditing ? <Check size={14} /> : <Pencil size={14} />}
+      {isEditing ? 'Done' : 'Edit Records'}
+    </button>
+  );
 
   return { content: ((
     <div className="w-full min-h-full pb-0">
-      <div className="w-full space-y-6">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-start gap-2.5">
+      <div className="w-full space-y-4">
+        <div className="flex flex-col gap-4 2xl:flex-row 2xl:items-center 2xl:justify-between">
+          <div className="flex min-w-0 items-start gap-2.5">
             {backButton}
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-maroon">
-              <ClipboardList size={28} />
-            </span>
-            <div>
+            <div className="min-w-0">
               <h1 className={`qed-type-page-title ${textPrimary}`}>
                 {subjectName} — {title}
               </h1>
@@ -321,9 +325,20 @@ function useSubjectRecordsPageState() {
               )}
             </div>
           </div>
+          {isAssessment && <div role="group" aria-label="Class record view" className={`qed-segmented-control flex max-w-full shrink-0 items-center self-start rounded-lg p-0 2xl:self-center ${darkMode ? "bg-white/5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]" : "bg-gray-50 shadow-[inset_0_0_0_1px_#e5e7eb]"}`}>
+            {[1, 2, 3].map(number => {
+              const period = terms.find(candidate => candidate.termNumber === number);
+              const active = !showFinalGrades && period?.id === term;
+              return <button key={number} type="button" aria-pressed={active} disabled={!period || isEditing}
+                onClick={() => { if (period) { setTerm(period.id); setShowFinalGrades(false); } }}
+                className={`rounded-lg px-3 text-xs font-bold transition-all disabled:opacity-50 ${active ? 'bg-maroon text-white shadow-sm' : `${textMuted} ${darkMode ? 'hover:text-white' : 'hover:text-gray-900'}`}`}>Term {number}</button>;
+            })}
+            <button type="button" aria-pressed={showFinalGrades} disabled={isEditing} onClick={() => setShowFinalGrades(true)}
+              className={`rounded-lg px-3 text-xs font-bold transition-all disabled:opacity-50 ${showFinalGrades ? 'bg-maroon text-white shadow-sm' : `${textMuted} ${darkMode ? 'hover:text-white' : 'hover:text-gray-900'}`}`}>Final Grades</button>
+          </div>}
         </div>
 
-        <div
+        {!isAssessment && <div
           className={`flex flex-wrap items-center justify-between gap-2.5 rounded-xl border px-3 py-2 ${panelBg} ${panelBorder}`}
         >
           <span
@@ -335,7 +350,7 @@ function useSubjectRecordsPageState() {
 
           {(terms.length > 0 || isAssessment) && (
             <div className="flex items-center gap-2.5">
-              {terms.length > 0 && (
+              {terms.length > 0 && !isAssessment && (
                 <AccountSelect data-account-select="" data-dropdown-dark={darkMode}
                   value={term}
                   onChange={(e) => setTerm(e.target.value)}
@@ -350,33 +365,22 @@ function useSubjectRecordsPageState() {
                 </AccountSelect>
               )}
 
-              {isAssessment && (
-                <button
-                  onClick={handleDoneClick}
-                  className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-extrabold transition-colors ${
-                    isEditing
-                      ? "border-black/10 bg-maroon text-white hover:bg-maroon-light"
-                      : darkMode
-                        ? "border-white/10 text-white/80 hover:bg-white/5"
-                        : "border-black/10 text-[#111827] hover:bg-black/5"
-                  }`}
-                >
-                  {isEditing ? <Check size={12} /> : <Pencil size={12} />}
-                  {isEditing ? "Done" : "Edit Records"}
-                </button>
-              )}
             </div>
           )}
-        </div>
+        </div>}
 
-        {isAssessment && weightsError && hasLoadedOnce && !isLoadingRecords && (
+        {isAssessment && !showFinalGrades && weightsError && hasLoadedOnce && !isLoadingRecords && (
           <div className={`${cardClasses} border-amber-500/40 px-5 py-4 text-sm font-semibold text-amber-700`} role="alert">
             {weightsError} <button type="button" onClick={() => setAttempt(value => value + 1)} className="underline">Retry</button>
           </div>
         )}
 
-        {isAssessment && subjectId && !loadError && (isLoadingRecords || !hasLoadedOnce || weights) && (
+        {isAssessment && showFinalGrades && subjectId && <FinalGradesSection key={subjectId} subjectSectionId={subjectId} selectedPeriod={term}
+          darkMode={darkMode} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} />}
+
+        {isAssessment && !showFinalGrades && subjectId && !loadError && (isLoadingRecords || !hasLoadedOnce || weights) && (
           <AssessmentRecordsSection
+            toolbarAction={editRecordsButton}
             subjectSectionId={subjectId}
             title={title}
             roster={roster}

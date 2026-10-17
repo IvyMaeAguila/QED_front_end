@@ -1,3 +1,4 @@
+import { computeStudentGrade, computeGroupResult, studentTotals } from './utils/assessmentGradeCalculation';
 import {useTeacherAcademicServices} from '../../../query/TeacherAcademicQueryContext';
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonText } from "@shared/components/SkeletonLoading";
@@ -5,7 +6,6 @@ import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 import { rememberColumns, useColumnReservation } from "@shared/loading/reservations";
 import { Children, cloneElement, isValidElement, Fragment, useMemo, useRef, useState, type ReactNode, type ReactElement } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
-import { StudentAvatar } from "@shared/components/StudentAvatar";
 import { AlertTriangle, CheckCircle2, Download, Send, X } from "lucide-react";
 import { ConfirmationModal } from "@shared/components/ConfirmationModal";
 import type { RosterStudent } from "./data";
@@ -22,19 +22,6 @@ import {
 
 import { downloadGradeRecordExport } from "../services/subjectGradeTemplate.service";
 import type { GradeTemplateStructure, TemplateDomain, TemplateExamComponent, TemplateExaminations } from "../../../../shared/grading/gradeTemplate.types";
-
-const INCOMPLETE_COLOR = "#CA8A04";
-
-function MissingScoreDot({ missingIn }: { missingIn: string[] }) {
-  return (
-    <span
-      title={`Missing score(s) in: ${missingIn.join(", ")}`}
-      aria-label={`Missing score(s) in: ${missingIn.join(", ")}`}
-      className="inline-block h-2 w-2 shrink-0 rounded-full"
-      style={{ backgroundColor: INCOMPLETE_COLOR }}
-    />
-  );
-}
 
 type GenderedStudent = RosterStudent & { gender?: "M" | "F" };
 
@@ -53,7 +40,7 @@ interface DomainColumnGroup {
   columns: ScoreColumn[];
 }
 
-interface ComponentColumnGroup {
+export interface ComponentColumnGroup {
   key: "writtenWorks" | "performanceTask" | "exams";
   label: string;
   weightLabel: string;
@@ -69,6 +56,7 @@ interface ComponentColumnGroup {
 }
 
 interface AssessmentRecordsSectionProps {
+  toolbarAction?: ReactNode;
   subjectSectionId: string;
   title: string;
   roster: GenderedStudent[];
@@ -91,108 +79,6 @@ interface AssessmentRecordsSectionProps {
   textMuted: string;
   isOwnAdvisory?: boolean;
   adviserName?: string;
-}
-
-interface StudentGroupTotals {
-  total: number;
-  highestPossible: number;
-  scoredCount: number;
-  totalItems: number;
-  isComplete: boolean;
-}
-
-function studentTotals(items: GradeItem[], studentId: string, scores: ScoreMap): StudentGroupTotals {
-  const highestPossible = items.reduce((sum, item) => sum + item.maxItems, 0);
-
-  let total = 0;
-  let scoredCount = 0;
-  for (const item of items) {
-    const value = scores[studentId]?.[item.id];
-    if (typeof value === "number") {
-      total += value;
-      scoredCount += 1;
-    }
-  }
-
-  return {
-    total,
-    highestPossible,
-    scoredCount,
-    totalItems: items.length,
-    isComplete: items.length > 0 && scoredCount === items.length,
-  };
-}
-
-interface GroupResult {
-  total: number;       // raw sum across the group's items — display only
-  ps: number | null;
-  ws: number | null;
-  hasAnyItems: boolean;
-  isComplete: boolean;
-}
-
-// Use the normalized pinned examination schema. ALL is retained for the
-// legacy manually configured pooled-exam case.
-function computeGroupResult(
-  group: ComponentColumnGroup,
-  studentId: string,
-  scores: ScoreMap,
-  examinations: TemplateExaminations | undefined,
-): GroupResult {
-  const pooled = studentTotals(group.items, studentId, scores);
-
-  if (group.key !== "exams" && group.domains && group.domains.length > 1) {
-    let weightedScore = 0;
-    const validDomainIds = new Set(group.domains.map((domain) => domain.id));
-    let complete = !group.items.some((item) => item.templateDomainId && !validDomainIds.has(item.templateDomainId));
-    let hasItems = false;
-    for (const domain of group.domains) {
-      const totals = studentTotals(group.items.filter((item) => item.templateDomainId === domain.id), studentId, scores);
-      hasItems ||= totals.totalItems > 0;
-      if (!totals.totalItems || !totals.isComplete || !totals.highestPossible) {
-        complete = false;
-        continue;
-      }
-      weightedScore += ((totals.total / totals.highestPossible) * 100 * domain.weightPercent) / 100;
-    }
-    const ws = complete && hasItems ? weightedScore : null;
-    return {
-      total: pooled.total,
-      ps: ws === null || !group.weight ? null : (ws / group.weight) * 100,
-      ws,
-      hasAnyItems: pooled.totalItems > 0,
-      isComplete: complete && hasItems,
-    };
-  }
-
-  if (group.key !== "exams" || !examinations?.enabled) {
-    const ps = computePS(pooled.total, pooled.highestPossible);
-    const ws = computeWS(ps, group.weight);
-    return {
-      total: pooled.total,
-      ps,
-      ws,
-      hasAnyItems: pooled.totalItems > 0,
-      isComplete: pooled.totalItems > 0 && pooled.isComplete,
-    };
-  }
-  let ps = 0;
-  let complete = true;
-  let hasAnyItems = false;
-  for (const component of examinations.components) {
-    const componentItems = component.key.toUpperCase() === "ALL"
-      ? group.items
-      : group.items.filter((item) => String(item.examType || "").toUpperCase() === component.key.toUpperCase());
-    const totals = studentTotals(componentItems, studentId, scores);
-    hasAnyItems ||= totals.totalItems > 0;
-    if (!totals.totalItems || !totals.isComplete || !totals.highestPossible) {
-      complete = false;
-      continue;
-    }
-    ps += ((totals.total / totals.highestPossible) * 100 * component.weightPercent) / 100;
-  }
-  complete &&= hasAnyItems;
-  return { total: pooled.total, ps: complete ? ps : null, ws: complete ? computeWS(ps, group.weight) : null, hasAnyItems, isComplete: complete };
 }
 
 function makeGroupColumns(
@@ -315,29 +201,6 @@ function makeGroupColumns(
   };
 }
 
-function computeStudentGrade(
-  student: GenderedStudent,
-  groups: ComponentColumnGroup[],
-  scores: ScoreMap,
-  examinations: TemplateExaminations | undefined,
-): { initialGrade: number | null; anyGroupIncomplete: boolean; isComplete: boolean } {
-  const weightedScores: number[] = [];
-  let anyGroupIncomplete = false;
-  let isComplete = true;
-
-  groups.forEach((group) => {
-    const result = computeGroupResult(group, student.id, scores, examinations);
-    if (!result.isComplete) { anyGroupIncomplete = true; isComplete = false; }
-    if (result.ws !== null) weightedScores.push(result.ws);
-  });
-
-  const initialGrade = isComplete && weightedScores.length === groups.length
-    ? weightedScores.reduce((sum, value) => sum + value, 0)
-    : null;
-
-  return { initialGrade, anyGroupIncomplete, isComplete };
-}
-
 function getRemarks(termGrade: number): "PASSED" | "FAILED" {
   return termGrade >= 75 ? "PASSED" : "FAILED";
 }
@@ -369,6 +232,7 @@ export function AssessmentRecordsSection({
   textMuted,
   isOwnAdvisory = false,
   adviserName,
+  toolbarAction,
 }: AssessmentRecordsSectionProps) {
   // Zero values are layout sentinels only while rules are unknown; never grade with them.
   const weights = resolvedWeights ?? { ww: 0, pt: 0, exam: 0 };
@@ -529,19 +393,12 @@ export function AssessmentRecordsSection({
       + Number(!!group.examOutputs?.percentageScore)
       + Number(!!group.examOutputs?.weightedScore)
     : group.columns.length + 3 * (group.domainGroups?.length || 1);
-  const columnCount = 1 + groups.reduce((sum, group) => sum + groupColumnSpan(group), 0) + 3;
+  const columnCount = 2 + groups.reduce((sum, group) => sum + groupColumnSpan(group), 0) + 3;
 
   function renderStudentRow(student: GenderedStudent, index: number, pending: boolean) {
-    let anyGroupIncomplete = false;
-    const missingIn: string[] = [];
-
     const groupCells = groups.map((group) => {
       const result = computeGroupResult(group, student.id, scores, examinations);
 
-      if (!result.isComplete) {
-        anyGroupIncomplete = true;
-        missingIn.push(group.label);
-      }
       if (group.key === "exams" && group.examComponents) {
         const componentWeightedCells = group.examComponents
           .filter(({ showWeightedScore }) => showWeightedScore)
@@ -675,12 +532,9 @@ export function AssessmentRecordsSection({
 
     return (
       <tr key={student.id} data-sk-region="subject-record-student" className={`border-t ${panelBorder} ${index % 2 ? (darkMode ? "bg-white/1.5" : "bg-black/[0.012]") : ""}`}>
-        <td className={`sticky left-0 z-20 min-w-60 border-r px-4 py-2.5 text-sm font-bold shadow-[2px_0_4px_rgba(15,23,42,0.05)] ${darkMode ? "bg-panel-dark" : index % 2 ? "bg-[#FCFCFD]" : "bg-white"} ${panelBorder} ${textPrimary}`}>
-          <span className="inline-flex items-center gap-1.5">
-            <StudentAvatar gender={student.gender} name={student.name} />
-            {student.name}
-            {!pending && anyGroupIncomplete && <MissingScoreDot missingIn={missingIn} />}
-          </span>
+        <td data-learner-number className={`sticky left-0 z-20 w-16 min-w-16 max-w-16 border-r px-4 py-2.5 text-xs tabular-nums ${darkMode ? "bg-panel-dark" : index % 2 ? "bg-[#FCFCFD]" : "bg-white"} ${panelBorder} ${textPrimary}`}>{index + 1}</td>
+        <td data-learner-name className={`sticky left-16 z-20 min-w-60 border-r px-4 py-2.5 text-sm font-bold shadow-[2px_0_4px_rgba(15,23,42,0.05)] ${darkMode ? "bg-panel-dark" : index % 2 ? "bg-[#FCFCFD]" : "bg-white"} ${panelBorder} ${textPrimary}`}>
+          {student.name}
         </td>
         {pending ? maskCells(groupCells) : groupCells}
         <td className="px-3 py-2.5 text-center text-sm font-black tabular-nums" style={{ color: "var(--brand-ink)" }}>
@@ -697,6 +551,7 @@ export function AssessmentRecordsSection({
   }
 
   const columnWidths = useColumnReservation(view, [
+    { label: "No.", typical: "99" },
     { label: "Learners' Names", typical: "Maria Alexandra Delos Santos" },
     ...groups.flatMap(group => Array.from({length: groupColumnSpan(group)}, (_, i) => ({label: String(i+1),typical:"100.00"}))),
     {label:"Initial Grade",typical:"100.00"},{label:"Term Grade",typical:"100"},{label:"Descriptor",typical:"Very Satisfactory"},
@@ -734,7 +589,8 @@ export function AssessmentRecordsSection({
           {pending && <colgroup>{columnWidths.map((width, index) => <col key={index} style={{ width }} />)}</colgroup>}
           <thead className={`sticky top-0 z-30 ${darkMode ? "bg-[#241311]" : "bg-white"}`}>
             <tr className={darkMode ? "bg-white/5" : "bg-brand-light"}>
-              <th rowSpan={3} className={`sticky left-0 z-50 w-60 min-w-60 border px-3 py-3 text-left text-sm font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.08)] ${darkMode ? "bg-panel-dark" : "bg-brand-light"} ${panelBorder} ${textPrimary}`}>
+              <th rowSpan={3} className={`sticky left-0 z-50 w-16 min-w-16 max-w-16 border px-3 py-3 text-left ${darkMode ? "bg-panel-dark" : "bg-brand-light"} ${panelBorder} ${textPrimary}`}>No.</th>
+              <th rowSpan={3} className={`sticky left-16 z-50 w-60 min-w-60 border px-3 py-3 text-left text-sm font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.08)] ${darkMode ? "bg-panel-dark" : "bg-brand-light"} ${panelBorder} ${textPrimary}`}>
                 Learners' Names
               </th>
               {groups.map((group) => <th key={group.key} colSpan={groupColumnSpan(group)} className={`border px-2 py-3 text-center text-xs font-black uppercase ${panelBorder} ${textPrimary}`}>
@@ -770,7 +626,7 @@ export function AssessmentRecordsSection({
               </Fragment>)}
             </tr>
             <tr className={darkMode ? "bg-white/2" : "bg-white"}>
-              <th className={`sticky left-0 z-50 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.08)] ${darkMode ? "bg-panel-dark" : "bg-white"} ${panelBorder} ${textMuted}`}>HPS</th>
+              <th colSpan={2} className={`sticky left-0 z-50 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.08)] ${darkMode ? "bg-panel-dark" : "bg-white"} ${panelBorder} ${textMuted}`}>HPS</th>
               {pending ? maskCells(hpsCells) : hpsCells}
               <th className={`min-w-24 border px-2 py-2 ${panelBorder}`} aria-label="No HPS for Initial Grade" />
               <th className={`min-w-24 border px-2 py-2 ${panelBorder}`} aria-label="No HPS for Term Grade" />
@@ -781,8 +637,8 @@ export function AssessmentRecordsSection({
             {grouped.male.length > 0 && (
               <>
                 <tr>
-                  <td className={`sticky left-0 z-20 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.05)] ${panelBorder} ${darkMode ? "bg-[#34201D]" : "bg-brand-light"} ${textPrimary}`}>Male</td>
-                  <td colSpan={columnCount - 1} className={`border px-3 py-2 ${panelBorder} ${darkMode ? "bg-white/10" : "bg-brand-light"}`} />
+                  <td colSpan={2} className={`sticky left-0 z-20 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.05)] ${panelBorder} ${darkMode ? "bg-[#34201D]" : "bg-brand-light"} ${textPrimary}`}>Male</td>
+                  <td colSpan={columnCount - 2} className={`border px-3 py-2 ${panelBorder} ${darkMode ? "bg-white/10" : "bg-brand-light"}`} />
                 </tr>
                 {grouped.male.map((student, index) => renderStudentRow(student, index, pending))}
               </>
@@ -790,8 +646,8 @@ export function AssessmentRecordsSection({
             {grouped.female.length > 0 && (
               <>
                 <tr>
-                  <td className={`sticky left-0 z-20 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.05)] ${panelBorder} ${darkMode ? "bg-[#34201D]" : "bg-brand-light"} ${textPrimary}`}>Female</td>
-                  <td colSpan={columnCount - 1} className={`border px-3 py-2 ${panelBorder} ${darkMode ? "bg-white/10" : "bg-brand-light"}`} />
+                  <td colSpan={2} className={`sticky left-0 z-20 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.05)] ${panelBorder} ${darkMode ? "bg-[#34201D]" : "bg-brand-light"} ${textPrimary}`}>Female</td>
+                  <td colSpan={columnCount - 2} className={`border px-3 py-2 ${panelBorder} ${darkMode ? "bg-white/10" : "bg-brand-light"}`} />
                 </tr>
                 {grouped.female.map((student, index) => renderStudentRow(student, index, pending))}
               </>
@@ -809,11 +665,19 @@ export function AssessmentRecordsSection({
 
   return (
     <section ref={recordSection} className={cardClasses} aria-label={title}>
-      <div className={`flex items-center justify-between gap-3 border-b px-4 py-2 ${panelBorder}`}>
-        <span className={`text-xs font-semibold ${textMuted}`}>Export this term's assessment records using the official DepEd template configured for this subject.</span>
-        <button type="button" onClick={() => void exportClassRecord()} disabled={loading} className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold ${panelBorder} ${textPrimary}`}>
-          <Download size={13} /> Export DepEd Class Record
-        </button>
+      <div className={`flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3 ${panelBorder}`}>
+        <div className="flex flex-wrap items-center gap-3">
+          <span className={`text-sm font-bold ${textPrimary}`}>Assessment records</span>
+          <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${darkMode ? 'bg-white/5' : 'bg-black/[0.035]'} ${textMuted}`}>
+            {roster.length} student{roster.length === 1 ? '' : 's'}
+          </span>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <button type="button" aria-label="Export DepEd Class Record" title="Export using the official DepEd template" onClick={() => void exportClassRecord()} disabled={loading} className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold transition-colors disabled:opacity-50 ${darkMode ? 'hover:bg-white/5' : 'hover:bg-black/[0.035]'} ${panelBorder} ${textPrimary}`}>
+            <Download size={14} /> Export Class Record
+          </button>
+          {toolbarAction}
+        </div>
       </div>
       {groups.some((group) => (group.capacityOverflow ?? 0) > 0) && (
         <div role="status" className="border-b border-amber-200 bg-amber-50 px-4 py-3 text-xs font-semibold text-amber-900">
