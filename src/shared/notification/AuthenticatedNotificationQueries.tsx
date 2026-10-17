@@ -1,3 +1,4 @@
+import { useToast } from "@shared/context/ToastContext";
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { onlineManager, QueryClientProvider, useMutation, useQuery } from '@tanstack/react-query';
 import { useAuth } from '@shared/hooks/useAuth';
@@ -10,6 +11,7 @@ export type NotificationQueryProps = {onChange: (value: NotificationContextType 
 const notificationKeys = (session: number, role: string, id: string) => ['session',session,role,id,role.toLowerCase(),'notifications'] as const;
 function Driver({onChange,expectedRole='PRINCIPAL',seed}: NotificationQueryProps) {
  const {user,isLoading,sessionScope,expireSession} = useAuth();
+ const { showToast } = useToast();
  const preview = useRoutePreview();
  const enabled = !preview && !isLoading && user?.role === expectedRole;
  const active = useRef(false);
@@ -54,8 +56,8 @@ function Driver({onChange,expectedRole='PRINCIPAL',seed}: NotificationQueryProps
    const denied=query.error instanceof Error&&'status' in query.error&&[401,403].includes(Number(query.error.status));
    const notifications=enabled&&!denied?query.data??[]:[];
    onChange({notifications,unreadCount:notifications.filter(n=>!n.isRead).length,
-     markAsRead:id=>{void mutateAsync(id).catch(()=>{});},markAllAsRead:()=>{void mutateAsync(null).catch(()=>{});}});
- },[enabled,query.data,query.error,onChange,mutateAsync]);
+     markAsRead:id=>{void mutateAsync(id).catch(()=>{if(active.current)showToast("Could not mark notification as read. Please try again.","error");});},markAllAsRead:()=>{void mutateAsync(null).catch(()=>{if(active.current)showToast("Could not mark notifications as read. Please try again.","error");});}});
+ },[enabled,query.data,query.error,onChange,mutateAsync,showToast]);
  return null;
 }
 export default function AuthenticatedNotificationQueries(props: NotificationQueryProps) {

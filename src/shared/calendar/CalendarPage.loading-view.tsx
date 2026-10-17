@@ -1,3 +1,4 @@
+import { useToast } from "@shared/context/ToastContext";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { CalendarHeart,CalendarRange } from "lucide-react";
 import { useMemo,useState } from "react";
@@ -61,6 +62,7 @@ type DeleteState =
   | null;
 
 function useCalendarPageState({ viewerRole = "ADMIN", data }: CalendarPageProps) {
+  const { showToast } = useToast();
   const theme = useOutletContext<AdminThemeContext>();
 
   const [legacyActivities, setActivities] = useState<CalendarActivity[]>([]);
@@ -104,17 +106,18 @@ function useCalendarPageState({ viewerRole = "ADMIN", data }: CalendarPageProps)
   }
 
   async function handleSaveActivities(entries: DraftEntry[]) {
-    if (data) { await data.saveActivities(entries); setManageTarget(null); return; }
+    if (data) { await data.saveActivities(entries); showToast("Calendar activities added."); setManageTarget(null); return; }
     const created = await createCalendarActivities(
       entries.map((e) => ({ title: e.title.trim(), date: e.date })),
     );
     setActivities((prev) => [...prev, ...created]);
     setAllActivities((prev) => [...prev, ...created]);
+    showToast("Calendar entries added.");
     setManageTarget(null);
   }
 
   async function handleSaveHolidays(entries: DraftEntry[]) {
-    if (data) { await data.saveHolidays(entries); setManageTarget(null); return; }
+    if (data) { await data.saveHolidays(entries); showToast("Calendar holidays added."); setManageTarget(null); return; }
     const created = await createCalendarHolidays(
       entries.map((e) => ({
         title: e.title.trim(),
@@ -129,7 +132,7 @@ function useCalendarPageState({ viewerRole = "ADMIN", data }: CalendarPageProps)
 
   async function handleEditSave(value: EditEntryValue) {
     if (!editState) return;
-    if (data) { await data.edit(editState, value); setEditState(null); return; }
+    if (data) { await data.edit(editState, value); showToast("Calendar entry updated."); setEditState(null); return; }
     if (editState.kind === "activity") {
       await updateCalendarActivity(editState.entry.id, {
         title: value.title,
@@ -163,12 +166,13 @@ function useCalendarPageState({ viewerRole = "ADMIN", data }: CalendarPageProps)
       setHolidays(updater);
       setAllHolidays(updater);
     }
+    showToast("Calendar entry updated.");
     setEditState(null);
   }
 
   async function handleDeleteConfirm() {
     if (!deleteState) return;
-    if (data) { await data.remove(deleteState); setDeleteState(null); return; }
+    if (data) { await data.remove(deleteState); showToast("Calendar entry deleted."); setDeleteState(null); return; }
     if (deleteState.kind === "activity") {
       await deleteCalendarActivityApi(deleteState.entry.id);
       const filterer = (prev: CalendarActivity[]) =>
@@ -182,6 +186,7 @@ function useCalendarPageState({ viewerRole = "ADMIN", data }: CalendarPageProps)
       setHolidays(filterer);
       setAllHolidays(filterer);
     }
+    showToast("Calendar entry deleted.");
     setDeleteState(null);
   }
 

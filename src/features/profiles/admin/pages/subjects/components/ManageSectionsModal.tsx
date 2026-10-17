@@ -1,3 +1,5 @@
+import { useActionConfirmation } from "@shared/components/useActionConfirmation";
+import { useToast } from "@shared/context/ToastContext";
 import { AccountSelect } from "@shared/components/AccountSelect";
 import { useState } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
@@ -15,6 +17,8 @@ interface ManageSectionsModalProps extends SubjectsTheme {
 
 export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme }: ManageSectionsModalProps) {
   const { darkMode, textMuted, textPrimary } = theme;
+  const { confirmAction, confirmationDialog } = useActionConfirmation(darkMode);
+  const { showToast } = useToast();
   const {
     getSectionsForGrade,
     loadSectionsForGrade,
@@ -56,6 +60,7 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
       setError(result.error);
       return;
     }
+    showToast("Section added.");
     setName("");
     setError(null);
   }
@@ -78,19 +83,20 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
       setEditError(result.error);
       return;
     }
+    showToast("Section updated.");
     setEditingId(null);
     setEditingName("");
     setEditError(null);
   }
 
-  async function handleRemove(id: string) {
-    setRemoveError(null);
-    setRemovingId(id);
-    const result = await removeSection(id);
-    setRemovingId(null);
-    if (!result.ok) {
-      setRemoveError({ id, message: result.error });
-    }
+  function handleRemove(id: string) {
+    const section = gradeSections.find(entry => entry.id === id);
+    if (!section || isInUse(section)) return;
+    confirmAction({ title: "Remove section?", description: `Remove ${section.name} from ${gradeLevel}?`, confirmLabel: "Remove section", danger: true, action: async () => {
+      setRemovingId(id);
+      try { const result = await removeSection(id); if (!result.ok) throw new Error(result.error); showToast("Section removed."); }
+      finally { setRemovingId(null); }
+    } });
   }
 
   // "In use" kapag may subject na naka-assign dito (SubjectSectionsContext data)
@@ -107,6 +113,7 @@ export function ManageSectionsModal({ defaultGrade, subjects, onClose, ...theme 
 
   return (
     <ModalShell title="Manage Sections" icon={School} onClose={onClose} {...theme}>
+      {confirmationDialog}
       <div>
         <label className={labelClasses}>Grade Level</label>
         <AccountSelect data-account-select=""

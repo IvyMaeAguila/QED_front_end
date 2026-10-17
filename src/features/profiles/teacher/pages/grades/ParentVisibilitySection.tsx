@@ -1,3 +1,5 @@
+import { useActionConfirmation } from "@shared/components/useActionConfirmation";
+import { useToast } from "@shared/context/ToastContext";
 import {useContext,useRef,useLayoutEffect} from 'react';
 import {TeacherGradeQueryContext} from '../../query/TeacherGradeQueryContext';
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
@@ -48,6 +50,8 @@ export function ParentVisibilitySection({
   textMuted,
 }: ParentVisibilitySectionProps) {
   const bridge=useContext(TeacherGradeQueryContext);
+  const { confirmAction, confirmationDialog } = useActionConfirmation(darkMode);
+  const { showToast } = useToast();
   const [attempt,setAttempt] = useState(0);
   const [students, setStudents] = useState<VisibilityStudent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -106,7 +110,11 @@ export function ParentVisibilitySection({
   const resource=(classId??'default')+':'+gradingPeriodId;
   const currentResource=useRef(resource);
   useLayoutEffect(()=>{currentResource.current=resource;return()=>{currentResource.current='';};},[resource]);
-  async function applyVisibility(visible: boolean) {
+  function applyVisibility(visible: boolean) {
+    if (!selected.size) return;
+    confirmAction({ title: visible ? "Show reports to parents?" : "Hide reports from parents?", description: `${visible ? "Show" : "Hide"} ${termLabel} reports for ${selected.size} selected students?`, confirmLabel: visible ? "Show reports" : "Hide reports", action: () => persistVisibility(visible) });
+  }
+  async function persistVisibility(visible: boolean) {
     if (selected.size === 0) return;
     setApplying(visible ? "show" : "hide");
     try {
@@ -127,10 +135,11 @@ export function ParentVisibilitySection({
         )
       );
       setSelected(new Set());
+      showToast(`${termLabel} reports ${visible ? "shown" : "hidden"} for ${selected.size} students.`);
     } catch (err) {
       if(currentResource.current!==resource)return;
       console.error("Failed to update grade visibility:", err);
-      setError("Failed to update visibility. Please try again.");
+      throw err instanceof Error ? err : new Error("Failed to update visibility. Please try again.");
     } finally {
       setApplying(null);
     }
@@ -241,7 +250,7 @@ export function ParentVisibilitySection({
               </tr>
             </thead></>;
 
-  return (<>{bridge&&<bridge.VisibilityEffects period={gradingPeriodId} classId={classId} ready={!prerequisitesLoading&&!prerequisitesError} attempt={attempt} setStudents={setStudents} setSelected={setSelected} setLoading={setLoading} setError={setError}/>}
+  return (<>{confirmationDialog}{bridge&&<bridge.VisibilityEffects period={gradingPeriodId} classId={classId} ready={!prerequisitesLoading&&!prerequisitesError} attempt={attempt} setStudents={setStudents} setSelected={setSelected} setLoading={setLoading} setError={setError}/>}
 {(
     <section className={cardClasses} aria-label="Parent grade visibility">
       <div className={`flex flex-col gap-2.5 border-b px-4 py-2.5 lg:flex-row lg:items-center lg:justify-between ${panelBorder}`}>

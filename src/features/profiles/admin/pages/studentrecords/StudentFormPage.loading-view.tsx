@@ -1,3 +1,4 @@
+import { useDraftNavigation } from "@shared/components/useDraftNavigation";
 import { AccountSelect } from "@shared/components/AccountSelect";
 import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { LoadingFormValue } from "@shared/loading/LoadingFormValue";
@@ -53,6 +54,7 @@ const ID_PATTERN = /^[A-Z]\d{2}-\d{4}$/;
 function useStudentFormPageState() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
+  const { markChanged, markSaved, navigationDialog } = useDraftNavigation(darkMode);
   const navigate = useNavigate();
   const { studentId } = useParams<{ studentId: string }>();
   const { getStudent, updateStudent, students, refetch, loading, error,createRecord } = useStudents();
@@ -101,7 +103,8 @@ function useStudentFormPageState() {
 
   if (isEditing && !existing && !loading && !error) {
     return { content: ((
-      <div className="w-full pb-8 sm:pb-12">
+      <div onChangeCapture={markChanged} className="w-full pb-8 sm:pb-12">
+      {navigationDialog}
         <section
           className={`rounded-[12px] border shadow-xs p-8 text-center ${panelBg} ${panelBorder}`}
         >
@@ -184,10 +187,12 @@ function useStudentFormPageState() {
     try {
       if (isEditing && existing) {
         await updateStudent(existing.dbId, payload as any);
+        markSaved();
         showToast("Student updated successfully!", "success");
         navigate(`/admin/students`);
       } else {
         await createRecord(payload);
+        markSaved();
         showToast("Student added successfully!", "success");
         await refetch(); // kunin ulit ang buong listahan galing backend
         navigate(`/admin/students`);
@@ -209,7 +214,8 @@ function useStudentFormPageState() {
   }
 
   return { content: ((
-    <div className="w-full space-y-4 pb-8 sm:space-y-6 sm:pb-12">
+    <div onChangeCapture={markChanged} className="w-full space-y-4 pb-8 sm:space-y-6 sm:pb-12">
+      {navigationDialog}
       <section className={cardClasses} aria-label="Student record form" data-sk-region="student-form">
         <div className={cardHeaderClasses}>
           <div className="flex min-w-0 items-center gap-3">

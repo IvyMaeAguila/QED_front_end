@@ -1,3 +1,4 @@
+import { useToast } from "@shared/context/ToastContext";
 import { ClassRecordExportModal } from "./ClassRecordExportModal";
 import { computeStudentGrade, computeGroupResult, studentTotals } from './utils/assessmentGradeCalculation';
 import {useTeacherAcademicServices} from '../../../query/TeacherAcademicQueryContext';
@@ -6,8 +7,8 @@ import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 import { rememberColumns, useColumnReservation } from "@shared/loading/reservations";
 import { Children, cloneElement, isValidElement, Fragment, useMemo, useRef, useState, type ReactNode, type ReactElement } from "react";
-import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
-import { AlertTriangle, CheckCircle2, Download, Send, X } from "lucide-react";
+
+import { AlertTriangle, CheckCircle2, Download, Send } from "lucide-react";
 import { ConfirmationModal } from "@shared/components/ConfirmationModal";
 import type { RosterStudent } from "./data";
 import {
@@ -272,13 +273,6 @@ export function AssessmentRecordsSection({
       link.click();
       URL.revokeObjectURL(link.href);
       setExportState("success");
-      const exportedTerm = fileName.match(/TERM-(\d+)/i)?.[1];
-      setSnackbar({
-        type: "success",
-        message: exportedTerm
-          ? `Term ${exportedTerm} class record exported successfully.`
-          : "Class record exported successfully.",
-      });
     } catch (err) {
       setSnackbar({ type: "error", message: err instanceof Error ? err.message : "Excel export failed." });
       setExportState("idle");
@@ -349,13 +343,10 @@ export function AssessmentRecordsSection({
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [justSubmitted, setJustSubmitted] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [snackbar, setSnackbar] = useState<{ type: "error" | "success"; message: string } | null>(null);
+  const { showToast } = useToast();
+  const setSnackbar = (message: { type: "error" | "success"; message: string }) => showToast(message.message, message.type);
 
-  useEffect(() => {
-    if (!snackbar) return;
-    const timeout = window.setTimeout(() => setSnackbar(null), 5000);
-    return () => window.clearTimeout(timeout);
-  }, [snackbar]);
+
 
   function handleSubmitClick() {
     if (isSubmitting) return;
@@ -813,24 +804,7 @@ export function AssessmentRecordsSection({
         </ConfirmationModal>
       )}
 
-      {snackbar && (
-        <div className="fixed bottom-5 left-1/2 z-50 w-full max-w-md -translate-x-1/2 px-4">
-          <div
-            className="flex items-start gap-2 rounded-xl px-4 py-3 text-xs font-bold text-white shadow-xl"
-            style={{ backgroundColor: snackbar.type === "error" ? "#DC2626" : "#16A34A" }}
-          >
-            {snackbar.type === "error" ? (
-              <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-            ) : (
-              <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-            )}
-            <span className="flex-1">{snackbar.message}</span>
-            <button type="button" onClick={() => setSnackbar(null)} aria-label="Dismiss">
-              <X className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        </div>
-      )}
+
     </section>
   );
 }

@@ -1,3 +1,6 @@
+import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
+import { useActionConfirmation } from "@shared/components/useActionConfirmation";
+import { useToast } from "@shared/context/ToastContext";
 // src/components/ProfileMenu.tsx
 import { useState, useRef } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
@@ -42,6 +45,12 @@ export function ProfileMenu() {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [draft, setDraft] = useState<UserProfile | null>(user);
+  const { showToast } = useToast();
+  const { confirmAction, confirmationDialog } = useActionConfirmation(darkMode);
+  const dirty = editing && JSON.stringify(draft) !== JSON.stringify(user);
+  const { navigationDialog, allowNavigation } = useUnsavedChanges(dirty, darkMode);
+  const closeRef = useRef(() => {});
+  closeRef.current = closeDrawer;
   const ref = useRef<HTMLDivElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
 
@@ -53,8 +62,7 @@ export function ProfileMenu() {
       const clickedTrigger = ref.current?.contains(target);
       const clickedDrawer = drawerRef.current?.contains(target);
       if (!clickedTrigger && !clickedDrawer) {
-        setOpen(false);
-        setEditing(false);
+        if (!(target instanceof Element && target.closest('[role="alertdialog"]'))) closeRef.current();
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -72,8 +80,10 @@ export function ProfileMenu() {
   }, [open]);
 
   function closeDrawer() {
-    setOpen(false);
-    setEditing(false);
+    if (saving) return;
+    const close = () => { allowNavigation(); setDraft(user); setOpen(false); setEditing(false); };
+    if (dirty) confirmAction({ title: "Discard profile changes?", description: "Your profile changes have not been saved.", confirmLabel: "Discard changes", action: close });
+    else close();
   }
 
   if (!user || !draft) return null;
@@ -114,7 +124,9 @@ export function ProfileMenu() {
         address: "address" in draft ? draft.address : undefined,
         avatarKey: teacherDraft?.avatarKey,
       });
+      allowNavigation();
       setUser({ ...draft, ...updated } as UserProfile);
+      showToast("Profile updated.");
       setEditing(false);
     } catch (error) {
       setSaveError(error instanceof Error ? error.message : "Failed to update profile.");
@@ -124,8 +136,9 @@ export function ProfileMenu() {
   }
 
   function cancel() {
-    setDraft(currentUser);
-    setEditing(false);
+    const discard = () => { allowNavigation(); setDraft(currentUser); setEditing(false); };
+    if (dirty) confirmAction({ title: "Discard profile changes?", description: "Your profile changes have not been saved.", confirmLabel: "Discard changes", action: discard });
+    else discard();
   }
 
   const avatarSrc = getAvatarSrc((editing ? draft : user) as any);
@@ -334,8 +347,10 @@ export function ProfileMenu() {
 
   return (
     <div ref={ref}>
+      {confirmationDialog}
+      {navigationDialog}
       <button
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => open ? closeDrawer() : setOpen(true)}
         className={`group flex items-center gap-2.5 shrink-0 rounded-xl pl-1.5 pr-2.5 py-1.5 border transition-all duration-200 ${
           open
             ? darkMode

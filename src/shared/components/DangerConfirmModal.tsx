@@ -36,7 +36,7 @@ export function DangerConfirmModal({
   confirmPhrase,
   confirmLabel = "Delete",
   successMessage,
-  errorMessage,
+
   onClose,
   onConfirm,
   darkMode,
@@ -64,9 +64,7 @@ export function DangerConfirmModal({
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to complete action.");
-      if (errorMessage) {
-        showToast(errorMessage, "error");
-      }
+
       setSubmitting(false);
     }
   }

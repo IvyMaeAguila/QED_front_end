@@ -1,3 +1,5 @@
+import { useSaveFeedback } from "@shared/components/useSaveFeedback";
+import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
 import {useContext} from 'react';
 import {useAuth} from '@shared/hooks/useAuth';
 import {TeacherAcademicQueryContext,useTeacherAcademicServices} from '../../../query/TeacherAcademicQueryContext';
@@ -155,6 +157,9 @@ function useSubjectRecordsPageState() {
   }, [state, term]);
 
 
+  const { save: persistScore, saveFeedback, pending: pendingWrites, hasFailures } = useSaveFeedback(`${subjectId}:${term}`);
+  const { navigationDialog, guardAction } = useUnsavedChanges(pendingWrites > 0 || hasFailures, darkMode);
+
   function handleScoreChange(
     studentId: string,
     itemId: string,
@@ -181,17 +186,7 @@ function useSubjectRecordsPageState() {
     });
 
     if (!subjectId) return;
-    saveScore(subjectId, studentId, itemId, value).catch((err) => {
-      console.error("Failed to save score:", err);
-      // If the save actually failed, resync from the server rather than
-      // leaving the UI showing a value that never really persisted.
-      setLoadError("Failed to save a score. Please retry.");
-      fetchScores(subjectId)
-        .then(setLocalScores)
-        .catch(() => {
-          /* best-effort resync; keep optimistic value if this also fails */
-        });
-    });
+    void persistScore(() => saveScore(subjectId, studentId, itemId, value), studentId + ':' + itemId);
   }
 
   // Finds every (student, item) pair in the current record that has no
@@ -222,6 +217,7 @@ function useSubjectRecordsPageState() {
       setIsEditing(true);
       return;
     }
+    if (pendingWrites > 0 || hasFailures) return;
     const missing = findMissingScores();
     if (missing.length > 0) {
       setPendingMissing(missing);
@@ -262,6 +258,8 @@ function useSubjectRecordsPageState() {
   if (!state) {
     return { content: ((
       <div className="w-full min-h-full pb-12">
+      {navigationDialog}
+      {saveFeedback}
         <div className="w-full space-y-6">
           <div className="flex items-start gap-2.5">
             {backButton}
@@ -309,6 +307,8 @@ function useSubjectRecordsPageState() {
 
   return { content: ((
     <div className="w-full min-h-full pb-0">
+      {navigationDialog}
+      {saveFeedback}
       <div className="w-full space-y-4">
         <div className="flex flex-col gap-4 2xl:flex-row 2xl:items-center 2xl:justify-between">
           <div className="flex min-w-0 items-start gap-2.5">
@@ -332,7 +332,7 @@ function useSubjectRecordsPageState() {
               const period = terms.find(candidate => candidate.termNumber === number);
               const active = !showFinalGrades && period?.id === term;
               return <button key={number} type="button" aria-pressed={active} disabled={!period || isEditing}
-                onClick={() => { if (period) { setTerm(period.id); setShowFinalGrades(false); } }}
+                onClick={() => { if (period) guardAction(() => { setTerm(period.id); setShowFinalGrades(false); }); }}
                 className={`rounded-lg px-3 text-xs font-bold transition-all disabled:opacity-50 ${active ? 'bg-maroon text-white shadow-sm' : `${textMuted} ${darkMode ? 'hover:text-white' : 'hover:text-gray-900'}`}`}>Term {number}</button>;
             })}
             <button type="button" aria-pressed={showFinalGrades} disabled={isEditing} onClick={() => setShowFinalGrades(true)}
@@ -355,7 +355,7 @@ function useSubjectRecordsPageState() {
               {terms.length > 0 && !isAssessment && (
                 <AccountSelect data-account-select="" data-dropdown-dark={darkMode}
                   value={term}
-                  onChange={(e) => setTerm(e.target.value)}
+                  onChange={(e) => { const value = e.target.value; guardAction(() => setTerm(value)); }}
                   className={`h-8 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
                   aria-label="Term"
                 >

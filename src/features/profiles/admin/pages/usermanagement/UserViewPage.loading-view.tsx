@@ -1,3 +1,4 @@
+import { useToast } from "@shared/context/ToastContext";
 import { ArrowLeft,Pencil,Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -15,6 +16,7 @@ import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 const ACCENT = "var(--color-maroon)";
 
 function useUserViewPageState() {
+  const { showToast } = useToast();
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const { role, userId } = useParams<{ role: string; userId: string }>();
@@ -87,6 +89,7 @@ function useUserViewPageState() {
             onCancel={() => setConfirmingDelete(false)}
             onConfirm={async () => {
               await deleteUser(user.id, user.role);
+            showToast("User account removed.");
               navigate("/admin/users");
             }}
           />
@@ -168,6 +171,7 @@ function useUserViewPageState() {
             onCancel={() => setConfirmingDelete(false)}
             onConfirm={async () => {
               await deleteUser(user.id, user.role);
+            showToast("User account removed.");
               navigate("/admin/users");
             }}
           />

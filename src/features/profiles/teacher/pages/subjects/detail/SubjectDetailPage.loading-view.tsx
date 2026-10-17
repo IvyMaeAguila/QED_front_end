@@ -1,3 +1,4 @@
+import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
 import {useTeacherAcademicServices} from '../../../query/TeacherAcademicQueryContext';
 import {useAuth} from '@shared/hooks/useAuth';
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
@@ -30,7 +31,7 @@ function currentSchoolYearLabel(): string {
 
 function useSubjectDetailPageState() {
   const {grading}=useTeacherAcademicServices();
-  const {addItem:addItemApi,deleteItem,fetchItems,saveScore,saveHolistic}=grading;
+  const {addItem:addItemApi,deleteItem,saveScore,saveHolistic}=grading;
   const {sessionScope,user}=useAuth();
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
@@ -67,6 +68,7 @@ function useSubjectDetailPageState() {
   const [templateStructure, setTemplateStructure] = useState<GradeTemplateStructure | undefined>();
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const { navigationDialog, allowNavigation } = useUnsavedChanges(hasUnsavedChanges, darkMode);
   const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
 
   function guardedNavigate(action: () => void) {
@@ -111,27 +113,9 @@ function useSubjectDetailPageState() {
   }
 
   async function handleDeleteItem(itemId: string) {
-    setItems((prev) => {
-      const next = prev.filter((i) => i.id !== itemId);
-      return next;
-    });
-
-    if (!subjectId) return;
-
-    try {
-      await deleteItem(subjectId, itemId);
-    } catch (err) {
-      console.error("Failed to delete item:", err);
-      try {
-        const refreshed = await fetchItems(subjectId, { allPeriods: true });
-        setItems(refreshed);
-      } catch (refetchErr) {
-        console.error(
-          "Failed to refresh items after failed delete:",
-          refetchErr,
-        );
-      }
-    }
+    if (!subjectId) throw new Error("No subject selected.");
+    await deleteItem(subjectId, itemId);
+    setItems(previous => previous.filter(item => item.id !== itemId));
   }
 
   async function handleScoreChange(
@@ -162,20 +146,9 @@ function useSubjectDetailPageState() {
     axis: HolisticAxisKey,
     value: number,
   ) {
-    setHolistic((prev) => {
-      const next = {
-        ...prev,
-        [studentId]: { ...prev[studentId], [axis]: value },
-      };
-      return next;
-    });
-
-    if (!subjectId) return;
-    try {
-      await saveHolistic(subjectId, studentId, axis, value, holisticTermNumber);
-    } catch (err) {
-      console.error("Failed to save holistic rating:", err);
-    }
+    if (!subjectId) throw new Error("No subject selected.");
+    await saveHolistic(subjectId, studentId, axis, value, holisticTermNumber);
+    setHolistic(prev => ({ ...prev, [studentId]: { ...prev[studentId], [axis]: value } }));
   }
 
   function openRecords() {
@@ -202,6 +175,7 @@ function useSubjectDetailPageState() {
   if (!subjectId) {
     return { content: ((
       <div className={`w-full min-h-full ${textPrimary}`}>
+      {navigationDialog}
         No subject selected.
       </div>
     )), scope: { subjectId, setTemplateLoading, selectedTerm, setTemplateStructure, hasUnsavedChanges, attempt, setSubjectName, setGradeLevel, setRoster, setItems, setScores, setHolistic, setHolisticWeekStartDate, setTerms, setSelectedTerm, setIsOwnAdvisory, setAdviserName, setLoading, setError } };
@@ -211,6 +185,7 @@ function useSubjectDetailPageState() {
 
   return { content: ((
     <div className="w-full min-h-full pb-0">
+      {navigationDialog}
       <div className="w-full space-y-6">
         <div className="flex items-start gap-2.5">
           <button
@@ -309,6 +284,7 @@ function useSubjectDetailPageState() {
             danger
             onCancel={() => setPendingAction(null)}
             onConfirm={() => {
+              allowNavigation();
               const action = pendingAction;
               setPendingAction(null);
               action();

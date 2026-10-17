@@ -16,7 +16,7 @@ import {
   downloadStudentImportTemplate,
   type ImportParseResult,
 } from "../utils/studentExcel";
-import { ToastContainer, type ToastItem } from "@shared/components/ToastNotification";
+import { useToast } from "@shared/context/ToastContext";
 import { ModalBody, ModalFooter, ModalFrame, ModalHeader } from "@shared/components/modal";
 
 interface StudentImportExportToolbarProps {
@@ -49,15 +49,7 @@ export function StudentImportExportToolbar({
   const [isParsing, setIsParsing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [toasts, setToasts] = useState<ToastItem[]>([]);
-
-  const pushToast = (message: string, type: ToastItem["type"] = "success") => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 4000);
-  };
+  const { showToast: pushToast } = useToast();
 
   const handleFileChosen = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -297,11 +289,7 @@ export function StudentImportExportToolbar({
         />
       )}
 
-      <ToastContainer
-        toasts={toasts}
-        darkMode={darkMode}
-        onClose={(id) => setToasts((prev) => prev.filter((t) => t.id !== id))}
-      />
+
     </>
   );
 }

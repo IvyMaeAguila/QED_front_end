@@ -1,8 +1,10 @@
+import { useSaveFeedback } from "@shared/components/useSaveFeedback";
+import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonText, SkeletonAvatar } from "@shared/components/SkeletonLoading";
 import { skeletonRows, rememberRows, rememberColumns, useColumnReservation } from "@shared/loading/reservations";
 import { useMemo, useRef, useState } from "react";
-import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
+
 import { ClipboardList, Search, Sparkles } from "lucide-react";
 import { StudentAvatar } from "@shared/components/StudentAvatar";
 import type { RosterStudent } from "../data";
@@ -24,7 +26,7 @@ interface HolisticTabProps {
   weekStartDate: string;
   termNumber: number;
   locked: boolean;
-  onRate: (studentId: string, axis: HolisticAxisKey, value: number) => void;
+  onRate: (studentId: string, axis: HolisticAxisKey, value: number) => Promise<void>;
   onOpenRecords: () => void;
   darkMode: boolean;
   panelBg: string;
@@ -65,13 +67,8 @@ export function HolisticTab({
   textMuted,
 }: HolisticTabProps) {
   const [search, setSearch] = useState("");
-  const [toast, setToast] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!toast) return;
-    const timer = window.setTimeout(() => setToast(null), 3000);
-    return () => window.clearTimeout(timer);
-  }, [toast]);
+  const { save, saveFeedback, pending, hasFailures } = useSaveFeedback(`${view}:${weekStartDate}`);
+  const { navigationDialog } = useUnsavedChanges(pending > 0 || hasFailures, darkMode);
 
   const filtered = useMemo(
     () =>
@@ -130,8 +127,7 @@ const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} $
                         aria-pressed={selected}
                         aria-label={`Rate ${student.name} ${level.label} for ${col.label}`}
                         onClick={() => {
-                          onRate(student.id, col.key, level.value);
-                          setToast("Weekly holistic records saved.");
+                          void save(() => onRate(student.id, col.key, level.value), `${student.id}:${col.key}`);
                         }}
                         className={`h-7 w-7 rounded-lg text-xs font-black tabular-nums transition-transform hover:scale-105 disabled:cursor-not-allowed disabled:hover:scale-100 ${
                           selected
@@ -297,14 +293,8 @@ const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} $
         <div ref={tableRoot}><LoadingRegion loading={loading} variable autoColumns name="holistic-roster" retainPrevious hasContent={filtered.length > 0} skeleton={null} frame={renderTable} onSettled={() => { rememberRows(view, filtered.length); rememberColumns(view, tableRoot.current?.querySelector("table") ?? null); }}>{null}</LoadingRegion></div>
       </section>
 
-      {toast && (
-        <div
-          role="status"
-          className="fixed bottom-5 right-5 z-50 max-w-sm rounded-xl bg-emerald-600 px-4 py-3 text-xs font-bold text-white shadow-xl"
-        >
-          {toast}
-        </div>
-      )}
+      {saveFeedback}
+      {navigationDialog}
     </div>
   );
 }

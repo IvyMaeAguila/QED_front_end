@@ -1,3 +1,5 @@
+import { SettingsProvider } from "../src/features/profiles/admin/pages/settings/context/SettingsContext";
+import { ToastProvider } from "../src/shared/context/ToastContext";
 import { StrictMode, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { createRoot } from 'react-dom/client';
 import { AuthContext } from '../src/features/auth/context/authContext';
@@ -23,4 +25,4 @@ export function Harness(){
  {mounted&&<NotificationProvider><Probe/></NotificationProvider>}
  </AuthContext.Provider>;
 }
-createRoot(document.getElementById('root')!).render(<StrictMode><Harness/></StrictMode>);
+createRoot(document.getElementById('root')!).render(<StrictMode><SettingsProvider><ToastProvider><Harness/></ToastProvider></SettingsProvider></StrictMode>);

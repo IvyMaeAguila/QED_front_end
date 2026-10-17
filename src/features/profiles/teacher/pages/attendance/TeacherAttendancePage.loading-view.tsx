@@ -1,3 +1,7 @@
+import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
+import { useSaveFeedback } from "@shared/components/useSaveFeedback";
+import { useActionConfirmation } from "@shared/components/useActionConfirmation";
+import { useToast } from "@shared/context/ToastContext";
 import {useContext,useLayoutEffect} from 'react';
 import {AttendanceQueryContext} from '../../query/AttendanceQueryContext';
 import { SkeletonAvatar,SkeletonText } from "@shared/components/SkeletonLoading";
@@ -47,6 +51,10 @@ function useTeacherAttendancePageState() {
     requestedClassId,
   } = useSelectedAdvisorySection();
 
+  const { save, saveFeedback, pending: savesPending, hasFailures } = useSaveFeedback(section?.classId ?? "");
+  const { navigationDialog } = useUnsavedChanges(savesPending > 0 || hasFailures, darkMode);
+  const { confirmAction, confirmationDialog } = useActionConfirmation(darkMode);
+  const { showToast } = useToast();
   const currentClass=useRef(section?.classId);
   useLayoutEffect(()=>{currentClass.current=section?.classId;return()=>{currentClass.current=undefined;};},[section?.classId]);
   const [attendance, setAttendance] = useState<AttendanceMap>({});
@@ -67,53 +75,27 @@ function useTeacherAttendancePageState() {
     activeTerm && iso >= activeTerm.startDate && iso <= activeTerm.endDate,
   );
 
+  async function persistMark(studentId: string, value: typeof PRESENT | null) {
+    if (!section || !activeTerm) throw new Error("Select an open class and term.");
+    await (bridge?.save ?? saveAdvisoryAttendance)(section.classId, studentId, iso, value, activeTerm.id);
+    if (currentClass.current === section.classId) setAttendance(prev => ({ ...prev, [studentId]: { ...prev[studentId], [iso]: value } }));
+  }
   function cycle(studentId: string) {
     if (!section || !activeTerm || !canMarkToday) return;
     const current = attendance[studentId]?.[iso] ?? null;
-    const idx = ATTENDANCE_CYCLE.indexOf(current);
-    const next = ATTENDANCE_CYCLE[(idx + 1) % ATTENDANCE_CYCLE.length];
-
-    setAttendance((prev) => ({
-      ...prev,
-      [studentId]: { ...prev[studentId], [iso]: next },
-    }));
-
-    (bridge?.save ?? saveAdvisoryAttendance)(section.classId, studentId, iso, next, activeTerm.id).catch(
-      (err) => {
-        if(currentClass.current!==section.classId)return;
-        console.error("Failed to save attendance:", err);
-        setAttendance((prev) => ({
-          ...prev,
-          [studentId]: { ...prev[studentId], [iso]: current },
-        }));
-      },
-    );
+    const next = ATTENDANCE_CYCLE[(ATTENDANCE_CYCLE.indexOf(current) + 1) % ATTENDANCE_CYCLE.length];
+    void save(() => persistMark(studentId, next), studentId);
   }
-
   function markAllPresent() {
-    if (!section || !activeTerm || !canMarkToday) return;
-    const targets = filteredRoster.length > 0 ? filteredRoster : section.roster;
-
-    for (const student of targets) {
-      const current = attendance[student.id]?.[iso] ?? null;
-      if (current === PRESENT) continue;
-
-      setAttendance((prev) => ({
-        ...prev,
-        [student.id]: { ...prev[student.id], [iso]: PRESENT },
-      }));
-
-      (bridge?.save ?? saveAdvisoryAttendance)(section.classId, student.id, iso, PRESENT, activeTerm.id).catch(
-        (err) => {
-          if(currentClass.current!==section.classId)return;
-        console.error("Failed to save attendance:", err);
-          setAttendance((prev) => ({
-            ...prev,
-            [student.id]: { ...prev[student.id], [iso]: current },
-          }));
-        },
-      );
-    }
+    if (!section || !activeTerm || !canMarkToday || savesPending) return;
+    const targets = (filteredRoster.length ? filteredRoster : section.roster).filter(student => attendance[student.id]?.[iso] !== PRESENT);
+    if (!targets.length) return;
+    confirmAction({ title: "Mark all present?", description: `Mark ${targets.length} students in ${section.sectionName || section.gradeLevel} present for ${iso}? Existing marks in this selection will be replaced.`, confirmLabel: "Mark present", action: async () => {
+      const results = await Promise.all(targets.map(student => save(() => persistMark(student.id, PRESENT), student.id)));
+      if (currentClass.current !== section.classId) return;
+      const savedCount = results.filter(Boolean).length;
+      if (savedCount) showToast(`Attendance saved for ${savedCount} of ${targets.length} students.`);
+    } });
   }
 
   const markedCount = section
@@ -261,6 +243,9 @@ function useTeacherAttendancePageState() {
 
   return { content: ((
     <div className="w-full min-h-full pb-0">
+      {confirmationDialog}
+      {navigationDialog}
+      {saveFeedback}
       <div className="w-full space-y-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2.5">
@@ -368,7 +353,7 @@ function useTeacherAttendancePageState() {
 
             <button
               onClick={markAllPresent}
-              disabled={loading || !canMarkToday || allMarkedPresent}
+              disabled={loading || savesPending > 0 || !canMarkToday || allMarkedPresent}
               className={`flex h-7 w-36 items-center justify-center gap-1 rounded-md border px-2.5 text-xs font-extrabold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                 darkMode
                   ? "border-white/10 bg-white/5 text-white hover:bg-white/10"

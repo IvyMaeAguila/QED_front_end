@@ -1,3 +1,5 @@
+import { useToast } from "@shared/context/ToastContext";
+import { useDraftNavigation } from "@shared/components/useDraftNavigation";
 import { AccountSelect } from "@shared/components/AccountSelect";
 import { LoadingFormValue } from "@shared/loading/LoadingFormValue";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
@@ -76,7 +78,9 @@ function toStr(value: unknown): string {
 function useUserFormPageState() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
+  const { markChanged, markSaved, navigationDialog } = useDraftNavigation(darkMode);
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const location = useLocation();
   const { role, userId } = useParams<{ role: string; userId: string }>();
   const { getUser, refetchUsers, getActivePrincipal, loading, error, forbidden, saveUser } = useUsers();
@@ -136,7 +140,8 @@ function useUserFormPageState() {
   if (forbidden) return { content: <LoadingRegion loading={false} error={error} retry={refetchUsers} name="user-form-error" skeleton={null}>{null}</LoadingRegion>, scope: { role, userId, isEditing, existing, loading, seededRecord, setForm, toStr } };
   if (isEditing && !existing && !loading && !error) {
     return { content: ((
-      <div className="w-full pb-12">
+      <div onChangeCapture={markChanged} className="w-full pb-12">
+      {navigationDialog}
         <section
           className={`rounded-[12px] border shadow-xs p-8 text-center ${panelBg} ${panelBorder}`}
         >
@@ -219,6 +224,8 @@ function useUserFormPageState() {
       // One server-owned write; successful Query invalidation refreshes readers.
       const data = await saveUser(payload, isEditing ? existing?.id : undefined);
 
+      markSaved();
+      if (isEditing) { showToast("User updated."); navigate("/admin/users"); return; }
       setFeedbackModal({
         open: true,
         variant: "success",
@@ -257,7 +264,8 @@ function useUserFormPageState() {
   }
 
   return { content: ((
-    <div className="w-full space-y-6 pb-12">
+    <div onChangeCapture={markChanged} className="w-full space-y-6 pb-12">
+      {navigationDialog}
       <section className={cardClasses} aria-label="User account form">
         {/* Card header — back button + icon/title on the left, helper text on the right */}
         <div className={cardHeaderClasses}>

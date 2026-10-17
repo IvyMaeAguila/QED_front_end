@@ -16,7 +16,7 @@ interface ToastContainerProps {
 
 export function ToastContainer({ toasts, onClose, darkMode }: ToastContainerProps) {
   return (
-    <div className="fixed bottom-5 right-5 z-[100] flex flex-col gap-2.5 items-end">
+    <div className="pointer-events-none fixed bottom-4 left-4 right-4 z-[110] flex flex-col items-end gap-2.5 sm:left-auto sm:right-5">
       {toasts.map((toast) => (
         <ToastCard
           key={toast.id}
@@ -44,14 +44,14 @@ function ToastCard({
     info: "#1D70D6",
   };
 
-  const cardClasses = `min-w-[260px] max-w-sm rounded-xl border shadow-lg px-4 py-3.5 flex items-start gap-3 animate-[toast-in_0.2s_ease-out] ${
+  const cardClasses = `pointer-events-auto w-full max-w-sm rounded-xl border shadow-lg px-4 py-3.5 flex items-start gap-3 motion-safe:animate-[toast-in_0.2s_ease-out] ${
     darkMode ? "bg-[#111827] border-[#374151]" : "bg-white border-border-subtle"
   }`;
 
   const iconColor = iconColors[toast.type];
 
   return (
-    <div className={cardClasses} role="status">
+    <div className={cardClasses} role={toast.type === 'error' ? 'alert' : 'status'} aria-atomic="true">
       <div
         className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 text-white text-xs font-bold"
         style={{ background: iconColor }}

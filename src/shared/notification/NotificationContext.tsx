@@ -1,3 +1,4 @@
+import { useToast } from "@shared/context/ToastContext";
 import { lazy, Suspense, useCallback, createContext, useContext, useState, type ReactNode } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { useAuth } from "../../features/auth/context/authContext";
@@ -17,6 +18,7 @@ const NotificationContext = createContext<NotificationContextType | undefined>(
 );
 
 function LegacyNotificationProvider({ children }: { children: ReactNode }) {
+  const { showToast } = useToast();
   const { user, isLoading, sessionScope } = useAuth();
   const identity = `${sessionScope}:${user?.role}:${user?.id}`;
   const [legacyIdentity, setLegacyIdentity] = useState<string | null>(null);
@@ -76,15 +78,13 @@ function LegacyNotificationProvider({ children }: { children: ReactNode }) {
   }, [user, isLoading, queryMode, identity]);
 
   const markAsRead = (id: number) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)),
-    );
-    notificationService.markAsRead(id).catch(() => {});
+    void notificationService.markAsRead(id).then(() => setNotifications(previous => previous.map(n => n.id === id ? { ...n, isRead: true } : n)))
+      .catch(() => showToast("Could not mark notification as read. Please try again.", "error"));
   };
-
   const markAllAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
-    if (user) notificationService.markAllAsRead(user.id).catch(() => {});
+    if (!user) return;
+    void notificationService.markAllAsRead(user.id).then(() => setNotifications(previous => previous.map(n => ({ ...n, isRead: true }))))
+      .catch(() => showToast("Could not mark notifications as read. Please try again.", "error"));
   };
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
@@ -118,5 +118,6 @@ const AdminNotifications = lazy(() => import("./AuthenticatedNotificationQueries
 const ParentNotifications = lazy(() => import("./AuthenticatedNotificationQueries"));
 const emptyNotifications = {notifications: [], unreadCount: 0, markAsRead: () => {}, markAllAsRead: () => {}};
 export function NotificationProvider({children}: {children: ReactNode}) {
+
   return <LegacyNotificationProvider>{children}</LegacyNotificationProvider>;
 }

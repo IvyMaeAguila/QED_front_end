@@ -1,3 +1,4 @@
+import { useActionConfirmation } from "@shared/components/useActionConfirmation";
 import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { rememberRows,skeletonRows } from "@shared/loading/reservations";
@@ -59,6 +60,7 @@ function useManageSubjectsPageState() {
   const [assignmentError, setAssignmentError] = useState<string | null>(null);
 
   const { showToast } = useToast();
+  const { confirmAction, confirmationDialog } = useActionConfirmation(darkMode);
 
   const gradeSubjects =
     activeGrade === "all"
@@ -113,17 +115,13 @@ function useManageSubjectsPageState() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtered]);
 
-  async function toggleStatus(subject: Subject) {
-    const newStatus = subject.status === "Active" ? "Inactive" : "Active";
-
-    updateLocalSubject(subject.id, { status: newStatus });
-
-    try {
+  function toggleStatus(subject: Subject) {
+    const next = subject.status === "Active" ? "Inactive" : "Active";
+    confirmAction({ title: next === "Inactive" ? "Deactivate subject?" : "Activate subject?", description: `Change ${subject.name} (${subject.gradeLevel} · ${subject.section}) to ${next.toLowerCase()}?`, confirmLabel: next === "Inactive" ? "Deactivate" : "Activate", action: async () => {
       await toggleSubjectStatusApi(subject.id);
-    } catch (err) {
-      console.error("Failed to toggle status:", err);
-      updateLocalSubject(subject.id, { status: subject.status });
-    }
+      updateLocalSubject(subject.id, { status: next });
+      showToast(`Subject ${next === "Active" ? "activated" : "deactivated"}.`);
+    } });
   }
 
   async function saveEditedSubject(
@@ -173,10 +171,7 @@ function useManageSubjectsPageState() {
       setEditSubjectError(
         err instanceof Error ? err.message : "Failed to update subject.",
       );
-      showToast(
-        err instanceof Error ? err.message : "Failed to update subject.",
-        "error",
-      );
+
     } finally {
       setSavingEdit(false);
     }
@@ -207,7 +202,7 @@ function useManageSubjectsPageState() {
       console.error("Failed to assign teacher:", err);
       const message = err instanceof Error ? err.message : "Failed to assign teacher.";
       setAssignmentError(message);
-      showToast(message, "error");
+
     } finally {
       setSavingAssignment(false);
     }
@@ -292,6 +287,7 @@ function useManageSubjectsPageState() {
 
   return { content: ((
     <div className="w-full min-h-full space-y-6 pb-12">
+      {confirmationDialog}
       {/* Page header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-2.5">

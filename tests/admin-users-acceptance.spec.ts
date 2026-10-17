@@ -74,7 +74,7 @@ test('mocked edit and status mutation update the list without an optimistic patc
   await expect(page.getByRole('button', { name: 'Save Changes', exact: true })).toBeEnabled(); await f.settled(); const before = f.state.calls;
   f.holdWrite(); await save(page, 'ChangedParent'); await expect.poll(() => f.state.mutations.length).toBe(1);
   expect(f.state.rows.find(r => r.role === 'PARENT')?.firstName).toBe('Parent'); await expect(page.getByRole('button', { name: 'Saving...', exact: true })).toBeDisabled(); f.releaseWrite();
-  await expect(page.getByText('User Updated', { exact: true })).toBeVisible(); await page.getByRole('button', { name: 'OK', exact: true }).click(); await shown(page);
+  await expect(page.getByText('User updated.', { exact: true })).toBeVisible(); await shown(page);
   const row = page.getByRole('row').filter({ hasText: 'parent@example.invalid' }); await expect(row).toContainText('ChangedParent'); await expect(row).toContainText('Active');
   expect(f.state.mutations).toHaveLength(1); expect(f.state.mutations[0]).toMatchObject({ method: 'PUT', path: '/api/user/editUser/1', payload: { role: 'PARENT', status: 'Active' } }); expect(f.state.calls).toBe(before + 1);
 });
@@ -102,7 +102,7 @@ test('mocked Teacher edit refreshes Admin profile Query/mapping and affected Das
   if(info.project.name==='fresh-production')expect(f.state.profileReads).toBe(1);
   const profileMark = f.profileLedger.mark(), profiles = f.state.profileReads, lookups = f.state.teacherLookups;
   await page.getByRole('button', { name: 'Edit User', exact: true }).click(); await expect(page.getByRole('button', { name: 'Save Changes', exact: true })).toBeEnabled(); await save(page, 'UpdatedTeacher');
-  await expect(page.getByText('User Updated', { exact: true })).toBeVisible(); await page.getByRole('button', { name: 'OK', exact: true }).click(); await shown(page);
+  await expect(page.getByText('User updated.', { exact: true })).toBeVisible(); await shown(page);
   const updated = page.getByRole('row').filter({ hasText: 'teacher@example.invalid' }); await expect(updated).toContainText('UpdatedTeacher'); await updated.getByRole('button').click(); await page.getByRole('menuitem', { name: 'View', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'UpdatedTeacher Fixture', exact: true })).toBeVisible(); const refreshedProfile=await f.profileLedger.successfulBatch(profileMark, 1);
   expect(f.state.profileReads).toBe(profiles + 1 + refreshedProfile.filter(r=>r.terminal==='aborted'&&r.intercepted).length);

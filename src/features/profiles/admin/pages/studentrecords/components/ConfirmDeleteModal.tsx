@@ -6,7 +6,7 @@ interface ConfirmDeleteModalProps {
   student: Student;
   darkMode: boolean;
   onCancel: () => void;
-  onConfirm: () => void;
+  onConfirm: () => void | Promise<void>;
 }
 
 export function ConfirmDeleteModal({ student, darkMode, onCancel, onConfirm }: ConfirmDeleteModalProps) {

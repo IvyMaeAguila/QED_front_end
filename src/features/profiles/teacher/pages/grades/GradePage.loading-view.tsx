@@ -1,3 +1,5 @@
+import { useActionConfirmation } from "@shared/components/useActionConfirmation";
+import { useToast } from "@shared/context/ToastContext";
 import { useExportProgress } from "@shared/components/useExportProgress";
 import {useContext,useRef,useLayoutEffect} from 'react';
 import {TeacherGradeQueryContext} from '../../query/TeacherGradeQueryContext';
@@ -133,7 +135,8 @@ function useGradesPageState() {
   const [submissionLogs, setSubmissionLogs] = useState<GradeSubmissionLog[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [showForceConfirm, setShowForceConfirm] = useState(false);
+  const { confirmAction, confirmationDialog } = useActionConfirmation(darkMode);
+  const { showToast } = useToast();
 
   const [activeTab, setActiveTab] = useState<"gradebook" | "visibility" | "history">("gradebook");
 
@@ -159,6 +162,10 @@ function useGradesPageState() {
   const resource=selectedClassId+':'+selectedTermId;
   const currentResource=useRef(resource);
   useLayoutEffect(()=>{currentResource.current=resource;return()=>{currentResource.current='';};},[resource]);
+  function requestSubmit() {
+    if (!gradebook || submitting) return;
+    confirmAction({ title: submitted ? "Re-submit class grades?" : "Submit class grades?", description: `${gradebook.sectionName || "Advisory class"} · ${terms.find(t => t.id === selectedTermId)?.label ?? "Selected term"} · ${gradebook.students.length} students. ${allComplete ? "All subjects have been submitted." : `${incompleteSubjectCount} subjects still have unsubmitted grades. Submit incomplete grades anyway?`}`, confirmLabel: submitted ? "Re-submit grades" : "Submit grades", action: handleSubmit });
+  }
   async function handleSubmit() {
     if (!selectedTermId) return;
     setSubmitting(true);
@@ -166,16 +173,17 @@ function useGradesPageState() {
     try {
       await (bridge?.submit ?? submitClassGrades)(selectedTermId, selectedClassId);
       if(currentResource.current!==resource)return;
+      showToast("Class grades submitted.");
       setSubmitted(true);
       setSubmittedAt(new Date().toISOString());
       const logs=await (bridge?.fetchLogs ?? fetchClassSubmissionLogs)(selectedTermId, selectedClassId);
       if(currentResource.current===resource)setSubmissionLogs(logs);
     } catch (err) {
       console.error("Failed to submit class grades:", err);
-      setSubmitError(err instanceof Error ? err.message : "Failed to submit class grades. Please try again.");
+      throw err instanceof Error ? err : new Error("Failed to submit class grades. Please try again.");
     } finally {
       setSubmitting(false);
-      setShowForceConfirm(false);
+
     }
   }
 
@@ -351,6 +359,7 @@ function useGradesPageState() {
   return { content: ((
     <div className="w-full min-h-full pb-12">
       {exportFeedback}
+      {confirmationDialog}
       <div className="w-full space-y-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2.5">
@@ -432,7 +441,7 @@ function useGradesPageState() {
                   <Download size={12} /> Export CSV
                 </button>
                 <button
-                  onClick={() => (allComplete ? handleSubmit() : setShowForceConfirm(true))}
+                  onClick={requestSubmit}
                   disabled={submitting || gradebookLoading || !gradebook}
                   className={`flex h-8 items-center gap-1.5 rounded-lg border bg-maroon px-3 text-xs font-extrabold text-white transition-colors hover:bg-maroon-light disabled:opacity-60 ${
                     darkMode ? "border-white/10" : "border-black/10"
@@ -454,33 +463,7 @@ function useGradesPageState() {
               </div>
             )}
 
-            {showForceConfirm && (
-              <div className={`rounded-xl border px-4 py-3 ${panelBg} ${panelBorder}`}>
-                <p className={`text-xs font-bold ${textPrimary}`}>Submit incomplete grades?</p>
-                <p className={`mt-1 text-xs font-medium ${textMuted}`}>
-                  One or more subjects still haven't been submitted by their subject teacher yet. You can submit
-                  now and reconcile later, or cancel and follow up with the subject teachers first.
-                </p>
-                <div className="mt-2.5 flex gap-2">
-                  <button
-                    onClick={() => setShowForceConfirm(false)}
-                    className={`flex h-8 items-center rounded-lg border px-3 text-xs font-bold transition-colors ${
-                      darkMode
-                        ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
-                        : "border-black/10 bg-white text-[#111827] hover:bg-black/5"
-                    }`}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleSubmit}
-                    className="flex h-8 items-center rounded-lg bg-maroon px-3 text-xs font-extrabold text-white transition-colors hover:bg-maroon-light"
-                  >
-                    Submit anyway
-                  </button>
-                </div>
-              </div>
-            )}
+
 
             {/*
               Search + filter + term + section strip.

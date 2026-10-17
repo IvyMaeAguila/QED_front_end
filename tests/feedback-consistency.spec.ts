@@ -1,0 +1,48 @@
+import { test, expect, type Page } from '@playwright/test';
+const control = async (page: Page, fail: boolean) => page.evaluate(fail => { (window as any).testFeedback.fail = fail; (window as any).testFeedback.release?.(); }, fail);
+for (const width of [375, 1280]) for (const dark of [false, true]) test(`feedback confirmation and saved-state ${width} ${dark}`, async ({ page }) => {
+  await page.setViewportSize({width,height:900});
+  await page.goto(`/tests/feedback-consistency.html?dark=${dark}`);
+  await page.getByRole('button',{name:'Delete test record',exact:true}).click();
+  const dialog=page.getByRole('alertdialog',{name:'Delete test record?',exact:true});
+  await dialog.getByRole('button',{name:'Cancel',exact:true}).click();
+  expect(await page.evaluate(()=>(window as any).testFeedback.calls)).toBe(0);
+  await page.getByRole('button',{name:'Delete test record',exact:true}).click();
+  await dialog.getByRole('button',{name:'Delete record',exact:true}).click();
+  await expect(dialog.getByRole('button',{name:'Working…',exact:true})).toBeDisabled();
+  await page.keyboard.press('Escape'); await expect(dialog).toBeVisible();
+  await control(page,true); await expect(dialog.getByRole('alert')).toHaveText('Synthetic save failed');
+  await dialog.getByRole('button',{name:'Delete record',exact:true}).click(); await control(page,false);
+  await expect(dialog).toHaveCount(0);
+  const rate=page.getByRole('button',{name:/Rate Test learner/}).first();
+  await rate.click(); await expect(page.getByText('Saving change…',{exact:true})).toBeVisible();
+  await expect(page.getByText('All changes saved.',{exact:true})).toHaveCount(0);
+  await control(page,true); await expect(page.getByRole('alert')).toContainText('could not be saved');
+  await page.getByRole('button',{name:'Retry failed changes',exact:true}).click(); await control(page,false);
+  await expect(page.getByText('All changes saved.',{exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'Toast twice',exact:true}).click(); await expect(page.getByText('Saved once',{exact:true})).toHaveCount(1);
+  await page.screenshot({path:test.info().outputPath('feedback.png')});
+});
+test('unsaved drafts guard application navigation and browser Back, but allow successful save',async({page})=>{
+  await page.goto('/tests/feedback-consistency.html');
+  await page.getByRole('button',{name:'Open editor',exact:true}).click();
+  await page.getByLabel('Draft',{exact:true}).fill('unsaved');
+  await page.getByRole('button',{name:'Navigate away',exact:true}).click();
+  const dialog=page.getByRole('alertdialog',{name:'Leave without saving?',exact:true});
+  await expect(dialog).toBeVisible(); await dialog.getByRole('button',{name:'Cancel',exact:true}).click();
+  await expect(page.getByTestId('path')).toHaveText('/edit'); await expect(page.getByLabel('Draft')).toHaveValue('unsaved');
+  await page.evaluate(()=>history.back()); await expect(dialog).toBeVisible();
+  await expect(page.getByTestId('path')).toHaveText('/edit');
+  await dialog.getByRole('button',{name:'Cancel',exact:true}).click();
+  await page.getByRole('button',{name:'Save and navigate',exact:true}).click();
+  await expect(page.getByTestId('path')).toHaveText('/saved'); await expect(dialog).toHaveCount(0);
+});
+test('writes to the same field are serialized and preserve the last edit',async({page})=>{
+  await page.goto('/tests/feedback-consistency.html');
+  await page.getByRole('button',{name:'Save ordered changes',exact:true}).click();
+  await expect.poll(()=>page.evaluate(()=>(window as any).testFeedback.calls)).toBe(1);
+  await control(page,false);
+  await expect.poll(()=>page.evaluate(()=>(window as any).testFeedback.calls)).toBe(2);
+  await control(page,false); await expect(page.getByText('All changes saved.',{exact:true})).toBeVisible();
+  expect(await page.evaluate(()=>(window as any).testFeedback.values)).toEqual([1,2]);
+});

@@ -1,3 +1,5 @@
+import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
+import { useSaveFeedback } from "@shared/components/useSaveFeedback";
 import {useContext,useRef,useLayoutEffect} from 'react';
 import {AttendanceQueryContext} from '../../query/AttendanceQueryContext';
 import { AccountSelect } from "@shared/components/AccountSelect";
@@ -108,6 +110,8 @@ export function AttendanceCalendarSection({
     return defaultViewDate(t);
   });
 
+  const { save, saveFeedback, pending, hasFailures } = useSaveFeedback(sectionId + ":" + selectedTermId);
+  const { navigationDialog, guardAction } = useUnsavedChanges(pending > 0 || hasFailures, darkMode);
   const currentResource=useRef('');
   useLayoutEffect(()=>{currentResource.current=sectionId+':'+selectedTermId;return()=>{currentResource.current='';};},[sectionId,selectedTermId]);
   const [summaryStudent, setSummaryStudent] = useState<RosterStudent | null>(null);
@@ -189,19 +193,10 @@ export function AttendanceCalendarSection({
     const idx = ATTENDANCE_CYCLE.indexOf(current);
     const next = ATTENDANCE_CYCLE[(idx + 1) % ATTENDANCE_CYCLE.length];
 
-    setAttendance((prev) => ({
-      ...prev,
-      [studentId]: { ...prev[studentId], [dateISO]: next },
-    }));
-
-    (bridge?.save ?? saveAdvisoryAttendance)(sectionId, studentId, dateISO, next, selectedTermId).catch((err) => {
-      if(currentResource.current!==sectionId+':'+selectedTermId)return;
-      console.error("Failed to save attendance:", err);
-      setAttendance((prev) => ({
-        ...prev,
-        [studentId]: { ...prev[studentId], [dateISO]: current },
-      }));
-    });
+    void save(async () => {
+      await (bridge?.save ?? saveAdvisoryAttendance)(sectionId, studentId, dateISO, next, selectedTermId);
+      if (currentResource.current === sectionId + ':' + selectedTermId) setAttendance(prev => ({ ...prev, [studentId]: { ...prev[studentId], [dateISO]: next } }));
+    }, studentId + ':' + dateISO);
   }
 
   const canGoPrev = term ? yearMonth(viewDate) > yearMonth(parseISO(term.startDate)) : true;
@@ -400,6 +395,8 @@ export function AttendanceCalendarSection({
   return (<>{bridge && <bridge.Effects {...{classId:sectionId,termId:selectedTermId,ready:!prerequisitesLoading&&!!sectionId,attempt,setAttendance,setLoading,setError:setAttendanceError,errorMessage:"Couldn't load attendance for this term. Please try again."}}/>}
 {(
     <section className={cardClasses} aria-label="Attendance records">
+      {saveFeedback}
+      {navigationDialog}
       <div className={`flex flex-col gap-4 border-b px-5 py-5 sm:flex-row sm:items-center sm:justify-between ${panelBorder}`}>
         <div className="flex items-start gap-3">
           <div>
@@ -414,7 +411,7 @@ export function AttendanceCalendarSection({
         <div className="flex items-center gap-2">
           <LoadingFormValue loading={prerequisitesLoading} intrinsic name="attendance-records-term" width="7ch"><AccountSelect data-account-select="" data-dropdown-dark={darkMode}
             value={selectedTermId}
-            onChange={(e) => setSelectedTermId(e.target.value)}
+            onChange={(e) => guardAction(() => setSelectedTermId(e.target.value))}
             className={`h-9 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
             aria-label="Term"
           >

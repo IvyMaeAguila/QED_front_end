@@ -55,7 +55,7 @@ function useStudentRecordsPageState() {
       showToast("Student deleted successfully!", "success");
     } catch (error) {
       console.error("Delete Error:", error);
-      showToast(error instanceof Error ? error.message : "Failed to delete student.");
+      throw error;
     }
   }
 

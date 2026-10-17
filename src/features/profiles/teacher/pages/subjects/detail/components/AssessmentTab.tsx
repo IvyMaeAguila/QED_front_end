@@ -1,3 +1,4 @@
+import { useToast } from "@shared/context/ToastContext";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonText, SkeletonAvatar, SkeletonControl } from "@shared/components/SkeletonLoading";
 import { skeletonRows, rememberRows, rememberColumns, useColumnReservation, lastKnownCount } from "@shared/loading/reservations";
@@ -108,7 +109,8 @@ export function AssessmentTab({
   const [topicManagerOpen, setTopicManagerOpen] = useState(false);
   const [savedFlash, setSavedFlash] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [toast, setToast] = useState<string | null>(null);
+  const { showToast } = useToast();
+  const setToast = (message: string) => showToast(message, /could not/i.test(message) ? "error" : "success");
   const [search, setSearch] = useState("");
 
   const [draftScores, setDraftScores] = useState<ScoreMap>(scores);
@@ -221,11 +223,7 @@ const isDirty = useMemo(() => {
     }
   }
 
-  useEffect(() => {
-    if (!toast) return;
-    const timer = window.setTimeout(() => setToast(null), 3000);
-    return () => window.clearTimeout(timer);
-  }, [toast]);
+
 
   const selectedItem = tabItems.find((i) => i.id === selectedItemId) ?? null;
 
@@ -623,14 +621,7 @@ const isDirty = useMemo(() => {
           />
         )}
 
-        {toast && (
-          <div
-            role="status"
-            className="fixed bottom-5 right-5 z-50 max-w-sm rounded-xl bg-emerald-600 px-4 py-3 text-xs font-bold text-white shadow-xl"
-          >
-            {toast}
-          </div>
-        )}
+
       </section>
     </div>
   );

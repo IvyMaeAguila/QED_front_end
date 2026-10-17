@@ -1,3 +1,5 @@
+import { useActionConfirmation } from "@shared/components/useActionConfirmation";
+import { useToast } from "@shared/context/ToastContext";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { ArrowLeft } from "lucide-react";
 import { useCallback,useState } from "react";
@@ -32,6 +34,8 @@ function useAcademicYearPageState(data?:AcademicYearData) {
   const [localLoadError, setLoadError] = useState<string | null>(null);
   const academicYear=data?data.academicYear:localAcademicYear,terms=data?.terms??localTerms,loading=data?.loading??localLoading,loadError=data?data.error:localLoadError;
 
+  const { confirmAction, confirmationDialog } = useActionConfirmation(darkMode);
+  const { showToast } = useToast();
   const [editingYear, setEditingYear] = useState(false);
   const [editingTerms, setEditingTerms] = useState(false);
 
@@ -68,15 +72,18 @@ function useAcademicYearPageState(data?:AcademicYearData) {
     setYearError(null);
     try {
       await (data?.addYear??addAcademicYear)(newYear);
-      // Full page reload so the new year, its freshly-seeded terms,
-      // and every dependent badge/status all reflect the fresh DB state.
-      window.location.reload();
+      // Refresh the active readers without discarding the result acknowledgement.
+      await loadAcademicYear();
+      setEditingYear(false);
+      setSavingYear(false);
+      showToast("Academic year saved.");
     } catch (err) {
       console.error("Failed to add academic year:", err);
       setYearError(
         err instanceof Error ? err.message : "Failed to add academic year.",
       );
       setSavingYear(false);
+      throw err;
     }
   }
 
@@ -88,13 +95,17 @@ function useAcademicYearPageState(data?:AcademicYearData) {
       const saved = await (data?.saveTerms??saveTermsRequest)(academicYear.id, updatedTerms);
       setTerms(saved);
       setEditingTerms(false);
-      const refreshedYear = await (data?.refreshYear??fetchActiveAcademicYear)();
-      setAcademicYear(refreshedYear);
+      showToast("Term dates updated.");
+      try {
+        const refreshedYear = await (data?.refreshYear??fetchActiveAcademicYear)();
+        setAcademicYear(refreshedYear);
+      } catch { showToast("Term dates were saved, but the year summary could not refresh. Reload this page.", "error"); }
     } catch (err) {
       console.error("Failed to save term dates:", err);
       setTermsError(
         err instanceof Error ? err.message : "Failed to save term dates.",
       );
+      throw err;
     } finally {
       setSavingTerms(false);
     }
@@ -105,6 +116,7 @@ function useAcademicYearPageState(data?:AcademicYearData) {
 
   return { content: ((
     <div className="w-full min-h-full space-y-6 pb-12">
+      {confirmationDialog}
       {/* Page header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
@@ -166,7 +178,7 @@ function useAcademicYearPageState(data?:AcademicYearData) {
                 setEditingYear(false);
                 setYearError(null);
               }}
-              onSave={saveAcademicYear}
+              onSave={value => confirmAction({ title: "Change academic year?", description: `Save ${value.label} with status ${value.status}? This changes the academic-year context used by school records.`, confirmLabel: "Save academic year", action: () => saveAcademicYear(value) })}
               saving={savingYear}
               error={yearError}
             />
@@ -184,7 +196,7 @@ function useAcademicYearPageState(data?:AcademicYearData) {
                 setEditingTerms(false);
                 setTermsError(null);
               }}
-              onSave={saveTermDates}
+              onSave={value => confirmAction({ title: "Update term dates?", description: `Save these dates for ${academicYear?.label}? Term dates affect attendance and report availability. ${value.map(term => `Term ${term.termNumber}: ${term.startDate} to ${term.endDate}`).join("; ")}`, confirmLabel: "Save term dates", action: () => saveTermDates(value) })}
               saving={savingTerms}
               error={termsError}
             />

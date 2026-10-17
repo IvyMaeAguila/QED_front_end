@@ -1,3 +1,5 @@
+import { useToast } from "@shared/context/ToastContext";
+import { useDraftNavigation } from "@shared/components/useDraftNavigation";
 import { AccountSelect } from "@shared/components/AccountSelect";
 import {
 AlertTriangle,
@@ -56,7 +58,9 @@ function useAddSubjectPageState() {
   const {addSubject:addSubjectApi,uploadTemplate:uploadGradeTemplate}=useAdminSubjectOperations();
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
+  const { markChanged, markSaved, navigationDialog } = useDraftNavigation(darkMode);
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const [schoolYear, setSchoolYear] = useState("");
   const [schoolYearError, setSchoolYearError] = useState<string | null>(null);
@@ -282,13 +286,9 @@ function useAddSubjectPageState() {
         id: String(row.id),
       });
 
-      setFeedbackModal({
-        open: true,
-        variant: "success",
-        title: "Subject Added",
-        message: `"${trimmedName}" was added successfully.`,
-        onCloseAction: () => navigate("/admin/subjects"),
-      });
+      markSaved();
+      showToast("Subject added.");
+      navigate("/admin/subjects");
     } catch (err) {
       console.error("Failed to add subject:", err);
       setFeedbackModal({
@@ -303,7 +303,8 @@ function useAddSubjectPageState() {
   }
 
   return { content: ((
-    <div className="w-full mt-6 space-y-6 pb-12 px-4 sm:px-6">
+    <div onChangeCapture={markChanged} className="w-full mt-6 space-y-6 pb-12 px-4 sm:px-6">
+      {navigationDialog}
       <LoadingRegion loading={schoolYearLoading || loadingGradeLevels || catalogLoading} error={schoolYearError ?? gradeError ?? assessmentError} retry={() => { if (schoolYearError) setYearAttempt(value => value + 1); if (gradeError) void retryGrades(); if (assessmentError) void loadAssessmentTypes(); }} skeleton={null} name="subject-form-prerequisites" variable className={schoolYearError || gradeError || assessmentError ? `text-sm ${textMuted}` : "contents"}>{null}</LoadingRegion>
       <section className={cardClasses} aria-label="Subject creation form" data-sk-region="subject-form">
         <div className={cardHeaderClasses}>

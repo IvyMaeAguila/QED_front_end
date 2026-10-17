@@ -53,7 +53,7 @@ test('subject records repeats cached native leaf columns within 2px',async({page
   await expect(region).toHaveAttribute('data-sk-phase','settled');await capture('initial settled');
   const loaded=await region.locator('tbody tr[data-sk-region="subject-record-student"]').first().locator('td').evaluateAll(els=>els.map(el=>el.getBoundingClientRect().width));
   for(const term of ['2','1']){
-   if(term==='1')await page.clock.fastForward(31_000);release.hold();await page.getByRole('combobox',{name:'Term',exact:true}).selectOption(term);
+   if(term==='1')await page.clock.fastForward(31_000);release.hold();await page.getByRole('group',{name:'Class record view'}).getByRole('button',{name:`Term ${term}`,exact:true}).click();
    await expect(region).toHaveAttribute('data-sk-phase','revealed');await capture(`term ${term} pending`);
    if(term==='1'){const pending=await region.locator('tbody tr[data-sk-region="subject-record-student"]').first().locator('td').evaluateAll(els=>els.map(el=>el.getBoundingClientRect().width));expect(pending).toHaveLength(loaded.length);pending.forEach((w,i)=>expect(Math.abs(w-loaded[i])).toBeLessThanOrEqual(2));}
    release.release();await expect(region).toHaveAttribute('data-sk-phase','settled');await capture(`term ${term} settled`);

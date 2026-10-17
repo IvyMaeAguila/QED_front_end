@@ -1,3 +1,4 @@
+import { useDraftNavigation } from "@shared/components/useDraftNavigation";
 import { AccountSelect } from "@shared/components/AccountSelect";
 
 import { useToast } from "@shared/context/ToastContext";
@@ -77,6 +78,7 @@ function TeacherDropdown({label,value,options,disabled,loading,valueLoading=fals
 function useClassFormPageState() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
+  const { markChanged, markSaved, navigationDialog } = useDraftNavigation(darkMode);
   const navigate = useNavigate();
   const { classId } = useParams<{ classId: string }>();
   const { getClass, refreshClasses,createClass,updateClass:updateClassApi, loading: classesLoading, error: classesError } = useClasses();
@@ -123,7 +125,8 @@ function useClassFormPageState() {
 
   if (isEditing && !existing && !classesLoading && !classesError) {
     return { content: ((
-      <div className="max-w-7xl mx-auto pb-12">
+      <div onChangeCapture={markChanged} onClickCapture={event => { const button = (event.target as Element).closest("button"); if (button && /add period|remove period/i.test(button.textContent ?? button.getAttribute("aria-label") ?? "")) markChanged(); }} className="max-w-7xl mx-auto pb-12">
+      {navigationDialog}
         <section
           className={`rounded-[12px] border shadow-xs p-8 text-center ${panelBg} ${panelBorder}`}
         >
@@ -152,6 +155,7 @@ function useClassFormPageState() {
   const labelClasses = `block text-xs font-bold uppercase tracking-wide mb-1.5 ${textMuted}`;
 
   function updatePeriod(id: string, updates: Partial<SchedulePeriod>) {
+    markChanged();
     setForm((f) => ({
       ...f,
       schedule: f.schedule.map((p) => (p.id === id ? { ...p, ...updates } : p)),
@@ -159,6 +163,7 @@ function useClassFormPageState() {
   }
 
   function toggleDay(periodId: string, day: DayOfWeek) {
+    markChanged();
     setForm((f) => ({
       ...f,
       schedule: f.schedule.map((p) =>
@@ -218,6 +223,7 @@ function useClassFormPageState() {
           schedule: cleanedSchedule,
         });
         refreshClasses();
+        markSaved();
         navigate(`/admin/classes`);
         showToast("Class updated successfully!", "success");
       } else {
@@ -230,6 +236,7 @@ function useClassFormPageState() {
           schedule: cleanedSchedule,
         });
         refreshClasses();
+        markSaved();
         navigate(`/admin/classes`);
         showToast("Class created successfully!", "success");
       }
@@ -237,17 +244,15 @@ function useClassFormPageState() {
       setSubmitError(
         err instanceof Error ? err.message : "Something went wrong.",
       );
-      showToast(
-        err instanceof Error ? err.message : "Failed to add class.",
-        "error",
-      );
+
     } finally {
       setSubmitting(false);
     }
   }
 
   return { content: ((
-    <div className="w-full space-y-4 pb-8 sm:space-y-6 sm:pb-12">
+    <div onChangeCapture={markChanged} className="w-full space-y-4 pb-8 sm:space-y-6 sm:pb-12">
+      {navigationDialog}
       <section className={cardClasses} aria-label="Class form" data-sk-region="class-form">
         {/* Card header — back button + icon/title on the left, helper text on the right */}
         <div className={cardHeaderClasses}>

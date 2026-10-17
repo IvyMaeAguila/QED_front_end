@@ -1,3 +1,4 @@
+import { useToast } from "@shared/context/ToastContext";
 import { UserPlus } from "lucide-react";
 import { useMemo,useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +15,7 @@ import { ROLE_LABELS,ROLE_LABEL_LIST,STATUSES } from "./types/user";
 const ACCENT = "var(--color-maroon)";
 
 function useUserManagementPageState() {
+  const { showToast } = useToast();
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
   const { users, loading, error, deleteUser, refetchUsers } = useUsers();
@@ -122,6 +124,7 @@ function useUserManagementPageState() {
           onCancel={() => setUserToDelete(null)}
           onConfirm={async () => {
             await deleteUser(userToDelete.id, userToDelete.role.toLowerCase());
+            showToast("User account removed.");
             setUserToDelete(null);
           }}
         />
