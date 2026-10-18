@@ -7,7 +7,7 @@ const BASE_URL = `${API_CONFIG.baseURL}/api`;
 export interface ExaminationAnalytics {
   schoolYear: string | null;
   summary: { count: number; students: number; mean: number | null; sd: number | null };
-  rows: { subjectId: number; subject: string; examination: string; students: number; count: number; mean: number | null; sd: number | null }[];
+  rows: { subjectId: number; subject: string; examination: string; comparisonCohort?: number | null; students: number; count: number; mean: number | null; sd: number | null }[];
   distribution: { interval: string; count: number }[];
   options: { years: { id: string; label: string }[]; terms: string[]; sections: { id: string; label: string }[]; subjects: { id: string; label: string }[] };
 }

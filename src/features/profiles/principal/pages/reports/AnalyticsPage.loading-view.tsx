@@ -11,7 +11,6 @@ import { ReportMetricCards } from "./components/ReportMetricCards";
 import { WholeElementaryRanking } from "./components/WholeElementaryRanking";
 import type { Term } from "./data/types";
 import { useSubjectAnalytics } from "./hooks/useSubjectAnalytics";
-import { ExaminationPerformance } from './components/ExaminationPerformance';
 
 function useAnalyticsPageState() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
@@ -104,7 +103,6 @@ function useAnalyticsPageState() {
           <PriorityFocus loading={loading} view={`subject-report:${term}:priority`} term={term} items={lowestPerforming} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} darkMode={darkMode} />
         </>
       )}
-      <ExaminationPerformance key={dataScope} term={term} grade={gradeFilter} gradeOptions={gradeOptions} onGradeChange={setGradeFilter} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} darkMode={darkMode} />
     </div>
   )), scope: {  } };
 }
