@@ -3,6 +3,13 @@
  * an entry here as well as real-route geometry/fixture verification.
  */
 export const routeSkeletons = {
+  "/principal/examination-performance": {
+    role: "PRINCIPAL",
+    component: "ExaminationPerformancePage",
+    skeleton: "ExaminationPerformancePageComposition",
+    load: () => import("../../features/profiles/principal/pages/reports/ExaminationPerformancePage").then(module => ({ default: module.ExaminationPerformancePage })),
+    regions: [{ name: "examination metrics and results", classification: "VARIABLE", reason: "Filtered results determine metric values and table rows", count: "Four metrics and returned subject rows" }],
+  },
   "/teacher/holistic": {
     role: "TEACHER",
     component: "HolisticOverviewPage",

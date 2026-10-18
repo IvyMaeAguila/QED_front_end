@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { BarChart3, HeartPulse } from "lucide-react";
+import { BarChart3, ClipboardList, HeartPulse } from "lucide-react";
 
 interface PrincipalAnalyticsTabsProps {
   textMuted: string;
@@ -7,6 +7,7 @@ interface PrincipalAnalyticsTabsProps {
 
 const TABS = [
   { to: "/principal/reports", label: "Subject Performance", Icon: BarChart3 },
+  { to: "/principal/examination-performance", label: "Examination Performance", Icon: ClipboardList },
   { to: "/principal/holistic-performance-analytics", label: "Holistic Development", Icon: HeartPulse },
 ];
 
