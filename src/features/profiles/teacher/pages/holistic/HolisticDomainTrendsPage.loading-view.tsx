@@ -5,7 +5,6 @@ import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { lastKnownCount,rememberRows } from "@shared/loading/reservations";
 import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 import {
-Activity,
 Brain,
 Compass,
 Heart,
@@ -38,21 +37,11 @@ type DomainWeekPoint,
 // works — CSS custom properties can't have a hex alpha byte appended.
 const ACCENT = "#8F1414";
 
-// A single, on-brand neutral for icon blocks outside the chart itself.
-// The four domains only need distinct hues where they're genuinely
-// disambiguating something on screen at once — the multi-line chart and
-// its legend. Repeating those same four hues on every scorecard and
-// interpretation row on top of the green/gold/red status badges made the
-// page feel busy, so this reuses the same brand maroon as everything
-// else (not the near-black --color-maroon-black gradient stop, which
-// read as too dark here).
-const NEUTRAL_ICON = ACCENT;
-
 const CHART_DOMAIN_META = {
-  cognitive: { label: "Cognitive", tagline: "How well concepts are landing", color: "var(--chart-cognitive)", Icon: Brain },
-  emotional: { label: "Emotional", tagline: "Motivation and confidence", color: "var(--chart-emotional)", Icon: Heart },
-  behavioral: { label: "Behavioral", tagline: "Focus and classroom conduct", color: "var(--chart-behavioral)", Icon: Compass },
-  social: { label: "Social", tagline: "Collaboration with peers", color: "var(--chart-social)", Icon: Users2 },
+  cognitive: { label: "Cognitive", tagline: "How well concepts are landing", color: "#578FBA", Icon: Brain },
+  emotional: { label: "Emotional", tagline: "Motivation and confidence", color: "#B96A91", Icon: Heart },
+  behavioral: { label: "Behavioral", tagline: "Focus and classroom conduct", color: "#B89043", Icon: Compass },
+  social: { label: "Social", tagline: "Collaboration with peers", color: "#4F9B7C", Icon: Users2 },
 } as const;
 
 type ChartDomainKey = keyof typeof CHART_DOMAIN_META;
@@ -232,7 +221,7 @@ function useHolisticDomainTrendsPageState() {
     return (Object.keys(CHART_DOMAIN_META) as ChartDomainKey[]).map((key) => {
       const values = chartRows.map((r) => r[key]).filter((v): v is number => v !== null);
       const latest = values.length ? values[values.length - 1] : null;
-      const previous = values.length > 1 ? values[values.length - 2] : null;
+      const previous = values.length > 1 ? values[0] : null;
       const delta = latest !== null && previous !== null ? Math.round((latest - previous) * 10) / 10 : null;
       return { key, latest, delta };
     });
@@ -282,14 +271,14 @@ function useHolisticDomainTrendsPageState() {
               <div className="flex flex-col sm:flex-row">
                 {(pending || compositeScore !== null) && (
                   <div
-                    className="sk-surface-brand flex shrink-0 flex-row items-center justify-between gap-3 px-5 py-4 sm:w-36 sm:flex-col sm:items-start sm:justify-center sm:gap-1"
-                    style={{ backgroundColor: ACCENT }} data-sk-surface="brand"
+                    className={`flex shrink-0 flex-col items-start justify-center gap-2 border-b px-5 py-4 sm:w-40 sm:border-b-0 sm:border-r ${panelBorder} ${darkMode ? "bg-white/5" : "bg-gray-50"}`}
                   >
-                    <span data-sk-region="domain-trend-composite" className="text-3xl font-black leading-none tabular-nums text-white">
+                    <span className={`text-xs font-bold uppercase tracking-wide ${textMuted}`}>Composite</span>
+                    <span data-sk-region="domain-trend-composite" className={`text-3xl font-black leading-none tabular-nums ${textPrimary}`}>
                       {pending ? <SkeletonText width="2.5ch" /> : compositeScore!.toFixed(1)}
                     </span>
-                    <span className="text-xs font-bold uppercase tracking-wide text-white/70">
-                      <span data-sk-static="">Composite</span> · {pending ? <SkeletonText className="inline-block" width="8ch" /> : bandFor(compositeScore!).label}
+                    <span className="rounded-full px-2 py-0.5 text-xs font-bold" style={{ color: compositeScore === null ? undefined : bandFor(compositeScore).color, backgroundColor: compositeScore === null ? undefined : `color-mix(in srgb, ${bandFor(compositeScore).color} 10%, transparent)` }}>
+                      {pending ? <SkeletonText className="inline-block" width="8ch" /> : bandFor(compositeScore!).label}
                     </span>
                   </div>
                 )}
@@ -322,7 +311,7 @@ function useHolisticDomainTrendsPageState() {
             </section>
 
             {/* ---------- 2. Domain scorecards ---------- */}
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 ${cardClasses}`}>
               {domainSummaries.map(({ key, latest, delta }) => {
                 const meta = CHART_DOMAIN_META[key];
                 const isHidden = hiddenDomains.has(key);
@@ -334,18 +323,12 @@ function useHolisticDomainTrendsPageState() {
                   <button
                     key={key}
                     type="button"
+                    aria-pressed={!isHidden}
                     onClick={() => toggleDomain(key)}
-                    className={`relative flex items-stretch overflow-hidden rounded-2xl border text-left shadow-card transition-opacity ${panelBorder} ${panelBg}`}
+                    className={`relative border-b p-4 text-left transition-opacity last:border-b-0 sm:border-b-0 sm:[&:nth-child(even)]:border-l lg:[&:not(:first-child)]:border-l ${panelBorder} ${darkMode ? "hover:bg-white/5" : "hover:bg-gray-50"}`}
                     style={{ opacity: isHidden ? 0.5 : 1 }}
                   >
-                    <span
-                      className="flex w-14 shrink-0 items-center justify-center"
-                      style={{ backgroundColor: NEUTRAL_ICON }}
-                    >
-                      <meta.Icon size={18} className="text-white" />
-                    </span>
-
-                    <div className="min-w-0 flex-1 p-3.5">
+                    <div className="min-w-0">
                       <div className="flex items-center justify-between gap-2">
                         <p className={`truncate text-xs font-bold uppercase tracking-wider ${textMuted}`}>
                           {meta.label}
@@ -359,8 +342,8 @@ function useHolisticDomainTrendsPageState() {
                           </span>
                         )}
                       </div>
-                      <div className="mt-0.5 flex items-baseline gap-1.5">
-                        <span data-sk-region={`domain-trend-score-${key}`} className={`text-lg font-black tabular-nums leading-none ${textPrimary}`}>
+                      <div className="mt-3 flex flex-wrap items-baseline gap-1.5">
+                        <span data-sk-region={`domain-trend-score-${key}`} className={`text-2xl font-black tabular-nums leading-none ${textPrimary}`}>
                           {pending ? <SkeletonText width="2.5ch" /> : latest !== null ? latest.toFixed(1) : "\u2014"}
                         </span>
                         <span className={`text-xs font-bold ${textMuted}`}>/ 5.0</span>
@@ -371,9 +354,11 @@ function useHolisticDomainTrendsPageState() {
                           >
                             <DeltaIcon size={10} />
                             {Math.abs(delta as number).toFixed(1)}
+                            <span>vs. start</span>
                           </span>
                         )}
                       </div>
+                      <span aria-hidden="true" className="mt-3 block w-12 border-t-2" style={{ borderColor: meta.color, borderStyle: key === "emotional" ? "dashed" : key === "behavioral" ? "dotted" : "solid" }} />
                     </div>
                   </button>
                 );
@@ -391,7 +376,7 @@ function useHolisticDomainTrendsPageState() {
                     Weekly Progression
                   </p>
                   <p className={`truncate text-xs font-medium ${textMuted}`}>
-                    · Tap a card above to isolate or hide its line
+                    · Average rating per domain, 1–5 scale
                   </p>
                 </div>
                 <span
@@ -404,23 +389,13 @@ function useHolisticDomainTrendsPageState() {
 
               <div className="px-3 pb-4 pt-4 sm:px-4">
                 <div className="sk-surface-domain-trend-plot relative h-80 w-full" data-sk-region="domain-trend-plot" data-sk-chart="lines">
-                  <DeferredChart loading={pending}>{({ CartesianGrid, Line, LineChart: RLineChart, ReferenceArea, ResponsiveContainer, Tooltip, XAxis, YAxis }) => (<ResponsiveContainer width="100%" height="100%">
+                  <DeferredChart loading={pending}>{({ CartesianGrid, Line, LineChart: RLineChart, ResponsiveContainer, Tooltip, XAxis, YAxis }) => (<ResponsiveContainer width="100%" height="100%">
                     <RLineChart data={pending ? Array.from({length: lastKnownCount(`${subjectView}-weeks`, 3)}, (_, index) => ({ weekLabel: "", weekStartDate: "", weekTick: String(index), cognitive: null, emotional: null, behavioral: null, social: null })) : chartRows} margin={{ top: 8, right: 20, bottom: 0, left: -8 }}>
                       <CartesianGrid
                         strokeDasharray="3 3"
                         stroke={darkMode ? "var(--color-grid-line-dark)" : "var(--color-grid-line)"}
                         vertical={false}
                       />
-                      {BANDS.map((band) => (
-                        <ReferenceArea
-                          key={band.label}
-                          y1={band.from}
-                          y2={band.to}
-                          fill={band.color}
-                          fillOpacity={darkMode ? 0.06 : 0.04}
-                          strokeWidth={0}
-                        />
-                      ))}
                       <XAxis
                         dataKey="weekTick"
                         tick={pending ? (props: {x?: number | string; y?: number | string}) => <foreignObject x={Number(props.x ?? 0) - 17} y={Number(props.y ?? 0)} width={34} height={16}><SkeletonText width="4ch" style={{fontSize: 10.5, lineHeight: "16px"}} /></foreignObject> : { fontSize: 10.5, fontWeight: 700, fill: darkMode ? "var(--color-axis-dark)" : "var(--color-axis)" }}
@@ -431,7 +406,7 @@ function useHolisticDomainTrendsPageState() {
                       />
                       <YAxis
                         domain={[1, 5]}
-                        ticks={[1, 1.5, 2.5, 3.5, 4.5, 5]}
+                        ticks={[1, 2, 3, 4, 5]}
                         tick={{ fontSize: 10, fontWeight: 600, fill: darkMode ? "var(--color-axis-dark)" : "var(--color-axis)" }}
                         axisLine={false}
                         tickLine={false}
@@ -449,23 +424,23 @@ function useHolisticDomainTrendsPageState() {
                             key={key}
                             name={meta.label}
                             dataKey={key}
-                            type="monotone"
+                            type="linear"
+                            hide={isHidden}
+                            strokeDasharray={key === "emotional" ? "6 4" : key === "behavioral" ? "2 4" : undefined}
                             stroke={meta.color}
-                            strokeWidth={isHidden ? 1.5 : 2.5}
-                            strokeOpacity={isHidden ? 0.15 : 1}
+                            strokeWidth={2}
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             dot={
                               isHidden
                                 ? false
-                                : { r: 3, strokeWidth: 2, stroke: darkMode ? "#111827" : "#FFFFFF", fill: meta.color }
+                                : { r: 3, strokeWidth: 1.5, stroke: meta.color, fill: darkMode ? "var(--surface-card-dark)" : "var(--surface-card)" }
                             }
                             activeDot={
                               isHidden
                                 ? false
                                 : { r: 5, strokeWidth: 2, stroke: darkMode ? "#111827" : "#FFFFFF", fill: meta.color }
                             }
-                            connectNulls
                             isAnimationActive
                             animationDuration={450}
                           />
@@ -485,12 +460,13 @@ function useHolisticDomainTrendsPageState() {
                       <button
                         key={key}
                         type="button"
+                        aria-pressed={!isHidden}
                         onClick={() => toggleDomain(key)}
                         className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-bold transition-opacity ${panelBorder} ${
                           darkMode ? "hover:bg-white/10" : "hover:bg-black/5"
                         } ${isHidden ? "opacity-40" : ""}`}
                       >
-                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: meta.color }} />
+                        <span aria-hidden="true" className="w-6 border-t-2" style={{ borderColor: meta.color, borderStyle: key === "emotional" ? "dashed" : key === "behavioral" ? "dotted" : "solid" }} />
                         <span className={textPrimary}>{meta.label}</span>
                       </button>
                     );
@@ -527,17 +503,10 @@ function useHolisticDomainTrendsPageState() {
                     <div
                       key={key}
                       className={`relative flex gap-3.5 px-4 py-5 transition-opacity ${
-                        isRightCol ? `lg:border-l ${panelBorder}` : ""
+                        `${isRightCol ? "lg:border-l" : ""} ${i > 1 ? "lg:border-t" : ""} ${panelBorder}`
                       }`}
                       style={{ opacity: isHidden ? 0.45 : 1 }}
                     >
-                      <span
-                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
-                        style={{ backgroundColor: NEUTRAL_ICON }}
-                      >
-                        <meta.Icon size={17} className="text-white" />
-                      </span>
-
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between gap-3">
                           <h3 className={`text-sm font-bold ${textPrimary}`}>{meta.label}</h3>
@@ -580,7 +549,8 @@ function useHolisticDomainTrendsPageState() {
                         <button
                           type="button"
                           onClick={() => toggleDomain(key)}
-                          className={`mt-2.5 text-xs font-bold ${textMuted} underline decoration-dotted underline-offset-2 transition-opacity hover:opacity-70`}
+                          aria-pressed={!isHidden}
+                          className={`mt-2.5 rounded-lg border px-3 py-2 text-xs font-bold ${panelBorder} ${textPrimary} transition-colors ${darkMode ? "hover:bg-white/5" : "hover:bg-gray-50"}`}
                         >
                           {isHidden ? "Show on chart" : "Hide from chart"}
                         </button>
@@ -603,9 +573,6 @@ function useHolisticDomainTrendsPageState() {
               panelBorder={panelBorder}
               textPrimary={textPrimary}
             />
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-maroon">
-              <Activity size={28} />
-            </span>
             <div>
               <h1 className={`qed-type-page-title ${textPrimary}`}>Domain Trends</h1>
               <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>

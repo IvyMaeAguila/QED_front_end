@@ -325,7 +325,7 @@ function useTeacherAttendancePageState() {
           </div>
         </div>
 
-        <LoadingRegion name="attendance-term-notice" loading={loading} variable skeleton={<div className={`rounded-lg border px-3 py-2 text-xs font-medium ${panelBg} ${panelBorder} ${textMuted}`}><SkeletonParagraph field="attendance-term-notice" typical={3} width="100%" /></div>}>
+        {(loading || !canMarkToday) && <LoadingRegion name="attendance-term-notice" loading={loading} variable skeleton={<div className={`rounded-lg border px-3 py-2 text-xs font-medium ${panelBg} ${panelBorder} ${textMuted}`}><SkeletonParagraph field="attendance-term-notice" typical={3} width="100%" /></div>}>
         {!canMarkToday && (
           <div
             className={`rounded-lg border px-3 py-2 text-xs font-medium ${panelBg} ${panelBorder} ${textMuted}`}
@@ -334,7 +334,7 @@ function useTeacherAttendancePageState() {
             Attendance entry is closed because today is outside an open term. You can still review and edit attendance already recorded for earlier dates in Full Records.
           </div>
         )}
-        </LoadingRegion>
+        </LoadingRegion>}
 
         <section className={cardClasses} aria-label="Today's attendance roster">
           <div

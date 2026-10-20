@@ -5,6 +5,23 @@ import { mockDirectory } from './fixtures/directory';
 import { assertNoDataSpinner, captureFixedOverlay, checkRenderedContrast, checkShimmerPixels } from './design-pixels';
 import fs from 'node:fs';
 const url='/teacher/holistic/domain-trends';
+test('domain trends compares against the first week and removes hidden series', async ({ page }) => {
+ const release = await fixture(page, false);
+ await page.goto(url);
+ await waitForDataRoute(page);
+ release();
+ await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);
+ const cognitiveScore = page.locator('[data-sk-region="domain-trend-score-cognitive"]').locator('xpath=ancestor::button');
+ await expect(cognitiveScore).toContainText('0.2vs. start');
+ const chart = page.locator('[data-sk-chart="lines"]');
+ await expect(chart.locator('.recharts-line-curve')).toHaveCount(4);
+ const toggle = page.getByRole('button', { name: 'Cognitive', exact: true });
+ await toggle.click();
+ await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+ await expect(chart.locator('.recharts-line-curve')).toHaveCount(3);
+ await toggle.click();
+ await expect(chart.locator('.recharts-line-curve')).toHaveCount(4);
+});
 async function fixture(page:Page,dark:boolean,weeks=3,subjectCount=2,long=false,advisories=1){
  const context=await mockDirectory(page,'TEACHER',dark);let finish!:()=>void;const gate=new Promise<void>(r=>{finish=r;});let failed='';const refetch=refetchGate();let fast=false;
  const points=Array.from({length:weeks},(_,i)=>({weekStartDate:`2026-09-${String(1+i*3).padStart(2,'0')}`,cognitive:3.5+i*.1,emotional:3.8,behavioral:2.6,social:4.2}));

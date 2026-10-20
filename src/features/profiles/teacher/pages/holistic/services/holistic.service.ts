@@ -184,6 +184,13 @@ export interface StudentHolisticProfile {
   overall: OverallDomainSnapshot;
   highestRiskLevel: "HIGH" | "MEDIUM" | "NONE";
   subjects: SubjectDomainProfile[];
+  evaluationHistory?: {
+    date: string;
+    subjectSectionId: string;
+    subjectName: string;
+    domain: keyof DomainAverages;
+    score: number;
+  }[];
 }
 
 export async function fetchStudentHolisticProfile(
