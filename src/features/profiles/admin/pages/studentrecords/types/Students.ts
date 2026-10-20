@@ -13,6 +13,7 @@ export interface Student {
   dbId: number; 
   gradeLevelId: number; 
   sectionId: number | null;
+  schoolYearId?: number;
   studentId: string;
   lrn: string;
   lastName: string;

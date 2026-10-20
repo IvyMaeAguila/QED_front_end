@@ -1,3 +1,4 @@
+import { ConfirmationModal } from "@shared/components/ConfirmationModal";
 import { useActionConfirmation } from "@shared/components/useActionConfirmation";
 import { useToast } from "@shared/context/ToastContext";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
@@ -39,6 +40,7 @@ function useAcademicYearPageState(data?:AcademicYearData) {
   const [editingYear, setEditingYear] = useState(false);
   const [editingTerms, setEditingTerms] = useState(false);
 
+  const [transitionCompleted, setTransitionCompleted] = useState(false);
   const [savingYear, setSavingYear] = useState(false);
   const [yearError, setYearError] = useState<string | null>(null);
 
@@ -71,7 +73,8 @@ function useAcademicYearPageState(data?:AcademicYearData) {
     setSavingYear(true);
     setYearError(null);
     try {
-      await (data?.addYear??addAcademicYear)(newYear);
+      const savedYear = await (data?.addYear??addAcademicYear)(newYear);
+      if (newYear.status === "Active" && savedYear.transition) setTransitionCompleted(true);
       // Refresh the active readers without discarding the result acknowledgement.
       await loadAcademicYear();
       setEditingYear(false);
@@ -116,6 +119,7 @@ function useAcademicYearPageState(data?:AcademicYearData) {
 
   return { content: ((
     <div className="w-full min-h-full space-y-6 pb-12">
+      {transitionCompleted && <ConfirmationModal title="School Year Transition Completed" description="The new academic year is now active. You can assign students to their respective sections." darkMode={darkMode} confirmLabel="Assign Sections" cancelLabel="Later" onClose={() => setTransitionCompleted(false)} onConfirm={() => { setTransitionCompleted(false); navigate('/admin/classes/section-assignment'); }} />}
       {confirmationDialog}
       {/* Page header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

@@ -63,6 +63,7 @@ function useStudentFormPageState() {
   const isEditing = Boolean(studentId);
   const existing = studentId ? getStudent(studentId) : undefined;
 
+  const [placementSnapshot, setPlacementSnapshot] = useState(existing ? { schoolYearId: existing.schoolYearId, gradeLevelId: existing.gradeLevelId, sectionId: existing.sectionId } : null);
   const [choicesAttempt, setChoicesAttempt] = useState(0);
   const [sectionError, setSectionError] = useState<string | null>(null);
   const [gradeLevels, setGradeLevels] = useState<DBGradeLevelResponse[]>([]);
@@ -122,7 +123,7 @@ function useStudentFormPageState() {
           </button>
         </section>
       </div>
-    )), scope: { existing, loading, seededRecord, studentId, setForm, setLoadingGrades, setGradeError, fetchGradeLevels, setGradeLevels, isEditing, choicesAttempt, form, setSections, setSectionError, setLoadingSections, fetchSectionByGrade } };
+    )), scope: { existing, loading, seededRecord, setPlacementSnapshot, studentId, setForm, setLoadingGrades, setGradeError, fetchGradeLevels, setGradeLevels, isEditing, choicesAttempt, form, setSections, setSectionError, setLoadingSections, fetchSectionByGrade } };
   }
 
   const inputClasses = `w-full h-10 px-3 rounded-lg border text-sm font-semibold outline-none transition-colors ${
@@ -186,7 +187,7 @@ function useStudentFormPageState() {
 
     try {
       if (isEditing && existing) {
-        await updateStudent(existing.dbId, payload as any);
+        await updateStudent(existing.dbId, { ...payload, expectedPlacement: placementSnapshot } as any);
         markSaved();
         showToast("Student updated successfully!", "success");
         navigate(`/admin/students`);
@@ -503,7 +504,7 @@ function useStudentFormPageState() {
         </form>}
       </section>
     </div>
-  )), scope: { existing, loading, seededRecord, studentId, setForm, setLoadingGrades, setGradeError, fetchGradeLevels, setGradeLevels, isEditing, choicesAttempt, form, setSections, setSectionError, setLoadingSections, fetchSectionByGrade } };
+  )), scope: { existing, loading, seededRecord, setPlacementSnapshot, studentId, setForm, setLoadingGrades, setGradeError, fetchGradeLevels, setGradeLevels, isEditing, choicesAttempt, form, setSections, setSectionError, setLoadingSections, fetchSectionByGrade } };
 }
 
 

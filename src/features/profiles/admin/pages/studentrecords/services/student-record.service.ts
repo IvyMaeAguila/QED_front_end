@@ -17,6 +17,7 @@ interface StudentRow {
   id: number;
   grade_level_id: number;
   section_id: number | null;
+  current_school_year_id: number;
   student_number: string;
   learner_reference_number: string;
   first_name: string;
@@ -34,6 +35,7 @@ function mapStudentRow(row: StudentRow): Student {
     id: String(row.id),
     gradeLevelId: row.grade_level_id,
     sectionId: row.section_id,
+    schoolYearId: row.current_school_year_id,
     studentId: row.student_number,
     lrn: row.learner_reference_number,
     firstName: row.first_name,

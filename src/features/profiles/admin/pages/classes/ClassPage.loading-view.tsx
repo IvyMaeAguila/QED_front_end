@@ -116,9 +116,13 @@ function useClassesPageState() {
             </p>
           </div>
         </div>
+        <div className="flex flex-wrap items-center gap-2.5 sm:justify-end">
+          <button type="button" onClick={() => navigate('/admin/classes/section-assignment')} className="h-8 px-3 rounded-lg text-xs font-extrabold text-white flex items-center gap-1.5 shrink-0 transition-colors hover:bg-maroon-light" style={{ background: "var(--color-maroon)", minHeight: "2rem", height: "2rem" }}>Assign Sections</button>
+
+        </div>
       </div>
 
-      {/* Search bar with grade filter + add button beside it */}
+      {/* Search and grade filter */}
       <div
         className={`relative z-20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 rounded-xl border px-3 py-2 ${panelBg} ${panelBorder}`}
       >
@@ -153,6 +157,7 @@ function useClassesPageState() {
             <Plus size={13} />
             Add Class
           </button>
+
         </div>
       </div>
 

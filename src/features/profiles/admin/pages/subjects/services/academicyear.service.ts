@@ -41,6 +41,7 @@ export interface ApiResponse<T> {
   status: "success" | "fail" | "error";
   message: string;
   data?: T;
+  transition?: { promoted: number; retained: number; graduated: number; pending: number } | null;
 }
 
 export async function fetchAllSchoolYears(options:ApiRequestOptions={}): Promise<SchoolYearRow[]> {
@@ -60,7 +61,7 @@ export async function fetchActiveAcademicYear(options:ApiRequestOptions={}): Pro
 export async function addAcademicYear(
   newYear: { label: string; status: SchoolYearStatus },
   options:ApiRequestOptions={},
-): Promise<AcademicYearRow> {
+): Promise<AcademicYearRow & { transition?: ApiResponse<AcademicYearRow>["transition"] }> {
   const res = await fetch(`${BASE_URL}/addAcademicYear`, {
     method: "POST",
     credentials: "include",
@@ -70,7 +71,7 @@ export async function addAcademicYear(
   });
   const json=await responseJson<AcademicYearRow>(res,options);
   if (!res.ok || !json.data) throw new QueryHttpError(json.message || "Failed to create academic year.",res.status);
-  return json.data;
+  return { ...json.data, transition: json.transition };
 }
 
 export async function fetchTerms(schoolYearId: number,options:ApiRequestOptions={}): Promise<TermRow[]> {

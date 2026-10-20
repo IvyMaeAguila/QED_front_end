@@ -5,7 +5,7 @@ import { assertNoDataSpinner, captureFixedOverlay, checkRenderedContrast, checkS
 import fs from 'node:fs';
 async function fixture(page:Page,dark:boolean,missing=false,long=false){
  const context=await mockDirectory(page,'ADMIN',dark);let finish!:()=>void;const gate=new Promise<void>(r=>{finish=r;});let failed=false, choiceFailure=false;
- await page.route('**/api/student/allStudents',async route=>{await gate;if(failed){await route.fulfill({status:500,json:{message:'Students unavailable'}});return;}await route.fulfill({json:{data:missing?[]:[{id:1,grade_level_id:1,section_id:1,student_number:'A23-0001',learner_reference_number:'123456789012',first_name:long?'Maria Alexandra '.repeat(12):'Ana',last_name:'Cruz',middle_name:'A',gender:'Female',grade_level_name:'Grade 1',section_name:'Maroon'}]}});});
+ await page.route('**/api/student/allStudents',async route=>{await gate;if(failed){await route.fulfill({status:500,json:{message:'Students unavailable'}});return;}await route.fulfill({json:{data:missing?[]:[{id:1,grade_level_id:1,section_id:1,current_school_year_id:26,student_number:'A23-0001',learner_reference_number:'123456789012',first_name:long?'Maria Alexandra '.repeat(12):'Ana',last_name:'Cruz',middle_name:'A',gender:'Female',grade_level_name:'Grade 1',section_name:'Maroon'}]}});});
  await page.route('**/api/gradeLevel/**',async route=>{await gate;const path=new URL(route.request().url()).pathname;if(choiceFailure){await route.fulfill({status:500,json:{message:'Choices unavailable'}});return;}await route.fulfill({json:path.endsWith('getGradeLevels')?[{id:1,grade_level:'Grade 1'}]:[{id:1,section_name:'Maroon',grade_level:'Grade 1'}]});});
  return Object.assign(()=>{context();finish();},{fail:()=>{failed=true;},recover:()=>{failed=false;choiceFailure=false;},failChoices:()=>{choiceFailure=true;}});
 }
@@ -42,7 +42,7 @@ test('student edit retains the existing update endpoint and payload',async({page
  await page.evaluate(()=>new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve()))));
  expect(requests,'Continue must enter Review without submitting the form').toBe(0);
  await page.getByRole('button',{name:/Save/}).click();
- await expect.poll(()=>payload).toEqual({studentId:'A23-0001',lrn:'123456789012',lastName:'Cruz',firstName:'Alicia',middleName:'A',gender:'Female',gradeLevel:'1',section:'1'});
+ await expect.poll(()=>payload).toEqual({studentId:'A23-0001',lrn:'123456789012',lastName:'Cruz',firstName:'Alicia',middleName:'A',gender:'Female',gradeLevel:'1',section:'1',expectedPlacement:{schoolYearId:26,gradeLevelId:1,sectionId:1}});
  expect(requests,'one explicit Save produces one update').toBe(1);finishSave();await expect(page).toHaveURL(/\/admin\/students$/);
 });
 for(const dark of [false,true])test(`student input ${dark?'dark':'light'} contrast and shimmer pixels`,async({page})=>{

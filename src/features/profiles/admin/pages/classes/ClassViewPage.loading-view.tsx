@@ -60,7 +60,7 @@ function useClassViewPageState() {
   const adviser = hasAdviser ? teachers.find((teacher) => String(teacher.id) === String(schoolClass.adviserId)) : undefined;
   const adviserAvatarSrc = getTeacherAvatar(adviser);
   const adviserAvatarBorderColor = getTeacherAvatarBorderColor(adviser?.gender);
-  const roster = students.filter((student) => student.gradeLevel === schoolClass.gradeLevel && student.section === schoolClass.section);
+  const roster = students.filter((student) => Number(student.gradeLevelId) === Number(schoolClass.gradeLevelId) && student.sectionId === schoolClass.sectionId);
   const totalSubjects = new Set(schoolClass.schedule.map((period) => period.subject.trim()).filter(Boolean)).size;
   const timeSlots = Array.from(
     new Map(schoolClass.schedule.map((period) => [`${period.startTime}-${period.endTime}`, { startTime: period.startTime, endTime: period.endTime }])).values(),
@@ -166,7 +166,7 @@ function useClassViewPageState() {
             textPrimary={textPrimary}
             textMuted={textMuted}
             darkMode={darkMode}
-            onActivate={(id) => navigate(`/admin/students/${id}`)}
+            onActivate={(id) => navigate(`/admin/students/${id}/edit`)}
           />
         </div>
       )}
