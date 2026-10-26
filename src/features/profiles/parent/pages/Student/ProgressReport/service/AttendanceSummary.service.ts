@@ -1,3 +1,4 @@
+import { boundedFetch as fetch, type BufferedHttpReply } from '@shared/http/boundedFetch';
 import { parentFetch } from '../../../../query/parentRequest';
 import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
 import { API_CONFIG } from '../../../../../../../config/api.config';
@@ -63,7 +64,7 @@ interface MyChildrenResponse {
 
 // ---------- Helper ----------
 
-async function handleResponse<T>(res: Response): Promise<T> {
+async function handleResponse<T>(res: BufferedHttpReply): Promise<T> {
   const data = await res.json().catch(() => ({}));
 
   if (!res.ok) {
@@ -97,7 +98,9 @@ const AttendanceService = {
       credentials: "include",
     });
 
-    return handleResponse<AttendanceSummaryResponse>(res);
+    const data=await handleResponse<AttendanceSummaryResponse>(res);
+    if(!data?.student||!Array.isArray(data.gradingPeriods))throw new Error('Failed to load attendance summary.');
+    return data;
   },
 };
 

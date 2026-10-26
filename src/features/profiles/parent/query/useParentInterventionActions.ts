@@ -14,7 +14,7 @@ export function useParentInterventionActions(studentId:string|undefined,topicId:
     }
   },async(data,{method},key)=>{
     if(data&&typeof data==='object'&&'success'in data&&data.success===false)return;
-    if(['submitQuiz','completeBonus','markTopicMastered'].includes(method)) {
+    if(['submitQuiz','completeBonus','markTopicMastered'].includes(method) || (method==='getInterventionState' && data && typeof data==='object' && 'interventionCompleted' in data && data.interventionCompleted===true)) {
       await queryClient.invalidateQueries({predicate:q=>key.every((part,i)=>q.queryKey[i]===part)&&q.queryKey[5]==='student'&&q.queryKey[6]===studentId&&q.queryKey.includes('intervention'),refetchType:'none'});
     }
   },['student',studentId,'intervention',topicId,'actions']);

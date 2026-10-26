@@ -76,7 +76,7 @@ export default function StudentsSection({
           <ViewToggle view={view} onChange={onViewChange} />
         </div>
 
-        <LoadingRegion name="enrolled-student-cards" loading={loading} error={error} retry={retry} variable retainPrevious hasContent={students.length > 0} skeleton={null} frame={renderStudents} onSettled={() => rememberRows(`parent-cards:${view}`, students.length)}>{renderStudents(false)}</LoadingRegion>
+        <LoadingRegion name="enrolled-student-cards" retainOnError={students.length > 0} loading={loading} error={error} retry={retry} variable retainPrevious hasContent={students.length > 0} skeleton={null} frame={renderStudents} onSettled={() => rememberRows(`parent-cards:${view}`, students.length)}>{renderStudents(false)}</LoadingRegion>
       </div>
     </div>
   );

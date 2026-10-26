@@ -39,7 +39,7 @@ const HelpSupportPage = lazy(routeSkeletons["/admin/help"].load);
 const AcademicYearPage = lazy(routeSkeletons["/admin/academic-year"].load);
 const AddSubjectPage = lazy(routeSkeletons["/admin/subjects/new"].load);
 const AdminSubjectDetailPage = lazy(routeSkeletons["/admin/subjects/:subjectId"].load);
-const SectionAssignmentPage = lazy(() => import('../../features/profiles/admin/pages/classes/SectionAssignmentPage').then(m => ({ default: m.SectionAssignmentPage })));
+const SectionAssignmentPage = lazy(routeSkeletons["/admin/classes/section-assignment"].load);
 export default function AdminRoutes() {
  return <RouteViewsContext.Provider value={routeViews}><Routes><Route element={<AdminSection/>}>
           <Route index element={<AdminDashboardHome />} />

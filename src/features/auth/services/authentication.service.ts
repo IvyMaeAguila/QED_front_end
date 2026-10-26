@@ -1,8 +1,4 @@
-import type { UserProfile, Role } from "../../../shared/profile/types/types";
-import { API_CONFIG } from '../../../config/api.config';
-import { preloadRole } from "../../../routes/roleModules";
-
-const BASE_URL = `${API_CONFIG.baseURL}/api/auth`;
+import type { UserProfile } from "../../../shared/profile/types/types";
 
 export interface LoginPayload {
   userName: string;
@@ -33,157 +29,18 @@ export interface ResetPasswordPayload {
 export type LoginResponse = UserProfile & { token: string; mustChangePassword: boolean };
 export type MeResponse = UserProfile & { mustChangePassword: boolean };
 
-function normalizeRole(role: string): Role {
-  return role.toUpperCase() as Role;
-}
 
-function mapToUserProfile(raw: any): UserProfile {
-  return {
-    id: raw.id,
-    userName: raw.user_name,
-    role: normalizeRole(raw.role),
-    name: raw.name,
-    email: raw.email ?? raw.email_address ?? "",
-    phone: raw.phone ?? raw.contact_number ?? raw.contact ?? "",
-    address: raw.address,
-    subject: raw.subject,
-    gradeLevel: raw.grade_level,
-    section: raw.section,
-    gender: String(raw.gender ?? "").toLowerCase() === "male"
-      ? "male"
-      : String(raw.gender ?? "").toLowerCase() === "female"
-        ? "female"
-        : undefined,
-    avatarKey: raw.avatar_key ?? undefined,
-  } as UserProfile;
-}
+type AuthenticationTransport = typeof import("./authentication.transport").transport;
+const loadTransport = () => import("./authentication.transport");
 
-export const AuthService = {
-  async updateProfile(payload: { email?: string; phone?: string; address?: string; avatarKey?: string }): Promise<{ email?: string; phone?: string; address?: string; avatarKey?: string }> {
-    const response = await fetch(`${BASE_URL}/profile`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(payload),
-    });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data?.message || "Failed to update profile.");
-    return data.profile;
-  },
-
-  async login(payload: LoginPayload): Promise<LoginResponse> {
-    const response = await fetch(`${BASE_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data?.message || "Invalid User ID or password.");
-    }
-
-    preloadRole(data.user.role);
-    return {
-      ...mapToUserProfile(data.user),
-      token: data.user.token,
-      mustChangePassword: !!data.user.mustChangePassword,
-    } as LoginResponse;
-  },
-
-  async getMe(): Promise<MeResponse | null> {
-    const response = await fetch(`${BASE_URL}/me`, {
-      method: "GET",
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      // unexpected server error lang dapat ito ngayon (500, etc),
-      // hindi na ito ang gamit para sa "walang session" case
-      return null;
-    }
-
-    const data = await response.json();
-
-    if (!data.user) {
-      // 200 pero walang session — normal na scenario ito, hindi error
-      return null;
-    }
-
-    preloadRole(data.user.role);
-    return {
-      ...mapToUserProfile(data.user),
-      mustChangePassword: !!data.user.mustChangePassword,
-    } as MeResponse;
-  },
-
-  async changePassword(payload: ChangePasswordPayload) {
-    const response = await fetch(`${BASE_URL}/change-password`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data?.message || "Failed to change password.");
-    }
-
-    return data;
-  },
-
-  async logout() {
-    const response = await fetch(`${BASE_URL}/logout`, {
-      method: "POST",
-      credentials: "include",
-    });
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Logout failed");
-    }
-    return response.json();
-  },
-
-  async requestPasswordReset(payload: ForgotPasswordPayload) {
-  const response = await fetch(`${BASE_URL}/forgot-password`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data?.message || "Failed to request password reset.");
-  }
-  return data;
-},
-
-async verifyOtp(payload: VerifyOtpPayload): Promise<{ resetToken: string }> {
-  const response = await fetch(`${BASE_URL}/verify-otp`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data?.message || "Invalid or expired OTP.");
-  }
-  return data;
-},
-
-async resetPassword(payload: ResetPasswordPayload) {
-  const response = await fetch(`${BASE_URL}/reset-password`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data?.message || "Failed to reset password.");
-  }
-  return data;
-},
+/** Keep authentication transport lazy without changing the public service API. */
+export const AuthService: AuthenticationTransport = {
+  updateProfile: async payload => (await loadTransport()).transport.updateProfile(payload),
+  login: async payload => (await loadTransport()).transport.login(payload),
+  getMe: async signal => (await loadTransport()).transport.getMe(signal),
+  changePassword: async payload => (await loadTransport()).transport.changePassword(payload),
+  logout: async () => (await loadTransport()).transport.logout(),
+  requestPasswordReset: async payload => (await loadTransport()).transport.requestPasswordReset(payload),
+  verifyOtp: async payload => (await loadTransport()).transport.verifyOtp(payload),
+  resetPassword: async payload => (await loadTransport()).transport.resetPassword(payload),
 };

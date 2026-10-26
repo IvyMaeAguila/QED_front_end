@@ -1,5 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import { mockAdminDashboard } from './fixtures/adminDashboard';
+import { matchRoutes } from 'react-router-dom';
+import { routeSkeletons } from '../src/shared/loading/routeSkeletons';
 import type { AssignmentData } from '../src/features/profiles/admin/pages/classes/services/sectionAssignment.service';
 
 async function fixture(page: Page, dark = false, count = 3) {
@@ -27,6 +29,39 @@ async function fixture(page: Page, dark = false, count = 3) {
 async function open(page: Page) { await page.goto('/admin/classes/section-assignment'); await expect(page.getByLabel('Assignment summary')).toContainText('2026–2027'); }
 async function grade(page: Page) { await page.getByLabel('Grade Level', { exact: true }).selectOption('1'); }
 const allLabel = 'Select all eligible students on this page';
+
+test('Section Assignment registration preserves dynamic class and unavailable-route matching', () => {
+  const routes = Object.keys(routeSkeletons).map(path => ({ path }));
+  const matched = (path: string) => matchRoutes(routes, path)?.at(-1)?.route.path ?? null;
+  expect(matched('/admin/classes/section-assignment')).toBe('/admin/classes/section-assignment');
+  expect(matched('/admin/classes/123')).toBe('/admin/classes/:classId');
+  expect(matched('/admin/classes/123/edit')).toBe('/admin/classes/:classId/edit');
+  expect(matched('/admin/classes/123/unavailable')).toBeNull();
+  expect(matched('/admin/unavailable')).toBeNull();
+});
+
+test('cold Section Assignment route keeps its own loading composition until the module arrives', async ({ page }) => {
+  const f = await fixture(page);
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  let requested = 0;
+  await page.route(/\/src\/features\/profiles\/admin\/pages\/classes\/SectionAssignmentPage\.tsx(?:\?.*)?$/, async route => {
+    requested++; await gate; await route.continue();
+  });
+  try {
+    await page.goto('/admin/classes/section-assignment');
+    await expect.poll(() => requested).toBe(1);
+    const preview = page.locator('[data-route-skeleton]');
+    await expect(preview).toHaveAttribute('data-route-skeleton', '/admin/classes/section-assignment');
+    await expect(preview.getByRole('heading', { name: 'Section Assignment', exact: true })).toBeVisible();
+    await expect(preview.getByText('Loading section assignments…', { exact: true })).toBeAttached();
+    expect(f.state.reads).toBe(0); expect(f.state.writes).toEqual([]);
+    release();
+    await expect(preview).toHaveCount(0);
+    await expect(page.getByLabel('Assignment summary')).toContainText('2026–2027');
+    expect(f.state.writes).toEqual([]);
+  } finally { release(); }
+});
 
 test('Classes navigation opens dedicated page without another sidebar item', async ({ page }) => {
   await fixture(page); await page.goto('/admin/classes'); await page.getByRole('button', { name: 'Assign Sections', exact: true }).click();
@@ -68,7 +103,7 @@ test('concurrent conflict refreshes without retrying; pending confirmation preve
   await page.getByRole('button', { name: 'Assign Selected Students' }).click(); f.hold(); f.state.error = 409;
   await page.getByRole('button', { name: 'Confirm Assignment', exact: true }).click();
   await expect(page.getByRole('alertdialog').getByRole('button', { name: /Confirm|Working/ })).toBeDisabled();
-  expect(f.state.writes).toHaveLength(1); f.state.release();
+  await expect.poll(() => f.state.writes.length).toBe(1); f.state.release();
   await expect(page.getByRole('alertdialog')).toContainText('Students changed.'); expect(f.state.writes).toHaveLength(1);
   await page.getByRole('button', { name: 'Cancel', exact: true }).click(); await expect(page.getByText('0 students selected', { exact: true })).toBeVisible();
 });

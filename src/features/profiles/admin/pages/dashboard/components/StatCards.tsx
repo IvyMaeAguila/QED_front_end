@@ -1,3 +1,4 @@
+import {isTransientReadFailure} from '@shared/query/safeReadPolicy';
 import { ArrowUpRight } from "lucide-react";
 import { statsConfig } from "../data/Dashboarddata";
 import { useAdminDashboardData, adminDashboardOfflineError } from "../AdminDashboardDataContext";
@@ -24,7 +25,7 @@ interface StatCardsProps {
 export function StatCards({ panelBg, panelBorder, textPrimary, textMuted }: StatCardsProps) {
   const { counts: state } = useAdminDashboardData();
   const { data: counts, loading, error, retry } = state;
-  const cachedOffline = error === adminDashboardOfflineError && counts !== undefined;
+  const cachedOffline = !state.forbidden && counts !== undefined && (error === adminDashboardOfflineError || isTransientReadFailure(error));
 
   const valueFor = (key: keyof DashboardCounts) => {
     if (error && !cachedOffline) return "—";
@@ -83,7 +84,7 @@ export function StatCards({ panelBg, panelBorder, textPrimary, textMuted }: Stat
                     isPrimary ? "text-white" : textPrimary
                   }`}
                 >
-                  {cachedOffline && <span role="alert">{error?.message}</span>}
+                  {cachedOffline && <span role="alert">{error?.message}<button type="button" className="ml-2 font-semibold underline" onClick={retry}>Retry</button></span>}
                   <LoadingRegion key={String(state.forbidden)} as="span" className={isPrimary ? "sk-surface-brand" : ""} loading={loading} error={cachedOffline ? null : error} retry={retry} skeleton={<SkeletonText width="3ch" />}>{value}</LoadingRegion>
                 </p>
                 {unit && (

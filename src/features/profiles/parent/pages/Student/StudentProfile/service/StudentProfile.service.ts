@@ -1,3 +1,4 @@
+import { boundedFetch as fetch, type BufferedHttpReply } from '@shared/http/boundedFetch';
 import { parentFetch } from '../../../../query/parentRequest';
 import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
 // services/studentProfile.service.ts
@@ -14,7 +15,7 @@ export interface UpdateStudentProfilePayload {
   residentialAddress: string;
 }
 
-async function parseJsonSafely(response: Response): Promise<any | null> {
+async function parseJsonSafely(response: BufferedHttpReply): Promise<any | null> {
   try {
     return await response.json();
   } catch {

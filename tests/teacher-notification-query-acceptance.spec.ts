@@ -42,6 +42,6 @@ test('Teacher notifications existing 30-second poll, focus refresh and offline c
  await page.clock.install();const f=await fixture(page);await open(page);await expect(page.getByText('Synthetic notice',{exact:true})).toBeVisible();const before=f.gets.length;
  await page.clock.fastForward(30_001);await page.clock.resume();await expect.poll(()=>f.gets.length).toBe(before+1);await expect.poll(()=>f.completed.length).toBe(2);
  await context.setOffline(true);await expect(page.getByText('Synthetic notice',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Mark all as read',exact:true}).click();expect(f.writes).toEqual([]);
- const restored=page.evaluate(()=>new Promise(resolve=>window.addEventListener('online',()=>queueMicrotask(()=>resolve(true)),{once:true})));
- await context.setOffline(false);await restored;await page.evaluate(()=>window.dispatchEvent(new Event('focus')));await expect.poll(()=>f.gets.length).toBe(before+2);await expect(page.getByText('Synthetic notice',{exact:true})).toBeVisible();
+ const restored=await page.evaluateHandle(()=>({online:new Promise<boolean>(resolve=>window.addEventListener('online',()=>queueMicrotask(()=>resolve(true)),{once:true}))}));
+ await context.setOffline(false);await restored.evaluate(({online})=>online);await restored.dispose();await page.evaluate(()=>window.dispatchEvent(new Event('focus')));await expect.poll(()=>f.gets.length).toBe(before+2);await expect(page.getByText('Synthetic notice',{exact:true})).toBeVisible();
 });

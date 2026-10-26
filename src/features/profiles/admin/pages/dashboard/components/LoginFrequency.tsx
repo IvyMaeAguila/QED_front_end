@@ -1,3 +1,4 @@
+import {isTransientReadFailure} from '@shared/query/safeReadPolicy';
 import { AccountSelect } from "@shared/components/AccountSelect";
 import { useMemo } from "react";
 import { RefreshCw } from "lucide-react";
@@ -44,7 +45,7 @@ export function LoginFrequency({
 }: LoginFrequencyProps) {
   const { frequency: state, selectedPeriod, setSelectedPeriod } = useAdminDashboardData();
   const { data, loading, error, retry } = state;
-  const cachedOffline = error === adminDashboardOfflineError && data !== undefined;
+  const cachedOffline = !state.forbidden && data !== undefined && (error === adminDashboardOfflineError || isTransientReadFailure(error));
 
   const selectedLabel =
     PERIOD_OPTIONS.find((p) => p.value === selectedPeriod)?.label ?? "This Week";
@@ -171,7 +172,7 @@ export function LoginFrequency({
         </div>
       </div>
 
-      {cachedOffline && <div role="alert">{error?.message}</div>}
+      {cachedOffline && <div role="alert">{error?.message}<button type="button" className="ml-2 font-semibold underline" onClick={retry}>Retry</button></div>}
       <LoadingRegion key={String(state.forbidden)} loading={loading} error={cachedOffline ? null : error} retry={retry} variable skeleton={renderChart(true)} onSettled={() => rememberRows(view, chart.length)}>{renderChart(false)}</LoadingRegion>
     </section>
   );

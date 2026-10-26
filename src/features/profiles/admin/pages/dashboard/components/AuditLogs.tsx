@@ -1,3 +1,4 @@
+import {isTransientReadFailure} from '@shared/query/safeReadPolicy';
 import { AccountSelect } from "@shared/components/AccountSelect";
 import { useMemo, useRef, useState, type FormEvent } from "react";
 import { ChevronLeft, ChevronRight, RefreshCw, Search } from "lucide-react";
@@ -37,7 +38,7 @@ export function AuditLogs({ darkMode, panelBg, panelBorder, textPrimary, textMut
   const setFrom = (from: string) => setFilters(current => ({ ...current, from }));
   const setTo = (to: string) => setFilters(current => ({ ...current, to }));
   const [searchInput, setSearchInput] = useState("");
-  const cachedOffline = error === adminDashboardOfflineError && page !== undefined;
+  const cachedOffline = !state.forbidden && page !== undefined && (error === adminDashboardOfflineError || isTransientReadFailure(error));
 
   const totalPages = Math.max(1, Math.ceil((page?.total ?? 0) / (page?.limit ?? 20)));
   const inputClass = `h-9 rounded-lg border px-3 text-xs outline-none focus:ring-2 focus:ring-maroon-light/30 ${darkMode ? "border-[#374151] bg-[#0B1120] text-white" : "border-border-subtle bg-white text-[#111827]"}`;
@@ -86,7 +87,7 @@ export function AuditLogs({ darkMode, panelBg, panelBorder, textPrimary, textMut
         <label className={`flex items-center gap-1 text-xs font-semibold ${textMuted}`} data-sk-region="auditlogs-to" data-sk-static="">To<input aria-label="To date" type="date" value={to} onChange={(event) => { setTo(event.target.value); setPageNumber(1); }} className={inputClass} /></label>
       </div>
 
-      {cachedOffline && <div role="alert">{error?.message}</div>}
+      {cachedOffline && <div role="alert">{error?.message}<button type="button" className="ml-2 font-semibold underline" onClick={retry}>Retry</button></div>}
       <LoadingRegion key={String(state.forbidden)} name="audit-table-body" retainPrevious hasContent={entries.length > 0} loading={loading} error={cachedOffline ? null : error} retry={retry} variable autoColumns layerAs="tbody"
         className="sk-table-region"
         onSettled={() => { rememberColumns(view, table.current); rememberRows(view, entries.length); }}

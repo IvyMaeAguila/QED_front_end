@@ -58,7 +58,7 @@ export default function DailyUpdateCard({
         Daily Attendance
       </p>
 
-      <LoadingRegion name="daily-attendance-updates" loading={isLoading} error={error} retry={retry} variable retainPrevious hasContent={updates.length > 0} skeleton={renderUpdates(true)} onSettled={() => rememberRows("parent-updates", updates.length)}>{renderUpdates(false)}</LoadingRegion>
+      <LoadingRegion name="daily-attendance-updates" retainOnError={updates.length > 0} loading={isLoading} error={error} retry={retry} variable retainPrevious hasContent={updates.length > 0} skeleton={renderUpdates(true)} onSettled={() => rememberRows("parent-updates", updates.length)}>{renderUpdates(false)}</LoadingRegion>
     </div>
   );
 }

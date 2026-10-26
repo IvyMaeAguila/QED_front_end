@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import { API_CONFIG } from '../../../../../../config/api.config';
 import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
 import { QueryHttpError } from '@shared/http/QueryHttpError';
@@ -26,7 +27,7 @@ async function request<T>(path: string, options: ApiRequestOptions, body?: Assig
   });
   if (response.status === 401) options.onUnauthorized?.();
   const json = await response.json().catch(() => ({}));
-  if (!response.ok || !json.data) throw new QueryHttpError(json.message || 'Unable to load section assignments.', response.status);
+  if (!response.ok || !json.data) throw new QueryHttpError(json.message || 'Unable to load section assignments.', response.status, undefined, {requestId: response.requestId});
   return json.data as T;
 }
 export const fetchSectionAssignments = (options: ApiRequestOptions = {}) => request<AssignmentData>('section-assignments', options);

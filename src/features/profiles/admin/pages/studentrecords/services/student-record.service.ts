@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import { API_CONFIG } from '../../../../../../config/api.config';
 import type { Student } from "../types/Students";
 import { QueryHttpError } from "@shared/http/QueryHttpError";
@@ -60,7 +61,7 @@ export const studentService = {
     if(response.status===401)options.onUnauthorized?.();
     if (!response.ok) {
       const errorData = await response.json().catch(()=>({}));
-      throw new QueryHttpError(errorData.message || "Failed to add new student",response.status);
+      throw new QueryHttpError(errorData.message || "Failed to add new student",response.status, undefined, {requestId: response.requestId});
     }
     return response.json();
   },
@@ -76,7 +77,7 @@ export const studentService = {
     if (response.status === 401) options.onUnauthorized?.();
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new QueryHttpError(errorData.message || "Failed to fetch students", response.status);
+      throw new QueryHttpError(errorData.message || "Failed to fetch students", response.status, undefined, {requestId: response.requestId});
     }
 
     const json = await response.json();
@@ -96,7 +97,7 @@ export const studentService = {
     if(response.status===401)options.onUnauthorized?.();
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new QueryHttpError(errorData.message || "Failed to update student",response.status);
+      throw new QueryHttpError(errorData.message || "Failed to update student",response.status, undefined, {requestId: response.requestId});
     }
     return response.json();
   },
@@ -113,7 +114,7 @@ export const studentService = {
     if(response.status===401)options.onUnauthorized?.();
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new QueryHttpError(errorData.message || "Failed to delete student",response.status);
+      throw new QueryHttpError(errorData.message || "Failed to delete student",response.status, undefined, {requestId: response.requestId});
     }
     return response.json();
   },

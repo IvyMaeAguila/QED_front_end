@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import { API_CONFIG } from "../../../../../../config/api.config";
 import { QueryHttpError } from "@shared/http/QueryHttpError";
 import type { TeacherProfile } from "../data/types";
@@ -8,6 +9,6 @@ export async function fetchPrincipalTeacherProfile(id: string, signal: AbortSign
     credentials: "include", signal,
   });
   if (response.status === 404) return null;
-  if (!response.ok) throw new QueryHttpError(`Failed to fetch teacher profile (${response.status})`, response.status);
+  if (!response.ok) throw new QueryHttpError(`Failed to fetch teacher profile (${response.status})`, response.status, undefined, {requestId: response.requestId});
   return response.json();
 }

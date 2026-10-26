@@ -83,7 +83,7 @@ export function EventsCardView({
   panelBg = "bg-white",
   textMuted = "text-gray-500",
   darkMode = false, calendar,
-}: EventsCardProps & {calendar:Pick<CalendarViewData,"activities"|"holidays"|"loading"|"error"|"retry">}) {
+}: EventsCardProps & {calendar:Pick<CalendarViewData,"activities"|"holidays"|"loading"|"error"|"retry"|"reads">}) {
   const loading=calendar.loading,error=calendar.error;
   const events=useMemo(()=>{
     interface RawCalendarRecord {id:number;title:string;_sortKey:string;kind:'activity'|'holiday';holidayType?:HolidayType}
@@ -145,10 +145,11 @@ export function EventsCardView({
   const renderGroups = (pending: boolean) => <>
     {([{ type: "activity", label: "Activities", items: activity, empty: "No upcoming activities recorded for this month." }, { type: "holiday", label: "Holidays", items: holiday, empty: "There are no official holidays scheduled for this month." }] as const).map(group => {
       const rows: SchoolEvent[] = pending ? Array.from({ length: skeletonRows(`parent-events:${group.type}`, undefined, 64) }, (_, index) => ({ id: String(index), day: 0, month: "", title: "", holidayType: "", type: group.type })) : group.items;
-      return <div key={group.type} className={group.type === "activity" ? "mb-3" : undefined}>
+      const read=calendar.reads?.[group.type==='activity'?'activities':'holidays'];
+      return <LoadingRegion key={group.type} name={'parent-events-'+group.type} loading={false} error={pending?null:read?.error} retry={read?.retry} hasContent={read?.hasData??false} retainOnError={read?.hasData??false} skeleton={null}><div className={group.type === "activity" ? "mb-3" : undefined}>
         <p className={`mb-1.5 text-xs font-semibold ${textMuted}`}>{group.label}</p>
         {rows.length > 0 ? <div className="flex flex-col gap-2">{rows.map(event => <EventRow key={event.id} event={event} loading={pending} darkMode={darkMode} />)}</div> : <p className={`py-1 text-xs ${textMuted}`}>{group.empty}</p>}
-      </div>;
+      </div></LoadingRegion>;
     })}
   </>;
   return (
@@ -160,7 +161,7 @@ export function EventsCardView({
         School Calendar
       </p>
 
-      <LoadingRegion name="parent-school-events" loading={loading} error={error} retry={calendar.retry} variable skeleton={null} frame={renderGroups} onSettled={() => { rememberRows("parent-events:activity", activity.length); rememberRows("parent-events:holiday", holiday.length); }}>{null}</LoadingRegion>
+      <LoadingRegion name="parent-school-events" loading={loading} error={calendar.reads?null:error} retry={calendar.retry} variable skeleton={null} frame={renderGroups} onSettled={() => { rememberRows("parent-events:activity", activity.length); rememberRows("parent-events:holiday", holiday.length); }}>{null}</LoadingRegion>
     </div>
   );
 }

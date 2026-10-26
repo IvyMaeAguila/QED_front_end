@@ -1,3 +1,5 @@
+import {useReadFreshness} from '@shared/query/readFreshness';
+import {useTeacherQueryScope} from '../../query/teacherQueryScope';
 import {useEffect} from 'react';
 import {QueryClientProvider} from '@tanstack/react-query';
 import {queryClient} from '@shared/query/queryClient';
@@ -14,13 +16,22 @@ export type {GradesPageEffectScope,GradesPageRouteProps} from './GradePage.loadi
 const message=(e:unknown)=>e instanceof Error?e.message:'Request failed.';
 const emptyLogs:api.GradeSubmissionLog[]=[];
 function Effects({scope:s}:{scope:GradesPageEffectScope}){
- const periods=useTeacherReader(['grading-periods','active'],fetchGradingPeriodsGlobal,message);
- const sections=useTeacherReader(['advisory-grades','sections'],api.fetchAdvisorySections,message);
- const ready=!!s.selectedTermId&&!!s.selectedClassId&&!periods.loading&&!sections.loading&&!periods.error&&!sections.error;
+ const owner=useTeacherQueryScope();
+ const periods=useTeacherReader(['grading-periods','active'],fetchGradingPeriodsGlobal,message,30_000,true,true);
+ const sections=useTeacherReader(['advisory-grades','sections'],api.fetchAdvisorySections,message,30_000,true,true);
+ const ready=!!s.selectedTermId&&!!s.selectedClassId&&!periods.loading&&!sections.loading&&!periods.error&&!sections.error&&!!periods.data?.some(p=>p.id===s.selectedTermId)&&!!sections.data?.some(c=>c.classId===s.selectedClassId);
  const key=(resource:string)=>advisoryGradeKey(periods.data?.[0]?.schoolYearId??'active',s.selectedTermId,s.selectedClassId,resource);
- const book=useTeacherReader(key('gradebook'),o=>api.fetchAdvisoryGradebook(s.selectedTermId,s.selectedClassId,o),'Failed to load grade records for this term.',30_000,ready);
- const logs=useTeacherReader(key('history'),o=>api.fetchClassSubmissionLogs(s.selectedTermId,s.selectedClassId,o),message,30_000,ready);
- const status=useTeacherReader(key('submission'),o=>api.fetchClassSubmissionStatus(s.selectedTermId,s.selectedClassId,o),message,30_000,ready);
+ const book=useTeacherReader(key('gradebook'),o=>api.fetchAdvisoryGradebook(s.selectedTermId,s.selectedClassId,o),'Failed to load grade records for this term.',30_000,ready,true);
+ const logs=useTeacherReader(key('history'),o=>api.fetchClassSubmissionLogs(s.selectedTermId,s.selectedClassId,o),message,30_000,ready,true);
+ const status=useTeacherReader(key('submission'),o=>api.fetchClassSubmissionStatus(s.selectedTermId,s.selectedClassId,o),message,30_000,ready,true);
+ useReadFreshness(JSON.stringify([...owner.key,'advisory-read',s.selectedTermId,s.selectedClassId]),owner.enabled&&!!s.selectedTermId&&!!s.selectedClassId&&s.activeTab!=='visibility'&&!s.submitting,async signal=>{
+  if(!ready||queryClient.isMutating()||[periods,sections,book,status].some(r=>r.refreshing))return;
+  const [nextPeriods,nextSections]=await Promise.all([periods.refresh(),sections.refresh()]);
+  if(signal.aborted||queryClient.isMutating()||!nextPeriods?.isSuccess||!nextSections?.isSuccess)return;
+  if((nextPeriods.data[0]?.schoolYearId??'active')!==(periods.data?.[0]?.schoolYearId??'active')||!nextPeriods.data.some(p=>p.id===s.selectedTermId)||!nextSections.data.some(c=>c.classId===s.selectedClassId))return;
+  // History GET initializes a table; keep its existing initial/manual owner.
+  await Promise.all([book.refresh(),status.refresh()]);
+ });
  useTeacherRetryAttempt(s.attempt,periods.retry);useTeacherRetryAttempt(s.attempt,sections.retry);useTeacherRetryAttempt(s.attempt,book.retry);useTeacherRetryAttempt(s.attempt,logs.retry);useTeacherRetryAttempt(s.attempt,status.retry);
  useTeacherRetryAttempt(s.logsAttempt,logs.retry);useTeacherRetryAttempt(s.statusAttempt,status.retry);
  const {setTermsLoading,setSectionsLoading,setMetadataError,setTerms,setSelectedTermId,setSections,setSelectedClassId,setGradebookLoading,setGradebookError,setGradebook,setLogsLoading,setLogsError,setSubmissionLogs,setStatusLoading,setStatusError,setSubmitted,setSubmittedAt}=s;

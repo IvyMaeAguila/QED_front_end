@@ -1,13 +1,16 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import type { UserProfile } from "../types/types";
 import { API_CONFIG } from "../../../config/api.config";
+import { QueryHttpError } from "../../http/QueryHttpError";
 
 const BASE_URL = `${API_CONFIG.baseURL}/api`;
 
-export async function getMyProfile(): Promise<UserProfile> {
+export async function getMyProfile(signal?: AbortSignal): Promise<UserProfile> {
   const response = await fetch(`${BASE_URL}/user-profile/`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     credentials: "include", // ipadala ang cookie
+    signal,
   });
 
   if (!response.ok) {
@@ -18,7 +21,7 @@ export async function getMyProfile(): Promise<UserProfile> {
     } catch {
 
     }
-    throw new Error(message);
+    throw new QueryHttpError(message, response.status, undefined, {requestId: response.requestId});
   }
 
   return (await response.json()) as UserProfile;

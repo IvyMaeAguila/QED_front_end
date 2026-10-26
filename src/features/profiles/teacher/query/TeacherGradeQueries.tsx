@@ -1,3 +1,4 @@
+import {confirmedSubmission} from './teacherSubmissionRecovery';
 import {useEffect,type ReactNode} from 'react';
 import {useMutation} from '@tanstack/react-query';
 import {queryClient} from '@shared/query/queryClient';
@@ -24,7 +25,9 @@ export function TeacherGradeQueries({children}:{children:ReactNode}){
  const year=periods.data?.[0]?.schoolYearId??'active';
  const mutation=useMutation({retry:false,networkMode:'always',mutationFn:async({write,request,allowed}:Request)=>{
   if(!allowed)throw new Error("You're offline or your session is not ready.");
-  return write.kind==='submit'?api.submitClassGrades(write.period,write.classId,request):api.setGradeVisibility(write.params,request);
+  if(write.kind==='visibility')return api.setGradeVisibility(write.params,request);
+  const resources=[...scope.key,...advisoryGradeKey(year,write.period,write.classId,'').slice(0,-1)];
+  return confirmedSubmission(JSON.stringify(resources),async()=>(await api.fetchClassSubmissionStatus(write.period,write.classId,request)).submissionVersion??null,version=>api.submitClassGrades(write.period,write.classId,request,version),()=>{void queryClient.invalidateQueries({queryKey:resources,refetchType:'none'});});
  },onSuccess:(_data,{write,key,year})=>{
   const period=write.kind==='submit'?write.period:write.params.gradingPeriodId;
   const classId=write.kind==='submit'?write.classId:write.params.classId;

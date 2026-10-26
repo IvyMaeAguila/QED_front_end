@@ -70,7 +70,7 @@ for (const width of [375, 1280]) for (const dark of [false, true]) test(`Dashboa
   f.state.overview.status = 500; await page.reload();
   await expect(region(page, "principal-dashboard-data").getByRole("alert")).toContainText("Failed to fetch overview (500)"); await capture("error");
   f.state.overview.status = 200; await region(page, "principal-dashboard-data").getByRole("button", { name: "Retry", exact: true }).click();
-  await ready(page); await f.settled(4); dashboardEndpoints.forEach(e => expect(f.state[e].calls, e).toBe(4));
+  await ready(page); await expect.poll(()=>f.state.overview.calls).toBe(5); await f.settled(5,["overview"]); await f.settled(3,dashboardEndpoints.filter(e=>e!=="overview")); dashboardEndpoints.forEach(e => expect(f.state[e].calls, e).toBe(e==="overview"?5:3));
   expect(errors).toEqual([]); expect(consoleErrors.filter(m => !m.includes("Failed to load resource"))).toEqual([]);
   await info.attach("sanitized-metrics", { body: JSON.stringify({ backend: "mocked", width, dark, calls: f.state }), contentType: "application/json" });
 });
@@ -91,6 +91,7 @@ test("header partial failure and aggregate failure retain independent Retry cont
   await expect(region(page, "principal-school-year").getByRole("alert")).toContainText("year failure (500)");
   await expect(region(page, "principal-dashboard-data").getByRole("alert")).toContainText("trend failure (500)");
   f.state.trend.status = 200; await region(page, "principal-dashboard-data").getByRole("button", { name: "Retry", exact: true }).click();
+  await expect(region(page,"principal-dashboard-data")).toHaveAttribute("data-sk-phase","settled");
   await expect(region(page, "principal-kpi-total-students")).toContainText("1,234");
   await expect(region(page, "principal-school-year").getByRole("alert")).toContainText("500"); const calls = f.state.overview.calls;
   f.state.year.status = 200; await region(page, "principal-school-year").getByRole("button", { name: "Retry", exact: true }).click();

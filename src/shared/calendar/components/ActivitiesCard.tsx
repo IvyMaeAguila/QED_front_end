@@ -10,6 +10,7 @@ import { EntryRowActions } from "./EntryRowsAction";
 interface ActivitiesCardProps extends CalendarTheme {
   loading?: boolean;
   error?: unknown;
+  hasData?: boolean;
   retry?: () => void;
   view?: string;
   activities: CalendarActivity[];
@@ -23,6 +24,7 @@ interface ActivitiesCardProps extends CalendarTheme {
 interface ActivityGroupListProps {
   loading?: boolean;
   error?: unknown;
+  hasData?: boolean;
   retry?: () => void;
   view?: string;
   activities: CalendarActivity[];
@@ -131,7 +133,7 @@ function ActivityRow({
 
 export function ActivityGroupList({
   activities,
-  loading = false, error, retry, view = "calendar-activities",
+  loading = false, error, retry, hasData, view = "calendar-activities",
   darkMode,
   textMuted,
   onEdit,
@@ -170,12 +172,12 @@ export function ActivityGroupList({
     </div>
   );
   };
-  return <LoadingRegion name={view + "-rows"} loading={loading} error={error} retry={retry} variable retainPrevious hasContent={activities.length > 0} skeleton={null} frame={renderGroups} onSettled={() => rememberRows(view, activities.length)}>{null}</LoadingRegion>;
+  return <LoadingRegion name={view + "-rows"} loading={loading} error={error} retry={retry} variable retainPrevious retainOnError={hasData} hasContent={hasData ?? activities.length > 0} skeleton={null} frame={renderGroups} onSettled={() => rememberRows(view, activities.length)}>{null}</LoadingRegion>;
 }
 
 export function ActivitiesCard({
   activities,
-  loading = false, error, retry,
+  loading = false, error, retry, hasData,
   onExpand,
   viewDate,
   selectedDate,
@@ -215,7 +217,7 @@ export function ActivitiesCard({
       <div className="max-h-96 overflow-y-auto pr-1">
         {/* No onEdit/onDelete here — actions only appear in the expanded modal */}
         <ActivityGroupList
-          loading={loading} error={error} retry={retry} view={"calendar-activities" + (selectedDate?.toISOString().slice(0,10) ?? viewDate?.toISOString().slice(0,7) ?? "current")}
+          loading={loading} error={error} retry={retry} hasData={hasData} view={"calendar-activities" + (selectedDate?.toISOString().slice(0,10) ?? viewDate?.toISOString().slice(0,7) ?? "current")}
           activities={visibleActivities}
           darkMode={darkMode}
           textMuted={textMuted}

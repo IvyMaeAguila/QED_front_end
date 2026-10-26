@@ -13,7 +13,7 @@ function useTerm(subject: string, year: string, period: string | undefined, read
   const items = useTeacherReader(subjectKey(year, subject, 'items', { term: period }),
     request => fetchItems(subject, { term: period }, request), 'Could not load term assessments.', 30_000, ready && !!period);
   const weights = useTeacherReader(subjectKey(year, subject, 'weights', period ?? 'active'),
-    async request => (await getEffectiveWeightsSafe(Number(subject), period, request)) ?? null,
+    request => getEffectiveWeightsSafe(Number(subject), period, request),
     'Could not load pinned term rules.', 300_000, ready && !!period);
   return { period, items, weights };
 }
@@ -38,11 +38,12 @@ export function FinalGradesSection({ subjectSectionId, selectedPeriod, ...theme 
   const loading = !ready || scores.loading || terms.some(term => term.period && (term.items.loading || term.weights.loading));
   const roster = ready ? academic?.info.data?.roster ?? [] : [];
   const selected = terms.find(term => term.period === selectedPeriod)?.weights.data;
+  const missingRules = terms.some(term => term.period && term.weights.data === null);
   const [exportState, setExportState] = useState<'idle' | 'loading' | 'success'>('idle');
   const [exportError, setExportError] = useState('');
   const exporting = useRef(false);
   async function exportFinalGrades() {
-    if (exporting.current || loading || error) return;
+    if (exporting.current || loading || error || missingRules) return;
     exporting.current = true;
     setExportError('');
     setExportState('loading');
@@ -95,11 +96,12 @@ export function FinalGradesSection({ subjectSectionId, selectedPeriod, ...theme 
       {ready && <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${theme.darkMode ? 'bg-white/5' : 'bg-black/[0.035]'} ${theme.textMuted}`}>
         {roster.length} student{roster.length === 1 ? '' : 's'}
       </span>}
-      <button type="button" onClick={() => void exportFinalGrades()} disabled={loading || !!error || !roster.length || exportState === 'loading'}
+      <button type="button" onClick={() => void exportFinalGrades()} disabled={loading || !!error || missingRules || !roster.length || exportState === 'loading'}
         className={`ml-auto inline-flex min-h-9 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold disabled:opacity-50 ${theme.panelBorder} ${theme.textPrimary}`}>
         <Download size={14} /> Export Final Grades
       </button>
     </div>
+    {!loading && !error && missingRules && <p role="status" className={`px-4 py-3 text-sm ${theme.textMuted}`}>No grading rules are configured for one or more terms. Ask an admin to upload the approved grade template.</p>}
     {exportError && <p role="alert" className="px-4 py-3 text-sm text-red-600">{exportError}</p>}
     {error ? <p role="alert" className={`px-4 py-4 text-sm ${theme.textMuted}`}>{error} <button type="button" className="underline" onClick={() => {
       academic?.info.retry(); academic?.periods.retry(); scores.retry(); terms.forEach(term => { term.items.retry(); term.weights.retry(); });

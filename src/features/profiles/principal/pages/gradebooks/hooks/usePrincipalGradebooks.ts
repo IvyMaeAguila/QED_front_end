@@ -1,3 +1,4 @@
+import {useReadFreshness} from '@shared/query/readFreshness';
 import { useLayoutEffect, useRef, useSyncExternalStore } from "react";
 import { onlineManager, useQuery } from "@tanstack/react-query";
 import { useAuth } from "@shared/hooks/useAuth";
@@ -60,8 +61,9 @@ export function usePrincipalGradebooks() {
     if (!enabled || !online || paused || fetching) return;
     const next = await year.refetch({ cancelRefetch: false });
     if (!lifecycle.current.mounted || !lifecycle.current.enabled || lifecycle.current.identity !== identity || !next.isSuccess) return;
-    if (next.data.id === yearId) void summaries.refetch({ cancelRefetch: false });
+    if (next.data.id === yearId) await summaries.refetch({ cancelRefetch: false });
   };
+  useReadFreshness(JSON.stringify([identity,'gradebooks']), enabled, retry);
   return {
     gradeLevels: visible ? summaries.data ?? [] : [],
     schoolYear: visible ? year.data?.label ?? "" : "",

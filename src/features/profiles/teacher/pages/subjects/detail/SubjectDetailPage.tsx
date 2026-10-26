@@ -1,4 +1,4 @@
-import {useContext,useEffect,useRef} from 'react';
+import {useContext,useEffect,useLayoutEffect,useRef} from 'react';
 import {useParams} from 'react-router-dom';
 import {QueryClientProvider} from '@tanstack/react-query';
 import {queryClient} from '@shared/query/queryClient';
@@ -28,9 +28,10 @@ function Effects({scope:s}:{scope:SubjectDetailPageEffectScope}){
  const items=useTeacherReader(subjectKey(year,id,'items',{allPeriods:true}),o=>api.fetchItems(id,{allPeriods:true},o),'Could not load the class records. Please try again.',300_000,ready);
  const scores=useTeacherReader(subjectKey(year,id,'scores'),o=>api.fetchScores(id,o),'Could not load the class records. Please try again.',300_000,ready);
  const holistic=useTeacherReader(subjectKey(year,id,'holistic',1,currentSchoolWeek()),o=>api.fetchHolistic(id,o),'Could not load the class records. Please try again.',300_000,ready);
- const weights=useTeacherReader(subjectKey(year,id,'weights',s.selectedTerm||'active'),async o=>(await getEffectiveWeightsSafe(Number(id),s.selectedTerm||undefined,o))??null,'Could not load grading rules.',300_000,ready&&!!s.selectedTerm);
+ const weights=useTeacherReader(subjectKey(year,id,'weights',s.selectedTerm||'active'),o=>getEffectiveWeightsSafe(Number(id),s.selectedTerm||undefined,o),'Could not load grading rules.',300_000,ready&&!!s.selectedTerm);
  useTeacherRetryAttempt(s.attempt,periods.retry);useTeacherRetryAttempt(s.attempt,info.retry);useTeacherRetryAttempt(s.attempt,items.retry);useTeacherRetryAttempt(s.attempt,scores.retry);useTeacherRetryAttempt(s.attempt,holistic.retry);useTeacherRetryAttempt(s.attempt,weights.retry);
  const {setTemplateLoading,setTemplateStructure,setTerms,setSelectedTerm,setSubjectName,setGradeLevel,setRoster,setItems,setScores,setHolistic,setHolisticWeekStartDate,setIsOwnAdvisory,setAdviserName,setLoading,setError,hasUnsavedChanges}=s;
+ useLayoutEffect(()=>{s.setGradingRules({period:s.selectedTerm,loading:weights.loading,error:weights.error,configured:!!weights.data});},[s.selectedTerm,weights.loading,weights.error,weights.data,s.setGradingRules]);
  useEffect(()=>{setTemplateLoading(weights.loading);setTemplateStructure(weights.data?.templateStructure);},[weights.loading,weights.data,setTemplateLoading,setTemplateStructure]);
  useEffect(()=>{if(periods.data){setTerms(periods.data.map(p=>({...p,label:p.termLabel})));setSelectedTerm(previous=>periods.data!.some(p=>p.id===previous)?previous:(periods.data!.find(p=>p.isActive)??periods.data![0])?.id??'');}},[periods.data,setTerms,setSelectedTerm]);
  const error=periods.error??info.error??items.error??scores.error??holistic.error;

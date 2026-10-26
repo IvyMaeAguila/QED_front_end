@@ -1,3 +1,4 @@
+import { boundedFetch as fetch, type BufferedHttpReply } from '@shared/http/boundedFetch';
 import type {TeacherRequestOptions} from '../../../query/teacherQueryScope';
 import {QueryHttpError} from '@shared/http/QueryHttpError';
 import { API_CONFIG } from '../../../../../../config/api.config';
@@ -18,7 +19,7 @@ export interface Topic {
   topicName: string;
 }
 
-async function handleJsonResponse(res: Response) {
+async function handleJsonResponse(res: BufferedHttpReply) {
   const contentType = res.headers.get("content-type") ?? "";
   const isJson = contentType.includes("application/json");
 
@@ -26,13 +27,13 @@ async function handleJsonResponse(res: Response) {
     throw new QueryHttpError(
       res.status === 404
         ? `Route not found (${res.status}): ${res.url}. Check that this route is registered on the backend.`
-        : `Unexpected server response (${res.status}): ${res.url}`,res.status
+        : `Unexpected server response (${res.status}): ${res.url}`,res.status, undefined, {requestId: res.requestId}
     );
   }
 
-  const data = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
+  const data = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status, undefined, {requestId: res.requestId});throw error;});
   if (!res.ok || !data.success) {
-    if(!res.ok)throw new QueryHttpError(data.message || "Request failed.",res.status);
+    if(!res.ok)throw new QueryHttpError(data.message || "Request failed.",res.status,['uncertain','conflict','not_saved'].includes(data.outcome)?data.outcome:undefined, {requestId: res.requestId});
     throw new Error(data.message || "Request failed.");
   }
   return data;
@@ -134,11 +135,11 @@ export async function saveScore(
   subjectSectionId: string,
   studentId: string,
   itemId: string,
-  value: number | null, request: TeacherRequestOptions = {}
+  value: number | null, request: TeacherRequestOptions = {}, expectedValue?: number | null
 ): Promise<void> {
   const res = await authedFetch(`${BASE_URL}/${subjectSectionId}/scores`, {
     method: "PUT",
-    body: JSON.stringify({ studentId, itemId, value }),
+    body: JSON.stringify({ studentId, itemId, value, ...(expectedValue !== undefined ? {expectedValue} : {}) }),
   }, request);
   await handleJsonResponse(res);
 }
@@ -184,6 +185,7 @@ export async function createTopic(subjectSectionId: string, topicName: string, r
 
 // ---------- Grade submission ----------
 export interface GradeSubmissionStatus {
+  submissionVersion?: string | null;
   submitted: boolean;
   submittedAt: string | null;
 }
@@ -199,10 +201,10 @@ export async function fetchGradeSubmissionStatus(
   return json.data;
 }
 
-export async function submitGrades(subjectSectionId: string, gradingPeriodId: string, request: TeacherRequestOptions = {}): Promise<void> {
+export async function submitGrades(subjectSectionId: string, gradingPeriodId: string, request: TeacherRequestOptions = {}, expectedSubmissionVersion?: string | null): Promise<void> {
   const res = await authedFetch(`${BASE_URL}/${subjectSectionId}/submission`, {
     method: "POST",
-    body: JSON.stringify({ gradingPeriodId }),
+    body: JSON.stringify({ gradingPeriodId, ...(expectedSubmissionVersion === undefined ? {} : {expectedSubmissionVersion}) }),
   }, request);
   await handleJsonResponse(res);
 }

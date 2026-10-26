@@ -28,7 +28,7 @@ async function fixture(page: Page,dark=false) {
    await route.fulfill({json:{success:true,data:rows}});
   }
  });
- return {today,completed,failed,writes,fail:(resource:string,code:number)=>{failedResource=resource;status=code;},writeFail:(code:number)=>{writeStatus=code;},empty:()=>{rows=[];},hold:()=>{gate=new Promise<void>(r=>{unlock=r;});},release:()=>{gate=undefined;unlock?.();},settled:async(n:number)=>{await expect.poll(()=>Object.fromEntries(resources.map(r=>[r,completed.filter(x=>x===r).length]))).toEqual(Object.fromEntries(resources.map(r=>[r,n])));}};
+ return {today,completed,failed,writes,fail:(resource:string,code:number)=>{failedResource=resource;status=code;},writeFail:(code:number)=>{writeStatus=code;},empty:()=>{rows=[];},hold:()=>{gate=new Promise<void>(r=>{unlock=r;});},release:()=>{gate=undefined;unlock?.();},settled:async(n:number|Record<string,number>)=>{await expect.poll(()=>Object.fromEntries(resources.map(r=>[r,completed.filter(x=>x===r).length]))).toEqual(Object.fromEntries(resources.map(r=>[r,typeof n==='number'?n:n[r]])));}};
 }
 async function open(page:Page){await page.goto('/admin/calendar');await waitForDataRoute(page);await expect(page.getByRole('heading',{name:'Calendar',exact:true})).toBeVisible();}
 async function settled(page:Page){await expect(page.locator('main [aria-busy="true"]')).toHaveCount(0);}
@@ -45,8 +45,8 @@ for(const width of [375,1280])for(const dark of [false,true])test('Admin Calenda
 for(const resource of resources)for(const status of [401,403,500])test('Admin Calendar independent '+resource+' '+status,async({page})=>{
  const f=await fixture(page);f.fail(resource,status);f.hold();await open(page);f.release();
  if(status===401){await expect(page.getByPlaceholder('e.g. TC_maria.delacruz')).toBeVisible();return;}
- await expect(page.getByRole('alert').first()).toContainText('Synthetic Calendar failure');await settled(page);await f.settled(1);expect(page.url()).toContain('/admin/calendar');
- f.fail(resource,0);await page.getByRole('button',{name:'Retry',exact:true}).first().click();await expect(page.getByRole('alert')).toHaveCount(0);await settled(page);await f.settled(2);
+ await expect(page.getByRole('alert').first()).toContainText('Synthetic Calendar failure');await settled(page);await f.settled(Object.fromEntries(resources.map(r=>[r,r===resource&&status===500?2:1])));expect(page.url()).toContain('/admin/calendar');
+ f.fail(resource,0);await page.getByRole('button',{name:'Retry',exact:true}).first().click();await expect(page.getByRole('alert')).toHaveCount(0);await settled(page);await f.settled(Object.fromEntries(resources.map(r=>[r,r===resource?(status===500?3:2):1])));
 });
 test('Admin Calendar empty and stale revalidation after navigation',async({page})=>{
  const f=await fixture(page);f.empty();await open(page);await settled(page);await f.settled(1);await expect(page.getByText('No activities on this date.')).toBeVisible();

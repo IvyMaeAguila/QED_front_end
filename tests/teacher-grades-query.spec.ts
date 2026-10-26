@@ -44,10 +44,52 @@ test('Teacher grades: pending old401 cancellation and account isolation',async({
  const f=await fixture(page);await start(page);await ready(page);await f.ledger.successfulBatch(0,4);f.status(401,'gradebook');f.hold();await term(page,'Term 2');await expect.poll(()=>f.ledger.snapshot().filter(r=>r.intercepted&&!r.terminal).length).toBe(3);const old=f.ledger.snapshot().filter(r=>!r.terminal).map(r=>r.id);f.status(200);f.name('New account');await page.getByRole('button',{name:'Switch account',exact:true}).click();await expect(page.getByText('Synthetic, Current',{exact:true})).toHaveCount(0);await expect.poll(()=>f.ledger.snapshot().filter(r=>old.includes(r.id)&&r.terminal==='aborted').length).toBe(3);f.release();await ready(page,'New account');await expect(page.getByTestId('auth')).toHaveText('TEACHER:2');await expect(page.getByTestId('keys')).not.toContainText('"TEACHER","1"');
 });
 test('Teacher grades: confirmed submission preserves payload, revalidates history once, and never publishes pending grades',async({page})=>{
- const f=await fixture(page);await start(page);await ready(page);await f.ledger.successfulBatch(0,4);const mark=f.ledger.mark();await page.getByRole('button',{name:'Submit Class Grades',exact:true}).click();await expect.poll(()=>f.writes.length).toBe(1);expect(f.writes[0]).toEqual({path:'/api/advisoryGrading/submission',body:{gradingPeriodId:'1',classId:'1'}});await expect(page.getByRole('button',{name:'Re-submit Class Grades',exact:true})).toBeVisible();await f.ledger.successfulBatch(mark,1);expect(f.ledger.snapshot(mark).map(r=>r.path)).toEqual(['/api/advisoryGrading/submission/logs']);
+ const f=await fixture(page);await start(page);await ready(page);await f.ledger.successfulBatch(0,4);const mark=f.ledger.mark();await page.getByRole('button',{name:'Submit Class Grades',exact:true}).click();
+ const confirmation=page.getByRole('alertdialog',{name:'Submit class grades?',exact:true});
+ await expect(confirmation).toBeVisible();
+ expect(f.writes).toHaveLength(0);
+ await confirmation.getByRole('button',{name:'Submit grades',exact:true}).click();
+ await expect.poll(()=>f.writes.length).toBe(1);expect(f.writes[0]).toEqual({path:'/api/advisoryGrading/submission',body:{gradingPeriodId:'1',classId:'1',expectedSubmissionVersion:null}});await expect(page.getByRole('button',{name:'Re-submit Class Grades',exact:true})).toBeVisible();await f.ledger.successfulBatch(mark,2);expect(f.ledger.snapshot(mark).map(r=>r.path)).toEqual(['/api/advisoryGrading/submission','/api/advisoryGrading/submission/logs']);
 });
 for(const status of [200,500])test(`Teacher visibility: ${status} preserves payload and confirmed-success-only cache invalidation`,async({page})=>{
- const f=await fixture(page);await start(page);await ready(page);await f.ledger.successfulBatch(0,4);await page.getByRole('button',{name:'Parent Visibility',exact:true}).click();await expect(page.getByText('Synthetic Parent',{exact:true})).toBeVisible();await f.ledger.successfulBatch(0,5);const mark=f.ledger.mark();f.saveStatus(status);await page.getByRole('button',{name:'Select all students',exact:true}).click();await page.getByRole('button',{name:'Show to Parents (1)',exact:true}).click();await expect.poll(()=>f.writes.length).toBe(1);expect(f.writes[0]).toEqual({path:'/api/advisoryGrading/visibility',body:{gradingPeriodId:'1',visible:true,applyToAll:true,classId:'1'}});
- if(status===200){await expect(page.getByTestId('query-state')).toContainText('"isInvalidated":true');await expect(page.getByText('Visible',{exact:true})).toBeVisible();}else{await expect(page.getByRole('alert')).toContainText('Failed to update visibility');await expect(page.getByTestId('query-state')).not.toContainText('"isInvalidated":true');await expect(page.getByText('Visible',{exact:true})).toHaveCount(0);}
- expect(f.writes).toHaveLength(1);expect(f.ledger.snapshot(mark)).toEqual([]);if(status===500){await page.getByRole('button',{name:'Retry',exact:true}).click();await expect(page.locator('[data-sk-region="teacher-grade-visibility:table-body"]')).toHaveAttribute('data-sk-phase','settled');await expect(page.getByText('Hidden',{exact:true})).toBeVisible();await f.ledger.successfulBatch(mark,1);}
+ const f=await fixture(page);if(status===500)await page.clock.install();await start(page);await ready(page);await f.ledger.successfulBatch(0,4);await page.getByRole('button',{name:'Parent Visibility',exact:true}).click();await expect(page.getByText('Synthetic Parent',{exact:true})).toBeVisible();await f.ledger.successfulBatch(0,5);const mark=f.ledger.mark();f.saveStatus(status);await page.getByRole('button',{name:'Select all students',exact:true}).click();await page.getByRole('button',{name:'Show to Parents (1)',exact:true}).click();
+ const confirmation=page.getByRole('alertdialog',{name:'Show reports to parents?',exact:true});
+ await expect(confirmation).toBeVisible();
+ expect(f.writes).toHaveLength(0);
+ await confirmation.getByRole('button',{name:'Show reports',exact:true}).click();
+ await expect.poll(()=>f.writes.length).toBe(1);expect(f.writes[0]).toEqual({path:'/api/advisoryGrading/visibility',body:{gradingPeriodId:'1',visible:true,applyToAll:true,classId:'1'}});
+ if(status===200){await expect(page.getByTestId('query-state')).toContainText('"isInvalidated":true');await expect(page.getByText('Visible',{exact:true})).toBeVisible();}else{await expect(confirmation.getByRole('alert')).toHaveText('Request failed.');await expect(page.getByTestId('query-state')).not.toContainText('"isInvalidated":true');await expect(page.getByText('Visible',{exact:true})).toHaveCount(0);}
+ expect(f.writes).toHaveLength(1);expect(f.ledger.snapshot(mark)).toEqual([]);
+ if(status===500){
+  const confirm=confirmation.getByRole('button',{name:'Show reports',exact:true});
+  const cancel=confirmation.getByRole('button',{name:'Cancel',exact:true});
+  const success=page.getByText('Term 1 reports shown for 1 students.',{exact:true});
+  await expect(confirmation).toBeVisible();await expect(confirm).toBeEnabled();await expect(cancel).toBeEnabled();
+  await expect(page.getByText('Hidden',{exact:true})).toBeVisible();await expect(success).toHaveCount(0);
+  await expect(page.getByRole('button',{name:'Retry',exact:true})).toHaveCount(0);
+  // Only an explicit confirmation retries the write; another 500 remains a failure.
+  await confirm.click();await expect.poll(()=>f.writes.length).toBe(2);
+  expect(f.writes[1]).toEqual(f.writes[0]);await expect(confirmation.getByRole('alert')).toHaveText('Request failed.');
+  await expect(confirm).toBeEnabled();await expect(cancel).toBeEnabled();
+  await expect(page.getByTestId('query-state')).not.toContainText('"isInvalidated":true');
+  await expect(page.getByText('Visible',{exact:true})).toHaveCount(0);await expect(success).toHaveCount(0);
+  expect(f.ledger.snapshot(mark)).toEqual([]);expect(f.writes).toHaveLength(2);
+  await cancel.click();await expect(confirmation).toHaveCount(0);await expect(page.getByRole('alert')).toHaveCount(0);
+  expect(f.writes).toHaveLength(2);expect(f.ledger.snapshot(mark)).toEqual([]);
+  // Read reconciliation is a stale-reader remount, not a replay of the failed write.
+  await page.getByRole('button',{name:'Gradebook',exact:true}).click();await page.clock.fastForward(31_000);
+  await page.getByRole('button',{name:'Parent Visibility',exact:true}).click();
+  await expect(page.locator('[data-sk-region="teacher-grade-visibility:table-body"]')).toHaveAttribute('data-sk-phase','settled');
+  await expect(page.getByText('Hidden',{exact:true})).toBeVisible();await f.ledger.successfulBatch(mark,1);
+  expect(f.ledger.snapshot(mark).map(r=>r.path)).toEqual(['/api/advisoryGrading/visibility']);expect(f.writes).toHaveLength(2);
+  // A later user-confirmed success is the first point that may update state/invalidate.
+  const recoveryMark=f.ledger.mark();f.saveStatus(200);
+  await page.getByRole('button',{name:'Select all students',exact:true}).click();
+  await page.getByRole('button',{name:'Show to Parents (1)',exact:true}).click();await expect(confirmation).toBeVisible();expect(f.writes).toHaveLength(2);
+  await confirm.click();await expect.poll(()=>f.writes.length).toBe(3);expect(f.writes[2]).toEqual(f.writes[0]);
+  await expect(confirmation).toHaveCount(0);await expect(page.getByRole('alert')).toHaveCount(0);
+  await expect(page.getByText('Visible',{exact:true})).toBeVisible();await expect(success).toBeVisible();
+  await expect(page.getByTestId('query-state')).toContainText('"isInvalidated":true');
+  expect(f.ledger.snapshot(recoveryMark)).toEqual([]);expect(f.writes).toHaveLength(3);
+ }
 });

@@ -1,3 +1,4 @@
+import { boundedFetch as fetch, type BufferedHttpReply } from '@shared/http/boundedFetch';
 import { API_CONFIG } from '../../../../../../config/api.config';
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/teacherAdvisory`;
@@ -25,7 +26,7 @@ interface AdvisoryRosterResponse {
   students: AdvisoryStudent[];
 }
 
-async function handleJsonResponse(res: Response): Promise<AdvisoryRosterResponse> {
+async function handleJsonResponse(res: BufferedHttpReply): Promise<AdvisoryRosterResponse> {
   const data = await res.json();
   if (!res.ok || !data.success) {
     throw new Error(data.message || "Request failed.");

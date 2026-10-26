@@ -12,6 +12,7 @@ function Dashboard({ secondary = false }: { secondary?: boolean }) {
   if (secondary) return <output data-testid="secondary">{state.data?.overview.totalTeachers}</output>;
   return <section>
     <output data-testid="loading">{String(state.loading)}</output>
+    {Object.entries(state.regions).map(([name,region])=><output key={name} data-testid={`region-error-${name}`}>{region.error?.message??""}</output>)}
     <output data-testid="error">{state.error?.message ?? ""}</output>
     <output data-testid="data">{state.data ? JSON.stringify(state.data) : ""}</output>
     <output data-testid="year">{state.academicYear?.label ?? ""}</output>

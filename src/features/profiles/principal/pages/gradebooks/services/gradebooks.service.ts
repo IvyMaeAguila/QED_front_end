@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import type { GradeLevelSummary, GradeSubmissionStatus, Student } from "../data/types";
 import { getRosterAcademicYear } from "../../students/services/students.service";
 import { API_CONFIG } from "../../../../../../config/api.config";
@@ -79,7 +80,7 @@ export async function fetchGradeLevelSummaries(signal?: AbortSignal, onUnauthori
 
   if (!response.ok) {
     if (response.status === 401 && !signal?.aborted) onUnauthorized?.();
-    throw new QueryHttpError("Failed to fetch grade level summaries.", response.status);
+    throw new QueryHttpError("Failed to fetch grade level summaries.", response.status, undefined, {requestId: response.requestId});
   }
 
   const data: RawGradeLevel[] = await response.json();
@@ -196,7 +197,7 @@ export async function fetchGradingPeriods(
   }
 
   if (!response.ok || !body?.success) {
-    throw new QueryHttpError(body?.message || "Failed to fetch grading periods.", response.status);
+    throw new QueryHttpError(body?.message || "Failed to fetch grading periods.", response.status, undefined, {requestId: response.requestId});
   }
 
   return {
@@ -279,7 +280,7 @@ export async function fetchPrincipalGradebook(
   }
 
   if (!response.ok || !body?.success) {
-    throw new QueryHttpError(body?.message || "Failed to fetch principal gradebook.", response.status);
+    throw new QueryHttpError(body?.message || "Failed to fetch principal gradebook.", response.status, undefined, {requestId: response.requestId});
   }
 
   const data = body.data;

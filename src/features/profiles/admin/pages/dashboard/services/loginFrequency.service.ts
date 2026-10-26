@@ -1,3 +1,4 @@
+import { boundedFetch as fetch, type BufferedHttpReply } from '@shared/http/boundedFetch';
 import { API_CONFIG } from '../../../../../../config/api.config';
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/analytics`;
@@ -35,10 +36,11 @@ export interface LoginFrequencyResponse {
 export class LoginFrequencyServiceError extends Error {
   status?: number;
 
-  constructor(message: string, status?: number) {
+  constructor(message: string, status?: number, cause?: unknown) {
     super(message);
     this.name = "LoginFrequencyServiceError";
     this.status = status;
+    if(cause!==undefined)Object.assign(this,{cause});
   }
 }
 
@@ -55,7 +57,7 @@ export async function getLoginFrequency(
   signal?: AbortSignal,
   onUnauthorized?: () => void,
 ): Promise<LoginFrequencyResponse> {
-  let response: Response;
+  let response: BufferedHttpReply;
   try {
     response = await fetch(
       `${BASE_URL}/login-frequency?period=${encodeURIComponent(period)}`,
@@ -68,7 +70,7 @@ export async function getLoginFrequency(
     );
   } catch (err) {
     if ((err as Error).name === "AbortError") throw err;
-    throw new LoginFrequencyServiceError("Network error while fetching login frequency.");
+    throw new LoginFrequencyServiceError("Network error while fetching login frequency.",undefined,err);
   }
 
   if (response.status === 401) onUnauthorized?.();

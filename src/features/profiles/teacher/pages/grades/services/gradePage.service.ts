@@ -1,3 +1,4 @@
+import { boundedFetch as fetch, type BufferedHttpReply } from '@shared/http/boundedFetch';
 import type {TeacherRequestOptions} from '../../../query/teacherQueryScope';
 import {QueryHttpError} from '@shared/http/QueryHttpError';
 import { API_CONFIG } from '../../../../../../config/api.config';
@@ -10,11 +11,11 @@ async function authedFetch(url: string, init?: RequestInit, request:TeacherReque
   return response;
 }
 
-async function handleJsonResponse(res: Response) {
+async function handleJsonResponse(res: BufferedHttpReply) {
   const isJson = (res.headers.get("content-type") ?? "").includes("application/json");
-  if (!isJson) throw new QueryHttpError(`Unexpected server response (${res.status}): ${res.url}`,res.status);
+  if (!isJson) throw new QueryHttpError(`Unexpected server response (${res.status}): ${res.url}`,res.status, undefined, {requestId: res.requestId});
   const data = await res.json();
-  if (!res.ok) throw new QueryHttpError(data.message || "Request failed.",res.status);
+  if (!res.ok) throw new QueryHttpError(data.message || "Request failed.",res.status,['uncertain','conflict','not_saved'].includes(data.outcome)?data.outcome:undefined, {requestId: res.requestId});
   if (!data.success) throw new Error(data.message || "Request failed.");
   return data;
 }
@@ -102,6 +103,7 @@ export async function fetchAdvisoryGradebook(
 }
 
 export interface ClassSubmissionStatus {
+  submissionVersion?: string | null;
   submitted: boolean;
   submittedAt: string | null;
 }
@@ -136,10 +138,10 @@ export async function fetchClassSubmissionLogs(
   return json.data;
 }
 
-export async function submitClassGrades(gradingPeriodId: string, classId?: string, request: TeacherRequestOptions = {}): Promise<void> {
+export async function submitClassGrades(gradingPeriodId: string, classId?: string, request: TeacherRequestOptions = {}, expectedSubmissionVersion?: string | null): Promise<void> {
   const res = await authedFetch(`${BASE_URL}/submission`, {
     method: "POST",
-    body: JSON.stringify({ gradingPeriodId, classId }),
+    body: JSON.stringify({ gradingPeriodId, classId, ...(expectedSubmissionVersion === undefined ? {} : {expectedSubmissionVersion}) }),
   }, request);
   await handleJsonResponse(res);
 }

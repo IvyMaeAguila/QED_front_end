@@ -15,6 +15,8 @@ import { useAdminWriter } from '../../query/useAdminWriter';
 import { StudentSearchInput } from '../studentrecords/components/StudentSearchInput';
 import { assignSections, fetchSectionAssignments, type AssignmentData, type AssignmentInput } from './services/sectionAssignment.service';
 
+import { SectionAssignmentPageComposition } from './SectionAssignmentPage.loading-view';
+
 const PAGE_SIZE = 50;
 
 function AssignmentQueries() {
@@ -25,18 +27,12 @@ function AssignmentQueries() {
   }, []);
   const write = useAdminWriter(assignSections, changed);
   const theme = useLoadingOutletContext<AdminThemeContext>();
-  const navigate = useNavigate();
-  return <div className="w-full space-y-6 pb-12">
-    <header className="space-y-2">
-      <button type="button" onClick={() => navigate('/admin/classes')} className={`qed-type-button ${theme.textMuted}`}>← Back to Classes Management</button>
-      <h1 className={`qed-type-page-title ${theme.textPrimary}`}>Section Assignment</h1>
-      <p className={`qed-type-page-description ${theme.textMuted}`}>Manage student section assignments for the active school year.</p>
-    </header>
+  return <SectionAssignmentPageComposition>
     <LoadingRegion loading={reader.loading && !reader.data} error={reader.error} retry={() => void reader.retry()} skeleton={<p className={theme.textMuted}>Loading section assignments…</p>}>
       {reader.offline && reader.data && <p role="status" className={theme.textMuted}>You're offline. Reconnect before assigning students.</p>}
       {reader.data && <AssignmentDirectory key={reader.data.schoolYear.id} data={reader.data} busy={reader.loading || reader.offline} write={write} refresh={reader.retry} />}
     </LoadingRegion>
-  </div>;
+  </SectionAssignmentPageComposition>;
 }
 
 function AssignmentDirectory({ data, busy, write, refresh }: {

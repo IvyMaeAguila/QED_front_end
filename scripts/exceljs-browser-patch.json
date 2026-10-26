@@ -1,0 +1,44 @@
+{
+  "package": "exceljs",
+  "version": "4.4.0",
+  "artifacts": [
+    {
+      "file": "node_modules/exceljs/dist/exceljs.js",
+      "before": "217ea0c8d055db909ca8b6d44b0c8dfef2a95f07010c634af88aa61202e4f08b",
+      "after": "1065954ac32a25ead8a2cba30b7b44c86f0c4af155496cccdb72dff254bab32d",
+      "changes": [
+        {
+          "position": 1913057,
+          "text": "/* QED: backport UUID output-buffer bounds validation. */if(buf&&(i<0||i+16>buf.length))throw new RangeError(\"UUID byte range is out of buffer bounds\");"
+        },
+        {
+          "position": 1919309,
+          "text": "/* QED: backport UUID output-buffer bounds validation. */if(offset<0||offset+16>buf.length)throw new RangeError(\"UUID byte range is out of buffer bounds\");"
+        },
+        {
+          "position": 1918128,
+          "text": "/* QED: backport UUID output-buffer bounds validation. */if(offset<0||offset+16>buf.length)throw new RangeError(\"UUID byte range is out of buffer bounds\");"
+        }
+      ]
+    },
+    {
+      "file": "node_modules/exceljs/dist/exceljs.min.js",
+      "before": "7e49da68588e250dbb8bba190d2caa8ab3787cc0284bda1d8b2f805c4df742c9",
+      "after": "273f28d150b6c08ba7fdb3b87aac6e632a5ac81e49c761a3e12cb53ec0b5a68d",
+      "changes": [
+        {
+          "position": 939797,
+          "text": "/* QED: backport UUID output-buffer bounds validation. */if(t&&(s<0||s+16>t.length))throw new RangeError(\"UUID byte range is out of buffer bounds\");"
+        },
+        {
+          "position": 942160,
+          "text": "/* QED: backport UUID output-buffer bounds validation. */if(r<0||r+16>t.length)throw new RangeError(\"UUID byte range is out of buffer bounds\");"
+        },
+        {
+          "position": 941460,
+          "text": "/* QED: backport UUID output-buffer bounds validation. */if(a<0||a+16>o.length)throw new RangeError(\"UUID byte range is out of buffer bounds\");"
+        }
+      ]
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import {safeReadOptions,isTransientReadFailure} from '@shared/query/safeReadPolicy';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@shared/hooks/useAuth';
@@ -22,7 +23,7 @@ export function ExaminationPerformance(p: Props) {
  const { user, isLoading, sessionScope, expireSession } = useAuth();
  const preview = useRoutePreview();
  const enabled = !preview && !isLoading && user?.role === 'PRINCIPAL';
- const year = useQuery({
+ const year = useQuery({...safeReadOptions,
   queryKey: principalStudentKeys.rosterYear(sessionScope, user?.role ?? '', String(user?.id ?? '')),
   enabled, staleTime: 30_000, gcTime: 300_000,
   queryFn: async ({signal}) => {
@@ -31,12 +32,15 @@ export function ExaminationPerformance(p: Props) {
   },
  });
  const filters = { schoolYear: schoolYear || String(year.data?.id ?? ''), term: examTerm || p.term, grade: p.grade === 'All Grades' ? '' : p.grade, section, subject, examination };
- const query = useQuery({
+ const query = useQuery({...safeReadOptions,
   queryKey: [...principalAnalyticsKeys.all(sessionScope, user?.role ?? '', String(user?.id ?? '')), 'examination-performance', filters],
   enabled: enabled && !!year.data?.id && !year.isFetching && !year.error, staleTime: 30_000, gcTime: 300_000,
   queryFn: ({ signal }) => getExaminationAnalytics(filters, { signal, onUnauthorized: () => expireSession(sessionScope) }),
  });
- const data = enabled ? query.data : undefined;
+ const blocked=[query.error,year.error].some(e=>e instanceof QueryHttpError&&[401,403,404].includes(e.status));
+ const data = enabled&&!blocked ? query.data : undefined;
+ const readError=query.error??year.error;
+ const retained=data!==undefined&&!blocked&&(isTransientReadFailure(readError)||query.isPaused||year.isPaused);
  const fmt = (v: number | null | undefined) => v == null ? '—' : v.toFixed(2);
  const withUnit = (value: number | null | undefined, unit: string) => value == null ? fmt(value) : `${fmt(value)}${unit}`;
  const distributionNote = distributionDescription(data);
@@ -55,14 +59,15 @@ export function ExaminationPerformance(p: Props) {
    </div>
    <div className={`mt-3 flex items-center gap-1 text-xs ${p.textMuted}`}><p>Examination scores are presented as percentages (0–100%).</p><ExaminationMetricInfo label="examination score methodology" term="Examination score methodology" explanation="Missing examination items are excluded, never counted as zero. Valid partial results are included using only recorded points and their corresponding Highest Possible Scores (HPS)." calculation="For each student, subject-section, and examination, divide total recorded points by their corresponding total HPS and multiply by 100. Each valid student-subject result contributes equally to the arithmetic mean, population SD, and distribution; a student can contribute results in multiple subjects." darkMode={p.darkMode} /></div>
   </div>
-  {query.error || year.error || query.isPaused || year.isPaused ? <LoadingRegion loading={false} error={query.error ?? year.error ?? new Error('Examination statistics are unavailable offline. Reconnect and retry.')} retry={() => {if (year.error) void year.refetch(); else void query.refetch();}} skeleton={null}>{null}</LoadingRegion> : <>
-   <ReportMetricCards regionPrefix="examination" loading={query.isPending || query.isFetching} panelBg={p.panelBg} panelBorder={p.panelBorder} textPrimary={p.textPrimary} textMuted={p.textMuted} items={[
+  {(query.error || year.error || query.isPaused || year.isPaused) && <LoadingRegion loading={false} error={query.error ?? year.error ?? new Error('Examination statistics are unavailable offline. Reconnect and retry.')} retry={() => {if (year.error) void year.refetch(); else void query.refetch();}} skeleton={null}>{null}</LoadingRegion>}
+  {(!(query.error||year.error||query.isPaused||year.isPaused)||retained)&&<>
+   <ReportMetricCards regionPrefix="examination" loading={query.isPending || query.isFetching&&data===undefined} panelBg={p.panelBg} panelBorder={p.panelBorder} textPrimary={p.textPrimary} textMuted={p.textMuted} items={[
     {label:'Average Exam Score',value:withUnit(data?.summary.mean, '%'),detail:'Overall examination performance.',titleInfo:<ExaminationMetricInfo label="Average Exam Score" term="Mean Examination Score" explanation="The arithmetic mean of valid normalized examination percentages. Each student-subject result has equal weight; partial results are included." calculation="For each result: recorded points divided by corresponding highest possible scores (HPS), multiplied by 100. Add these percentages and divide by the number of valid results." darkMode={p.darkMode} />},
     {label:'Score Variation (SD)',value:withUnit(data?.summary.sd, ' pp'),detail:'Shows how much examination scores differ.',titleInfo:<ExaminationMetricInfo label="Score Variation (SD)" term="Standard Deviation" explanation="Measures how spread out examination scores are around the mean, in percentage points. Lower SD means more closely grouped scores; higher SD means greater variation, which alone does not indicate poor performance." calculation="Population SD: square each valid percentage's distance from the mean, average those squared distances, then take the square root." darkMode={p.darkMode} />},
     {label:'Students Assessed',value:String(data?.summary.students ?? '—'),detail:`${data?.summary.count ?? 0} student-subject results`,titleInfo:<ExaminationMetricInfo label="Students Assessed" term="Unique Students with Valid Examination Scores" explanation="Counts unique students, rather than examination records. A student with results in multiple subjects is counted once. Valid partial results are included." calculation="Count distinct student IDs among valid examination results matching the selected filters." darkMode={p.darkMode} />},
     {label:'Results Coverage',value:'Unavailable',detail:'Completeness data is not available.',detailKnown:true,titleInfo:<ExaminationMetricInfo label="Results Coverage" term="Examination Results Completion Rate" explanation="The percentage of expected examination results that are complete. The current examination data does not establish the eligible expected results or verified completeness rules, so coverage cannot yet be calculated reliably. Partial records must not count as complete." calculation="Complete expected results divided by all eligible expected results, multiplied by 100, once the population and completeness rules are verified. No percentage is estimated from recorded results alone." darkMode={p.darkMode} />},
    ]}/>
-   <ExaminationInsights data={data} loading={query.isPending || query.isFetching} panelBg={p.panelBg} panelBorder={p.panelBorder} textPrimary={p.textPrimary} textMuted={p.textMuted} />
+   <ExaminationInsights data={data} loading={query.isPending || query.isFetching&&data===undefined} panelBg={p.panelBg} panelBorder={p.panelBorder} textPrimary={p.textPrimary} textMuted={p.textMuted} />
    {!query.isPending && !data?.summary.count ? <p className={`py-6 text-center text-sm ${p.textMuted}`}>No valid examination scores for these filters.</p> : data && <div className="grid min-w-0 gap-3 lg:grid-cols-2">
     <div className={`self-start overflow-x-auto rounded-xl border p-4 ${p.panelBg} ${p.panelBorder}`}>
       <table className={`w-full min-w-[400px] text-xs ${p.textPrimary}`}>

@@ -96,6 +96,8 @@ function usePetQuizPageState(PetQuizService=DefaultPetQuizService) {
   const [showEndConfirm, setShowEndConfirm] = useState(false);
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
   const [isEnding, setIsEnding] = useState(false);
+  const [endUncertain, setEndUncertain] = useState(false);
+  const endRequest = useRef(false);
 
   const [difficulty, setDifficulty] = useState<Difficulty>("Easy");
   const [practiceSetId, setPracticeSetId] = useState<number | null>(null);
@@ -429,12 +431,14 @@ function usePetQuizPageState(PetQuizService=DefaultPetQuizService) {
       } catch (err) {
         if (handleArchivedError(err)) return;
         console.error("Failed to record the practice round:", err);
+        setQuizError("Could not confirm practice completion. Please retry the activity; your saved progress is retained.");
+        setPetVisualState(restingPetState());
+        return;
       }
     }
 
-    setPendingCleared(cleared);
-
-    const confirmed = serverResult ? serverResult.fullyCleared : true;
+    const confirmed = serverResult?.fullyCleared === true;
+    setPendingCleared(cleared && confirmed);
     if (cleared && confirmed) {
       const unlocked = serverResult
         ? serverResult.unlockedNext
@@ -494,7 +498,8 @@ function usePetQuizPageState(PetQuizService=DefaultPetQuizService) {
   }
 
   async function confirmEndIntervention() {
-    if (!studentId || !topicId || isEnding) return;
+    if (!studentId || !topicId || endRequest.current || endUncertain) return;
+    endRequest.current = true;
     setIsEnding(true);
     setEndError(null);
     try {
@@ -505,16 +510,34 @@ function usePetQuizPageState(PetQuizService=DefaultPetQuizService) {
       setShowEndConfirm(false);
       setShowAccomplishment(true);
     } catch (err) {
+      const transportUnknown = err instanceof TypeError || err instanceof SyntaxError;
+      if (transportUnknown || (err instanceof Error && "outcome" in err && err.outcome === "uncertain")) setEndUncertain(true);
       console.error("Failed to archive intervention:", err);
       setShowEndConfirm(false);
       setEndError(
+        transportUnknown ? "Completion could not be confirmed. Check its current state before trying again." :
         err instanceof Error && err.message
           ? err.message
           : "Couldn't end the intervention. Please try again.",
       );
     } finally {
+      endRequest.current = false;
       setIsEnding(false);
     }
+  }
+
+  async function checkCompletionStatus() {
+    if (!studentId || !topicId || endRequest.current) return;
+    endRequest.current = true; setIsEnding(true);
+    try {
+      const current = await PetQuizService.getInterventionState(studentId, topicId);
+      setIntervention(current); setEndUncertain(false);
+      if (current.interventionCompleted) {
+        setEndError(null); setShowAccomplishment(true);
+      } else setEndError("Completion was not recorded. You can try End Intervention again.");
+    } catch (error) {
+      setEndError(error instanceof Error ? error.message : "Could not check completion. Please try again.");
+    } finally { endRequest.current = false; setIsEnding(false); }
   }
 
   function handleStopForNow() {
@@ -580,6 +603,7 @@ function usePetQuizPageState(PetQuizService=DefaultPetQuizService) {
             onSelectBonus={openBonus}
             onShowStory={() => setView("intro")}
             onEnd={() => {
+              if (endUncertain || endRequest.current) return;
               if (allStepsDone) {
                 setEndError(null);
                 setShowEndConfirm(true);
@@ -654,6 +678,8 @@ function usePetQuizPageState(PetQuizService=DefaultPetQuizService) {
         </p>
       )}
 
+      {endUncertain && <button type="button" disabled={isEnding} onClick={checkCompletionStatus} className="text-sm underline">Check completion status</button>}
+
       {view === "quiz" && !feedback && (
         <button
           type="button"
@@ -709,7 +735,7 @@ function usePetQuizPageState(PetQuizService=DefaultPetQuizService) {
         </div>
       )}
 
-      {quizError ? <>{renderGame(false)}<button type="button" className="text-sm underline" onClick={() => requestedBonus && /bonus/.test(quizError) ? openBonus(requestedBonus) : startFullRound(difficulty)}>Retry</button></> : <LoadingRegion name="pet-quiz-content" loading={waiting} error={loadError} retry={() => setAttempt(value => value + 1)} variable className="w-full" skeleton={null} frame={renderGame} onSettled={() => { if (view === "quiz") rememberRows(gameView+":questions",activeQuestions.length); if (bonusGames) { rememberRows(gameView+":match",bonusGames.match.length); rememberRows(gameView+":memory",bonusGames.memory.length); } }}>{null}</LoadingRegion>}
+      {quizError ? <>{view === "quiz" && <p role="alert" className="text-sm text-red-600">{quizError}</p>}{renderGame(false)}<button type="button" className="text-sm underline" onClick={() => requestedBonus && /bonus/.test(quizError) ? openBonus(requestedBonus) : startFullRound(difficulty)}>Retry</button></> : <LoadingRegion name="pet-quiz-content" loading={waiting} error={loadError} retry={() => setAttempt(value => value + 1)} variable className="w-full" skeleton={null} frame={renderGame} onSettled={() => { if (view === "quiz") rememberRows(gameView+":questions",activeQuestions.length); if (bonusGames) { rememberRows(gameView+":match",bonusGames.match.length); rememberRows(gameView+":memory",bonusGames.memory.length); } }}>{null}</LoadingRegion>}
 
       {view === "roundResult" && (
         <RoundResult

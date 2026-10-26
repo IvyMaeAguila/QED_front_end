@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import { API_CONFIG } from '../../../../../../config/api.config';
 import type {ApiRequestOptions} from '@shared/http/ApiRequestOptions';
 import {QueryHttpError} from '@shared/http/QueryHttpError';
@@ -15,7 +16,7 @@ export const fetchGradeLevels = async (options:ApiRequestOptions={}): Promise<DB
     if(response.status===401)options.onUnauthorized?.();
     
     if (!response.ok) {
-      throw new QueryHttpError(`Failed to fetch grade levels: ${response.statusText}`,response.status);
+      throw new QueryHttpError(`Failed to fetch grade levels: ${response.statusText}`,response.status, undefined, {requestId: response.requestId});
     }
     
     const rawData: DBGradeLevelResponse[] = await response.json();
@@ -39,7 +40,7 @@ export const fetchSectionByGrade = async (gradeLevelId: string | number,options:
     if(response.status===401)options.onUnauthorized?.();
     
     if (!response.ok) {
-      throw new QueryHttpError(`Failed to fetch sections: ${response.statusText}`,response.status);
+      throw new QueryHttpError(`Failed to fetch sections: ${response.statusText}`,response.status, undefined, {requestId: response.requestId});
     }
     
     return await response.json();

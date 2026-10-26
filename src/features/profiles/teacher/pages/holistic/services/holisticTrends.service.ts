@@ -1,3 +1,4 @@
+import { boundedFetch as fetch, type BufferedHttpReply } from '@shared/http/boundedFetch';
 import { API_CONFIG } from '../../../../../../config/api.config';
 import type { TeacherRequestOptions } from "../../../query/teacherQueryScope";
 import { QueryHttpError } from "@shared/http/QueryHttpError";
@@ -35,10 +36,10 @@ export interface DomainTrendsSection {
   overallWeeks: DomainWeekPoint[];
 }
 
-async function handleJsonResponse(res: Response) {
-  const data = await res.json().catch(error => { if(!res.ok)throw new QueryHttpError('Request failed.',res.status);throw error; });
+async function handleJsonResponse(res: BufferedHttpReply) {
+  const data = await res.json().catch(error => { if(!res.ok)throw new QueryHttpError('Request failed.',res.status, undefined, {requestId: res.requestId});throw error; });
   if (!res.ok || !data.success) {
-    if(!res.ok)throw new QueryHttpError(data.message || 'Request failed.',res.status);
+    if(!res.ok)throw new QueryHttpError(data.message || 'Request failed.',res.status, undefined, {requestId: res.requestId});
     throw new Error(data.message || "Request failed.");
   }
   return data;

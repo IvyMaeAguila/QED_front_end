@@ -121,7 +121,7 @@ export function EnrolledChildrenList({
         </span>
       </div>
 
-      <LoadingRegion loading={loading} error={error} retry={retry} variable skeleton={renderStudents(true)} onSettled={() => rememberRows(view, students.length)}>{renderStudents(false)}</LoadingRegion>
+      <LoadingRegion retainOnError={students.length > 0} loading={loading} error={error} retry={retry} variable skeleton={renderStudents(true)} onSettled={() => rememberRows(view, students.length)}>{renderStudents(false)}</LoadingRegion>
     </div>
   );
 }

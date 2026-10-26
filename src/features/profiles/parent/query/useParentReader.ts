@@ -1,3 +1,4 @@
+import {safeReadOptions} from '@shared/query/safeReadPolicy';
 import {useQuery} from '@tanstack/react-query';
 import {useCallback,useEffect,useMemo,useRef} from 'react';
 import {useLocation} from 'react-router-dom';
@@ -5,9 +6,9 @@ import {queryClient} from '@shared/query/queryClient';
 import type {ApiRequestOptions} from '@shared/http/ApiRequestOptions';
 import {parentOfflineMessage,useParentQueryScope} from './parentQueryScope';
 import {childDenial,hideChildCache} from './parentChildCache';
-export function useParentReader<T>(resource:readonly unknown[],fetcher:(options:ApiRequestOptions)=>Promise<T>,message:string,ready=true,seed?:{data?:T;updatedAt?:number},staleTime=30_000,refreshInterval?:number,policy?:{cancellable?:boolean;reconnect?:boolean;retryOnMount?:boolean}){
+export function useParentReader<T>(resource:readonly unknown[],fetcher:(options:ApiRequestOptions)=>Promise<T>,message:string,ready=true,seed?:{data?:T;updatedAt?:number},staleTime=30_000,refreshInterval?:number,policy?:{safeRead?:boolean;cancellable?:boolean;reconnect?:boolean;retryOnMount?:boolean}){
  const scope=useParentQueryScope();
- const query=useQuery({...scope.options,enabled:scope.enabled&&ready,staleTime,retryOnMount:policy?.retryOnMount??true,refetchOnReconnect:policy?.reconnect??true,refetchInterval:refreshInterval,queryKey:[...scope.key,...resource],queryFn:async context=>{
+ const query=useQuery({...scope.options,...(policy?.safeRead?safeReadOptions:{}),enabled:scope.enabled&&ready,staleTime,retryOnMount:policy?.retryOnMount??true,refetchOnReconnect:policy?.reconnect??true,refetchInterval:refreshInterval,queryKey:[...scope.key,...resource],queryFn:async context=>{
    const child=resource[0]==='student'?[...scope.key,...resource.slice(0,2)]:null;
    const previous=child?childDenial(child):undefined;
    try{const result=await fetcher(policy?.cancellable===false?scope.mutationRequest():scope.request(context.signal));const latest=child?childDenial(child):undefined;if(latest&&latest!==previous)throw latest;return result;}

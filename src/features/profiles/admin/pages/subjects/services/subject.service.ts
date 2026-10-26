@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import type {ApiRequestOptions} from '@shared/http/ApiRequestOptions';
 import {QueryHttpError} from '@shared/http/QueryHttpError';
 import { API_CONFIG } from '../../../../../../config/api.config';
@@ -65,16 +66,16 @@ export async function fetchSubjectSectionsByGrade(
 ): Promise<SubjectSectionByGradeRow[]> {
   const res = await fetch(`${BASE_URL}/getSubjectSectionsByGrade/${gradeLevel}`, {credentials: "include", signal:options.signal});
   if(res.status===401)options.onUnauthorized?.();
-  const json: ApiResponse<SubjectSectionByGradeRow[]> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
-  if (!res.ok) throw new QueryHttpError(json.message || "Failed to fetch subjects.",res.status);
+  const json: ApiResponse<SubjectSectionByGradeRow[]> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status, undefined, {requestId: res.requestId});throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to fetch subjects.",res.status, undefined, {requestId: res.requestId});
   return json.data ?? [];
 }
 
 export async function fetchSubjectsByGrade(gradeLevel: string, options:ApiRequestOptions={}): Promise<ElemSubjectRow[]> {
   const res = await fetch(`${BASE_URL}/getSubjectsByGrade/${gradeLevel}`, {credentials: "include", signal:options.signal});
   if(res.status===401)options.onUnauthorized?.();
-  const json: ApiResponse<ElemSubjectRow[]> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
-  if (!res.ok) throw new QueryHttpError(json.message || "Failed to fetch subjects.",res.status);
+  const json: ApiResponse<ElemSubjectRow[]> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status, undefined, {requestId: res.requestId});throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to fetch subjects.",res.status, undefined, {requestId: res.requestId});
   return json.data ?? [];
 }
 
@@ -92,8 +93,8 @@ export async function addSubject(payload: {
     body: JSON.stringify(payload), signal:options.signal,
   });
   if(res.status===401)options.onUnauthorized?.();
-  const json: ApiResponse<ElemSubjectRow> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
-  if (!res.ok) throw new QueryHttpError(json.message || "Failed to add subject.",res.status);
+  const json: ApiResponse<ElemSubjectRow> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status, undefined, {requestId: res.requestId});throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to add subject.",res.status, undefined, {requestId: res.requestId});
   return json.data as ElemSubjectRow;
 }
 
@@ -128,8 +129,8 @@ export async function updateSubjectAssignment(
     body: JSON.stringify(payload), signal:options.signal,
   });
   if(res.status===401)options.onUnauthorized?.();
-  const json: ApiResponse<UpdateSubjectAssignmentResult> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
-  if (!res.ok) throw new QueryHttpError(json.message || "Failed to update subject.",res.status);
+  const json: ApiResponse<UpdateSubjectAssignmentResult> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status, undefined, {requestId: res.requestId});throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to update subject.",res.status, undefined, {requestId: res.requestId});
   return json.data as UpdateSubjectAssignmentResult;
 }
 
@@ -144,8 +145,8 @@ export async function assignTeacherToSubject(
     body: JSON.stringify(payload), signal:options.signal,
   });
   if(res.status===401)options.onUnauthorized?.();
-  const json: ApiResponse<{ id: number; section_id: number; teacher_id: string | number | null }> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
-  if (!res.ok) throw new QueryHttpError(json.message || "Failed to assign teacher.",res.status);
+  const json: ApiResponse<{ id: number; section_id: number; teacher_id: string | number | null }> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status, undefined, {requestId: res.requestId});throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to assign teacher.",res.status, undefined, {requestId: res.requestId});
   return json.data as { id: number; section_id: number; teacher_id: string | number | null };
 }
 
@@ -158,8 +159,8 @@ export async function toggleSubjectStatus(
     headers: { "Content-Type": "application/json" }, signal:options.signal,
   });
   if(res.status===401)options.onUnauthorized?.();
-  const json: ApiResponse<{ id: number; status: "Active" | "Inactive" }> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
-  if (!res.ok) throw new QueryHttpError(json.message || "Failed to toggle status.",res.status);
+  const json: ApiResponse<{ id: number; status: "Active" | "Inactive" }> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status, undefined, {requestId: res.requestId});throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to toggle status.",res.status, undefined, {requestId: res.requestId});
   return json.data as { id: number; status: "Active" | "Inactive" };
 }
 
@@ -173,8 +174,8 @@ export async function createAssessmentType(payload: {
     body: JSON.stringify(payload), signal:options.signal,
   });
   if(res.status===401)options.onUnauthorized?.();
-  const json: ApiResponse<NewAssessmentType> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
-  if (!res.ok) throw new QueryHttpError(json.message || "Failed to add assessment type.",res.status);
+  const json: ApiResponse<NewAssessmentType> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status, undefined, {requestId: res.requestId});throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to add assessment type.",res.status, undefined, {requestId: res.requestId});
   return json.data as NewAssessmentType;
 }
 
@@ -186,7 +187,7 @@ export async function getAssessmentTypes(options:ApiRequestOptions={}): Promise<
   });
   if(response.status===401)options.onUnauthorized?.();
   if (!response.ok) {
-    throw new QueryHttpError(`Failed to fetch assessment types: ${response.status}`,response.status);
+    throw new QueryHttpError(`Failed to fetch assessment types: ${response.status}`,response.status, undefined, {requestId: response.requestId});
   }
   const json: ApiResponse<Array<{
     id: number;
@@ -226,7 +227,7 @@ export async function updateAssessmentType(
     // Keep a useful API error visible if an intermediary returns plain text.
   }
   if (!res.ok || !json?.success) {
-    throw new QueryHttpError(json?.message || body || "Failed to update assessment type.",res.status);
+    throw new QueryHttpError(json?.message || body || "Failed to update assessment type.",res.status, undefined, {requestId: res.requestId});
   }
   return json.data as NewAssessmentType;
 }
@@ -238,8 +239,8 @@ export async function deleteAssessmentType(id: number, options:ApiRequestOptions
     headers: { "Content-Type": "application/json" }, signal:options.signal,
   });
   if(res.status===401)options.onUnauthorized?.();
-  const json: ApiResponse<null> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
-  if (!res.ok) throw new QueryHttpError(json.message || "Failed to delete assessment type.",res.status);
+  const json: ApiResponse<null> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status, undefined, {requestId: res.requestId});throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to delete assessment type.",res.status, undefined, {requestId: res.requestId});
 }
 
 export function toWeightPayload(

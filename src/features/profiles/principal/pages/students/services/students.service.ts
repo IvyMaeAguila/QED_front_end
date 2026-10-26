@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import type { GradeLevelSummary, ClassList } from "../data/types";
 import { API_CONFIG } from '../../../../../../config/api.config';
 import { QueryHttpError } from "@shared/http/QueryHttpError";
@@ -11,7 +12,7 @@ export async function getGradeLevels(signal?: AbortSignal): Promise<GradeLevelSu
   });
 
   if (!res.ok) {
-    throw new QueryHttpError(`Failed to fetch grade levels (${res.status})`, res.status);
+    throw new QueryHttpError(`Failed to fetch grade levels (${res.status})`, res.status, undefined, {requestId: res.requestId});
   }
 
   return res.json();
@@ -21,7 +22,7 @@ export async function getOverviewSchoolYear(signal?: AbortSignal): Promise<strin
   const response = await fetch(`${API_CONFIG.baseURL}/api/academic-year/getAcademicYear`, {
     credentials: "include", signal,
   });
-  if (!response.ok) throw new QueryHttpError("Failed to fetch academic year.", response.status);
+  if (!response.ok) throw new QueryHttpError("Failed to fetch academic year.", response.status, undefined, {requestId: response.requestId});
   const json = await response.json();
   if (!json.data) throw new Error(json.message || "Failed to fetch academic year.");
   return json.data.label;
@@ -32,7 +33,7 @@ export async function getRosterAcademicYear(signal?: AbortSignal): Promise<{ id:
   const response = await fetch(`${API_CONFIG.baseURL}/api/academic-year/getAcademicYear`, {
     credentials: "include", signal,
   });
-  if (!response.ok) throw new QueryHttpError("Failed to fetch academic year.", response.status);
+  if (!response.ok) throw new QueryHttpError("Failed to fetch academic year.", response.status, undefined, {requestId: response.requestId});
   const json = await response.json();
   if (!json.data || json.data.id == null) throw new Error(json.message || "Failed to fetch academic year.");
   return { id: json.data.id, label: json.data.label };
@@ -43,14 +44,14 @@ export async function getRosterAcademicYear(signal?: AbortSignal): Promise<{ id:
 export async function getClassList(classId: number, signal?: AbortSignal): Promise<ClassList | null> {
   const res = await fetch(`${BASE_URL}/class-list/${classId}`, { credentials: "include", signal });
   if (res.status === 404) return null;
-  if (!res.ok) throw new QueryHttpError(`Failed to fetch class list (${res.status})`, res.status);
+  if (!res.ok) throw new QueryHttpError(`Failed to fetch class list (${res.status})`, res.status, undefined, {requestId: res.requestId});
   return res.json();
 }
 
 export async function getUnassignedClassList(gradeId: number, signal?: AbortSignal): Promise<ClassList | null> {
   const res = await fetch(`${BASE_URL}/grade/${gradeId}/unassigned`, { credentials: "include", signal });
   if (res.status === 404) return null;
-  if (!res.ok) throw new QueryHttpError(`Failed to fetch class list (${res.status})`, res.status);
+  if (!res.ok) throw new QueryHttpError(`Failed to fetch class list (${res.status})`, res.status, undefined, {requestId: res.requestId});
   return res.json();
 }
 

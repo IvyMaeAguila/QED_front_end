@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import type {TeacherRequestOptions} from '../../../query/teacherQueryScope';
 import {QueryHttpError} from '@shared/http/QueryHttpError';
 // features/profiles/teacher/.../services/subjectGradeTemplate.service.ts
@@ -63,28 +64,40 @@ export async function getEffectiveWeightsSafe(
   subjectSectionId: number,
   gradingPeriodId?: string,
   request:TeacherRequestOptions={},
-): Promise<EffectiveWeights | undefined> {
+): Promise<EffectiveWeights | null> {
+  const controller = new AbortController();
+  const cancel = () => controller.abort(request.signal?.reason);
+  if (request.signal?.aborted) cancel();
+  else request.signal?.addEventListener('abort', cancel, { once: true });
+  // Match session verification's bounded read. This retries no operation.
+  const timeout = window.setTimeout(() => controller.abort(new DOMException('Grading-rule verification timed out.', 'TimeoutError')), 15_000);
   try {
     const periodQuery = gradingPeriodId ? `?gradingPeriodId=${encodeURIComponent(gradingPeriodId)}` : "";
-    const res = await authedFetch(`${BASE_URL}/getEffectiveWeights/${subjectSectionId}${periodQuery}`,{signal:request.signal});
+    const res = await authedFetch(`${BASE_URL}/getEffectiveWeights/${subjectSectionId}${periodQuery}`,{signal:controller.signal});
     if(res.status===401)request.onUnauthorized?.();
-    if([401,403].includes(res.status))throw new QueryHttpError("Could not load grading rules.",res.status);
+    if(!res.ok)throw new QueryHttpError("Could not load grading rules.",res.status, undefined, {requestId: res.requestId});
     const contentType = res.headers.get("content-type") ?? "";
-    if (!contentType.includes("application/json")) return undefined;
+    if (!contentType.includes("application/json")) throw new Error('The server did not return valid grading rules.');
 
     const json = await res.json();
-    if (!res.ok || !json.success) return undefined;
-    return json.data ?? undefined;
-  } catch (err) {
-    if(request.signal?.aborted||err instanceof QueryHttpError)throw err;
-    console.error("Failed to load effective weights:", err);
-    return undefined;
+    if (json?.success !== true) throw new Error('Could not load grading rules.');
+    // Only an explicit successful null means no configured template/manual rules.
+    if (json.data === null) return null;
+    const rules = json.data;
+    if (!rules || !['template', 'manual'].includes(rules.source)
+      || ![rules.ww, rules.pt, rules.exam].every(value => typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 100)) {
+      throw new Error('The server did not return valid grading rules.');
+    }
+    return rules;
+  } finally {
+    window.clearTimeout(timeout);
+    request.signal?.removeEventListener('abort', cancel);
   }
 }
 
 export async function downloadActiveGradeTemplate(subjectSectionId: string): Promise<ArrayBuffer> {
   const res = await fetch(`${BASE_URL}/downloadActiveGradeTemplateBySection/${subjectSectionId}`, {
-    credentials: "include",
+    credentials: "include", operation: "export",
   });
   if (!res.ok) {
     let message = "Could not download the active grade template.";
@@ -97,7 +110,7 @@ export async function downloadActiveGradeTemplate(subjectSectionId: string): Pro
 export async function downloadGradeRecordExport(subjectSectionId: string, gradingPeriodId: string): Promise<{ buffer: ArrayBuffer; fileName: string }> {
   const res = await fetch(
     `${BASE_URL}/exportGradeTemplateBySection/${subjectSectionId}?gradingPeriodId=${encodeURIComponent(gradingPeriodId)}`,
-    { credentials: "include" },
+    { credentials: "include", operation: "export" },
   );
   if (!res.ok) {
     let message = "Could not create the official grade record export.";

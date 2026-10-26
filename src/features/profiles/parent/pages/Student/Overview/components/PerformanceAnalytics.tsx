@@ -75,7 +75,8 @@ export default function TermAverageTrendChart({
 }: TermAverageTrendChartProps) {
   const { darkMode, panelBg, panelBorder, textMuted } = theme;
 
-  const { data, loading, error, refetch } = useProgressReport();
+  const { data, loading, error: reportError, sections, refetch } = useProgressReport();
+  const error=reportError??sections.academic.error;
   const studentName = student.fullName;
 
   // Derive the chart's { term, average, plotAverage, subjects[] } points from

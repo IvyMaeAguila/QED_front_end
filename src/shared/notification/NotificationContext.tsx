@@ -1,10 +1,14 @@
+import {NotificationSnapshot} from "./notificationSnapshot";
 import { useToast } from "@shared/context/ToastContext";
-import { lazy, Suspense, useCallback, createContext, useContext, useState, type ReactNode } from "react";
+import { lazy, Suspense, useCallback, createContext, useContext, useState, useRef, type ReactNode } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { useAuth } from "../../features/auth/context/authContext";
 import { notificationService, type Notification } from "./Notification.service";
 
 export interface NotificationContextType {
+  readError?: Error|null;
+  readLoading?:boolean;
+  retryRead?:()=>void;
   notifications: Notification[];
   unreadCount: number;
   markAsRead: (id: number) => void;
@@ -20,10 +24,14 @@ const NotificationContext = createContext<NotificationContextType | undefined>(
 function LegacyNotificationProvider({ children }: { children: ReactNode }) {
   const { showToast } = useToast();
   const { user, isLoading, sessionScope } = useAuth();
+  const activeIdentity=useRef("");
+  const [readError,setReadError]=useState<Error|null>(null);
+  const refreshRef=useRef<()=>void>(()=>{});
   const identity = `${sessionScope}:${user?.role}:${user?.id}`;
+  activeIdentity.current=identity;
   const [legacyIdentity, setLegacyIdentity] = useState<string | null>(null);
   const [legacyUpdatedAt,setLegacyUpdatedAt]=useState(0);
-  const [adminActivation,setAdminActivation]=useState<{identity:string;seed?:{data:Notification[];updatedAt:number}}>();
+  const [adminActivation,setAdminActivation]=useState<{identity:string;seed?:{data:Notification[];updatedAt:number;error?:Error|null}}>();
   const [parentActivation,setParentActivation]=useState<string>();
   const activateParentQueries=useCallback(()=>{if(!isLoading&&user?.role==='PARENT'&&navigator.onLine)setParentActivation(identity);},[identity,isLoading,user?.role]);
   const queryMode = !isLoading && (user?.role === "PRINCIPAL" || user?.role === "TEACHER" || user?.role === "PARENT"&&parentActivation===identity || user?.role==='ADMIN'&&adminActivation?.identity===identity);
@@ -34,7 +42,7 @@ function LegacyNotificationProvider({ children }: { children: ReactNode }) {
     setAdminActivation(previous=>previous?.identity===identity&&previous.seed?{identity}:previous);
   }, [identity]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const activateAdminQueries=useCallback(()=>{if(navigator.onLine&&!isLoading&&user?.role==='ADMIN')setAdminActivation(previous=>previous?.identity===identity?previous:{identity,seed:legacyIdentity===identity&&legacyUpdatedAt?{data:notifications,updatedAt:legacyUpdatedAt}:undefined});},[isLoading,user?.role,identity,legacyIdentity,legacyUpdatedAt,notifications]);
+  const activateAdminQueries=useCallback(()=>{if(navigator.onLine&&!isLoading&&user?.role==='ADMIN')setAdminActivation(previous=>previous?.identity===identity?previous:{identity,seed:legacyIdentity===identity&&legacyUpdatedAt?{data:notifications,updatedAt:legacyUpdatedAt,error:readError}:undefined});},[isLoading,user?.role,identity,legacyIdentity,legacyUpdatedAt,notifications,readError]);
 
   useEffect(() => {
     if(user?.role==='PARENT'&&!queryMode)return;
@@ -44,25 +52,29 @@ function LegacyNotificationProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    let cancelled = false;
+    let cancelled = false,pending=false,denied=false;
+    const snapshots=new NotificationSnapshot();
+    setReadError(null);
     const controller=new AbortController();
     setNotifications([]);
     setLegacyUpdatedAt(0);
     setLegacyIdentity(identity);
     const refresh = () => {
+      if(pending||cancelled||!navigator.onLine)return;
+      pending=true;const started=snapshots.start();
       notificationService.getAll(user.id,user.role==='ADMIN'?{signal:controller.signal}:undefined).then((items) => {
         if (cancelled) return;
+        denied=false;setReadError(null);
         if(user.role==='ADMIN')setLegacyUpdatedAt(Date.now());
-        setNotifications((previous) => {
-          const fetchedIds = new Set(items.map((n) => n.id));
-          return [...previous.filter((n) => !fetchedIds.has(n.id)), ...items]
-            .sort((a, b) => b.id - a.id);
-        });
-      }).catch(error => {if(!cancelled&&user.role==='ADMIN'&&error instanceof Error&&'status'in error&&[401,403].includes(Number(error.status))){setNotifications([]);setLegacyUpdatedAt(0);}});
+        setNotifications(snapshots.reconcile(items,started));
+      }).catch(error=>{if(cancelled)return;setReadError(error instanceof Error?error:new Error('Notifications unavailable.'));if(error instanceof Error&&'status'in error&&[401,403].includes(Number(error.status))){denied=true;setNotifications([]);setLegacyUpdatedAt(0);}}).finally(()=>{pending=false;});
+
     };
+    refreshRef.current=refresh;
     refresh();
     const unsubscribe = notificationService.subscribe(user.id, (notif) => {
-      if (cancelled) return;
+      if (cancelled||denied) return;
+      snapshots.push(notif);
       setNotifications((prev) => [notif, ...prev.filter((n) => n.id !== notif.id)]);
     }, refresh);
     const interval = window.setInterval(refresh, 30000);
@@ -78,12 +90,12 @@ function LegacyNotificationProvider({ children }: { children: ReactNode }) {
   }, [user, isLoading, queryMode, identity]);
 
   const markAsRead = (id: number) => {
-    void notificationService.markAsRead(id).then(() => setNotifications(previous => previous.map(n => n.id === id ? { ...n, isRead: true } : n)))
+    void notificationService.markAsRead(id).then(() => {if(activeIdentity.current===identity)setNotifications(previous => previous.map(n => n.id === id ? { ...n, isRead: true } : n));})
       .catch(() => showToast("Could not mark notification as read. Please try again.", "error"));
   };
   const markAllAsRead = () => {
     if (!user) return;
-    void notificationService.markAllAsRead(user.id).then(() => setNotifications(previous => previous.map(n => ({ ...n, isRead: true }))))
+    void notificationService.markAllAsRead(user.id).then(() => {if(activeIdentity.current===identity)setNotifications(previous => previous.map(n => ({ ...n, isRead: true })));})
       .catch(() => showToast("Could not mark notifications as read. Please try again.", "error"));
   };
 
@@ -91,7 +103,7 @@ function LegacyNotificationProvider({ children }: { children: ReactNode }) {
 
   return (
     <NotificationContext.Provider
-      value={{...(queryMode ? queryState ?? emptyNotifications : legacyIdentity === identity ? { notifications, unreadCount, markAsRead, markAllAsRead } : emptyNotifications),activateAdminQueries,activateParentQueries}}
+      value={{...(queryMode ? queryState ?? emptyNotifications : legacyIdentity === identity ? { notifications, unreadCount, markAsRead, markAllAsRead,readError,retryRead:()=>refreshRef.current() } : emptyNotifications),activateAdminQueries,activateParentQueries}}
     >
       {queryMode && <Suspense fallback={null}>{user?.role==='ADMIN'
         ? <AdminNotifications key={identity} onChange={publish} expectedRole="ADMIN" seed={adminActivation?.seed}/>:user?.role === "TEACHER"

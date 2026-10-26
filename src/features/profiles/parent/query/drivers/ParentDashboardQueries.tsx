@@ -83,12 +83,12 @@ function ParentDashboardProvider({ children,seeds,initialViewMode='grid' }: { ch
     const response = await enrolledChildrenService.getEnrolledChildren(options);
     if(!response.success) throw new Error(response.message || 'Failed to load linked students.');
     return response.students;
-  }, 'Failed to load linked students.',true,seeds?.students,30_000,undefined,{retryOnMount:false});
+  }, 'Failed to load linked students.',true,seeds?.students,30_000,undefined,{retryOnMount:false,safeRead:true});
   const dailyReader = useParentReader(['dashboard','daily-updates'], async options => {
     const response = await dailyUpdateService.getDailyUpdatesForParent(options);
     if(!response.success) throw new Error(response.message || 'Failed to load daily updates.');
     return response.dailyUpdates;
-  }, 'Failed to load daily updates.',true,seeds?.daily,30_000,undefined,{retryOnMount:false});
+  }, 'Failed to load daily updates.',true,seeds?.daily,30_000,undefined,{retryOnMount:false,safeRead:true});
   const students = studentReader.data ?? EMPTY_STUDENTS, isLoadingStudents = studentReader.loading, studentsError = studentReader.error;
   const dailyUpdates = dailyReader.data ?? EMPTY_DAILY, isLoadingDailyUpdates = dailyReader.loading, dailyUpdatesError = dailyReader.error;
   const fetchStudents = studentReader.retry, fetchDailyUpdates = dailyReader.retry;

@@ -3,6 +3,13 @@
  * an entry here as well as real-route geometry/fixture verification.
  */
 export const routeSkeletons = {
+  "/admin/classes/section-assignment": {
+    role: "ADMIN",
+    component: "SectionAssignmentPage",
+    skeleton: "SectionAssignmentPageComposition",
+    load: () => import("../../features/profiles/admin/pages/classes/SectionAssignmentPage").then(module => ({ default: module.SectionAssignmentPage })),
+    regions: [{ name: "section assignments", classification: "VARIABLE", reason: "School-year data determines available sections and student rows", count: "Returned assignment directory" }],
+  },
   "/principal/examination-performance": {
     role: "PRINCIPAL",
     component: "ExaminationPerformancePage",

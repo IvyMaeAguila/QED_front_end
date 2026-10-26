@@ -1,3 +1,4 @@
+import {confirmedSubmission} from './teacherSubmissionRecovery';
 import {useEffect,useRef,useContext,type ReactNode} from 'react';
 import {useParams} from 'react-router-dom';
 import {useMutation} from '@tanstack/react-query';
@@ -15,6 +16,9 @@ const errorMessage=(e:unknown)=>e instanceof Error?e.message:'Request failed.';
 const emptyTopics:grading.Topic[]=[];
 const emptyPeriods:holistic.GradingPeriod[]=[];
 const emptyWeekly:holistic.HolisticWeeklyMap={};
+// A route remount must not turn an old uncertain action into another write.
+// A full reload resets this fence and reads authoritative scores first.
+const scoreWriteFences=new Set<string>();
 function TopicsEffects({subjectId,enabled,setTopics,setLoading,setError,setNewTopicMode,onTopicsChanged}:TopicScope){
  const periods=useTeacherReader(['grading-periods','active'],holistic.fetchGradingPeriodsGlobal,errorMessage);
  const reader=useTeacherReader(subjectKey(periods.data?.[0]?.schoolYearId??'active',subjectId,'topics'),o=>grading.fetchTopics(subjectId,o),'Failed to load topics.',30_000,enabled&&!periods.loading&&!periods.error);
@@ -38,6 +42,10 @@ function WeeklyEffects({subjectId,termNumber,periodId,attempt,editing,setData,se
 }
 type Operation={run:()=>Promise<unknown>;keys:readonly (readonly unknown[])[];allowed:boolean};
 export function TeacherAcademicQueries({children}:{children:ReactNode}){
+ const scoreOwner=useRef(true);
+ useEffect(()=>{scoreOwner.current=true;return()=>{scoreOwner.current=false;};},[]);
+ const scoreChain=useRef<Promise<unknown>>(Promise.resolve());
+ const confirmedScores=useRef(new Map<string,number|null>());
  const {subjectId=''}=useParams();
  const scope=useTeacherQueryScope();
  const periods=useTeacherReader(['grading-periods','active'],holistic.fetchGradingPeriodsGlobal,errorMessage);
@@ -62,16 +70,38 @@ export function TeacherAcademicQueries({children}:{children:ReactNode}){
  };
  const subject=(id:string,resource:string,...filters:unknown[])=>subjectKey(year,id,resource,...filters);
  const allGrades=['advisory-grades'];
+ const saveScore=(id:string,student:string,item:string,value:number|null)=>{
+  const key=[...scope.key,...subject(id,'scores')],fence=JSON.stringify(key),cell=JSON.stringify([...key,student,item]);
+  const task=scoreChain.current.catch(()=>{}).then(async()=>{
+   if(!scoreOwner.current)throw new Error('Score action cancelled because its page changed.');
+   if(scoreWriteFences.has(fence))throw new QueryHttpError('Score state needs reconciliation. Your edits are retained. Reload this class to check stored scores before saving again.',503,'uncertain');
+   const cached=queryClient.getQueryData<Awaited<ReturnType<typeof grading.fetchScores>>>(key);
+   const expected=confirmedScores.current.has(cell)?confirmedScores.current.get(cell)!:cached?.[student]?.[item]??null;
+   let sent=false;
+   try{
+    await write(o=>{sent=true;return grading.saveScore(id,student,item,value,o,expected);},[subject(id,'scores'),subject(id,'submission'),allGrades]);
+    confirmedScores.current.set(cell,value);
+   }catch(error){
+    if(sent&&(!(error instanceof QueryHttpError)||error.outcome==='uncertain'||error.outcome==='conflict'||(error.status>=500&&error.outcome!=='not_saved'))){
+     scoreWriteFences.add(fence);
+     throw new QueryHttpError(error instanceof QueryHttpError&&error.outcome==='conflict'?error.message:'Score saving could not be confirmed. Your edits are retained. Reload this class to check stored scores before saving again.',error instanceof QueryHttpError?error.status:503,error instanceof QueryHttpError&&error.outcome==='conflict'?'conflict':'uncertain');
+    }
+    throw error;
+   }
+  });
+  scoreChain.current=task;return task;
+ };
  const gradingPort:GradingPort={
   fetchTopics:id=>read(subject(id,'topics'),o=>grading.fetchTopics(id,o)),
   fetchScores:id=>read(subject(id,'scores'),o=>grading.fetchScores(id,o),0),
   fetchItems:(id,filters={})=>read(subject(id,'items',filters),o=>grading.fetchItems(id,filters,o),0),
   addItem:(id,item)=>write(o=>grading.addItem(id,item,o),[subject(id,'items')]),
   deleteItem:(id,item)=>write(o=>grading.deleteItem(id,item,o),[subject(id,'items'),subject(id,'scores'),allGrades]),
-  saveScore:(id,student,item,value)=>write(o=>grading.saveScore(id,student,item,value,o),[subject(id,'scores'),subject(id,'submission'),allGrades]),
+  saveScore,
   saveHolistic:(id,student,axis,value,term)=>write(o=>grading.saveHolistic(id,student,axis,value,term,o),[subject(id,'holistic'),subject(id,'weekly-holistic'),['holistic']]),
   createTopic:(id,name)=>write(o=>grading.createTopic(id,name,o),[subject(id,'topics')]),
-  submitGrades:(id,period)=>write(o=>grading.submitGrades(id,period,o),[subject(id,'submission'),allGrades]),
+  fetchGradeSubmissionStatus:(id,period)=>read(subject(id,'submission',period),o=>grading.fetchGradeSubmissionStatus(id,period,o),0),
+  submitGrades:(id,period,_request,expectedVersion)=>write(o=>confirmedSubmission(JSON.stringify([...scope.key,...subject(id,'submission'),period]),async()=>expectedVersion!==undefined?expectedVersion:(await read(subject(id,'submission',period),request=>grading.fetchGradeSubmissionStatus(id,period,request),0)).submissionVersion??null,version=>grading.submitGrades(id,period,o,version),()=>{[subject(id,'submission'),allGrades].forEach(key=>{void queryClient.invalidateQueries({queryKey:[...scope.key,...key],refetchType:'none'});});}),[subject(id,'submission'),allGrades]),
  };
  const holisticPort:HolisticPort={fetchGradingPeriodsGlobal:holistic.fetchGradingPeriodsGlobal,fetchHolisticWeekly:holistic.fetchHolisticWeekly,
   saveHolistic:(id,student,axis,value,overrides)=>write(o=>holistic.saveHolistic(id,student,axis,value,overrides,o),[subject(id,'weekly-holistic'),subject(id,'holistic'),['holistic']]),

@@ -1,3 +1,4 @@
+import type { HttpRequestInit } from '@shared/http/boundedFetch';
 import { parentFetch } from '../../../../query/parentRequest';
 import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
 import { API_CONFIG } from '../../../../../../../config/api.config';
@@ -80,7 +81,7 @@ function isArchivedStatus(status: number): boolean {
   return status === 410;
 }
 
-async function petFetch(url:string,options:ApiRequestOptions|undefined,init:RequestInit) {
+async function petFetch(url:string,options:ApiRequestOptions|undefined,init:HttpRequestInit) {
  try{return await parentFetch(url,options,init);}catch(error){if(error instanceof Error && 'status'in error && error.status===410)throw new InterventionArchivedError();throw error;}
 }
 
@@ -106,7 +107,7 @@ const PetQuizService = {
   ): Promise<QuizResponse> {
     const res = await petFetch(
       `${API_BASE_URL}/quiz/${studentId}/${topicId}?difficulty=${difficulty}`,
-      options, { credentials: "include" }
+      options, { credentials: "include", operation: "generation" }
     );
     if (isArchivedStatus(res.status)) throw new InterventionArchivedError();
     if (!res.ok) {
@@ -185,7 +186,7 @@ const PetQuizService = {
     options?: ApiRequestOptions
   ): Promise<BonusGames> {
     const res = await petFetch(`${API_BASE_URL}/bonus/${studentId}/${topicId}`, options, {
-      credentials: "include",
+      credentials: "include", operation: "generation",
     });
     if (isArchivedStatus(res.status)) throw new InterventionArchivedError();
     if (!res.ok) {

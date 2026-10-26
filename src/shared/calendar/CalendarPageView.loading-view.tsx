@@ -1,3 +1,4 @@
+import type {CalendarReadResource,CalendarReadStates} from './types/Calendar';
 import { CalendarHeart,CalendarRange } from "lucide-react";
 import { useMemo,useState } from "react";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
@@ -22,6 +23,7 @@ interface CalendarPageProps {
   viewerRole?: Role;
 }
 export interface CalendarViewData {
+  reads?:CalendarReadStates;
   activities: CalendarActivity[];
   holidays: CalendarHoliday[];
   allActivities: CalendarActivity[];
@@ -70,9 +72,11 @@ function useCalendarPageViewState(data?: CalendarViewData) {
   }
 
   if (!theme) return { content: null, scope: null };
+  const readProps=(name:CalendarReadResource)=>data?.reads?.[name]??{loading,error,retry:data?.retry ?? (() => setAttempt(value => value + 1))};
   return { content: ((
     <div className="space-y-6 pb-12">
-      {data?.offline && !error && <div role="alert" className={`rounded-xl border p-4 ${panelBg} ${panelBorder} ${textPrimary}`}>You're offline. Cached calendar records remain available. Reconnect and try again.</div>}
+      {data?.offline && (!error || !!data.reads) && <div role="alert" className={`rounded-xl border p-4 ${panelBg} ${panelBorder} ${textPrimary}`}>You're offline. Cached calendar records remain available. Reconnect and try again.</div>}
+      {data?.reads && error && !data?.offline && <div role="alert" className={`rounded-xl border p-4 ${panelBg} ${panelBorder} ${textPrimary}`}><p>{error}</p><button type="button" className="mt-2 font-semibold underline" onClick={data.retry}>Retry</button></div>}
       <div>
         <h1 className={`qed-type-page-title ${textPrimary}`}>
           Calendar
@@ -99,7 +103,7 @@ function useCalendarPageViewState(data?: CalendarViewData) {
 
         <div className="space-y-4">
           <ActivitiesCard
-            loading={loading} error={error} retry={data?.retry ?? (() => setAttempt(value => value + 1))}
+            {...readProps('activities')}
             activities={activities}
             viewDate={viewDate}
             selectedDate={selectedDate}
@@ -112,7 +116,7 @@ function useCalendarPageViewState(data?: CalendarViewData) {
           />
 
           <HolidaysCard
-            loading={loading} error={error} retry={data?.retry ?? (() => setAttempt(value => value + 1))}
+            {...readProps('holidays')}
             holidays={holidays}
             viewDate={viewDate}
             selectedDate={selectedDate}
@@ -138,7 +142,7 @@ function useCalendarPageViewState(data?: CalendarViewData) {
           textMuted={textMuted}
         >
           <ActivityGroupList
-            loading={loading} error={error} retry={data?.retry ?? (() => setAttempt(value => value + 1))}
+            {...readProps('all-activities')}
             activities={allActivities}
             darkMode={darkMode}
             textMuted={textMuted}
@@ -158,7 +162,7 @@ function useCalendarPageViewState(data?: CalendarViewData) {
           textMuted={textMuted}
         >
           <HolidayGroupList
-            loading={loading} error={error} retry={data?.retry ?? (() => setAttempt(value => value + 1))}
+            {...readProps('all-holidays')}
             holidays={allHolidays}
             darkMode={darkMode}
             textMuted={textMuted}

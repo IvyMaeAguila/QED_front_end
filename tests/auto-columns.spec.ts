@@ -1,8 +1,9 @@
+import { mockAdminDashboard } from "./fixtures/adminDashboard";
 import { waitForDataRoute } from "./fixtures/routeReady";
 import { test, expect, type Page } from "@playwright/test";
 
 // External font delivery is independent of table data; keep metrics constant throughout each measurement.
-test.beforeEach(async ({ page }) => { await page.route("https://fonts.googleapis.com/**", route => route.abort()); });
+test.beforeEach(async ({ page }) => { await mockAdminDashboard(page); });
 
 const widths = (page: Page) => page.locator("thead th").evaluateAll(cells => cells.map(cell => ({ x: cell.getBoundingClientRect().x, width: cell.getBoundingClientRect().width })));
 const fixture = (long: boolean, count: number) => ({ success: true, data: { page: 1, limit: 20, total: count, entries: Array.from({ length: count }, (_, id) => ({ id, createdAt: "2026-10-08T02:00:00Z", actorFullName: long ? "Maria Alexandra Isabella Delos Santos Villanueva" : "Li", actorUsername: "teacher", actorRole: "TEACHER", action: long ? "UPDATE_STUDENT_PROFILE_DETAILS" : "LOGIN", resource: "student", resourceId: "1", httpMethod: "GET", endpoint: long ? "/api/students/123/profile/academic-history" : "/api/me", statusCode: 200 })) } });

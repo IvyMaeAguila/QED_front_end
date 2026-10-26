@@ -1,4 +1,5 @@
 import { useToast } from "@shared/context/ToastContext";
+import { QueryHttpError } from "@shared/http/QueryHttpError";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonText, SkeletonAvatar, SkeletonControl } from "@shared/components/SkeletonLoading";
 import { skeletonRows, rememberRows, rememberColumns, useColumnReservation, lastKnownCount } from "@shared/loading/reservations";
@@ -110,7 +111,7 @@ export function AssessmentTab({
   const [savedFlash, setSavedFlash] = useState(false);
   const [saving, setSaving] = useState(false);
   const { showToast } = useToast();
-  const setToast = (message: string) => showToast(message, /could not/i.test(message) ? "error" : "success");
+  const setToast = (message: string, type?: 'error' | 'success') => showToast(message, type ?? (/could not/i.test(message) ? "error" : "success"));
   const [search, setSearch] = useState("");
 
   const [draftScores, setDraftScores] = useState<ScoreMap>(scores);
@@ -215,9 +216,9 @@ const isDirty = useMemo(() => {
       setSavedFlash(true);
       setToast("Grades saved to Records.");
       setTimeout(() => setSavedFlash(false), 1800);
-    } catch {
+    } catch (error) {
       setSavedFlash(false);
-      setToast("Could not save scores. Please try again.");
+      setToast(error instanceof QueryHttpError&&(error.outcome==='uncertain'||error.outcome==='conflict')?error.message:"Could not save scores. Please try again.",'error');
     } finally {
       setSaving(false);
     }

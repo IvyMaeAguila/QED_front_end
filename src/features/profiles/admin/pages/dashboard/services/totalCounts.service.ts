@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import { API_CONFIG } from '../../../../../../config/api.config';
 import { QueryHttpError } from "@shared/http/QueryHttpError";
 
@@ -28,7 +29,7 @@ export const DashboardService = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
-      throw new QueryHttpError(errorData?.message || "Failed to fetch user counts", response.status);
+      throw new QueryHttpError(errorData?.message || "Failed to fetch user counts", response.status, undefined, {requestId: response.requestId});
     }
 
     return response.json();
@@ -44,7 +45,7 @@ export const DashboardService = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
-      throw new QueryHttpError(errorData?.message || "Failed to fetch total students", response.status);
+      throw new QueryHttpError(errorData?.message || "Failed to fetch total students", response.status, undefined, {requestId: response.requestId});
     }
 
     const data = await response.json(); // { success, total }

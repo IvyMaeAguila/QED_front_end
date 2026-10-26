@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import { parentFetch } from '../../../query/parentRequest';
 import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
 import { API_CONFIG } from '../../../../../../config/api.config';
