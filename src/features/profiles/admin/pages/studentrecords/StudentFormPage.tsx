@@ -3,7 +3,8 @@ import {useAdminReader,useAdminRetryAttempt} from '../../query/useAdminReader';
 import {useStudents} from './context/StudentsContext';
 import {fetchGradeLevels,fetchSectionByGrade} from './services/grade-section.service';
 import {StudentFormPageComposition,type StudentFormPageEffectScope} from './StudentFormPage.loading-view';
-export * from './StudentFormPage.loading-view';
+export {StudentFormPageComposition} from './StudentFormPage.loading-view';
+export type {StudentFormPageEffectScope,StudentFormPageRouteProps} from './StudentFormPage.loading-view';
 const emptyGrades:Awaited<ReturnType<typeof fetchGradeLevels>>=[];
 const emptySections:Awaited<ReturnType<typeof fetchSectionByGrade>>=[];
 function StudentFormPageDataEffects({scope:s}:{scope:StudentFormPageEffectScope}){
@@ -17,7 +18,7 @@ function StudentFormPageDataEffects({scope:s}:{scope:StudentFormPageEffectScope}
   if(!existing||loading||seededRecordRef.current===studentId)return;
   seededRecordRef.current=studentId;
   setPlacementSnapshot({schoolYearId:existing.schoolYearId,gradeLevelId:existing.gradeLevelId,sectionId:existing.sectionId});
-  setForm({studentId:existing.studentId,lastName:existing.lastName,firstName:existing.firstName,middleName:existing.middleName??'',lrn:existing.lrn,gender:existing.gender,gradeLevel:String(existing.gradeLevelId),section:existing.sectionId!=null?String(existing.sectionId):''});
+  setForm({isTransferee:Boolean(existing.joinedDate),joinedDate:existing.joinedDate??'',studentId:existing.studentId,lastName:existing.lastName,firstName:existing.firstName,middleName:existing.middleName??'',lrn:existing.lrn,gender:existing.gender,gradeLevel:String(existing.gradeLevelId),section:existing.sectionId!=null?String(existing.sectionId):''});
  },[existing,loading,seededRecordRef,setPlacementSnapshot,studentId,setForm]);
  useEffect(()=>{setLoadingGrades(grades.loading);setGradeError(grades.error);if(!grades.loading)setGradeLevels(grades.data??emptyGrades);},[grades.loading,grades.error,grades.data,setLoadingGrades,setGradeError,setGradeLevels]);
  useEffect(()=>{

@@ -27,6 +27,9 @@ interface StudentRow {
   gender: string;
   grade_level_name: string;  
   section_name: string | null;
+  joined_date?: string | null;
+  enrollment_status?: string;
+  dropout_effective_date?: string | null;
   parent_guardian_name?: string | null;
   guardian_first_name?: string | null;
   guardian_middle_name?: string | null;
@@ -37,6 +40,9 @@ interface StudentRow {
 
 function mapStudentRow(row: StudentRow): Student {
   return {
+    joinedDate: row.joined_date ?? undefined,
+    enrollmentStatus: row.enrollment_status,
+    dropoutEffectiveDate: row.dropout_effective_date ?? undefined,
     guardianName: [row.guardian_first_name, row.guardian_middle_name, row.guardian_last_name].map(part => part?.trim()).filter(Boolean).join(' ') || row.parent_guardian_name?.trim() || undefined,
     guardianContact: row.guardian_contact_number?.trim() || undefined,
     dbId: row.id,

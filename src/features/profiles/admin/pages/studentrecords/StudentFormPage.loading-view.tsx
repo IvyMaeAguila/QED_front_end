@@ -35,6 +35,8 @@ interface FormState {
   gender: Gender;
   gradeLevel: string;
   section: string;
+  isTransferee: boolean;
+  joinedDate: string;
 }
 
 const emptyForm: FormState = {
@@ -46,6 +48,8 @@ const emptyForm: FormState = {
   gender: "Male",
   gradeLevel: "",
   section: "",
+  isTransferee: false,
+  joinedDate: "",
 };
 
 const LRN_PATTERN = /^\d{12}$/;
@@ -76,6 +80,8 @@ function useStudentFormPageState() {
   const [form, setForm] = useState<FormState>(
     existing
       ? {
+          isTransferee: Boolean(existing.joinedDate),
+          joinedDate: existing.joinedDate ?? "",
           studentId: existing.studentId,
           lastName: existing.lastName,
           firstName: existing.firstName,
@@ -159,6 +165,8 @@ function useStudentFormPageState() {
       }
     }
     if (step === undefined || step === 1) {
+      if (!isEditing && form.isTransferee && (!form.joinedDate || !/^\d{4}-\d{2}-\d{2}$/.test(form.joinedDate))) next.joinedDate = "Date joined this school is required.";
+      if (!isEditing && form.isTransferee && form.joinedDate > new Date().toLocaleDateString('en-CA')) next.joinedDate = "Joining date cannot be in the future.";
       // A section is required whenever at least one section is available.
       if (sectionIsSelectable && !form.section.trim())
         next.section = "Section is required.";
@@ -187,12 +195,12 @@ function useStudentFormPageState() {
 
     try {
       if (isEditing && existing) {
-        await updateStudent(existing.dbId, { ...payload, expectedPlacement: placementSnapshot } as any);
+        await updateStudent(existing.dbId, { ...payload, expectedPlacement: placementSnapshot } as Parameters<typeof updateStudent>[1]);
         markSaved();
         showToast("Student updated successfully!", "success");
         navigate(`/admin/students`);
       } else {
-        await createRecord(payload);
+        await createRecord({...payload, isTransferee: form.isTransferee, ...(form.isTransferee ? {joinedDate: form.joinedDate} : {})});
         markSaved();
         showToast("Student added successfully!", "success");
         await refetch(); // kunin ulit ang buong listahan galing backend
@@ -429,6 +437,17 @@ function useStudentFormPageState() {
               )}
             </div>
           </div>
+          {!isEditing && <div className={`mt-5 border-t pt-5 ${panelBorder}`}>
+            <label className={`inline-flex cursor-pointer items-center gap-2.5 text-sm font-semibold ${textPrimary}`}>
+              <input type="checkbox" checked={form.isTransferee} onChange={e => setForm({...form,isTransferee:e.target.checked,joinedDate:e.target.checked?form.joinedDate:''})} className="h-4 w-4 rounded border accent-maroon"/>
+              This student is a transferee
+            </label>
+            {form.isTransferee && <div className="mt-4 max-w-sm">
+              <label htmlFor="student-joined-date" className={labelClasses}>Date joined this school <span aria-hidden="true">*</span></label>
+              <input id="student-joined-date" type="date" required value={form.joinedDate} max={new Date().toLocaleDateString('en-CA')} onChange={e=>{setForm({...form,joinedDate:e.target.value});setErrors(previous=>({...previous,joinedDate:undefined}));}} aria-invalid={!!errors.joinedDate} aria-describedby={errors.joinedDate?'student-joined-error':undefined} className={inputClasses}/>
+              {errors.joinedDate && <p id="student-joined-error" className="mt-1 text-xs font-semibold text-[#B91C1C]">{errors.joinedDate}</p>}
+            </div>}
+          </div>}
           </div>
           )}
 
@@ -443,6 +462,7 @@ function useStudentFormPageState() {
                   ["Gender", form.gender],
                   ["Grade level", gradeLevels.find((grade) => String(grade.id) === form.gradeLevel)?.grade_level ?? "—"],
                   ["Section", sections.find((section) => String(section.id) === form.section)?.section_name ?? "Unassigned"],
+                  ...(!isEditing && form.isTransferee ? [["Transferee", "Yes"], ["Date joined this school", form.joinedDate]] : []),
                 ].map(([label, value]) => (
                   <div key={label} className="min-w-0">
                     <dt className={`text-xs font-bold uppercase tracking-wide ${textMuted}`}>{label}</dt>

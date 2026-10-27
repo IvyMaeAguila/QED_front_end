@@ -50,6 +50,7 @@ function useLoginPanelState({ open, onClose }: LoginModalProps) {
 
   const [userName, setuserName] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -75,6 +76,7 @@ function useLoginPanelState({ open, onClose }: LoginModalProps) {
       const user = await AuthService.login({
         userName: userName.trim(),
         password,
+        rememberMe,
       });
 
       await login(user, user.token, user.mustChangePassword);
@@ -165,7 +167,7 @@ function useLoginPanelState({ open, onClose }: LoginModalProps) {
           <div className="flex flex-col gap-4">
             {/* Username */}
             <div className="flex flex-col gap-1.5">
-              <label className="qed-type-label-compact text-gray-600 uppercase">
+              <label htmlFor="login-username" className="qed-type-label-compact text-gray-600 uppercase">
                 Username
               </label>
               <div className="relative">
@@ -173,31 +175,21 @@ function useLoginPanelState({ open, onClose }: LoginModalProps) {
                   <UserIDIcon color="#bbb" />
                 </span>
                 <input
+                  id="login-username"
+                  autoComplete="username"
                   type="text"
                   value={userName}
                   onChange={(e) => setuserName(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="e.g. TC_maria.delacruz"
-                  className="w-full pl-12 pr-4 py-3 rounded-xl text-sm text-black bg-brand-light border border-transparent outline-none transition-all placeholder:text-[#ccc]"
-                  style={{ boxShadow: "none" }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.background = "#fff";
-                    e.currentTarget.style.borderColor = "color-mix(in srgb, var(--brand-primary) 35%, transparent)";
-                    e.currentTarget.style.boxShadow =
-                      "0 0 0 3px color-mix(in srgb, var(--brand-primary) 7%, transparent)";
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.background = "var(--brand-light)";
-                    e.currentTarget.style.borderColor = "transparent";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
+                  className="qed-login-input w-full pl-12 pr-4 py-3 rounded-lg text-sm text-black bg-brand-light border border-transparent outline-none transition-all placeholder:text-[#ccc]"
                 />
               </div>
             </div>
 
             {/* Password */}
             <div className="flex flex-col gap-1.5">
-              <label className="qed-type-label-compact text-gray-600 uppercase">
+              <label htmlFor="login-password" className="qed-type-label-compact text-gray-600 uppercase">
                 Password
               </label>
               <div className="relative">
@@ -205,23 +197,14 @@ function useLoginPanelState({ open, onClose }: LoginModalProps) {
                   <PasswordIcon color="#bbb" />
                 </span>
                 <input
+                  id="login-password"
+                  autoComplete="current-password"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="••••••••"
-                  className="w-full rounded-lg border border-transparent bg-brand-light py-3 pl-12 pr-11 text-sm text-black outline-none transition-all placeholder:text-[#ccc]"
-                  onFocus={(e) => {
-                    e.currentTarget.style.background = "#fff";
-                    e.currentTarget.style.borderColor = "color-mix(in srgb, var(--brand-primary) 35%, transparent)";
-                    e.currentTarget.style.boxShadow =
-                      "0 0 0 3px color-mix(in srgb, var(--brand-primary) 7%, transparent)";
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.background = "var(--brand-light)";
-                    e.currentTarget.style.borderColor = "transparent";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
+                  className="qed-login-input w-full rounded-lg border border-transparent bg-brand-light py-3 pl-12 pr-11 text-sm text-black outline-none transition-all placeholder:text-[#ccc]"
                 />
                 <button
                   type="button"
@@ -241,6 +224,8 @@ function useLoginPanelState({ open, onClose }: LoginModalProps) {
             <label className="flex items-center gap-2 cursor-pointer select-none group">
               <input
                 type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
                 className="w-3.5 h-3.5 accent-maroon cursor-pointer"
               />
               <span className="text-[13px] font-normal leading-[1.4] text-gray-600 group-hover:text-black transition-colors">
@@ -259,12 +244,7 @@ function useLoginPanelState({ open, onClose }: LoginModalProps) {
           {/* Login button */}
           <button
             disabled={loading}
-            className="mt-7 w-full rounded-lg py-3.5 qed-type-button text-white transition-opacity hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
-            style={{
-              background: "var(--color-maroon)",
-              boxShadow: "0 4px 16px color-mix(in srgb, var(--brand-primary) 16%, transparent)",
-              transition: "opacity 0.15s, transform 0.1s",
-            }}
+            className="qed-login-submit mt-7 w-full rounded-lg py-3.5 qed-type-button text-white transition-opacity hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
             onClick={handleLogin}
           >
             {loading ? "Logging in..." : "Login"}
@@ -279,12 +259,6 @@ function useLoginPanelState({ open, onClose }: LoginModalProps) {
         </div>
     </ModalFrame>
 
-      <style>{`
-        @keyframes modalIn {
-          from { opacity: 0; transform: scale(0.95) translateY(12px); }
-          to   { opacity: 1; transform: scale(1)    translateY(0); }
-        }
-      `}</style>
 
       {/* Forgot password flow */}
       {forgotStep === "email" && (

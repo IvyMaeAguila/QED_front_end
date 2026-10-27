@@ -42,6 +42,7 @@ export default function AdvisoryStudentProfile({student,fullName,theme,loading,n
       <div className="mt-2 flex flex-wrap items-center gap-1.5">
        <span className={'rounded-full border px-2 py-0.5 text-xs font-medium '+panelBorder+' '+textMuted}>{value([student.gradeLevel,student.section?'Section '+student.section:''].filter(Boolean).join(' · '),'18ch')}</span>
        <span className={'rounded-full border px-2 py-0.5 text-xs font-medium '+panelBorder+' '+textMuted}>{value(student.gender,'6ch')}</span>
+       {student.enrollmentStatus==='dropped'&&<span className={'rounded-full border px-2 py-0.5 text-xs font-medium '+panelBorder+' '+textMuted}>Dropped{student.dropoutEffectiveDate?' - '+student.dropoutEffectiveDate:''}</span>}
       </div>
      </div>
     </div>

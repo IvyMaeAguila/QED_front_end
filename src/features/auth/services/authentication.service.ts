@@ -3,6 +3,7 @@ import type { UserProfile } from "../../../shared/profile/types/types";
 export interface LoginPayload {
   userName: string;
   password: string;
+  rememberMe?: boolean;
 }
 
 export interface ChangePasswordPayload {

@@ -5,6 +5,7 @@ import type { MonthlyAttendanceReport, ReportSignatories } from './monthlyAttend
 // rounded averages and monthly sums. No input is dropped if capacity changes.
 export const REPORT_DAY_CAPACITY = 24;
 export async function createMonthlyAttendancePdf(report: MonthlyAttendanceReport, signatories: ReportSignatories, templateBytes?: ArrayBuffer | Uint8Array): Promise<Uint8Array> {
+  if ((report.dropouts?.length ?? 0) > 9) throw new Error('The official template has space for nine dropout entries. This report exceeds capacity; no entries were exported.');
   if (report.days.length > REPORT_DAY_CAPACITY) throw new Error('This month exceeds the official template’s 24 daily rows. No records were exported.');
   let template = templateBytes;
   if (!template) {
@@ -36,15 +37,16 @@ export async function createMonthlyAttendancePdf(report: MonthlyAttendanceReport
   put('Month', monthName.toUpperCase(), TextAlignment.Left, 11);
   put('School_Year', report.schoolYearLabel, TextAlignment.Left, 10);
   for (const period of ['Year', 'Month']) {
-    put('Enrollment_' + period + '_Male', report.enrollment.male);
-    put('Enrollment_' + period + '_Female', report.enrollment.female);
-    put('Enrollment_' + period + '_Total', report.enrollment.total);
+    const enrollment=period==='Year'?(report.annualEnrollment??report.enrollment):report.enrollment;
+    put('Enrollment_' + period + '_Male', enrollment.male);
+    put('Enrollment_' + period + '_Female', enrollment.female);
+    put('Enrollment_' + period + '_Total', enrollment.total);
   }
   for (const gender of ['Male', 'Female', 'Total'] as const) put('Average_Daily_Attendance_' + gender, report.ada?.[gender.toLowerCase() as 'male' | 'female' | 'total'] ?? null, TextAlignment.Center, 9);
   put('Number_of_Days', report.numberOfDays, TextAlignment.Center, 9);
   const rowField = (row: number, suffix: string, value: string | number | null, size = 10) => put('Row_' + String(row).padStart(2, '0') + '_' + suffix, value, TextAlignment.Center, size);
-  function enrollmentRow(row: number) {
-    rowField(row, 'Enrollment_Male', report.enrollment.male); rowField(row, 'Enrollment_Female', report.enrollment.female); rowField(row, 'Enrollment_Total', report.enrollment.total);
+  function enrollmentRow(row: number, enrollment=report.enrollment) {
+    rowField(row, 'Enrollment_Male', enrollment.male); rowField(row, 'Enrollment_Female', enrollment.female); rowField(row, 'Enrollment_Total', enrollment.total);
   }
   function attendanceRow(row: number, male: number, female: number, parentheses = false) {
     // AM and PM repeat one daily mark; sums and ADA come from the source once.
@@ -55,7 +57,7 @@ export async function createMonthlyAttendancePdf(report: MonthlyAttendanceReport
   }
   report.days.forEach((day, index) => {
     const row = index + 1;
-    rowField(row, 'Date', Number(day.date.slice(8))); enrollmentRow(row);
+    rowField(row, 'Date', Number(day.date.slice(8))); enrollmentRow(row,day.enrollment??report.enrollment);
     attendanceRow(row, day.malePresent, day.femalePresent);
   });
   if (report.ada) {
@@ -63,6 +65,29 @@ export async function createMonthlyAttendancePdf(report: MonthlyAttendanceReport
     attendanceRow(25, report.ada.male, report.ada.female, true);
     attendanceRow(26, report.sums.male, report.sums.female);
   }
+  function movementList(entries:{name:string;date:string}[],start:number,end:number,label:string){
+  let dropoutRow=start;
+  for (const entry of entries) {
+    const width=form.getTextField('Row_'+String(start).padStart(2,'0')+'_Student_Name').acroField.getWidgets()[0].getRectangle().width-5;
+    const lines:string[]=[];let line='';
+    // Continue the complete name over spare rows in the official dropout block.
+    // Never abbreviate a student name or silently overwrite the transfer block.
+    for(const word of entry.name.trim().split(/\s+/)){
+      if(line&&regular.widthOfTextAtSize(line+' '+word,8)<=width){line+=' '+word;continue;}
+      if(line){lines.push(line);line='';}
+      for(const character of word){if(line&&regular.widthOfTextAtSize(line+character,8)>width){lines.push(line);line='';}line+=character;}
+    }
+    if(line)lines.push(line);
+    if(dropoutRow+lines.length-1>end)throw new Error('The complete '+label+' names exceed the official template capacity. No names were clipped or exported.');
+    for(const [index,text] of lines.entries()){
+      const prefix='Row_'+String(dropoutRow++).padStart(2,'0');
+      put(prefix+'_Student_Name',text,TextAlignment.Left,8);
+      if(index===0)put(prefix+'_Student_Date',entry.date,TextAlignment.Center,8);
+    }
+  }
+  }
+  movementList((report.dropouts??[]).map(e=>({name:e.name,date:e.effectiveDate})),1,9,'dropout');
+  movementList((report.transferIns??[]).map(e=>({name:e.name,date:e.joinedDate})),21,26,'transfer-in');
   put('Adviser_Name_or_Signature', signatories.adviserName, TextAlignment.Center, 11);
   put('Adviser_Designation', signatories.adviserDesignation, TextAlignment.Left, 12);
   put('Principal_Name', signatories.principalName, TextAlignment.Left, 12, true);

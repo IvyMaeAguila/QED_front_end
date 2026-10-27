@@ -10,10 +10,10 @@ export function progressMonthOptions(terms: Pick<GradingPeriod, 'startDate' | 'e
  return [...months].sort().map(key=>({key,label:new Intl.DateTimeFormat('en',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(key+'-01T12:00:00Z'))}));
 }
 /** Match the parent's P/A/L ring semantics. Excused and unmarked remain separate. */
-export function studentAttendanceProgress(attendance:AttendanceMap,studentId:string,month:string,terms:Pick<GradingPeriod,'startDate'|'endDate'>[]){
+export function studentAttendanceProgress(attendance:AttendanceMap,studentId:string,month:string,terms:Pick<GradingPeriod,'startDate'|'endDate'>[],dropoutDate?:string,joinedDate?:string){
  const dates=new Set<string>();
  for(const marks of Object.values(attendance))for(const [date,status] of Object.entries(marks)){
-  if(date.slice(0,7)===month&&['P','A','L','E'].includes(status??'')&&terms.some(t=>date>=t.startDate&&date<=t.endDate))dates.add(date);
+  if((!joinedDate||date>=joinedDate)&&(!dropoutDate||date<dropoutDate)&&date.slice(0,7)===month&&['P','A','L','E'].includes(status??'')&&terms.some(t=>date>=t.startDate&&date<=t.endDate))dates.add(date);
  }
  const statusSummary={present:0,absent:0,late:0,excused:0};let unmarked=0;
  for(const date of dates){

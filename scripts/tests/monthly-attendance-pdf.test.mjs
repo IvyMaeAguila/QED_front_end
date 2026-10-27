@@ -20,3 +20,17 @@ test('official template has an explicit field for every dynamic date and signato
  const pdf=await PDFDocument.load(template),form=pdf.getForm();for(let row=1;row<=26;row++)assert.ok(form.getTextField('Row_'+String(row).padStart(2,'0')+'_Date'));
  for(const name of ['Grade','Month','School_Year','Principal_Name','Principal_Designation','Adviser_Name_or_Signature','Adviser_Designation'])assert.ok(form.getTextField(name));
 });
+
+
+test('dropout entries export without form widgets and overflow never silently truncates students',async()=>{
+ const result=await createMonthlyAttendancePdf({...base,dropouts:[{studentId:'1',name:'Sample Dropout Student',effectiveDate:'2026-10-14'}]},names,template);
+ const pdf=await PDFDocument.load(result);assert.equal(pdf.getPages().length,1);assert.equal(pdf.getForm().getFields().length,0);
+ await assert.rejects(createMonthlyAttendancePdf({...base,dropouts:Array.from({length:10},(_,i)=>({studentId:String(i),name:'Student '+i,effectiveDate:'2026-10-14'}))},names,template),/nine dropout/);
+});
+
+test('incoming entries populate official entered block and fail explicitly when names exceed capacity',async()=>{
+ const transferIns=[{studentId:'1',name:'October Transfer Student',joinedDate:'2026-10-15'}];
+ const result=await createMonthlyAttendancePdf({...base,transferIns},names,template);const pdf=await PDFDocument.load(result);assert.equal(pdf.getForm().getFields().length,0);
+ const {writeFileSync,mkdirSync}=await import('node:fs');mkdirSync('monthly-report-review',{recursive:true});writeFileSync('monthly-report-review/transfer-in-report.pdf',result);
+ await assert.rejects(createMonthlyAttendancePdf({...base,transferIns:Array.from({length:7},(_,i)=>({studentId:String(i),name:'Student '+i,joinedDate:'2026-10-15'}))},names,template),/transfer-in.*capacity/);
+});

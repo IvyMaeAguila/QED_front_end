@@ -28,7 +28,7 @@ function ProgressContent({student,theme,ready,information}:Props){
  const setMonth=(value:string)=>setSelection(previous=>({year,key:(previous?.year===year?previous.key.slice(0,4):monthKey.slice(0,4))+'-'+value}));
  const classId=advisory?.classId??'';
  const marks=useTeacherReader(['attendance',classId,'all','profile',year],o=>fetchAdvisoryAttendance(classId,{allPeriods:true},o),'Unable to load student attendance.',30_000,ready&&!!advisory&&!terms.loading&&!terms.error&&!advisories.loading&&!advisories.error);
- const attendance=useMemo(()=>studentAttendanceProgress(marks.data?.data??{},student.id,monthKey,terms.data??[]),[marks.data,student.id,monthKey,terms.data]);
+ const attendance=useMemo(()=>studentAttendanceProgress(marks.data?.data??{},student.id,monthKey,terms.data??[],student.dropoutEffectiveDate,student.joinedDate),[marks.data,student.id,monthKey,terms.data,student.dropoutEffectiveDate,student.joinedDate]);
  const [termSelection,setTermSelection]=useState<{year:string;id:string}>();
  const defaultTerm=terms.data?.find(t=>t.isActive)??[...(terms.data??[])].filter(t=>t.startDate<=today+'-'+String(now.getDate()).padStart(2,'0')).sort((a,b)=>b.startDate.localeCompare(a.startDate))[0]??terms.data?.[0];
  const term=(termSelection?.year===year?terms.data?.find(t=>t.id===termSelection.id):undefined)??defaultTerm;

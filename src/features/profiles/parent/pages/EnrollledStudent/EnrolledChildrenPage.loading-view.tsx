@@ -22,7 +22,7 @@ function useEnrolledChildrenPageState() {
   const dividerColor = darkMode ? "border-white/10" : "border-black/5";
 
   return { content: ((
-    <div className="mx-auto flex w-full max-w-7xl flex-col">
+    <div className="flex w-full min-w-0 flex-col">
       {/* Page header */}
       <header className="mb-6 flex items-center gap-3 sm:gap-4 lg:mb-8">
         <div className="min-w-0">
@@ -40,8 +40,8 @@ function useEnrolledChildrenPageState() {
 
       {/* One single card holding both the form and the linked students */}
       <section
-        className={`self-start w-full overflow-hidden rounded-2xl ${panelSurface} ${
-          isMobile ? "" : "grid lg:grid-cols-[minmax(0,1.6fr)_minmax(0,0.8fr)]"
+        className={`w-full min-w-0 overflow-hidden rounded-2xl ${panelSurface} ${
+          isMobile ? "" : "grid xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"
         }`}
       >
         {/* LEFT (desktop): inline link form */}
@@ -57,7 +57,7 @@ function useEnrolledChildrenPageState() {
         {/* RIGHT: linked children */}
         <div
           className={
-            isMobile ? "" : `border-t lg:border-l lg:border-t-0 ${dividerColor}`
+            isMobile ? "min-w-0" : `min-w-0 border-t xl:border-l xl:border-t-0 ${dividerColor}`
           }
         >
           <EnrolledChildrenList loading={isLoadingStudents} error={studentsError} retry={refetchStudents} students={students} darkMode={darkMode} />

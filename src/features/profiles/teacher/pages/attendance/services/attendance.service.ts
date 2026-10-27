@@ -62,3 +62,8 @@ export async function saveAdvisoryAttendance(
   if(res.status===401)request.onUnauthorized?.();
   if (!res.ok) throw new QueryHttpError(`Failed to save attendance (${res.status})`,res.status, undefined, {requestId: res.requestId});
 }
+export async function markAdvisoryPresent(classId:string,studentIds:string[],date:string,termId:string,request:TeacherRequestOptions={}):Promise<void>{
+ const res=await authedFetch(`${BASE_URL}/${encodeURIComponent(classId)}/mark-present`,{method:'POST',signal:request.signal,body:JSON.stringify({studentIds,date,termId})});
+ if(res.status===401)request.onUnauthorized?.();
+ if(!res.ok){const result=await res.json().catch(()=>null);throw new QueryHttpError(result?.message||'The selected attendance records could not be saved.',res.status,undefined,{requestId:res.requestId});}
+}

@@ -1,3 +1,6 @@
+import {useAttendanceCellEdits} from './useAttendanceCellEdits';
+import {lazy,Suspense} from 'react';
+import {initialDropoutReader,effectiveDropout} from './dropoutState';
 import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
 import { useSaveFeedback } from "@shared/components/useSaveFeedback";
 import { useActionConfirmation } from "@shared/components/useActionConfirmation";
@@ -27,16 +30,20 @@ import { AdvisorySectionTabs } from "./components/AdvisorySectionTabs.tsx";
 import {
 fetchAdvisoryAttendance,
 saveAdvisoryAttendance,
+markAdvisoryPresent,
 type AdvisorySection,
 } from "./services/attendance.service.ts";
 import { useSelectedAdvisorySection } from "./services/useSelectedAdvisorySection.service";
 
+const DropoutEffects=lazy(()=>import('./DropoutEffects').then(module=>({default:module.DropoutEffects})));
 const PRESENT = "P" as keyof typeof ATTENDANCE_META;
 
+type BulkSaveState={classId:string;ids:string[];pending:boolean}|null;
 type RosterEntry = AdvisorySection["roster"][number];
 
 function useTeacherAttendancePageState() {
   const bridge=useContext(AttendanceQueryContext);
+  const [dropoutReader,setDropoutReader]=useState(initialDropoutReader);
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
@@ -56,7 +63,13 @@ function useTeacherAttendancePageState() {
   const { showToast } = useToast();
   const currentClass=useRef(section?.classId);
   useLayoutEffect(()=>{currentClass.current=section?.classId;return()=>{currentClass.current=undefined;};},[section?.classId]);
-  const [attendance, setAttendance] = useState<AttendanceMap>({});
+  const [storedAttendance, setAttendance] = useState<AttendanceMap>({});
+  const [bulkResource,setBulkResource]=useState<{scope:string|undefined;value:BulkSaveState}>({scope:section?.classId,value:null});
+  if(bulkResource.scope!==section?.classId)setBulkResource({scope:section?.classId,value:null});
+  const bulkState=bulkResource.scope===section?.classId?bulkResource.value:null;
+  const setBulkState=(value:BulkSaveState)=>setBulkResource({scope:section?.classId,value});
+  const lifetime=useRef({classId:section?.classId});
+  useLayoutEffect(()=>{const current={classId:section?.classId};lifetime.current=current;return()=>{lifetime.current={classId:undefined};};},[section?.classId]);
   const [attendanceLoading, setAttendanceLoading] = useState(true);
   const [attendanceError, setAttendanceError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -67,40 +80,54 @@ function useTeacherAttendancePageState() {
   const columns = [{ label: "No.", cls: "w-12 sm:w-16 text-left" }, { label: "Student", cls: "text-left" }, { label: "Status", cls: "w-24 sm:w-36 text-center" }];
 
   const iso = todayISO();
+  const dropoutReady=dropoutReader.data?.classId===section?.classId&&!dropoutReader.loading&&!dropoutReader.error;
+  const activeRoster=section?.roster.filter(s=>{const d=dropoutReader.data?.classId===section.classId?effectiveDropout(dropoutReader,s.id):undefined;return (!s.joinedDate||iso>=s.joinedDate)&&(!d||iso<d.effectiveDate);})??[];
   const activeTerm = section?.terms.find((term) => term.isActive);
   const canMarkToday = Boolean(
     activeTerm && iso >= activeTerm.startDate && iso <= activeTerm.endDate,
   );
 
-  async function persistMark(studentId: string, value: typeof PRESENT | null) {
-    if (!section || !activeTerm) throw new Error("Select an open class and term.");
-    await (bridge?.save ?? saveAdvisoryAttendance)(section.classId, studentId, iso, value, activeTerm.id);
-    if (currentClass.current === section.classId) setAttendance(prev => ({ ...prev, [studentId]: { ...prev[studentId], [iso]: value } }));
-  }
+  const attendanceClassId=section?.classId??'';
+  const {attendance,getStatus,saveMark,isPending}=useAttendanceCellEdits((section?.classId??'')+':'+iso,storedAttendance,setAttendance,save,
+    (studentId,date,status)=>(bridge?.save??saveAdvisoryAttendance)(attendanceClassId,studentId,date,status,activeTerm?.id));
+  const bulkIds=bulkState?.classId===section?.classId?bulkState?.ids??[]:[];
+  const bulkPending=bulkState?.classId===section?.classId&&!!bulkState?.pending;
   function cycle(studentId: string) {
-    if (!section || !activeTerm || !canMarkToday) return;
-    const current = attendance[studentId]?.[iso] ?? null;
+    if (!section || !activeTerm || !canMarkToday || !dropoutReady) return;
+    if(bulkIds.includes(studentId))return;
+    const current = getStatus(studentId,iso);
     const next = ATTENDANCE_CYCLE[(ATTENDANCE_CYCLE.indexOf(current) + 1) % ATTENDANCE_CYCLE.length];
-    void save(() => persistMark(studentId, next), studentId);
+    saveMark(studentId,iso,next);
   }
   function markAllPresent() {
-    if (!section || !activeTerm || !canMarkToday || savesPending) return;
-    const targets = (filteredRoster.length ? filteredRoster : section.roster).filter(student => attendance[student.id]?.[iso] !== PRESENT);
+    if (!section || !activeTerm || !canMarkToday || !dropoutReady || savesPending || hasFailures) return;
+    const targets = (filteredRoster.length ? filteredRoster : activeRoster).filter(student => attendance[student.id]?.[iso] !== PRESENT);
     if (!targets.length) return;
-    confirmAction({ title: "Mark all present?", description: `Mark ${targets.length} students in ${section.sectionName || section.gradeLevel} present for ${iso}? Existing marks in this selection will be replaced.`, confirmLabel: "Mark present", action: async () => {
-      const results = await Promise.all(targets.map(student => save(() => persistMark(student.id, PRESENT), student.id)));
-      if (currentClass.current !== section.classId) return;
-      const savedCount = results.filter(Boolean).length;
-      if (savedCount) showToast(`Attendance saved for ${savedCount} of ${targets.length} students.`);
+    confirmAction({ title: "Mark all present?", layout: "standard", size: "md", icon: <CheckCheck size={20} strokeWidth={1.75} />, loadingLabel: "Saving...", description: <><p>Mark <strong>{targets.length} student{targets.length===1?'':'s'}</strong> in <strong>{section.sectionName || section.gradeLevel}</strong> as present for <strong>{new Intl.DateTimeFormat('en-US',{dateStyle:'long',timeZone:'UTC'}).format(new Date(iso+'T12:00:00Z'))}</strong>?</p><p className="text-xs">Existing attendance marks for these students will be replaced.</p></>, confirmLabel: "Mark present", action: () => {
+      const currentLifetime=lifetime.current,classId=section.classId,termId=activeTerm.id;
+      const ids=targets.map(student=>student.id);
+      const previous=Object.fromEntries(ids.map(id=>[id,getStatus(id,iso)]));
+      const current=()=>lifetime.current===currentLifetime;
+      const display=(values:Record<string,typeof PRESENT|null>)=>{if(current())setAttendance(old=>{const next={...old};for(const id of ids)next[id]={...next[id],[iso]:values[id]};return next;});};
+      // The dialog closes immediately. The existing save queue retains failures
+      // for an explicit retry, with the exact previous marks restored on error.
+      void save(async()=>{
+        if(!current())return;
+        setBulkState({classId,ids,pending:true});display(Object.fromEntries(ids.map(id=>[id,PRESENT])));
+        try{
+          await (bridge?.markPresent??markAdvisoryPresent)(classId,ids,iso,termId);
+          if(current()){setBulkState(null);showToast(`Attendance saved for ${ids.length} student${ids.length===1?'':'s'}.`);}
+        }catch(error){if(current()){display(previous);setBulkState({classId,ids,pending:false});}throw error;}
+      },'bulk-present:'+iso);
     } });
   }
 
   const markedCount = section
-    ? section.roster.filter((s) => attendance[s.id]?.[iso]).length
+    ? activeRoster.filter((s) => attendance[s.id]?.[iso]).length
     : 0;
 
   const filteredRoster: RosterEntry[] = section
-    ? section.roster.filter((student) =>
+    ? activeRoster.filter((student) =>
         student.name.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : [];
@@ -158,7 +185,8 @@ function useTeacherAttendancePageState() {
         <td className="whitespace-nowrap px-4 py-2 text-center">
           <button
             onClick={() => cycle(student.id)}
-            disabled={pending || !canMarkToday}
+            disabled={pending || !canMarkToday || !dropoutReady || bulkIds.includes(student.id)}
+            aria-busy={isPending(student.id,iso)||bulkPending&&bulkIds.includes(student.id)}
             title={canMarkToday ? "Change today's attendance" : "Attendance entry is unavailable outside an open term"}
             className="inline-flex h-7 min-w-13 items-center justify-center rounded-lg px-2.5 text-xs font-black tabular-nums transition-[background-color,color,transform] duration-150 ease-out motion-reduce:transition-none enabled:hover:scale-105 enabled:active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
             style={
@@ -242,8 +270,9 @@ function useTeacherAttendancePageState() {
   return { content: ((
     <div className="w-full min-h-full pb-0">
       {confirmationDialog}
+      {bridge&&<Suspense fallback={null}><DropoutEffects classId={section?.classId??""} ready={!!section} onChange={setDropoutReader}/></Suspense>}
       {navigationDialog}
-      {saveFeedback}
+      {saveFeedback}{dropoutReader.error&&<div role="alert" className="px-5 py-3 text-xs">{dropoutReader.error}<button className="ml-2 underline" onClick={dropoutReader.retry}>Retry dropout records</button></div>}
       <div className="w-full space-y-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2.5">
@@ -254,7 +283,7 @@ function useTeacherAttendancePageState() {
                 Attendance — <LoadingRegion as="span" name="attendance-section-name" loading={!section} variable skeleton={<SkeletonText width="10ch" className="inline-block align-middle" />}><span data-sk-field="attendance-section-name">{displaySectionName}</span></LoadingRegion>
               </h1>
               <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
-                {todayLabel} · <LoadingRegion as="span" name="attendance-marked-count" loading={loading} variable skeleton={<SkeletonText width="12ch" className="inline-block align-middle" />}>{markedCount}/{section?.roster.length ?? 0} marked</LoadingRegion>
+                {todayLabel} · <LoadingRegion as="span" name="attendance-marked-count" loading={loading} variable skeleton={<SkeletonText width="12ch" className="inline-block align-middle" />}>{markedCount}/{activeRoster.length} marked</LoadingRegion>
               </p>
             </div>
           </div>
@@ -346,7 +375,7 @@ function useTeacherAttendancePageState() {
 
             <button
               onClick={markAllPresent}
-              disabled={loading || savesPending > 0 || !canMarkToday || allMarkedPresent}
+              disabled={loading || savesPending > 0 || !canMarkToday || !dropoutReady || hasFailures || filteredRoster.length===0 || allMarkedPresent}
               className={`flex h-7 w-36 items-center justify-center gap-1 rounded-md border px-2.5 text-xs font-extrabold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                 darkMode
                   ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
@@ -354,7 +383,7 @@ function useTeacherAttendancePageState() {
               }`} data-sk-region="teacherattendancepage-mark-all-present" data-sk-static=""
             >
               <CheckCheck size={12} style={{ color: "var(--brand-ink)" }} />
-              Mark All Present
+              {bulkPending ? "Saving..." : "Mark All Present"}
             </button>
           </div>
 

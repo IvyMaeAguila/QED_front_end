@@ -5,9 +5,12 @@ import type { TeacherRequestOptions } from '../../../query/teacherQueryScope';
 
 export interface MonthlyAttendanceReport {
   classId: string; schoolYearId: string; schoolYearLabel: string; gradeSection: string; month: string; months: string[];
+  annualEnrollment?: { male:number; female:number; total:number };
+  transferIns?: {studentId:string;name:string;joinedDate:string}[];
+  dropouts?: {studentId:string;name:string;effectiveDate:string}[];
   enrollment: { male: number; female: number; total: number }; rosterCount: number;
   unknownGender: { id: string; name: string }[];
-  days: { date: string; malePresent: number; femalePresent: number; maleAbsent: number; femaleAbsent: number; unmarked: number }[];
+  days: { date: string; malePresent: number; femalePresent: number; maleAbsent: number; femaleAbsent: number; unmarked: number; enrollment?:{male:number;female:number;total:number} }[];
   numberOfDays: number; sums: { male: number; female: number };
   ada: { male: number; female: number; total: number } | null;
   adviserName: string; principalName: string; principalDesignation: string; principalSource: 'system' | 'manual';

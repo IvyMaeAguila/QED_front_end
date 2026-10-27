@@ -14,6 +14,9 @@ export interface Student {
   gradeLevelId: number; 
   sectionId: number | null;
   schoolYearId?: number;
+  joinedDate?: string;
+  enrollmentStatus?: string;
+  dropoutEffectiveDate?: string;
   guardianName?: string;
   guardianContact?: string;
   studentId: string;

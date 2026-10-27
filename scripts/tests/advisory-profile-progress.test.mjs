@@ -19,3 +19,8 @@ test('holistic average excludes unevaluated domains and preserves no-data state'
  assert.equal(studentHolisticSnapshot({overall:{domainAverages:{cognitive:null,emotional:null,behavioral:null,social:null}}},'Term 1').compositeScore,null);
  assert.equal(studentHolisticSnapshot(undefined,'Term 1'),null);
 });
+
+test('transferee profile excludes all dates before joining, including saved stale marks',()=>{
+ const result=studentAttendanceProgress({'1':{'2026-10-02':'A','2026-10-15':'P'},'2':{'2026-10-02':'P','2026-10-14':'P','2026-10-15':'A'}},'1','2026-10',terms,undefined,'2026-10-15');
+ assert.deepEqual(result,{schoolDays:1,statusSummary:{present:1,absent:0,late:0,excused:0},unmarked:0});
+});

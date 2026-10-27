@@ -115,7 +115,8 @@ export default function MonthlyAttendanceReportModal({ section, initialMonth, th
               ].map(([label, ...values]) => <tr key={label} className={'border-t ' + panelBorder}><th className="px-4 py-3 text-left font-medium">{label}</th>{values.map((value, index) => <td key={index} className="px-4 py-3 tabular-nums">{value}</td>)}</tr>)}</tbody>
             </table>
           </div>
-          <p className={'text-xs ' + textMuted}>{data.numberOfDays} reporting day{data.numberOfDays === 1 ? '' : 's'} · Dropout, transfer-out, and entered-student fields remain blank.</p>
+          <p className={'text-xs ' + textMuted}>{data.numberOfDays} reporting day{data.numberOfDays === 1 ? '' : 's'} · Dropout declarations are listed for their effective month; transfer-out and entered-student fields remain blank.</p>
+          {!!data.dropouts?.length&&<div className={'border-t pt-4 '+panelBorder}><h3 className="text-sm font-bold">Declared dropouts</h3><ul className={'mt-2 space-y-1 text-xs '+textMuted}>{data.dropouts.map(entry=><li key={entry.studentId}>{entry.name} - {entry.effectiveDate}</li>)}</ul></div>}
           <div>
             <h3 className="text-sm font-bold">Report details</h3>
             <p className={'mt-1 text-xs leading-relaxed ' + textMuted}>Names and designations apply to this report session only. {data.principalSource === 'system' ? 'Principal details come from the single active principal profile; verify the designation.' : 'A unique active principal could not be resolved. Enter the approved signatory below.'}</p>
