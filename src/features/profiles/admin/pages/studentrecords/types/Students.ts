@@ -14,6 +14,8 @@ export interface Student {
   gradeLevelId: number; 
   sectionId: number | null;
   schoolYearId?: number;
+  guardianName?: string;
+  guardianContact?: string;
   studentId: string;
   lrn: string;
   lastName: string;

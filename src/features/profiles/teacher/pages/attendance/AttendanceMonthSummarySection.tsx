@@ -3,7 +3,7 @@ import {AttendanceQueryContext} from '../../query/AttendanceQueryContext';
 import { AccountSelect } from "@shared/components/AccountSelect";
 import { useMemo, useState } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
-import { CalendarCheck, CalendarDays } from "lucide-react";
+import { CalendarCheck, CalendarDays, FileText } from "lucide-react";
 import type { RosterStudent } from "../subjects/detail/data.ts";
 import {
   ATTENDANCE_META,
@@ -18,6 +18,7 @@ import { fetchAdvisoryAttendance } from "./services/attendance.service.ts";
 
 interface AttendanceMonthSummarySectionProps {
   sectionId: string;
+  onMonthlyReport?: (month: string) => void;
   prerequisitesLoading?: boolean;
   roster: RosterStudent[];
   terms: GradingPeriod[];
@@ -81,6 +82,7 @@ function allDatesInMonth(monthKeyStr: string): string[] {
 
 export function AttendanceMonthSummarySection({
   sectionId,
+  onMonthlyReport,
   prerequisitesLoading = false,
   roster,
   terms,
@@ -302,11 +304,12 @@ export function AttendanceMonthSummarySection({
           </p>
         </div>
 
+        <div className="flex flex-wrap items-center gap-2.5 sm:justify-end">
         <AccountSelect data-account-select="" data-dropdown-dark={darkMode}
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value)}
           style={{ borderRadius: "8px" }}
-          className={`h-10 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
+          className={`h-8 rounded-lg border px-3 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
           aria-label="Month"
         >
           {prerequisitesLoading && <option value={selectedMonth}>{monthLabel(selectedMonth)}</option>}
@@ -316,6 +319,10 @@ export function AttendanceMonthSummarySection({
             </option>
           ))}
         </AccountSelect>
+        {onMonthlyReport && <button type="button" onClick={() => onMonthlyReport(selectedMonth)} disabled={prerequisitesLoading || loading || !!attendanceError} className="inline-flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-maroon px-3 text-xs font-bold text-white transition-colors hover:bg-maroon-light disabled:cursor-not-allowed disabled:opacity-50">
+          <FileText size={13} aria-hidden="true" />Monthly Report
+        </button>}
+        </div>
       </div>
 
       <LoadingRegion loading={prerequisitesLoading || loading} error={attendanceError} retry={() => setAttempt(value => value + 1)} name="attendance-month-summary" variable skeleton={null} frame={renderSummary} retainPrevious hasContent={Object.keys(attendance).length > 0} onSettled={() => rememberRows(view, absencesByDate.length)}>{null}</LoadingRegion>

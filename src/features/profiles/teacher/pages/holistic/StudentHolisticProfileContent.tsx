@@ -47,6 +47,15 @@ export function StudentHolisticProfileContent({ data, student, pending, activeTa
   const soft = darkMode ? "bg-white/[0.03]" : "bg-gray-50";
   const subject = data.subjects.find(item => item.subjectSectionId === activeTab);
   const history = (data.evaluationHistory ?? []).filter(item => activeTab === "all" || item.subjectSectionId === activeTab).slice().sort((a, b) => b.date.localeCompare(a.date));
+  const historyGroups = Array.from(history.reduce((groups, item) => {
+    const key = JSON.stringify([item.date.slice(0, 10), item.subjectSectionId]);
+    const group = groups.get(key);
+    if (group) group.entries.push(item);
+    else groups.set(key, { key, date: item.date, subjectName: item.subjectName, entries: [item] });
+    return groups;
+  }, new Map<string, { key: string; date: string; subjectName: string; entries: typeof history }>()).values());
+  const historyDomains = ["cognitive", "emotional", "behavioral", "social"] as const;
+  const historyAccent = darkMode ? "var(--color-maroon-light)" : "var(--color-maroon)";
   const header = `border-b px-4 py-3 ${panelBorder}`;
   const cell = `border-t px-4 py-3 text-xs ${panelBorder}`;
   const tableHeading = `px-4 py-2.5 text-left text-xs font-bold uppercase tracking-wide ${textMuted}`;
@@ -122,9 +131,32 @@ export function StudentHolisticProfileContent({ data, student, pending, activeTa
     </section>
 
     <section className={card} aria-label="Evaluation history">
-      <div className={header}><h2 className={`text-sm font-bold ${textPrimary}`}>Evaluation history</h2><p className={`mt-0.5 text-xs ${textMuted}`}>Most recent first.</p></div>
-      <div className="overflow-x-auto"><table className="w-full min-w-[600px] border-collapse"><thead className={soft}><tr>{["Date", "Subject", "Domain", "Score"].map(label => <th key={label} scope="col" className={tableHeading}>{label}</th>)}</tr></thead>
-        <tbody>{pending ? <tr>{[12, 22, 10, 3].map((width, index) => <td key={index} className={cell}><SkeletonText width={`${width}ch`} /></td>)}</tr> : history.map((item, index) => <tr key={`${item.date}-${item.subjectSectionId}-${item.domain}-${index}`}><td className={`${cell} whitespace-nowrap ${textMuted}`}>{formatDate(item.date)}</td><td className={`${cell} ${textPrimary}`}>{item.subjectName}</td><td className={`${cell} ${textPrimary}`}>{LABELS[item.domain]}</td><td className={`${cell} font-semibold tabular-nums`} style={{ color: rating(item.score).color }}>{item.score.toFixed(1)}</td></tr>)}
+      <div className={`border-b px-5 py-4 ${panelBorder}`}><h2 className={`text-sm font-bold ${textPrimary}`}>Evaluation History</h2><p className={`mt-1 text-xs ${textMuted}`}>Subject evaluations, listed from most recent. Ratings are on a 1–5 scale.</p></div>
+      <div className="overflow-x-auto"><table className="w-full min-w-[680px] table-fixed border-collapse">
+        <colgroup><col className="w-[15%]" /><col className="w-[35%]" /><col className="w-[42%]" /><col className="w-[8%]" /></colgroup>
+        <thead className={soft}><tr>{["Evaluation Date", "Subject", "Domain", "Score"].map(label => <th key={label} scope="col" className={`${label === "Score" ? tableHeading.replace("text-left", "text-center") : tableHeading} !px-5 !py-3.5`}>{label}</th>)}</tr></thead>
+        <tbody>{pending ? <tr>{[12, 22, 10, 3].map((width, index) => <td key={index} className={cell}><SkeletonText width={`${width}ch`} /></td>)}</tr> : historyGroups.map(group => {
+          const entries = group.entries.slice().sort((a, b) => historyDomains.indexOf(a.domain) - historyDomains.indexOf(b.domain));
+          const average = entries.reduce((total, entry) => total + entry.score, 0) / entries.length;
+          return entries.map((item, index) => <tr key={`${group.key}-${item.domain}-${index}`}>
+            {index === 0 && <>
+              <td rowSpan={entries.length} className={`${cell} !px-5 !py-5 align-top whitespace-nowrap font-medium tabular-nums ${textPrimary}`}>{formatDate(group.date)}</td>
+              <td rowSpan={entries.length} className={`${cell} !px-5 !py-5 align-top ${textPrimary}`}>
+                <p className="break-words font-semibold leading-relaxed">{group.subjectName}</p>
+                <p className={`mt-1 ${textMuted}`}>Overall average <span className="font-semibold tabular-nums" style={{ color: historyAccent }}>{average.toFixed(1)}</span></p>
+              </td>
+            </>}
+            <td className={`${cell} h-14 border-l !px-5 !py-4 ${textPrimary}`}>
+              <div className="grid grid-cols-[6rem_minmax(0,1fr)] items-center gap-4">
+                <span className={`shrink-0 font-medium ${textMuted}`}>{LABELS[item.domain]}</span>
+                <div className="h-1.5 w-full overflow-hidden rounded-full" style={{ backgroundColor: "color-mix(in srgb, var(--color-maroon) 12%, transparent)" }} aria-hidden="true">
+                  <div className="h-full rounded-full" style={{ width: `${Math.max(0, Math.min(100, item.score / 5 * 100))}%`, backgroundColor: historyAccent }} />
+                </div>
+              </div>
+            </td>
+            <td className={`${cell} !px-5 !py-4 text-center align-middle font-semibold tabular-nums ${textPrimary}`}>{item.score.toFixed(1)}</td>
+          </tr>);
+        })}
           {!pending && history.length === 0 && <tr><td colSpan={4} className={`px-4 py-8 text-center text-xs ${textMuted}`}>{data.overall.evaluationCount ? "Evaluation history is not available for this term." : "No evaluation history yet."}</td></tr>}
         </tbody></table></div>
     </section>

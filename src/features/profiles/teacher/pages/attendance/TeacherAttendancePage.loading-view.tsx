@@ -4,11 +4,10 @@ import { useActionConfirmation } from "@shared/components/useActionConfirmation"
 import { useToast } from "@shared/context/ToastContext";
 import {useContext,useLayoutEffect} from 'react';
 import {AttendanceQueryContext} from '../../query/AttendanceQueryContext';
-import { SkeletonAvatar,SkeletonText } from "@shared/components/SkeletonLoading";
+import { Skeleton, SkeletonAvatar,SkeletonText } from "@shared/components/SkeletonLoading";
 import { StudentAvatar } from "@shared/components/StudentAvatar";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
-import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
-import { rememberColumns,rememberRows,skeletonRows,useColumnReservation } from "@shared/loading/reservations";
+import { rememberRows,skeletonRows } from "@shared/loading/reservations";
 import {
 CheckCheck,
 ClipboardList,
@@ -51,7 +50,7 @@ function useTeacherAttendancePageState() {
     requestedClassId,
   } = useSelectedAdvisorySection();
 
-  const { save, saveFeedback, pending: savesPending, hasFailures } = useSaveFeedback(section?.classId ?? "");
+  const { save, saveFeedback, pending: savesPending, hasFailures } = useSaveFeedback(section?.classId ?? "", { showStatus: false });
   const { navigationDialog } = useUnsavedChanges(savesPending > 0 || hasFailures, darkMode);
   const { confirmAction, confirmationDialog } = useActionConfirmation(darkMode);
   const { showToast } = useToast();
@@ -63,11 +62,9 @@ function useTeacherAttendancePageState() {
   const [searchQuery, setSearchQuery] = useState("");
   const [attendanceLoadedFor, setAttendanceLoadedFor] = useState<string | null>(null);
   const [attendanceAttempt, setAttendanceAttempt] = useState(0);
-  const table = useRef<HTMLTableElement>(null);
   const loading = !sectionError && (sections === undefined || Boolean(section && (attendanceLoading || attendanceLoadedFor !== section.classId)));
   const view = `teacher-today-attendance:${requestedClassId ?? "default"}:${searchQuery}`;
-  const columns = [{ label: "No.", cls: "w-16 text-left", reservedWidth: 64 }, { label: "Student", cls: "text-left", typical: "Maria Alexandra Santos" }, { label: "Status", cls: "w-44 text-center", reservedWidth: 176 }];
-  const widths = useColumnReservation(view, columns, loading);
+  const columns = [{ label: "No.", cls: "w-12 sm:w-16 text-left" }, { label: "Student", cls: "text-left" }, { label: "Status", cls: "w-24 sm:w-36 text-center" }];
 
   const iso = todayISO();
   const activeTerm = section?.terms.find((term) => term.isActive);
@@ -132,7 +129,7 @@ function useTeacherAttendancePageState() {
 
   // `index` is the 0-based position inside its Male / Female group, so the
   // numbering restarts at 1 for each group.
-  function renderStudentRow(student: RosterEntry, index: number, pending: boolean) {
+  function renderStudentRow(student: RosterEntry, index: number, pending: boolean, identityPending: boolean) {
     const status = attendance[student.id]?.[iso] ?? null;
     const meta = status ? ATTENDANCE_META[status] : null;
     return (
@@ -148,13 +145,13 @@ function useTeacherAttendancePageState() {
         <td
           className={`whitespace-nowrap px-4 py-2 text-xs font-bold tabular-nums ${textMuted}`} data-sk-region="teacherattendancepage-td-field-1"
         >
-          {pending ? <SkeletonText width="2ch" /> : index + 1}
+          {identityPending ? <SkeletonText width="2ch" /> : index + 1}
         </td>
         <td className="px-4 py-2">
           <div className="flex min-w-0 items-center gap-2.5" data-sk-region="teacherattendancepage-div-field-2">
-            {pending ? <SkeletonAvatar className="h-7 w-7" /> : <StudentAvatar gender={student.gender} name={student.name} />}
+            {identityPending ? <SkeletonAvatar className="h-7 w-7" /> : <StudentAvatar gender={student.gender} name={student.name} />}
             <span className={`truncate text-xs font-bold ${textPrimary}`} data-sk-region="teacherattendancepage-span-field-3">
-              {pending ? <SkeletonText width={`${14 + index % 3 * 2}ch`} /> : student.name}
+              {identityPending ? <SkeletonText width={`${14 + index % 3 * 2}ch`} /> : student.name}
             </span>
           </div>
         </td>
@@ -163,9 +160,9 @@ function useTeacherAttendancePageState() {
             onClick={() => cycle(student.id)}
             disabled={pending || !canMarkToday}
             title={canMarkToday ? "Change today's attendance" : "Attendance entry is unavailable outside an open term"}
-            className="inline-flex h-7 min-w-13 items-center justify-center rounded-lg px-2.5 text-xs font-black tabular-nums transition-transform enabled:hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex h-7 min-w-13 items-center justify-center rounded-lg px-2.5 text-xs font-black tabular-nums transition-[background-color,color,transform] duration-150 ease-out motion-reduce:transition-none enabled:hover:scale-105 enabled:active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
             style={
-              meta
+              pending ? { backgroundColor: "var(--sk-transparent)" } : meta
                 ? {
                     backgroundColor: darkMode ? `color-mix(in srgb, ${meta.color} 14.51%, transparent)` : meta.bg,
                     color: meta.color,
@@ -176,7 +173,7 @@ function useTeacherAttendancePageState() {
                   }
             } data-sk-region="teacherattendancepage-button-field-4"
           >
-            {pending ? <SkeletonText width="3ch" /> : status ?? "Mark"}
+            {pending ? <Skeleton className="h-3 w-6 rounded" /> : status ?? "Mark"}
           </button>
         </td>
       </tr>
@@ -201,12 +198,13 @@ function useTeacherAttendancePageState() {
   }
 
   function renderRoster(pending: boolean) {
-    const rows: RosterEntry[] = pending ? Array.from({ length: skeletonRows(view) }, (_, index) => ({ id: String(index), name: "", gender: index % 2 ? "F" : "M" })) : filteredRoster;
+    const identityPending = pending && !section;
+    const rows: RosterEntry[] = identityPending ? Array.from({ length: skeletonRows(view) }, (_, index) => ({ id: String(index), name: "", gender: index % 2 ? "F" : "M" })) : filteredRoster;
     const groups = [{ label: "Male", rows: rows.filter(student => !isFemale(student)) }, { label: "Female", rows: rows.filter(isFemale) }];
-    return <div className="overflow-x-auto"><table ref={pending ? undefined : table} className="teacher-user-table w-full text-sm">
-      {pending && <colgroup>{widths.map((width, index) => <col key={index} style={{ width }} />)}</colgroup>}
+    return <div className="overflow-x-auto"><table data-sk-region="today-attendance-native-table" className="teacher-user-table w-full table-fixed text-sm">
+      <colgroup><col className="w-12 sm:w-16" /><col /><col className="w-24 sm:w-36" /></colgroup>
       <thead data-sk-region="attendance-table-header"><tr className={darkMode ? "bg-white/5" : "bg-brand-light"}>{columns.map(column => <th key={column.label} data-sk-static="" data-sk-region={`attendance-column-${column.label}`} className={`whitespace-nowrap px-4 py-2 text-xs font-black uppercase tracking-wider ${column.cls} ${textMuted}`}>{column.label}</th>)}</tr></thead>
-      <tbody>{rows.length === 0 ? <tr><td colSpan={3} className={`px-4 py-5 text-center text-xs font-medium ${textMuted}`}>No students found matching "{searchQuery}".</td></tr> : groups.filter(group => group.rows.length > 0).map(group => <Fragment key={group.label}>{renderGroupHeader(group.label)}{group.rows.map((student, index) => renderStudentRow(student, index, pending))}</Fragment>)}</tbody>
+      <tbody>{rows.length === 0 ? <tr><td colSpan={3} className={`px-4 py-5 text-center text-xs font-medium ${textMuted}`}>No students found matching "{searchQuery}".</td></tr> : groups.filter(group => group.rows.length > 0).map(group => <Fragment key={group.label}>{renderGroupHeader(group.label)}{group.rows.map((student, index) => renderStudentRow(student, index, pending, identityPending))}</Fragment>)}</tbody>
     </table></div>;
   }
 
@@ -253,15 +251,15 @@ function useTeacherAttendancePageState() {
               <h1
                 className={`qed-type-page-title ${textPrimary}`} data-sk-region="teacherattendancepage-attendance-" data-sk-static=""
               >
-                Attendance — <LoadingRegion as="span" name="attendance-section-name" loading={loading} variable skeleton={<SkeletonParagraph field="attendance-section-name" typical={2} />}><span data-sk-field="attendance-section-name">{displaySectionName}</span></LoadingRegion>
+                Attendance — <LoadingRegion as="span" name="attendance-section-name" loading={!section} variable skeleton={<SkeletonText width="10ch" className="inline-block align-middle" />}><span data-sk-field="attendance-section-name">{displaySectionName}</span></LoadingRegion>
               </h1>
               <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
-                {todayLabel} · <LoadingRegion as="span" name="attendance-marked-count" loading={loading} variable skeleton={<SkeletonText width="12ch" />}>{markedCount}/{section?.roster.length ?? 0} marked</LoadingRegion>
+                {todayLabel} · <LoadingRegion as="span" name="attendance-marked-count" loading={loading} variable skeleton={<SkeletonText width="12ch" className="inline-block align-middle" />}>{markedCount}/{section?.roster.length ?? 0} marked</LoadingRegion>
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <AdvisorySectionTabs
               sections={sections ?? []}
               activeClassId={section?.classId ?? ""}
@@ -325,16 +323,11 @@ function useTeacherAttendancePageState() {
           </div>
         </div>
 
-        {(loading || !canMarkToday) && <LoadingRegion name="attendance-term-notice" loading={loading} variable skeleton={<div className={`rounded-lg border px-3 py-2 text-xs font-medium ${panelBg} ${panelBorder} ${textMuted}`}><SkeletonParagraph field="attendance-term-notice" typical={3} width="100%" /></div>}>
-        {!canMarkToday && (
-          <div
-            className={`rounded-lg border px-3 py-2 text-xs font-medium ${panelBg} ${panelBorder} ${textMuted}`}
-            data-sk-field="attendance-term-notice"
-          >
+        {section && !canMarkToday && (
+          <div className={`rounded-lg border px-3 py-2 text-xs font-medium ${panelBg} ${panelBorder} ${textMuted}`}>
             Attendance entry is closed because today is outside an open term. You can still review and edit attendance already recorded for earlier dates in Full Records.
           </div>
         )}
-        </LoadingRegion>}
 
         <section className={cardClasses} aria-label="Today's attendance roster">
           <div
@@ -347,7 +340,7 @@ function useTeacherAttendancePageState() {
                 Today's Roster
               </p>
               <p className={`truncate text-xs font-medium ${textMuted}`}>
-                <LoadingRegion as="span" name="attendance-roster-count" loading={loading} variable skeleton={<SkeletonText width="12ch" />}>· {filteredRoster.length} student{filteredRoster.length === 1 ? "" : "s"}</LoadingRegion>
+                <LoadingRegion as="span" name="attendance-roster-count" loading={!section} variable skeleton={<SkeletonText width="12ch" />}>· {filteredRoster.length} student{filteredRoster.length === 1 ? "" : "s"}</LoadingRegion>
               </p>
             </div>
 
@@ -365,7 +358,7 @@ function useTeacherAttendancePageState() {
             </button>
           </div>
 
-          <LoadingRegion name="today-attendance-roster" loading={loading} variable autoColumns error={attendanceError} retry={() => setAttendanceAttempt(value => value + 1)} frame={renderRoster} skeleton={null} retainPrevious hasContent={filteredRoster.length > 0} onSettled={() => { rememberRows(view, filteredRoster.length); rememberColumns(view, table.current); }}>{null}</LoadingRegion>
+          <LoadingRegion key={section?.classId ?? "pending-roster"} name="today-attendance-roster" delay={section ? 0 : 200} loading={loading} variable error={attendanceError} retry={() => setAttendanceAttempt(value => value + 1)} frame={renderRoster} skeleton={null} retainPrevious hasContent={filteredRoster.length > 0} onSettled={() => rememberRows(view, filteredRoster.length)}>{null}</LoadingRegion>
         </section>
       </div>
     </div>

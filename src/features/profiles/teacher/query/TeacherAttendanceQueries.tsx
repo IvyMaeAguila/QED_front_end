@@ -24,6 +24,7 @@ export function TeacherAttendanceQueries({children}:{children:ReactNode}){
   onSuccess:(_data,{args,key})=>{
    // Keep the current optimistic UI; mark every term/history projection stale.
    void queryClient.invalidateQueries({queryKey:[...key,'attendance',args[0]],refetchType:'none'});
+   void queryClient.invalidateQueries({queryKey:[...key,'monthly-attendance-report',args[0]]});
    void queryClient.invalidateQueries({queryKey:[...key,'dashboard','attendance'],refetchType:'none'});
   },
  });

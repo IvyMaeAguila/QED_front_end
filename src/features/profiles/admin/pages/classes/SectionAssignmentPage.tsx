@@ -1,3 +1,4 @@
+import { CalendarDays, UserRoundMinus, UserRoundCheck, ClipboardList } from 'lucide-react';
 import { Fragment, useCallback, useRef, useState } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -81,12 +82,12 @@ function AssignmentDirectory({ data, busy, write, refresh }: {
     <div className={`overflow-hidden rounded-xl border ${panelBg} ${panelBorder} ${textPrimary}`} aria-label="Assignment summary">
       <dl className="grid grid-cols-2 gap-y-5 px-5 py-4 sm:grid-cols-4">
         {[
-          { label: 'School Year', value: data.schoolYear.label },
-          { label: 'Unassigned', value: data.counts.unassigned },
-          { label: 'Assigned', value: data.counts.assigned },
-          { label: 'Needs review', value: data.counts.needsReview },
-        ].map(({ label, value }, index) => <div key={label} className={`min-w-0 ${index > 0 ? `sm:border-l sm:pl-5 ${panelBorder}` : ''} ${index % 2 === 1 ? 'pl-5' : ''}`}>
-          <dt className={`text-xs font-medium ${textMuted}`}>{label}</dt>{' '}
+          { label: 'School Year', value: data.schoolYear.label, icon: CalendarDays },
+          { label: 'Unassigned', value: data.counts.unassigned, icon: UserRoundMinus },
+          { label: 'Assigned', value: data.counts.assigned, icon: UserRoundCheck },
+          { label: 'Needs review', value: data.counts.needsReview, icon: ClipboardList },
+        ].map(({ label, value, icon: Icon }, index) => <div key={label} className={`min-w-0 ${index > 0 ? `sm:border-l sm:pl-5 ${panelBorder}` : ''} ${index % 2 === 1 ? 'pl-5' : ''}`}>
+          <dt className={`flex items-center gap-2 text-xs font-medium ${textMuted}`}><Icon size={18} strokeWidth={1.75} className="shrink-0" style={{ color: "var(--color-maroon)" }} aria-hidden="true" />{label}</dt>{' '}
           <dd className="mt-1 text-lg font-bold leading-tight tabular-nums">{value}</dd>
         </div>)}
       </dl>

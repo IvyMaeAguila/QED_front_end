@@ -44,7 +44,7 @@ for (const width of [375, 1280]) for (const dark of [false, true]) test(`teacher
   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
 });
 
-test("attendance column classification is justified by long returned names", async ({ page }) => {
+test("attendance columns stay aligned across long returned names", async ({ page }) => {
   const widths: number[][] = [];
   for (const long of [false, true]) {
     const fixture = await attendanceFixture(page, false, long);
@@ -54,7 +54,7 @@ test("attendance column classification is justified by long returned names", asy
     widths.push(await page.locator("thead th").evaluateAll(elements => elements.map(element => element.getBoundingClientRect().width)));
     await page.unrouteAll({ behavior: "wait" });
   }
-  expect(widths[0].some((width, index) => Math.abs(width - widths[1][index]) > 1)).toBe(true);
+  expect(widths[0].every((width, index) => Math.abs(width - widths[1][index]) <= 1)).toBe(true);
 });
 
 test("attendance loading migration preserves the marking request", async ({ page }) => {

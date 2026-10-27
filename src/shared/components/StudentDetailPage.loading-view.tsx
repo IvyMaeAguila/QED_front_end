@@ -22,7 +22,7 @@ Users2,
 XCircle,
 Zap,
 } from "lucide-react";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import type { AdminThemeContext } from "../../features/profiles/admin/pages/AdminLayout";
@@ -47,6 +47,8 @@ type StudentWithExtras = Student & {
   guardianContact?: string;
   guardianEmail?: string;
 };
+
+const AdvisoryStudentProfile = lazy(() => import("../../features/profiles/teacher/pages/roster/components/AdvisoryStudentProfile"));
 
 const ACCENT = "var(--color-maroon)";
 
@@ -300,13 +302,26 @@ function useStudentDetailPageState() {
                   <th className="px-6 py-3.5" data-sk-region="studentdetailpage-status" data-sk-static="">Status</th>
                 </tr>
               </thead>);
-  const navigation = (
+  const navigation = user?.role === "TEACHER" ? (
+    <div className="flex items-start gap-3">
+      <button type="button" onClick={() => navigate(backToStudents)} aria-label="Back to Students" className={`system-back-button flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${panelBg} ${panelBorder} ${textMuted}`}><ArrowLeft size={18} /></button>
+      <div className="min-w-0"><h1 className={`qed-type-page-title ${textPrimary}`}>Student Profile</h1><p className={`qed-type-page-description mt-0.5 ${textMuted}`}>Student information and progress</p></div>
+    </div>
+  ) : (
       <div className="flex items-center justify-between">
         <button onClick={() => navigate(backToStudents)} className={`h-9 px-3.5 rounded-xl text-xs font-semibold inline-flex items-center gap-2 border transition-colors ${darkMode ? "border-slate-700 bg-slate-900 text-slate-200 hover:bg-slate-800" : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"}`} data-sk-region="studentdetailpage-back-to-students" data-sk-static=""><ArrowLeft size={14} />Back to Students</button>
         {user?.role === "ADMIN" && <Link aria-disabled={studentsLoading || !!studentsError} onClick={event => { if (studentsLoading || studentsError) event.preventDefault(); }} to={`/admin/students/${student.id}/edit`} className="h-9 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 shadow-xs transition-opacity hover:opacity-90" style={{ background: ACCENT }}><Pencil size={13} />Edit Student Record</Link>}
       </div>
   );
-  if (studentsError) return { content: (<div className="max-w-6xl mx-auto space-y-6 pb-12">{navigation}<LoadingRegion loading={false} error={studentsError} retry={() => void refetch()} skeleton={null}>{null}</LoadingRegion></div>), scope: {  } };
+  if (studentsError) return { content: (<div className={user?.role === "TEACHER" ? "w-full min-w-0 space-y-6 pb-12" : "max-w-6xl mx-auto space-y-6 pb-12"}>{navigation}<LoadingRegion loading={false} error={studentsError} retry={() => void refetch()} skeleton={null}>{null}</LoadingRegion></div>), scope: {  } };
+
+  if (user?.role === "TEACHER") return { content: (
+    <Suspense fallback={<div className="w-full min-w-0 space-y-6">{navigation}<div className={cardClasses + " p-5"}>Loading student profile…</div></div>}>
+      <AdvisoryStudentProfile student={student} fullName={fullName} theme={{ darkMode, panelBg, panelBorder, textPrimary, textMuted }} loading={studentsLoading} navigation={navigation}
+        subjects={(myClass?.schedule ?? []).map(period => { const teacher = teachers.find(t => t.id === period.teacherId); return { id: period.id, subject: period.subject, teacher: teacher ? formatTeacherName(teacher) : "Unassigned" }; })}
+        subjectsLoading={scheduleLoading} subjectsError={scheduleError} retrySubjects={retrySchedule} />
+    </Suspense>
+  ), scope: {} };
 
   return { content: ((
     <div className="max-w-6xl mx-auto space-y-6 pb-12">

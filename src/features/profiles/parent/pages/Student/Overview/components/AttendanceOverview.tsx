@@ -36,20 +36,13 @@ interface AttendanceOverviewContentProps {
 }
 
 function AttendanceOverviewContent({ theme }: AttendanceOverviewContentProps) {
-  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
-  const {
-    year,
-    month,
-    setYear,
-    setMonth,
-    data,
-    loading,
-    error,
-    monthOptions,
-    monthsLoading,
-    monthsError, retryMonths, refetch,
-  } = useAttendanceOverview();
+  return <AttendanceOverviewView theme={theme} {...useAttendanceOverview()} />;
+}
 
+export type AttendanceOverviewViewProps = AttendanceOverviewContentProps & Omit<ReturnType<typeof useAttendanceOverview>, 'data'> & { data: Pick<NonNullable<ReturnType<typeof useAttendanceOverview>['data']>, 'schoolDays' | 'statusSummary'> | null; className?: string; emptyRateLabel?: string; note?: string; compact?: boolean };
+/** Shared presentation; callers supply their own role-authorized reader. */
+export function AttendanceOverviewView({ theme, year, month, setYear, setMonth, data, loading, error, monthOptions, monthsLoading, monthsError, retryMonths, refetch, className = '', emptyRateLabel = '0%', note, compact = false }: AttendanceOverviewViewProps) {
+  const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
   const [selectedKey, setSelectedKey] = useState<AttendanceKey>("present");
 
   const monthKey = year && month ? `${year}-${month}` : "";
@@ -117,22 +110,22 @@ function AttendanceOverviewContent({ theme }: AttendanceOverviewContentProps) {
 
   return (
     <div
-      className={`h-full flex flex-col rounded-2xl border overflow-hidden ${panelBg} ${panelBorder}`}
+      className={`h-full flex flex-col rounded-2xl border overflow-hidden ${panelBg} ${panelBorder} ${className}`}
       style={{
         boxShadow:
           "0 4px 20px -2px rgba(0,0,0,0.05), 0 2px 10px -2px rgba(0,0,0,0.03)",
       }}
     >
       <div
-        className={`px-8 py-6 border-b flex items-center justify-between gap-4 flex-wrap ${panelBorder}`}
+        className={`${compact ? "px-5 py-4 xl:h-20 xl:shrink-0" : "px-8 py-6"} border-b flex items-center justify-between gap-4 flex-wrap ${panelBorder}`}
       >
         <div className="flex items-center gap-3">
           <Calendar size={18} style={{ color: "var(--brand-ink)" }} />
           <div>
-            <h2 className={`text-base font-bold ${textPrimary}`}>
+            <h2 className={`${compact ? "text-sm" : "text-base"} font-bold ${textPrimary}`}>
               Attendance Overview
             </h2>
-            <p className={`text-xs font-medium ${textMuted}`}>
+            <p className={`${compact ? "mt-0.5" : ""} text-xs font-medium ${textMuted}`}>
               <LoadingRegion as="span" name="parent-attendance-caption" loading={loading || monthsLoading} variable skeleton={<SkeletonText width="24ch" />}>{error
                 ? "Failed to load attendance"
                 : monthLabel
@@ -150,7 +143,7 @@ function AttendanceOverviewContent({ theme }: AttendanceOverviewContentProps) {
               onChange={(e) => handleMonthChange(e.target.value)}
               disabled={monthsLoading || monthOptions.length === 0}
               aria-label="Select attendance month"
-              className={`appearance-none rounded-lg border py-1.5 pl-3 pr-8 text-xs font-bold focus:outline-none disabled:opacity-60 ${panelBorder} ${panelBg} ${textPrimary}`}
+              className={`${compact ? "h-8" : ""} appearance-none rounded-lg border py-1.5 pl-3 pr-8 text-xs font-bold focus:outline-none disabled:opacity-60 ${panelBorder} ${panelBg} ${textPrimary}`}
             >
               {monthsLoading && <option value="" hidden />}
               {!monthsLoading && monthOptions.length === 0 && (
@@ -167,9 +160,9 @@ function AttendanceOverviewContent({ theme }: AttendanceOverviewContentProps) {
       </div>
 
       <LoadingRegion name="parent-attendance-body" className="flex-1" loading={monthsLoading || (loading && !!monthKey)} error={monthsError || error} retry={monthsError ? retryMonths : refetch} variable skeleton={null} frame={(pending) => (
-      <div className="flex-1 p-8 flex flex-col md:flex-row items-center gap-8">
+      <div className={compact ? "flex h-full min-h-0 flex-1 flex-col items-center justify-center gap-6 p-5 sm:flex-row xl:flex-col 2xl:flex-row" : "flex-1 p-8 flex flex-col md:flex-row items-center gap-8"}>
         {/* Attendance ring */}
-        <div className="relative shrink-0 w-42 h-42">
+        <div className={compact ? "relative h-40 w-40 shrink-0" : "relative shrink-0 w-42 h-42"}>
           {pending ? <Skeleton className="h-full w-full sk-ring" /> : <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
             <circle
               cx="50"
@@ -207,7 +200,7 @@ function AttendanceOverviewContent({ theme }: AttendanceOverviewContentProps) {
               className={`text-3xl font-black ${textPrimary}`}
               style={{ transition: "color 0.3s ease" }}
             >
-              {pending ? <SkeletonText width="4ch" /> : `${selectedPct}%`}
+              {pending ? <SkeletonText width="4ch" /> : tally.present + tally.absent + tally.late > 0 ? `${selectedPct}%` : emptyRateLabel}
             </span>
             <span
               className="text-xs font-bold uppercase tracking-[0.12em] mt-0.5"
@@ -219,7 +212,7 @@ function AttendanceOverviewContent({ theme }: AttendanceOverviewContentProps) {
         </div>
 
         {/* Breakdown list */}
-        <div className="flex-1 w-full flex flex-col gap-3">
+        <div className="flex-1 w-full flex flex-col justify-center gap-3">
           {groups.map((g) => {
             const pct = Math.round((g.count / total) * 100);
             const isSelected = g.key === selectedKey;
@@ -228,7 +221,7 @@ function AttendanceOverviewContent({ theme }: AttendanceOverviewContentProps) {
                 key={g.key}
                 type="button"
                 onClick={() => setSelectedKey(g.key)}
-                className={`flex items-center gap-4 rounded-xl border p-3.5 text-left transition-all ${panelBorder}`}
+                className={`flex items-center gap-4 ${compact ? "border-b px-3 py-3" : "rounded-xl border p-3.5"} text-left transition-all ${panelBorder}`}
                 style={{
                   background: isSelected
                     ? g.soft
@@ -236,7 +229,7 @@ function AttendanceOverviewContent({ theme }: AttendanceOverviewContentProps) {
                     ? "rgba(255,255,255,0.02)"
                     : "#FBFCFD",
                   borderColor: isSelected ? g.solid : undefined,
-                  boxShadow: isSelected ? `0 0 0 1px ${g.solid}` : undefined,
+                  boxShadow: !compact && isSelected ? `0 0 0 1px ${g.solid}` : undefined,
                 }}
               >
                 <div
@@ -269,6 +262,9 @@ function AttendanceOverviewContent({ theme }: AttendanceOverviewContentProps) {
         </div>
       </div>
       )}>{null}</LoadingRegion>
+      {note && !loading && !monthsLoading && !error && !monthsError && <p className={`border-t px-5 py-3 text-xs leading-relaxed ${panelBorder} ${textMuted}`}>{note}</p>}
     </div>
   );
 }
+
+

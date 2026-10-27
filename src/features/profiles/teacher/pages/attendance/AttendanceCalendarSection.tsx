@@ -1,6 +1,6 @@
 import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
 import { useSaveFeedback } from "@shared/components/useSaveFeedback";
-import {useContext,useRef,useLayoutEffect} from 'react';
+import {useContext} from 'react';
 import {AttendanceQueryContext} from '../../query/AttendanceQueryContext';
 import { AccountSelect } from "@shared/components/AccountSelect";
 import { useMemo, useState } from "react";
@@ -17,9 +17,9 @@ import {
 import { fetchAdvisoryAttendance, saveAdvisoryAttendance } from "./services/attendance.service.ts";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { LoadingFormValue } from "@shared/loading/LoadingFormValue";
-import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
-import { SkeletonText } from "@shared/components/SkeletonLoading";
+import { Skeleton, SkeletonText } from "@shared/components/SkeletonLoading";
 import { rememberRows, skeletonRows } from "@shared/loading/reservations";
+import { useAttendanceCellEdits } from "./useAttendanceCellEdits";
 import { StudentAttendanceSummaryModal } from "./StudentAttendanceSummaryModal";
 
 const WEEKDAY_LABELS = ["SN", "M", "T", "W", "TTH", "F", "ST"];
@@ -101,7 +101,7 @@ export function AttendanceCalendarSection({
 }: AttendanceCalendarSectionProps) {
   const bridge=useContext(AttendanceQueryContext);
   const [attempt, setAttempt] = useState(0);
-  const [attendance, setAttendance] = useState<AttendanceMap>({});
+  const [storedAttendance, setAttendance] = useState<AttendanceMap>({});
   const [loading, setLoading] = useState(true);
   const [attendanceError, setAttendanceError] = useState<string | null>(null);
   const [selectedTermId, setSelectedTermId] = useState<string>(() => terms.find((t) => t.isActive)?.id ?? terms[0]?.id ?? "");
@@ -110,10 +110,10 @@ export function AttendanceCalendarSection({
     return defaultViewDate(t);
   });
 
-  const { save, saveFeedback, pending, hasFailures } = useSaveFeedback(sectionId + ":" + selectedTermId);
+  const { save, saveFeedback, pending, hasFailures } = useSaveFeedback(sectionId + ":" + selectedTermId, { showStatus: false });
   const { navigationDialog, guardAction } = useUnsavedChanges(pending > 0 || hasFailures, darkMode);
-  const currentResource=useRef('');
-  useLayoutEffect(()=>{currentResource.current=sectionId+':'+selectedTermId;return()=>{currentResource.current='';};},[sectionId,selectedTermId]);
+  const { attendance, getStatus, saveMark, isPending } = useAttendanceCellEdits(sectionId + ':' + selectedTermId, storedAttendance, setAttendance, save,
+    (studentId, date, status) => (bridge?.save ?? saveAdvisoryAttendance)(sectionId, studentId, date, status, selectedTermId));
   const [summaryStudent, setSummaryStudent] = useState<RosterStudent | null>(null);
 
   const term = terms.find((t) => t.id === selectedTermId) ?? terms[0];
@@ -183,7 +183,7 @@ export function AttendanceCalendarSection({
 
   function cycle(studentId: string, dateISO: string) {
     if (!editable) return;
-    const current = attendance[studentId]?.[dateISO] ?? null;
+    const current = getStatus(studentId, dateISO);
     const inSelectedTerm = Boolean(term && dateISO >= term.startDate && dateISO <= term.endDate);
     const canMarkNewToday = Boolean(
       dateISO === todayISO && canMarkToday && term?.id === activeTerm?.id,
@@ -193,10 +193,7 @@ export function AttendanceCalendarSection({
     const idx = ATTENDANCE_CYCLE.indexOf(current);
     const next = ATTENDANCE_CYCLE[(idx + 1) % ATTENDANCE_CYCLE.length];
 
-    void save(async () => {
-      await (bridge?.save ?? saveAdvisoryAttendance)(sectionId, studentId, dateISO, next, selectedTermId);
-      if (currentResource.current === sectionId + ':' + selectedTermId) setAttendance(prev => ({ ...prev, [studentId]: { ...prev[studentId], [dateISO]: next } }));
-    }, studentId + ':' + dateISO);
+    saveMark(studentId, dateISO, next);
   }
 
   const canGoPrev = term ? yearMonth(viewDate) > yearMonth(parseISO(term.startDate)) : true;
@@ -241,14 +238,17 @@ export function AttendanceCalendarSection({
             >
               <button
                 onClick={() => clickable && cycle(student.id, iso)}
+                aria-busy={isPending(student.id, iso)}
+                data-attendance-date={iso}
+                data-attendance-student={student.id}
                 disabled={!clickable}
                 title={clickable
                   ? `${formatDisplayDate(iso)} — ${iso < todayISO ? "edit saved attendance" : "mark today's attendance"}`
                   : !inTerm
                     ? `${formatDisplayDate(iso)} — outside ${term?.label ?? ""}`
                     : `${formatDisplayDate(iso)} — only saved past marks or today's attendance during an open term can be edited`}
-                className={`inline-flex h-6 w-6 items-center justify-center rounded-md text-xs font-extrabold tabular-nums transition-colors ${
-                  pending ? "cursor-not-allowed" : clickable ? "hover:scale-105 cursor-pointer" : "cursor-not-allowed opacity-25"
+                className={`inline-flex h-6 w-6 items-center justify-center rounded-md text-xs font-extrabold tabular-nums transition-[background-color,color,transform] duration-150 ease-out motion-reduce:transition-none ${
+                  pending ? "cursor-not-allowed" : clickable ? "hover:scale-105 active:scale-95 cursor-pointer" : "cursor-not-allowed opacity-25"
                 } ${!pending && isWeekend && !status ? "opacity-60" : ""}`}
                 style={
                   pending ? { backgroundColor: "var(--sk-transparent)" } : meta
@@ -256,7 +256,7 @@ export function AttendanceCalendarSection({
                     : { backgroundColor: darkMode ? "#ffffff10" : "var(--surface-page)", color: "#9CA3AF" }
                 }
               >
-                {pending ? <SkeletonText width="1ch" /> : status ?? "·"}
+                {pending ? <Skeleton className="h-4 w-4 rounded-md" /> : status ?? "·"}
               </button>
             </td>
           );
@@ -270,7 +270,7 @@ export function AttendanceCalendarSection({
           <button
             disabled={pending}
             onClick={() => setSummaryStudent(student)}
-            className={`inline-flex min-h-7 items-center justify-center rounded-lg px-2 text-xs font-bold transition-colors ${
+            className={`inline-flex min-h-7 items-center justify-center rounded-lg px-2 text-xs font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
               darkMode ? "hover:bg-white/10" : "hover:bg-brand-light"
             }`}
             style={{ color: "var(--brand-ink)" }}
@@ -332,9 +332,10 @@ export function AttendanceCalendarSection({
                     darkMode ? "bg-panel-dark" : "bg-brand-light"
                   } ${textMuted}`}
                 >
-                  Present / School Days
-                  <br />
-                  <span className="normal-case font-semibold">({prerequisitesLoading ? <SkeletonParagraph field="attendance-record-term-label" typical={2} width="100%" /> : term?.label})</span>
+                  <div className="flex flex-col items-center justify-center gap-1">
+                    <span>Present / School Days</span>
+                    <span className="inline-flex h-4 items-center justify-center whitespace-nowrap normal-case font-semibold">{prerequisitesLoading ? <SkeletonText width="6ch" /> : `(${term?.label ?? ""})`}</span>
+                  </div>
                 </th>
                 <th
                   className={`sticky right-0 z-20 border-l px-1 py-3 text-center text-xs font-extrabold uppercase tracking-wide ${panelBorder} ${
@@ -402,17 +403,16 @@ export function AttendanceCalendarSection({
           <div>
             <h2 data-sk-static="" className={`font-extrabold ${textPrimary}`}>Attendance Records</h2>
             <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
-              {prerequisitesLoading ? <SkeletonText width="1ch" className="inline-block align-top" /> : roster.length} student{roster.length === 1 ? "" : "s"}
-              {editable ? " · click a cell to edit" : ""}
+              {prerequisitesLoading ? <SkeletonText width="24ch" className="inline-block align-middle" /> : <>{roster.length} student{roster.length === 1 ? "" : "s"}{editable ? " · click a cell to edit" : ""}</>}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <LoadingFormValue loading={prerequisitesLoading} intrinsic name="attendance-records-term" width="7ch"><AccountSelect data-account-select="" data-dropdown-dark={darkMode}
+        <div className="flex flex-wrap items-center gap-2">
+          <LoadingFormValue loading={prerequisitesLoading} name="attendance-records-term" width="6ch"><AccountSelect data-account-select="" data-dropdown-dark={darkMode}
             value={selectedTermId}
             onChange={(e) => guardAction(() => setSelectedTermId(e.target.value))}
-            className={`h-9 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
+            className={`h-9 w-32 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
             aria-label="Term"
           >
             {terms.map((t) => (
@@ -425,7 +425,7 @@ export function AttendanceCalendarSection({
           <div className={`flex h-9 items-center gap-1 rounded-lg border px-1 ${panelBorder}`}>
             <button
               onClick={goToPrevMonth}
-              disabled={!canGoPrev}
+              disabled={prerequisitesLoading || !canGoPrev}
               aria-label="Previous month"
               className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors disabled:opacity-30 ${
                 darkMode ? "hover:bg-white/10" : "hover:bg-brand-light"
@@ -436,7 +436,7 @@ export function AttendanceCalendarSection({
             <span className={`min-w-32 px-2 py-1 text-center text-xs font-extrabold ${textPrimary}`}>{monthLabel(viewDate)}</span>
             <button
               onClick={goToNextMonth}
-              disabled={!canGoNext}
+              disabled={prerequisitesLoading || !canGoNext}
               aria-label="Next month"
               className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors disabled:opacity-30 ${
                 darkMode ? "hover:bg-white/10" : "hover:bg-brand-light"
@@ -448,11 +448,11 @@ export function AttendanceCalendarSection({
         </div>
       </div>
 
-      <LoadingRegion loading={prerequisitesLoading} name="attendance-records-term-notice" variable skeleton={<div className={`border-b px-5 py-2.5 text-xs font-medium ${panelBorder} ${textMuted}`}><SkeletonParagraph field="attendance-records-term-notice" typical={3} width="100%" /></div>}>{editable && !canMarkToday && (
+      {!prerequisitesLoading && editable && !canMarkToday && (
         <div className={`border-b px-5 py-2.5 text-xs font-medium ${panelBorder} ${textMuted}`}>
           Today is outside an open term, so new attendance cannot be entered. Previously saved attendance remains editable.
         </div>
-      )}</LoadingRegion>
+      )}
 
       <div className={`flex flex-wrap gap-3 border-b px-5 py-3 ${panelBorder}`}>
         {(Object.keys(ATTENDANCE_META) as (keyof typeof ATTENDANCE_META)[]).map((key) => {

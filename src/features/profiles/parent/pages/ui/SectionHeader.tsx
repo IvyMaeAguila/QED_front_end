@@ -11,6 +11,7 @@ interface SectionHeaderProps {
   subtitle?: string;
   about?: string;
   action?: ReactNode;
+  className?: string;
   theme: AdminThemeContext;
 }
 
@@ -20,6 +21,7 @@ export default function SectionHeader({
   subtitle,
   about,
   action,
+  className = "",
   theme,
 }: SectionHeaderProps) {
   const [showInfo, setShowInfo] = useState(false);
@@ -29,7 +31,7 @@ export default function SectionHeader({
 
   return (
     <div
-      className={`relative flex items-center justify-between gap-2 border-b px-5 py-4 ${panelBorder}`}
+      className={`relative flex items-center justify-between gap-2 border-b px-5 py-4 ${panelBorder} ${className}`}
     >
       <div className="flex min-w-0 items-center gap-2">
         {Icon && (

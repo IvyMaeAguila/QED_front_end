@@ -27,11 +27,18 @@ interface StudentRow {
   gender: string;
   grade_level_name: string;  
   section_name: string | null;
+  parent_guardian_name?: string | null;
+  guardian_first_name?: string | null;
+  guardian_middle_name?: string | null;
+  guardian_last_name?: string | null;
+  guardian_contact_number?: string | null;
   is_deleted?: number;
 }
 
 function mapStudentRow(row: StudentRow): Student {
   return {
+    guardianName: [row.guardian_first_name, row.guardian_middle_name, row.guardian_last_name].map(part => part?.trim()).filter(Boolean).join(' ') || row.parent_guardian_name?.trim() || undefined,
+    guardianContact: row.guardian_contact_number?.trim() || undefined,
     dbId: row.id,
     id: String(row.id),
     gradeLevelId: row.grade_level_id,

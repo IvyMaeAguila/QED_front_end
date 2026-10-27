@@ -293,7 +293,7 @@ function useManageSubjectsPageState() {
         <div className="flex items-start gap-2.5">
           <div>
             <h1 className={`qed-type-page-title ${textPrimary}`} data-sk-region="managesubjectspage-manage-subjects" data-sk-static="">
-              Manage Subjects
+              Academics
             </h1>
             <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
               {filtered.length} of {gradeSubjects.length} subject
@@ -305,7 +305,6 @@ function useManageSubjectsPageState() {
         <SubjectActions
           darkMode={darkMode}
           onAcademicYear={() => navigate("/admin/academic-year")}
-          onManageSections={() => setManagingSections(true)}
           onAddSubject={() => navigate("new")}
         />
       </div>

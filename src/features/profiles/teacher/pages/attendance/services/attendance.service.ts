@@ -12,6 +12,8 @@ function authedFetch(url: string, init?: RequestInit) {
 }
 
 export interface AdvisorySection {
+  schoolYearId?: string;
+  schoolYearLabel?: string;
   classId: string;          // always present — real attendance key
   sectionId: string | null; // present only if this grade level uses named sections
   sectionName: string;      // falls back to gradeLevel when no section name exists

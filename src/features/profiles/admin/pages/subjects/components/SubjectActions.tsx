@@ -1,9 +1,8 @@
-import { CalendarDays, Plus, School } from "lucide-react";
+import { CalendarDays, Plus } from "lucide-react";
 
 interface SubjectActionsProps {
   darkMode: boolean;
   onAcademicYear: () => void;
-  onManageSections: () => void;
   onAddSubject: () => void;
 }
 
@@ -12,7 +11,6 @@ interface SubjectActionsProps {
 export function SubjectActions({
   darkMode,
   onAcademicYear,
-  onManageSections,
   onAddSubject,
 }: SubjectActionsProps) {
   const secondary = `h-8 px-3 rounded-lg border text-xs font-extrabold flex items-center gap-1.5 shrink-0 transition-colors ${
@@ -26,10 +24,6 @@ export function SubjectActions({
       <button type="button" onClick={onAcademicYear} className={secondary}>
         <CalendarDays size={13} />
         Academic Year
-      </button>
-      <button type="button" onClick={onManageSections} className={secondary}>
-        <School size={13} />
-        Manage Sections
       </button>
       <button
         type="button"
