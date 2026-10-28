@@ -117,6 +117,9 @@ export const notificationService = {
 },
 
   subscribe(userId: number | string, onNew: (n: Notification) => void, onConnect?: () => void): () => void {
+  // Both notification providers already refresh persisted records every 30s.
+  // Serverless deployments use that shared data instead of process-local rooms.
+  if (import.meta.env.VITE_NOTIFICATION_TRANSPORT === 'polling') return () => {};
   const socket: Socket = io(`${API_CONFIG.baseURL}`, { withCredentials: true });
 
   socket.on("connect", () => {

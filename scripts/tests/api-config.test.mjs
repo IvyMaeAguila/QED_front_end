@@ -33,6 +33,13 @@ for (const value of [undefined, '']) test('missing API configuration fails expli
 test('bundle guard accepts the Render target in the real configuration chunk', () => {
   assert.equal(inspect('const api=' + JSON.stringify(productionApiOrigin)).apiOrigin, productionApiOrigin);
 });
+
+test('bundle guard accepts an explicitly configured Vercel backend and rejects a stale Render bundle', () => {
+  const target = 'https://qed-backend.example.vercel.app';
+  assert.equal(checkApiTarget(chunks, () => 'const api=' + JSON.stringify(target), target).apiOrigin, target);
+  assert.throws(() => checkApiTarget(chunks, () => 'const api=' + JSON.stringify(productionApiOrigin), target), /configured production backend/);
+  assert.throws(() => checkApiTarget(chunks, () => '', 'http://localhost:7400'), /HTTPS origin/);
+});
 for (const host of ['localhost', '127.0.0.1', '[::1]']) test('bundle guard rejects a loopback API target: ' + host, () => {
   assert.throws(() => inspect('const api=' + JSON.stringify('http://' + host + ':7400')), /loopback/);
 });
