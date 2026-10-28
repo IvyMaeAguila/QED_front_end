@@ -245,7 +245,8 @@ const isDirty = useMemo(() => {
   const rowCount = skeletonRows(view, undefined, 44);
   const pendingRoster: GenderedStudent[] = Array.from({ length: rowCount }, (_, index) => ({ id: `pending-${index}`, name: "", gender: index < Math.ceil(rowCount / 2) ? "M" : "F" }));
   const pendingItems: GradeItem[] = Array.from({ length: lastKnownCount(`${view}-items`, 1) }, (_, index) => ({ id: `pending-item-${index}`, tab, date: "2026-01-01", activityName: "", topic: "", format: "", maxItems: 0, gradingPeriodId: null }));
-  const columnLabels = [{ label: "Student", typical: "Student full name" }, ...(loading ? pendingItems : tabItems).map(() => ({ label: "", typical: "Assessment topic" }))];
+  const skeletonItems = tabItems.length ? tabItems : pendingItems;
+  const columnLabels = [{ label: "Student", typical: "Student full name" }, ...(loading ? skeletonItems : tabItems).map(() => ({ label: "", typical: "Assessment topic" }))];
   const columnWidths = useColumnReservation(view, columnLabels, loading);
   function renderStudentRow(student: GenderedStudent, pending = false, visibleItems = tabItems) {
     return (
@@ -256,9 +257,9 @@ const isDirty = useMemo(() => {
       >
         <td className={`sticky left-0 z-10 px-4 py-2 ${stickyCell}`}>
           <div className="flex min-w-0 items-center gap-2.5">
-            <span data-sk-region="student-avatar" className="inline-flex h-7 w-7 shrink-0">{pending ? <SkeletonAvatar className="h-7 w-7" /> : <StudentAvatar gender={student.gender} name={student.name} />}</span>
+            <span data-sk-region="student-avatar" className="inline-flex h-7 w-7 shrink-0">{pending && !filtered.length ? <SkeletonAvatar className="h-7 w-7" /> : <StudentAvatar gender={student.gender} name={student.name} />}</span>
             <span className={`truncate text-xs font-bold ${textPrimary}`}>
-              {pending ? <SkeletonText className={Number(student.id.split("-").at(-1)) % 2 === 0 ? "w-[14ch]" : "w-[11ch]"} /> : student.name}
+              {pending && !filtered.length ? <SkeletonText className={Number(student.id.split("-").at(-1)) % 2 === 0 ? "w-[14ch]" : "w-[11ch]"} /> : student.name}
             </span>
           </div>
         </td>
@@ -268,7 +269,7 @@ const isDirty = useMemo(() => {
           const style = scoreStyle(percent);
           return (
             <td key={item.id} className="px-3 py-2 text-center">
-              {pending ? <SkeletonControl className="h-7 w-14 rounded-lg mx-auto" /> : <input
+              {pending ? <span className="inline-flex h-7 w-14 items-center justify-center"><SkeletonControl className="h-2 w-6 rounded-full" /></span> : <input
                 type="number"
                 min={0}
                 max={item.maxItems}
@@ -310,10 +311,12 @@ const isDirty = useMemo(() => {
   }
 
   function renderTable(pending: boolean) {
-    const visibleRoster = pending ? pendingRoster : filtered;
+    const visibleRoster = pending && !filtered.length ? pendingRoster : filtered;
     const grouped = { male: visibleRoster.filter(student => !isFemale(student)), female: visibleRoster.filter(isFemale) };
-    const tabItems = pending ? pendingItems : items.filter(item => item.tab === tab && !roster.some(student => typeof scores[student.id]?.[item.id] === "number"));
-    const columnCount = 1 + Math.max(tabItems.length, 1);
+    const visibleItems = pending ? skeletonItems : tabItems;
+    const itemMetadataPending = pending && !tabItems.length;
+    const tabItemsForTable = visibleItems;
+    const columnCount = 1 + Math.max(tabItemsForTable.length, 1);
       return (!pending && filtered.length === 0 ? (
           <p className={`px-4 py-5 text-center text-xs font-medium ${textMuted}`}>
             No students found matching "{search}".
@@ -331,14 +334,14 @@ const isDirty = useMemo(() => {
                   >
                     Student
                   </th>
-                  {tabItems.length === 0 ? (
+                  {tabItemsForTable.length === 0 ? (
                     <th
                       className={`px-4 py-2 text-left text-xs font-bold ${textMuted}`}
                     >
                       No items yet — tap Add Item
                     </th>
                   ) : (
-                    tabItems.map((item) => {
+                    tabItemsForTable.map((item) => {
                       const isSelected = item.id === selectedItemId;
                       return (
                         <th key={item.id} className="min-w-32 px-1.5 py-1.5 align-top">
@@ -366,7 +369,7 @@ const isDirty = useMemo(() => {
                               <p
                                 className={`text-xs font-black leading-none ${textPrimary}`}
                               >
-                                {pending ? <SkeletonText className="w-[8ch]" /> : formatDisplayDate(item.date)}
+                                {itemMetadataPending ? <SkeletonText className="w-[8ch]" /> : formatDisplayDate(item.date)}
                               </p>
                               <span
                                 className={`absolute right-0 shrink-0 rounded-full bg-[#DC2626] px-1.5 py-0.5 text-xs font-black uppercase tracking-wide text-white transition-opacity ${
@@ -384,7 +387,7 @@ const isDirty = useMemo(() => {
                                 className={`mt-1 truncate text-xs font-semibold leading-none ${textMuted}`}
                                 title={item.activityName}
                               >
-                                {pending ? <SkeletonText className="w-[12ch]" /> : <>{item.activityName} · {item.maxItems} pts</>}
+                                {itemMetadataPending ? <SkeletonText className="w-[12ch]" /> : <>{item.activityName} · {item.maxItems} pts</>}
                               </p>
                             )}
 
@@ -393,7 +396,7 @@ const isDirty = useMemo(() => {
                               style={{ color: "var(--brand-ink)" }}
                               title={item.topic}
                             >
-                              {pending ? <SkeletonText className="w-[10ch]" /> : <>{item.topic}{isWrittenWorks ? ` · ${item.maxItems} pts` : ""}</>}
+                              {itemMetadataPending ? <SkeletonText className="w-[10ch]" /> : <>{item.topic}{isWrittenWorks ? ` · ${item.maxItems} pts` : ""}</>}
                             </p>
                           </button>
                         </th>
@@ -410,7 +413,7 @@ const isDirty = useMemo(() => {
                         Male
                       </td>
                     </tr>
-                    {grouped.male.map((student) => renderStudentRow(student, pending, tabItems))}
+                    {grouped.male.map((student) => renderStudentRow(student, pending, tabItemsForTable))}
                   </>
                 )}
 
@@ -421,7 +424,7 @@ const isDirty = useMemo(() => {
                         Female
                       </td>
                     </tr>
-                    {grouped.female.map((student) => renderStudentRow(student, pending, tabItems))}
+                    {grouped.female.map((student) => renderStudentRow(student, pending, tabItemsForTable))}
                   </>
                 )}
               </tbody>

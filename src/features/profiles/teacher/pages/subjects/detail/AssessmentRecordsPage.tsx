@@ -4,8 +4,7 @@ import { computeStudentGrade, computeGroupResult, studentTotals } from './utils/
 import {useTeacherAcademicServices} from '../../../query/TeacherAcademicQueryContext';
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonText } from "@shared/components/SkeletonLoading";
-import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
-import { rememberColumns, useColumnReservation } from "@shared/loading/reservations";
+import { rememberColumns, rememberRows, skeletonRows, useColumnReservation } from "@shared/loading/reservations";
 import { Children, cloneElement, isValidElement, Fragment, useEffect, useMemo, useRef, useState, type ReactNode, type ReactElement } from "react";
 
 import { AlertTriangle, CheckCircle2, Download, Send } from "lucide-react";
@@ -554,7 +553,7 @@ export function AssessmentRecordsSection({
       <tr key={student.id} data-sk-region="subject-record-student" className={`border-t ${panelBorder} ${index % 2 ? (darkMode ? "bg-white/1.5" : "bg-black/[0.012]") : ""}`}>
         <td data-learner-number className={`sticky left-0 z-20 w-16 min-w-16 max-w-16 border-r px-4 py-2.5 text-xs tabular-nums ${darkMode ? "bg-panel-dark" : index % 2 ? "bg-[#FCFCFD]" : "bg-white"} ${panelBorder} ${textPrimary}`}>{index + 1}</td>
         <td data-learner-name className={`sticky left-16 z-20 min-w-60 border-r px-4 py-2.5 text-sm font-bold shadow-[2px_0_4px_rgba(15,23,42,0.05)] ${darkMode ? "bg-panel-dark" : index % 2 ? "bg-[#FCFCFD]" : "bg-white"} ${panelBorder} ${textPrimary}`}>
-          {student.name}
+          {pending && !roster.length ? <SkeletonText width={index % 2 ? "13ch" : "17ch"} /> : student.name}
         </td>
         {pending ? maskCells(groupCells) : groupCells}
         <td className="px-3 py-2.5 text-center text-sm font-black tabular-nums" style={{ color: "var(--brand-ink)" }}>
@@ -564,15 +563,15 @@ export function AssessmentRecordsSection({
           {pending ? <SkeletonText width="3ch" className="mx-auto" /> : termGrade ?? "—"}
         </td>
         <td className="px-3 py-2.5 text-center text-sm font-semibold">
-          {pending ? <SkeletonParagraph field={`${view}:descriptor:${student.id}`} typical={2} width="100%" /> : descriptor ?? "—"}
+          {pending ? <SkeletonText width="12ch" className="mx-auto" /> : descriptor ?? "—"}
         </td>
       </tr>
     );
   }
 
   const columnWidths = useColumnReservation(view, [
-    { label: "No.", typical: "99" },
-    { label: "Learners' Names", typical: "Maria Alexandra Delos Santos" },
+    { label: "No.", typical: "99", reservedWidth: 64 },
+    { label: "Learners' Names", typical: "Maria Alexandra Delos Santos", reservedWidth: 240 },
     ...groups.flatMap(group => Array.from({length: groupColumnSpan(group)}, (_, i) => ({label: String(i+1),typical:"100.00"}))),
     {label:"Initial Grade",typical:"100.00"},{label:"Term Grade",typical:"100"},{label:"Descriptor",typical:"Very Satisfactory"},
   ], loading);
@@ -604,7 +603,11 @@ export function AssessmentRecordsSection({
                   <th className={`min-w-16 border px-2 py-2 text-center font-black ${panelBorder}`} style={{ color: "var(--brand-ink)" }}>{group.items.length || weights.templateStructure ? group.weightLabel : "—"}</th>
                 </>}
               </Fragment>);
-  function renderRecordsTable(pending: boolean) { return (<div className="max-h-[68vh] overflow-auto">
+  function renderRecordsTable(pending: boolean) {
+    const placeholderRoster: GenderedStudent[] = pending && !roster.length
+      ? Array.from({ length: skeletonRows(view, undefined, 40) }, (_, index) => ({ id: `pending-${index}`, name: '', gender: index % 2 ? 'F' : 'M' })) : [];
+    const visibleGroups = placeholderRoster.length ? { male: placeholderRoster.filter(student => student.gender === 'M'), female: placeholderRoster.filter(student => student.gender === 'F') } : grouped;
+    return (<div className="max-h-[68vh] overflow-auto">
         <table className="teacher-user-table w-full min-w-max border-collapse text-xs">
           {pending && <colgroup>{columnWidths.map((width, index) => <col key={index} style={{ width }} />)}</colgroup>}
           <thead className={`sticky top-0 z-30 ${darkMode ? "bg-[#241311]" : "bg-white"}`}>
@@ -654,25 +657,25 @@ export function AssessmentRecordsSection({
             </tr>
           </thead>
           <tbody>
-            {grouped.male.length > 0 && (
+            {visibleGroups.male.length > 0 && (
               <>
                 <tr>
                   <td colSpan={2} className={`sticky left-0 z-20 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.05)] ${panelBorder} ${darkMode ? "bg-[#34201D]" : "bg-brand-light"} ${textPrimary}`}>Male</td>
                   <td colSpan={columnCount - 2} className={`border px-3 py-2 ${panelBorder} ${darkMode ? "bg-white/10" : "bg-brand-light"}`} />
                 </tr>
-                {grouped.male.map((student, index) => renderStudentRow(student, index, pending))}
+                {visibleGroups.male.map((student, index) => renderStudentRow(student, index, pending))}
               </>
             )}
-            {grouped.female.length > 0 && (
+            {visibleGroups.female.length > 0 && (
               <>
                 <tr>
                   <td colSpan={2} className={`sticky left-0 z-20 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.05)] ${panelBorder} ${darkMode ? "bg-[#34201D]" : "bg-brand-light"} ${textPrimary}`}>Female</td>
                   <td colSpan={columnCount - 2} className={`border px-3 py-2 ${panelBorder} ${darkMode ? "bg-white/10" : "bg-brand-light"}`} />
                 </tr>
-                {grouped.female.map((student, index) => renderStudentRow(student, index, pending))}
+                {visibleGroups.female.map((student, index) => renderStudentRow(student, index, pending))}
               </>
             )}
-            {roster.length === 0 && (
+            {!pending && roster.length === 0 && (
               <tr>
                 <td colSpan={columnCount} className={`px-5 py-12 text-center text-sm font-semibold ${textMuted}`}>
                   No students enrolled yet.
@@ -690,7 +693,7 @@ export function AssessmentRecordsSection({
         <div className="flex flex-wrap items-center gap-3">
           <span className={`text-sm font-bold ${textPrimary}`}>Assessment records</span>
           <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${darkMode ? 'bg-white/5' : 'bg-black/[0.035]'} ${textMuted}`}>
-            {roster.length} student{roster.length === 1 ? '' : 's'}
+            {loading && !roster.length ? <SkeletonText width="10ch" /> : <>{roster.length} student{roster.length === 1 ? '' : 's'}</>}
           </span>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -712,6 +715,7 @@ export function AssessmentRecordsSection({
         // table ref lets outgoing cleanup null it after incoming attachment.
         // Measure the settled live table through the stable section instead.
         rememberColumns(view, recordSection.current?.querySelector<HTMLTableElement>('[data-sk-region="subject-assessment-records"] [data-sk-content] table') ?? null);
+        rememberRows(view, roster.length);
       }}>{null}</LoadingRegion>
       {!loading && groups.every((g) => g.items.length === 0) && (
         <p className={`px-5 py-6 text-center text-sm font-semibold ${textMuted}`}>

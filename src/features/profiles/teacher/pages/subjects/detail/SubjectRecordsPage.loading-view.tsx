@@ -1,3 +1,4 @@
+import { FinalGradesLoading } from './components/FinalGradesTable';
 import { useSaveFeedback } from "@shared/components/useSaveFeedback";
 import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
 import {useContext} from 'react';
@@ -379,9 +380,7 @@ function useSubjectRecordsPageState() {
         )}
 
         {isAssessment && showFinalGrades && subjectId && <Suspense fallback={
-          <section aria-label="Final Grades" className={`${cardClasses} px-4 py-4`}>
-            <p role="status" className={`text-sm ${textMuted}`}>Loading final grades…</p>
-          </section>
+          <FinalGradesLoading roster={roster} darkMode={darkMode} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} />
         }><FinalGradesSection key={subjectId} subjectSectionId={subjectId} selectedPeriod={term}
           darkMode={darkMode} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} /></Suspense>}
 
