@@ -607,7 +607,7 @@ export function AssessmentRecordsSection({
     const placeholderRoster: GenderedStudent[] = pending && !roster.length
       ? Array.from({ length: skeletonRows(view, undefined, 40) }, (_, index) => ({ id: `pending-${index}`, name: '', gender: index % 2 ? 'F' : 'M' })) : [];
     const visibleGroups = placeholderRoster.length ? { male: placeholderRoster.filter(student => student.gender === 'M'), female: placeholderRoster.filter(student => student.gender === 'F') } : grouped;
-    return (<div className="max-h-[68vh] overflow-auto">
+    return (<div className="overflow-x-auto" data-record-scroll="horizontal">
         <table className="teacher-user-table w-full min-w-max border-collapse text-xs">
           {pending && <colgroup>{columnWidths.map((width, index) => <col key={index} style={{ width }} />)}</colgroup>}
           <thead className={`sticky top-0 z-30 ${darkMode ? "bg-[#241311]" : "bg-white"}`}>

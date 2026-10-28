@@ -14,6 +14,33 @@ async function fixture(page: Page, dark = false, count = 3, long = false, tab = 
   await page.route('**/api/subject/getEffectiveWeights/**',async route=>{await gate;await route.fulfill({status:failed==='weights'?500:200,json:failed==='weights'?{success:false}:{success:true,data:{source:'manual',ww:30,pt:50,exam:20}}});});
   return Object.assign(()=>{context();finish();},{fail:(kind:string)=>failed=kind,recover:()=>failed='',hold:()=>{gate=new Promise<void>(r=>finish=r);},release:()=>finish()});
 }
+for (const width of [375, 1280]) for (const dark of [false, true]) test(`class record ${width} ${dark ? 'dark' : 'light'} expands without an inner vertical scrollbar`, async ({ page }) => {
+  await page.setViewportSize({ width, height: 900 });
+  const release = await fixture(page, dark, 24);
+  await page.goto('/teacher/subjects/1/records');
+  await waitForDataRoute(page);
+  release();
+  const region = page.locator('[data-sk-region="subject-assessment-records"]');
+  await expect(region).toHaveAttribute('data-sk-phase', 'settled');
+  const scroll = region.locator('[data-record-scroll="horizontal"]');
+  expect(await scroll.evaluate(element => ({ fits: element.scrollHeight <= element.clientHeight, height: element.clientHeight }))).toMatchObject({ fits: true });
+  expect(await scroll.evaluate(element => element.clientHeight)).toBeGreaterThan(900 * .68);
+  await page.getByRole('button', { name: 'Full screen', exact: true }).click();
+  const expanded = page.getByRole('dialog', { name: 'Full screen class record', exact: true });
+  await expect(expanded).toBeVisible();
+  const bounds = await expanded.boundingBox();
+  expect(bounds).toMatchObject({ x: 0, y: 0, width, height: 900 });
+  await expect(expanded.locator('[data-sk-region="subject-record-student"]')).toHaveCount(24);
+  await expect(expanded.getByRole('group', { name: 'Class record view' })).toBeVisible();
+  await page.screenshot({ path: `loading-screenshots/class-record-expanded-${width}-${dark ? 'dark' : 'light'}.png` });
+  await page.keyboard.press('Escape');
+  await expect(expanded).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Full screen', exact: true })).toBeFocused();
+  await page.getByRole('button', { name: 'Full screen', exact: true }).click();
+  await page.getByRole('button', { name: 'Exit full screen', exact: true }).click();
+  await expect(page.locator('[data-sk-region="subject-record-student"]')).toHaveCount(24);
+  await expect(page.locator('[data-record-expanded="true"]')).toHaveCount(0);
+});
 for(const width of [375,1280]) for(const dark of [false,true]) test(`subject records ${width} ${dark?'dark':'light'} preserves known roster and headers`,async({page})=>{
   await page.setViewportSize({width,height:1100});const release=await fixture(page,dark);
   await page.goto('/teacher/subjects/1/records');await waitForDataRoute(page);

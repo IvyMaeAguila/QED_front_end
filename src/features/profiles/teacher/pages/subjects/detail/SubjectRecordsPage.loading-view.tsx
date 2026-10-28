@@ -10,8 +10,10 @@ import {
 ArrowLeft,
 Check,
 Pencil,
+Maximize2,
+Minimize2,
 } from "lucide-react";
-import { lazy, Suspense, useMemo,useState,useRef } from "react";
+import { lazy, Suspense, useEffect, useMemo,useState,useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
@@ -63,6 +65,28 @@ const RECORDS_TITLES: Record<SubjectDetailTab, string> = {
 } as Record<SubjectDetailTab, string>;
 
 function useSubjectRecordsPageState() {
+  const [fullScreen, setFullScreen] = useState(false);
+  const fullScreenButton = useRef<HTMLButtonElement>(null);
+  const recordView = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!fullScreen) return;
+    const handleKey = (event: KeyboardEvent) => {
+      // Leave confirmation/export dialogs in charge of their own keyboard input.
+      if (event.defaultPrevented || (event.target instanceof Element && event.target.closest('[role="dialog"]') !== recordView.current)) return;
+      if (event.key === 'Escape') {
+        setFullScreen(false);
+        fullScreenButton.current?.focus();
+      }
+      if (event.key === 'Tab') {
+        const controls = [...(recordView.current?.querySelectorAll<HTMLElement>('button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), [tabindex="0"]') ?? [])].filter(element => element.getClientRects().length > 0);
+        const first = controls[0], last = controls.at(-1);
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+      }
+    };
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [fullScreen]);
   const port=useContext(TeacherAcademicQueryContext);
   const {grading:{saveScore,fetchScores,fetchItems}}=useTeacherAcademicServices();
   const {sessionScope,user}=useAuth();
@@ -308,7 +332,8 @@ function useSubjectRecordsPageState() {
   );
 
   return { content: ((
-    <div className="w-full min-h-full pb-0">
+    <div ref={recordView} data-record-expanded={fullScreen ? 'true' : undefined} role={fullScreen ? 'dialog' : undefined} aria-modal={fullScreen ? true : undefined} aria-label={fullScreen ? 'Full screen class record' : undefined}
+      className={fullScreen ? `fixed inset-0 z-[80] h-dvh w-full overflow-y-auto p-4 sm:p-6 ${darkMode ? 'bg-page-dark' : 'bg-surface'}` : 'w-full min-h-full pb-0'}>
       {navigationDialog}
       {saveFeedback}
       <div className="w-full space-y-4">
@@ -329,6 +354,7 @@ function useSubjectRecordsPageState() {
               )}
             </div>
           </div>
+          <div className="flex max-w-full flex-wrap items-center gap-2 self-start 2xl:self-center">
           {isAssessment && <div role="group" aria-label="Class record view" className={`qed-segmented-control flex max-w-full shrink-0 items-center self-start rounded-lg p-0 2xl:self-center ${darkMode ? "bg-white/5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]" : "bg-gray-50 shadow-[inset_0_0_0_1px_#e5e7eb]"}`}>
             {[1, 2, 3].map(number => {
               const period = terms.find(candidate => candidate.termNumber === number);
@@ -340,6 +366,12 @@ function useSubjectRecordsPageState() {
             <button type="button" aria-pressed={showFinalGrades} disabled={isEditing} onClick={() => setShowFinalGrades(true)}
               className={`rounded-lg px-3 text-xs font-bold transition-all disabled:opacity-50 ${showFinalGrades ? 'bg-maroon text-white shadow-sm' : `${textMuted} ${darkMode ? 'hover:text-white' : 'hover:text-gray-900'}`}`}>Final Grades</button>
           </div>}
+          <button ref={fullScreenButton} type="button" aria-pressed={fullScreen} onClick={() => setFullScreen(value => !value)}
+            className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold transition-colors ${panelBg} ${panelBorder} ${textPrimary} ${darkMode ? 'hover:bg-white/5' : 'hover:bg-black/[0.035]'}`}>
+            {fullScreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+            {fullScreen ? 'Exit full screen' : 'Full screen'}
+          </button>
+          </div>
         </div>
 
         {!isAssessment && <div

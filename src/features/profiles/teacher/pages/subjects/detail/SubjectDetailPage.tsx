@@ -35,7 +35,10 @@ function Effects({scope:s}:{scope:SubjectDetailPageEffectScope}){
  useEffect(()=>{setTemplateLoading(weights.loading);setTemplateStructure(weights.data?.templateStructure);},[weights.loading,weights.data,setTemplateLoading,setTemplateStructure]);
  useEffect(()=>{if(periods.data){setTerms(periods.data.map(p=>({...p,label:p.termLabel})));setSelectedTerm(previous=>periods.data!.some(p=>p.id===previous)?previous:(periods.data!.find(p=>p.isActive)??periods.data![0])?.id??'');}},[periods.data,setTerms,setSelectedTerm]);
  const error=periods.error??info.error??items.error??scores.error??holistic.error;
- const loading=!error&&(periods.loading||info.loading||items.loading||scores.loading||holistic.loading);
+ // Publish one complete score-sheet snapshot, including the rules that determine
+ // its available assessment controls. Do not expose the roster while rules load.
+ const waitingForTerm=!!periods.data?.length&&!s.selectedTerm;
+ const loading=!error&&(periods.loading||info.loading||items.loading||scores.loading||holistic.loading||waitingForTerm||(ready&&!!s.selectedTerm&&weights.loading));
  const itemKey=[...session.key,...subjectKey(year,id,'items',{allPeriods:true})],scoreKey=[...session.key,...subjectKey(year,id,'scores')];
  const itemsInvalidated=useTeacherQueryInvalidation(itemKey),scoresInvalidated=useTeacherQueryInvalidation(scoreKey);
  const invalidated=itemsInvalidated||scoresInvalidated;
