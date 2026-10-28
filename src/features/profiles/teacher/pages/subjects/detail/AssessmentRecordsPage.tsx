@@ -6,7 +6,7 @@ import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 import { rememberColumns, useColumnReservation } from "@shared/loading/reservations";
-import { Children, cloneElement, isValidElement, Fragment, useMemo, useRef, useState, type ReactNode, type ReactElement } from "react";
+import { Children, cloneElement, isValidElement, Fragment, useEffect, useMemo, useRef, useState, type ReactNode, type ReactElement } from "react";
 
 import { AlertTriangle, CheckCircle2, Download, Send } from "lucide-react";
 import { ConfirmationModal } from "@shared/components/ConfirmationModal";
@@ -70,6 +70,7 @@ interface AssessmentRecordsSectionProps {
   // this keeps subjects without a template working exactly as before
   // (the "grandfathered" rollout behavior).
   weights: { ww: number; pt: number; exam: number; examSubWeights?: { st1: number; st2: number; te: number }; examinations?: TemplateExaminations; templateStructure?: GradeTemplateStructure } | null;
+  gradingRulesVerified?: boolean;
   loading?: boolean;
   term: string;
   isEditing: boolean;
@@ -223,6 +224,7 @@ export function AssessmentRecordsSection({
   items,
   scores,
   weights: resolvedWeights,
+  gradingRulesVerified = true,
   loading = false,
   term,
   isEditing,
@@ -338,8 +340,14 @@ export function AssessmentRecordsSection({
     });
   }, [roster, groups, scores, examinations, weights.templateStructure?.descriptorTable, weights.templateStructure?.transmutationTable]);
 
-  const {grading:{submitGrades}}=useTeacherAcademicServices();
+  const {grading:{submitGrades,fetchGradeSubmissionStatus}}=useTeacherAcademicServices();
+  const [existingSubmission, setExistingSubmission] = useState<import('../services/subjectGrading.service').GradeSubmissionStatus | null>(null);
+  const [checkingSubmission, setCheckingSubmission] = useState(false);
+  const submissionResource = subjectSectionId + ':' + term;
+  const currentSubmissionResource = useRef(submissionResource);
+  useEffect(() => { currentSubmissionResource.current = submissionResource; setCheckingSubmission(false); return () => { currentSubmissionResource.current = ''; }; }, [submissionResource]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const rulesReady = useRef(gradingRulesVerified); rulesReady.current = gradingRulesVerified;
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [justSubmitted, setJustSubmitted] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -348,8 +356,8 @@ export function AssessmentRecordsSection({
 
 
 
-  function handleSubmitClick() {
-    if (isSubmitting) return;
+  async function handleSubmitClick() {
+    if (!rulesReady.current || isSubmitting || checkingSubmission) return;
     if (!weights.templateStructure?.transmutationTable?.length) {
       setSnackbar({ type: "error", message: "This subject has no active grade template with transmutation rules. Ask an admin to upload the approved template before submitting grades." });
       return;
@@ -366,23 +374,34 @@ export function AssessmentRecordsSection({
       return;
     }
     setSubmitError(null);
-    setShowConfirmModal(true);
+    setCheckingSubmission(true);
+    try {
+      const status = await fetchGradeSubmissionStatus(subjectSectionId, term);
+      if (!rulesReady.current || currentSubmissionResource.current !== submissionResource) return;
+      setExistingSubmission(status);
+      setShowConfirmModal(true);
+    } catch (error) {
+      if (currentSubmissionResource.current === submissionResource) setSnackbar({ type: 'error', message: error instanceof Error ? error.message : 'Could not check submission status. Please try again.' });
+    } finally {
+      if (currentSubmissionResource.current === submissionResource) setCheckingSubmission(false);
+    }
   }
 
   async function handleConfirmSubmit() {
-    if (isSubmitting) return;
+    if (!rulesReady.current || isSubmitting) return;
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      await submitGrades(subjectSectionId, term);
+      await submitGrades(subjectSectionId, term, undefined, existingSubmission?.submissionVersion ?? null);
       setShowConfirmModal(false);
       setJustSubmitted(true);
       setSnackbar({ type: "success", message: "Grades submitted to the adviser's gradesheet." });
       window.setTimeout(() => setJustSubmitted(false), 3000);
     } catch (err) {
       console.error("Failed to submit grades:", err);
-      setSubmitError("Failed to submit grades. Please try again.");
-      setSnackbar({ type: "error", message: "Failed to submit grades. Please try again." });
+      const message = err instanceof Error ? err.message : "Failed to submit grades. Please try again.";
+      setSubmitError(message);
+      setSnackbar({ type: "error", message });
     } finally {
       setIsSubmitting(false);
     }
@@ -715,7 +734,7 @@ export function AssessmentRecordsSection({
           <button
             type="button"
             onClick={handleSubmitClick}
-            disabled={isSubmitting || loading}
+            disabled={isSubmitting || checkingSubmission || loading}
             title={isSubmitting ? "Submitting…" : "Submit Grades"}
             className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-maroon px-4 text-xs font-bold uppercase tracking-wide text-white shadow-primary transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
           >
@@ -732,6 +751,7 @@ export function AssessmentRecordsSection({
             <>
                   This sends {roster.length} {roster.length === 1 ? "grade" : "grades"} to{" "}
                   {adviserName ? `${adviserName}'s` : "the adviser's"} gradesheet. Review before confirming.
+                  {existingSubmission?.submitted && <span className="mt-2 block">A submission is already recorded{existingSubmission.submittedAt ? ` (${new Date(existingSubmission.submittedAt).toLocaleString()})` : ''}. Confirming again creates a new submission history entry.</span>}
             </>
           }
           onClose={() => setShowConfirmModal(false)}
@@ -743,7 +763,7 @@ export function AssessmentRecordsSection({
           darkMode={darkMode}
           loading={isSubmitting}
           allowBackdropCloseWhileLoading
-          disabled={isSubmitting}
+          disabled={isSubmitting || !gradingRulesVerified}
           size="lg"
           panelClassName={`max-h-[85vh] rounded-2xl shadow-xl ${panelBorder} ${darkMode ? "bg-panel-dark" : "bg-white"}`}
           titleClassName={`uppercase ${textPrimary}`}

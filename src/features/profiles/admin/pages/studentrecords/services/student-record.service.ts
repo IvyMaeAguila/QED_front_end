@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import { API_CONFIG } from '../../../../../../config/api.config';
 import type { Student } from "../types/Students";
 import { QueryHttpError } from "@shared/http/QueryHttpError";
@@ -17,6 +18,7 @@ interface StudentRow {
   id: number;
   grade_level_id: number;
   section_id: number | null;
+  current_school_year_id: number;
   student_number: string;
   learner_reference_number: string;
   first_name: string;
@@ -25,15 +27,29 @@ interface StudentRow {
   gender: string;
   grade_level_name: string;  
   section_name: string | null;
+  joined_date?: string | null;
+  enrollment_status?: string;
+  dropout_effective_date?: string | null;
+  parent_guardian_name?: string | null;
+  guardian_first_name?: string | null;
+  guardian_middle_name?: string | null;
+  guardian_last_name?: string | null;
+  guardian_contact_number?: string | null;
   is_deleted?: number;
 }
 
 function mapStudentRow(row: StudentRow): Student {
   return {
+    joinedDate: row.joined_date ?? undefined,
+    enrollmentStatus: row.enrollment_status,
+    dropoutEffectiveDate: row.dropout_effective_date ?? undefined,
+    guardianName: [row.guardian_first_name, row.guardian_middle_name, row.guardian_last_name].map(part => part?.trim()).filter(Boolean).join(' ') || row.parent_guardian_name?.trim() || undefined,
+    guardianContact: row.guardian_contact_number?.trim() || undefined,
     dbId: row.id,
     id: String(row.id),
     gradeLevelId: row.grade_level_id,
     sectionId: row.section_id,
+    schoolYearId: row.current_school_year_id,
     studentId: row.student_number,
     lrn: row.learner_reference_number,
     firstName: row.first_name,
@@ -58,7 +74,7 @@ export const studentService = {
     if(response.status===401)options.onUnauthorized?.();
     if (!response.ok) {
       const errorData = await response.json().catch(()=>({}));
-      throw new QueryHttpError(errorData.message || "Failed to add new student",response.status);
+      throw new QueryHttpError(errorData.message || "Failed to add new student",response.status, undefined, {requestId: response.requestId});
     }
     return response.json();
   },
@@ -74,7 +90,7 @@ export const studentService = {
     if (response.status === 401) options.onUnauthorized?.();
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new QueryHttpError(errorData.message || "Failed to fetch students", response.status);
+      throw new QueryHttpError(errorData.message || "Failed to fetch students", response.status, undefined, {requestId: response.requestId});
     }
 
     const json = await response.json();
@@ -94,7 +110,7 @@ export const studentService = {
     if(response.status===401)options.onUnauthorized?.();
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new QueryHttpError(errorData.message || "Failed to update student",response.status);
+      throw new QueryHttpError(errorData.message || "Failed to update student",response.status, undefined, {requestId: response.requestId});
     }
     return response.json();
   },
@@ -111,7 +127,7 @@ export const studentService = {
     if(response.status===401)options.onUnauthorized?.();
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new QueryHttpError(errorData.message || "Failed to delete student",response.status);
+      throw new QueryHttpError(errorData.message || "Failed to delete student",response.status, undefined, {requestId: response.requestId});
     }
     return response.json();
   },

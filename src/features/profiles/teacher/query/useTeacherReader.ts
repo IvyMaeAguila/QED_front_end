@@ -1,11 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, type QueryObserverResult } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { teacherOfflineMessage, useTeacherQueryScope, type TeacherRequestOptions } from "./teacherQueryScope";
 import type { TeacherReader } from "./TeacherReader";
 
-export function useTeacherReader<T>(resource: readonly unknown[], fetcher: (options: TeacherRequestOptions) => Promise<T>, message: string | ((error: unknown) => string), staleTime = 30_000, ready = true): TeacherReader<T> {
+export function useTeacherReader<T>(resource: readonly unknown[], fetcher: (options: TeacherRequestOptions) => Promise<T>, message: string | ((error: unknown) => string), staleTime = 30_000, ready = true, coordinated = false): TeacherReader<T> & { refresh: () => Promise<QueryObserverResult<T, Error> | undefined>; refreshing: boolean } {
   const scope = useTeacherQueryScope();
-  const query = useQuery({ ...scope.options, enabled: scope.enabled && ready, staleTime, queryKey: [...scope.key, ...resource],
+  const query = useQuery({ ...scope.options, enabled: scope.enabled && ready, refetchOnReconnect: coordinated ? false : scope.options.refetchOnReconnect, staleTime, queryKey: [...scope.key, ...resource],
     queryFn: ({ signal }) => fetcher(scope.request(signal)),
   });
   const denied = query.error instanceof Error && "status" in query.error && [401, 403].includes(Number(query.error.status));
@@ -17,7 +17,8 @@ export function useTeacherReader<T>(resource: readonly unknown[], fetcher: (opti
     if (scope.enabled && ready && scope.online && !query.isFetching && !query.isPaused) void refetch({ cancelRefetch: false });
   }, [scope.enabled, ready, scope.online, query.isFetching, query.isPaused, refetch]);
   return {
-    data, offline,
+    data, offline, refreshing: query.isFetching,
+    refresh: async () => { if (scope.enabled && ready && scope.online) return refetch({ cancelRefetch: false }); },
     loading: !scope.enabled || !ready || (!offline && (query.isFetching || query.isPending)),
     error: !scope.enabled || !ready ? null : denied ? errorMessage : offline ? data === undefined ? teacherOfflineMessage : null : query.isFetching ? null : query.isError ? errorMessage : null,
     retry,

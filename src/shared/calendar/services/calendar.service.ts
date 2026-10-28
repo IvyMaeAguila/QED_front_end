@@ -1,3 +1,4 @@
+import { boundedFetch as fetch, type BufferedHttpReply } from '@shared/http/boundedFetch';
 // calendar.service.ts
 import type { CalendarActivity, CalendarHoliday, HolidayType } from "../types/Calendar";
 import { API_CONFIG } from '../../../config/api.config';
@@ -40,7 +41,7 @@ function holidayRecordToHoliday(record: CalendarHolidayRecordDTO): CalendarHolid
 
 export interface CalendarRequestOptions { signal?: AbortSignal; onUnauthorized?: () => void }
 
-async function handleJsonResponse(res: Response, options: CalendarRequestOptions = {}) {
+async function handleJsonResponse(res: BufferedHttpReply, options: CalendarRequestOptions = {}) {
   if (res.status === 401 && !options.signal?.aborted) options.onUnauthorized?.();
   const data = await res.json().catch(() => ({ success: false, message: "Request failed." }));
   if (!res.ok || !data.success) {

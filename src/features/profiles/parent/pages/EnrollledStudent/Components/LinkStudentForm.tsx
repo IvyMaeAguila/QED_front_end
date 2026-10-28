@@ -254,10 +254,10 @@ export function LinkStudentForm({
 
   return (
     // No card styling here: the page provides the shared card.
-    <div className="w-full p-2 md:p-3">
-      <div className="grid gap-2 md:grid-cols-[16rem_1fr] md:gap-3">
+    <div className="w-full min-w-0 p-2 md:p-3">
+      <div className="grid min-w-0 gap-2 md:grid-cols-[clamp(12rem,18vw,18rem)_minmax(0,1fr)] md:gap-3">
         {/* Top bar on mobile / sidebar on desktop */}
-        <aside className={`rounded-xl px-4 py-5 md:px-7 md:py-8 ${stepperSurface}`}>
+        <aside className={`min-w-0 rounded-xl px-4 py-5 md:px-4 md:py-8 xl:px-5 ${stepperSurface}`}>
           <div className="mb-5 flex items-center gap-2.5 md:mb-8 md:block">
             <h2 className={`text-base font-semibold md:text-lg ${titleColor}`}>
               Link a Student
@@ -268,7 +268,7 @@ export function LinkStudentForm({
 
         {/* Form panel */}
         <div
-          className={`flex flex-col rounded-xl px-4 py-6 sm:px-6 md:px-10 md:py-8 ${formSurface}`}
+          className={`flex min-w-0 flex-col rounded-xl px-4 py-6 sm:px-6 md:px-6 md:py-8 2xl:px-10 ${formSurface}`}
         >
           <form
             onSubmit={handleSubmit}

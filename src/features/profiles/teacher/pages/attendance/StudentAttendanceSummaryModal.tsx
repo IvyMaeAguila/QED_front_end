@@ -18,6 +18,7 @@ interface StudentAttendanceSummaryModalProps {
   panelBorder: string;
   textPrimary: string;
   textMuted: string;
+  dropoutDate?: string;
   onClose: () => void;
 }
 
@@ -67,6 +68,7 @@ export function StudentAttendanceSummaryModal({
   textPrimary,
   textMuted,
   onClose,
+  dropoutDate,
 }: StudentAttendanceSummaryModalProps) {
   const cellBase = `px-3 py-2.5 text-center text-xs font-bold tabular-nums ${textPrimary}`;
   const headBase = `px-3 py-2.5 text-center text-xs font-extrabold uppercase tracking-wider ${textMuted}`;
@@ -88,6 +90,8 @@ export function StudentAttendanceSummaryModal({
       let present = 0;
       let absent = 0;
       for (const iso of dates) {
+        if(student.joinedDate&&iso<student.joinedDate)continue;
+        if(dropoutDate&&iso>=dropoutDate)continue;
         // A "class day" is any date someone on the roster was marked for —
         // same rule the main calendar's Present/School Days total uses.
         const marked = roster.some((s) => attendance[s.id]?.[iso]);
@@ -136,7 +140,7 @@ export function StudentAttendanceSummaryModal({
         <div className="relative shrink-0">
           <ModalHeader
             title={student.name}
-            subtitle="Attendance Summary"
+            subtitle={dropoutDate ? "Attendance Summary - Dropped effective " + dropoutDate : "Attendance Summary"}
             titleClassName={textPrimary}
             subtitleClassName={textMuted}
             leading={<StudentAvatar gender={student.gender} name={student.name} className="h-14 w-14 shadow-sm" />}

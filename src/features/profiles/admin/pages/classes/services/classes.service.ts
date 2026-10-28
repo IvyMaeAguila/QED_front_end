@@ -1,3 +1,4 @@
+import { boundedFetch as fetch, type BufferedHttpReply } from '@shared/http/boundedFetch';
 import type {ApiRequestOptions} from '@shared/http/ApiRequestOptions';
 import {QueryHttpError} from '@shared/http/QueryHttpError';
 import type { DayOfWeek, SchedulePeriod } from "../types/Class";
@@ -78,11 +79,11 @@ interface CreateClassPayload {
 // adviserId, and the full replacement schedule, exactly like createClass.
 export type UpdateClassPayload = CreateClassPayload;
 
-async function handleJsonResponse(res: Response,options:ApiRequestOptions={}) {
+async function handleJsonResponse(res: BufferedHttpReply,options:ApiRequestOptions={}) {
   if(res.status===401)options.onUnauthorized?.();
-  const data = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError('Request failed.',res.status);throw error;});
+  const data = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError('Request failed.',res.status, undefined, {requestId: res.requestId});throw error;});
   if (!res.ok || !data.success) {
-    throw new QueryHttpError(data.message || "Request failed.",res.status);
+    throw new QueryHttpError(data.message || "Request failed.",res.status, undefined, {requestId: res.requestId});
   }
   return data;
 }
@@ -185,7 +186,7 @@ export async function updateClassApi(id: string | number, payload: UpdateClassPa
 export async function fetchClasses(options:ApiRequestOptions={}): Promise<ClassRecord[]> {
   const res = await fetch(`${BASE_URL}/`, { credentials: "include",signal:options.signal });
   if(res.status===401)options.onUnauthorized?.();
-  if(!res.ok){const error=await res.json().catch(()=>({}));throw new QueryHttpError(error.message||"Request failed.",res.status);}
+  if(!res.ok){const error=await res.json().catch(()=>({}));throw new QueryHttpError(error.message||"Request failed.",res.status, undefined, {requestId: res.requestId});}
   const data = await handleJsonResponse(res);
   return data.data;
 }

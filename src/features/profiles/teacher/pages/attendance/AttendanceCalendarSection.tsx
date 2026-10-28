@@ -1,9 +1,11 @@
+import {initialDropoutReader,effectiveDropout} from './dropoutState';
+import {AttendanceRowMenu} from './AttendanceRowMenu';
 import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
 import { useSaveFeedback } from "@shared/components/useSaveFeedback";
-import {useContext,useRef,useLayoutEffect} from 'react';
+import {useContext} from 'react';
 import {AttendanceQueryContext} from '../../query/AttendanceQueryContext';
 import { AccountSelect } from "@shared/components/AccountSelect";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback, lazy, Suspense } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { RosterStudent } from "../subjects/detail/data";
@@ -17,11 +19,13 @@ import {
 import { fetchAdvisoryAttendance, saveAdvisoryAttendance } from "./services/attendance.service.ts";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { LoadingFormValue } from "@shared/loading/LoadingFormValue";
-import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
-import { SkeletonText } from "@shared/components/SkeletonLoading";
+import { Skeleton, SkeletonText } from "@shared/components/SkeletonLoading";
 import { rememberRows, skeletonRows } from "@shared/loading/reservations";
+import { useAttendanceCellEdits } from "./useAttendanceCellEdits";
 import { StudentAttendanceSummaryModal } from "./StudentAttendanceSummaryModal";
 
+const DropoutEffects=lazy(()=>import('./DropoutEffects').then(module=>({default:module.DropoutEffects})));
+const StudentDropoutDialog=lazy(()=>import('./StudentDropoutDialog').then(module=>({default:module.StudentDropoutDialog})));
 const WEEKDAY_LABELS = ["SN", "M", "T", "W", "TTH", "F", "ST"];
 const STUDENT_COLUMN_WIDTH = 180;
 const DAY_COLUMN_WIDTH = 28;
@@ -100,8 +104,12 @@ export function AttendanceCalendarSection({
   prerequisitesLoading = false,
 }: AttendanceCalendarSectionProps) {
   const bridge=useContext(AttendanceQueryContext);
+  const [dropoutReader,setDropoutReader]=useState(initialDropoutReader);
+  const [declarationStudent,setDeclarationStudent]=useState<RosterStudent|null>(null);
+  const dropoutReady=dropoutReader.data?.classId===sectionId&&!dropoutReader.loading&&!dropoutReader.error;
+  const dropoutFor=useCallback((id:string)=>dropoutReader.data?.classId===sectionId?effectiveDropout(dropoutReader,id):undefined,[dropoutReader,sectionId]);
   const [attempt, setAttempt] = useState(0);
-  const [attendance, setAttendance] = useState<AttendanceMap>({});
+  const [storedAttendance, setAttendance] = useState<AttendanceMap>({});
   const [loading, setLoading] = useState(true);
   const [attendanceError, setAttendanceError] = useState<string | null>(null);
   const [selectedTermId, setSelectedTermId] = useState<string>(() => terms.find((t) => t.isActive)?.id ?? terms[0]?.id ?? "");
@@ -110,10 +118,10 @@ export function AttendanceCalendarSection({
     return defaultViewDate(t);
   });
 
-  const { save, saveFeedback, pending, hasFailures } = useSaveFeedback(sectionId + ":" + selectedTermId);
+  const { save, saveFeedback, pending, hasFailures } = useSaveFeedback(sectionId + ":" + selectedTermId, { showStatus: false });
   const { navigationDialog, guardAction } = useUnsavedChanges(pending > 0 || hasFailures, darkMode);
-  const currentResource=useRef('');
-  useLayoutEffect(()=>{currentResource.current=sectionId+':'+selectedTermId;return()=>{currentResource.current='';};},[sectionId,selectedTermId]);
+  const { attendance, getStatus, saveMark, isPending } = useAttendanceCellEdits(sectionId + ':' + selectedTermId, storedAttendance, setAttendance, save,
+    (studentId, date, status) => (bridge?.save ?? saveAdvisoryAttendance)(sectionId, studentId, date, status, selectedTermId));
   const [summaryStudent, setSummaryStudent] = useState<RosterStudent | null>(null);
 
   const term = terms.find((t) => t.id === selectedTermId) ?? terms[0];
@@ -140,7 +148,7 @@ export function AttendanceCalendarSection({
 
   useEffect(() => {
     if (term) setViewDate(defaultViewDate(term));
-  }, [selectedTermId]);
+  }, [selectedTermId,term]);
 
   const days = useMemo(() => {
     const year = viewDate.getFullYear();
@@ -163,17 +171,15 @@ export function AttendanceCalendarSection({
       const hasMark = roster.some((student) => attendance[student.id]?.[iso]);
       if (hasMark) markedDates.add(iso);
     }
-    const total = markedDates.size;
+
 
     for (const student of roster) {
-      let present = 0;
-      for (const iso of termDates) {
-        if (attendance[student.id]?.[iso] === "P") present += 1;
-      }
-      summary[student.id] = { present, total };
+      const cutoff=dropoutFor(student.id)?.effectiveDate;
+      const eligible=[...markedDates].filter(d=>(!student.joinedDate||d>=student.joinedDate)&&(!cutoff||d<cutoff));
+      summary[student.id] = {present:eligible.filter(d=>attendance[student.id]?.[d]==='P').length,total:eligible.length};
     }
     return summary;
-  }, [roster, termDates, attendance, term]);
+  }, [roster, termDates, attendance, term, dropoutFor]);
 
   const groupedRoster = useMemo(() => {
     const male = roster.filter((s) => !isFemale(s));
@@ -182,21 +188,20 @@ export function AttendanceCalendarSection({
   }, [roster]);
 
   function cycle(studentId: string, dateISO: string) {
-    if (!editable) return;
-    const current = attendance[studentId]?.[dateISO] ?? null;
+    if (!editable || !dropoutReady || (dropoutFor(studentId)?.effectiveDate ?? '9999-12-31') <= dateISO) return;
+    const current = getStatus(studentId, dateISO);
     const inSelectedTerm = Boolean(term && dateISO >= term.startDate && dateISO <= term.endDate);
     const canMarkNewToday = Boolean(
       dateISO === todayISO && canMarkToday && term?.id === activeTerm?.id,
     );
     const canEditExistingPast = Boolean(current && dateISO < todayISO);
-    if (!inSelectedTerm || (!canMarkNewToday && !canEditExistingPast)) return;
+    const joinedDate=roster.find(s=>s.id===studentId)?.joinedDate;
+    const canBackfill=!!joinedDate&&dateISO>=joinedDate&&dateISO<todayISO&&![0,6].includes(new Date(dateISO+'T12:00:00Z').getUTCDay());
+    if ((joinedDate&&dateISO<joinedDate)||!inSelectedTerm || (!canMarkNewToday && !canEditExistingPast && !canBackfill)) return;
     const idx = ATTENDANCE_CYCLE.indexOf(current);
     const next = ATTENDANCE_CYCLE[(idx + 1) % ATTENDANCE_CYCLE.length];
 
-    void save(async () => {
-      await (bridge?.save ?? saveAdvisoryAttendance)(sectionId, studentId, dateISO, next, selectedTermId);
-      if (currentResource.current === sectionId + ':' + selectedTermId) setAttendance(prev => ({ ...prev, [studentId]: { ...prev[studentId], [dateISO]: next } }));
-    }, studentId + ':' + dateISO);
+    saveMark(studentId, dateISO, next);
   }
 
   const canGoPrev = term ? yearMonth(viewDate) > yearMonth(parseISO(term.startDate)) : true;
@@ -219,11 +224,15 @@ export function AttendanceCalendarSection({
 
   function renderStudentRow(student: RosterStudent, index: number, pending: boolean) {
     const { present, total } = termSummary[student.id] ?? { present: 0, total: 0 };
+    const dropout=dropoutFor(student.id);
+    const risk=dropoutReader.data?.classId===sectionId?dropoutReader.data.students[student.id]?.risk:undefined;
     const rowStripe = index % 2 === 1 ? (darkMode ? "bg-white/[0.015]" : "bg-black/[0.012]") : "";
     return (
       <tr data-sk-region="attendance-record-row" key={student.id} className={`border-t ${panelBorder} ${rowStripe}`}>
         <td className={`sticky left-0 z-10 px-3 py-2 ${darkMode ? "bg-panel-dark" : "bg-white"}`}>
           <span title={student.name} className={`block truncate text-xs font-semibold ${textPrimary}`}>{pending && prerequisitesLoading ? <SkeletonText width={index % 2 ? "12ch" : "16ch"} /> : student.name}</span>
+          {!pending&&dropout&&<span className={'mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold '+(darkMode?'bg-white/10 text-slate-300':'bg-slate-100 text-slate-600')} title={'Dropped effective '+dropout.effectiveDate}>Dropped</span>}
+          {!pending&&!dropout&&risk&&risk.count>=5&&<span className={'mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold '+(darkMode?'bg-amber-500/10 text-amber-200':'bg-amber-50 text-amber-800')} title={risk.count+' consecutive school-day absences since '+risk.since}>At risk: {risk.count} consecutive absences</span>}
         </td>
         {days.map(({ iso, dayOfWeek }) => {
           const status = attendance[student.id]?.[iso] ?? null;
@@ -233,7 +242,10 @@ export function AttendanceCalendarSection({
           const inTerm = term ? iso >= term.startDate && iso <= term.endDate : false;
           const canMarkNewToday = iso === todayISO && canMarkToday && term?.id === activeTerm?.id;
           const canEditExistingPast = Boolean(status && iso < todayISO);
-          const clickable = !pending && editable && inTerm && (canMarkNewToday || canEditExistingPast);
+          const droppedDate=!!dropout&&iso>=dropout.effectiveDate;
+          const beforeJoined=!!student.joinedDate&&iso<student.joinedDate;
+          const canBackfill=!!student.joinedDate&&iso>=student.joinedDate&&iso<todayISO&&!isWeekend;
+          const clickable = !beforeJoined && !droppedDate && dropoutReady && !pending && editable && inTerm && (canMarkNewToday || canEditExistingPast || canBackfill);
           return (
             <td
               key={iso}
@@ -241,22 +253,25 @@ export function AttendanceCalendarSection({
             >
               <button
                 onClick={() => clickable && cycle(student.id, iso)}
+                aria-busy={isPending(student.id, iso)}
+                data-attendance-date={iso}
+                data-attendance-student={student.id}
                 disabled={!clickable}
-                title={clickable
+                title={beforeJoined ? `Not yet enrolled - joined ${student.joinedDate}` : droppedDate ? `Dropped effective ${dropout.effectiveDate} - attendance entry is locked` : clickable
                   ? `${formatDisplayDate(iso)} — ${iso < todayISO ? "edit saved attendance" : "mark today's attendance"}`
                   : !inTerm
                     ? `${formatDisplayDate(iso)} — outside ${term?.label ?? ""}`
                     : `${formatDisplayDate(iso)} — only saved past marks or today's attendance during an open term can be edited`}
-                className={`inline-flex h-6 w-6 items-center justify-center rounded-md text-xs font-extrabold tabular-nums transition-colors ${
-                  pending ? "cursor-not-allowed" : clickable ? "hover:scale-105 cursor-pointer" : "cursor-not-allowed opacity-25"
+                className={`inline-flex h-6 w-6 items-center justify-center rounded-md text-xs font-extrabold tabular-nums transition-[background-color,color,transform] duration-150 ease-out motion-reduce:transition-none ${
+                  pending ? "cursor-not-allowed" : clickable ? "hover:scale-105 active:scale-95 cursor-pointer" : "cursor-not-allowed opacity-25"
                 } ${!pending && isWeekend && !status ? "opacity-60" : ""}`}
                 style={
-                  pending ? { backgroundColor: "var(--sk-transparent)" } : meta
+                  pending ? { backgroundColor: "var(--sk-transparent)" } : (droppedDate || beforeJoined) ? {backgroundImage:"repeating-linear-gradient(135deg,transparent,transparent 3px,var(--border-subtle) 3px,var(--border-subtle) 6px)",color:"var(--text-muted)"} : meta
                     ? { backgroundColor: darkMode ? `color-mix(in srgb, ${meta.color} 14.51%, transparent)` : meta.bg, color: meta.color }
                     : { backgroundColor: darkMode ? "#ffffff10" : "var(--surface-page)", color: "#9CA3AF" }
                 }
               >
-                {pending ? <SkeletonText width="1ch" /> : status ?? "·"}
+                {pending ? <Skeleton className="h-4 w-4 rounded-md" /> : status ?? "·"}
               </button>
             </td>
           );
@@ -267,16 +282,8 @@ export function AttendanceCalendarSection({
           </span>
         </td>
         <td className={`sticky right-0 z-10 border-l px-1 py-2 text-center ${panelBorder} ${stickyRightBg}`}>
-          <button
-            disabled={pending}
-            onClick={() => setSummaryStudent(student)}
-            className={`inline-flex min-h-7 items-center justify-center rounded-lg px-2 text-xs font-bold transition-colors ${
-              darkMode ? "hover:bg-white/10" : "hover:bg-brand-light"
-            }`}
-            style={{ color: "var(--brand-ink)" }}
-          >
-            View 
-          </button>
+          <AttendanceRowMenu name={student.name} dropped={!!dropout} disabled={pending||!dropoutReady} darkMode={darkMode} onView={()=>setSummaryStudent(student)} onDropout={()=>guardAction(()=>setDeclarationStudent(student))}/>
+
         </td>
       </tr>
     );
@@ -332,16 +339,17 @@ export function AttendanceCalendarSection({
                     darkMode ? "bg-panel-dark" : "bg-brand-light"
                   } ${textMuted}`}
                 >
-                  Present / School Days
-                  <br />
-                  <span className="normal-case font-semibold">({prerequisitesLoading ? <SkeletonParagraph field="attendance-record-term-label" typical={2} width="100%" /> : term?.label})</span>
+                  <div className="flex flex-col items-center justify-center gap-1">
+                    <span>Present / School Days</span>
+                    <span className="inline-flex h-4 items-center justify-center whitespace-nowrap normal-case font-semibold">{prerequisitesLoading ? <SkeletonText width="6ch" /> : `(${term?.label ?? ""})`}</span>
+                  </div>
                 </th>
                 <th
                   className={`sticky right-0 z-20 border-l px-1 py-3 text-center text-xs font-extrabold uppercase tracking-wide ${panelBorder} ${
                     darkMode ? "bg-panel-dark" : "bg-brand-light"
                   } ${textMuted}`}
                 >
-                  Summary
+                  Actions
                 </th>
               </tr>
             </thead>
@@ -383,7 +391,7 @@ export function AttendanceCalendarSection({
   };
 
   if (!term && !prerequisitesLoading) {
-    return (<>{bridge && <bridge.Effects {...{classId:sectionId,termId:selectedTermId,ready:!prerequisitesLoading&&!!sectionId,attempt,setAttendance,setLoading,setError:setAttendanceError,errorMessage:"Couldn't load attendance for this term. Please try again."}}/>}
+    return (<>{bridge && <Suspense fallback={null}><DropoutEffects classId={sectionId} ready={!prerequisitesLoading&&!!sectionId} onChange={setDropoutReader}/></Suspense>} {bridge && <bridge.Effects {...{classId:sectionId,termId:selectedTermId,ready:!prerequisitesLoading&&!!sectionId,attempt,setAttendance,setLoading,setError:setAttendanceError,errorMessage:"Couldn't load attendance for this term. Please try again."}}/>}
 {(
       <div className={`${cardClasses} px-5 py-16 text-center`}>
         <p className={`font-bold ${textPrimary}`}>No terms set up yet</p>
@@ -392,27 +400,28 @@ export function AttendanceCalendarSection({
     )}</>);
   }
 
-  return (<>{bridge && <bridge.Effects {...{classId:sectionId,termId:selectedTermId,ready:!prerequisitesLoading&&!!sectionId,attempt,setAttendance,setLoading,setError:setAttendanceError,errorMessage:"Couldn't load attendance for this term. Please try again."}}/>}
+  return (<>{bridge && <Suspense fallback={null}><DropoutEffects classId={sectionId} ready={!prerequisitesLoading&&!!sectionId} onChange={setDropoutReader}/></Suspense>} {bridge && <bridge.Effects {...{classId:sectionId,termId:selectedTermId,ready:!prerequisitesLoading&&!!sectionId,attempt,setAttendance,setLoading,setError:setAttendanceError,errorMessage:"Couldn't load attendance for this term. Please try again."}}/>}
 {(
     <section className={cardClasses} aria-label="Attendance records">
       {saveFeedback}
       {navigationDialog}
+      {dropoutReader.error&&<div role="alert" className={'border-b px-5 py-3 text-xs '+panelBorder}><span>{dropoutReader.error}</span><button type="button" className="ml-2 font-semibold underline" onClick={dropoutReader.retry}>Retry dropout records</button></div>}
+      {declarationStudent&&dropoutReader.data&&<Suspense fallback={null}><StudentDropoutDialog classId={sectionId} student={declarationStudent} state={dropoutReader.data} dropout={dropoutFor(declarationStudent.id)} theme={{darkMode,panelBg,panelBorder,textPrimary,textMuted}} onClose={()=>setDeclarationStudent(null)} onSaved={()=>{dropoutReader.retry();setAttempt(n=>n+1);}}/></Suspense>}
       <div className={`flex flex-col gap-4 border-b px-5 py-5 sm:flex-row sm:items-center sm:justify-between ${panelBorder}`}>
         <div className="flex items-start gap-3">
           <div>
             <h2 data-sk-static="" className={`font-extrabold ${textPrimary}`}>Attendance Records</h2>
             <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
-              {prerequisitesLoading ? <SkeletonText width="1ch" className="inline-block align-top" /> : roster.length} student{roster.length === 1 ? "" : "s"}
-              {editable ? " · click a cell to edit" : ""}
+              {prerequisitesLoading ? <SkeletonText width="24ch" className="inline-block align-middle" /> : <>{roster.length} student{roster.length === 1 ? "" : "s"}{editable ? " · click a cell to edit" : ""}</>}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <LoadingFormValue loading={prerequisitesLoading} intrinsic name="attendance-records-term" width="7ch"><AccountSelect data-account-select="" data-dropdown-dark={darkMode}
+        <div className="flex flex-wrap items-center gap-2">
+          <LoadingFormValue loading={prerequisitesLoading} name="attendance-records-term" width="6ch"><AccountSelect data-account-select="" data-dropdown-dark={darkMode}
             value={selectedTermId}
             onChange={(e) => guardAction(() => setSelectedTermId(e.target.value))}
-            className={`h-9 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
+            className={`h-9 w-32 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
             aria-label="Term"
           >
             {terms.map((t) => (
@@ -425,7 +434,7 @@ export function AttendanceCalendarSection({
           <div className={`flex h-9 items-center gap-1 rounded-lg border px-1 ${panelBorder}`}>
             <button
               onClick={goToPrevMonth}
-              disabled={!canGoPrev}
+              disabled={prerequisitesLoading || !canGoPrev}
               aria-label="Previous month"
               className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors disabled:opacity-30 ${
                 darkMode ? "hover:bg-white/10" : "hover:bg-brand-light"
@@ -436,7 +445,7 @@ export function AttendanceCalendarSection({
             <span className={`min-w-32 px-2 py-1 text-center text-xs font-extrabold ${textPrimary}`}>{monthLabel(viewDate)}</span>
             <button
               onClick={goToNextMonth}
-              disabled={!canGoNext}
+              disabled={prerequisitesLoading || !canGoNext}
               aria-label="Next month"
               className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors disabled:opacity-30 ${
                 darkMode ? "hover:bg-white/10" : "hover:bg-brand-light"
@@ -448,11 +457,11 @@ export function AttendanceCalendarSection({
         </div>
       </div>
 
-      <LoadingRegion loading={prerequisitesLoading} name="attendance-records-term-notice" variable skeleton={<div className={`border-b px-5 py-2.5 text-xs font-medium ${panelBorder} ${textMuted}`}><SkeletonParagraph field="attendance-records-term-notice" typical={3} width="100%" /></div>}>{editable && !canMarkToday && (
+      {!prerequisitesLoading && editable && !canMarkToday && (
         <div className={`border-b px-5 py-2.5 text-xs font-medium ${panelBorder} ${textMuted}`}>
           Today is outside an open term, so new attendance cannot be entered. Previously saved attendance remains editable.
         </div>
-      )}</LoadingRegion>
+      )}
 
       <div className={`flex flex-wrap gap-3 border-b px-5 py-3 ${panelBorder}`}>
         {(Object.keys(ATTENDANCE_META) as (keyof typeof ATTENDANCE_META)[]).map((key) => {
@@ -474,6 +483,7 @@ export function AttendanceCalendarSection({
           roster={roster}
           attendance={attendance}
           terms={terms}
+          dropoutDate={dropoutFor(summaryStudent.id)?.effectiveDate}
           darkMode={darkMode}
           panelBg={panelBg}
           panelBorder={panelBorder}

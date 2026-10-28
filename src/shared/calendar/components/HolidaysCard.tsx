@@ -10,6 +10,7 @@ import { EntryRowActions } from "./EntryRowsAction";
 interface HolidaysCardProps extends CalendarTheme {
   loading?: boolean;
   error?: unknown;
+  hasData?: boolean;
   retry?: () => void;
   view?: string;
   holidays: CalendarHoliday[];
@@ -23,6 +24,7 @@ interface HolidaysCardProps extends CalendarTheme {
 interface HolidayGroupListProps {
   loading?: boolean;
   error?: unknown;
+  hasData?: boolean;
   retry?: () => void;
   view?: string;
   holidays: CalendarHoliday[];
@@ -144,7 +146,7 @@ function HolidayRow({
 
 export function HolidayGroupList({
   holidays,
-  loading = false, error, retry, view = "calendar-holidays",
+  loading = false, error, retry, hasData, view = "calendar-holidays",
   darkMode,
   textMuted,
   onEdit,
@@ -183,12 +185,12 @@ export function HolidayGroupList({
     </div>
   );
   };
-  return <LoadingRegion name={view + "-rows"} loading={loading} error={error} retry={retry} variable retainPrevious hasContent={holidays.length > 0} skeleton={null} frame={renderGroups} onSettled={() => rememberRows(view, holidays.length)}>{null}</LoadingRegion>;
+  return <LoadingRegion name={view + "-rows"} loading={loading} error={error} retry={retry} variable retainPrevious retainOnError={hasData} hasContent={hasData ?? holidays.length > 0} skeleton={null} frame={renderGroups} onSettled={() => rememberRows(view, holidays.length)}>{null}</LoadingRegion>;
 }
 
 export function HolidaysCard({
   holidays,
-  loading = false, error, retry,
+  loading = false, error, retry, hasData,
   onExpand,
   viewDate,
   selectedDate,
@@ -228,7 +230,7 @@ export function HolidaysCard({
       <div className="max-h-96 overflow-y-auto pr-1">
         {/* No onEdit/onDelete here — actions only appear in the expanded modal */}
         <HolidayGroupList
-          loading={loading} error={error} retry={retry} view={"calendar-holidays" + (selectedDate?.toISOString().slice(0,10) ?? viewDate?.toISOString().slice(0,7) ?? "current")}
+          loading={loading} error={error} retry={retry} hasData={hasData} view={"calendar-holidays" + (selectedDate?.toISOString().slice(0,10) ?? viewDate?.toISOString().slice(0,7) ?? "current")}
           holidays={visibleHolidays}
           darkMode={darkMode}
           textMuted={textMuted}

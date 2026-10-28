@@ -26,8 +26,8 @@ async function fixture(page: Page) {
     empty: () => { empty = true; },
     hold: (e: Endpoint) => { gates[e] = new Promise(resolve => { releases[e] = resolve; }); },
     release: (e: Endpoint) => { releases[e]?.(); delete gates[e]; },
-    async settled(count: number) {
-      await expect.poll(() => endpoints.map(e => ledger.snapshot().filter(r => r.path.endsWith('/' + e) && r.terminal === "finished").length)).toEqual(endpoints.map(() => count));
+    async settled(count: number | Record<Endpoint, number>) {
+      await expect.poll(() => endpoints.map(e => ledger.snapshot().filter(r => r.path.endsWith('/' + e) && r.terminal === "finished").length)).toEqual(endpoints.map(e => typeof count === "number" ? count : count[e]));
       await expect.poll(() => ledger.snapshot().every(r => r.terminal !== undefined)).toBe(true);
       expect(ledger.snapshot().filter(r => r.terminal === "failed")).toEqual([]);
     },
@@ -57,27 +57,27 @@ test("Teacher dashboard: independent loading, exact fresh reuse, stale revalidat
   await page.context().setOffline(true);
   await expect(page.getByRole("alert")).toContainText("You're offline");
   await page.clock.fastForward(31_000); await page.context().setOffline(false);
-  await expect(page.getByRole("alert")).toContainText("statistics"); await f.settled(3);
+  await expect(page.getByRole("alert")).toContainText("statistics"); await f.settled({summary:3,stats:4,attendance:3,upcoming:3,schedule:3});
   f.status.stats = 200; await page.getByRole("button", { name: "Retry", exact: true }).click();
-  await ready(page); await f.settled(4);
+  await ready(page); await f.settled({summary:3,stats:5,attendance:3,upcoming:3,schedule:3});
   await info.attach("sanitized-request-lifecycle", { body: JSON.stringify(f.ledger.snapshot()), contentType: "application/json" });
 });
 for (const endpoint of endpoints) test(`Teacher dashboard: ${endpoint} failure preserves independent sections and recovers`, async ({ page }) => {
   const f = await fixture(page); f.status[endpoint] = 500;
   await page.goto("/teacher"); await waitForDataRoute(page);
-  await expect(page.getByRole("alert")).toContainText("Unable to load"); await f.settled(1);
+  await expect(page.getByRole("alert")).toContainText("Unable to load"); await f.settled(Object.fromEntries(endpoints.map(e=>[e,e===endpoint?2:1])) as Record<Endpoint,number>);
   await expect(page.locator('[data-sk-layer]')).toHaveCount(0);
   if (endpoint !== "stats") await ready(page);
   f.status[endpoint] = 200; await page.getByRole("button", { name: "Retry", exact: true }).click();
-  await ready(page); await f.settled(2);
+  await ready(page); await f.settled(Object.fromEntries(endpoints.map(e=>[e,e===endpoint?3:1])) as Record<Endpoint,number>);
 });
 test("Teacher dashboard: all endpoints fail, one bounded Retry recovers", async ({ page }) => {
   const f = await fixture(page); endpoints.forEach(e => { f.status[e] = 500; });
   await page.goto("/teacher"); await waitForDataRoute(page);
-  await expect(page.getByRole("alert")).toContainText("profile, statistics, attendance, events, weekly schedule"); await f.settled(1);
+  await expect(page.getByRole("alert")).toContainText("profile, statistics, attendance, events, weekly schedule"); await f.settled(2);
   await expect(page.locator('[data-sk-layer]')).toHaveCount(0);
   endpoints.forEach(e => { f.status[e] = 200; });
-  await page.getByRole("button", { name: "Retry", exact: true }).click(); await ready(page); await f.settled(2);
+  await page.getByRole("button", { name: "Retry", exact: true }).click(); await ready(page); await f.settled(3);
 });
 test("Teacher dashboard: uncached offline mount stops loading, repeated retries queue no requests, reconnect recovers", async ({ page }) => {
   const f = await fixture(page);

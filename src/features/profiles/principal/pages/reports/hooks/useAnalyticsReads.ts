@@ -1,3 +1,4 @@
+import {useReadFreshness} from '@shared/query/readFreshness';
 import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { onlineManager, useQuery } from "@tanstack/react-query";
 import { useAuth } from "@shared/hooks/useAuth";
@@ -88,11 +89,10 @@ export function useAnalyticsReads<T, F>(
     // New context enables its own new keys; unchanged context needs explicit
     // refresh of all three original report requests, including fresh lookups.
     if (next.data.id === yearId) {
-      void terms.refetch({ cancelRefetch: false });
-      void filterOptions.refetch({ cancelRefetch: false });
-      void result.refetch({ cancelRefetch: false });
+      await Promise.all([terms.refetch({ cancelRefetch: false }), filterOptions.refetch({ cancelRefetch: false }), result.refetch({ cancelRefetch: false })]);
     }
   };
+  useReadFreshness(JSON.stringify(['analytics',requestScope]), enabled, retry);
   return {
     data: visible ? result.data : undefined,
     terms: visible ? terms.data : undefined,

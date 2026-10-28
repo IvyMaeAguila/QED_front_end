@@ -66,8 +66,10 @@ export default defineConfig({
         }
         eagerGroups.clear();
         for (const id of publicModules) {
-          if (/\.(?:css|png|jpg|webp|svg)(?:\?|$)/.test(id)) continue;
-          eagerGroups.set(id, id.includes("node_modules/") ? "public-vendor" : "public-app");
+          if (/\.css(?:\?|$)/.test(id)) continue;
+          // Keep the identical public audience together, including asset URL
+          // wrappers. Image/font payloads remain separate emitted assets.
+          eagerGroups.set(id, "public-app");
         }
         audiences.forEach((roles, id) => {
           // Shared authenticated Query runtime is also reached by the lazy Admin

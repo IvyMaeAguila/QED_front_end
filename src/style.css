@@ -541,6 +541,27 @@ select[aria-label*="month" i] {
   line-height: 1.4;
 }
 
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(12px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.qed-login-modal .qed-login-submit {
+  background: var(--color-maroon);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--brand-primary) 16%, transparent);
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.qed-login-modal .qed-login-input {
+  box-shadow: none;
+}
+
+.qed-login-modal .qed-login-input:focus {
+  background: #fff;
+  border-color: color-mix(in srgb, var(--brand-primary) 35%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 7%, transparent);
+}
+
 .qed-login-modal label.qed-type-label-compact {
   font-family: var(--qed-font-primary), var(--qed-font-fallback);
   font-size: var(--qed-type-compact-label);

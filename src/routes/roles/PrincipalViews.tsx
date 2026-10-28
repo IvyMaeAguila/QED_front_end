@@ -1,3 +1,4 @@
+import { ExaminationPerformancePageComposition } from "../../features/profiles/principal/pages/reports/ExaminationPerformancePage.loading-view";
 import { PrincipalGradeSheetPageComposition } from "../../features/profiles/principal/pages/gradebooks/PrincipalGradeSheetPage.loading-view";
 import { AnalyticsPageComposition } from "../../features/profiles/principal/pages/reports/AnalyticsPage.loading-view";
 import { PrincipalGradebooksPageComposition } from "../../features/profiles/principal/pages/gradebooks/PrincipalGradebooksPage.loading-view";
@@ -10,6 +11,7 @@ import { PrincipalDashboardHomeComposition } from "../../features/profiles/princ
 import { ClassListPageComposition } from "../../features/profiles/principal/pages/students/ClassListPage.loading-view";
 import { HolisticPerformanceAnalyticsPageComposition } from "../../features/profiles/principal/pages/reports/HolisticPerformanceAnalyticsPage.loading-view";
 export const routeViews = {
+  ExaminationPerformancePageComposition,
   PrincipalGradeSheetPageComposition,
   AnalyticsPageComposition,
   PrincipalGradebooksPageComposition,

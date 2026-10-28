@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import type {TeacherRequestOptions} from '../../../../teacher/query/teacherQueryScope';
 import {QueryHttpError} from '@shared/http/QueryHttpError';
 import { API_CONFIG } from '../../../../../../config/api.config';
@@ -26,10 +27,10 @@ export async function fetchTeachers(options:TeacherRequestOptions={}): Promise<T
   const res = await fetch(`${BASE_URL}/getTeachers`, { credentials: "include",signal:options.signal });
   if(res.status===401)options.onUnauthorized?.();
 
-  const json: ApiResponse<TeacherRow[]> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Failed to fetch teachers.",res.status);throw error;});
+  const json: ApiResponse<TeacherRow[]> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Failed to fetch teachers.",res.status, undefined, {requestId: res.requestId});throw error;});
 
   if (!res.ok) {
-    throw new QueryHttpError(json.message || "Failed to fetch teachers.",res.status);
+    throw new QueryHttpError(json.message || "Failed to fetch teachers.",res.status, undefined, {requestId: res.requestId});
   }
 
   return json.data ?? [];

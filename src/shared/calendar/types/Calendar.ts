@@ -1,4 +1,6 @@
 export type Role = "ADMIN" | "PRINCIPAL" | "TEACHER" | "PARENT";
+export type CalendarReadResource='activities'|'holidays'|'all-activities'|'all-holidays';
+export type CalendarReadStates=Partial<Record<CalendarReadResource,{loading:boolean;error:string|null;hasData:boolean;retry:()=>void}>>;
 
 export const ACCENT = "var(--color-maroon)";
 

@@ -36,7 +36,10 @@ interface ProgressReportContextValue {
   visibility: TermVisibilityEntry[];
   /** Visibility entry (isVisible/termEnded/available) para sa currently selected term. */
   selectedTermVisibility: TermVisibilityEntry | undefined;
+  sections: Record<ReportSection, {loading:boolean;error:string|null;hasData:boolean;retry:()=>void}>;
+  complete: boolean;
 }
+export type ReportSection = 'academic'|'holistic'|'attendance'|'visibility';
 
 const ProgressReportContext = createContext<ProgressReportContextValue | undefined>(undefined);
 
@@ -169,13 +172,17 @@ function ProgressReportProvider({
   const attendance=useParentChildReader(['progress','attendance'],studentId,options=>AttendanceService.getAttendanceSummary(Number(studentId),options),'Failed to load attendance summary.',30_000,undefined,ready);
   const access=useParentChildReader(['progress','visibility'],studentId,options=>fetchStudentGradeVisibility(studentId!,options),'Failed to load grade visibility.',30_000,undefined,ready);
   const denied=[academic,holistic,attendance,access].find(reader=>reader.denied);
-  const fetchedData=useMemo(()=>academic.data?({meta:academic.data.meta,periodicRatings:toPeriodicRatingRows(academic.data.terms),termAverages:toTermAverages(academic.data.terms),holisticAssessments:holistic.data?toHolisticAssessments(holistic.data):[],attendanceByTerm:attendance.data?toAttendanceByTerm(attendance.data):[]}):null,[academic.data,holistic.data,attendance.data]);
+  const fetchedData=useMemo(()=>({meta:academic.data?.meta??EMPTY_PROGRESS_REPORT_DATA.meta,periodicRatings:academic.data?toPeriodicRatingRows(academic.data.terms):[],termAverages:academic.data?toTermAverages(academic.data.terms):[],holisticAssessments:holistic.data?toHolisticAssessments(holistic.data):[],attendanceByTerm:attendance.data?toAttendanceByTerm(attendance.data):[]}),[academic.data,holistic.data,attendance.data]);
   const data=providedData??(denied?EMPTY_PROGRESS_REPORT_DATA:fetchedData??EMPTY_PROGRESS_REPORT_DATA);
-  const visibility=denied?EMPTY_VISIBILITY:access.data??EMPTY_VISIBILITY;
-  const loading=!providedData&&[academic,holistic,attendance,access].some(reader=>reader.loading);
-  const error=providedData?null:!studentId?'Missing studentId for fetching progress report.':denied?.error??academic.error;
+  // Release verification is required even when previously cached academics exist.
+  const visibility=denied||access.error||access.loading?EMPTY_VISIBILITY:access.data??EMPTY_VISIBILITY;
+  const loading=!providedData&&(access.loading||academic.loading);
+  const error=providedData?null:!studentId?'Missing studentId for fetching progress report.':denied?.error??(access.error?academic.error??access.error:null);
+  const readers={academic,holistic,attendance,visibility:access};
+  const sections=Object.fromEntries(Object.entries(readers).map(([key,reader])=>[key,{loading:!providedData&&reader.loading,error:providedData?null:reader.error,hasData:!!providedData||!denied&&reader.data!==undefined,retry:()=>{void reader.retry();}}])) as ProgressReportContextValue['sections'];
+  const complete=!!providedData||!denied&&Object.values(readers).every(reader=>reader.data!==undefined&&!reader.loading&&!reader.error);
   useEffect(()=>{if(!userSelectedRef.current)setSelectedTermState(getLatestReleasedTerm(data.termAverages));},[data.termAverages]);
-  const refetch=()=>{void Promise.all([academic.retry(),holistic.retry(),attendance.retry(),access.retry()]);};
+  const refetch=()=>{void Promise.all(Object.values(readers).filter(reader=>reader.error||reader.data===undefined).map(reader=>reader.retry()));};
 
   const currentTermAverage = useMemo(
     () => data.termAverages.find((t) => t.term === selectedTerm),
@@ -231,6 +238,8 @@ function ProgressReportProvider({
     refetch,
     visibility,
     selectedTermVisibility,
+    sections,
+    complete,
   };
 
   return <ProgressReportContext.Provider value={value}>{children}</ProgressReportContext.Provider>;

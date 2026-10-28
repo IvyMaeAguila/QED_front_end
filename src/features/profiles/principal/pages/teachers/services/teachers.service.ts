@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import { QueryHttpError } from "@shared/http/QueryHttpError";
 import { API_CONFIG } from "../../../../../../config/api.config"; 
 import { fetchActiveAcademicYear } from "../../../../admin/pages/subjects/services/academicyear.service";
@@ -44,7 +45,7 @@ export async function getTeacherProfile(
 // Directory responses are cached exclusively by TanStack Query.
 export async function getTeachers(signal?: AbortSignal): Promise<TeacherSummary[]> {
   const response = await fetch(BASE_URL, { credentials: "include", signal });
-  if (!response.ok) throw new QueryHttpError(`Failed to fetch teachers (${response.status})`, response.status);
+  if (!response.ok) throw new QueryHttpError(`Failed to fetch teachers (${response.status})`, response.status, undefined, {requestId: response.requestId});
   return response.json();
 }
 
@@ -53,7 +54,7 @@ export async function getDirectorySchoolYear(signal?: AbortSignal): Promise<stri
   const response = await fetch(`${API_CONFIG.baseURL}/api/academic-year/getAcademicYear`, {
     credentials: "include", signal,
   });
-  if (!response.ok) throw new QueryHttpError("Failed to fetch academic year.", response.status);
+  if (!response.ok) throw new QueryHttpError("Failed to fetch academic year.", response.status, undefined, {requestId: response.requestId});
   const json = await response.json();
   if (!json.data) throw new Error(json.message || "Failed to fetch academic year.");
   return json.data.label;

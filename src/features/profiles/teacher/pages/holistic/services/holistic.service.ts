@@ -1,3 +1,4 @@
+import { boundedFetch as fetch, type BufferedHttpReply } from '@shared/http/boundedFetch';
 import { API_CONFIG } from '../../../../../../config/api.config';
 import type { HolisticAxisKey, HolisticMap } from "../../subjects/detail/types/Grading";
 import type { TeacherRequestOptions } from "../../../query/teacherQueryScope";
@@ -5,10 +6,10 @@ import { QueryHttpError } from "@shared/http/QueryHttpError";
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/teacherHolistic`;
 
-async function handleJsonResponse(res: Response) {
-  const data = await res.json().catch(error => { if(!res.ok)throw new QueryHttpError('Request failed.',res.status);throw error; });
+async function handleJsonResponse(res: BufferedHttpReply) {
+  const data = await res.json().catch(error => { if(!res.ok)throw new QueryHttpError('Request failed.',res.status, undefined, {requestId: res.requestId});throw error; });
   if (!res.ok || !data.success) {
-    if(!res.ok)throw new QueryHttpError(data.message || "Request failed.",res.status);
+    if(!res.ok)throw new QueryHttpError(data.message || "Request failed.",res.status, undefined, {requestId: res.requestId});
     throw new Error(data.message || "Request failed.");
   }
   return data;
@@ -184,6 +185,13 @@ export interface StudentHolisticProfile {
   overall: OverallDomainSnapshot;
   highestRiskLevel: "HIGH" | "MEDIUM" | "NONE";
   subjects: SubjectDomainProfile[];
+  evaluationHistory?: {
+    date: string;
+    subjectSectionId: string;
+    subjectName: string;
+    domain: keyof DomainAverages;
+    score: number;
+  }[];
 }
 
 export async function fetchStudentHolisticProfile(

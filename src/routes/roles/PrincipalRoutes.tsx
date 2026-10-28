@@ -11,6 +11,7 @@ const PrincipalStudentsPage = lazy(routeSkeletons["/principal/students"].load);
 const ClassListPage = lazy(routeSkeletons["/principal/students/class/:classId"].load);
 const PrincipalTeachersPage = lazy(routeSkeletons["/principal/teachers"].load);
 const TeacherSchedulePage = lazy(routeSkeletons["/principal/teachers/:teacherId"].load);
+const ExaminationPerformancePage = lazy(routeSkeletons["/principal/examination-performance"].load);
 const AnalyticsPage = lazy(routeSkeletons["/principal/reports"].load);
 const PrincipalGradebooksPage = lazy(routeSkeletons["/principal/gradebooks"].load);
 const PrincipalGradeSheetPage = lazy(routeSkeletons["/principal/gradebooks/:grade"].load);
@@ -24,6 +25,7 @@ export default function PrincipalRoutes() {
           <Route path="teachers" element={<PrincipalTeachersPage />} />
           <Route path="teachers/:teacherId" element={<TeacherSchedulePage />} />
           <Route path="reports" element={<AnalyticsPage />} />
+          <Route path="examination-performance" element={<ExaminationPerformancePage />} />
           <Route
             path="holistic-performance-analytics"
             element={<HolisticPerformanceAnalyticsPage />}

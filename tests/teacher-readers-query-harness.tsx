@@ -2,6 +2,8 @@ import { StrictMode, useState, useSyncExternalStore } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClientProvider, notifyManager } from "@tanstack/react-query";
 import { AuthProvider } from "../src/features/auth/context/authContext";
+import { SettingsProvider } from "../src/features/profiles/admin/pages/settings/context/SettingsContext";
+import { ToastProvider } from "../src/shared/context/ToastContext";
 import { useAuth } from "../src/shared/hooks/useAuth";
 import { queryClient } from "../src/shared/query/queryClient";
 import { RoutePreviewOutletContext, RoutePreviewContext } from "../src/shared/loading/RoutePreview";
@@ -74,7 +76,17 @@ export function Harness() {
       : <>{mounted && <Reader target={target}/>}{observer && <Reader target={target}/>}</>}
   </RoutePreviewContext.Provider>;
 }
-createRoot(document.getElementById("root")!).render(<StrictMode><AuthProvider><QueryClientProvider client={queryClient}><Harness/></QueryClientProvider></AuthProvider></StrictMode>);
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <AuthProvider>
+      <SettingsProvider>
+        <ToastProvider>
+          <QueryClientProvider client={queryClient}><Harness/></QueryClientProvider>
+        </ToastProvider>
+      </SettingsProvider>
+    </AuthProvider>
+  </StrictMode>,
+);
 
 
 Object.assign(window,{__qedTeacherDiagnostics:()=>queryClient.getQueryCache().getAll().map(q=>({key:q.queryKey,status:q.state.status,fetchStatus:q.state.fetchStatus,isInvalidated:q.state.isInvalidated,updatedAt:q.state.dataUpdatedAt,observers:q.getObserversCount(),dataKeys:q.state.data&&typeof q.state.data==='object'?Object.keys(q.state.data):[],scoreValues:q.queryKey.includes('scores')&&q.state.data?Object.values(q.state.data as Record<string,Record<string,number|null>>).flatMap(values=>Object.values(values)):undefined}))});

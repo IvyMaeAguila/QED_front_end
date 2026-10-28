@@ -1,4 +1,4 @@
-import {useContext,useEffect,useRef} from 'react';
+import {useContext,useEffect,useLayoutEffect,useRef} from 'react';
 import {useParams} from 'react-router-dom';
 import {QueryClientProvider} from '@tanstack/react-query';
 import {queryClient} from '@shared/query/queryClient';
@@ -26,23 +26,28 @@ function Effects({scope:s}:{scope:SubjectRecordsPageEffectScope}){
  const ready=!!id&&s.isAssessment&&!!s.tab&&!periods.loading&&!periods.error&&!info.loading&&!info.error;
  const items=useTeacherReader(subjectKey(year,id,'items',{term:s.term||undefined}),o=>api.fetchItems(id,{term:s.term||undefined},o),'Could not load the latest records. Showing last known data.',30_000,ready);
  const scores=useTeacherReader(subjectKey(year,id,'scores'),o=>api.fetchScores(id,o),'Could not load the latest records. Showing last known data.',30_000,ready);
- const weights=useTeacherReader(subjectKey(year,id,'weights',s.term||'active'),async o=>(await getEffectiveWeightsSafe(Number(id),s.term||undefined,o))??null,'Could not load grading rules.',300_000,ready);
+ const weights=useTeacherReader(subjectKey(year,id,'weights',s.term||'active'),o=>getEffectiveWeightsSafe(Number(id),s.term||undefined,o),'Could not load grading rules.',300_000,ready);
  useTeacherRetryAttempt(s.attempt,periods.retry);useTeacherRetryAttempt(s.attempt,info.retry);useTeacherRetryAttempt(s.attempt,items.retry);useTeacherRetryAttempt(s.attempt,scores.retry);useTeacherRetryAttempt(s.attempt,weights.retry);
  const {setIsLoadingRecords,setLoadError,setItems,setLocalScores,setEffectiveWeights,setWeightsError,setHasLoadedOnce,setTerm,term}=s;
  useEffect(()=>{if(periods.data?.length&&!periods.data.some(p=>p.id===term))setTerm((periods.data.find(p=>p.isActive)??periods.data[0]).id);},[periods.data,term,setTerm]);
- const error=periods.error??info.error??items.error??scores.error??weights.error;
+ const baseError=periods.error??info.error??items.error??scores.error;
+ const error=baseError??weights.error;
+ useLayoutEffect(()=>{const verified=!!weights.data&&!weights.loading&&!error;s.setRulesVerification({period:s.term,ready:verified});if(verified)s.setEffectiveWeights(weights.data!);},[s.term,weights.data,weights.loading,error,s.setRulesVerification,s.setEffectiveWeights]);
  const invalidated=useTeacherQueryInvalidation([...session.key,...subjectKey(year,id,'scores')]);
- const loading=!error&&(periods.loading||info.loading||items.loading||scores.loading||weights.loading);
+ const loading=!error&&(periods.loading||info.loading||items.loading||scores.loading||(weights.loading&&!weights.data));
  useEffect(()=>{
   if(!s.isAssessment)return;
-  setIsLoadingRecords(loading);setLoadError(error);
+  setIsLoadingRecords(loading);setLoadError(baseError);
   if(loading)return;
-  if(error){setItems(emptyItems);setLocalScores(emptyScores);setEffectiveWeights(undefined);setWeightsError("Could not load this subject's grading rules. Grade calculations are unavailable until the rules load successfully.");return;}
+  if(baseError){setItems(emptyItems);setLocalScores(emptyScores);setEffectiveWeights(undefined);setWeightsError("Could not load this subject's grading rules. Grade calculations are unavailable until the rules load successfully.");return;}
+  if(weights.error){if(!weights.data)setEffectiveWeights(undefined);setWeightsError("Could not load grading rules. Grade recording is unavailable until verification succeeds.");setHasLoadedOnce(true);return;}
+  if(weights.data===null){setEffectiveWeights(undefined);setWeightsError('No grading rules are configured for this subject. Ask an admin to upload the approved grade template before recording grades.');setHasLoadedOnce(true);return;}
+  setWeightsError(null);
   const projection=[items.data,scores.data,weights.data];
   if(s.isEditing||academic.writing||invalidated||projection.every((value,index)=>value===lastApplied.current[index]))return;
   lastApplied.current=projection;
   setItems(items.data??emptyItems);setLocalScores(scores.data??emptyScores);setEffectiveWeights(weights.data??undefined);setWeightsError(weights.data?null:'No grading rules are configured for this subject. Ask an admin to upload the approved grade template before recording grades.');setHasLoadedOnce(true);
- },[s.isAssessment,s.isEditing,academic.writing,invalidated,loading,error,items.data,scores.data,weights.data,setIsLoadingRecords,setLoadError,setItems,setLocalScores,setEffectiveWeights,setWeightsError,setHasLoadedOnce]);
+ },[s.isAssessment,s.isEditing,academic.writing,invalidated,loading,error,baseError,weights.error,items.data,scores.data,weights.data,setIsLoadingRecords,setLoadError,setItems,setLocalScores,setEffectiveWeights,setWeightsError,setHasLoadedOnce]);
  return null;
 }
 export function SubjectRecordsPage(){const {subjectId}=useParams();return <TeacherSessionBoundary resource={subjectId}><QueryClientProvider client={queryClient}><TeacherAcademicQueries><SubjectRecordsPageComposition effects={scope=><Effects scope={scope}/>}/></TeacherAcademicQueries></QueryClientProvider></TeacherSessionBoundary>;}

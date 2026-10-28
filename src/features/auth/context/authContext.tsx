@@ -5,11 +5,14 @@ import { LogOut } from "lucide-react";
 import Modal from "../../../shared/components/modal";
 import type { UserProfile } from "../../../shared/profile/types/types";
 import { AuthService } from "../services/authentication.service";
-import { profileService } from "@shared/profile/service/profile.service";
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+
+export type AuthenticationStatus = "loading" | "authenticated" | "unauthenticated" | "error";
 
 type AuthContextType = {
   user: UserProfile | null;
   isLoading: boolean;
+  status: AuthenticationStatus;
   mustChangePassword: boolean;
   sessionScope: number;
   expireSession: (expectedScope: number) => void;
@@ -29,9 +32,16 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUserState] = useState<UserProfile | null>(null);
   const identity = useRef<string | null>(null);
+  const verificationRequest = useRef<AbortController | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [verificationError, setVerificationError] = useState<React.ReactNode>(null);
+  const [verificationAttempt, setVerificationAttempt] = useState(0);
+  const status: AuthenticationStatus = isLoading ? "loading" : verificationError ? "error" : user ? "authenticated" : "unauthenticated";
   const [sessionScope, setSessionScope] = useState(nextQuerySession);
   const scopeRef = useRef(sessionScope);
   const resetSession = useCallback(() => {
+    verificationRequest.current?.abort();
+    verificationRequest.current = null;
     const next = nextQuerySession();
     scopeRef.current = next;
     setSessionScope(next);
@@ -44,7 +54,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUserState(next);
   }, [resetSession]);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true); // true muna habang chine-check
   const [mustChangePassword, setMustChangePassword] = useState(false);
 
   const expireSession = useCallback((expectedScope: number) => {
@@ -56,37 +65,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [resetSession, setUser]);
 
   useEffect(() => {
-    let cancelled = false;
-    const scope = scopeRef.current;
-    async function rehydrate() {
-      try {
-        // Kung walang valid na cookie, dapat null ang ibalik ng getMe()
-        const me = await AuthService.getMe();
-        if (cancelled || scopeRef.current !== scope) return;
-        if (me) {
-          setMustChangePassword(me.mustChangePassword);
-          try {
-            const profile = await profileService.getMyProfile();
-            if (!cancelled && scopeRef.current === scope) {
-              identity.current = `${profile.role}:${profile.id}`;
-              setUserState(profile);
-            }
-          } catch {
-            if (!cancelled && scopeRef.current === scope) {
-              identity.current = `${me.role}:${me.id}`;
-              setUserState(me);
-            }
-          }
-        }
-      } catch (error) {
-        console.error("Failed to restore session:", error);
-      } finally {
-        if (!cancelled && scopeRef.current === scope) setIsLoading(false);
+    const retryVerification = () => {
+      if (verificationRequest.current) return;
+      setVerificationError(null);
+      setIsLoading(true);
+      setVerificationAttempt(attempt => attempt + 1);
+    };
+    const request = new AbortController();
+    verificationRequest.current = request;
+    const unavailable = () => {
+      window.clearTimeout(timeout);
+      if (verificationRequest.current === request) {
+        verificationRequest.current = null;
+        setVerificationError(<LoadingRegion name="auth-bootstrap" loading={false} error
+          retry={() => location.reload()} skeleton={null}>{null}</LoadingRegion>);
+        setIsLoading(false);
       }
-    }
-    rehydrate();
-    return () => { cancelled = true; };
-  }, []);
+    };
+    // Also bound loading the verifier itself, so an unavailable code asset
+    // cannot leave the application on an endless bootstrap spinner.
+    const timeout = window.setTimeout(unavailable, 15_000);
+    void import("../services/sessionVerification.service").then(({ verify }) => {
+      window.clearTimeout(timeout);
+      if (verificationRequest.current !== request) return;
+      return verify({ request, owner: verificationRequest, identity,
+        setUser: setUserState, setPasswordFlag: setMustChangePassword, setLoading: setIsLoading, setError: setVerificationError, retry: retryVerification });
+    }).catch(unavailable);
+    return () => {
+      request.abort(); window.clearTimeout(timeout);
+      if (verificationRequest.current === request) verificationRequest.current = null;
+    };
+  }, [verificationAttempt]);
 
   async function login(
     user: UserProfile,
@@ -96,11 +105,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const scope = resetSession();
     identity.current = null;
     setUserState(null);
+    setVerificationError(null);
     setIsLoading(true);
     // Na-set na ng backend ang cookie sa login response, kaya walang localStorage dito
     setMustChangePassword(mustChangePassword);
     try {
-      const profile = await profileService.getMyProfile();
+      const { getProfile } = await import("../services/sessionVerification.service");
+      const profile = await getProfile();
       if (scopeRef.current === scope) {
         identity.current = `${profile.role}:${profile.id}`;
         setUserState(profile);
@@ -133,6 +144,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (scopeRef.current === scope) {
         setUser(null);
         setMustChangePassword(false);
+        setVerificationError(null);
         setIsLoading(false);
       }
     }
@@ -147,6 +159,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       value={{
         user,
         isLoading,
+        status,
         mustChangePassword,
         sessionScope,
         expireSession,
@@ -156,7 +169,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         clearMustChangePassword,
       }}
     >
-      {children}
+      {verificationError || children}
       <Modal
         open={logoutModalOpen}
         onClose={() => setLogoutModalOpen(false)}

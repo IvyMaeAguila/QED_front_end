@@ -72,17 +72,17 @@ function useTeacherDashboardHomeState(data?: TeacherDashboardData) {
       <div className="grid grid-cols-1 items-start gap-4 sm:gap-5 xl:grid-cols-[minmax(0,3fr)_minmax(280px,1fr)] xl:gap-6">
         <div className="flex min-w-0 flex-col gap-4 sm:gap-5 xl:gap-6">
           <WelcomeBanner name={user?.name || summary?.name || "Teacher"} loading={!user?.name && loading}/>
-          {!errors.includes("statistics") && <StatCards stats={stats} loading={loading} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted}/>}
-          {!errors.includes("attendance") && <TodayAttendance loading={loading}
+          {(!errors.includes("statistics")||data?.cachedSections?.includes("statistics")) && <StatCards stats={stats} loading={loading} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted}/>}
+          {(!errors.includes("attendance")||data?.cachedSections?.includes("attendance")) && <TodayAttendance loading={loading}
             hasAdvisoryStudents={attendance?.hasAdvisory ?? (errors.includes("statistics") || (statsData?.advisoryClassCount ?? 0) > 0)}
             recordedCount={attendance?.recordedCount} present={attendance?.present ?? 0} absent={attendance?.absent ?? 0} late={attendance?.late ?? 0}
             panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} darkMode={darkMode} onViewFull={() => navigate("/teacher/attendance/records")}/>}
-          {!errors.includes("agenda") && <WeeklySchedule schedule={agenda} loading={loading} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} darkMode={darkMode}/>}
+          {(!errors.includes("agenda")||data?.cachedSections?.includes("agenda")) && <WeeklySchedule schedule={agenda} loading={loading} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} darkMode={darkMode}/>}
         </div>
         <div className="flex min-w-0 flex-col gap-4 sm:gap-5 xl:gap-6">
           <QuickDateCard panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted}/>
           <MiniCalendar panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted}/>
-          {!errors.includes("events") && <UpcomingEvents events={events} loading={loading} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} darkMode={darkMode}/>}
+          {(!errors.includes("events")||data?.cachedSections?.includes("events")) && <UpcomingEvents events={events} loading={loading} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} darkMode={darkMode}/>}
         </div>
       </div>
     </div>

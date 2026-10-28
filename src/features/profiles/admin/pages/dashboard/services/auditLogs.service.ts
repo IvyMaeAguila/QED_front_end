@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import { API_CONFIG } from "../../../../../../config/api.config";
 import { QueryHttpError } from "@shared/http/QueryHttpError";
 
@@ -47,7 +48,7 @@ export async function fetchAuditLogs(filters: AuditLogFilters, signal?: AbortSig
   if (response.status === 401) onUnauthorized?.();
   const body = await response.json().catch(() => null);
   if (!response.ok || !body?.success) {
-    throw new QueryHttpError(body?.message || "Unable to load audit logs.", response.status);
+    throw new QueryHttpError(body?.message || "Unable to load audit logs.", response.status, undefined, {requestId: response.requestId});
   }
   return body.data as AuditLogPage;
 }

@@ -1,7 +1,8 @@
+import { boundedFetch as fetch, type BufferedHttpReply } from '@shared/http/boundedFetch';
 import { API_CONFIG } from '../../../../../../config/api.config';
 import type {ApiRequestOptions} from '@shared/http/ApiRequestOptions';
 import {QueryHttpError} from '@shared/http/QueryHttpError';
-async function responseJson<T>(res:Response,options:ApiRequestOptions):Promise<ApiResponse<T>>{if(res.status===401)options.onUnauthorized?.();return res.json().catch(error=>{if(!res.ok)throw new QueryHttpError('Academic year request failed.',res.status);throw error;});}
+async function responseJson<T>(res:BufferedHttpReply,options:ApiRequestOptions):Promise<ApiResponse<T>>{if(res.status===401)options.onUnauthorized?.();return res.json().catch(error=>{if(!res.ok)throw new QueryHttpError('Academic year request failed.',res.status, undefined, {requestId: res.requestId});throw error;});}
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/academic-year`;
 
@@ -41,26 +42,27 @@ export interface ApiResponse<T> {
   status: "success" | "fail" | "error";
   message: string;
   data?: T;
+  transition?: { promoted: number; retained: number; graduated: number; pending: number } | null;
 }
 
 export async function fetchAllSchoolYears(options:ApiRequestOptions={}): Promise<SchoolYearRow[]> {
   const res = await fetch(`${BASE_URL}/getAllSy`, { credentials: "include",signal:options.signal });
   const json=await responseJson<SchoolYearRow[]>(res,options);
-  if (!res.ok) throw new QueryHttpError(json.message || "Failed to fetch school years.",res.status);
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to fetch school years.",res.status, undefined, {requestId: res.requestId});
   return json.data ?? [];
 }
 
 export async function fetchActiveAcademicYear(options:ApiRequestOptions={}): Promise<AcademicYearRow> {
   const res = await fetch(`${BASE_URL}/getAcademicYear`, { credentials: "include",signal:options.signal });
   const json=await responseJson<AcademicYearRow>(res,options);
-  if (!res.ok || !json.data) throw new QueryHttpError(json.message || "Failed to fetch academic year.",res.status);
+  if (!res.ok || !json.data) throw new QueryHttpError(json.message || "Failed to fetch academic year.",res.status, undefined, {requestId: res.requestId});
   return json.data;
 }
 
 export async function addAcademicYear(
   newYear: { label: string; status: SchoolYearStatus },
   options:ApiRequestOptions={},
-): Promise<AcademicYearRow> {
+): Promise<AcademicYearRow & { transition?: ApiResponse<AcademicYearRow>["transition"] }> {
   const res = await fetch(`${BASE_URL}/addAcademicYear`, {
     method: "POST",
     credentials: "include",
@@ -69,14 +71,14 @@ export async function addAcademicYear(
     signal:options.signal,
   });
   const json=await responseJson<AcademicYearRow>(res,options);
-  if (!res.ok || !json.data) throw new QueryHttpError(json.message || "Failed to create academic year.",res.status);
-  return json.data;
+  if (!res.ok || !json.data) throw new QueryHttpError(json.message || "Failed to create academic year.",res.status, undefined, {requestId: res.requestId});
+  return { ...json.data, transition: json.transition };
 }
 
 export async function fetchTerms(schoolYearId: number,options:ApiRequestOptions={}): Promise<TermRow[]> {
   const res = await fetch(`${BASE_URL}/getTerms/${schoolYearId}`, { credentials: "include",signal:options.signal });
   const json=await responseJson<TermRow[]>(res,options);
-  if (!res.ok) throw new QueryHttpError(json.message || "Failed to fetch terms.",res.status);
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to fetch terms.",res.status, undefined, {requestId: res.requestId});
   return json.data ?? [];
 }
 
@@ -93,6 +95,6 @@ export async function saveTerms(
     signal:options.signal,
   });
   const json=await responseJson<TermRow[]>(res,options);
-  if (!res.ok) throw new QueryHttpError(json.message || "Failed to save terms.",res.status);
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to save terms.",res.status, undefined, {requestId: res.requestId});
   return json.data ?? [];
 }

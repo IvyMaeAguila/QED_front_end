@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import type {ApiRequestOptions} from '@shared/http/ApiRequestOptions';
 import {QueryHttpError} from '@shared/http/QueryHttpError';
 import { API_CONFIG } from '../../../../../../config/api.config';
@@ -32,9 +33,9 @@ export async function uploadGradeTemplate(
   });
   if(res.status===401)options.onUnauthorized?.();
 
-  const json = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
+  const json = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status, undefined, {requestId: res.requestId});throw error;});
   if (!res.ok || !json.success) {
-    throw new QueryHttpError(json.message ?? "Failed to upload grade template.",res.status);
+    throw new QueryHttpError(json.message ?? "Failed to upload grade template.",res.status, undefined, {requestId: res.requestId});
   }
   return { ...json.data, file_name: json.data.file_name ?? json.data.fileName };
 }
@@ -46,9 +47,9 @@ export async function getActiveGradeTemplate(
     credentials: "include", signal:options.signal,
   });
   if(res.status===401)options.onUnauthorized?.();
-  const json = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
+  const json = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status, undefined, {requestId: res.requestId});throw error;});
   if (!res.ok || !json.success) {
-    throw new QueryHttpError(json.message ?? "Failed to load grade template.",res.status);
+    throw new QueryHttpError(json.message ?? "Failed to load grade template.",res.status, undefined, {requestId: res.requestId});
   }
   return json.data;
 }

@@ -13,7 +13,9 @@ import { StudentRecordsPageComposition } from "../../features/profiles/admin/pag
 import { AdminDashboardHomeComposition } from "../../features/profiles/admin/pages/dashboard/AdminDashboardHome.loading-view";
 import { ClassesPageComposition } from "../../features/profiles/admin/pages/classes/ClassPage.loading-view";
 import { UserManagementPageComposition } from "../../features/profiles/admin/pages/usermanagement/UserManagementPage.loading-view";
+import { SectionAssignmentPageComposition } from "../../features/profiles/admin/pages/classes/SectionAssignmentPage.loading-view";
 export const routeViews = {
+  SectionAssignmentPageComposition,
   ClassFormPageComposition,
   AddSubjectPageComposition,
   StudentFormPageComposition,

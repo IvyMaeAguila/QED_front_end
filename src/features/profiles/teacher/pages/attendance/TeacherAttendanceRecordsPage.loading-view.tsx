@@ -1,7 +1,7 @@
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
-import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
+import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { ArrowLeft } from "lucide-react";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
@@ -10,9 +10,12 @@ import { AttendanceMonthSummarySection } from "./AttendanceMonthSummarySection";
 import { AdvisorySectionTabs } from "./components/AdvisorySectionTabs";
 import { useSelectedAdvisorySection } from "./services/useSelectedAdvisorySection.service";
 
+const MonthlyAttendanceReportModal = lazy(() => import("./MonthlyAttendanceReportModal"));
+
 function useTeacherAttendanceRecordsPageState() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
+  const [reportMonth, setReportMonth] = useState<string | null>(null);
 
   const { sections, section, error, selectSection, retry } = useSelectedAdvisorySection();
   const [viewMode, setViewMode] = useState<"month" | "summary">("month");
@@ -24,6 +27,7 @@ function useTeacherAttendanceRecordsPageState() {
 
   return { content: ((
     <div className="w-full min-h-full pb-10">
+      {reportMonth && section && <Suspense fallback={<p role="status" className={textMuted}>Opening monthly report…</p>}><MonthlyAttendanceReportModal key={section.classId} section={section} initialMonth={reportMonth} theme={{ darkMode, panelBg, panelBorder, textPrimary, textMuted }} onClose={() => setReportMonth(null)} /></Suspense>}
       <div className="w-full space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-start gap-2.5">
@@ -39,14 +43,14 @@ function useTeacherAttendanceRecordsPageState() {
             <div>
               <h1 data-sk-region="attendance-records-title" data-sk-static="" className={`qed-type-page-title ${textPrimary}`}>Attendance Records</h1>
               <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
-                <LoadingRegion as="span" loading={sections === undefined && !error} name="attendance-records-section" variable skeleton={<SkeletonParagraph field="attendance-records-section" typical={2} width="16ch" inline />}><span data-sk-field="attendance-records-section">{displaySectionName}</span></LoadingRegion> · <span data-sk-static="">Click a cell to edit — changes save immediately.</span>
+                <LoadingRegion as="span" loading={sections === undefined && !error} name="attendance-records-section" variable skeleton={<SkeletonText width="16ch" className="inline-block align-middle" />}><span data-sk-field="attendance-records-section">{displaySectionName}</span></LoadingRegion> · <span data-sk-static="">Click a cell to edit — changes save immediately.</span>
               </p>
             </div>
           </div>
 
           {sections !== null && (
             <div className="flex items-center gap-2">
-              {!error && (
+              {!error && sections && sections.length > 1 && (
                 <AdvisorySectionTabs
                   sections={sections ?? []}
                   loading={sections === undefined}
@@ -81,7 +85,7 @@ function useTeacherAttendanceRecordsPageState() {
 
         <LoadingRegion key={viewMode} loading={sections === undefined && !error} error={error} retry={retry} name="attendance-records-roster" variable skeleton={null} frame={pending => !pending && !section ? (
           <div className={`${cardClasses} px-5 py-14 text-center`}><p className={`text-sm font-bold ${textPrimary}`}>No advisory class assigned</p></div>
-        ) : viewMode === "month" ? <AttendanceCalendarSection sectionId={section?.classId ?? ""} roster={pending ? [] : section?.roster ?? []} terms={pending ? [] : section?.terms ?? []} prerequisitesLoading={pending} darkMode={darkMode} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} /> : <AttendanceMonthSummarySection sectionId={section?.classId ?? ""} roster={pending ? [] : section?.roster ?? []} terms={pending ? [] : section?.terms ?? []} prerequisitesLoading={pending} darkMode={darkMode} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} />}>{null}</LoadingRegion>
+        ) : viewMode === "month" ? <AttendanceCalendarSection sectionId={section?.classId ?? ""} roster={pending ? [] : section?.roster ?? []} terms={pending ? [] : section?.terms ?? []} prerequisitesLoading={pending} darkMode={darkMode} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} /> : <AttendanceMonthSummarySection classLabel={section?[section.gradeLevel,section.sectionName!==section.gradeLevel?section.sectionName:null].filter(Boolean).join(" - "):""} onMonthlyReport={section ? setReportMonth : undefined} sectionId={section?.classId ?? ""} roster={pending ? [] : section?.roster ?? []} terms={pending ? [] : section?.terms ?? []} prerequisitesLoading={pending} darkMode={darkMode} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} />}>{null}</LoadingRegion>
 
       </div>
     </div>

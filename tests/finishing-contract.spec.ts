@@ -1,3 +1,4 @@
+import { mockAdminDashboard } from "./fixtures/adminDashboard";
 import { waitForDataRoute } from "./fixtures/routeReady";
 import { test, expect } from "@playwright/test";
 import { mockTeacher } from "./fixtures/teacher";
@@ -24,6 +25,7 @@ test("attendance skeleton retains the real ring chart shape", async ({ page }) =
 });
 
 test("table refetch keeps old rows until delay then dims without a spinner", async ({ page }) => {
+  await mockAdminDashboard(page);
   let release!: () => void;
   let gate = Promise.resolve();
   await page.route("**/api/audit-logs?**", async route => {

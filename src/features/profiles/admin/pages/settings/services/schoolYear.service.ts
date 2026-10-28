@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import { API_CONFIG } from '../../../../../../config/api.config';
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/sy`; 

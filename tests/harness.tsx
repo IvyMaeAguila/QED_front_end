@@ -3,6 +3,11 @@ import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { DataLoader } from "../src/shared/loading/LoadingRegion";
 import { Skeleton, SkeletonText } from "../src/shared/components/SkeletonLoading";
 import "../src/style.css";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "../src/shared/query/queryClient";
+import { AuthProvider } from "../src/features/auth/context/authContext";
+import { AdminDashboardDataContext } from "../src/features/profiles/admin/pages/dashboard/AdminDashboardDataContext";
+import { useAdminDashboardQueries } from "../src/features/profiles/admin/pages/dashboard/hooks/useAdminDashboardQueries";
 import { AuditLogs } from "../src/features/profiles/admin/pages/dashboard/components/AuditLogs";
 
 declare global { interface Window { skEvents: { phase: string; time: number; height: number; busy: string | null; hidden: string | null; reservationVisibility: string | null; statusCount: number }[]; skShifts: { value: number; time: number }[]; skDataAt: number; skMountedAt: number; skRelease?: () => void; } }
@@ -34,6 +39,10 @@ function Tile({ loading }: { loading: boolean }) {
     <p style={{ fontSize: 12, lineHeight: "16px", marginBottom: 4 }}>Total students</p>
     <div data-match="number" style={{ fontSize: 30, lineHeight: "30px" }}>{loading ? <SkeletonText width="2ch"/> : "21"}</div>
   </div>;
+}
+function AuditHarness() {
+  const data = useAdminDashboardQueries();
+  return <AdminDashboardDataContext.Provider value={data}><AuditLogs darkMode={params.get("theme") === "dark"} panelBg="bg-white dark:bg-gray-900" panelBorder="border-gray-200" textPrimary="text-gray-900" textMuted="text-gray-500" /></AdminDashboardDataContext.Provider>;
 }
 function Harness() {
   const [attempt, setAttempt] = useState(0);
@@ -79,7 +88,7 @@ function Harness() {
     <button data-static="" onClick={() => setAttempt(value => value + 1)}>Retry request</button>
     <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 40px", gap: 16, alignItems: "start" }}>
       <div id="test-region">
-        {mode === "auto" ? <AuditLogs darkMode={params.get("theme") === "dark"} panelBg="bg-white dark:bg-gray-900" panelBorder="border-gray-200" textPrimary="text-gray-900" textMuted="text-gray-500" /> : <DataLoader key={attempt} fetcher={fetcher} variable={variable} skeleton={mismatch ? <div style={{ height: 240 }}><Skeleton className="h-full"/></div> : render(true)} render={rows => render(false, rows)}/> }
+        {mode === "auto" ? <AuthProvider><QueryClientProvider client={queryClient}><AuditHarness/></QueryClientProvider></AuthProvider> : <DataLoader key={attempt} fetcher={fetcher} variable={variable} skeleton={mismatch ? <div style={{ height: 240 }}><Skeleton className="h-full"/></div> : render(true)} render={rows => render(false, rows)}/> }
       </div>
       <aside data-beside="">Side</aside>
     </div>

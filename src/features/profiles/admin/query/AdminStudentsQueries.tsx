@@ -16,7 +16,7 @@ function Driver({seed,publish,isCurrent}:AdminStudentsDriverProps){
  const scope=useAdminQueryScope(),reader=useAdminReader(resource,studentService.getAllStudents,'Failed to load students',true,seed);
  const {key,enabled,online,mutationRequest}=scope,fetch=useAdminFetch();
  useAdminNavigationRefresh(resource,reader.retry,consumers);
- const changed=useCallback(()=>{for(const dependency of [['students'],['classes'],['dashboard','students'],['dashboard','audit']])void queryClient.invalidateQueries({queryKey:[...key,...dependency],refetchType:'none'});},[key]);
+ const changed=useCallback(()=>{for(const dependency of [['section-assignments'],['students'],['classes'],['dashboard','students'],['dashboard','audit']])void queryClient.invalidateQueries({queryKey:[...key,...dependency],refetchType:'none'});},[key]);
  const {mutateAsync}=useMutation({retry:false,networkMode:'always',mutationFn:async(write:Write)=>{
   if(!enabled||!online||!isCurrent())throw new Error("You're offline or your session is not ready.");
   const options=mutationRequest();return write.kind==='create'?studentService.addNewStudent(write.payload,options):write.kind==='update'?studentService.updateStudent(write.id,write.payload,options):studentService.softDeleteStudent(write.id,options);

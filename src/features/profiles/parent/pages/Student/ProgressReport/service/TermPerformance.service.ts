@@ -1,3 +1,4 @@
+import type { BufferedHttpReply } from '@shared/http/boundedFetch';
 import { parentFetch } from '../../../../query/parentRequest';
 import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
 import { API_CONFIG } from '../../../../../../../config/api.config';
@@ -6,7 +7,7 @@ import type { ProgressReportMeta } from "../types/types";
 
 const BASE_URL = `${API_CONFIG.baseURL}/api/termPerformanceProgress`;
 
-async function handleJsonResponse(res: Response) {
+async function handleJsonResponse(res: BufferedHttpReply) {
   const isJson = (res.headers.get("content-type") ?? "").includes("application/json");
   if (!isJson) throw new Error(`Unexpected server response (${res.status}): ${res.url}`);
   const data = await res.json();

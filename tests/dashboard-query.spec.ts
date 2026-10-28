@@ -26,6 +26,7 @@ async function fixture(page: Page, holdAuth = false) {
   await expect(page.getByTestId("auth")).toHaveText(holdAuth ? "pending" : "1");
   return { ...f, releaseAuth };
 }
+const sectionError = (p:Page,e:string) => p.getByTestId(e === "term" ? "error" : e === "year" ? "year-error" : `region-error-${({total:"overview",overview:"overview",today:"attendance",attendance:"attendance",top:"subject",ranking:"subject",holistic:"holistic",grades:"academic",trend:"academic"} as Record<string,string>)[e]}`);
 const button = (p: Page, name: string) => p.getByRole("button", { name, exact: true }).click();
 const start = (p: Page) => button(p, "Toggle preview");
 const toggle = (p: Page) => button(p, "Toggle dashboard");
@@ -78,17 +79,20 @@ test("independent year failure leaves the snapshot usable and year Retry does no
   f.state.year.status = 200; await button(page, "Retry year"); await expect(page.getByTestId("year")).toHaveText("Year 1");
   snapshotEndpoints.forEach(e => expect(f.state[e].calls, e).toBe(1));
 });
-for (const endpoint of ["term", "overview", "trend"] as DashboardEndpoint[]) test(`${endpoint} failure preserves fail-fast state, bounded retry and recovery`, async ({ page }) => {
+for (const endpoint of ["term", "overview", "trend"] as DashboardEndpoint[]) test(`${endpoint} failure preserves independent data, bounded retry and recovery`, async ({ page }) => {
   const f = await fixture(page); f.state[endpoint].status = 500; await start(page);
-  await expect(page.getByTestId("error")).not.toBeEmpty(); await expect(page.getByTestId("loading")).toHaveText("false");
-  await expect(page.getByTestId("data")).toBeEmpty(); expect(f.state[endpoint].calls).toBe(1);
-  f.state[endpoint].status = 200; await retry(page); await loaded(page); expect(f.state[endpoint].calls).toBe(2);
+  await expect(sectionError(page,endpoint)).not.toBeEmpty(); await expect(page.getByTestId("loading")).toHaveText("false");
+  if(endpoint === "term") await expect(page.getByTestId("data")).toBeEmpty(); else await expect(page.getByTestId("data")).toContainText("Fixture Mathematics");
+  expect(f.state[endpoint].calls).toBe(2);
+  f.state[endpoint].status = 200; await retry(page);
+  await expect.poll(() => f.state[endpoint].calls).toBe(3); await settledQueries(page);
+  await loaded(page); await expect(sectionError(page,endpoint)).toBeEmpty(); expect(f.state[endpoint].calls).toBe(3);
 });
-test("all snapshot and year requests failing stops both loading states without automatic retry", async ({ page }) => {
+test("all snapshot and year requests failing stops both loading states after one bounded read retry", async ({ page }) => {
   const f = await fixture(page); [...snapshotEndpoints, "year" as const].forEach(e => { f.state[e].status = 500; }); await start(page);
   await expect(page.getByTestId("error")).not.toBeEmpty(); await expect(page.getByTestId("year-error")).not.toBeEmpty();
   await expect(page.getByTestId("loading")).toHaveText("false"); await expect(page.getByTestId("year-loading")).toHaveText("false");
-  dashboardEndpoints.forEach(e => expect(f.state[e].calls, e).toBe(1)); dashboardEndpoints.forEach(e => { f.state[e].status = 200; });
+  dashboardEndpoints.forEach(e => expect(f.state[e].calls, e).toBe(e === "term" ? 1 : 2)); dashboardEndpoints.forEach(e => { f.state[e].status = 200; });
   await retry(page); await loaded(page);
 });
 test("stale remount refetches once; selected terms are local and survive explicit refresh", async ({ page }) => {
@@ -123,7 +127,7 @@ test("cached content readiness does not imply a pending refresh has completed", 
 for (const change of ["year", "term"]) test(`${change} rollover selects a new key without a stale snapshot or duplicate section requests`, async ({ page }) => {
   const f = await fixture(page); await page.clock.install(); await start(page); await loaded(page); await button(page, "Term 3"); await toggle(page);
   f.setContext(change === "year" ? 2 : 1, 13, 1); f.setMarker(29); f.hold("overview"); await page.clock.fastForward(31_000); await toggle(page);
-  await expect(page.getByTestId("data")).toBeEmpty(); await expect(page.getByTestId("loading")).toHaveText("true");
+  await expect(page.getByTestId("data")).not.toContainText('"totalTeachers":17'); await expect(page.getByTestId("loading")).toHaveText("true");
   f.release("overview"); await expect(page.getByTestId("data")).toContainText('"totalTeachers":29');
   await expect(page.getByTestId("ranking-term")).toHaveText("Term 1");
   expect((await keys(page)).some((k: unknown[]) => k[6] === "snapshot" && k[7] === (change === "year" ? 2 : 1) && k[8] === 13 && k[9] === 1)).toBe(true);
@@ -169,14 +173,13 @@ for (const endpoint of dashboardEndpoints) {
 }
 for (const [first, late] of [["total", "overview"], ["overview", "holistic"], ["year", "trend"], ["overview", "year"], ["year", "term"]] as [DashboardEndpoint, DashboardEndpoint][]) test(`${first} 500 cannot mask late ${late} 401`, async ({ page }) => {
   const f = await fixture(page); f.state[first].status = 500; f.state[late].status = 401; f.hold(late); await start(page);
-  await expect(page.getByTestId(first === "year" ? "year-error" : "error")).not.toBeEmpty();
+  await expect(sectionError(page,first)).not.toBeEmpty();
   f.release(late); await expect(page.getByTestId("auth")).toHaveText("signed-out");
 });
-test("Retry clears ordinary snapshot errors and restores loading while context is pending", async ({ page }) => {
-  const f = await fixture(page); f.state.overview.status = 500; await start(page); await expect(page.getByTestId("error")).not.toBeEmpty();
-  f.state.overview.status = 200; f.hold("term"); await retry(page);
-  await expect(page.getByTestId("loading")).toHaveText("true"); await expect(page.getByTestId("error")).toBeEmpty();
-  f.release("term"); await loaded(page);
+test("Retry targets a failed section without unnecessarily refreshing healthy context", async ({ page }) => {
+  const f = await fixture(page); f.state.overview.status = 500; await start(page); await expect(sectionError(page,"overview")).not.toBeEmpty();
+  const contextCalls=f.state.term.calls;f.state.overview.status = 200; f.hold("term"); await retry(page);
+  await expect(sectionError(page,"overview")).toBeEmpty();await loaded(page);expect(f.state.term.calls).toBe(contextCalls);f.release("term");
 });
 for (const e of ["term", "year"] as const) test(`${e} malformed 403 still hides cached private data without logout`, async ({ page }) => {
   await fixture(page); await start(page); await loaded(page);
@@ -188,7 +191,7 @@ test("new calendar day has a separate snapshot key even within the context fresh
   await page.clock.install({ time: new Date(2026, 9, 11, 23, 59, 55) }); const f = await fixture(page); await start(page); await loaded(page);
   await toggle(page); await page.clock.fastForward(10_000); await toggle(page); await loaded(page);
   expect(f.state.term.calls).toBe(1); expect(f.state.year.calls).toBe(1); snapshotEndpoints.forEach(e => expect(f.state[e].calls, e).toBe(2));
-  const snapshots = (await keys(page)).filter((k: unknown[]) => k[6] === "snapshot"); expect(snapshots.map((k: unknown[]) => k[10]).sort()).toEqual(["2026-10-11", "2026-10-12"]);
+  const snapshots = (await keys(page)).filter((k: unknown[]) => k[6] === "snapshot"); expect([...new Set(snapshots.map((k: unknown[]) => k[10]))].sort()).toEqual(["2026-10-11", "2026-10-12"]);
 });
 test("account switching cancels a pending aggregate and ignores old successful or 401 responses", async ({ page }) => {
   const f = await fixture(page); snapshotEndpoints.forEach(e => f.hold(e)); f.state.holistic.status = 401;
@@ -202,7 +205,7 @@ test("account switching cancels a pending aggregate and ignores old successful o
 for (const transition of ["switch", "logout-login"]) test(`late rejected snapshot cannot overwrite or expire newer session on ${transition}`, async ({ page }) => {
   const f = await fixture(page); await start(page); await loaded(page);
   f.state.overview.status = 500; f.state.holistic.status = 401; f.hold("holistic"); await retry(page);
-  await expect(page.getByTestId("error")).not.toBeEmpty(); f.state.overview.status = 200; f.state.holistic.status = 200; f.setMarker(29);
+  await expect(sectionError(page,"overview")).not.toBeEmpty(); f.state.overview.status = 200; f.state.holistic.status = 200; f.setMarker(29);
   if (transition === "switch") await button(page, "Switch account");
   else { await button(page, "Logout"); await button(page, "Log out"); await expect(page.getByTestId("data")).toBeEmpty(); expect(await keys(page)).toEqual([]); await button(page, "Login again"); }
   f.release("holistic"); await expect(page.getByTestId("data")).toContainText('"totalTeachers":29');

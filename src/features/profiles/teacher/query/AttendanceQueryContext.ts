@@ -1,6 +1,6 @@
 import {createContext,type ComponentType,type Dispatch,type SetStateAction} from 'react';
 import type {AttendanceMap} from '../pages/subjects/detail/types/Grading';
-import type {saveAdvisoryAttendance} from '../pages/attendance/services/attendance.service';
+import type {saveAdvisoryAttendance,markAdvisoryPresent} from '../pages/attendance/services/attendance.service';
 export interface AttendanceReadScope {
  classId:string;termId?:string;allPeriods?:boolean;ready:boolean;attempt:number;
  setAttendance:Dispatch<SetStateAction<AttendanceMap>>;
@@ -13,4 +13,5 @@ export interface AttendanceReadScope {
 export const AttendanceQueryContext=createContext<{
  Effects:ComponentType<AttendanceReadScope>;
  save:typeof saveAdvisoryAttendance;
+ markPresent:typeof markAdvisoryPresent;
 }|null>(null);

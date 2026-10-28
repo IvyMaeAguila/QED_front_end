@@ -24,7 +24,7 @@ function usePrincipalDashboardHomeState() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
   const { user } = useAuth();
-  const { data, loading, error, rankingTerm, setRankingTerm, refetch, academicYear, yearLoading, yearError, retryYear } =
+  const { data, regions, loading, error, rankingTerm, setRankingTerm, refetch, academicYear, yearLoading, yearError, retryYear } =
     usePrincipalDashboardData();
   const cachedOffline = error === dashboardOfflineError && !!data;
   const [showFullRanking, setShowFullRanking] = useState(false);
@@ -51,7 +51,8 @@ function usePrincipalDashboardHomeState() {
     const fullRanking = current.subjectRankingByTerm[rankingTerm] ?? [];
     const top5Ranking = fullRanking.slice(0,5);
     return (<div className="flex flex-col gap-4 sm:gap-5 xl:gap-6">
-      <OverviewCards loading={pending}
+      <LoadingRegion name="principal-region-overview" loading={false} error={pending?null:regions.overview.error} retry={regions.overview.retry} hasContent={regions.overview.hasData} retainOnError={regions.overview.retainOnError} skeleton={null}>
+      <OverviewCards loading={pending||regions.overview.loading}
         overview={current.overview}
         currentTermLabel={current.currentTerm}
         panelBg={panelBg}
@@ -59,9 +60,10 @@ function usePrincipalDashboardHomeState() {
         textPrimary={textPrimary}
         textMuted={textMuted}
         darkMode={darkMode}
-      />
+      /></LoadingRegion>
 
-      <TodaysAttendanceSection loading={pending}
+      <LoadingRegion name="principal-region-attendance" loading={false} error={pending?null:regions.attendance.error} retry={regions.attendance.retry} hasContent={regions.attendance.hasData} retainOnError={regions.attendance.retainOnError} skeleton={null}>
+      <TodaysAttendanceSection loading={pending||regions.attendance.loading}
         attendanceByGrade={current.attendanceByGrade}
         todaysAttendance={current.todaysAttendance}
         panelBg={panelBg}
@@ -71,9 +73,10 @@ function usePrincipalDashboardHomeState() {
         darkMode={darkMode}
         gridStroke={gridStroke}
         axisColor={axisColor}
-      />
+      /></LoadingRegion>
 
-      <SubjectPerformanceSection loading={pending}
+      <LoadingRegion name="principal-region-subject" loading={false} error={pending?null:regions.subject.error} retry={regions.subject.retry} hasContent={regions.subject.hasData} retainOnError={regions.subject.retainOnError} skeleton={null}>
+      <SubjectPerformanceSection loading={pending||regions.subject.loading}
         topSubjectPerGrade={current.topSubjectPerGrade}
         ranking={top5Ranking}
         rankingTerm={rankingTerm}
@@ -84,7 +87,7 @@ function usePrincipalDashboardHomeState() {
         textPrimary={textPrimary}
         textMuted={textMuted}
         darkMode={darkMode}
-      />
+      /></LoadingRegion>
 
       {showFullRanking && (
         <FullRankingModal
@@ -100,7 +103,8 @@ function usePrincipalDashboardHomeState() {
         />
       )}
 
-      <HolisticDevelopmentSection loading={pending}
+      <LoadingRegion name="principal-region-holistic" loading={false} error={pending?null:regions.holistic.error} retry={regions.holistic.retry} hasContent={regions.holistic.hasData} retainOnError={regions.holistic.retainOnError} skeleton={null}>
+      <HolisticDevelopmentSection loading={pending||regions.holistic.loading}
         domains={current.holisticDomains}
         rubric={current.holisticRubric}
         panelBg={panelBg}
@@ -110,9 +114,10 @@ function usePrincipalDashboardHomeState() {
         darkMode={darkMode}
         gridStroke={gridStroke}
         axisColor={axisColor}
-      />
+      /></LoadingRegion>
 
-      <AcademicPerformanceSection loading={pending}
+      <LoadingRegion name="principal-region-academic" loading={false} error={pending?null:regions.academic.error} retry={regions.academic.retry} hasContent={regions.academic.hasData} retainOnError={regions.academic.retainOnError} skeleton={null}>
+      <AcademicPerformanceSection loading={pending||regions.academic.loading}
         performanceByGrade={current.performanceByGrade}
         performanceTrend={current.performanceTrend}
         panelBg={panelBg}
@@ -122,7 +127,7 @@ function usePrincipalDashboardHomeState() {
         darkMode={darkMode}
         gridStroke={gridStroke}
         axisColor={axisColor}
-      />
+      /></LoadingRegion>
 </div>);
   };
   return { content: ((
@@ -138,7 +143,7 @@ function usePrincipalDashboardHomeState() {
         <TodayDateCard panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} />
       </div>
       {cachedOffline && <LoadingRegion loading={false} error={error} retry={refetch} skeleton={null} className={textPrimary}>{null}</LoadingRegion>}
-      <LoadingRegion loading={loading} error={cachedOffline ? null : error} retry={refetch} name="principal-dashboard-data" variable retainPrevious hasContent={Boolean(data)} skeleton={null} frame={renderData} onSettled={() => { if (data) {rememberRows("principal-dashboard-grades", data.topSubjectPerGrade.length); rememberRows("principal-dashboard-ranking", data.subjectRankingByTerm[rankingTerm]?.length ?? 0);} }}>{null}</LoadingRegion>
+      <LoadingRegion loading={loading} error={cachedOffline ? null : error} retry={refetch} name="principal-dashboard-data" variable retainPrevious hasContent={Boolean(data)} skeleton={null} frame={renderData} onSettled={() => { if (data && regions.subject.hasData) {rememberRows("principal-dashboard-grades", data.topSubjectPerGrade.length); rememberRows("principal-dashboard-ranking", data.subjectRankingByTerm[rankingTerm]?.length ?? 0);} }}>{null}</LoadingRegion>
     </div>
   )), scope: {} };
 }

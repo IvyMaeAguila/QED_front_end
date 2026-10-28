@@ -1,3 +1,4 @@
+import {safeReadOptions} from '@shared/query/safeReadPolicy';
 import { useLayoutEffect, useState, useSyncExternalStore } from "react";
 import { onlineManager, useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { useAuth } from "@shared/hooks/useAuth";
@@ -14,7 +15,7 @@ export const adminDashboardKeys = {
 };
 const subscribe = (notify: () => void) => onlineManager.subscribe(notify);
 const getOnline = () => onlineManager.isOnline();
-const denied = (error: unknown) => error instanceof Error && "status" in error && error.status === 403;
+const denied = (error: unknown) => error instanceof Error && "status" in error && [401,403].includes(Number(error.status));
 
 export function useAdminDashboardQueries(): AdminDashboardData {
   const { user, isLoading, sessionScope, expireSession } = useAuth();
@@ -30,17 +31,18 @@ export function useAdminDashboardQueries(): AdminDashboardData {
   const [filters, setFilters] = useState<AuditLogFilters>(defaultAuditFilters);
   const key = (resource: "users" | "students" | "frequency" | "audit", ...params: (string | number)[]) =>
     adminDashboardKeys.resource(sessionScope, user?.role ?? "", String(user?.id ?? ""), resource, ...params);
-  const options = { enabled, staleTime: 30_000, gcTime: 5 * 60_000, retry: false as const,
+  const options = { enabled, staleTime: 30_000, gcTime: 5 * 60_000,
     refetchOnWindowFocus: false, refetchOnReconnect: true };
   const expire = (signal: AbortSignal) => () => { if (!signal.aborted) expireSession(sessionScope); };
-  const users = useQuery({ ...options, queryKey: key("users"),
+  const users = useQuery({ ...options, ...safeReadOptions, queryKey: key("users"),
     queryFn: ({ signal }) => DashboardService.getUserCounts({ signal, onUnauthorized: expire(signal) }) });
-  const students = useQuery({ ...options, queryKey: key("students"),
+  const students = useQuery({ ...options, ...safeReadOptions, queryKey: key("students"),
     queryFn: ({ signal }) => DashboardService.getTotalStudents({ signal, onUnauthorized: expire(signal) }) });
-  const frequency = useQuery({ ...options, queryKey: key("frequency", selectedPeriod),
+  const frequency = useQuery({ ...options, ...safeReadOptions, queryKey: key("frequency", selectedPeriod),
     refetchInterval: enabled ? 30_000 : false, refetchIntervalInBackground: true,
     queryFn: ({ signal }) => getLoginFrequency(selectedPeriod, signal, expire(signal)) });
-  const audit = useQuery({ ...options, queryKey: key("audit", filters.page, filters.search, filters.role, filters.action, filters.from, filters.to, 20),
+  // The audit GET can initialize its table; it is not a pure read.
+  const audit = useQuery({ ...options, retry:false, queryKey: key("audit", filters.page, filters.search, filters.role, filters.action, filters.from, filters.to, 20),
     queryFn: ({ signal }) => fetchAuditLogs(filters, signal, expire(signal)) });
   function reader<T>(query: UseQueryResult<T, Error>): DashboardReader<T> {
     const offline = enabled && (!online || query.isPaused);
@@ -59,7 +61,8 @@ export function useAdminDashboardQueries(): AdminDashboardData {
     data: !forbidden && u.data !== undefined && s.data !== undefined ? { ...u.data, totalStudents: s.data } : undefined,
     loading: !countsError && (u.loading || s.loading), error: countsError, forbidden,
     retry: () => {
-      u.retry(); s.retry();
+      const failed=!!u.error||!!s.error;
+      if(!failed||u.error||u.data===undefined)u.retry(); if(!failed||s.error||s.data===undefined)s.retry();
     },
   };
   const login = reader(frequency);

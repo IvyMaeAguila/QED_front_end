@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import { QueryHttpError } from '@shared/http/QueryHttpError';
 import { parentFetch } from '../../../query/parentRequest';
 import type { ApiRequestOptions } from '@shared/http/ApiRequestOptions';
@@ -82,7 +83,7 @@ export const verificationService = {
             const result: { success: boolean; message: string; student?: StudentData } =
                 await response.json();
             if(response.status===401 && result.message!=='No information matched') options?.onUnauthorized?.();
-            if([401,403].includes(response.status) && result.message!=='No information matched') throw new QueryHttpError(result.message,response.status);
+            if([401,403].includes(response.status) && result.message!=='No information matched') throw new QueryHttpError(result.message,response.status, undefined, {requestId: response.requestId});
 
             return {
                 success: result.success,
@@ -112,7 +113,7 @@ export const verificationService = {
             const result: { success: boolean; message: string; student?: StudentData } =
                 await response.json();
             if(response.status===401 && result.message!=='No information matched') options?.onUnauthorized?.();
-            if([401,403].includes(response.status) && result.message!=='No information matched') throw new QueryHttpError(result.message,response.status);
+            if([401,403].includes(response.status) && result.message!=='No information matched') throw new QueryHttpError(result.message,response.status, undefined, {requestId: response.requestId});
 
             return {
                 success: result.success,

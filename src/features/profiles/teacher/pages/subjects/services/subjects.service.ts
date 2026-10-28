@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import { API_CONFIG } from '../../../../../../config/api.config';
 import { QueryHttpError } from '@shared/http/QueryHttpError';
 import type { TeacherRequestOptions } from '../../../query/teacherQueryScope';
@@ -54,7 +55,7 @@ export const assignedSubjectsService = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new QueryHttpError(errorData.message || "Failed to fetch assigned subjects", response.status);
+      throw new QueryHttpError(errorData.message || "Failed to fetch assigned subjects", response.status, undefined, {requestId: response.requestId});
     }
 
     const json = await response.json();

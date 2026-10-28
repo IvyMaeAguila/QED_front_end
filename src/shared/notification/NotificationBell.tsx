@@ -110,7 +110,7 @@ function formatStamp(iso: string) {
 }
 
 export function NotificationBell() {
-  const { notifications, unreadCount, markAsRead, markAllAsRead } =
+  const { notifications, unreadCount, markAsRead, markAllAsRead,readError,readLoading,retryRead } =
     useNotifications();
   const { darkMode } = useSettings();
   const [open, setOpen] = useState(false);
@@ -283,10 +283,12 @@ export function NotificationBell() {
               </div>
             </div>
 
+            {readError&&<div role="alert" className="px-5 pt-3 text-sm">Unable to refresh notifications.{notifications.length>0&&" Previously retrieved notifications are shown."}{retryRead&&<button type="button" onClick={retryRead} className="ml-2 font-semibold underline">Retry</button>}</div>}
+            {readLoading&&<p role="status" className="px-5 pt-3 text-sm">Loading notifications…</p>}
             <div className="mt-3 min-h-48 flex-1 overflow-y-auto scrollbar-none">
               {visible.length === 0 ? (
                 <p className={`px-5 py-12 text-center text-sm ${muted}`}>
-                  {activeTab.empty}
+                  {readError ? "Notifications unavailable" : readLoading ? "Loading notifications…" : activeTab.empty}
                 </p>
               ) : (
                 visible.map((n) => {

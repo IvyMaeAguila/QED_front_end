@@ -13,6 +13,12 @@ export interface Student {
   dbId: number; 
   gradeLevelId: number; 
   sectionId: number | null;
+  schoolYearId?: number;
+  joinedDate?: string;
+  enrollmentStatus?: string;
+  dropoutEffectiveDate?: string;
+  guardianName?: string;
+  guardianContact?: string;
   studentId: string;
   lrn: string;
   lastName: string;

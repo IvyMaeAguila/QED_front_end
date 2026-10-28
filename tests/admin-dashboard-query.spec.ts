@@ -85,9 +85,9 @@ for (const endpoint of adminEndpoints) test(`${endpoint} failure stays independe
   const f = await fixture(page); f.state[endpoint].status = 500; await click(page, "Toggle preview");
   const resource = endpoint === "users" || endpoint === "students" ? "counts" : endpoint;
   await expect(page.getByTestId(`${resource}-error`)).toHaveText(`Synthetic ${endpoint} 500`);
-  await expect(page.getByTestId(`${resource}-loading`)).toHaveText("false"); expect(f.state[endpoint].calls).toBe(1);
+  await expect(page.getByTestId(`${resource}-loading`)).toHaveText("false"); expect(f.state[endpoint].calls).toBe(endpoint === "audit" ? 1 : 2);
   f.state[endpoint].status = 200; await click(page, `Retry ${resource}`); await loaded(page);
-  expect(f.state[endpoint].calls).toBe(2);
+  expect(f.state[endpoint].calls).toBe(endpoint === "audit" ? 2 : 3);
 });
 for (const endpoint of adminEndpoints) test(`${endpoint} 401 expires session independently`, async ({ page }) => {
   const f = await fixture(page); f.state[endpoint].status = 401;
@@ -203,4 +203,9 @@ test("inactive resources are collected after five minutes", async ({ page }) => 
     return queryClient.getQueryCache().getAll().length;
   });
   expect(remaining).toBe(0);
+});
+test('F01: audit GET with table initialization is excluded from automatic retries and pure-read metadata',async({page})=>{
+ const f=await fixture(page);f.state.audit.status=503;await click(page,'Toggle preview');await expect(page.getByTestId('audit-error')).toContainText('503');expect(f.state.audit.calls).toBe(1);
+ const policy=await page.evaluate(async()=>{const {queryClient}=await import('/src/shared/query/queryClient.ts');const query=queryClient.getQueryCache().getAll().find(q=>q.queryKey[6]==='audit');return {retry:query?.options.retry,pureRead:query?.meta?.pureRead??false};});expect(policy).toEqual({retry:false,pureRead:false});
+ for(const endpoint of ['users','students','frequency'] as const)expect(f.state[endpoint].calls).toBe(1);f.state.audit.status=200;await click(page,'Retry audit');await loaded(page);expect(f.state.audit.calls).toBe(2);
 });

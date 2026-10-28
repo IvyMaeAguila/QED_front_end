@@ -4,6 +4,7 @@ import { registerSessionQueryCleanup } from "./sessionQueries";
 // One client per browser runtime. No persistence of authenticated data.
 export const queryClient = new QueryClient({
   defaultOptions: {
+    mutations: { retry: false },
     queries: {
       staleTime: 5 * 60 * 1000,
       gcTime: 10 * 60 * 1000,

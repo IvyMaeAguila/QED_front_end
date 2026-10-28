@@ -1,4 +1,5 @@
 export interface RosterStudent {
+  joinedDate?: string | null;
   id: string;
   name: string;
   gender: "M" | "F";

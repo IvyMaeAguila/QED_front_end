@@ -1,3 +1,4 @@
+import { boundedFetch as fetch, type BufferedHttpReply } from '@shared/http/boundedFetch';
 import { QueryHttpError } from '@shared/http/QueryHttpError';
 import type { TeacherRequestOptions } from '../../../query/teacherQueryScope';
 import { API_CONFIG } from '../../../../../../config/api.config';
@@ -55,14 +56,14 @@ interface RawUpcomingEvent {
   holidayType?: string;
 }
 
-async function handleJsonResponse(res: Response, options?: TeacherRequestOptions) {
+async function handleJsonResponse(res: BufferedHttpReply, options?: TeacherRequestOptions) {
   if (res.status === 401 && !options?.signal?.aborted) options?.onUnauthorized?.();
   const data = await res.json().catch(error => {
-    if (!res.ok) throw new QueryHttpError("Request failed.", res.status);
+    if (!res.ok) throw new QueryHttpError("Request failed.", res.status, undefined, {requestId: res.requestId});
     throw error;
   });
   if (!res.ok || !data.success) {
-    throw new QueryHttpError(data.message || "Request failed.", res.status);
+    throw new QueryHttpError(data.message || "Request failed.", res.status, undefined, {requestId: res.requestId});
   }
   return data;
 }

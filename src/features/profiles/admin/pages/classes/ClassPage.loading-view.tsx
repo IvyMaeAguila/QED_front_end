@@ -1,5 +1,5 @@
 import { DangerConfirmModal } from "@shared/components/DangerConfirmModal";
-import { Plus,Search } from "lucide-react";
+import { Plus,Search,School,UserRoundPlus } from "lucide-react";
 import { useMemo,useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
@@ -9,6 +9,7 @@ import {
 GRADE_LEVELS,
 type GradeLevel,
 } from "../studentrecords/types/Students";
+import { ClassSectionsModal } from "./components/ClassSectionsModal";
 import { ClassCard } from "./components/ClassCard";
 import { useClasses } from "./context/ClassesContext";
 
@@ -26,6 +27,7 @@ function useClassesPageState() {
     "All Grades",
   );
   const [search, setSearch] = useState("");
+  const [managingSections, setManagingSections] = useState(false);
 
   const [classToDelete, setClassToDelete] = useState<{
     id: string;
@@ -116,9 +118,17 @@ function useClassesPageState() {
             </p>
           </div>
         </div>
+        <div className="flex flex-wrap items-center gap-2.5 sm:justify-end">
+          <button type="button" onClick={() => setManagingSections(true)} className={`h-8 px-3 rounded-lg border text-xs font-extrabold flex items-center gap-1.5 shrink-0 transition-colors ${darkMode ? "bg-[#0B1120] border-[#374151] text-white hover:bg-[#111827]" : "bg-brand-light border-border-subtle text-[#111827] hover:bg-brand-light"}`}>
+            <School size={13} aria-hidden="true" />
+            Manage Sections
+          </button>
+          <button type="button" onClick={() => navigate('/admin/classes/section-assignment')} className="h-8 px-3 rounded-lg text-xs font-extrabold text-white flex items-center gap-1.5 shrink-0 transition-colors hover:bg-maroon-light" style={{ background: "var(--color-maroon)", minHeight: "2rem", height: "2rem" }}><UserRoundPlus size={13} aria-hidden="true" />Assign Sections</button>
+
+        </div>
       </div>
 
-      {/* Search bar with grade filter + add button beside it */}
+      {/* Search and grade filter */}
       <div
         className={`relative z-20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 rounded-xl border px-3 py-2 ${panelBg} ${panelBorder}`}
       >
@@ -153,10 +163,14 @@ function useClassesPageState() {
             <Plus size={13} />
             Add Class
           </button>
+
         </div>
       </div>
 
       <LoadingRegion loading={loading} error={error} retry={refreshClasses} variable skeleton={renderClasses(true)} onSettled={() => rememberRows(view, filtered.length)}>{renderClasses(false)}</LoadingRegion>
+      {managingSections && (
+        <ClassSectionsModal defaultGrade={gradeFilter === "All Grades" ? GRADE_LEVELS[0] : gradeFilter} theme={{ darkMode, panelBg, panelBorder, textPrimary, textMuted }} onClose={() => setManagingSections(false)} />
+      )}
       {classToDelete && (
         <DangerConfirmModal
           title="Delete this class?"

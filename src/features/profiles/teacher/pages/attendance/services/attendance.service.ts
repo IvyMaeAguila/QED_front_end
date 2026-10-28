@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import { API_CONFIG } from '../../../../../../config/api.config';
 import type { AttendanceMap, GradingPeriod, AttendanceStatus } from "../../subjects/detail/types/Grading";
 import { type RosterStudent } from "../../subjects/detail/data";
@@ -11,6 +12,8 @@ function authedFetch(url: string, init?: RequestInit) {
 }
 
 export interface AdvisorySection {
+  schoolYearId?: string;
+  schoolYearLabel?: string;
   classId: string;          // always present — real attendance key
   sectionId: string | null; // present only if this grade level uses named sections
   sectionName: string;      // falls back to gradeLevel when no section name exists
@@ -24,7 +27,7 @@ export async function fetchAdvisorySections(options: TeacherRequestOptions = {})
   const res = await authedFetch(`${BASE_URL}/advisory-sections`, {signal: options.signal});
   if (res.status === 401) options.onUnauthorized?.();
   if (res.status === 404) return [];
-  if (!res.ok) throw new QueryHttpError(`Failed to fetch advisory sections (${res.status})`, res.status);
+  if (!res.ok) throw new QueryHttpError(`Failed to fetch advisory sections (${res.status})`, res.status, undefined, {requestId: res.requestId});
   return res.json();
 }
 
@@ -39,7 +42,7 @@ export async function fetchAdvisoryAttendance(
   const query = params.size ? `?${params.toString()}` : "";
   const res = await authedFetch(`${BASE_URL}/${classId}${query}`, {signal:request.signal});
   if(res.status===401)request.onUnauthorized?.();
-  if (!res.ok) throw new QueryHttpError(`Failed to fetch attendance (${res.status})`,res.status);
+  if (!res.ok) throw new QueryHttpError(`Failed to fetch attendance (${res.status})`,res.status, undefined, {requestId: res.requestId});
   return res.json();
 }
 
@@ -57,5 +60,10 @@ export async function saveAdvisoryAttendance(
     body: JSON.stringify({ studentId, date: dateISO, status, ...(termId ? { term: termId } : {}) }),
   });
   if(res.status===401)request.onUnauthorized?.();
-  if (!res.ok) throw new QueryHttpError(`Failed to save attendance (${res.status})`,res.status);
+  if (!res.ok) throw new QueryHttpError(`Failed to save attendance (${res.status})`,res.status, undefined, {requestId: res.requestId});
+}
+export async function markAdvisoryPresent(classId:string,studentIds:string[],date:string,termId:string,request:TeacherRequestOptions={}):Promise<void>{
+ const res=await authedFetch(`${BASE_URL}/${encodeURIComponent(classId)}/mark-present`,{method:'POST',signal:request.signal,body:JSON.stringify({studentIds,date,termId})});
+ if(res.status===401)request.onUnauthorized?.();
+ if(!res.ok){const result=await res.json().catch(()=>null);throw new QueryHttpError(result?.message||'The selected attendance records could not be saved.',res.status,undefined,{requestId:res.requestId});}
 }

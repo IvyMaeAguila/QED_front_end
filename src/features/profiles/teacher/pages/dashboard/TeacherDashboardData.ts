@@ -8,6 +8,7 @@ export interface TeacherDashboardData {
   agenda: WeeklyScheduleItem[];
   loading: boolean;
   errors: string[];
+  cachedSections?: string[];
   offline: boolean;
   retry: () => void;
 }

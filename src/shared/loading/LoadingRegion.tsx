@@ -24,6 +24,8 @@ interface ControlledProps {
   autoColumns?: boolean;
   name?: string;
   retainPrevious?: boolean;
+  /** Caller must verify same-scope cached data and permission before opting in. */
+  retainOnError?: boolean;
   hasContent?: boolean;
   /** Shared real layout with static labels outside the placeholder shapes. */
   frame?: (pending: boolean) => ReactNode;
@@ -33,7 +35,7 @@ interface ControlledProps {
 }
 
 /** One timing/transition engine for fetched and existing context-driven regions. */
-export function LoadingRegion({ as: Tag = "div", loading, error, retry, skeleton, children, label = "Loading…", delay = 200, minDuration = 400, variable = false, className = "", layerClassName = "", onSettled, layout, layerAs, autoColumns, name, retainPrevious = false, hasContent = true, frame, preserveStatic = false, initialContentKnown = false }: ControlledProps) {
+export function LoadingRegion({ as: Tag = "div", loading, error, retry, skeleton, children, label = "Loading…", delay = 200, minDuration = 400, variable = false, className = "", layerClassName = "", onSettled, layout, layerAs, autoColumns, name, retainPrevious = false, retainOnError = false, hasContent = true, frame, preserveStatic = false, initialContentKnown = false }: ControlledProps) {
   const Layer = layerAs ?? Tag;
   const instance = useId();
   const [phase, setPhase] = useState<Phase>(error ? "error" : loading ? "waiting" : "settled");
@@ -117,7 +119,7 @@ export function LoadingRegion({ as: Tag = "div", loading, error, retry, skeleton
   </>;
   return (
     <Tag ref={element => { root.current = element; }} className={`sk-region ${className}`} data-sk-region={name ?? `field-${instance}`} aria-busy={pending} data-sk-variable={variable ? "" : undefined} data-sk-auto-columns={autoColumns ? "" : undefined} data-sk-phase={failed ? "error" : phase}>
-      {failed ? <>{layout?.(null, false, null)}<Tag className="sk-layer" role="alert"><Tag>{error instanceof Error ? error.message : typeof error === "string" ? error : "Unable to load this information."}</Tag>{retry && <button type="button" onClick={retry} className="mt-2 font-semibold underline" data-sk-region="loadingregion-retry" data-sk-static="">Retry</button>}</Tag></> : <>
+      {failed ? <>{retainOnError && hasContent ? (frame ? frame(false) : children) : layout?.(null, false, null)}<Tag className="sk-layer" role="alert"><Tag>{error instanceof Error ? error.message : typeof error === "string" ? error : "Unable to load this information."}</Tag>{retainOnError && hasContent && <Tag>Previously retrieved data is shown.</Tag>}{retry && <button type="button" onClick={retry} className="mt-2 font-semibold underline" data-sk-region="loadingregion-retry" data-sk-static="">Retry</button>}</Tag></> : <>
         {frame ? <>
           {showingStale && <Layer inert className="sk-layer" data-sk-stale="" style={{ opacity: phase === "dimmed" ? .6 : 1 }}>{snapshot.content}</Layer>}
           {!showingStale && phase !== "settled" && <Layer className={phase === "swapping" ? "sk-layer" : "sk-frame"} data-sk-frame="" data-sk-reserved={phase === "waiting" ? "" : undefined} data-sk-outgoing={phase === "swapping" ? "" : undefined} aria-hidden={phase === "swapping" ? true : undefined}>{phase === "swapping" && stale && !replacedStale ? snapshot.content : reservedFrame}</Layer>}

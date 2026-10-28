@@ -10,14 +10,11 @@ ArrowLeft,
 Check,
 Pencil,
 } from "lucide-react";
-import { lazy, Suspense, useMemo,useState } from "react";
+import { lazy, Suspense, useMemo,useState,useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
-import {
-getEffectiveWeightsSafe,
-type EffectiveWeights,
-} from "../services/subjectGradeTemplate.service";
+import type { EffectiveWeights } from "../services/subjectGradeTemplate.service";
 import { AssessmentRecordsSection } from "./AssessmentRecordsPage";
 import type { SubjectDetailTab } from "./components/TabNav";
 import type { RosterStudent } from "./data";
@@ -90,6 +87,9 @@ function useSubjectRecordsPageState() {
   const [showFinalGrades, setShowFinalGrades] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
+  const [rulesVerification, setRulesVerification] = useState({period:'',ready:false});
+  const gradingRulesReady = rulesVerification.period === term && rulesVerification.ready;
+  const rulesReady = useRef(false); rulesReady.current = gradingRulesReady;
 
   // Do NOT seed items/localScores from location.state. That stale snapshot
   // was causing the page to flash old (pre-edit) values immediately on
@@ -174,6 +174,7 @@ function useSubjectRecordsPageState() {
     )
       return;
 
+    if (!rulesReady.current) return;
     // Optimistic local update so typing feels instant.
     setLocalScores((prev) => {
       const studentScores = { ...(prev[studentId] ?? {}) };
@@ -277,7 +278,7 @@ function useSubjectRecordsPageState() {
           </div>
         </div>
       </div>
-    )), scope: { subjectId, isAssessment, tab, setIsLoadingRecords, setLoadError, fetchItems, term, setTerm, fetchScores, getEffectiveWeightsSafe, setItems, setLocalScores, setEffectiveWeights, setWeightsError, setHasLoadedOnce, attempt, isEditing } };
+    )), scope: { subjectId, setRulesVerification, isAssessment, tab, setIsLoadingRecords, setLoadError, fetchItems, term, setTerm, fetchScores, setItems, setLocalScores, setEffectiveWeights, setWeightsError, setHasLoadedOnce, attempt, isEditing } };
   }
 
   const { subjectName, roster, terms } = state;
@@ -296,7 +297,7 @@ function useSubjectRecordsPageState() {
     new Map(pendingMissing.map((m) => [m.studentId, m.studentName])).values(),
   );
   const editRecordsButton = (
-    <button type="button" onClick={handleDoneClick}
+    <button type="button" disabled={!gradingRulesReady} onClick={handleDoneClick}
       className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold transition-colors ${isEditing
         ? 'border-transparent bg-maroon text-white hover:bg-maroon-light'
         : `${panelBorder} ${textPrimary} ${darkMode ? 'hover:bg-white/5' : 'hover:bg-black/[0.035]'}`}`}>
@@ -385,7 +386,8 @@ function useSubjectRecordsPageState() {
           darkMode={darkMode} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} /></Suspense>}
 
         {isAssessment && !showFinalGrades && subjectId && !loadError && (isLoadingRecords || !hasLoadedOnce || weights) && (
-          <AssessmentRecordsSection
+          <fieldset disabled={!gradingRulesReady} className="min-w-0"><AssessmentRecordsSection
+            gradingRulesVerified={gradingRulesReady}
             toolbarAction={editRecordsButton}
             subjectSectionId={subjectId}
             title={title}
@@ -404,7 +406,7 @@ function useSubjectRecordsPageState() {
             textMuted={textMuted}
             isOwnAdvisory={state.isOwnAdvisory}
             adviserName={state.adviserName}
-          />
+          /></fieldset>
         )}
 
         {tab === "holistic" && subjectId && (
@@ -464,7 +466,7 @@ function useSubjectRecordsPageState() {
         </ConfirmationModal>
       )}
     </div>
-  )), scope: { subjectId, isAssessment, tab, setIsLoadingRecords, setLoadError, fetchItems, term, setTerm, fetchScores, getEffectiveWeightsSafe, setItems, setLocalScores, setEffectiveWeights, setWeightsError, setHasLoadedOnce, attempt, isEditing } };
+  )), scope: { subjectId, setRulesVerification, isAssessment, tab, setIsLoadingRecords, setLoadError, fetchItems, term, setTerm, fetchScores, setItems, setLocalScores, setEffectiveWeights, setWeightsError, setHasLoadedOnce, attempt, isEditing } };
 }
 
 

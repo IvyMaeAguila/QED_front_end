@@ -3,6 +3,20 @@
  * an entry here as well as real-route geometry/fixture verification.
  */
 export const routeSkeletons = {
+  "/admin/classes/section-assignment": {
+    role: "ADMIN",
+    component: "SectionAssignmentPage",
+    skeleton: "SectionAssignmentPageComposition",
+    load: () => import("../../features/profiles/admin/pages/classes/SectionAssignmentPage").then(module => ({ default: module.SectionAssignmentPage })),
+    regions: [{ name: "section assignments", classification: "VARIABLE", reason: "School-year data determines available sections and student rows", count: "Returned assignment directory" }],
+  },
+  "/principal/examination-performance": {
+    role: "PRINCIPAL",
+    component: "ExaminationPerformancePage",
+    skeleton: "ExaminationPerformancePageComposition",
+    load: () => import("../../features/profiles/principal/pages/reports/ExaminationPerformancePage").then(module => ({ default: module.ExaminationPerformancePage })),
+    regions: [{ name: "examination metrics and results", classification: "VARIABLE", reason: "Filtered results determine metric values and table rows", count: "Four metrics and returned subject rows" }],
+  },
   "/teacher/holistic": {
     role: "TEACHER",
     component: "HolisticOverviewPage",

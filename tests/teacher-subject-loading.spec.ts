@@ -88,7 +88,7 @@ test('teacher score saving retains the existing request payload and working-item
   let payload:unknown;await page.route('**/api/teacherGrading/1/scores',async route=>{payload=route.request().postDataJSON();await route.fulfill({json:{success:true,data:{}}});});
   await page.getByRole('spinbutton',{name:'Student 1 score for Practice, out of 20',exact:true}).fill('17');
   await page.getByRole('button',{name:'Save',exact:true}).click();
-  await expect.poll(()=>payload).toEqual({studentId:'1',itemId:'item1',value:17});
+  await expect.poll(()=>payload).toEqual({studentId:'1',itemId:'item1',value:17,expectedValue:null});
   await expect(page.getByText('No items yet — tap Add Item',{exact:true})).toBeVisible();
 });
 for (const dark of [false,true]) test(`teacher score sheet ${dark ? 'dark' : 'light'} placeholders stay visible on header and row surfaces`,async({page})=>{

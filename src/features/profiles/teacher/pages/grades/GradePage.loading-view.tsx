@@ -176,8 +176,12 @@ function useGradesPageState() {
       showToast("Class grades submitted.");
       setSubmitted(true);
       setSubmittedAt(new Date().toISOString());
-      const logs=await (bridge?.fetchLogs ?? fetchClassSubmissionLogs)(selectedTermId, selectedClassId);
-      if(currentResource.current===resource)setSubmissionLogs(logs);
+      try {
+        const logs=await (bridge?.fetchLogs ?? fetchClassSubmissionLogs)(selectedTermId, selectedClassId);
+        if(currentResource.current===resource)setSubmissionLogs(logs);
+      } catch {
+        if(currentResource.current===resource)showToast("Class grades submitted, but submission history could not be refreshed. Use Retry in Submission History to reload it.", "error");
+      }
     } catch (err) {
       console.error("Failed to submit class grades:", err);
       throw err instanceof Error ? err : new Error("Failed to submit class grades. Please try again.");
@@ -584,7 +588,7 @@ function useGradesPageState() {
         )}
       </div>
     </div>
-  )), scope: { setTermsLoading, setSectionsLoading, setMetadataError, fetchGradingPeriods, setTerms, setSelectedTermId, fetchAdvisorySections, setSections, setSelectedClassId, attempt, selectedTermId, selectedClassId, termsLoading, sectionsLoading, setGradebookLoading, setGradebookError, fetchAdvisoryGradebook, setGradebook, setLogsLoading, setLogsError, fetchClassSubmissionLogs, setSubmissionLogs, logsAttempt, setStatusLoading, setStatusError, fetchClassSubmissionStatus, setSubmitted, setSubmittedAt, statusAttempt, gradebook, gradebookLoading, rememberRows } };
+  )), scope: { setTermsLoading, setSectionsLoading, setMetadataError, fetchGradingPeriods, setTerms, setSelectedTermId, fetchAdvisorySections, setSections, setSelectedClassId, attempt, selectedTermId, selectedClassId, termsLoading, sectionsLoading, setGradebookLoading, setGradebookError, fetchAdvisoryGradebook, setGradebook, setLogsLoading, setLogsError, fetchClassSubmissionLogs, setSubmissionLogs, logsAttempt, setStatusLoading, setStatusError, fetchClassSubmissionStatus, setSubmitted, setSubmittedAt, statusAttempt, gradebook, gradebookLoading, rememberRows, activeTab, submitting } };
 }
 
 

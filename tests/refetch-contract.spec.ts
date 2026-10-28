@@ -1,3 +1,4 @@
+import { mockAdminDashboard } from "./fixtures/adminDashboard";
 import { waitForDataRoute } from "./fixtures/routeReady";
 import { test, expect, type Page } from "@playwright/test";
 import { assertNoDataSpinner } from "./design-pixels";
@@ -5,6 +6,7 @@ import { assertNoDataSpinner } from "./design-pixels";
 test.beforeEach(async ({ page }) => { await page.route("https://fonts.googleapis.com/**", route => route.abort()); });
 
 async function auditFixture(page: Page, initialCount = 3) {
+  await mockAdminDashboard(page);
   let gate = Promise.resolve();
   let release = () => {};
   let count = initialCount;

@@ -4,7 +4,7 @@ import {useAuth} from '@shared/hooks/useAuth';
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 import { ArrowLeft } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
@@ -40,6 +40,7 @@ function useSubjectDetailPageState() {
 
   const [attempt, setAttempt] = useState(0);
   const [templateLoading, setTemplateLoading] = useState(true);
+  const [gradingRules, setGradingRules] = useState<{period:string;loading:boolean;error:string|null;configured:boolean}>({period:'',loading:true,error:null,configured:false});
   const [activeTab, setActiveTab] = useState<SubjectDetailTab>("writtenWorks");
 
   const [subjectName, setSubjectName] = useState<string>("");
@@ -63,6 +64,9 @@ function useSubjectDetailPageState() {
   const [holisticTermNumber] = useState(1);
   const [terms, setTerms] = useState<GradingPeriod[]>([]);
   const [selectedTerm, setSelectedTerm] = useState<string>("");
+  const gradingRulesReady = gradingRules.period === selectedTerm && !gradingRules.loading && !gradingRules.error && gradingRules.configured;
+  const rulesReady = useRef(false); rulesReady.current = gradingRulesReady;
+  const rulesError = gradingRules.period === selectedTerm ? gradingRules.error ?? (!gradingRules.loading && !gradingRules.configured ? 'No grading rules are configured for this subject. Ask an admin to upload the approved grade template before recording grades.' : null) : null;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [templateStructure, setTemplateStructure] = useState<GradeTemplateStructure | undefined>();
@@ -88,6 +92,7 @@ function useSubjectDetailPageState() {
   }
 
   async function handleAddItem(item: GradeItem) {
+    if (!rulesReady.current) throw new Error('Verify grading rules before recording grades. Retry loading the rules.');
     if (!subjectId) return;
     try {
       const { id } = await addItemApi(subjectId, {
@@ -113,6 +118,7 @@ function useSubjectDetailPageState() {
   }
 
   async function handleDeleteItem(itemId: string) {
+    if (!rulesReady.current) throw new Error('Verify grading rules before recording grades. Retry loading the rules.');
     if (!subjectId) throw new Error("No subject selected.");
     await deleteItem(subjectId, itemId);
     setItems(previous => previous.filter(item => item.id !== itemId));
@@ -123,8 +129,7 @@ function useSubjectDetailPageState() {
     itemId: string,
     value: number | null,
   ) {
-
-
+    if (!rulesReady.current) throw new Error('Verify grading rules before recording grades. Retry loading the rules.');
     if (!subjectId) return;
     try {
       await saveScore(subjectId, studentId, itemId, value);
@@ -178,7 +183,7 @@ function useSubjectDetailPageState() {
       {navigationDialog}
         No subject selected.
       </div>
-    )), scope: { subjectId, setTemplateLoading, selectedTerm, setTemplateStructure, hasUnsavedChanges, attempt, setSubjectName, setGradeLevel, setRoster, setItems, setScores, setHolistic, setHolisticWeekStartDate, setTerms, setSelectedTerm, setIsOwnAdvisory, setAdviserName, setLoading, setError } };
+    )), scope: { subjectId, setGradingRules, setTemplateLoading, selectedTerm, setTemplateStructure, hasUnsavedChanges, attempt, setSubjectName, setGradeLevel, setRoster, setItems, setScores, setHolistic, setHolisticWeekStartDate, setTerms, setSelectedTerm, setIsOwnAdvisory, setAdviserName, setLoading, setError } };
   }
 
   const holisticLocked = [0, 6].includes(new Date().getDay());
@@ -219,11 +224,13 @@ function useSubjectDetailPageState() {
 
         {error && <LoadingRegion loading={false} error={error} retry={() => setAttempt(value => value + 1)} skeleton={null} name="subject-error">{null}</LoadingRegion>}
 
+        {!error && activeTab !== 'holistic' && rulesError && <LoadingRegion loading={false} error={rulesError} retry={() => setAttempt(value => value + 1)} skeleton={null} name="grading-rules-error">{null}</LoadingRegion>}
+        {!error && gradingRules.configured && gradingRules.loading && activeTab !== 'holistic' && <p role="status" className="sr-only">Verifying grading rules…</p>}
         {!error && (activeTab === "writtenWorks" ||
           activeTab === "performanceTask" ||
           activeTab === "exams") && (
-          <AssessmentTab
-            loading={loading}
+          <fieldset disabled={!gradingRulesReady} className="min-w-0"><AssessmentTab
+            loading={loading || (!gradingRules.configured && gradingRules.loading)}
             templateLoading={templateLoading}
             subjectSectionId={subjectId}
             subjectName={subjectName}
@@ -254,7 +261,7 @@ function useSubjectDetailPageState() {
                 ? ["TE"]
                 : templateStructure.examinations.components.map((component) => component.key as "ST1" | "ST2" | "TE"))
               : undefined}
-          />
+          /></fieldset>
         )}
 
         {!error && activeTab === "holistic" && (
@@ -294,7 +301,7 @@ function useSubjectDetailPageState() {
         )}
       </div>
     </div>
-  )), scope: { subjectId, setTemplateLoading, selectedTerm, setTemplateStructure, hasUnsavedChanges, attempt, setSubjectName, setGradeLevel, setRoster, setItems, setScores, setHolistic, setHolisticWeekStartDate, setTerms, setSelectedTerm, setIsOwnAdvisory, setAdviserName, setLoading, setError } };
+  )), scope: { subjectId, setGradingRules, setTemplateLoading, selectedTerm, setTemplateStructure, hasUnsavedChanges, attempt, setSubjectName, setGradeLevel, setRoster, setItems, setScores, setHolistic, setHolisticWeekStartDate, setTerms, setSelectedTerm, setIsOwnAdvisory, setAdviserName, setLoading, setError } };
 }
 
 

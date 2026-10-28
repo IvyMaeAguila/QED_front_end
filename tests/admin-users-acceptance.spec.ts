@@ -9,8 +9,14 @@ const shown = (page: Page) => expect(page.getByText('4 of 4 accounts shown')).to
 async function open(page: Page, path = '/admin/users') { await page.goto(path); await waitForDataRoute(page); }
 async function list(page: Page) { await page.getByRole('link', { name: 'Manage Users', exact: true }).first().click(); await waitForDataRoute(page); }
 async function save(page: Page, firstName: string) {
-  await page.locator('[data-sk-region="user-form-firstName"] input').fill(firstName);
-  await page.locator('[data-sk-region="user-form-status"] select').selectOption('Active');
+  // API completion and an enabled Save button can precede a field's crossfade.
+  // Wait for each real control to replace its disabled, aria-hidden placeholder.
+  const nameField = page.locator('[data-sk-region="user-form-firstName"]');
+  await expect(nameField).toHaveAttribute('data-sk-phase', 'settled');
+  await nameField.getByRole('textbox').fill(firstName);
+  const statusField = page.locator('[data-sk-region="user-form-status"]');
+  await expect(statusField).toHaveAttribute('data-sk-phase', 'settled');
+  await statusField.getByRole('combobox').selectOption('Active');
   await page.getByRole('button', { name: 'Save Changes', exact: true }).click();
 }
 test('mocked Dashboard bootstrap hands fresh records to Users without another completed request', async ({ page }) => {

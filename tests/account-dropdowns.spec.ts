@@ -1,15 +1,17 @@
 import { test, expect } from '@playwright/test';
+import { mockParent } from './fixtures/parent';
 import { mockDirectory } from './fixtures/directory';
 import { waitForDataRoute } from './fixtures/routeReady';
 const cases = [
  {role:'ADMIN',url:'/admin/users',label:'All Roles',button:true},
  {role:'TEACHER',url:'/teacher/subjects',label:'All Grades',button:true},
  {role:'PRINCIPAL',url:'/principal/students',label:'Grade level filter',button:false},
- {role:'PARENT',url:'/parent/students/1',label:'Select attendance month',button:false},
+ {role:'PARENT',url:'/parent/students/101',label:'Select attendance month',button:false},
 ] as const;
 for(const scenario of cases)for(const dark of [false,true])test(`${scenario.role} shared dropdown ${dark?'dark mobile':'light desktop'}`,async({page})=>{
  await page.setViewportSize({width:dark?375:1440,height:900});
- const release=await mockDirectory(page,scenario.role,dark);release();
+ if(scenario.role==='PARENT') await mockParent(page,dark);
+ else { const release=await mockDirectory(page,scenario.role,dark);release(); }
  await page.route('**/api/mySubjects/subjects',route=>route.fulfill({json:{data:[]}}));
  await page.route('**/api/sy_term',route=>route.fulfill({json:{success:true,data:{months:[{month:9,year:2026},{month:10,year:2026}]}}}));
  await page.route('**/api/attendance/**',route=>route.fulfill({json:{success:true,data:{student:{id:1,full_name:'Ana Cruz',student_number:'2026-01'},school_days:20,status_summary:{present:18,absent:1,late:1,excused:0}}}}));

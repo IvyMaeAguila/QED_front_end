@@ -14,7 +14,7 @@ import {useAuth} from '@shared/hooks/useAuth';
 import {useRoutePreview} from '@shared/loading/RoutePreview';
 const Queries=lazy(()=>import('../../query/AdminSubjectsQueries'));
 
-function SubjectSession() {
+function SubjectSession({ children }: { children?: import("react").ReactNode }) {
   const theme = useOutletContext<AdminThemeContext>();
   const {user,isLoading}=useAuth(),preview=useRoutePreview();
   const [snapshot,setSnapshot]=useState<AdminSubjectsBridge>();
@@ -29,7 +29,7 @@ function SubjectSession() {
            <AdminSubjectOperationsContext.Provider value={bridge.operations}>
             {!preview&&!isLoading&&user?.role==='ADMIN'&&<Suspense fallback={null}><Queries publish={publish}/></Suspense>}
             <Suspense fallback={<RouteSkeleton outletContext={theme} />}>
-              <Outlet context={theme} />
+              {children ?? <Outlet context={theme} />}
             </Suspense>
            </AdminSubjectOperationsContext.Provider>
           </SubjectSectionsProvider>
@@ -38,4 +38,4 @@ function SubjectSession() {
     </GradeLevelsProvider>
   );
 }
-export function SubjectsSection(){return <AdminSessionBoundary resource="subjects"><SubjectSession/></AdminSessionBoundary>;}
+export function SubjectsSection({ children }: { children?: import("react").ReactNode }){return <AdminSessionBoundary resource="subjects"><SubjectSession>{children}</SubjectSession></AdminSessionBoundary>;}

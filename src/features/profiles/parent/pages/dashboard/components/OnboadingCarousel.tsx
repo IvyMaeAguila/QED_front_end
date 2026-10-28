@@ -1,5 +1,7 @@
 // OnboardingCarousel.tsx
 import { useState } from "react";
+import { useIsMobile } from "../../../hooks/usseIsMobile";
+import { MobileParentTutorial } from "./MobileParentTutorial";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { MoreHorizontal } from "lucide-react";
 import MockupFrame, { type HighlightTarget } from "./MockUpFrame";
@@ -122,7 +124,7 @@ const pages: Page[] = [
   },
 ];
 
-export default function OnboardingCarousel({
+function DesktopOnboardingCarousel({
   darkMode = false,
   onClose,
 }: OnboardingCarouselProps) {
@@ -191,7 +193,7 @@ export default function OnboardingCarousel({
   return (
     // max-w-3xl + mx-auto: pumipigil sa buong widget na sumobra kalapad sa ultra-wide screens
     <div
-      className={` rounded-2xl p-3 shadow-card ${outerBg}`}
+      className={`rounded-2xl p-3 shadow-card ${outerBg}`}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -331,4 +333,9 @@ export default function OnboardingCarousel({
       </div>
     </div>
   );
+}
+
+export default function OnboardingCarousel(props: OnboardingCarouselProps) {
+  const isMobile = useIsMobile();
+  return isMobile ? <MobileParentTutorial {...props} /> : <DesktopOnboardingCarousel {...props} />;
 }

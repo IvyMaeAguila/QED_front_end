@@ -1,3 +1,4 @@
+import {useReadFreshness} from '@shared/query/readFreshness';
 import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { onlineManager, useQuery } from "@tanstack/react-query";
 import { useAuth } from "@shared/hooks/useAuth";
@@ -102,6 +103,7 @@ export function usePrincipalGradeSheet(params: SheetParams, requested = true) {
       if (retrying.current === requestScope) retrying.current = null;
     }
   };
+  useReadFreshness(JSON.stringify(['grade-sheet',requestScope]), enabled, retry);
   return {
     students: data?.students ?? [], subjects: data?.subjects ?? [],
     schoolYear: data ? year.data?.label ?? "" : "", sectionName: data?.sectionName ?? null,

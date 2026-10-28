@@ -10,6 +10,7 @@ export async function mockDirectory(page: Page, role: "ADMIN" | "PRINCIPAL" | "T
     const name = long ? "Maria Alexandra Isabella Delos Santos Villanueva" : "Ana";
     let body: unknown = { success: true, data: [], students: [], dailyUpdates: [] };
     if (path === "/api/auth/me") body = { user: { id: "1", user_name: "user", role, name: "School User", email: "user@example.test" } };
+    else if (/^\/api\/teacherAttendance\/[^/]+\/dropouts$/.test(path)) body={success:true,data:{classId:path.split("/")[3],schoolYearId:"1",today:new Date().toISOString().slice(0,10),asOf:null,students:{},dropouts:[],transferIns:[]}};
     else if (path.startsWith("/api/user-profile")) body = { id: "1", userName: "user", role, name: "School User", email: "user@example.test" };
     else if (path.startsWith("/api/teachers") || path.startsWith("/api/student/") || path.startsWith("/api/calendar/") || path.startsWith("/api/parent-dashboard/") || path.startsWith("/api/academic-year") || path.startsWith("/api/linkedChildren")) {
       await gate;

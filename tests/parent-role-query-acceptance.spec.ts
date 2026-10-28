@@ -57,13 +57,19 @@ for(const resource of ['academic','visibility','holistic','attendance'] as Paren
   f.release(resource);await expect(page).toHaveURL(/\/login/);await expect(page.getByText('Mathematics 101',{exact:true})).toHaveCount(0);
 });
 for(const resource of ['holistic','attendance','visibility'] as ParentResource[])test(`mocked Parent partial ${resource}500 retains successful academic section`,async({page})=>{
-  const f=await mockParent(page);f.resources[resource].status=500;await open(page,'progressReport');await settled(page,'parent-progress-report');
-  if(resource==='visibility'){await expect(page.getByText('This progress report is not available yet.',{exact:true})).toBeVisible();}
-  else {await expect(page.getByText('Mathematics 101',{exact:true}).first()).toBeVisible();await expect(region(page,'parent-report-average-ring')).toContainText('90%');}
+  const f=await mockParent(page);f.resources[resource].status=500;await open(page,'progressReport');
+  await expect(region(page,'parent-progress-report').getByRole('alert')).toContainText(`Synthetic ${resource} 500`);
+  await expect(page.getByRole('button',{name:'Download PDF',exact:true})).toBeDisabled();
+  if(resource==='visibility'){await expect(page.getByText('This progress report is not available yet.',{exact:true})).toHaveCount(0);await expect(page.getByText('Mathematics 101',{exact:true})).toHaveCount(0);}
+  else {await settled(page,'parent-progress-report');await expect(page.getByText('Mathematics 101',{exact:true}).first()).toBeVisible();await expect(region(page,'parent-report-average-ring')).toContainText('90%');}
 });
 test('mocked Parent complete progress failure and one explicit recovery keep request counts bounded',async({page})=>{
   const f=await mockParent(page);for(const r of ['academic','visibility','holistic','attendance'] as ParentResource[])f.resources[r].status=500;
-  await open(page,'progressReport');await expect(region(page,'parent-progress-report').getByRole('alert')).toContainText('Synthetic academic 500');
+  await open(page,'progressReport');
+  // Complete failure has one report-level error; partial section errors may arrive first.
+  await expect.poll(()=>['academic','visibility','holistic','attendance'].map(r=>f.ledger.snapshot().filter(e=>e.path===parentPaths[r as ParentResource]&&e.status===500&&e.terminal==='finished').length)).toEqual([1,1,1,1]);
+  await expect(region(page,'parent-progress-report')).toHaveAttribute('data-sk-phase','error');
+  await expect(region(page,'parent-progress-report').getByRole('alert')).toContainText('Synthetic academic 500');
   for(const r of ['academic','visibility','holistic','attendance'] as ParentResource[])f.resources[r].status=200;
   await region(page,'parent-progress-report').getByRole('button',{name:'Retry',exact:true}).click();await settled(page,'parent-progress-report');await f.settled();
   for(const r of ['academic','visibility','holistic','attendance'] as ParentResource[])expect(f.ledger.snapshot().filter(e=>e.path===parentPaths[r]&&e.status===200&&e.terminal==='finished')).toHaveLength(1);

@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import type { StudentNarrativeSnapshot as SnapshotData } from "../types/holisticAverageType";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
@@ -106,21 +108,28 @@ export default function StudentNarrativeSnapshot({
   );
 }
 
-function StudentNarrativeSnapshotContent({
-  student,
-  theme,
-}: StudentNarrativeSnapshotProps) {
+function StudentNarrativeSnapshotContent(props: StudentNarrativeSnapshotProps) {
+  return <StudentNarrativeSnapshotView {...props} {...useStudentNarrativeSnapshot()} />;
+}
+export type SnapshotSummary = Pick<SnapshotData, 'domainScores' | 'compositeScore' | 'termLabel'> & Partial<Pick<SnapshotData, 'reportCardStatus'>>;
+export interface StudentNarrativeSnapshotViewProps extends Omit<StudentNarrativeSnapshotProps, 'student'> {
+  student: Pick<DetailStudent, 'firstName'>;
+  snapshot: SnapshotSummary | null; loading: boolean; error: string | null; retry: () => void;
+  gateOnRelease?: boolean; action?: ReactNode; className?: string; compact?: boolean;
+}
+/** Parent and teacher cards share design, with role-specific access and release rules. */
+export function StudentNarrativeSnapshotView({ student, theme, snapshot, loading, error, retry, gateOnRelease = true, action, className = '', compact = false }: StudentNarrativeSnapshotViewProps) {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
-  const { snapshot, loading, error, retry } = useStudentNarrativeSnapshot();
-
   const accentColor = darkMode ? "#F87171" : ACCENT;
 
   return (
     <div
-      className={`flex min-h-[340px] flex-col rounded-xl2 shadow-sm ${panelBg}`}
+      className={`flex min-h-[340px] flex-col rounded-xl2 shadow-sm ${compact ? "h-full [&_h3]:text-sm [&_h3]:normal-case [&_h3]:tracking-normal" : ""} ${panelBg} ${className}`}
     >
       <SectionHeader
         title="Term Snapshot"
+        className={compact ? "xl:h-20 xl:shrink-0" : undefined}
+        action={action}
         subtitle="Current holistic evaluation across development domains."
         about={`A live summary of ${student.firstName}'s cognitive, emotional, behavioral, and social evaluations for the active term.`}
         theme={theme}
@@ -133,7 +142,7 @@ function StudentNarrativeSnapshotContent({
             message={`No holistic data available yet for ${student.firstName}.`}
             theme={theme}
           />
-        ) : !pending && snapshot!.reportCardStatus !== "released" ? (
+        ) : !pending && gateOnRelease && snapshot!.reportCardStatus !== "released" ? (
           <EmptyState
             icon={snapshot!.reportCardStatus === "processing" ? Clock : Lock}
             message={
@@ -161,15 +170,15 @@ function StudentNarrativeSnapshotContent({
               : null;
 
             return withScores.length > 0 ? (
-              <div className="grid w-full flex-1 gap-4 sm:grid-cols-[minmax(190px,0.75fr)_minmax(0,1.25fr)]">
+              <div className={compact ? "flex w-full flex-1 flex-col gap-4" : "grid w-full flex-1 gap-4 sm:grid-cols-[minmax(190px,0.75fr)_minmax(0,1.25fr)]"}>
                 <div
-                  className={`flex min-h-[220px] flex-col items-center justify-center rounded-xl2 border px-4 py-5 text-center ${darkMode ? "border-[#374151] bg-[#111827]" : "border-gray-200 bg-gray-50"}`}
+                  className={`flex ${compact ? "min-h-24 border-b px-4 py-3" : "min-h-[220px] rounded-xl2 border px-4 py-5"} flex-col items-center justify-center text-center ${compact ? panelBorder : darkMode ? "border-[#374151] bg-[#111827]" : "border-gray-200 bg-gray-50"}`}
                 >
                   <p className={`text-xs font-semibold uppercase tracking-wide ${textMuted}`}>
                     Overall holistic rating
                   </p>
                   {(pending || compositeScore !== null) && (
-                    <p className="mt-4 text-3xl font-bold" style={{ color: "var(--brand-ink)" }}>
+                    <p className={compact ? "mt-1 text-2xl font-bold" : "mt-4 text-3xl font-bold"} style={{ color: "var(--brand-ink)" }}>
                       {pending ? <SkeletonParagraph field="parent-snapshot-overall" typical={2} width="10ch" /> : <span data-sk-field="parent-snapshot-overall">{bandFor(compositeScore!).label}</span>}
                     </p>
                   )}
@@ -187,7 +196,7 @@ function StudentNarrativeSnapshotContent({
                       return (
                         <div
                           key={d.domain}
-                          className={`flex min-w-0 flex-col gap-2 rounded-xl2 border p-3 ${darkMode ? "border-[#374151] bg-[#111827]" : "border-gray-200 bg-white"}`}
+                          className={`flex min-w-0 flex-col gap-2 ${compact ? "border-b" : "rounded-xl2 border"} p-3 ${darkMode ? "border-[#374151] bg-[#111827]" : "border-gray-200 bg-white"}`}
                         >
                           <div className="flex items-center justify-between gap-2">
                             <span className="truncate text-xs font-semibold" style={{ color: domain.color }}>
@@ -215,7 +224,7 @@ function StudentNarrativeSnapshotContent({
                     <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: accentColor }}>
                       {pending ? <SkeletonText width="7ch" className="inline-block" /> : snapshot!.termLabel} snapshot
                     </p>
-                    <p className={`mt-1 text-sm font-medium leading-relaxed ${textPrimary}`}>
+                    <p className={`mt-1 ${compact ? "text-xs" : "text-sm"} font-medium leading-relaxed ${textPrimary}`}>
                       {pending ? <SkeletonParagraph field="parent-snapshot-narrative" typical={3} width="100%" /> : strongest && weakest && strongest.domain !== weakest.domain ? (
                         <>
                           {student.firstName} is showing the most strength in{" "}

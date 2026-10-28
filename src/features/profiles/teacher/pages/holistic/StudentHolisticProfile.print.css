@@ -1,0 +1,40 @@
+@media print {
+  body:has([data-student-holistic-profile]) :is(#root, div, main):has([data-student-holistic-profile]) {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    position: static !important;
+    margin: 0 !important;
+  }
+
+  body:has([data-student-holistic-profile]) :is(#root, div):has([data-student-holistic-profile]) > :not(:has([data-student-holistic-profile])):not([data-student-holistic-profile]) {
+    display: none !important;
+  }
+
+  [data-student-holistic-profile] {
+    color: #111827;
+    print-color-adjust: exact;
+  }
+
+  [data-student-holistic-profile] section {
+    box-shadow: none;
+    background: white;
+  }
+
+  [data-student-holistic-profile] :is(h1, h2, h3, p, dt, dd, th, td, span, button, select) {
+    color: #111827 !important;
+  }
+
+  [data-student-holistic-profile] .overflow-x-auto {
+    overflow: visible;
+  }
+
+  [data-student-holistic-profile] table {
+    min-width: 0;
+  }
+
+  [data-student-holistic-profile] tr {
+    break-inside: avoid;
+  }
+}

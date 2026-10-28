@@ -21,7 +21,7 @@ async function fixture(page: Page, dark = false) {
   });
   return { ledger, status, writes, empty: () => { empty = true; },
     hold: () => { gate = new Promise(r => { unlock = r; }); }, release: () => { unlock?.(); gate = undefined; },
-    async settled(n: number) { await expect.poll(() => resources.map(r => ledger.snapshot().filter(e => e.path.endsWith('/' + r) && e.terminal === 'finished').length)).toEqual(resources.map(() => n)); },
+    async settled(n: number | Record<string,number>) { await expect.poll(() => resources.map(r => ledger.snapshot().filter(e => e.path.endsWith('/' + r) && e.terminal === 'finished').length)).toEqual(resources.map(r => typeof n === 'number' ? n : n[r])); },
   };
 }
 async function nav(page: Page, name: string) {
@@ -51,10 +51,10 @@ for (const resource of resources) for (const code of [401, 403, 500]) test(`Teac
   const f = await fixture(page); f.status[resource] = code;
   await page.goto('/teacher/calendar');
   if (code === 401) { await expect(page).toHaveURL(/\/login/); return; }
-  await expect(page.getByRole('alert').first()).toContainText('Synthetic Calendar failure'); await ready(page); await f.settled(1);
+  await expect(page.getByRole('alert').first()).toContainText('Synthetic Calendar failure'); await ready(page); await f.settled(Object.fromEntries(resources.map(r=>[r,r===resource&&code===500?2:1])));
   await expect(page).toHaveURL(/\/teacher\/calendar/);
   f.status[resource] = 200; await page.getByRole('button', { name: 'Retry', exact: true }).first().click();
-  await expect(page.getByRole('alert')).toHaveCount(0); await ready(page); await f.settled(2);
+  await expect(page.getByRole('alert')).toHaveCount(0); await ready(page); await f.settled(Object.fromEntries(resources.map(r=>[r,r===resource?(code===500?3:2):1])));
 });
 test('Teacher Calendar cancellation aborts all four GETs and late401 cannot expire the current route', async ({ page }, info) => {
   const f = await fixture(page); f.status.activities = 401; f.hold(); await page.goto('/teacher/calendar');

@@ -1,3 +1,4 @@
+import { boundedFetch as fetch, type BufferedHttpReply } from '@shared/http/boundedFetch';
 import { API_CONFIG } from '../../../../../../config/api.config';
 
 import { QueryHttpError } from "@shared/http/QueryHttpError";
@@ -30,7 +31,7 @@ export interface DashboardRequestOptions {
 }
 
 // Guard each response before aggregation: a sibling rejection must not mask 401.
-async function request(path: string, options: DashboardRequestOptions, init: RequestInit): Promise<Response> {
+async function request(path: string, options: DashboardRequestOptions, init: RequestInit): Promise<BufferedHttpReply> {
   // Let a same-tick StrictMode cleanup cancel before dispatching transport.
   await Promise.resolve();
   options.signal?.throwIfAborted();
@@ -45,27 +46,27 @@ export async function fetchActiveTerm(options: DashboardRequestOptions = {}): Pr
   });
   if (!res.ok) {
     const failure = await res.json().catch(() => null);
-    throw new QueryHttpError(failure?.message || "Failed to fetch active term.", res.status);
+    throw new QueryHttpError(failure?.message || "Failed to fetch active term.", res.status, undefined, {requestId: res.requestId});
   }
   const json: ApiResponse<ActiveTermRow> = await res.json();
   if (!res.ok || !json.data) {
-    throw new QueryHttpError(json.message || "Failed to fetch active term.", res.status);
+    throw new QueryHttpError(json.message || "Failed to fetch active term.", res.status, undefined, {requestId: res.requestId});
   }
   return json.data;
 }
 // Total ng lahat ng enrolled na estudyante (hindi kasama ang deleted at graduated)
-async function getTotalStudents(options: DashboardRequestOptions = {}): Promise<number> {
+export async function getTotalStudents(options: DashboardRequestOptions = {}): Promise<number> {
   const res = await request(`/student/total-student`, options, {
     credentials: "include",
   });
   if (!res.ok) {
-    throw new QueryHttpError(`Failed to fetch total students (${res.status})`, res.status);
+    throw new QueryHttpError(`Failed to fetch total students (${res.status})`, res.status, undefined, {requestId: res.requestId});
   }
   const json: { total: number } = await res.json();
   return Number(json.total) || 0;
 }
 
-function mapToTerm(name: string): Term {
+export function mapToTerm(name: string): Term {
   if (name === "Term 1" || name === "Term 2" || name === "Term 3") return name;
   throw new Error(`Unexpected term name from API: ${name}`);
 }
@@ -94,23 +95,27 @@ export interface ActiveTermRow {
 }
 
 export async function getOverview(options: DashboardRequestOptions = {}): Promise<OverviewData> {
-  const [totalStudents, response] = await Promise.all([
+  const [totalStudents, summary] = await Promise.all([
     getTotalStudents(options),
-    request(`/principal-dashboard/overview-summary`, options, { credentials: "include" }),
+    getOverviewSummary(options),
   ]);
-  if (!response.ok) throw new QueryHttpError(`Failed to fetch overview (${response.status})`, response.status);
-  const summary: Pick<OverviewData, "totalTeachers" | "attendance" | "academicPerf"> = await response.json();
   return { totalStudents, ...summary, needsIntervention: 0 };
+}
+
+export async function getOverviewSummary(options: DashboardRequestOptions = {}):Promise<Pick<OverviewData,"totalTeachers"|"attendance"|"academicPerf">> {
+  const response=await request(`/principal-dashboard/overview-summary`, options, { credentials: "include" });
+  if (!response.ok) throw new QueryHttpError(`Failed to fetch overview (${response.status})`, response.status, undefined, {requestId: response.requestId});
+  return response.json();
 }
 
 export async function fetchActiveAcademicYear(options: DashboardRequestOptions = {}): Promise<AcademicYearRow> {
   const res = await request(`/academic-year/getAcademicYear`, options, {credentials: "include"});
   if (!res.ok) {
     const failure = await res.json().catch(() => null);
-    throw new QueryHttpError(failure?.message || "Failed to fetch academic year.", res.status);
+    throw new QueryHttpError(failure?.message || "Failed to fetch academic year.", res.status, undefined, {requestId: res.requestId});
   }
   const json: ApiResponse<AcademicYearRow> = await res.json();
-  if (!res.ok || !json.data) throw new QueryHttpError(json.message || "Failed to fetch academic year.", res.status);
+  if (!res.ok || !json.data) throw new QueryHttpError(json.message || "Failed to fetch academic year.", res.status, undefined, {requestId: res.requestId});
   return json.data;
 }
 
@@ -119,7 +124,7 @@ export async function getTodaysAttendance(options: DashboardRequestOptions = {})
     credentials: "include",
   });
   if (!res.ok) {
-    throw new QueryHttpError(`Failed to fetch today's attendance (${res.status})`, res.status);
+    throw new QueryHttpError(`Failed to fetch today's attendance (${res.status})`, res.status, undefined, {requestId: res.requestId});
   }
   return res.json();
 }
@@ -129,7 +134,7 @@ export async function getAttendanceByGrade(options: DashboardRequestOptions = {}
     credentials: "include",
   });
   if (!res.ok) {
-    throw new QueryHttpError(`Failed to fetch attendance by grade (${res.status})`, res.status);
+    throw new QueryHttpError(`Failed to fetch attendance by grade (${res.status})`, res.status, undefined, {requestId: res.requestId});
   }
   return res.json();
 }
@@ -139,7 +144,7 @@ export async function getTopSubjectPerGrade(options: DashboardRequestOptions = {
     credentials: "include",
   });
   if (!res.ok) {
-    throw new QueryHttpError(`Failed to fetch top subject per grade (${res.status})`, res.status);
+    throw new QueryHttpError(`Failed to fetch top subject per grade (${res.status})`, res.status, undefined, {requestId: res.requestId});
   }
   return res.json();
 }
@@ -149,7 +154,7 @@ export async function getSubjectRankingByTerm(options: DashboardRequestOptions =
     credentials: "include",
   });
   if (!res.ok) {
-    throw new QueryHttpError(`Failed to fetch subject ranking (${res.status})`, res.status);
+    throw new QueryHttpError(`Failed to fetch subject ranking (${res.status})`, res.status, undefined, {requestId: res.requestId});
   }
   return res.json();
 }
@@ -160,7 +165,7 @@ export async function getHolisticOverview(options: DashboardRequestOptions = {})
     credentials: "include",
   });
   if (!res.ok) {
-    throw new QueryHttpError(`Failed to fetch holistic overview: ${res.status}`, res.status);
+    throw new QueryHttpError(`Failed to fetch holistic overview: ${res.status}`, res.status, undefined, {requestId: res.requestId});
   }
   const json: ApiIntegrationResponse<HolisticDomain[]> = await res.json();
   if (!json.success) {
@@ -192,7 +197,7 @@ export async function getPerformanceByGrade(options: DashboardRequestOptions = {
   });
 
   if (!res.ok) {
-    throw new QueryHttpError(`Failed to fetch performance by grade: ${res.status}`, res.status);
+    throw new QueryHttpError(`Failed to fetch performance by grade: ${res.status}`, res.status, undefined, {requestId: res.requestId});
   }
 
   const json: ApiIntegrationResponse<GradePerformance[]> = await res.json();
@@ -219,7 +224,7 @@ export async function getPerformanceTrend(options: DashboardRequestOptions = {})
   if (!response.ok) {
     const errorBody = await response.json().catch(() => null);
     throw new QueryHttpError(
-      errorBody?.message ?? `Failed to fetch performance trend (status ${response.status})`, response.status
+      errorBody?.message ?? `Failed to fetch performance trend (status ${response.status})`, response.status, undefined, {requestId: response.requestId}
     );
   }
 

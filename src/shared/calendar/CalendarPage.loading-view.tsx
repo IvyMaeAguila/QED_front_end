@@ -1,3 +1,4 @@
+import type {CalendarReadResource,CalendarReadStates} from './types/Calendar';
 import { useToast } from "@shared/context/ToastContext";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { CalendarHeart,CalendarRange } from "lucide-react";
@@ -38,6 +39,7 @@ type Role,
 } from "./types/Calendar";
 
 export interface CalendarData {
+  reads?:CalendarReadStates;
   activities: CalendarActivity[]; holidays: CalendarHoliday[]; allActivities: CalendarActivity[]; allHolidays: CalendarHoliday[];
   loading: boolean; error: string | null; cachedOffline?: boolean; retry: () => void;
   saveActivities: (entries: DraftEntry[]) => Promise<unknown>; saveHolidays: (entries: DraftEntry[]) => Promise<unknown>;
@@ -190,8 +192,10 @@ function useCalendarPageState({ viewerRole = "ADMIN", data }: CalendarPageProps)
     setDeleteState(null);
   }
 
+  const readProps=(name:CalendarReadResource)=>data?.reads?.[name]??{loading,error,retry:retry};
   return { content: ((
     <div className="w-full space-y-6 pb-12">
+      {data?.reads && error && !data?.cachedOffline && <div role="alert" className={`rounded-xl border p-4 ${panelBg} ${panelBorder} ${textPrimary}`}><p>{error}</p><button type="button" className="mt-2 font-semibold underline" onClick={data.retry}>Retry</button></div>}
       <div>
         <h1 className={`qed-type-page-title ${textPrimary}`}>
           Calendar
@@ -231,7 +235,7 @@ function useCalendarPageState({ viewerRole = "ADMIN", data }: CalendarPageProps)
           )}
 
           <ActivitiesCard
-            loading={loading} error={error} retry={retry}
+            {...readProps('activities')}
             activities={activities}
             viewDate={viewDate}
             selectedDate={selectedDate}
@@ -244,7 +248,7 @@ function useCalendarPageState({ viewerRole = "ADMIN", data }: CalendarPageProps)
           />
 
           <HolidaysCard
-            loading={loading} error={error} retry={retry}
+            {...readProps('holidays')}
             holidays={holidays}
             viewDate={viewDate}
             selectedDate={selectedDate}
@@ -287,7 +291,7 @@ function useCalendarPageState({ viewerRole = "ADMIN", data }: CalendarPageProps)
           textMuted={textMuted}
         >
           <ActivityGroupList
-            loading={loading} error={error} retry={retry}
+            {...readProps('all-activities')}
             activities={allActivities}
             darkMode={darkMode}
             textMuted={textMuted}
@@ -309,7 +313,7 @@ function useCalendarPageState({ viewerRole = "ADMIN", data }: CalendarPageProps)
           textMuted={textMuted}
         >
           <HolidayGroupList
-            loading={loading} error={error} retry={retry}
+            {...readProps('all-holidays')}
             holidays={allHolidays}
             darkMode={darkMode}
             textMuted={textMuted}

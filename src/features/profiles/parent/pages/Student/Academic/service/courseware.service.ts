@@ -47,7 +47,7 @@ export async function getCourseware(
   options?: ApiRequestOptions
 ): Promise<CoursewareResource> {
   const response = await parentFetch(`${API_BASE_URL}/${studentId}/${topicId}`, options, {
-    method: "GET",
+    method: "GET", operation: "generation",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",

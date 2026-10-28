@@ -1,3 +1,4 @@
+import { boundedFetch as fetch, type BufferedHttpReply } from '@shared/http/boundedFetch';
 import { API_CONFIG } from '../../../../../../config/api.config';
 import { QueryHttpError } from '@shared/http/QueryHttpError';
 import type { UserAccount } from '../types/user';
@@ -5,10 +6,10 @@ import type { UserAccount } from '../types/user';
 export type UserWritePayload = Omit<UserAccount, 'id' | 'lastLogin' | 'gender'> & { userId?: string; gender?: 'Male' | 'Female' | '' | null };
 export interface UserWriteResult { success: boolean; message?: string; data: UserAccount; credentialDelivery?: 'accepted' | 'failed' | 'test-recipient' }
 export interface UserRequestOptions { signal?: AbortSignal; onUnauthorized?: () => void }
-async function read(response: Response, fallback: string, options: UserRequestOptions) {
+async function read(response: BufferedHttpReply, fallback: string, options: UserRequestOptions) {
   if (response.status === 401 && !options.signal?.aborted) options.onUnauthorized?.();
   const data = await response.json().catch(() => undefined);
-  if (!response.ok) throw new QueryHttpError(data?.message || fallback, response.status);
+  if (!response.ok) throw new QueryHttpError(data?.message || fallback, response.status, undefined, {requestId: response.requestId});
   return data;
 }
 

@@ -1,3 +1,4 @@
+import { boundedFetch as fetch } from '@shared/http/boundedFetch';
 import type {ApiRequestOptions} from '@shared/http/ApiRequestOptions';
 import {QueryHttpError} from '@shared/http/QueryHttpError';
 import { API_CONFIG } from '../../../../../../config/api.config';
@@ -24,8 +25,8 @@ export interface ApiResponse<T> {
 export async function fetchSectionsByGrade(gradeLevel: string, options:ApiRequestOptions={}): Promise<SectionRow[]> {
   const res = await fetch(`${BASE_URL}/getSections/${gradeLevel}`, {credentials: "include", signal:options.signal});
   if(res.status===401)options.onUnauthorized?.();
-  const json: ApiResponse<SectionRow[]> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
-  if (!res.ok) throw new QueryHttpError(json.message || "Failed to fetch sections.",res.status);
+  const json: ApiResponse<SectionRow[]> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status, undefined, {requestId: res.requestId});throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to fetch sections.",res.status, undefined, {requestId: res.requestId});
   return json.data ?? [];
 }
 
@@ -37,8 +38,8 @@ export async function createSection(gradeLevel: string, sectionName: string, opt
     body: JSON.stringify({ gradeLevel, sectionName }), signal:options.signal,
   });
   if(res.status===401)options.onUnauthorized?.();
-  const json: ApiResponse<{ id: number; grade_level_id: string; section_name: string }> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
-  if (!res.ok) throw new QueryHttpError(json.message || "Failed to add section.",res.status);
+  const json: ApiResponse<{ id: number; grade_level_id: string; section_name: string }> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status, undefined, {requestId: res.requestId});throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to add section.",res.status, undefined, {requestId: res.requestId});
   return json.data as SectionRow;
 }
 
@@ -50,22 +51,22 @@ export async function updateSection(id: string, sectionName: string, options:Api
     body: JSON.stringify({ sectionName }), signal:options.signal,
   });
   if(res.status===401)options.onUnauthorized?.();
-  const json: ApiResponse<SectionRow> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
-  if (!res.ok) throw new QueryHttpError(json.message || "Failed to update section.",res.status);
+  const json: ApiResponse<SectionRow> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status, undefined, {requestId: res.requestId});throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to update section.",res.status, undefined, {requestId: res.requestId});
   return json.data as SectionRow;
 }
 
 export async function deleteSection(id: string, options:ApiRequestOptions={}): Promise<void> {
   const res = await fetch(`${BASE_URL}/deleteSection/${id}`, { method: "DELETE", credentials: "include", signal:options.signal });
   if(res.status===401)options.onUnauthorized?.();
-  const json: ApiResponse<null> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
-  if (!res.ok) throw new QueryHttpError(json.message || "Failed to delete section.",res.status);
+  const json: ApiResponse<null> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status, undefined, {requestId: res.requestId});throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to delete section.",res.status, undefined, {requestId: res.requestId});
 }
 
 export async function fetchSectionIdsUsedByClasses(options:ApiRequestOptions={}): Promise<number[]> {
   const res = await fetch(`${BASE_URL}/sectionIdsUsedByClasses`, {credentials: "include", signal:options.signal});
   if(res.status===401)options.onUnauthorized?.();
-  const json: ApiResponse<number[]> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status);throw error;});
-  if (!res.ok) throw new QueryHttpError(json.message || "Failed to fetch used sections.",res.status);
+  const json: ApiResponse<number[]> = await res.json().catch(error=>{if(!res.ok)throw new QueryHttpError("Request failed.",res.status, undefined, {requestId: res.requestId});throw error;});
+  if (!res.ok) throw new QueryHttpError(json.message || "Failed to fetch used sections.",res.status, undefined, {requestId: res.requestId});
   return json.data ?? [];
 }

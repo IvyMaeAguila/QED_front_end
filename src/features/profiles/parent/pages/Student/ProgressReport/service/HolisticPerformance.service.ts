@@ -34,5 +34,5 @@ export interface BackendHolisticTermAverage {
 export async function fetchStudentHolisticTermAverages(studentId:string, options:ApiRequestOptions & {termNumber?:number}={}):Promise<BackendHolisticTermAverage[]> {
  const url=new URL(`${API_BASE}/${studentId}`,window.location.origin);if(options.termNumber!==undefined)url.searchParams.set('termNumber',String(options.termNumber));
  const response=await parentFetch(url.toString(),options);const body=await response.json();
- if(!body?.success)throw new Error(body?.message??'Failed to fetch holistic term averages.');return body.data??[];
+ if(body?.success!==true||!Array.isArray(body.data))throw new Error(body?.message??'Failed to fetch holistic term averages.');return body.data;
 }
