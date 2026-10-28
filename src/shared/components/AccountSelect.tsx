@@ -1,4 +1,4 @@
-import { Children, cloneElement, isValidElement, useId, useRef, useState, useCallback, useImperativeHandle, type ComponentProps, type ReactNode } from "react";
+import { Children, isValidElement, useId, useRef, useState, useCallback, useImperativeHandle, type ComponentProps, type ReactNode } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { createPortal } from "react-dom";
 import { Check, ChevronDown } from "lucide-react";
@@ -10,13 +10,6 @@ function optionsFrom(children: ReactNode, disabled = false): Option[] {
     if (child.type === "option") return [{ value: String(child.props.value ?? child.props.children ?? ""), label: child.props.children, disabled: disabled || Boolean(child.props.disabled), hidden: Boolean(child.props.hidden) }];
     return optionsFrom(child.props.children, disabled || Boolean(child.props.disabled));
   });
-}
-
-function nativeOptions(children: ReactNode): ReactNode {
- return Children.map(children, child => {
-  if (!isValidElement<{children?: ReactNode; "aria-hidden"?: boolean}>(child)) return child;
-  return child.type === "option" ? cloneElement(child, {"aria-hidden": true}) : cloneElement(child, {}, nativeOptions(child.props.children));
- });
 }
 
 /** A real form select with the Admin menu presentation, shared by all accounts. */
@@ -100,7 +93,7 @@ export function AccountSelect({ children, className = "", style, onPointerDown, 
           if (next >= 0) { event.preventDefault(); if (!open) show(); setActive(next); }
         }
       }}
-    >{nativeOptions(children)}</select>
+    >{children}</select>
     {open && !props.disabled && createPortal(<div ref={menu} id={id} role="listbox" aria-label={props["aria-label"]} className={`account-select-menu ${position.dark ? "dark" : ""}`} style={{ position: "fixed", zIndex: 10000, top: position.top, left: position.left, width: position.width, maxHeight: position.maxHeight }}>
       {visible.map((option, index) => <button key={`${option.value}-${index}`} id={`${id}-${index}`} data-option-index={index} type="button" role="option" tabIndex={-1} disabled={option.disabled} aria-selected={option.value === selectedValue} data-active={index === active} onMouseDown={event => event.preventDefault()} onMouseEnter={() => setActive(index)} onClick={() => choose(option)}><span>{option.label}</span>{option.value === selectedValue && <Check size={14} />}</button>)}
     </div>, document.body)}
