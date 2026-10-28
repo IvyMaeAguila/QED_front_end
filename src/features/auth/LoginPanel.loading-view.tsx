@@ -1,14 +1,13 @@
 import { Eye,EyeOff } from "lucide-react";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useLocation,useNavigate } from "react-router-dom";
-import { ForgotPasswordModal } from "../../shared/components/manage_password/ForgotPasswordModal";
-import { OtpVerificationModal } from "../../shared/components/manage_password/OtpVerificationModal";
-import { ResetPasswordModal } from "../../shared/components/manage_password/ResetPasswordModal";
 import { ModalCloseButton,ModalFrame } from "../../shared/components/modal";
 import Logo from "../../shared/images/QED_Logo.png";
 import { AuthService } from "../auth/services/authentication.service";
 import { PasswordIcon,UserIDIcon } from "./components/LoginIcon";
 import { useAuth } from "./context/authContext";
+
+const LoginRecoveryFlow = lazy(() => import("./LoginRecoveryFlow").then(module => ({ default: module.LoginRecoveryFlow })));
 
 interface LoginModalProps {
   open: boolean;
@@ -41,8 +40,6 @@ function getSafeRedirect(search: string): string | null {
   return null;
 }
 
-type ForgotPasswordStep = "closed" | "email" | "otp" | "reset";
-
 function useLoginPanelState({ open, onClose }: LoginModalProps) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -55,11 +52,7 @@ function useLoginPanelState({ open, onClose }: LoginModalProps) {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Forgot password flow state
-  const [forgotStep, setForgotStep] = useState<ForgotPasswordStep>("closed");
-  const [resetUserName, setResetUserName] = useState("");
-  const [resetEmail, setResetEmail] = useState("");
-  const [resetToken, setResetToken] = useState("");
+  const [recoveryOpen, setRecoveryOpen] = useState(false);
 
   if (!open) return { content: (null), scope: {  } };
 
@@ -234,7 +227,7 @@ function useLoginPanelState({ open, onClose }: LoginModalProps) {
             </label>
             <button
               type="button"
-              onClick={() => setForgotStep("email")}
+              onClick={() => setRecoveryOpen(true)}
               className="text-xs text-brand-ink hover:text-maroon-light font-medium transition-colors"
             >
               Forgot password?
@@ -260,36 +253,13 @@ function useLoginPanelState({ open, onClose }: LoginModalProps) {
     </ModalFrame>
 
 
-      {/* Forgot password flow */}
-      {forgotStep === "email" && (
-        <ForgotPasswordModal
-          onClose={() => setForgotStep("closed")}
-          onOtpSent={(userName, email) => {
-            setResetUserName(userName);
-            setResetEmail(email);
-            setForgotStep("otp");
-          }}
-        />
-      )}
-      {forgotStep === "otp" && (
-        <OtpVerificationModal
-          userName={resetUserName}
-          email={resetEmail}
-          onClose={() => setForgotStep("closed")}
-          onResend={() => setForgotStep("email")}
-          onVerified={(token) => {
-            setResetToken(token);
-            setForgotStep("reset");
-          }}
-        />
-      )}
-      {forgotStep === "reset" && (
-        <ResetPasswordModal
-          resetToken={resetToken}
-          onClose={() => setForgotStep("closed")}
-          onSuccess={() => setForgotStep("closed")}
-        />
-      )}
+      {recoveryOpen && <Suspense fallback={
+        <ModalFrame shellVariant="specialized" onClose={() => setRecoveryOpen(false)} size="compact" zIndexClass="z-200" ariaLabel="Loading password recovery">
+          <p role="status" className="p-8 text-center text-sm text-gray-600">Opening password recovery...</p>
+        </ModalFrame>
+      }>
+        <LoginRecoveryFlow onClose={() => setRecoveryOpen(false)}/>
+      </Suspense>}
     </>
   )), scope: {  } };
 }
