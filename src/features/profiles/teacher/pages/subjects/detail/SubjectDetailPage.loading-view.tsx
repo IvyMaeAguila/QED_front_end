@@ -2,7 +2,7 @@ import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
 import {useTeacherAcademicServices} from '../../../query/TeacherAcademicQueryContext';
 import {useAuth} from '@shared/hooks/useAuth';
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
-import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
+import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { ArrowLeft } from "lucide-react";
 import { useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -206,7 +206,7 @@ function useSubjectDetailPageState() {
             <h1
               className={`qed-type-page-title ${textPrimary}`}
             >
-              {error ? subjectName : <LoadingRegion as="span" loading={loading} variable name="subject-title" skeleton={<SkeletonParagraph field={`subject-${subjectId}-title`} typical={2} />}><span data-sk-field={`subject-${subjectId}-title`} data-sk-variable="">{subjectName}</span></LoadingRegion>}
+              {error ? subjectName : <LoadingRegion as="span" loading={loading} variable name="subject-title" skeleton={<SkeletonText width="min(24ch, 65vw)" />}><span data-sk-field={`subject-${subjectId}-title`} data-sk-variable="">{subjectName}</span></LoadingRegion>}
             </h1>
             <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
               {currentSchoolYearLabel()}

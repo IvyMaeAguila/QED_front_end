@@ -244,9 +244,9 @@ const isDirty = useMemo(() => {
   const tableRoot = useRef<HTMLDivElement>(null);
   const rowCount = skeletonRows(view, undefined, 44);
   const pendingRoster: GenderedStudent[] = Array.from({ length: rowCount }, (_, index) => ({ id: `pending-${index}`, name: "", gender: index < Math.ceil(rowCount / 2) ? "M" : "F" }));
-  const pendingItems: GradeItem[] = Array.from({ length: lastKnownCount(`${view}-items`, 1) }, (_, index) => ({ id: `pending-item-${index}`, tab, date: "2026-01-01", activityName: "", topic: "", format: "", maxItems: 0, gradingPeriodId: null }));
+  const pendingItems: GradeItem[] = Array.from({ length: lastKnownCount(`${view}-items`, 0) }, (_, index) => ({ id: `pending-item-${index}`, tab, date: "2026-01-01", activityName: "", topic: "", format: "", maxItems: 0, gradingPeriodId: null }));
   const skeletonItems = tabItems.length ? tabItems : pendingItems;
-  const columnLabels = [{ label: "Student", typical: "Student full name" }, ...(loading ? skeletonItems : tabItems).map(() => ({ label: "", typical: "Assessment topic" }))];
+  const columnLabels = [{ label: "Student", typical: "Student full name" }, ...Array.from({ length: Math.max((loading ? skeletonItems : tabItems).length, 1) }, () => ({ label: "", typical: "Assessment topic" }))];
   const columnWidths = useColumnReservation(view, columnLabels, loading);
   function renderStudentRow(student: GenderedStudent, pending = false, visibleItems = tabItems) {
     return (
@@ -259,7 +259,7 @@ const isDirty = useMemo(() => {
           <div className="flex min-w-0 items-center gap-2.5">
             <span data-sk-region="student-avatar" className="inline-flex h-7 w-7 shrink-0">{pending && !filtered.length ? <SkeletonAvatar className="h-7 w-7" /> : <StudentAvatar gender={student.gender} name={student.name} />}</span>
             <span className={`truncate text-xs font-bold ${textPrimary}`}>
-              {pending && !filtered.length ? <SkeletonText className={Number(student.id.split("-").at(-1)) % 2 === 0 ? "w-[14ch]" : "w-[11ch]"} /> : student.name}
+              {pending && !filtered.length ? <SkeletonText className={Number(student.id.split("-").at(-1)) % 2 === 0 ? "w-[22ch] max-w-full" : "w-[18ch] max-w-full"} /> : student.name}
             </span>
           </div>
         </td>
@@ -269,7 +269,7 @@ const isDirty = useMemo(() => {
           const style = scoreStyle(percent);
           return (
             <td key={item.id} className="px-3 py-2 text-center">
-              {pending ? <span className="inline-flex h-7 w-14 items-center justify-center"><SkeletonControl className="h-2 w-6 rounded-full" /></span> : <input
+              {pending ? <span className="inline-flex h-7 w-14 items-center justify-center"><SkeletonControl className="h-2 w-8 rounded-full" /></span> : <input
                 type="number"
                 min={0}
                 max={item.maxItems}
@@ -306,6 +306,7 @@ const isDirty = useMemo(() => {
             </td>
           );
         })}
+        {visibleItems.length === 0 && <td className="min-w-32 px-3 py-2" />}
       </tr>
     );
   }
@@ -338,10 +339,11 @@ const isDirty = useMemo(() => {
                     <th
                       className={`px-4 py-2 text-left text-xs font-bold ${textMuted}`}
                     >
-                      No items yet — tap Add Item
+                      {pending ? null : 'No items yet — tap Add Item'}
                     </th>
                   ) : (
                     tabItemsForTable.map((item) => {
+                      if (itemMetadataPending) return <th key={item.id} className="min-w-32 px-1.5 py-1.5" aria-label="Loading assessment" />;
                       const isSelected = item.id === selectedItemId;
                       return (
                         <th key={item.id} className="min-w-32 px-1.5 py-1.5 align-top">
@@ -369,7 +371,7 @@ const isDirty = useMemo(() => {
                               <p
                                 className={`text-xs font-black leading-none ${textPrimary}`}
                               >
-                                {itemMetadataPending ? <SkeletonText className="w-[8ch]" /> : formatDisplayDate(item.date)}
+                                {formatDisplayDate(item.date)}
                               </p>
                               <span
                                 className={`absolute right-0 shrink-0 rounded-full bg-[#DC2626] px-1.5 py-0.5 text-xs font-black uppercase tracking-wide text-white transition-opacity ${
@@ -387,7 +389,7 @@ const isDirty = useMemo(() => {
                                 className={`mt-1 truncate text-xs font-semibold leading-none ${textMuted}`}
                                 title={item.activityName}
                               >
-                                {itemMetadataPending ? <SkeletonText className="w-[12ch]" /> : <>{item.activityName} · {item.maxItems} pts</>}
+                                {item.activityName} · {item.maxItems} pts
                               </p>
                             )}
 
@@ -396,7 +398,7 @@ const isDirty = useMemo(() => {
                               style={{ color: "var(--brand-ink)" }}
                               title={item.topic}
                             >
-                              {itemMetadataPending ? <SkeletonText className="w-[10ch]" /> : <>{item.topic}{isWrittenWorks ? ` · ${item.maxItems} pts` : ""}</>}
+                              {item.topic}{isWrittenWorks ? ` · ${item.maxItems} pts` : ""}
                             </p>
                           </button>
                         </th>
