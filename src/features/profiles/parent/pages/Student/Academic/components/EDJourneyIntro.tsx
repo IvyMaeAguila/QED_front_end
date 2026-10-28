@@ -305,11 +305,10 @@ export default function EDJourneyIntro({
   };
 
   return (
-    <div className="relative isolate w-full max-w-md overflow-hidden rounded-3xl shadow-lg">
+    <div className="relative isolate w-full max-w-md overflow-hidden rounded-3xl">
       {/* ================= SKY + PET ================= */}
       <div
         className="relative"
-        style={{ background: "var(--brand-light)" }}
       >
         {/* sun */}
         <div
@@ -349,14 +348,6 @@ export default function EDJourneyIntro({
 
         {/* stage: pet standing on the hill */}
         <div className="relative mt-2 h-72.5 w-full">
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-20"
-            style={{
-              background: "var(--brand-light)",
-              borderTopLeftRadius: "60% 100%",
-              borderTopRightRadius: "60% 100%",
-            }}
-          />
           <div className="pointer-events-none absolute bottom-3 left-12 h-3 w-3 rounded-full bg-emerald-600/30" />
           <div className="pointer-events-none absolute bottom-5 right-14 h-2.5 w-2.5 rounded-full bg-emerald-600/30" />
           <div className="pointer-events-none absolute bottom-2 right-28 h-2 w-2 rounded-full bg-emerald-600/25" />
@@ -390,7 +381,6 @@ export default function EDJourneyIntro({
       {/* ================= GRASS: dialogue + info + button ================= */}
       <div
         className="relative flex flex-col gap-3 px-5 pb-6 pt-5"
-        style={{ background: "var(--brand-light)" }}
       >
         {/* dialogue box, replays per scene */}
         <div key={currentScene} className="flex flex-col gap-3">
