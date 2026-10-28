@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
 import { loadEnv } from 'vite';
 
-export const productionApiOrigin = 'https://thesis-qed-1.onrender.com';
+export const productionApiOrigin = 'https://thesis-qed.vercel.app';
 
 export function checkApiTarget(chunks, readChunk, expectedOrigin = productionApiOrigin) {
   const target = new URL(expectedOrigin);
@@ -26,7 +26,7 @@ export function checkApiTarget(chunks, readChunk, expectedOrigin = productionApi
     };
     visit(source);
   }
-  if (!configuredOriginPresent) throw new Error('Bundled API configuration must target the configured production backend (Render by default)');
+  if (!configuredOriginPresent) throw new Error('Bundled API configuration must target the configured production backend');
   return { apiOrigin: expectedOrigin, configChunk: configChunks[0].fileName, loopbackApiEndpoints: 0 };
 }
 
