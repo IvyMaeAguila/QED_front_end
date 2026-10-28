@@ -257,8 +257,7 @@ function useManageSubjectsPageState() {
                       {pending ? <SkeletonText width="15ch" /> : group.label}
                     </h4>
                     <span className={`text-xs font-semibold ${textMuted}`}>
-                      ({group.items.length} subject
-                      {group.items.length === 1 ? "" : "s"})
+                      {pending ? <SkeletonText width="7ch" /> : <>({group.items.length} subject{group.items.length === 1 ? "" : "s"})</>}
                     </span>
                     <span
                       className={`h-px flex-1 ${
@@ -296,8 +295,9 @@ function useManageSubjectsPageState() {
               Academics
             </h1>
             <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
-              {filtered.length} of {gradeSubjects.length} subject
-              {gradeSubjects.length === 1 ? "" : "s"} shown
+              <LoadingRegion as="span" name="admin-subject-count" loading={loading} skeleton={<SkeletonText width="20ch" />}>
+                {filtered.length} of {gradeSubjects.length} subject{gradeSubjects.length === 1 ? "" : "s"} shown
+              </LoadingRegion>
             </p>
           </div>
         </div>
