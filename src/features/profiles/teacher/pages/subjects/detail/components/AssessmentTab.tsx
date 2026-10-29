@@ -1,3 +1,4 @@
+import {assessmentCapacity} from '../assessmentCapacity';
 import {mergeScoreDraft} from '../../../../query/subjectScoreCache';
 import { useToast } from "@shared/context/ToastContext";
 import { QueryHttpError } from "@shared/http/QueryHttpError";
@@ -229,7 +230,7 @@ const isDirty = useMemo(() => {
       setTimeout(() => setSavedFlash(false), 1800);
     } catch (error) {
       setSavedFlash(false);
-      setToast(error instanceof QueryHttpError&&(error.outcome==='uncertain'||error.outcome==='conflict')?error.message:"Could not save scores. Please try again.",'error');
+      setToast(error instanceof QueryHttpError?error.message+(error.requestId?' (Request '+error.requestId+')':''):"Could not save scores. Please try again.",'error');
     } finally {
       setSaving(false);
     }
@@ -237,6 +238,10 @@ const isDirty = useMemo(() => {
 
 
 
+  const capacity=assessmentCapacity(items,tab,selectedTerm,templateDomains);
+  const fullDomainIds=capacity.filter(domain=>domain.full).map(domain=>domain.id);
+  const categoryFull=capacity.length>0&&capacity.every(domain=>domain.full);
+  const addReason=categoryFull?'Cannot add: all scoring columns allowed by the assigned Excel template are full for this term.':tabItems.length>0?'Save the current item before adding another.':loading||templateLoading?'Wait for the template limits to load.':saving?'Wait for the current save to finish.':'';
   const selectedItem = tabItems.find((i) => i.id === selectedItemId) ?? null;
 
 
@@ -565,24 +570,23 @@ const isDirty = useMemo(() => {
               Delete
             </button>
 
+            <span tabIndex={addReason?0:undefined} title={addReason||'Add item'} className="relative group inline-flex" aria-label={addReason||undefined}>
             <button
-              onClick={() => setModalOpen(true)}
-              disabled={loading || saving || templateLoading || tabItems.length > 0}
+              onClick={() => {if(!categoryFull)setModalOpen(true);}}
+              disabled={loading || saving || templateLoading || categoryFull || tabItems.length > 0}
               aria-label={
                 tabItems.length > 0
                   ? "Finish scoring the current item before adding a new one"
                   : "Add item"
               }
-              title={
-                tabItems.length > 0
-                  ? "Save scores for the current item before adding a new one"
-                  : "Add item"
-              }
+              title={addReason || 'Add item'}
               className={toolButton}
             >
               <Plus size={12} style={{ color: "var(--brand-ink)" }} />
               Add Item
             </button>
+            {addReason&&<span role="tooltip" className="pointer-events-none absolute right-0 top-full z-50 mt-2 hidden w-64 rounded-lg bg-gray-900 p-3 text-xs text-white shadow-lg group-hover:block group-focus-within:block">{addReason}</span>}
+            </span>
           </div>
         </div>
 
@@ -604,6 +608,7 @@ const isDirty = useMemo(() => {
             panelBg={panelBg}
             panelBorder={panelBorder}
             textMuted={textMuted}
+            fullDomainIds={fullDomainIds}
             templateDomains={templateDomains}
             examTypes={examTypes}
           />

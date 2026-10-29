@@ -31,6 +31,7 @@ interface AddItemModalProps {
   panelBorder: string;
   textMuted: string;
   templateDomains?: TemplateDomain[];
+  fullDomainIds?:string[];
   examTypes?: ExamType[];
 }
 
@@ -45,6 +46,7 @@ export function AddItemModal({
   panelBorder,
   textMuted,
   templateDomains = [],
+  fullDomainIds = [],
   examTypes = EXAM_TYPES,
 }: AddItemModalProps) {
   const isExam = tab === "exams";
@@ -53,7 +55,7 @@ export function AddItemModal({
   const textPrimary = darkMode ? "text-white" : "text-[#111827]";
 
   const [date, setDate] = useState(initialItem?.date ?? todayISO());
-  const [templateDomainId, setTemplateDomainId] = useState(initialItem?.templateDomainId ?? templateDomains[0]?.id ?? "");
+  const [templateDomainId, setTemplateDomainId] = useState(initialItem?.templateDomainId ?? templateDomains.find(domain=>!fullDomainIds.includes(domain.id))?.id ?? "");
 
   const port=useContext(TeacherAcademicQueryContext);
   const queryManaged=port!==null;
@@ -124,6 +126,7 @@ export function AddItemModal({
     }
     if (!date) return setError("Date is required.");
 
+    if(!isEdit&&fullDomainIds.includes(templateDomainId))return setError('This domain has no remaining scoring columns in the assigned template. Choose another domain.');
     setSubmitting(true);
     setError(null);
     try {
@@ -198,7 +201,7 @@ export function AddItemModal({
             <label className={`${fieldRow} justify-between`}>
               <span className={`qed-type-label ${textMuted}`}>Template domain</span>
               <AccountSelect data-account-select="" data-dropdown-dark={darkMode} value={templateDomainId} onChange={(e) => setTemplateDomainId(e.target.value)} className={`${inputBare} text-right`}>
-                {templateDomains.map((domain) => <option key={domain.id} value={domain.id}>{domain.label} ({domain.weightPercent}%)</option>)}
+                {templateDomains.map((domain) => <option key={domain.id} value={domain.id} disabled={!isEdit&&fullDomainIds.includes(domain.id)}>{domain.label} ({domain.weightPercent}%){fullDomainIds.includes(domain.id)?' — Full':''}</option>)}
               </AccountSelect>
             </label>
           )}
@@ -283,7 +286,7 @@ export function AddItemModal({
         <ModalFooter className={`border-t-0 px-5 pb-5 pt-0 ${panelBorder}`}>
           <button
             onClick={handleConfirm}
-            disabled={submitting}
+            disabled={submitting||(!isEdit&&fullDomainIds.includes(templateDomainId))}
             className="flex h-10 w-full items-center justify-center rounded-lg bg-maroon qed-type-button text-white transition-colors hover:bg-maroon-light disabled:opacity-60"
           >
             {submitting ? "Saving..." : isEdit ? "Save Changes" : "Confirm"}
