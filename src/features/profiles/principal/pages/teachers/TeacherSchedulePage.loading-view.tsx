@@ -41,7 +41,7 @@ function useTeacherSchedulePageState({ teacherIdOverride, backPath = "/principal
   const loading = !!prerequisite?.loading || schedule.loading;
   const error = prerequisite?.error || schedule.error;
   const retry = prerequisite?.error ? prerequisite.retry : schedule.retry;
-  const [activeTab, setActiveTab] = useState<"schedule" | "class-list">("class-list");
+  const [activeTab, setActiveTab] = useState<"schedule" | "class-list">("schedule");
   const [localRosters, setClassRosters] = useState<TeacherClassRoster[]>([]);
   const [localLoading, setRostersLoading] = useState(false);
   const [localError, setRostersError] = useState(false);
@@ -67,11 +67,15 @@ function useTeacherSchedulePageState({ teacherIdOverride, backPath = "/principal
     .toUpperCase();
   const teacherAvatar = getTeacherAvatar(profile);
   const teacherAvatarBorderColor = getTeacherAvatarBorderColor(profile.gender);
-  const advisory = profile.advisories?.length
-    ? `${profile.advisories.length} assigned ${profile.advisories.length === 1 ? "class" : "classes"}`
-    : profile.gradeLevel || profile.advisorySection
-      ? `${profile.gradeLevel ?? ""}${profile.gradeLevel && profile.advisorySection ? " · " : ""}${profile.advisorySection ?? ""}`
-      : "No advisory assigned";
+  const advisoryDetails = profile.advisories
+    ?.map(({ gradeLevel, section }) => [gradeLevel?.trim(), section?.trim()].filter(Boolean).join(" · "))
+    .filter(Boolean)
+    .join("; ");
+  const advisory = advisoryDetails
+    || [profile.gradeLevel?.trim(), profile.advisorySection?.trim()].filter(Boolean).join(" · ")
+    || (profile.advisories?.length
+      ? `${profile.advisories.length} assigned ${profile.advisories.length === 1 ? "class" : "classes"}`
+      : "No advisory assigned");
 
   return { content: ((
     <div className="flex flex-col gap-6 font-sans">

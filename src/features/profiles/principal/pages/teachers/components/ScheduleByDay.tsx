@@ -54,7 +54,6 @@ export function ScheduleByDay({
     <SectionCard
       title="Class Schedule"
       compact
-      action={<span className={`text-xs font-medium ${textMuted}`}><LoadingRegion as="span" loading={loading} skeleton={<SkeletonText width="10ch" />}>{scheduleByDay.reduce((total, day) => total + day.entries.length, 0)} sessions</LoadingRegion></span>}
       panelBg={panelBg}
       panelBorder={panelBorder}
       textPrimary={textPrimary}
