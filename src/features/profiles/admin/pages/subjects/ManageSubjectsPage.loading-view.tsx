@@ -131,14 +131,10 @@ function useManageSubjectsPageState() {
     setSavingEdit(true);
     setEditSubjectError(null);
     try {
-      const isGraded = updates.isGraded ?? subject.isGraded;
-      const weightDistribution = isGraded
-        ? toWeightPayload(updates.weightDistribution ?? [], assessmentTypes)
-        : [];
+      const isGraded = subject.isGraded;
 
       await updateSubjectAssignment(subject.id, {
         isGraded,
-        weightDistribution,
         subjectName: updates.name ?? subject.name,
         gradeLevelId: GRADE_LEVEL_IDS[updates.gradeLevel ?? subject.gradeLevel],
         sectionName: updates.section ?? subject.section,
@@ -153,9 +149,6 @@ function useManageSubjectsPageState() {
         teacherId: updates.teacherId ?? null,
         schoolYear: updates.schoolYear ?? subject.schoolYear,
         isGraded,
-        ...(isGraded
-          ? { weightDistribution: updates.weightDistribution ?? [] }
-          : {}),
       });
       if (updates.gradeLevel && updates.gradeLevel !== subject.gradeLevel) {
         await Promise.all([
@@ -336,10 +329,6 @@ function useManageSubjectsPageState() {
             setEditSubjectError(null);
           }}
           onSave={(updates) => saveEditedSubject(editingSubject, updates)}
-          onManageSections={() => {
-            setEditingSubject(null);
-            setManagingSections(true);
-          }}
           saving={savingEdit}
           error={editSubjectError}
         />
