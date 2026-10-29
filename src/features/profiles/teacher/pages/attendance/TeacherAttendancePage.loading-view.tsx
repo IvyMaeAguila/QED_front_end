@@ -2,7 +2,7 @@ import {useAttendanceCellEdits} from './useAttendanceCellEdits';
 import {lazy,Suspense} from 'react';
 import {initialDropoutReader,effectiveDropout} from './dropoutState';
 import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
-import { useSaveFeedback } from "@shared/components/useSaveFeedback";
+import {useAttendanceSaves} from '../../query/useAttendanceSaves';
 import { useToast } from "@shared/context/ToastContext";
 import {useContext,useLayoutEffect} from 'react';
 import {AttendanceQueryContext} from '../../query/AttendanceQueryContext';
@@ -56,8 +56,8 @@ function useTeacherAttendancePageState() {
     requestedClassId,
   } = useSelectedAdvisorySection();
 
-  const { save, saveFeedback, pending: savesPending, hasFailures } = useSaveFeedback(section?.classId ?? "", { showStatus: false });
-  const { navigationDialog } = useUnsavedChanges(savesPending > 0 || hasFailures, darkMode);
+  const { save, saveFeedback, pending: savesPending, hasFailures, background } = useAttendanceSaves(section?.classId ?? "");
+  const { navigationDialog } = useUnsavedChanges(!background && (savesPending > 0 || hasFailures), darkMode);
   const { showToast } = useToast();
   const currentClass=useRef(section?.classId);
   useLayoutEffect(()=>{currentClass.current=section?.classId;return()=>{currentClass.current=undefined;};},[section?.classId]);
@@ -87,7 +87,7 @@ function useTeacherAttendancePageState() {
 
   const attendanceClassId=section?.classId??'';
   const {attendance,getStatus,saveMark,isPending}=useAttendanceCellEdits((section?.classId??'')+':'+iso,storedAttendance,setAttendance,save,
-    (studentId,date,status)=>(bridge?.save??saveAdvisoryAttendance)(attendanceClassId,studentId,date,status,activeTerm?.id));
+    (studentId,date,status)=>(bridge?.save??saveAdvisoryAttendance)(attendanceClassId,studentId,date,status,activeTerm?.id),background);
   const bulkIds=bulkState?.classId===section?.classId?bulkState?.ids??[]:[];
   const bulkPending=bulkState?.classId===section?.classId&&!!bulkState?.pending;
   function cycle(studentId: string) {
@@ -109,13 +109,13 @@ function useTeacherAttendancePageState() {
     // Apply immediately; the save queue retains failures for an explicit retry
     // and restores the previous marks if the request fails.
     void save(async()=>{
-      if(!current())return;
-      setBulkState({classId,ids,pending:true});display(Object.fromEntries(ids.map(id=>[id,PRESENT])));
+      if(!background&&!current())return;
+      if(current())setBulkState({classId,ids,pending:true});display(Object.fromEntries(ids.map(id=>[id,PRESENT])));
       try{
         await (bridge?.markPresent??markAdvisoryPresent)(classId,ids,iso,termId);
         if(current()){setBulkState(null);showToast(`Attendance saved for ${ids.length} student${ids.length===1?'':'s'}.`);}
       }catch(error){if(current()){display(previous);setBulkState({classId,ids,pending:false});}throw error;}
-    },'bulk-present:'+iso);
+    },'bulk-present:'+iso,ids.map(studentId=>({studentId,date:iso,status:PRESENT})));
   }
 
   const markedCount = section

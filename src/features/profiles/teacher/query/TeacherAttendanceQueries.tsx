@@ -1,3 +1,4 @@
+import {useAttendanceQueue} from './useAttendanceSaves';
 import {confirmAttendance} from './attendanceCache';
 import {useEffect,useMemo,type ReactNode} from 'react';
 import {useMutation} from '@tanstack/react-query';
@@ -12,9 +13,10 @@ type BulkArgs=Parameters<typeof markAdvisoryPresent>;
 type BulkRequest={args:BulkArgs;key:readonly unknown[];request:TeacherRequestOptions;allowed:boolean};
 type SaveRequest={args:SaveArgs;key:readonly unknown[];request:TeacherRequestOptions;allowed:boolean};
 function Effects({classId,termId,allPeriods,ready,attempt,setAttendance,setLoading,setError,setLoadedFor,errorMessage}:AttendanceReadScope){
+ const {jobs}=useAttendanceQueue();
  const reader=useTeacherReader(['attendance',classId,termId??'active',Boolean(allPeriods)],o=>fetchAdvisoryAttendance(classId,{termId,allPeriods},o),errorMessage,30_000,ready&&!!classId,false,true);
  useTeacherRetryAttempt(attempt,reader.retry);
- useEffect(()=>{setLoading(reader.loading);setError(reader.error);if(!reader.loading){setAttendance(reader.data?.data??{});setLoadedFor?.(classId);}},[reader.data,reader.loading,reader.error,classId,setAttendance,setLoading,setError,setLoadedFor]);
+ useEffect(()=>{setLoading(reader.loading);setError(reader.error);if(!reader.loading){const data={...reader.data?.data};for(const job of jobs)if(job.classId===classId&&job.state==='pending')for(const mark of job.marks)data[mark.studentId]={...data[mark.studentId],[mark.date]:mark.status};setAttendance(data);setLoadedFor?.(classId);}},[jobs,reader.data,reader.loading,reader.error,classId,setAttendance,setLoading,setError,setLoadedFor]);
  return null;
 }
 function invalidate(key:readonly unknown[],classId:string){
