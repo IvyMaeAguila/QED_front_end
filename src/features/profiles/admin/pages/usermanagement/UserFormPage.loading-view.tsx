@@ -225,6 +225,8 @@ function useUserFormPageState() {
       const data = await saveUser(payload, isEditing ? existing?.id : undefined);
 
       markSaved();
+      const creds = (data as { credentials?: { userName: string; password: string } }).credentials;
+      if (!isEditing && creds) console.log(`[Account Created] Username: ${creds.userName} | Password: ${creds.password}`);
       if (isEditing) { showToast("User updated."); navigate("/admin/users"); return; }
       setFeedbackModal({
         open: true,
