@@ -4,11 +4,11 @@ export function generateUsername(role: string, firstName: string, lastName: stri
 
   switch (role.toLowerCase()) {
     case "teacher":
-      return `TC_${first}.${last}`;
+      return `tc_${first}.${last}`;
     case "principal":
-      return `PRN.${first}.${last}`;
+      return `prn_${first}.${last}`;
     case "parent":
-      return `PRT_${first}.${last}`;
+      return `prt_${first}.${last}`;
     default:
       return `${first}.${last}`;
   }
