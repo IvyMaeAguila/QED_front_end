@@ -1,3 +1,4 @@
+import {mergeScoreDraft} from '../../../../query/subjectScoreCache';
 import { useToast } from "@shared/context/ToastContext";
 import { QueryHttpError } from "@shared/http/QueryHttpError";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
@@ -115,8 +116,11 @@ export function AssessmentTab({
   const [search, setSearch] = useState("");
 
   const [draftScores, setDraftScores] = useState<ScoreMap>(scores);
+  const previousScores=useRef(scores);
   useEffect(() => {
-    setDraftScores(scores);
+    const previous=previousScores.current;
+    setDraftScores(draft=>mergeScoreDraft(draft,previous,scores));
+    previousScores.current=scores;
   }, [scores]);
 
   // An item stays on this working Score Sheet only until it has been
@@ -131,12 +135,14 @@ export function AssessmentTab({
   // This reads off `scores` (the committed/persisted map), not
   // `draftScores` (in-progress typing), so an item you haven't saved yet
   // correctly stays visible even if you've typed values into every box.
-  const tabItems = items.filter((i) => {
+  const [savingItems,setSavingItems]=useState<GradeItem[]|null>(null);
+  const tabItems = savingItems?.filter(item=>items.some(current=>current.id===item.id)) ?? items.filter((i) => {
     if (i.tab !== tab) return false;
     const hasAnySavedScore = roster.some(
       (s) => typeof scores[s.id]?.[i.id] === "number",
     );
-    return !hasAnySavedScore;
+    const hasUnsavedDraft=roster.some(student=>Object.hasOwn(draftScores[student.id]??{},i.id)&&(draftScores[student.id]?.[i.id]??null)!==(scores[student.id]?.[i.id]??null));
+    return !hasAnySavedScore || hasUnsavedDraft;
   });
 
   useEffect(() => {
@@ -208,11 +214,13 @@ const isDirty = useMemo(() => {
       return;
     }
 
+    setSavingItems(tabItems);
     setSaving(true);
     try {
-      await Promise.all(
-        changes.map((c) => onScoreChange(c.studentId, c.itemId, c.value)),
-      );
+      const results=await Promise.allSettled(changes.map(c=>onScoreChange(c.studentId,c.itemId,c.value)));
+      const failed=results.find(result=>result.status==='rejected');
+      if(failed?.status==='rejected')throw failed.reason;
+      setSavingItems(null);
       setSavedFlash(true);
       setToast("Grades saved to Records.");
       setTimeout(() => setSavedFlash(false), 1800);
@@ -476,7 +484,7 @@ const isDirty = useMemo(() => {
 
           {tab !== "exams" && (
             <button
-              disabled={loading} onClick={() => setTopicManagerOpen(true)}
+              disabled={loading || saving} onClick={() => setTopicManagerOpen(true)}
               className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-extrabold transition-colors ${
                 darkMode
                   ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
@@ -533,7 +541,7 @@ const isDirty = useMemo(() => {
 
             <button
               onClick={() => selectedItem && setConfirmingDelete(true)}
-              disabled={!selectedItem || loading}
+              disabled={!selectedItem || loading || saving}
               aria-label={
                 selectedItem
                   ? `Delete ${selectedItem.activityName}`
@@ -556,7 +564,7 @@ const isDirty = useMemo(() => {
 
             <button
               onClick={() => setModalOpen(true)}
-              disabled={loading || templateLoading || tabItems.length > 0}
+              disabled={loading || saving || templateLoading || tabItems.length > 0}
               aria-label={
                 tabItems.length > 0
                   ? "Finish scoring the current item before adding a new one"

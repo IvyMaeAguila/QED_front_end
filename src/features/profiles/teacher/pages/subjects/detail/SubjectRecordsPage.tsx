@@ -23,10 +23,14 @@ function Effects({scope:s}:{scope:SubjectRecordsPageEffectScope}){
  const session=useTeacherQueryScope();
  const lastApplied=useRef<unknown[]>([]);
  const id=s.subjectId??'',year=periods.data?.[0]?.schoolYearId??'active';
- const ready=!!id&&s.isAssessment&&!!s.tab&&!periods.loading&&!periods.error&&!info.loading&&!info.error;
- const items=useTeacherReader(subjectKey(year,id,'items',{term:s.term||undefined}),o=>api.fetchItems(id,{term:s.term||undefined},o),'Could not load the latest records. Showing last known data.',30_000,ready);
+ const ready=!!id&&s.isAssessment&&!!s.tab&&!!s.term&&!periods.loading&&!periods.error&&!info.loading&&!info.error;
+ const items=useTeacherReader(subjectKey(year,id,'items',{term:s.term||undefined}),async o=>{
+  const cached=queryClient.getQueryState<Awaited<ReturnType<typeof api.fetchItems>>>([...session.key,...subjectKey(year,id,'items',{allPeriods:true})]);
+  if(cached?.data&&!cached.isInvalidated&&Date.now()-cached.dataUpdatedAt<30_000&&cached.data.every(item=>!!item.gradingPeriodId))return cached.data.filter(item=>!s.term||String(item.gradingPeriodId)===s.term);
+  return api.fetchItems(id,{term:s.term||undefined},o);
+ },'Could not load the latest records. Showing last known data.',30_000,ready,false,true);
  const scores=useTeacherReader(subjectKey(year,id,'scores'),o=>api.fetchScores(id,o),'Could not load the latest records. Showing last known data.',30_000,ready);
- const weights=useTeacherReader(subjectKey(year,id,'weights',s.term||'active'),o=>getEffectiveWeightsSafe(Number(id),s.term||undefined,o),'Could not load grading rules.',300_000,ready);
+ const weights=useTeacherReader(subjectKey(year,id,'weights',s.term||'active'),o=>getEffectiveWeightsSafe(Number(id),s.term||undefined,o),'Could not load grading rules.',300_000,ready,false,true);
  useTeacherRetryAttempt(s.attempt,periods.retry);useTeacherRetryAttempt(s.attempt,info.retry);useTeacherRetryAttempt(s.attempt,items.retry);useTeacherRetryAttempt(s.attempt,scores.retry);useTeacherRetryAttempt(s.attempt,weights.retry);
  const {setIsLoadingRecords,setLoadError,setItems,setLocalScores,setEffectiveWeights,setWeightsError,setHasLoadedOnce,setTerm,term}=s;
  useEffect(()=>{if(periods.data?.length&&!periods.data.some(p=>p.id===term))setTerm((periods.data.find(p=>p.isActive)??periods.data[0]).id);},[periods.data,term,setTerm]);

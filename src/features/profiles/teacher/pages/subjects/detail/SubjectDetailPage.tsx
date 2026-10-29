@@ -25,7 +25,7 @@ function Effects({scope:s}:{scope:SubjectDetailPageEffectScope}){
  const session=useTeacherQueryScope();
  const {periods,info}=port,year=periods.data?.[0]?.schoolYearId??'active',id=s.subjectId??'';
  const ready=!!id&&!periods.loading&&!periods.error&&!info.loading&&!info.error;
- const items=useTeacherReader(subjectKey(year,id,'items',{allPeriods:true}),o=>api.fetchItems(id,{allPeriods:true},o),'Could not load the class records. Please try again.',300_000,ready);
+ const items=useTeacherReader(subjectKey(year,id,'items',{allPeriods:true}),o=>api.fetchItems(id,{allPeriods:true},o),'Could not load the class records. Please try again.',300_000,ready,false,true);
  const scores=useTeacherReader(subjectKey(year,id,'scores'),o=>api.fetchScores(id,o),'Could not load the class records. Please try again.',300_000,ready);
  const holistic=useTeacherReader(subjectKey(year,id,'holistic',1,currentSchoolWeek()),o=>api.fetchHolistic(id,o),'Could not load the class records. Please try again.',300_000,ready);
  const weights=useTeacherReader(subjectKey(year,id,'weights',s.selectedTerm||'active'),o=>getEffectiveWeightsSafe(Number(id),s.selectedTerm||undefined,o),'Could not load grading rules.',300_000,ready&&!!s.selectedTerm);

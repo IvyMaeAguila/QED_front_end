@@ -26,6 +26,7 @@ export function ConfirmDialog({
       onClose={onCancel}
       onConfirm={onConfirm}
       confirmLabel={confirmLabel}
+      loadingLabel={confirmLabel === "Delete" ? "Deleting…" : "Working…"}
       variant={danger ? "danger" : "default"}
       darkMode={darkMode}
       zIndexClass="z-100"

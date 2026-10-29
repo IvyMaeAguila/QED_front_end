@@ -108,7 +108,7 @@ function useSubjectDetailPageState() {
         templateDomainId: item.templateDomainId,
       });
       setItems((prev) => {
-        const next = [...prev, { ...item, id, gradingPeriodId: selectedTerm }];
+        const next = [...prev.filter(entry=>entry.id!==id), { ...item, id, gradingPeriodId: selectedTerm }];
         return next;
       });
     } catch (err) {
@@ -229,7 +229,7 @@ function useSubjectDetailPageState() {
         {!error && (activeTab === "writtenWorks" ||
           activeTab === "performanceTask" ||
           activeTab === "exams") && (
-          <fieldset disabled={!gradingRulesReady} className="min-w-0"><AssessmentTab
+          <fieldset disabled={!gradingRulesReady} className="min-w-0"><AssessmentTab key={`${subjectId}:${selectedTerm}:${activeTab}`}
             loading={loading || (!gradingRules.configured && gradingRules.loading)}
             templateLoading={templateLoading}
             subjectSectionId={subjectId}
