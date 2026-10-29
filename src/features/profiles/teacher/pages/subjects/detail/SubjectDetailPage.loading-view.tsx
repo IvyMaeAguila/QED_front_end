@@ -31,7 +31,7 @@ function currentSchoolYearLabel(): string {
 
 function useSubjectDetailPageState() {
   const {grading}=useTeacherAcademicServices();
-  const {addItem:addItemApi,deleteItem,saveScore,saveHolistic}=grading;
+  const {addItem:addItemApi,deleteItem,saveScore,saveScores,saveHolistic}=grading;
   const {sessionScope,user}=useAuth();
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
@@ -244,6 +244,11 @@ function useSubjectDetailPageState() {
             onAddItem={handleAddItem}
             onDeleteItem={handleDeleteItem}
             onScoreChange={handleScoreChange}
+            onScoresChange={async changes=>{
+             if(!subjectId||!rulesReady.current)throw new Error('Verify grading rules before saving.');
+             await saveScores(subjectId,changes);
+             setScores(previous=>{const next={...previous};for(const change of changes)next[change.studentId]={...next[change.studentId],[change.itemId]:change.value};return next;});
+            }}
             onOpenRecords={openRecords}
             onDirtyChange={setHasUnsavedChanges}
             darkMode={darkMode}

@@ -116,6 +116,17 @@ export function TeacherAcademicQueries({children}:{children:ReactNode}){
    queryClient.setQueriesData<Awaited<ReturnType<typeof grading.fetchItems>>>({queryKey:[...scope.key,...subject(id,'items')]},previous=>previous?.filter(entry=>entry.id!==item));
    queryClient.setQueryData<Awaited<ReturnType<typeof grading.fetchScores>>>([...scope.key,...subject(id,'scores')],previous=>previous?removeItemScores(previous,item):previous);
   },
+  saveScores:async(id,edits)=>{
+   const key=[...scope.key,...subject(id,'scores')],fence=JSON.stringify(key);
+   const task=scoreChain.current.catch(()=>{}).then(async()=>{
+    if(!scoreOwner.current||scoreWriteFences.has(fence))throw new Error('Reload this class before saving again.');
+    try{await write(o=>grading.saveScores(id,edits,o),[subject(id,'submission'),allGrades]);}
+    catch(error){if(!(error instanceof QueryHttpError)||error.outcome!=='not_saved')scoreWriteFences.add(fence);throw error;}
+    queryClient.setQueryData<Awaited<ReturnType<typeof grading.fetchScores>>>(key,previous=>{
+     if(!previous)return previous;const next={...previous};for(const edit of edits){next[edit.studentId]={...next[edit.studentId],[edit.itemId]:edit.value};confirmedScores.current.set(JSON.stringify([...key,edit.studentId,edit.itemId]),edit.value);}return next;
+    });
+   });scoreChain.current=task;await task;
+  },
   saveScore,
   saveHolistic:(id,student,axis,value,term)=>write(o=>grading.saveHolistic(id,student,axis,value,term,o),[subject(id,'holistic'),subject(id,'weekly-holistic'),['holistic']]),
   createTopic:(id,name)=>write(o=>grading.createTopic(id,name,o),[subject(id,'topics')]),

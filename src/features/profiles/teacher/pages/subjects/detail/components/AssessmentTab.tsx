@@ -60,6 +60,7 @@ interface AssessmentTabProps {
     itemId: string,
     value: number | null,
   ) => void | Promise<void>;
+  onScoresChange?: (edits:import("../../services/subjectGrading.service").ScoreEdit[])=>Promise<void>;
   onOpenRecords: () => void;
   onDirtyChange?: (dirty: boolean) => void;
   darkMode: boolean;
@@ -92,6 +93,7 @@ export function AssessmentTab({
   onAddItem,
   onDeleteItem,
   onScoreChange,
+  onScoresChange,
   onOpenRecords,
   onDirtyChange,
   darkMode,
@@ -217,9 +219,10 @@ const isDirty = useMemo(() => {
     setSavingItems(tabItems);
     setSaving(true);
     try {
-      const results=await Promise.allSettled(changes.map(c=>onScoreChange(c.studentId,c.itemId,c.value)));
+      if(onScoresChange)await onScoresChange(changes.map(change=>({...change,expectedValue:scores[change.studentId]?.[change.itemId]??null})));
+      else {const results=await Promise.allSettled(changes.map(c=>onScoreChange(c.studentId,c.itemId,c.value)));
       const failed=results.find(result=>result.status==='rejected');
-      if(failed?.status==='rejected')throw failed.reason;
+      if(failed?.status==='rejected')throw failed.reason;}
       setSavingItems(null);
       setSavedFlash(true);
       setToast("Grades saved to Records.");

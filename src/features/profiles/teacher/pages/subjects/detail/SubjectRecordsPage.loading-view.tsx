@@ -1,3 +1,4 @@
+import {useToast} from '@shared/context/ToastContext';
 import { FinalGradesLoading } from './components/FinalGradesTable';
 import { useSaveFeedback } from "@shared/components/useSaveFeedback";
 import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
@@ -13,7 +14,7 @@ Pencil,
 Maximize2,
 Minimize2,
 } from "lucide-react";
-import { lazy, Suspense, useEffect, useMemo,useState,useRef } from "react";
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo,useState,useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
@@ -114,7 +115,7 @@ function useSubjectRecordsPageState() {
   const [isEditing, setIsEditing] = useState(false);
   const [rulesVerification, setRulesVerification] = useState({period:'',ready:false});
   const gradingRulesReady = rulesVerification.period === term && rulesVerification.ready;
-  const rulesReady = useRef(false); rulesReady.current = gradingRulesReady;
+  const rulesReady = useRef(false); useLayoutEffect(()=>{rulesReady.current=gradingRulesReady;},[gradingRulesReady]);
 
   // Do NOT seed items/localScores from location.state. That stale snapshot
   // was causing the page to flash old (pre-edit) values immediately on
@@ -182,9 +183,16 @@ function useSubjectRecordsPageState() {
   }, [state, term]);
 
 
-  const { save: persistScore, saveFeedback, pending: pendingWrites, hasFailures } = useSaveFeedback(`${subjectId}:${term}`);
+  const {showToast}=useToast();
+  const saveCycle=useRef(false);
+  const editRevisions=useRef(new Map<string,number>());
+  const { save: persistScore, saveFeedback, pending: pendingWrites, hasFailures } = useSaveFeedback(`${subjectId}:${term}`,{showStatus:false});
   const { navigationDialog, guardAction } = useUnsavedChanges(pendingWrites > 0 || hasFailures, darkMode);
 
+  useEffect(()=>{
+   if(pendingWrites>0)saveCycle.current=true;
+   else if(saveCycle.current){saveCycle.current=false;showToast(hasFailures?'Some scores could not be saved. Check the error and retry.':'Score changes saved.',hasFailures?'error':'success');}
+  },[pendingWrites,hasFailures,showToast]);
   function handleScoreChange(
     studentId: string,
     itemId: string,
@@ -212,7 +220,8 @@ function useSubjectRecordsPageState() {
     });
 
     if (!subjectId) return;
-    void persistScore(() => saveScore(subjectId, studentId, itemId, value), studentId + ':' + itemId);
+    const cell=studentId+':'+itemId,revision=(editRevisions.current.get(cell)??0)+1;editRevisions.current.set(cell,revision);
+    void persistScore(async()=>{await new Promise(resolve=>setTimeout(resolve,300));if(editRevisions.current.get(cell)!==revision)return;await saveScore(subjectId,studentId,itemId,value);},cell);
   }
 
   // Finds every (student, item) pair in the current record that has no
