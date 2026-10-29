@@ -11,8 +11,8 @@ async function fixture(page:Page,initial=true){
  await page.goto('/teacher/attendance');await waitForDataRoute(page);await expect(page.getByRole('button',{name:'Mark All Present',exact:true})).toBeEnabled();
  return {batch,single,release:done,fail:(value:boolean)=>{fail=value;}};
 }
-test('bulk marking closes immediately, uses one request, rolls back exact marks on failure and retries the batch',async({page})=>{
- const state=await fixture(page);state.fail(true);await page.getByRole('button',{name:'Mark All Present',exact:true}).click();await page.getByRole('alertdialog').getByRole('button',{name:'Mark present',exact:true}).click();
+test('bulk marking starts immediately, uses one request, rolls back exact marks on failure and retries the batch',async({page})=>{
+ const state=await fixture(page);state.fail(true);await page.getByRole('button',{name:'Mark All Present',exact:true}).click();
  await expect(page.getByRole('alertdialog')).toHaveCount(0);await expect(page.getByRole('button',{name:'P',exact:true})).toHaveCount(2);await expect.poll(()=>state.batch.length).toBe(1);expect(state.single).toEqual([]);
  await expect(page.getByText(/Attendance saved for/)).toHaveCount(0);state.release();await expect(page.getByRole('alert')).toContainText('could not be saved');
  await expect(page.getByRole('row').filter({hasText:'Student One'}).getByRole('button',{name:'A',exact:true})).toBeVisible();await expect(page.getByRole('row').filter({hasText:'Student Two'}).getByRole('button',{name:'E',exact:true})).toBeVisible();

@@ -145,6 +145,7 @@ export function AttendanceMonthSummarySection({
     // for this section. Marking more students (or re-marking) on a date
     // that's already counted does not add another day — only a date the
     // teacher hasn't touched yet increments the total.
+    const dropped = new Map((dropoutReader.data?.classId===sectionId?dropoutReader.data.dropouts:[]).map(entry=>[entry.studentId,entry.effectiveDate]));
     const markedDates = new Set<string>();
     const summaries: Record<string, { present: number; absent: number; late: number; excused: number }> = {};
     const absentStudents: Record<string, RosterStudent[]> = {};
@@ -153,21 +154,20 @@ export function AttendanceMonthSummarySection({
       let dayHasMark = false;
       const summary = { present: 0, absent: 0, late: 0, excused: 0 };
       for (const student of roster) {
-        const dropout=dropoutReader.data?.classId===sectionId?dropoutReader.data.dropouts.find(entry=>entry.studentId===student.id):undefined;
+        const dropoutDate=dropped.get(student.id);
         if(student.joinedDate&&iso<student.joinedDate)continue;
-        if(dropout&&iso>=dropout.effectiveDate)continue;
+        if(dropoutDate&&iso>=dropoutDate)continue;
         const status = attendance[student.id]?.[iso];
         if (!status) continue;
         dayHasMark = true;
         if (status === "P") summary.present += 1;
-        if (status === "A") summary.absent += 1;
+        if (status === "A") { summary.absent += 1; (absentStudents[iso]??=[]).push(student); }
         if (status === "L") summary.late += 1;
         if (status === "E") summary.excused += 1;
       }
       if (dayHasMark) markedDates.add(iso);
       summaries[iso] = summary;
-      const absentOnDate = roster.filter(student=>(!student.joinedDate||iso>=student.joinedDate)&&attendance[student.id]?.[iso]==='A'&&!(dropoutReader.data?.classId===sectionId&&dropoutReader.data.dropouts.some(entry=>entry.studentId===student.id&&iso>=entry.effectiveDate)));
-      if (absentOnDate.length > 0) absentStudents[iso] = absentOnDate;
+
     }
 
     return {

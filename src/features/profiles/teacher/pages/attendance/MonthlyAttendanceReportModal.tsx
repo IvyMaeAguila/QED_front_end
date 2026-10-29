@@ -39,7 +39,7 @@ export default function MonthlyAttendanceReportModal({ section, initialMonth, th
   const ready = !!section.schoolYearId && !!month;
   const reader = useTeacherReader(['monthly-attendance-report', section.classId, section.schoolYearId ?? '', month],
     options => fetchMonthlyAttendanceReport(section.classId, section.schoolYearId!, month, options),
-    error => error instanceof Error ? error.message : 'Unable to load the report.', 0, ready);
+    error => error instanceof Error ? error.message : 'Unable to load the report.', 30_000, ready);
   const data = reader.data;
   const signatories: ReportSignatories = {
     adviserName: edits.adviserName ?? data?.adviserName ?? '',
