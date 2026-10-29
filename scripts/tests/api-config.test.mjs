@@ -24,17 +24,18 @@ const inspect = (api, other = '') => checkApiTarget(chunks, file => file === 'ap
 test('development configuration preserves the localhost API origin', () => {
   assert.equal(configured(envFile('development')), 'http://localhost:7400');
 });
-test('production configuration reads the tracked Render environment', () => {
+test('production configuration targets the verified public Vercel backend', () => {
   assert.equal(configured(envFile('production')), productionApiOrigin);
+  assert.equal(productionApiOrigin, 'https://thesis-qed.vercel.app');
 });
 for (const value of [undefined, '']) test('missing API configuration fails explicitly: ' + String(value), () => {
   assert.throws(() => configured({ VITE_API_BASE_URL: value }), /VITE_API_BASE_URL/);
 });
-test('bundle guard accepts the Render target in the real configuration chunk', () => {
+test('bundle guard accepts the production target in the real configuration chunk', () => {
   assert.equal(inspect('const api=' + JSON.stringify(productionApiOrigin)).apiOrigin, productionApiOrigin);
 });
 
-test('bundle guard accepts an explicitly configured Vercel backend and rejects a stale Render bundle', () => {
+test('bundle guard accepts an explicitly configured backend and rejects a stale default bundle', () => {
   const target = 'https://qed-backend.example.vercel.app';
   assert.equal(checkApiTarget(chunks, () => 'const api=' + JSON.stringify(target), target).apiOrigin, target);
   assert.throws(() => checkApiTarget(chunks, () => 'const api=' + JSON.stringify(productionApiOrigin), target), /configured production backend/);
@@ -46,11 +47,11 @@ for (const host of ['localhost', '127.0.0.1', '[::1]']) test('bundle guard rejec
 test('bundle guard rejects a loopback endpoint in another emitted chunk', () => {
   assert.throws(() => inspect('const api=' + JSON.stringify(productionApiOrigin), 'const api="http://localhost:7400/api"'), /loopback/);
 });
-test('a decoy Render target in an unrelated chunk does not clear the guard', () => {
-  assert.throws(() => inspect('const api="https://wrong.example.invalid"', 'const decoy=' + JSON.stringify(productionApiOrigin)), /Render/);
+test('a decoy production target in an unrelated chunk does not clear the guard', () => {
+  assert.throws(() => inspect('const api="https://wrong.example.invalid"', 'const decoy=' + JSON.stringify(productionApiOrigin)), /configured production backend/);
 });
 test('a comment is not evidence of a bundled production target', () => {
-  assert.throws(() => inspect('// ' + productionApiOrigin), /Render/);
+  assert.throws(() => inspect('// ' + productionApiOrigin), /configured production backend/);
 });
 test('bundle guard requires the configuration module in the build inventory', () => {
   assert.throws(() => checkApiTarget([], () => ''), /configuration module/);

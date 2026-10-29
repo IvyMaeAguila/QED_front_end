@@ -35,6 +35,7 @@ function useAdminSubjectDetailPageState() {
   const cardHeaderClasses = `px-6 py-4 flex items-center justify-between border-b ${panelBorder}`;
   const sectionTitleClasses = `qed-type-page-title ${textPrimary}`;
   const renderTemplate = (pending: boolean) => <SubjectGradeTemplateSection
+    readOnly
     subjectId={numericSubjectId}
     darkMode={darkMode}
     loading={pending}

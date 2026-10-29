@@ -2,8 +2,7 @@ import {useAttendanceCellEdits} from './useAttendanceCellEdits';
 import {lazy,Suspense} from 'react';
 import {initialDropoutReader,effectiveDropout} from './dropoutState';
 import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
-import { useSaveFeedback } from "@shared/components/useSaveFeedback";
-import { useActionConfirmation } from "@shared/components/useActionConfirmation";
+import {useAttendanceSaves} from '../../query/useAttendanceSaves';
 import { useToast } from "@shared/context/ToastContext";
 import {useContext,useLayoutEffect} from 'react';
 import {AttendanceQueryContext} from '../../query/AttendanceQueryContext';
@@ -57,9 +56,8 @@ function useTeacherAttendancePageState() {
     requestedClassId,
   } = useSelectedAdvisorySection();
 
-  const { save, saveFeedback, pending: savesPending, hasFailures } = useSaveFeedback(section?.classId ?? "", { showStatus: false });
-  const { navigationDialog } = useUnsavedChanges(savesPending > 0 || hasFailures, darkMode);
-  const { confirmAction, confirmationDialog } = useActionConfirmation(darkMode);
+  const { save, saveFeedback, pending: savesPending, hasFailures, background } = useAttendanceSaves(section?.classId ?? "");
+  const { navigationDialog } = useUnsavedChanges(!background && (savesPending > 0 || hasFailures), darkMode);
   const { showToast } = useToast();
   const currentClass=useRef(section?.classId);
   useLayoutEffect(()=>{currentClass.current=section?.classId;return()=>{currentClass.current=undefined;};},[section?.classId]);
@@ -89,7 +87,7 @@ function useTeacherAttendancePageState() {
 
   const attendanceClassId=section?.classId??'';
   const {attendance,getStatus,saveMark,isPending}=useAttendanceCellEdits((section?.classId??'')+':'+iso,storedAttendance,setAttendance,save,
-    (studentId,date,status)=>(bridge?.save??saveAdvisoryAttendance)(attendanceClassId,studentId,date,status,activeTerm?.id));
+    (studentId,date,status)=>(bridge?.save??saveAdvisoryAttendance)(attendanceClassId,studentId,date,status,activeTerm?.id),background);
   const bulkIds=bulkState?.classId===section?.classId?bulkState?.ids??[]:[];
   const bulkPending=bulkState?.classId===section?.classId&&!!bulkState?.pending;
   function cycle(studentId: string) {
@@ -103,23 +101,21 @@ function useTeacherAttendancePageState() {
     if (!section || !activeTerm || !canMarkToday || !dropoutReady || savesPending || hasFailures) return;
     const targets = (filteredRoster.length ? filteredRoster : activeRoster).filter(student => attendance[student.id]?.[iso] !== PRESENT);
     if (!targets.length) return;
-    confirmAction({ title: "Mark all present?", layout: "standard", size: "md", icon: <CheckCheck size={20} strokeWidth={1.75} />, loadingLabel: "Saving...", description: <><p>Mark <strong>{targets.length} student{targets.length===1?'':'s'}</strong> in <strong>{section.sectionName || section.gradeLevel}</strong> as present for <strong>{new Intl.DateTimeFormat('en-US',{dateStyle:'long',timeZone:'UTC'}).format(new Date(iso+'T12:00:00Z'))}</strong>?</p><p className="text-xs">Existing attendance marks for these students will be replaced.</p></>, confirmLabel: "Mark present", action: () => {
-      const currentLifetime=lifetime.current,classId=section.classId,termId=activeTerm.id;
-      const ids=targets.map(student=>student.id);
-      const previous=Object.fromEntries(ids.map(id=>[id,getStatus(id,iso)]));
-      const current=()=>lifetime.current===currentLifetime;
-      const display=(values:Record<string,typeof PRESENT|null>)=>{if(current())setAttendance(old=>{const next={...old};for(const id of ids)next[id]={...next[id],[iso]:values[id]};return next;});};
-      // The dialog closes immediately. The existing save queue retains failures
-      // for an explicit retry, with the exact previous marks restored on error.
-      void save(async()=>{
-        if(!current())return;
-        setBulkState({classId,ids,pending:true});display(Object.fromEntries(ids.map(id=>[id,PRESENT])));
-        try{
-          await (bridge?.markPresent??markAdvisoryPresent)(classId,ids,iso,termId);
-          if(current()){setBulkState(null);showToast(`Attendance saved for ${ids.length} student${ids.length===1?'':'s'}.`);}
-        }catch(error){if(current()){display(previous);setBulkState({classId,ids,pending:false});}throw error;}
-      },'bulk-present:'+iso);
-    } });
+    const currentLifetime=lifetime.current,classId=section.classId,termId=activeTerm.id;
+    const ids=targets.map(student=>student.id);
+    const previous=Object.fromEntries(ids.map(id=>[id,getStatus(id,iso)]));
+    const current=()=>lifetime.current===currentLifetime;
+    const display=(values:Record<string,typeof PRESENT|null>)=>{if(current())setAttendance(old=>{const next={...old};for(const id of ids)next[id]={...next[id],[iso]:values[id]};return next;});};
+    // Apply immediately; the save queue retains failures for an explicit retry
+    // and restores the previous marks if the request fails.
+    void save(async()=>{
+      if(!background&&!current())return;
+      if(current())setBulkState({classId,ids,pending:true});display(Object.fromEntries(ids.map(id=>[id,PRESENT])));
+      try{
+        await (bridge?.markPresent??markAdvisoryPresent)(classId,ids,iso,termId);
+        if(current()){setBulkState(null);if(!background)showToast(`Attendance saved for ${ids.length} student${ids.length===1?'':'s'}.`);}
+      }catch(error){if(current()){display(previous);setBulkState({classId,ids,pending:false});}throw error;}
+    },'bulk-present:'+iso,ids.map(studentId=>({studentId,date:iso,status:PRESENT})));
   }
 
   const markedCount = section
@@ -269,7 +265,6 @@ function useTeacherAttendancePageState() {
 
   return { content: ((
     <div className="w-full min-h-full pb-0">
-      {confirmationDialog}
       {bridge&&<Suspense fallback={null}><DropoutEffects classId={section?.classId??""} ready={!!section} onChange={setDropoutReader}/></Suspense>}
       {navigationDialog}
       {saveFeedback}{dropoutReader.error&&<div role="alert" className="px-5 py-3 text-xs">{dropoutReader.error}<button className="ml-2 underline" onClick={dropoutReader.retry}>Retry dropout records</button></div>}

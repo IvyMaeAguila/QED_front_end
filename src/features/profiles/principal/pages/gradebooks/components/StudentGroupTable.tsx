@@ -63,9 +63,10 @@ export function StudentGroupTable({
           {displayGroups.map((group) => (
             <Fragment key={group.label}>
               <tr>
-                <td colSpan={columnCount} className={groupBand}>
+                <td className={`sticky left-0 z-20 ${groupBand} ${darkMode ? "bg-[#111827]" : "bg-brand-light"}`}>
                   {group.label} · {pending ? <SkeletonText width="1ch" className="inline-block align-middle" /> : group.students.length} students
                 </td>
+                <td colSpan={columnCount-1} className={groupBand} aria-hidden="true" />
               </tr>
               {group.students.map((student) => {
                 const average = student.overallAverage ?? computeAverage(student.grades, subjects);
@@ -86,9 +87,7 @@ export function StudentGroupTable({
                       return (
                         <td key={subject} className="px-3 py-2 text-center">
                           {pending ? <SkeletonText width={index % 2 ? "2ch" : "3ch"} className="qed-type-table-grade mx-auto" /> : status === "submitted" ? (
-                            grade == null ? (
-                              <span className="qed-type-table-empty-value">—</span>
-                            ) : (
+                            grade == null ? null : (
                               <span className="qed-type-table-grade text-brand-ink">{grade}</span>
                             )
                           ) : status === "pending" ? (
@@ -96,11 +95,7 @@ export function StudentGroupTable({
                               <Clock size={10} aria-hidden="true" /> Pending
                             </span>
                           ) : (
-                            student.ownAdvisorySubjects[subject] ? (
-                              <span className="qed-type-table-empty-value">No grades yet</span>
-                            ) : (
-                              <span className={`qed-type-badge uppercase tracking-wide ${textMuted}`}>Not Submitted</span>
-                            )
+                            null
                           )}
                         </td>
                       );

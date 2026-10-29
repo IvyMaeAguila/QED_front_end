@@ -14,6 +14,7 @@ interface Props {
   onTemplateUpdated: (template: ActiveGradeTemplate) => void;
   loading?: boolean;
   disabled?: boolean;
+  readOnly?: boolean;
   onTemplateSelected?: (file: File, preview: ParsedGradeTemplate) => void;
   onProcessingChange?: (processing: boolean) => void;
 }
@@ -33,6 +34,7 @@ export function SubjectGradeTemplateSection({
   onTemplateUpdated,
   loading = false,
   disabled = false,
+  readOnly = false,
   onTemplateSelected,
   onProcessingChange,
 }: Props) {
@@ -107,9 +109,7 @@ export function SubjectGradeTemplateSection({
       </div>
 
       <p className="text-xs opacity-70 leading-relaxed" data-sk-region="subjectgradetemplatesection-use-the-official-deped-electronic-class-recor" data-sk-static="">
-        Use the official DepEd Electronic Class Record configured for this
-        subject. Replacing it affects new grading periods; periods already
-        using an earlier version keep that workbook.
+        {readOnly?'The template uploaded when this subject was created is its official grade template. It cannot be replaced here.':'Use the official DepEd Electronic Class Record configured for this subject.'}
       </p>
 
       {(loading || activeTemplate) && (
@@ -122,6 +122,7 @@ export function SubjectGradeTemplateSection({
         </div>
       )}
 
+      {!readOnly&&<>
       <input
         ref={fileInputRef}
         type="file"
@@ -163,6 +164,7 @@ export function SubjectGradeTemplateSection({
         </button>
       )}
 
+      </>}
       {error && (
         <div className="flex items-center gap-2 text-xs font-semibold text-[#B91C1C]">
           <AlertTriangle size={14} />

@@ -15,7 +15,7 @@ export interface WeeklyScope {
  setPeriods:Dispatch<SetStateAction<holistic.GradingPeriod[]>>;
  setPeriodsLoaded:Dispatch<SetStateAction<boolean>>;setPeriodError:Dispatch<SetStateAction<string|null>>;
 }
-export type GradingPort=Pick<typeof grading,'addItem'|'deleteItem'|'fetchItems'|'fetchScores'|'saveScore'|'saveHolistic'|'fetchTopics'|'createTopic'|'fetchGradeSubmissionStatus'|'submitGrades'>;
+export type GradingPort=Pick<typeof grading,'addItem'|'deleteItem'|'fetchItems'|'fetchScores'|'saveScore'|'saveScores'|'saveHolistic'|'fetchTopics'|'createTopic'|'fetchGradeSubmissionStatus'|'submitGrades'>;
 export type HolisticPort=Pick<typeof holistic,'fetchGradingPeriodsGlobal'|'fetchHolisticWeekly'|'saveHolistic'>;
 export interface AcademicPort {
  grading:GradingPort;holistic:HolisticPort;writing:boolean;
@@ -24,7 +24,7 @@ export interface AcademicPort {
  periods:TeacherReader<holistic.GradingPeriod[]>;
 }
 export const TeacherAcademicQueryContext=createContext<AcademicPort|null>(null);
-const legacy={grading:{addItem:grading.addItem,deleteItem:grading.deleteItem,fetchItems:grading.fetchItems,fetchScores:grading.fetchScores,saveScore:grading.saveScore,saveHolistic:grading.saveHolistic,fetchTopics:grading.fetchTopics,createTopic:grading.createTopic,fetchGradeSubmissionStatus:grading.fetchGradeSubmissionStatus,submitGrades:grading.submitGrades},holistic:{fetchGradingPeriodsGlobal:holistic.fetchGradingPeriodsGlobal,fetchHolisticWeekly:holistic.fetchHolisticWeekly,saveHolistic:holistic.saveHolistic}};
+const legacy={grading:{addItem:grading.addItem,deleteItem:grading.deleteItem,fetchItems:grading.fetchItems,fetchScores:grading.fetchScores,saveScore:grading.saveScore,saveScores:grading.saveScores,saveHolistic:grading.saveHolistic,fetchTopics:grading.fetchTopics,createTopic:grading.createTopic,fetchGradeSubmissionStatus:grading.fetchGradeSubmissionStatus,submitGrades:grading.submitGrades},holistic:{fetchGradingPeriodsGlobal:holistic.fetchGradingPeriodsGlobal,fetchHolisticWeekly:holistic.fetchHolisticWeekly,saveHolistic:holistic.saveHolistic}};
 export function useTeacherAcademicServices(){
  const port=useContext(TeacherAcademicQueryContext);
  return port??legacy;

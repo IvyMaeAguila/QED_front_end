@@ -1,3 +1,5 @@
+import {useToast} from '@shared/context/ToastContext';
+import { FinalGradesLoading } from './components/FinalGradesTable';
 import { useSaveFeedback } from "@shared/components/useSaveFeedback";
 import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
 import {useContext} from 'react';
@@ -9,8 +11,10 @@ import {
 ArrowLeft,
 Check,
 Pencil,
+Maximize2,
+Minimize2,
 } from "lucide-react";
-import { lazy, Suspense, useMemo,useState,useRef } from "react";
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo,useState,useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import type { AdminThemeContext } from "../../../../admin/pages/AdminLayout";
@@ -62,6 +66,28 @@ const RECORDS_TITLES: Record<SubjectDetailTab, string> = {
 } as Record<SubjectDetailTab, string>;
 
 function useSubjectRecordsPageState() {
+  const [fullScreen, setFullScreen] = useState(false);
+  const fullScreenButton = useRef<HTMLButtonElement>(null);
+  const recordView = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!fullScreen) return;
+    const handleKey = (event: KeyboardEvent) => {
+      // Leave confirmation/export dialogs in charge of their own keyboard input.
+      if (event.defaultPrevented || (event.target instanceof Element && event.target.closest('[role="dialog"]') !== recordView.current)) return;
+      if (event.key === 'Escape') {
+        setFullScreen(false);
+        fullScreenButton.current?.focus();
+      }
+      if (event.key === 'Tab') {
+        const controls = [...(recordView.current?.querySelectorAll<HTMLElement>('button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), [tabindex="0"]') ?? [])].filter(element => element.getClientRects().length > 0);
+        const first = controls[0], last = controls.at(-1);
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+      }
+    };
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [fullScreen]);
   const port=useContext(TeacherAcademicQueryContext);
   const {grading:{saveScore,fetchScores,fetchItems}}=useTeacherAcademicServices();
   const {sessionScope,user}=useAuth();
@@ -89,7 +115,7 @@ function useSubjectRecordsPageState() {
   const [isEditing, setIsEditing] = useState(false);
   const [rulesVerification, setRulesVerification] = useState({period:'',ready:false});
   const gradingRulesReady = rulesVerification.period === term && rulesVerification.ready;
-  const rulesReady = useRef(false); rulesReady.current = gradingRulesReady;
+  const rulesReady = useRef(false); useLayoutEffect(()=>{rulesReady.current=gradingRulesReady;},[gradingRulesReady]);
 
   // Do NOT seed items/localScores from location.state. That stale snapshot
   // was causing the page to flash old (pre-edit) values immediately on
@@ -157,9 +183,16 @@ function useSubjectRecordsPageState() {
   }, [state, term]);
 
 
-  const { save: persistScore, saveFeedback, pending: pendingWrites, hasFailures } = useSaveFeedback(`${subjectId}:${term}`);
+  const {showToast}=useToast();
+  const saveCycle=useRef(false);
+  const editRevisions=useRef(new Map<string,number>());
+  const { save: persistScore, saveFeedback, pending: pendingWrites, hasFailures } = useSaveFeedback(`${subjectId}:${term}`,{showStatus:false});
   const { navigationDialog, guardAction } = useUnsavedChanges(pendingWrites > 0 || hasFailures, darkMode);
 
+  useEffect(()=>{
+   if(pendingWrites>0)saveCycle.current=true;
+   else if(saveCycle.current){saveCycle.current=false;showToast(hasFailures?'Some scores could not be saved. Check the error and retry.':'Score changes saved.',hasFailures?'error':'success');}
+  },[pendingWrites,hasFailures,showToast]);
   function handleScoreChange(
     studentId: string,
     itemId: string,
@@ -187,7 +220,8 @@ function useSubjectRecordsPageState() {
     });
 
     if (!subjectId) return;
-    void persistScore(() => saveScore(subjectId, studentId, itemId, value), studentId + ':' + itemId);
+    const cell=studentId+':'+itemId,revision=(editRevisions.current.get(cell)??0)+1;editRevisions.current.set(cell,revision);
+    void persistScore(async()=>{await new Promise(resolve=>setTimeout(resolve,300));if(editRevisions.current.get(cell)!==revision)return;await saveScore(subjectId,studentId,itemId,value);},cell);
   }
 
   // Finds every (student, item) pair in the current record that has no
@@ -307,7 +341,8 @@ function useSubjectRecordsPageState() {
   );
 
   return { content: ((
-    <div className="w-full min-h-full pb-0">
+    <div ref={recordView} data-record-expanded={fullScreen ? 'true' : undefined} role={fullScreen ? 'dialog' : undefined} aria-modal={fullScreen ? true : undefined} aria-label={fullScreen ? 'Full screen class record' : undefined}
+      className={fullScreen ? `fixed inset-0 z-[80] h-dvh w-full overflow-y-auto p-4 sm:p-6 ${darkMode ? 'bg-page-dark' : 'bg-surface'}` : 'w-full min-h-full pb-0'}>
       {navigationDialog}
       {saveFeedback}
       <div className="w-full space-y-4">
@@ -328,6 +363,7 @@ function useSubjectRecordsPageState() {
               )}
             </div>
           </div>
+          <div className="flex max-w-full flex-wrap items-center gap-2 self-start 2xl:self-center">
           {isAssessment && <div role="group" aria-label="Class record view" className={`qed-segmented-control flex max-w-full shrink-0 items-center self-start rounded-lg p-0 2xl:self-center ${darkMode ? "bg-white/5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]" : "bg-gray-50 shadow-[inset_0_0_0_1px_#e5e7eb]"}`}>
             {[1, 2, 3].map(number => {
               const period = terms.find(candidate => candidate.termNumber === number);
@@ -339,6 +375,12 @@ function useSubjectRecordsPageState() {
             <button type="button" aria-pressed={showFinalGrades} disabled={isEditing} onClick={() => setShowFinalGrades(true)}
               className={`rounded-lg px-3 text-xs font-bold transition-all disabled:opacity-50 ${showFinalGrades ? 'bg-maroon text-white shadow-sm' : `${textMuted} ${darkMode ? 'hover:text-white' : 'hover:text-gray-900'}`}`}>Final Grades</button>
           </div>}
+          <button ref={fullScreenButton} type="button" aria-pressed={fullScreen} onClick={() => setFullScreen(value => !value)}
+            className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold transition-colors ${panelBg} ${panelBorder} ${textPrimary} ${darkMode ? 'hover:bg-white/5' : 'hover:bg-black/[0.035]'}`}>
+            {fullScreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+            {fullScreen ? 'Exit full screen' : 'Full screen'}
+          </button>
+          </div>
         </div>
 
         {!isAssessment && <div
@@ -379,9 +421,7 @@ function useSubjectRecordsPageState() {
         )}
 
         {isAssessment && showFinalGrades && subjectId && <Suspense fallback={
-          <section aria-label="Final Grades" className={`${cardClasses} px-4 py-4`}>
-            <p role="status" className={`text-sm ${textMuted}`}>Loading final grades…</p>
-          </section>
+          <FinalGradesLoading roster={roster} darkMode={darkMode} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} />
         }><FinalGradesSection key={subjectId} subjectSectionId={subjectId} selectedPeriod={term}
           darkMode={darkMode} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} /></Suspense>}
 

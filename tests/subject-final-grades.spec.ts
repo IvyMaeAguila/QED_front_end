@@ -84,6 +84,33 @@ for (const width of [375, 1280]) for (const dark of [false, true]) test(`final g
   await expect(page.getByRole('button', { name: 'Export DepEd Class Record', exact: true })).toBeVisible();
 });
 
+for (const width of [375, 1280]) test(`final grades keeps its table while a term is loading at ${width}px`, async ({ page }) => {
+  await page.setViewportSize({ width, height: 1000 });
+  await fixture(page, width === 1280);
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  await page.route('**/api/subject/getEffectiveWeights/**', async route => {
+    if (new URL(route.request().url()).searchParams.get('gradingPeriodId') === '2') await gate;
+    await route.fallback();
+  });
+  await page.getByRole('button', { name: 'Final Grades', exact: true }).click();
+  const summary = page.getByRole('region', { name: 'Final Grades', exact: true });
+  const region = summary.locator('[data-sk-region="subject-final-grades"]');
+  await expect(region).toHaveAttribute('data-sk-phase', 'revealed');
+  await expect(summary.getByRole('columnheader', { name: 'Term Grades', exact: true })).toBeVisible();
+  await expect(summary.locator('[data-learner-name]').first()).not.toBeEmpty();
+  await expect(summary.getByText('No students enrolled yet.', { exact: true })).toHaveCount(0);
+  const before = await summary.locator('table').boundingBox();
+  await summary.screenshot({ path: `loading-screenshots/my-subject-final-grades-${width}-loading.png` });
+  release();
+  await expect(region).toHaveAttribute('data-sk-phase', 'settled');
+  await expect(summary.locator('[data-sk-primitive]')).toHaveCount(0);
+  const after = await summary.locator('table').boundingBox();
+  await summary.screenshot({ path: `loading-screenshots/my-subject-final-grades-${width}-loaded.png` });
+  expect(Math.abs(after!.height - before!.height)).toBeLessThanOrEqual(8);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
 test('rounding and template descriptors never invent missing results', async ({ page }) => {
   await page.goto('/loading-harness.html');
   const results = await page.evaluate(async () => {

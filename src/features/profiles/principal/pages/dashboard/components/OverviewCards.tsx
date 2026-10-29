@@ -1,5 +1,5 @@
 import { SkeletonText } from "@shared/components/SkeletonLoading";
-import { Users, GraduationCap, TrendingUp, AlertTriangle } from "lucide-react";
+import { Users, GraduationCap, TrendingUp } from "lucide-react";
 import { OverviewCard } from "../../../../shared/components/DashboardUI";
 import type { OverviewData } from "../data/types";
 
@@ -25,7 +25,7 @@ export function OverviewCards({
   loading = false,
 }: OverviewCardsProps) {
   return (
-    <div data-sk-region="principal-overview" className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-5">
+    <div data-sk-region="principal-overview" className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
       <OverviewCard loading={loading}
         label="Total Students" region="principal-kpi-total-students"
         value={loading ? <SkeletonText width="4ch" /> : overview.totalStudents.toLocaleString()}
@@ -84,21 +84,7 @@ export function OverviewCards({
         textMuted={textMuted}
         darkMode={darkMode}
       />
-      <OverviewCard loading={false}
-        label="Needs Intervention" region="principal-kpi-needs-intervention"
-        value={overview.needsIntervention.toString()}
-        sub="Students flagged"
-        icon={AlertTriangle}
-        showIcon={false}
-        compact
-        trend={overview.needsIntervention <= 35 ? "up" : "down"}
-        variant="alert"
-        panelBg={panelBg}
-        panelBorder={panelBorder}
-        textPrimary={textPrimary}
-        textMuted={textMuted}
-        darkMode={darkMode}
-      />
+
     </div>
   );
 }

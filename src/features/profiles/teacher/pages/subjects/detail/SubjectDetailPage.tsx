@@ -25,7 +25,7 @@ function Effects({scope:s}:{scope:SubjectDetailPageEffectScope}){
  const session=useTeacherQueryScope();
  const {periods,info}=port,year=periods.data?.[0]?.schoolYearId??'active',id=s.subjectId??'';
  const ready=!!id&&!periods.loading&&!periods.error&&!info.loading&&!info.error;
- const items=useTeacherReader(subjectKey(year,id,'items',{allPeriods:true}),o=>api.fetchItems(id,{allPeriods:true},o),'Could not load the class records. Please try again.',300_000,ready);
+ const items=useTeacherReader(subjectKey(year,id,'items',{allPeriods:true}),o=>api.fetchItems(id,{allPeriods:true},o),'Could not load the class records. Please try again.',300_000,ready,false,true);
  const scores=useTeacherReader(subjectKey(year,id,'scores'),o=>api.fetchScores(id,o),'Could not load the class records. Please try again.',300_000,ready);
  const holistic=useTeacherReader(subjectKey(year,id,'holistic',1,currentSchoolWeek()),o=>api.fetchHolistic(id,o),'Could not load the class records. Please try again.',300_000,ready);
  const weights=useTeacherReader(subjectKey(year,id,'weights',s.selectedTerm||'active'),o=>getEffectiveWeightsSafe(Number(id),s.selectedTerm||undefined,o),'Could not load grading rules.',300_000,ready&&!!s.selectedTerm);
@@ -35,7 +35,10 @@ function Effects({scope:s}:{scope:SubjectDetailPageEffectScope}){
  useEffect(()=>{setTemplateLoading(weights.loading);setTemplateStructure(weights.data?.templateStructure);},[weights.loading,weights.data,setTemplateLoading,setTemplateStructure]);
  useEffect(()=>{if(periods.data){setTerms(periods.data.map(p=>({...p,label:p.termLabel})));setSelectedTerm(previous=>periods.data!.some(p=>p.id===previous)?previous:(periods.data!.find(p=>p.isActive)??periods.data![0])?.id??'');}},[periods.data,setTerms,setSelectedTerm]);
  const error=periods.error??info.error??items.error??scores.error??holistic.error;
- const loading=!error&&(periods.loading||info.loading||items.loading||scores.loading||holistic.loading);
+ // Publish one complete score-sheet snapshot, including the rules that determine
+ // its available assessment controls. Do not expose the roster while rules load.
+ const waitingForTerm=!!periods.data?.length&&!s.selectedTerm;
+ const loading=!error&&(periods.loading||info.loading||items.loading||scores.loading||holistic.loading||waitingForTerm||(ready&&!!s.selectedTerm&&weights.loading));
  const itemKey=[...session.key,...subjectKey(year,id,'items',{allPeriods:true})],scoreKey=[...session.key,...subjectKey(year,id,'scores')];
  const itemsInvalidated=useTeacherQueryInvalidation(itemKey),scoresInvalidated=useTeacherQueryInvalidation(scoreKey);
  const invalidated=itemsInvalidated||scoresInvalidated;

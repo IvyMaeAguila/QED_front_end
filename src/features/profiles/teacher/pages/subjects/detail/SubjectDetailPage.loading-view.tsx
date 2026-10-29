@@ -2,7 +2,7 @@ import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
 import {useTeacherAcademicServices} from '../../../query/TeacherAcademicQueryContext';
 import {useAuth} from '@shared/hooks/useAuth';
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
-import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
+import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { ArrowLeft } from "lucide-react";
 import { useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -31,7 +31,7 @@ function currentSchoolYearLabel(): string {
 
 function useSubjectDetailPageState() {
   const {grading}=useTeacherAcademicServices();
-  const {addItem:addItemApi,deleteItem,saveScore,saveHolistic}=grading;
+  const {addItem:addItemApi,deleteItem,saveScore,saveScores,saveHolistic}=grading;
   const {sessionScope,user}=useAuth();
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
@@ -108,7 +108,7 @@ function useSubjectDetailPageState() {
         templateDomainId: item.templateDomainId,
       });
       setItems((prev) => {
-        const next = [...prev, { ...item, id, gradingPeriodId: selectedTerm }];
+        const next = [...prev.filter(entry=>entry.id!==id), { ...item, id, gradingPeriodId: selectedTerm }];
         return next;
       });
     } catch (err) {
@@ -206,7 +206,7 @@ function useSubjectDetailPageState() {
             <h1
               className={`qed-type-page-title ${textPrimary}`}
             >
-              {error ? subjectName : <LoadingRegion as="span" loading={loading} variable name="subject-title" skeleton={<SkeletonParagraph field={`subject-${subjectId}-title`} typical={2} />}><span data-sk-field={`subject-${subjectId}-title`} data-sk-variable="">{subjectName}</span></LoadingRegion>}
+              {error ? subjectName : <LoadingRegion as="span" loading={loading} variable name="subject-title" skeleton={<SkeletonText width="min(24ch, 65vw)" />}><span data-sk-field={`subject-${subjectId}-title`} data-sk-variable="">{subjectName}</span></LoadingRegion>}
             </h1>
             <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
               {currentSchoolYearLabel()}
@@ -229,7 +229,7 @@ function useSubjectDetailPageState() {
         {!error && (activeTab === "writtenWorks" ||
           activeTab === "performanceTask" ||
           activeTab === "exams") && (
-          <fieldset disabled={!gradingRulesReady} className="min-w-0"><AssessmentTab
+          <fieldset disabled={!gradingRulesReady} className="min-w-0"><AssessmentTab key={`${subjectId}:${selectedTerm}:${activeTab}`}
             loading={loading || (!gradingRules.configured && gradingRules.loading)}
             templateLoading={templateLoading}
             subjectSectionId={subjectId}
@@ -244,6 +244,11 @@ function useSubjectDetailPageState() {
             onAddItem={handleAddItem}
             onDeleteItem={handleDeleteItem}
             onScoreChange={handleScoreChange}
+            onScoresChange={async changes=>{
+             if(!subjectId||!rulesReady.current)throw new Error('Verify grading rules before saving.');
+             await saveScores(subjectId,changes);
+             setScores(previous=>{const next={...previous};for(const change of changes)next[change.studentId]={...next[change.studentId],[change.itemId]:change.value};return next;});
+            }}
             onOpenRecords={openRecords}
             onDirtyChange={setHasUnsavedChanges}
             darkMode={darkMode}

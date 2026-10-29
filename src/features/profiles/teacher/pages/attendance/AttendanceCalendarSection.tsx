@@ -1,7 +1,7 @@
 import {initialDropoutReader,effectiveDropout} from './dropoutState';
 import {AttendanceRowMenu} from './AttendanceRowMenu';
 import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
-import { useSaveFeedback } from "@shared/components/useSaveFeedback";
+import {useAttendanceSaves} from '../../query/useAttendanceSaves';
 import {useContext} from 'react';
 import {AttendanceQueryContext} from '../../query/AttendanceQueryContext';
 import { AccountSelect } from "@shared/components/AccountSelect";
@@ -118,10 +118,10 @@ export function AttendanceCalendarSection({
     return defaultViewDate(t);
   });
 
-  const { save, saveFeedback, pending, hasFailures } = useSaveFeedback(sectionId + ":" + selectedTermId, { showStatus: false });
-  const { navigationDialog, guardAction } = useUnsavedChanges(pending > 0 || hasFailures, darkMode);
+  const { save, saveFeedback, pending, hasFailures, background } = useAttendanceSaves(sectionId);
+  const { navigationDialog, guardAction } = useUnsavedChanges(!background && (pending > 0 || hasFailures), darkMode);
   const { attendance, getStatus, saveMark, isPending } = useAttendanceCellEdits(sectionId + ':' + selectedTermId, storedAttendance, setAttendance, save,
-    (studentId, date, status) => (bridge?.save ?? saveAdvisoryAttendance)(sectionId, studentId, date, status, selectedTermId));
+    (studentId, date, status) => (bridge?.save ?? saveAdvisoryAttendance)(sectionId, studentId, date, status, selectedTermId),background);
   const [summaryStudent, setSummaryStudent] = useState<RosterStudent | null>(null);
 
   const term = terms.find((t) => t.id === selectedTermId) ?? terms[0];

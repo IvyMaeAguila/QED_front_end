@@ -1,3 +1,4 @@
+import {removeItemScores} from './subjectScoreCache';
 import {confirmedSubmission} from './teacherSubmissionRecovery';
 import {useEffect,useRef,useContext,type ReactNode} from 'react';
 import {useParams} from 'react-router-dom';
@@ -81,6 +82,7 @@ export function TeacherAcademicQueries({children}:{children:ReactNode}){
    try{
     await write(o=>{sent=true;return grading.saveScore(id,student,item,value,o,expected);},[subject(id,'scores'),subject(id,'submission'),allGrades]);
     confirmedScores.current.set(cell,value);
+    queryClient.setQueryData<Awaited<ReturnType<typeof grading.fetchScores>>>(key,previous=>previous?{...previous,[student]:{...previous[student],[item]:value}}:previous);
    }catch(error){
     if(sent&&(!(error instanceof QueryHttpError)||error.outcome==='uncertain'||error.outcome==='conflict'||(error.status>=500&&error.outcome!=='not_saved'))){
      scoreWriteFences.add(fence);
@@ -95,8 +97,36 @@ export function TeacherAcademicQueries({children}:{children:ReactNode}){
   fetchTopics:id=>read(subject(id,'topics'),o=>grading.fetchTopics(id,o)),
   fetchScores:id=>read(subject(id,'scores'),o=>grading.fetchScores(id,o),0),
   fetchItems:(id,filters={})=>read(subject(id,'items',filters),o=>grading.fetchItems(id,filters,o),0),
-  addItem:(id,item)=>write(o=>grading.addItem(id,item,o),[subject(id,'items')]),
-  deleteItem:(id,item)=>write(o=>grading.deleteItem(id,item,o),[subject(id,'items'),subject(id,'scores'),allGrades]),
+  addItem:async(id,item)=>{
+   await queryClient.cancelQueries({queryKey:[...scope.key,...subject(id,'items')]});
+   const created=await write(o=>grading.addItem(id,item,o),[subject(id,'items')]);
+   const entry={...item,id:created.id,gradingPeriodId:item.term} as Awaited<ReturnType<typeof grading.fetchItems>>[number];
+   for(const query of queryClient.getQueryCache().findAll({queryKey:[...scope.key,...subject(id,'items')]})){
+    const filter=query.queryKey[query.queryKey.length-1] as {allPeriods?:boolean;term?:string;tab?:string};
+    if(!filter?.allPeriods&&filter?.term!==item.term)continue;
+    if(filter.tab&&filter.tab!==item.tab)continue;
+    queryClient.setQueryData<Awaited<ReturnType<typeof grading.fetchItems>>>(query.queryKey,previous=>previous?[...previous.filter(row=>row.id!==entry.id),entry]:previous);
+   }
+   return created;
+  },
+  deleteItem:async(id,item)=>{
+   await queryClient.cancelQueries({queryKey:[...scope.key,...subject(id,'scores')]});
+   await queryClient.cancelQueries({queryKey:[...scope.key,...subject(id,'items')]});
+   await write(o=>grading.deleteItem(id,item,o),[subject(id,'items'),subject(id,'scores'),allGrades]);
+   queryClient.setQueriesData<Awaited<ReturnType<typeof grading.fetchItems>>>({queryKey:[...scope.key,...subject(id,'items')]},previous=>previous?.filter(entry=>entry.id!==item));
+   queryClient.setQueryData<Awaited<ReturnType<typeof grading.fetchScores>>>([...scope.key,...subject(id,'scores')],previous=>previous?removeItemScores(previous,item):previous);
+  },
+  saveScores:async(id,edits)=>{
+   const key=[...scope.key,...subject(id,'scores')],fence=JSON.stringify(key);
+   const task=scoreChain.current.catch(()=>{}).then(async()=>{
+    if(!scoreOwner.current||scoreWriteFences.has(fence))throw new QueryHttpError('Saving could not be confirmed. Your entries are retained. Check Full Records or reload this class before saving again.',503,'uncertain');
+    try{await write(o=>grading.saveScores(id,edits,o),[subject(id,'submission'),allGrades]);}
+    catch(error){if(!(error instanceof QueryHttpError)||error.outcome!=='not_saved'){scoreWriteFences.add(fence);throw new QueryHttpError(error instanceof QueryHttpError?error.message:'Saving could not be confirmed. Your entries are retained. Check Full Records or reload this class before saving again.',error instanceof QueryHttpError?error.status:503,error instanceof QueryHttpError&&error.outcome==='conflict'?'conflict':'uncertain');}throw error;}
+    queryClient.setQueryData<Awaited<ReturnType<typeof grading.fetchScores>>>(key,previous=>{
+     if(!previous)return previous;const next={...previous};for(const edit of edits){next[edit.studentId]={...next[edit.studentId],[edit.itemId]:edit.value};confirmedScores.current.set(JSON.stringify([...key,edit.studentId,edit.itemId]),edit.value);}return next;
+    });
+   });scoreChain.current=task;await task;
+  },
   saveScore,
   saveHolistic:(id,student,axis,value,term)=>write(o=>grading.saveHolistic(id,student,axis,value,term,o),[subject(id,'holistic'),subject(id,'weekly-holistic'),['holistic']]),
   createTopic:(id,name)=>write(o=>grading.createTopic(id,name,o),[subject(id,'topics')]),

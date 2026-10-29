@@ -31,10 +31,10 @@ test('attendance edits cycle immediately through rapid clicks, serialize request
  for(const value of ['P','A','L','E','·','P']){await target.click();await expect(target).toHaveText(value);}
  await expect.poll(()=>state.writes.length).toBe(1);await expect(target).toHaveAttribute('aria-busy','true');
  await expect(state.region).toHaveAttribute('data-sk-phase','settled');await expect(state.region.locator('[data-sk-primitive]')).toHaveCount(0);
- await expect(page.getByText('All changes saved.',{exact:true})).toHaveCount(0);await expect(page.getByText(/^Saving .*…$/)).toHaveCount(0);
+ await expect(page.getByText('All changes saved.',{exact:true})).toHaveCount(0);await expect(page.getByText(/Saving .* attendance change/)).toBeVisible();
  expect(Math.abs((await heading.boundingBox())!.y-before)).toBeLessThan(1);
- state.release();await expect.poll(state.complete).toBe(6);await expect(target).toHaveAttribute('aria-busy','false');await expect(target).toHaveText('P');
- expect(state.writes.map(w=>w.status)).toEqual(['P','A','L','E',null,'P']);expect(state.maps['1']['1']['2026-10-09']).toBe('P');
+ state.release();await expect.poll(state.complete).toBe(2);await expect(target).toHaveAttribute('aria-busy','false');await expect(target).toHaveText('P');
+ expect(state.writes.map(w=>w.status)).toEqual(['P','P']);expect(state.maps['1']['1']['2026-10-09']).toBe('P');
  expect(Math.abs((await heading.boundingBox())!.y-before)).toBeLessThan(1);
 });
 test('attendance edits on independent cells save independently without a table loading state',async({page})=>{
@@ -43,16 +43,16 @@ test('attendance edits on independent cells save independently without a table l
  state.release();await expect.poll(state.complete).toBe(2);
 });
 test('attendance edits roll back only the failed latest value and retry the intended status',async({page})=>{
- const state=await fixture(page,[1,3]);const target=cell(page);
+ const state=await fixture(page,[2]);const target=cell(page);
  for(const value of ['P','A','L']){await target.click();await expect(target).toHaveText(value);}
- state.release();await expect.poll(state.complete).toBe(3);await expect(target).toHaveText('A');await expect(page.getByRole('alert')).toContainText('could not be saved');
- state.success();await page.getByRole('button',{name:'Retry failed changes',exact:true}).click();await expect(target).toHaveText('L');await expect.poll(state.complete).toBe(4);await expect(page.getByRole('alert')).toHaveCount(0);
- expect(state.writes.map(w=>w.status)).toEqual(['P','A','L','L']);await expect(page.getByText('All changes saved.',{exact:true})).toHaveCount(0);
+ state.release();await expect.poll(state.complete).toBe(2);await expect(target).toHaveText('P');await expect(page.getByRole('alert')).toContainText('could not be saved');
+ state.success();await page.getByRole('button',{name:'Retry failed changes',exact:true}).click();await expect(target).toHaveText('L');await expect.poll(state.complete).toBe(3);await expect(page.getByRole('alert')).toHaveCount(0);
+ expect(state.writes.map(w=>w.status)).toEqual(['P','L','L']);await expect(page.getByText('All changes saved.',{exact:true})).toHaveCount(0);
 });
 test('attendance edits cannot apply an old class response to a newly selected class',async({page})=>{
  const state=await fixture(page);await cell(page).click();await expect.poll(()=>state.writes.length).toBe(1);
  await page.getByRole('button',{name:'White',exact:true}).click();
- const dialog=page.getByRole('alertdialog',{name:'Leave without saving?',exact:true});await dialog.getByRole('button',{name:'Leave page',exact:true}).click();
+ await expect(page.getByRole('alertdialog')).toHaveCount(0);
  await expect(page.getByText('White Student',{exact:true})).toBeVisible();await expect(state.region).toHaveAttribute('data-sk-phase','settled');await expect(cell(page)).toHaveText('E');
  state.release();await expect.poll(state.complete).toBe(1);await expect(cell(page)).toHaveText('E');
 });

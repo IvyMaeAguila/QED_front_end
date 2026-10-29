@@ -21,15 +21,19 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   return (
     <ConfirmationModal
+      layout="standard"
       title={title}
       description={message}
       onClose={onCancel}
       onConfirm={onConfirm}
       confirmLabel={confirmLabel}
+      loadingLabel={confirmLabel === "Delete" ? "Deleting…" : "Working…"}
       variant={danger ? "danger" : "default"}
       darkMode={darkMode}
       zIndexClass="z-100"
-      panelClassName={`border-t-4 border-t-maroon shadow-card ${darkMode ? "bg-panel-dark" : "bg-white"}`}
+      panelClassName={`shadow-card ${darkMode ? "bg-panel-dark" : "bg-white"}`}
+      cancelButtonClassName="min-w-32"
+      confirmButtonClassName="min-w-32"
     />
   );
 }

@@ -52,10 +52,10 @@ function studentDisplayName(s: { firstName: string; lastName: string; middleName
 }
 
 function cellDisplayValue(cell: { status: string; termGrade?: number | null; average: number | null; isOwnAdvisory?: boolean } | undefined): string | number {
-  if (!cell) return "Not Submitted";
-  if (cell.status === "submitted") return cell.termGrade ?? cell.average ?? "—";
+  if (!cell) return "";
+  if (cell.status === "submitted") return cell.termGrade ?? cell.average ?? "";
   if (cell.status === "pending") return "Pending";
-  return cell.isOwnAdvisory ? "No grades yet" : "Not Submitted";
+  return "";
 }
 
 function toCSV(gradebook: AdvisoryGradebook) {
@@ -263,9 +263,10 @@ function useGradesPageState() {
     return <>{groups.map((group) => (
                         <Fragment key={group.label}>
                           <tr>
-                            <td colSpan={pending ? 2+displayBook.subjects.length : columnCount} className={groupBand}>
+                            <td className={`sticky left-0 z-20 ${groupBand} ${darkMode ? "bg-panel-dark" : "bg-brand-light"}`}>
                               {group.label} · {pending ? <SkeletonText width="2ch" className="inline-block align-top" /> : group.students.length} student{group.students.length === 1 ? "" : "s"}
                             </td>
+                            <td colSpan={(pending ? 2+displayBook.subjects.length : columnCount)-1} className={groupBand} aria-hidden="true" />
                           </tr>
                           {group.students.map((student) => (
                             <tr
@@ -296,7 +297,7 @@ function useGradesPageState() {
                                             {grade}
                                           </span>
                                         )
-                                        : <span className="qed-type-table-empty-value">—</span>
+                                        : null
                                     ) : status === "pending" ? (
                                       <span
                                         className="qed-type-badge inline-flex items-center gap-1 uppercase tracking-wide text-[#B45309]"
@@ -304,21 +305,7 @@ function useGradesPageState() {
                                       >
                                         <Clock size={10} /> Pending
                                       </span>
-                                    ) : cell?.isOwnAdvisory ? (
-                                      <span
-                                        className="qed-type-table-empty-value"
-                                        title="No grades recorded yet for this subject"
-                                      >
-                                        No grades yet
-                                      </span>
-                                    ) : (
-                                      <span
-                                        className={`qed-type-badge uppercase tracking-wide ${textMuted}`}
-                                        title="This subject's grade has not been submitted yet"
-                                      >
-                                        Not Submitted
-                                      </span>
-                                    )}
+                                    ) : null}
                                   </td>
                                 );
                               })}

@@ -79,7 +79,7 @@ test('Score Sheet does not send queued actions after the owning page unmounts',a
  await page.getByRole('spinbutton',{name:'Synthetic Learner score for Practice 2, out of 20',exact:true}).fill('18');
  await page.getByRole('button',{name:'Save',exact:true}).click();await expect.poll(()=>f.writes.length).toBe(1);
  await page.getByRole('button',{name:'Toggle readers',exact:true}).click();await expect(page.locator('[data-sk-region="assessment-roster"]')).toHaveCount(0);f.release();
- await expect.poll(()=>f.stored()).toBe(17);await expect(page.getByTestId('query-state')).toContainText('"isInvalidated":true');
+ await expect.poll(()=>f.stored()).toBe(17);await expect(page.getByTestId('query-state')).not.toContainText('"isInvalidated":true');
  await page.getByRole('button',{name:'Toggle readers',exact:true}).click();await expect(page.locator('[data-sk-region="assessment-roster"]')).toHaveAttribute('data-sk-phase','settled');
  await expect(page.getByRole('spinbutton',{name:'Synthetic Learner score for Practice 2, out of 20',exact:true})).toHaveValue('');expect(f.writes).toHaveLength(1);
 });

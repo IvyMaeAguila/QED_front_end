@@ -1,3 +1,5 @@
+import {assessmentCapacity} from '../assessmentCapacity';
+import {mergeScoreDraft} from '../../../../query/subjectScoreCache';
 import { useToast } from "@shared/context/ToastContext";
 import { QueryHttpError } from "@shared/http/QueryHttpError";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
@@ -59,6 +61,7 @@ interface AssessmentTabProps {
     itemId: string,
     value: number | null,
   ) => void | Promise<void>;
+  onScoresChange?: (edits:import("../../services/subjectGrading.service").ScoreEdit[])=>Promise<void>;
   onOpenRecords: () => void;
   onDirtyChange?: (dirty: boolean) => void;
   darkMode: boolean;
@@ -91,6 +94,7 @@ export function AssessmentTab({
   onAddItem,
   onDeleteItem,
   onScoreChange,
+  onScoresChange,
   onOpenRecords,
   onDirtyChange,
   darkMode,
@@ -115,8 +119,11 @@ export function AssessmentTab({
   const [search, setSearch] = useState("");
 
   const [draftScores, setDraftScores] = useState<ScoreMap>(scores);
+  const previousScores=useRef(scores);
   useEffect(() => {
-    setDraftScores(scores);
+    const previous=previousScores.current;
+    setDraftScores(draft=>mergeScoreDraft(draft,previous,scores));
+    previousScores.current=scores;
   }, [scores]);
 
   // An item stays on this working Score Sheet only until it has been
@@ -131,12 +138,14 @@ export function AssessmentTab({
   // This reads off `scores` (the committed/persisted map), not
   // `draftScores` (in-progress typing), so an item you haven't saved yet
   // correctly stays visible even if you've typed values into every box.
-  const tabItems = items.filter((i) => {
+  const [savingItems,setSavingItems]=useState<GradeItem[]|null>(null);
+  const tabItems = savingItems?.filter(item=>items.some(current=>current.id===item.id)) ?? items.filter((i) => {
     if (i.tab !== tab) return false;
     const hasAnySavedScore = roster.some(
       (s) => typeof scores[s.id]?.[i.id] === "number",
     );
-    return !hasAnySavedScore;
+    const hasUnsavedDraft=roster.some(student=>Object.hasOwn(draftScores[student.id]??{},i.id)&&(draftScores[student.id]?.[i.id]??null)!==(scores[student.id]?.[i.id]??null));
+    return !hasAnySavedScore || hasUnsavedDraft;
   });
 
   useEffect(() => {
@@ -208,17 +217,20 @@ const isDirty = useMemo(() => {
       return;
     }
 
+    setSavingItems(tabItems);
     setSaving(true);
     try {
-      await Promise.all(
-        changes.map((c) => onScoreChange(c.studentId, c.itemId, c.value)),
-      );
+      if(onScoresChange)await onScoresChange(changes.map(change=>({...change,expectedValue:scores[change.studentId]?.[change.itemId]??null})));
+      else {const results=await Promise.allSettled(changes.map(c=>onScoreChange(c.studentId,c.itemId,c.value)));
+      const failed=results.find(result=>result.status==='rejected');
+      if(failed?.status==='rejected')throw failed.reason;}
+      setSavingItems(null);
       setSavedFlash(true);
       setToast("Grades saved to Records.");
       setTimeout(() => setSavedFlash(false), 1800);
     } catch (error) {
       setSavedFlash(false);
-      setToast(error instanceof QueryHttpError&&(error.outcome==='uncertain'||error.outcome==='conflict')?error.message:"Could not save scores. Please try again.",'error');
+      setToast(error instanceof QueryHttpError?error.message+(error.requestId?' (Request '+error.requestId+')':''):"Could not save scores. Please try again.",'error');
     } finally {
       setSaving(false);
     }
@@ -226,6 +238,10 @@ const isDirty = useMemo(() => {
 
 
 
+  const capacity=assessmentCapacity(items,tab,selectedTerm,templateDomains);
+  const fullDomainIds=capacity.filter(domain=>domain.full).map(domain=>domain.id);
+  const categoryFull=capacity.length>0&&capacity.every(domain=>domain.full);
+  const addReason=categoryFull?'Cannot add: all scoring columns allowed by the assigned Excel template are full for this term.':tabItems.length>0?'Save the current item before adding another.':loading||templateLoading?'Wait for the template limits to load.':saving?'Wait for the current save to finish.':'';
   const selectedItem = tabItems.find((i) => i.id === selectedItemId) ?? null;
 
 
@@ -244,8 +260,9 @@ const isDirty = useMemo(() => {
   const tableRoot = useRef<HTMLDivElement>(null);
   const rowCount = skeletonRows(view, undefined, 44);
   const pendingRoster: GenderedStudent[] = Array.from({ length: rowCount }, (_, index) => ({ id: `pending-${index}`, name: "", gender: index < Math.ceil(rowCount / 2) ? "M" : "F" }));
-  const pendingItems: GradeItem[] = Array.from({ length: lastKnownCount(`${view}-items`, 1) }, (_, index) => ({ id: `pending-item-${index}`, tab, date: "2026-01-01", activityName: "", topic: "", format: "", maxItems: 0, gradingPeriodId: null }));
-  const columnLabels = [{ label: "Student", typical: "Student full name" }, ...(loading ? pendingItems : tabItems).map(() => ({ label: "", typical: "Assessment topic" }))];
+  const pendingItems: GradeItem[] = Array.from({ length: lastKnownCount(`${view}-items`, 0) }, (_, index) => ({ id: `pending-item-${index}`, tab, date: "2026-01-01", activityName: "", topic: "", format: "", maxItems: 0, gradingPeriodId: null }));
+  const skeletonItems = tabItems.length ? tabItems : pendingItems;
+  const columnLabels = [{ label: "Student", typical: "Student full name" }, ...Array.from({ length: Math.max((loading ? skeletonItems : tabItems).length, 1) }, () => ({ label: "", typical: "Assessment topic" }))];
   const columnWidths = useColumnReservation(view, columnLabels, loading);
   function renderStudentRow(student: GenderedStudent, pending = false, visibleItems = tabItems) {
     return (
@@ -256,9 +273,9 @@ const isDirty = useMemo(() => {
       >
         <td className={`sticky left-0 z-10 px-4 py-2 ${stickyCell}`}>
           <div className="flex min-w-0 items-center gap-2.5">
-            <span data-sk-region="student-avatar" className="inline-flex h-7 w-7 shrink-0">{pending ? <SkeletonAvatar className="h-7 w-7" /> : <StudentAvatar gender={student.gender} name={student.name} />}</span>
+            <span data-sk-region="student-avatar" className="inline-flex h-7 w-7 shrink-0">{pending && !filtered.length ? <SkeletonAvatar className="h-7 w-7" /> : <StudentAvatar gender={student.gender} name={student.name} />}</span>
             <span className={`truncate text-xs font-bold ${textPrimary}`}>
-              {pending ? <SkeletonText className={Number(student.id.split("-").at(-1)) % 2 === 0 ? "w-[14ch]" : "w-[11ch]"} /> : student.name}
+              {pending && !filtered.length ? <SkeletonText className={Number(student.id.split("-").at(-1)) % 2 === 0 ? "w-[22ch] max-w-full" : "w-[18ch] max-w-full"} /> : student.name}
             </span>
           </div>
         </td>
@@ -268,7 +285,7 @@ const isDirty = useMemo(() => {
           const style = scoreStyle(percent);
           return (
             <td key={item.id} className="px-3 py-2 text-center">
-              {pending ? <SkeletonControl className="h-7 w-14 rounded-lg mx-auto" /> : <input
+              {pending ? <span className="inline-flex h-7 w-14 items-center justify-center"><SkeletonControl className="h-2 w-8 rounded-full" /></span> : <input
                 type="number"
                 min={0}
                 max={item.maxItems}
@@ -305,15 +322,18 @@ const isDirty = useMemo(() => {
             </td>
           );
         })}
+        {visibleItems.length === 0 && <td className="min-w-32 px-3 py-2" />}
       </tr>
     );
   }
 
   function renderTable(pending: boolean) {
-    const visibleRoster = pending ? pendingRoster : filtered;
+    const visibleRoster = pending && !filtered.length ? pendingRoster : filtered;
     const grouped = { male: visibleRoster.filter(student => !isFemale(student)), female: visibleRoster.filter(isFemale) };
-    const tabItems = pending ? pendingItems : items.filter(item => item.tab === tab && !roster.some(student => typeof scores[student.id]?.[item.id] === "number"));
-    const columnCount = 1 + Math.max(tabItems.length, 1);
+    const visibleItems = pending ? skeletonItems : tabItems;
+    const itemMetadataPending = pending && !tabItems.length;
+    const tabItemsForTable = visibleItems;
+    const columnCount = 1 + Math.max(tabItemsForTable.length, 1);
       return (!pending && filtered.length === 0 ? (
           <p className={`px-4 py-5 text-center text-xs font-medium ${textMuted}`}>
             No students found matching "{search}".
@@ -331,14 +351,23 @@ const isDirty = useMemo(() => {
                   >
                     Student
                   </th>
-                  {tabItems.length === 0 ? (
+                  {tabItemsForTable.length === 0 ? (
                     <th
                       className={`px-4 py-2 text-left text-xs font-bold ${textMuted}`}
                     >
-                      No items yet — tap Add Item
+                      {!pending&&<div className="flex items-center justify-center gap-3 py-2 normal-case tracking-normal" style={{textTransform:'none'}}>
+                        <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${darkMode?'bg-white/10':'bg-white'}`}>
+                          {categoryFull||items.some(item=>item.tab===tab&&String(item.gradingPeriodId)===selectedTerm)?<CheckCircle2 size={18} className="text-emerald-600" aria-hidden="true"/>:<ClipboardList size={18} style={{color:'var(--brand-ink)'}} aria-hidden="true"/>}
+                        </span>
+                        <div className="text-left">
+                          <span className={`block text-sm font-semibold ${textPrimary}`}>{categoryFull?'All template slots used':items.some(item=>item.tab===tab&&String(item.gradingPeriodId)===selectedTerm)?'No pending assessments':'No assessment added'}</span>
+                          <span className={`mt-0.5 block text-xs font-normal ${textMuted}`}>{categoryFull||items.some(item=>item.tab===tab&&String(item.gradingPeriodId)===selectedTerm)?'View saved scores in Full Records.':'Select Add Item to start recording scores.'}</span>
+                        </div>
+                      </div>}
                     </th>
                   ) : (
-                    tabItems.map((item) => {
+                    tabItemsForTable.map((item) => {
+                      if (itemMetadataPending) return <th key={item.id} className="min-w-32 px-1.5 py-1.5" aria-label="Loading assessment" />;
                       const isSelected = item.id === selectedItemId;
                       return (
                         <th key={item.id} className="min-w-32 px-1.5 py-1.5 align-top">
@@ -366,7 +395,7 @@ const isDirty = useMemo(() => {
                               <p
                                 className={`text-xs font-black leading-none ${textPrimary}`}
                               >
-                                {pending ? <SkeletonText className="w-[8ch]" /> : formatDisplayDate(item.date)}
+                                {formatDisplayDate(item.date)}
                               </p>
                               <span
                                 className={`absolute right-0 shrink-0 rounded-full bg-[#DC2626] px-1.5 py-0.5 text-xs font-black uppercase tracking-wide text-white transition-opacity ${
@@ -384,7 +413,7 @@ const isDirty = useMemo(() => {
                                 className={`mt-1 truncate text-xs font-semibold leading-none ${textMuted}`}
                                 title={item.activityName}
                               >
-                                {pending ? <SkeletonText className="w-[12ch]" /> : <>{item.activityName} · {item.maxItems} pts</>}
+                                {item.activityName} · {item.maxItems} pts
                               </p>
                             )}
 
@@ -393,7 +422,7 @@ const isDirty = useMemo(() => {
                               style={{ color: "var(--brand-ink)" }}
                               title={item.topic}
                             >
-                              {pending ? <SkeletonText className="w-[10ch]" /> : <>{item.topic}{isWrittenWorks ? ` · ${item.maxItems} pts` : ""}</>}
+                              {item.topic}{isWrittenWorks ? ` · ${item.maxItems} pts` : ""}
                             </p>
                           </button>
                         </th>
@@ -410,7 +439,7 @@ const isDirty = useMemo(() => {
                         Male
                       </td>
                     </tr>
-                    {grouped.male.map((student) => renderStudentRow(student, pending, tabItems))}
+                    {grouped.male.map((student) => renderStudentRow(student, pending, tabItemsForTable))}
                   </>
                 )}
 
@@ -421,7 +450,7 @@ const isDirty = useMemo(() => {
                         Female
                       </td>
                     </tr>
-                    {grouped.female.map((student) => renderStudentRow(student, pending, tabItems))}
+                    {grouped.female.map((student) => renderStudentRow(student, pending, tabItemsForTable))}
                   </>
                 )}
               </tbody>
@@ -471,7 +500,7 @@ const isDirty = useMemo(() => {
 
           {tab !== "exams" && (
             <button
-              disabled={loading} onClick={() => setTopicManagerOpen(true)}
+              disabled={loading || saving} onClick={() => setTopicManagerOpen(true)}
               className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-extrabold transition-colors ${
                 darkMode
                   ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
@@ -506,14 +535,7 @@ const isDirty = useMemo(() => {
               <ClipboardList size={13} style={{ color: "var(--brand-ink)" }} />
               Score Sheet
             </p>
-            <p className={`truncate text-xs font-medium ${textMuted}`}>
-              <LoadingRegion as="span" loading={loading} name="assessment-metadata" skeleton={<SkeletonText className="w-[20ch]" />}>{<>· {tabItems.length} item{tabItems.length === 1 ? "" : "s"} · {filtered.length} student{filtered.length === 1 ? "" : "s"}</>}</LoadingRegion>
-              {isDirty && (
-                <span className="ml-1 font-extrabold" style={{ color: "var(--brand-ink)" }}>
-                  · Unsaved changes
-                </span>
-              )}
-            </p>
+            {isDirty && <p className="text-xs font-extrabold" style={{color:'var(--brand-ink)'}}>Unsaved changes</p>}
           </div>
 
           <div role="group" aria-label="Item actions" className="flex items-center gap-2">
@@ -528,7 +550,7 @@ const isDirty = useMemo(() => {
 
             <button
               onClick={() => selectedItem && setConfirmingDelete(true)}
-              disabled={!selectedItem || loading}
+              disabled={!selectedItem || loading || saving}
               aria-label={
                 selectedItem
                   ? `Delete ${selectedItem.activityName}`
@@ -549,24 +571,23 @@ const isDirty = useMemo(() => {
               Delete
             </button>
 
+            <span tabIndex={addReason?0:undefined} title={addReason||'Add item'} className="relative group inline-flex" aria-label={addReason||undefined}>
             <button
-              onClick={() => setModalOpen(true)}
-              disabled={loading || templateLoading || tabItems.length > 0}
+              onClick={() => {if(!categoryFull)setModalOpen(true);}}
+              disabled={loading || saving || templateLoading || categoryFull || tabItems.length > 0}
               aria-label={
                 tabItems.length > 0
                   ? "Finish scoring the current item before adding a new one"
                   : "Add item"
               }
-              title={
-                tabItems.length > 0
-                  ? "Save scores for the current item before adding a new one"
-                  : "Add item"
-              }
+              title={addReason || 'Add item'}
               className={toolButton}
             >
               <Plus size={12} style={{ color: "var(--brand-ink)" }} />
               Add Item
             </button>
+            {addReason&&<span role="tooltip" className="pointer-events-none absolute right-0 top-full z-50 mt-2 hidden w-64 rounded-lg bg-gray-900 p-3 text-xs text-white shadow-lg group-hover:block group-focus-within:block">{addReason}</span>}
+            </span>
           </div>
         </div>
 
@@ -588,6 +609,7 @@ const isDirty = useMemo(() => {
             panelBg={panelBg}
             panelBorder={panelBorder}
             textMuted={textMuted}
+            fullDomainIds={fullDomainIds}
             templateDomains={templateDomains}
             examTypes={examTypes}
           />

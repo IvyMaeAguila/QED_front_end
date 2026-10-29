@@ -131,14 +131,10 @@ function useManageSubjectsPageState() {
     setSavingEdit(true);
     setEditSubjectError(null);
     try {
-      const isGraded = updates.isGraded ?? subject.isGraded;
-      const weightDistribution = isGraded
-        ? toWeightPayload(updates.weightDistribution ?? [], assessmentTypes)
-        : [];
+      const isGraded = subject.isGraded;
 
       await updateSubjectAssignment(subject.id, {
         isGraded,
-        weightDistribution,
         subjectName: updates.name ?? subject.name,
         gradeLevelId: GRADE_LEVEL_IDS[updates.gradeLevel ?? subject.gradeLevel],
         sectionName: updates.section ?? subject.section,
@@ -153,9 +149,6 @@ function useManageSubjectsPageState() {
         teacherId: updates.teacherId ?? null,
         schoolYear: updates.schoolYear ?? subject.schoolYear,
         isGraded,
-        ...(isGraded
-          ? { weightDistribution: updates.weightDistribution ?? [] }
-          : {}),
       });
       if (updates.gradeLevel && updates.gradeLevel !== subject.gradeLevel) {
         await Promise.all([
@@ -257,8 +250,7 @@ function useManageSubjectsPageState() {
                       {pending ? <SkeletonText width="15ch" /> : group.label}
                     </h4>
                     <span className={`text-xs font-semibold ${textMuted}`}>
-                      ({group.items.length} subject
-                      {group.items.length === 1 ? "" : "s"})
+                      {pending ? <SkeletonText width="7ch" /> : <>({group.items.length} subject{group.items.length === 1 ? "" : "s"})</>}
                     </span>
                     <span
                       className={`h-px flex-1 ${
@@ -296,8 +288,9 @@ function useManageSubjectsPageState() {
               Academics
             </h1>
             <p className={`qed-type-page-description mt-0.5 ${textMuted}`}>
-              {filtered.length} of {gradeSubjects.length} subject
-              {gradeSubjects.length === 1 ? "" : "s"} shown
+              <LoadingRegion as="span" name="admin-subject-count" loading={loading} skeleton={<SkeletonText width="20ch" />}>
+                {filtered.length} of {gradeSubjects.length} subject{gradeSubjects.length === 1 ? "" : "s"} shown
+              </LoadingRegion>
             </p>
           </div>
         </div>
@@ -336,10 +329,6 @@ function useManageSubjectsPageState() {
             setEditSubjectError(null);
           }}
           onSave={(updates) => saveEditedSubject(editingSubject, updates)}
-          onManageSections={() => {
-            setEditingSubject(null);
-            setManagingSections(true);
-          }}
           saving={savingEdit}
           error={editSubjectError}
         />

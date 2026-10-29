@@ -53,7 +53,7 @@ async function authedFetch(url: string, init?: RequestInit, request:TeacherReque
 export async function fetchGradingPeriods(request: TeacherRequestOptions = {}): Promise<GradingPeriod[]> {
   const res = await authedFetch(GRADING_PERIODS_BASE_URL, undefined, request);
   const data = await handleJsonResponse(res);
-  return data.data.map((r: any) => ({
+  return data.data.map((r: {id:string;termNumber:number;termLabel:string;startDate:string;endDate:string;isActive:boolean}) => ({
     id: r.id,
     termNumber: r.termNumber,
     label: r.termLabel,
@@ -207,4 +207,9 @@ export async function submitGrades(subjectSectionId: string, gradingPeriodId: st
     body: JSON.stringify({ gradingPeriodId, ...(expectedSubmissionVersion === undefined ? {} : {expectedSubmissionVersion}) }),
   }, request);
   await handleJsonResponse(res);
+}
+
+export type ScoreEdit={studentId:string;itemId:string;value:number|null;expectedValue:number|null};
+export async function saveScores(id:string,edits:ScoreEdit[],request:TeacherRequestOptions={}):Promise<void>{
+ const response=await authedFetch(BASE_URL+'/'+id+'/scores/batch',{method:'PUT',body:JSON.stringify({edits})},request);await handleJsonResponse(response);
 }

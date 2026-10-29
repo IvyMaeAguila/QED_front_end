@@ -1,3 +1,5 @@
+import {AttendanceBackgroundSaves} from '../query/AttendanceBackgroundSaves';
+import {useAuth} from '@shared/hooks/useAuth';
 import { Suspense } from "react";
 import { RouteSkeleton } from "@shared/loading/RouteSkeleton";
 import { useState } from "react";
@@ -13,6 +15,7 @@ interface TeacherLayoutProps {
 }
 
 export function TeacherLayout({ onLogout }: TeacherLayoutProps) {
+  const {sessionScope,user}=useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { darkMode } = useSettings();
 
@@ -25,6 +28,7 @@ export function TeacherLayout({ onLogout }: TeacherLayoutProps) {
   };
 
   return (
+    <AttendanceBackgroundSaves key={sessionScope+':'+user?.id}>
     <div
       className={`qed-account-ui teacher-ui flex h-screen w-full overflow-hidden transition-colors ${darkMode ? "dark bg-page-dark" : "bg-surface"}`}
     >
@@ -100,5 +104,6 @@ export function TeacherLayout({ onLogout }: TeacherLayoutProps) {
         </main>
       </div>
     </div>
+    </AttendanceBackgroundSaves>
   );
 }

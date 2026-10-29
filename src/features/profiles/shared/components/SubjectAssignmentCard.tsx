@@ -5,6 +5,7 @@ interface SubjectAssignmentCardProps {
   loading?: boolean;
   schoolYearLoading?: boolean;
   statusLoading?: boolean;
+  detailLoading?: boolean;
   schoolYear: ReactNode;
   status: string;
   title: string;
@@ -26,6 +27,7 @@ export function SubjectAssignmentCard({
   loading = false,
   schoolYearLoading = loading,
   statusLoading = loading,
+  detailLoading = loading,
   schoolYear,
   status,
   title,
@@ -83,7 +85,7 @@ export function SubjectAssignmentCard({
         </div>
         <h3 className={`qed-type-card-title mt-1 truncate pr-14 leading-snug ${textPrimary}`} title={title} data-sk-region="subjectassignmentcard-h3-field-4">{loading ? <SkeletonText width="68%"/> : title}</h3>
         {subtitle && <p className={`qed-type-metadata mt-0.5 truncate pr-14 ${textMuted}`} title={subtitle} data-sk-region="subjectassignmentcard-p-field-5">{loading ? <SkeletonText width="55%"/> : subtitle}</p>}
-        {detail && <p className={`qed-type-metadata mt-0.5 truncate pr-14 ${textMuted}`} title={detail} data-sk-region="subjectassignmentcard-p-field-6">{loading ? <SkeletonText width="42%"/> : detail}</p>}
+        {detail && <p className={`qed-type-metadata mt-0.5 truncate pr-14 ${textMuted}`} title={detailLoading ? undefined : detail} data-sk-region="subjectassignmentcard-p-field-6">{detailLoading ? <SkeletonText width="42%"/> : detail}</p>}
         </div>
 
         <div className={`mt-auto mb-3 border-t ${darkMode ? "border-white/10" : "border-gray-200"}`} aria-hidden="true" />
@@ -93,7 +95,7 @@ export function SubjectAssignmentCard({
             {loading ? <SkeletonText width="3ch"/> : <>{studentCount} student{studentCount === 1 ? "" : "s"}</>}
           </span>
         )}
-        <div className="ml-auto flex shrink-0 items-center justify-end gap-1.5 sm:gap-2">
+        <div className="ml-auto flex min-w-0 flex-wrap items-center justify-end gap-1.5 sm:gap-2">
           {actions}
         </div>
         </div>

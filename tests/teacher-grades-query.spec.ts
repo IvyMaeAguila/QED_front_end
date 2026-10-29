@@ -93,3 +93,11 @@ for(const status of [200,500])test(`Teacher visibility: ${status} preserves payl
   expect(f.ledger.snapshot(recoveryMark)).toEqual([]);expect(f.writes).toHaveLength(3);
  }
 });
+
+test('teacher gradebook pins gender headers and leaves unavailable subject grades blank',async({page})=>{
+ await page.setViewportSize({width:375,height:1000});const f=await fixture(page);f.state('not_submitted');await start(page);await ready(page);
+ const row=page.locator('[data-sk-region="teacher-grade-row"]').first();await expect(row.locator('td').nth(1)).toHaveText('');await expect(page.getByText('No grades yet',{exact:true})).toHaveCount(0);
+ const label=page.getByRole('cell',{name:/^Female ·/});const before=(await label.boundingBox())!.x;
+ await label.evaluate(element=>{let parent=element.parentElement;while(parent&&parent.scrollWidth<=parent.clientWidth)parent=parent.parentElement;if(parent)parent.scrollLeft=300;});
+ await expect(label).toHaveCSS('position','sticky');expect(Math.abs((await label.boundingBox())!.x-before)).toBeLessThan(3);
+});

@@ -1,4 +1,6 @@
+import {Link} from 'react-router-dom';
 import { SubjectAssignmentCard } from "../../../../shared/components/SubjectAssignmentCard";
+import { SkeletonControl } from "@shared/components/SkeletonLoading";
 import { useTeachers } from "../../classes/context/TeachersContext";
 import { formatTeacherName } from "../../classes/types/Teacher";
 import { type Subject, type SubjectsTheme } from "../types/types";
@@ -19,13 +21,14 @@ export function SubjectCard({
   onToggleStatus,
   ...theme
 }: SubjectCardProps) {
-  const { teachers } = useTeachers();
+  const { teachers, loading: teachersLoading } = useTeachers();
   const teacher = teachers.find((t) => t.id === subject.teacherId);
   const isActive = subject.status === "Active";
 
   return (
     <SubjectAssignmentCard
       loading={loading}
+      detailLoading={loading || (teachersLoading && !!subject.teacherId)}
       {...theme}
       schoolYear={subject.schoolYear}
       status={subject.status}
@@ -34,14 +37,18 @@ export function SubjectCard({
       detail={teacher ? `Teacher · ${formatTeacherName(teacher)}` : "Teacher not assigned"}
       showStudentCount={false}
       actions={
-        <>
+        loading ? <>
+          <SkeletonControl className="h-8 w-12 rounded-lg" />
+          <SkeletonControl className="h-8 w-24 rounded-lg" />
+        </> : <>
+          <Link to={`/admin/subjects/${subject.subjectId ?? subject.id}`} className="inline-flex h-8 items-center whitespace-nowrap rounded-lg border border-gray-200 bg-white px-3 text-xs font-extrabold text-brand-ink hover:bg-brand-light">View Template</Link>
           <button
             onClick={onEdit}
             className="h-8 rounded-lg bg-maroon px-3 text-xs font-extrabold text-white transition-colors hover:bg-maroon-light"
           >
             Edit
           </button>
-          {!teacher && (
+          {!subject.teacherId && (
             <button
               onClick={onAssign}
               className="h-8 whitespace-nowrap rounded-lg border border-[#D8C3C6] bg-white px-3 text-xs font-extrabold text-brand-ink transition-colors hover:bg-[#FFF8F8]"

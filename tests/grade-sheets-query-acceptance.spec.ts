@@ -16,7 +16,7 @@ for(const width of [375,1280])for(const dark of [false,true])test(`Grade Sheet $
   const consoleErrors:string[]=[];page.on('console',m=>{if(m.type()==='error'&&!m.text().includes('Failed to load resource'))consoleErrors.push(m.text());});
   const capture=async(name:string)=>{const path=info.outputPath(name+'.png');await page.screenshot({path,fullPage:true});await info.attach(name,{path,contentType:'image/png'});};
   await page.goto(url);await expect(region(page)).toHaveAttribute('aria-busy','true');await capture('loading');f.release('sheet');await ready(page);await f.settled({year:1,periods:1,sheet:1});
-  await expect(rows(page).locator('td')).toHaveText(['Fixture, Synthetic A.','89.94','Pending','No grades yet','—','89.9']);
+  await expect(rows(page).locator('td')).toHaveText(['Fixture, Synthetic A.','89.94','Pending','','','89.9']);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);await capture('loaded');
   const term=page.getByRole('combobox',{name:'Select grading term',exact:true});await term.selectOption('3');await expect(page.getByRole('heading',{name:'Grades Unavailable',exact:true})).toBeVisible();await expect(term).toHaveValue('1');
   await page.getByRole('button',{name:'Okay',exact:true}).click();expect(f.state.sheet.calls).toBe(1);

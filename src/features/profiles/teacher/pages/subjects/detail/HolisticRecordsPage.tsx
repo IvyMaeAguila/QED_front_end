@@ -1,3 +1,5 @@
+import {useToast} from '@shared/context/ToastContext';
+import {useUnsavedChanges} from '@shared/components/useUnsavedChanges';
 import {useContext} from 'react';
 import {TeacherAcademicQueryContext,useTeacherAcademicServices} from '../../../query/TeacherAcademicQueryContext';
 import { AccountSelect } from "@shared/components/AccountSelect";
@@ -171,6 +173,26 @@ export function HolisticRecordsSection({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  type Edit={studentId:string;axis:HolisticAxisKey;weekStartDate:string;value:number;termNumber?:number};
+  const [edits,setEdits]=useState<Record<string,Edit>>({});
+  const baseline=useRef<HolisticWeeklyMap>({});
+  const [saving,setSaving]=useState(false);
+  const {showToast}=useToast();
+  const {navigationDialog,guardAction}=useUnsavedChanges(Object.keys(edits).length>0||saving,darkMode);
+  function startEditing(){baseline.current=weeklyData;setEdits({});setIsEditing(true);}
+  function cancelEditing(){if(saving)return;setWeeklyData(baseline.current);setEdits({});setIsEditing(false);}
+  async function finishEditing(){
+   if(saving)return;const changes=Object.entries(edits);if(!changes.length){setIsEditing(false);return;}
+   setSaving(true);
+   const failed:Record<string,Edit>={};
+   try{
+    const results=await Promise.allSettled(changes.map(([,edit])=>saveHolistic(subjectSectionId,edit.studentId,edit.axis,edit.value,{weekStartDate:edit.weekStartDate,termNumber:edit.termNumber})));
+    results.forEach((result,index)=>{const [key,edit]=changes[index];if(result.status==='rejected')failed[key]=edit;else baseline.current=upsertAxisValue(baseline.current,edit.studentId,edit.weekStartDate,edit.axis,edit.value);});
+    setEdits(failed);
+    if(Object.keys(failed).length)showToast('Some ratings could not be saved. Select Done to retry, or Cancel to discard the unsaved changes.','error');
+    else{setIsEditing(false);showToast('Holistic ratings saved.','success');}
+   }finally{setSaving(false);}
+  }
   const [selectedMonthKey, setSelectedMonthKey] = useState<string | null>(null);
   const hasInitializedMonth = useRef(false);
   const latestRequestId = useRef(0);
@@ -233,17 +255,13 @@ export function HolisticRecordsSection({
 
   function handleCellChange(studentId: string, axis: HolisticAxisKey, weekStartDate: string, raw: string) {
     const trimmed = raw.trim();
-    if (trimmed === "") return;
+    if (saving || trimmed === "") return;
     const value = Number(trimmed);
     if (!Number.isInteger(value) || value < 1 || value > 5) return;
 
     setWeeklyData((prev) => upsertAxisValue(prev, studentId, weekStartDate, axis, value));
 
-    saveHolistic(subjectSectionId, studentId, axis, value, { weekStartDate, termNumber: resolvedTermNumber }).catch(
-      (err) => {
-        console.error("Failed to save holistic rating:", err);
-      }
-    );
+    setEdits(previous=>({...previous,[studentId+':'+weekStartDate+':'+axis]:{studentId,axis,weekStartDate,value,termNumber:resolvedTermNumber}}));
   }
 
   const monthGroups: MonthGroup[] = useMemo(() => {
@@ -345,6 +363,7 @@ export function HolisticRecordsSection({
                 <td key={`${week}-${column.key}`} className={`border px-1.5 py-2 text-center ${panelBorder}`}>
                   {pending ? <SkeletonControl className="mx-auto h-7 w-7 rounded-lg" /> : isEditing ? (
                     <input
+                      disabled={saving}
                       type="number"
                       min={1}
                       max={5}
@@ -358,7 +377,7 @@ export function HolisticRecordsSection({
                   ) : (
                     <span
                       className={`inline-flex h-7 w-7 items-center justify-center rounded-lg text-xs font-black tabular-nums ${
-                        level ? "text-white" : textMuted
+                        level ? "qed-type-badge bg-transparent text-white" : textMuted
                       }`}
                       style={level ? { backgroundColor: level.color } : undefined}
                     >
@@ -438,9 +457,7 @@ export function HolisticRecordsSection({
                   {grouped.male.length > 0 && (
                     <>
                       <tr>
-                        <td colSpan={columnCount} className={groupBand}>
-                          Male
-                        </td>
+                        <td className={`sticky left-0 z-20 ${groupBand} ${darkMode?'bg-panel-dark':'bg-brand-light'}`}>Male</td><td colSpan={columnCount-1} className={groupBand} aria-hidden="true" />
                       </tr>
                       {grouped.male.map((student) => renderStudentRow(student, group.weekStartDates, pending))}
                     </>
@@ -449,9 +466,7 @@ export function HolisticRecordsSection({
                   {grouped.female.length > 0 && (
                     <>
                       <tr>
-                        <td colSpan={columnCount} className={groupBand}>
-                          Female
-                        </td>
+                        <td className={`sticky left-0 z-20 ${groupBand} ${darkMode?'bg-panel-dark':'bg-brand-light'}`}>Female</td><td colSpan={columnCount-1} className={groupBand} aria-hidden="true" />
                       </tr>
                       {grouped.female.map((student) => renderStudentRow(student, group.weekStartDates, pending))}
                     </>
@@ -462,7 +477,7 @@ export function HolisticRecordsSection({
           );
  }
 
-  return (<>{port&&<port.WeeklyEffects subjectId={subjectSectionId} termNumber={resolvedTermNumber} periodId={activePeriod?.id} attempt={attempt} editing={isEditing} setData={setWeeklyData} setLoading={setLoading} setError={setError} setPeriods={setGradingPeriods} setPeriodsLoaded={setPeriodsLoaded} setPeriodError={setPeriodError}/>}
+  return (<>{navigationDialog}{port&&<port.WeeklyEffects subjectId={subjectSectionId} termNumber={resolvedTermNumber} periodId={activePeriod?.id} attempt={attempt} editing={isEditing} setData={setWeeklyData} setLoading={setLoading} setError={setError} setPeriods={setGradingPeriods} setPeriodsLoaded={setPeriodsLoaded} setPeriodError={setPeriodError}/>}
 {(
     <section className={cardClasses} aria-label="Weekly holistic ratings">
       <div
@@ -473,28 +488,15 @@ export function HolisticRecordsSection({
             <Sparkles size={15} style={{ color: "var(--brand-ink)" }} />
             Weekly Holistic Ratings
           </h2>
-          <p className={`mt-0.5 text-xs font-medium ${textMuted}`}>
-            {isEditing ? "Changes save as you type" : `${roster.length} student${roster.length === 1 ? "" : "s"}`}
-            {activePeriod && (
-              <>
-                {" "}
-                · {activePeriod.termLabel}
-                {/* schoolYearId is the raw DB id (e.g. a UUID), not a
-                    "2025-2026"-style label. Swap this for a real label field
-                    (e.g. activePeriod.schoolYearLabel) once one exists on
-                    the GradingPeriod type / API response. */}
-                {activePeriod.schoolYearId ? ` · SY ${activePeriod.schoolYearId}` : ""}
-              </>
-            )}
-          </p>
+
         </div>
 
         <div className="flex items-center gap-2.5">
           {(displayGroup || (loading || !periodsLoaded)) && (
             <LoadingFormValue name="subject-holistic-month" loading={(loading || !periodsLoaded) && !displayGroup} width="16ch" intrinsic><AccountSelect data-account-select="" data-dropdown-dark={darkMode}
               value={displayGroup?.key ?? ""}
-              disabled={(loading || !periodsLoaded)}
-              onChange={(e) => setSelectedMonthKey(e.target.value)}
+              disabled={(loading || !periodsLoaded || saving)}
+              onChange={(e) => {const month=e.target.value;guardAction(()=>{if(isEditing)cancelEditing();setSelectedMonthKey(month);});}}
               className={`h-10 rounded-lg border px-2.5 text-xs font-bold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
               aria-label="Month"
             >
@@ -506,9 +508,10 @@ export function HolisticRecordsSection({
               ))}
             </AccountSelect></LoadingFormValue>
           )}
-          <button
-            onClick={() => setIsEditing((v) => !v)}
-            className={`flex h-10 items-center gap-1.5 rounded-xl border px-3 text-xs font-extrabold transition-colors ${
+          {isEditing&&<button type="button" onClick={cancelEditing} disabled={saving} className={`h-10 rounded-lg border px-3 text-xs font-bold disabled:opacity-50 ${panelBorder} ${textPrimary}`}>Cancel</button>}
+          <button type="button" disabled={saving||loading||!periodsLoaded}
+            onClick={() => {if(isEditing)void finishEditing();else startEditing();}}
+            className={`flex h-10 items-center gap-1.5 rounded-lg border px-3 text-xs font-extrabold transition-colors ${
               isEditing
                 ? "border-transparent text-white"
                 : darkMode
@@ -518,7 +521,7 @@ export function HolisticRecordsSection({
             style={isEditing ? { background: ACCENT } : undefined}
           >
             {isEditing ? <Check size={13} /> : <Pencil size={13} style={{ color: "var(--brand-ink)" }} />}
-            {isEditing ? "Done" : "Edit"}
+            {saving ? "Saving…" : isEditing ? "Done" : "Edit"}
           </button>
         </div>
       </div>
