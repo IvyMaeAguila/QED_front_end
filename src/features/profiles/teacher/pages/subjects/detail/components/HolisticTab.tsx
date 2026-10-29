@@ -1,9 +1,10 @@
+import {useToast} from '@shared/context/ToastContext';
 import { useSaveFeedback } from "@shared/components/useSaveFeedback";
 import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonText, SkeletonAvatar } from "@shared/components/SkeletonLoading";
 import { skeletonRows, rememberRows, rememberColumns, useColumnReservation } from "@shared/loading/reservations";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { ClipboardList, Search, Sparkles } from "lucide-react";
 import { StudentAvatar } from "@shared/components/StudentAvatar";
@@ -67,7 +68,17 @@ export function HolisticTab({
   textMuted,
 }: HolisticTabProps) {
   const [search, setSearch] = useState("");
-  const { save, saveFeedback, pending, hasFailures } = useSaveFeedback(`${view}:${weekStartDate}`);
+  const { save, saveFeedback, pending, hasFailures } = useSaveFeedback(`${view}:${weekStartDate}`, {showStatus:false});
+  const {showToast}=useToast();
+  const saveScope=view+':'+weekStartDate;
+  const cycle=useRef({scope:saveScope,pending:false});
+  useEffect(()=>{
+    if(cycle.current.scope!==saveScope){cycle.current={scope:saveScope,pending:false};return;}
+    if(pending>0){cycle.current.pending=true;return;}
+    if(!cycle.current.pending)return;
+    cycle.current.pending=false;
+    showToast(hasFailures?'Some holistic ratings could not be saved. Retry the failed changes.':'Holistic ratings saved.',hasFailures?'error':'success');
+  },[pending,hasFailures,saveScope,showToast]);
   const { navigationDialog } = useUnsavedChanges(pending > 0 || hasFailures, darkMode);
 
   const filtered = useMemo(
