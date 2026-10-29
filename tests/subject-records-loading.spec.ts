@@ -89,3 +89,25 @@ test('subject records repeats cached native leaf columns within 2px',async({page
 });
 
 
+
+for(const dark of [false,true])test('holistic record badges retain white bold rating numbers '+(dark?'dark':'light'),async({page})=>{
+ const release=await fixture(page,dark,1,false,'holistic');
+ await page.route('**/api/gradingPeriods',r=>r.fulfill({json:{success:true,data:[{id:'1',termNumber:1,termLabel:'Term 1',startDate:'2026-10-01',endDate:'2026-10-31',isActive:true}]}}));
+ await page.route('**/api/teacherHolistic/**',r=>r.fulfill({json:{success:true,data:{'1':{weeks:[{weekStartDate:'2026-10-05',cognitive:5,emotional:4,behavioral:3,social:1}],trend:{weeksCount:1,weeklyScores:[]}}}}}));
+ await page.goto('/teacher/subjects/1/records');await waitForDataRoute(page);release();
+ const badge=page.locator('[data-sk-region="subject-holistic-records"] .qed-type-badge').filter({hasText:/^5$/}).first();
+ await expect(badge).toBeVisible();await expect(badge).toHaveCSS('color','rgb(255, 255, 255)');expect(Number(await badge.evaluate(element=>getComputedStyle(element).fontWeight))).toBeGreaterThanOrEqual(600);
+});
+
+test('weekly holistic Done and Cancel control persistence and gender labels stay pinned',async({page})=>{
+ const release=await fixture(page,false,2,false,'holistic');let writes=0;
+ await page.route('**/api/gradingPeriods',r=>r.fulfill({json:{success:true,data:[{id:'1',termNumber:1,termLabel:'Term 1',startDate:'2026-10-01',endDate:'2026-10-31',isActive:true}]}}));
+ await page.route('**/api/teacherHolistic/**',r=>{if(r.request().method()!=='GET'){writes++;return r.fulfill({json:{success:true}});}return r.fulfill({json:{success:true,data:{'1':{weeks:[{weekStartDate:'2026-10-05',cognitive:5}],trend:{weeksCount:1,weeklyScores:[]}}}}});});
+ await page.goto('/teacher/subjects/1/records');await waitForDataRoute(page);release();
+ await page.getByRole('button',{name:'Edit',exact:true}).click();const input=page.getByRole('spinbutton',{name:'Ana Cruz 0 Cognitive rating for week of 2026-10-05',exact:true});await input.fill('3');expect(writes).toBe(0);
+ await page.getByRole('button',{name:'Cancel',exact:true}).click();expect(writes).toBe(0);await expect(page.getByRole('spinbutton')).toHaveCount(0);
+ await page.getByRole('button',{name:'Edit',exact:true}).click();await expect(input).toHaveValue('5');await input.fill('4');const done=page.getByRole('button',{name:'Done',exact:true});await expect(done).toHaveClass(/rounded-lg/);await done.click();await expect(page.getByText('Holistic ratings saved.',{exact:true})).toBeVisible();expect(writes).toBe(1);
+ const male=page.getByRole('cell',{name:'Male',exact:true}),female=page.getByRole('cell',{name:'Female',exact:true});
+ const initial=await male.boundingBox();await male.evaluate(element=>{let parent=element.parentElement;while(parent&&parent.scrollWidth<=parent.clientWidth)parent=parent.parentElement;if(parent)parent.scrollLeft=500;});
+ expect(Math.abs((await male.boundingBox())!.x-initial!.x)).toBeLessThan(3);await expect(female).toBeVisible();
+});

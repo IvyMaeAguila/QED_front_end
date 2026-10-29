@@ -355,7 +355,15 @@ const isDirty = useMemo(() => {
                     <th
                       className={`px-4 py-2 text-left text-xs font-bold ${textMuted}`}
                     >
-                      {pending ? null : 'No items yet — tap Add Item'}
+                      {!pending&&<div className="flex items-center justify-center gap-3 py-2 normal-case tracking-normal" style={{textTransform:'none'}}>
+                        <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${darkMode?'bg-white/10':'bg-white'}`}>
+                          {categoryFull||items.some(item=>item.tab===tab&&String(item.gradingPeriodId)===selectedTerm)?<CheckCircle2 size={18} className="text-emerald-600" aria-hidden="true"/>:<ClipboardList size={18} style={{color:'var(--brand-ink)'}} aria-hidden="true"/>}
+                        </span>
+                        <div className="text-left">
+                          <span className={`block text-sm font-semibold ${textPrimary}`}>{categoryFull?'All template slots used':items.some(item=>item.tab===tab&&String(item.gradingPeriodId)===selectedTerm)?'No pending assessments':'No assessment added'}</span>
+                          <span className={`mt-0.5 block text-xs font-normal ${textMuted}`}>{categoryFull||items.some(item=>item.tab===tab&&String(item.gradingPeriodId)===selectedTerm)?'View saved scores in Full Records.':'Select Add Item to start recording scores.'}</span>
+                        </div>
+                      </div>}
                     </th>
                   ) : (
                     tabItemsForTable.map((item) => {
@@ -527,14 +535,7 @@ const isDirty = useMemo(() => {
               <ClipboardList size={13} style={{ color: "var(--brand-ink)" }} />
               Score Sheet
             </p>
-            <p className={`truncate text-xs font-medium ${textMuted}`}>
-              <LoadingRegion as="span" loading={loading} name="assessment-metadata" skeleton={<SkeletonText className="w-[20ch]" />}>{<>· {tabItems.length} item{tabItems.length === 1 ? "" : "s"} · {filtered.length} student{filtered.length === 1 ? "" : "s"}</>}</LoadingRegion>
-              {isDirty && (
-                <span className="ml-1 font-extrabold" style={{ color: "var(--brand-ink)" }}>
-                  · Unsaved changes
-                </span>
-              )}
-            </p>
+            {isDirty && <p className="text-xs font-extrabold" style={{color:'var(--brand-ink)'}}>Unsaved changes</p>}
           </div>
 
           <div role="group" aria-label="Item actions" className="flex items-center gap-2">

@@ -113,7 +113,7 @@ function useTeacherAttendancePageState() {
       if(current())setBulkState({classId,ids,pending:true});display(Object.fromEntries(ids.map(id=>[id,PRESENT])));
       try{
         await (bridge?.markPresent??markAdvisoryPresent)(classId,ids,iso,termId);
-        if(current()){setBulkState(null);showToast(`Attendance saved for ${ids.length} student${ids.length===1?'':'s'}.`);}
+        if(current()){setBulkState(null);if(!background)showToast(`Attendance saved for ${ids.length} student${ids.length===1?'':'s'}.`);}
       }catch(error){if(current()){display(previous);setBulkState({classId,ids,pending:false});}throw error;}
     },'bulk-present:'+iso,ids.map(studentId=>({studentId,date:iso,status:PRESENT})));
   }

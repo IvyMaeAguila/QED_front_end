@@ -22,3 +22,13 @@ test('individual clicks update instantly through rapid cycles while saves remain
  const state=await fixture(page,false);const row=page.getByRole('row').filter({hasText:'Student One'});await row.getByRole('button',{name:'Mark',exact:true}).click();await expect(row.getByRole('button',{name:'P',exact:true})).toBeVisible();
  await row.getByRole('button',{name:'P',exact:true}).click();await expect(row.getByRole('button',{name:'A',exact:true})).toBeVisible();await expect.poll(()=>state.single.length).toBe(1);state.release();await expect.poll(()=>state.single.length).toBe(2);expect(state.single.map(value=>value.status)).toEqual(['P','A']);await expect(row.getByRole('button',{name:'A',exact:true})).toBeVisible();
 });
+
+test('fast attendance edits produce one settled toast without flashing a saving panel',async({page})=>{
+ const f=await fixture(page,false);const row=page.getByRole('row').filter({hasText:'Student One'});
+ await row.getByRole('button',{name:'Mark',exact:true}).click();await expect.poll(()=>f.single.length).toBe(1);
+ await row.getByRole('button',{name:'P',exact:true}).click();f.release();
+ await expect(page.getByText('Attendance changes saved.',{exact:true})).toBeVisible();
+ await expect(page.getByText('Attendance changes saved.',{exact:true})).toHaveCount(1);
+ await expect(page.getByText(/Saving .* attendance change/)).toHaveCount(0);
+ await expect(row.getByRole('button',{name:'A',exact:true})).toBeVisible();
+});

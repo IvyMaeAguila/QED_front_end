@@ -290,7 +290,7 @@ const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} $
               This Week's Ratings
             </p>
             <p className={`truncate text-xs font-medium ${textMuted}`}>
-              <LoadingRegion as="span" loading={loading} name="holistic-metadata" skeleton={<SkeletonText className="w-[24ch]" />}>{<>· {formatWeekRange(weekStartDate)} · {filtered.length} student{filtered.length === 1 ? "" : "s"}</>}</LoadingRegion>
+              <LoadingRegion as="span" loading={loading} name="holistic-metadata" skeleton={<SkeletonText className="w-[24ch]" />}>{<>· {formatWeekRange(weekStartDate)}</>}</LoadingRegion>
             </p>
           </div>
 

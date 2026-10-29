@@ -1,3 +1,4 @@
+import {Link} from 'react-router-dom';
 import { SubjectAssignmentCard } from "../../../../shared/components/SubjectAssignmentCard";
 import { SkeletonControl } from "@shared/components/SkeletonLoading";
 import { useTeachers } from "../../classes/context/TeachersContext";
@@ -40,6 +41,7 @@ export function SubjectCard({
           <SkeletonControl className="h-8 w-12 rounded-lg" />
           <SkeletonControl className="h-8 w-24 rounded-lg" />
         </> : <>
+          <Link to={`/admin/subjects/${subject.subjectId ?? subject.id}`} className="inline-flex h-8 items-center whitespace-nowrap rounded-lg border border-gray-200 bg-white px-3 text-xs font-extrabold text-brand-ink hover:bg-brand-light">View Template</Link>
           <button
             onClick={onEdit}
             className="h-8 rounded-lg bg-maroon px-3 text-xs font-extrabold text-white transition-colors hover:bg-maroon-light"
