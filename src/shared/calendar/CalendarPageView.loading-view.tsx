@@ -52,7 +52,7 @@ function useCalendarPageViewState(data?: CalendarViewData) {
   };
 
   const [viewDate, setViewDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>();
 
   const [expandTarget, setExpandTarget] = useState<ExpandTarget>(null);
 
@@ -68,7 +68,7 @@ function useCalendarPageViewState(data?: CalendarViewData) {
   function shiftMonth(delta: number) {
     const nextMonth = new Date(viewDate.getFullYear(), viewDate.getMonth() + delta, 1);
     setViewDate(nextMonth);
-    setSelectedDate(nextMonth);
+    setSelectedDate(undefined);
   }
 
   if (!theme) return { content: null, scope: null };
@@ -91,6 +91,7 @@ function useCalendarPageViewState(data?: CalendarViewData) {
           viewDate={viewDate}
           selectedDate={selectedDate}
           onSelectDate={setSelectedDate}
+          onToday={() => { setViewDate(new Date()); setSelectedDate(undefined); }}
           onPrevMonth={() => shiftMonth(-1)}
           onNextMonth={() => shiftMonth(1)}
           eventDatesISO={eventDatesISO}
@@ -101,7 +102,11 @@ function useCalendarPageViewState(data?: CalendarViewData) {
           textMuted={textMuted}
         />
 
-        <div className="space-y-4">
+        <div className="min-w-0 space-y-4">
+          <div className="flex min-h-9 items-center justify-between gap-3">
+            <h2 className={`qed-type-card-title ${textPrimary}`}>{selectedDate ? "Selected date" : "Upcoming events"}</h2>
+            {selectedDate && <button type="button" className={`rounded-lg border px-3 py-2 text-sm font-semibold ${panelBg} ${panelBorder} ${textPrimary}`} onClick={() => setSelectedDate(undefined)}>Upcoming events</button>}
+          </div>
           <ActivitiesCard
             {...readProps('activities')}
             activities={activities}

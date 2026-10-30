@@ -4,7 +4,8 @@ import { rememberRows, skeletonRows } from "@shared/loading/reservations";
 import { CalendarRange, Maximize2 } from "lucide-react";
 import { type CalendarActivity, type CalendarTheme } from "../types/Calendar";
 import { groupActivitiesByMonth } from "../utils/Groupings";
-import { toISODate } from "../data";
+import { toISODate, visibleCalendarEntries } from "../data";
+import "../Calendar.css";
 import { EntryRowActions } from "./EntryRowsAction";
 
 interface ActivitiesCardProps extends CalendarTheme {
@@ -15,9 +16,7 @@ interface ActivitiesCardProps extends CalendarTheme {
   view?: string;
   activities: CalendarActivity[];
   onExpand: () => void;
-  /** Ang buwan na kasalukuyang tinitingnan sa MonthGrid (viewDate) */
   viewDate?: Date;
-  /** Piniling araw sa MonthGrid para maipakita lang ang mga activity nito. */
   selectedDate?: Date;
 }
 
@@ -33,29 +32,6 @@ interface ActivityGroupListProps {
   onEdit?: (activity: CalendarActivity) => void;
   onDelete?: (activity: CalendarActivity) => void;
   emptyMessage?: string;
-}
-
-// --------------------------------------------------------
-// Keep lang ang mga activity na nasa buwan+taon ng `referenceDate`
-// (yung viewDate mula sa MonthGrid, hindi laging "today").
-// Ginagamit ang toISODate() para consistent ang comparison sa
-// "YYYY-MM-DD" format ng activity.date.
-// --------------------------------------------------------
-function filterActivitiesForMonth(
-  activities: CalendarActivity[],
-  referenceDate: Date
-): CalendarActivity[] {
-  const referenceYearMonth = toISODate(referenceDate).slice(0, 7); // "YYYY-MM"
-
-  return activities.filter((a) => a.date.slice(0, 7) === referenceYearMonth);
-}
-
-function filterActivitiesForDate(
-  activities: CalendarActivity[],
-  selectedDate: Date,
-): CalendarActivity[] {
-  const selectedISO = toISODate(selectedDate);
-  return activities.filter((activity) => activity.date.slice(0, 10) === selectedISO);
 }
 
 function isToday(dateStr: string): boolean {
@@ -76,7 +52,7 @@ function ActivityRow({
   onDelete?: () => void;
 }) {
   const day = Number(activity.date.slice(8, 10));
-  const monthAbbr = new Date(activity.date)
+  const monthAbbr = new Date(activity.date.slice(0, 10) + "T00:00:00")
     .toLocaleString("en-US", { month: "short" })
     .toUpperCase();
   const showActions = Boolean(onEdit || onDelete);
@@ -86,16 +62,17 @@ function ActivityRow({
 
   return (
     <div
-      className={`flex items-center gap-3 rounded-lg p-2.5 ${
+      data-calendar-entry={happeningToday ? "today" : "upcoming"}
+      className={`qed-calendar-entry flex items-center gap-3 rounded-lg border p-3 ${
         happeningToday
-          ? "bg-maroon-dark sk-surface-brand"
+          ? "border-maroon-dark bg-maroon-dark sk-surface-brand"
           : darkMode
-            ? "bg-[#241614]"
-            : "bg-surface/60"
+            ? "border-border-dark bg-panel-dark"
+            : "border-border-subtle bg-white"
       }`}
     >
       <div
-        className={`sk-surface-card flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg text-maroon-dark shadow-sm ${
+        className={`qed-calendar-date sk-surface-card flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg text-maroon-dark shadow-sm ${
           darkMode ? "bg-panel-dark" : "bg-white"
         }`}
       >
@@ -107,7 +84,7 @@ function ActivityRow({
 
       <div className="min-w-0 flex-1">
         <p
-          className={`truncate text-xs font-semibold ${
+          className={`qed-calendar-entry-title break-words text-sm font-semibold ${
             happeningToday
               ? "text-white"
               : darkMode
@@ -117,6 +94,7 @@ function ActivityRow({
         >
           {loading ? <SkeletonText width="16ch" /> : activity.title}
         </p>
+        {happeningToday && !loading && <p className="qed-calendar-entry-meta mt-1 text-xs text-white/80">Today</p>}
       </div>
 
       {showActions && (
@@ -179,27 +157,23 @@ export function ActivitiesCard({
   activities,
   loading = false, error, retry, hasData,
   onExpand,
-  viewDate,
   selectedDate,
   darkMode,
   panelBg,
+  panelBorder,
   textMuted,
 }: ActivitiesCardProps) {
-  // Use the selected date when available; otherwise preserve the month view
-  // for calendar card consumers that do not provide selectedDate.
-  const visibleActivities = selectedDate
-    ? filterActivitiesForDate(activities, selectedDate)
-    : filterActivitiesForMonth(activities, viewDate ?? new Date());
+  const visibleActivities = visibleCalendarEntries(activities, selectedDate);
 
   return (
-    <div className={`rounded-[12px] p-5 shadow-card ${panelBg}`}>
+    <div className={`rounded-[12px] border p-5 shadow-sm ${panelBg} ${panelBorder}`}>
       <div className="mb-3 flex items-center justify-between">
         <div>
           <p className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textMuted}`} data-sk-region="activitiescard-activities" data-sk-static="">
-            <CalendarRange size={14} className="text-maroon-dark" />
+            <CalendarRange size={14} className={darkMode ? "text-[#F3B5B5]" : "text-maroon-dark"} />
             Activities
           </p>
-          {selectedDate && <p className={`mt-1 pl-5 text-xs ${textMuted}`}>{selectedDate.toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}</p>}
+          <p className={`mt-1 pl-5 text-xs ${textMuted}`}>{selectedDate ? selectedDate.toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" }) : "Today and upcoming"}</p>
         </div>
         <button
           onClick={onExpand}
@@ -217,11 +191,11 @@ export function ActivitiesCard({
       <div className="max-h-96 overflow-y-auto pr-1">
         {/* No onEdit/onDelete here — actions only appear in the expanded modal */}
         <ActivityGroupList
-          loading={loading} error={error} retry={retry} hasData={hasData} view={"calendar-activities" + (selectedDate?.toISOString().slice(0,10) ?? viewDate?.toISOString().slice(0,7) ?? "current")}
+          loading={loading} error={error} retry={retry} hasData={hasData} view={"calendar-activities" + (selectedDate ? toISODate(selectedDate) : "upcoming")}
           activities={visibleActivities}
           darkMode={darkMode}
           textMuted={textMuted}
-          emptyMessage={selectedDate ? "No activities on this date." : undefined}
+          emptyMessage={selectedDate ? "No activities on this date." : "No upcoming activities."}
         />
       </div>
     </div>

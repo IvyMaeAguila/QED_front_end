@@ -1,0 +1,19 @@
+@layer components {
+  .qed-account-ui .qed-calendar-entry[data-calendar-entry="today"] {
+    background: var(--color-maroon-dark) !important;
+    border-color: var(--color-maroon-dark) !important;
+  }
+  .qed-account-ui .qed-calendar-entry[data-calendar-entry="today"] .qed-calendar-entry-title {
+    color: #fff !important;
+  }
+  .qed-account-ui .qed-calendar-entry[data-calendar-entry="today"] .qed-calendar-entry-meta {
+    color: rgb(255 255 255 / 85%) !important;
+  }
+  .qed-account-ui .qed-calendar-entry .qed-calendar-date {
+    background: #fff !important;
+    color: var(--color-maroon-dark) !important;
+  }
+  .qed-account-ui .qed-calendar-day[aria-current="date"] {
+    color: #fff !important;
+  }
+}

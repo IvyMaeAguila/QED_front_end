@@ -2,7 +2,7 @@ import type { CalendarActivity, CalendarHoliday } from "../types/Calendar";
 
 function monthLabelOf(monthKey: string): string {
   const d = new Date(`${monthKey}-01T00:00:00`);
-  return d.toLocaleDateString(undefined, { month: "long" });
+  return d.toLocaleDateString(undefined, { month: "long", year: "numeric" });
 }
 
 export interface MonthGroup<T> {

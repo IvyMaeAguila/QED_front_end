@@ -4,7 +4,8 @@ import { rememberRows, skeletonRows } from "@shared/loading/reservations";
 import { CalendarHeart, Maximize2 } from "lucide-react";
 import { HOLIDAY_TYPE_LABELS, type CalendarHoliday, type CalendarTheme } from "../types/Calendar";
 import { groupHolidaysByMonth } from "../utils/Groupings";
-import { toISODate } from "../data";
+import { toISODate, visibleCalendarEntries } from "../data";
+import "../Calendar.css";
 import { EntryRowActions } from "./EntryRowsAction";
 
 interface HolidaysCardProps extends CalendarTheme {
@@ -15,9 +16,7 @@ interface HolidaysCardProps extends CalendarTheme {
   view?: string;
   holidays: CalendarHoliday[];
   onExpand: () => void;
-  /** Ang buwan na kasalukuyang tinitingnan sa MonthGrid (viewDate) */
   viewDate?: Date;
-  /** Piniling araw sa MonthGrid para maipakita lang ang mga holiday nito. */
   selectedDate?: Date;
 }
 
@@ -33,29 +32,6 @@ interface HolidayGroupListProps {
   onEdit?: (holiday: CalendarHoliday) => void;
   onDelete?: (holiday: CalendarHoliday) => void;
   emptyMessage?: string;
-}
-
-// --------------------------------------------------------
-// Keep lang ang mga holiday na nasa buwan+taon ng `referenceDate`
-// (yung viewDate mula sa MonthGrid, hindi laging "today").
-// Ginagamit ang toISODate() para consistent ang comparison sa
-// "YYYY-MM-DD" format ng holiday.date.
-// --------------------------------------------------------
-function filterHolidaysForMonth(
-  holidays: CalendarHoliday[],
-  referenceDate: Date
-): CalendarHoliday[] {
-  const referenceYearMonth = toISODate(referenceDate).slice(0, 7); // "YYYY-MM"
-
-  return holidays.filter((h) => h.date.slice(0, 7) === referenceYearMonth);
-}
-
-function filterHolidaysForDate(
-  holidays: CalendarHoliday[],
-  selectedDate: Date,
-): CalendarHoliday[] {
-  const selectedISO = toISODate(selectedDate);
-  return holidays.filter((holiday) => holiday.date.slice(0, 10) === selectedISO);
 }
 
 function isToday(dateStr: string): boolean {
@@ -76,7 +52,7 @@ function HolidayRow({
   onDelete?: () => void;
 }) {
   const day = Number(holiday.date.slice(8, 10));
-  const monthAbbr = new Date(holiday.date)
+  const monthAbbr = new Date(holiday.date.slice(0, 10) + "T00:00:00")
     .toLocaleString("en-US", { month: "short" })
     .toUpperCase();
   const showActions = Boolean(onEdit || onDelete);
@@ -86,16 +62,17 @@ function HolidayRow({
 
   return (
     <div
-      className={`flex items-center gap-3 rounded-lg p-2.5 ${
+      data-calendar-entry={happeningToday ? "today" : "upcoming"}
+      className={`qed-calendar-entry flex items-center gap-3 rounded-lg border p-3 ${
         happeningToday
-          ? "bg-maroon-dark sk-surface-brand"
+          ? "border-maroon-dark bg-maroon-dark sk-surface-brand"
           : darkMode
-            ? "bg-[#241614]"
-            : "bg-surface/60"
+            ? "border-border-dark bg-panel-dark"
+            : "border-border-subtle bg-white"
       }`}
     >
       <div
-        className={`sk-surface-card flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg text-maroon-dark shadow-sm ${
+        className={`qed-calendar-date sk-surface-card flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg text-maroon-dark shadow-sm ${
           darkMode ? "bg-panel-dark" : "bg-white"
         }`}
       >
@@ -107,7 +84,7 @@ function HolidayRow({
 
       <div className="min-w-0 flex-1" data-sk-region="holidayscard-div-field-3">
         <p
-          className={`truncate text-xs font-semibold ${
+          className={`qed-calendar-entry-title break-words text-sm font-semibold ${
             happeningToday
               ? "text-white"
               : darkMode
@@ -119,7 +96,7 @@ function HolidayRow({
         </p>
         {holiday.type && (
           <p
-            className={`truncate text-xs ${
+            className={`qed-calendar-entry-meta text-xs ${
               happeningToday
                 ? "text-white/80"
                 : darkMode
@@ -127,7 +104,7 @@ function HolidayRow({
                   : "text-gray-500"
             }`} data-sk-region="holidayscard-p-field-5"
           >
-            {loading ? <SkeletonText width="12ch" /> : HOLIDAY_TYPE_LABELS[holiday.type]}
+            {loading ? <SkeletonText width="12ch" /> : `${happeningToday ? "Today · " : ""}${HOLIDAY_TYPE_LABELS[holiday.type] ?? holiday.type}`}
           </p>
         )}
       </div>
@@ -192,27 +169,23 @@ export function HolidaysCard({
   holidays,
   loading = false, error, retry, hasData,
   onExpand,
-  viewDate,
   selectedDate,
   darkMode,
   panelBg,
+  panelBorder,
   textMuted,
 }: HolidaysCardProps) {
-  // Use the selected date when available; otherwise preserve the month view
-  // for calendar card consumers that do not provide selectedDate.
-  const visibleHolidays = selectedDate
-    ? filterHolidaysForDate(holidays, selectedDate)
-    : filterHolidaysForMonth(holidays, viewDate ?? new Date());
+  const visibleHolidays = visibleCalendarEntries(holidays, selectedDate);
 
   return (
-    <div className={`rounded-[12px] p-5 shadow-card ${panelBg}`}>
+    <div className={`rounded-[12px] border p-5 shadow-sm ${panelBg} ${panelBorder}`}>
       <div className="mb-3 flex items-center justify-between">
         <div>
           <p className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide ${textMuted}`} data-sk-region="holidayscard-holidays" data-sk-static="">
-            <CalendarHeart size={14} className="text-maroon-dark" />
+            <CalendarHeart size={14} className={darkMode ? "text-[#F3B5B5]" : "text-maroon-dark"} />
             Holidays
           </p>
-          {selectedDate && <p className={`mt-1 pl-5 text-xs ${textMuted}`}>{selectedDate.toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}</p>}
+          <p className={`mt-1 pl-5 text-xs ${textMuted}`}>{selectedDate ? selectedDate.toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" }) : "Today and upcoming"}</p>
         </div>
         <button
           onClick={onExpand}
@@ -230,11 +203,11 @@ export function HolidaysCard({
       <div className="max-h-96 overflow-y-auto pr-1">
         {/* No onEdit/onDelete here — actions only appear in the expanded modal */}
         <HolidayGroupList
-          loading={loading} error={error} retry={retry} hasData={hasData} view={"calendar-holidays" + (selectedDate?.toISOString().slice(0,10) ?? viewDate?.toISOString().slice(0,7) ?? "current")}
+          loading={loading} error={error} retry={retry} hasData={hasData} view={"calendar-holidays" + (selectedDate ? toISODate(selectedDate) : "upcoming")}
           holidays={visibleHolidays}
           darkMode={darkMode}
           textMuted={textMuted}
-          emptyMessage={selectedDate ? "No holidays on this date." : undefined}
+          emptyMessage={selectedDate ? "No holidays on this date." : "No upcoming holidays."}
         />
       </div>
     </div>

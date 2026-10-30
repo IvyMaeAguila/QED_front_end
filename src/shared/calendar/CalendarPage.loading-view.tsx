@@ -80,7 +80,7 @@ function useCalendarPageState({ viewerRole = "ADMIN", data }: CalendarPageProps)
   const retry = data?.retry ?? (() => setAttempt(value => value + 1));
 
   const [viewDate, setViewDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>();
 
   const [manageTarget, setManageTarget] = useState<ManageTarget>(null);
   const [expandTarget, setExpandTarget] = useState<ExpandTarget>(null);
@@ -104,7 +104,7 @@ function useCalendarPageState({ viewerRole = "ADMIN", data }: CalendarPageProps)
   function shiftMonth(delta: number) {
     const nextMonth = new Date(viewDate.getFullYear(), viewDate.getMonth() + delta, 1);
     setViewDate(nextMonth);
-    setSelectedDate(nextMonth);
+    setSelectedDate(undefined);
   }
 
   async function handleSaveActivities(entries: DraftEntry[]) {
@@ -211,6 +211,7 @@ function useCalendarPageState({ viewerRole = "ADMIN", data }: CalendarPageProps)
           viewDate={viewDate}
           selectedDate={selectedDate}
           onSelectDate={setSelectedDate}
+          onToday={() => { setViewDate(new Date()); setSelectedDate(undefined); }}
           onPrevMonth={() => shiftMonth(-1)}
           onNextMonth={() => shiftMonth(1)}
           eventDatesISO={eventDatesISO}
@@ -221,7 +222,11 @@ function useCalendarPageState({ viewerRole = "ADMIN", data }: CalendarPageProps)
           textMuted={textMuted}
         />
 
-        <div className="space-y-4">
+        <div className="min-w-0 space-y-4">
+          <div className="flex min-h-9 items-center justify-between gap-3">
+            <h2 className={`qed-type-card-title ${textPrimary}`}>{selectedDate ? "Selected date" : "Upcoming events"}</h2>
+            {selectedDate && <button type="button" className={`rounded-lg border px-3 py-2 text-sm font-semibold ${panelBg} ${panelBorder} ${textPrimary}`} onClick={() => setSelectedDate(undefined)}>Upcoming events</button>}
+          </div>
           {canManage && (
             <ManageCalendarButton
               onSelectActivities={() => setManageTarget("activity")}

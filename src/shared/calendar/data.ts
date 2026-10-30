@@ -30,3 +30,11 @@ export function formatTimeRange(start?: string, end?: string): string | null {
   };
   return end ? `${fmt(start)} - ${fmt(end)}` : fmt(start);
 }
+/** Keep date-only comparisons in the viewer's local calendar day. */
+export function visibleCalendarEntries<T extends { date: string }>(entries: T[], selectedDate?: Date): T[] {
+  const reference = toISODate(selectedDate ?? new Date());
+  return entries.filter(entry => selectedDate
+    ? entry.date.slice(0, 10) === reference
+    : entry.date.slice(0, 10) >= reference)
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
