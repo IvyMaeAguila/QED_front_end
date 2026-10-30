@@ -151,7 +151,7 @@ function useSubjectRecordsPageState() {
     [],
   );
 
-  const tab = state?.tab;
+  const tab = info?.isGraded === false ? "holistic" : state?.tab;
   const isAssessment =
     tab === "writtenWorks" || tab === "performanceTask" || tab === "exams";
 

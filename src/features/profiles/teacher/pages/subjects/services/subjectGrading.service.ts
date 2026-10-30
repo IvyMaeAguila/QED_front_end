@@ -68,6 +68,7 @@ export async function fetchSubjectSectionInfo(subjectSectionId: string, request:
   const res = await authedFetch(`${BASE_URL}/${subjectSectionId}`, undefined, request);
   const json = await handleJsonResponse(res);
   return json.data as {
+    isGraded?: boolean;
     subjectName: string;
     gradeLevel: string;
     sectionName: string;

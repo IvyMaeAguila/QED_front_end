@@ -10,6 +10,7 @@ const TABS: { key: SubjectDetailTab; label: string; icon: typeof ClipboardCheck 
 ];
 
 interface TabNavProps {
+  isGraded?: boolean;
   active: SubjectDetailTab;
   onChange: (tab: SubjectDetailTab) => void;
   darkMode: boolean;
@@ -17,12 +18,12 @@ interface TabNavProps {
   textMuted: string;
 }
 
-export function TabNav({ active, onChange, darkMode, textMuted }: TabNavProps) {
+export function TabNav({ active, onChange, darkMode, textMuted, isGraded = true }: TabNavProps) {
   return (
    <div
       className={`flex items-stretch gap-1 rounded-xl p-1.5 ${darkMode ? "bg-white/5" : "bg-white"}`}
     >
-      {TABS.map((tab) => {
+      {TABS.filter(tab => isGraded || tab.key === 'holistic').map((tab) => {
         const isActive = tab.key === active;
         return (
           <button

@@ -1,4 +1,6 @@
 import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
+import {useContext} from 'react';
+import {TeacherAcademicQueryContext} from '../../../query/TeacherAcademicQueryContext';
 import {useTeacherAcademicServices} from '../../../query/TeacherAcademicQueryContext';
 import {useAuth} from '@shared/hooks/useAuth';
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
@@ -41,7 +43,10 @@ function useSubjectDetailPageState() {
   const [attempt, setAttempt] = useState(0);
   const [templateLoading, setTemplateLoading] = useState(true);
   const [gradingRules, setGradingRules] = useState<{period:string;loading:boolean;error:string|null;configured:boolean}>({period:'',loading:true,error:null,configured:false});
-  const [activeTab, setActiveTab] = useState<SubjectDetailTab>("writtenWorks");
+  const info = useContext(TeacherAcademicQueryContext)?.info;
+  const isGraded = info ? !!info.data && info.data.isGraded !== false : true;
+  const [chosenTab, setActiveTab] = useState<SubjectDetailTab>("writtenWorks");
+  const activeTab = isGraded ? chosenTab : "holistic";
 
   const [subjectName, setSubjectName] = useState<string>("");
 
@@ -215,6 +220,7 @@ function useSubjectDetailPageState() {
         </div>
 
         <TabNav
+          isGraded={isGraded}
           active={activeTab}
           onChange={handleTabChange}
           darkMode={darkMode}

@@ -23,7 +23,7 @@ function Effects({scope:s}:{scope:SubjectRecordsPageEffectScope}){
  const session=useTeacherQueryScope();
  const lastApplied=useRef<unknown[]>([]);
  const id=s.subjectId??'',year=periods.data?.[0]?.schoolYearId??'active';
- const ready=!!id&&s.isAssessment&&!!s.tab&&!!s.term&&!periods.loading&&!periods.error&&!info.loading&&!info.error;
+ const ready=info.data?.isGraded!==false&&!!id&&s.isAssessment&&!!s.tab&&!!s.term&&!periods.loading&&!periods.error&&!info.loading&&!info.error;
  const items=useTeacherReader(subjectKey(year,id,'items',{term:s.term||undefined}),async o=>{
   const cached=queryClient.getQueryState<Awaited<ReturnType<typeof api.fetchItems>>>([...session.key,...subjectKey(year,id,'items',{allPeriods:true})]);
   if(cached?.data&&!cached.isInvalidated&&Date.now()-cached.dataUpdatedAt<30_000&&cached.data.every(item=>!!item.gradingPeriodId))return cached.data.filter(item=>!s.term||String(item.gradingPeriodId)===s.term);
