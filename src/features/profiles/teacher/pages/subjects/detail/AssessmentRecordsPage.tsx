@@ -1,5 +1,6 @@
 import { useToast } from "@shared/context/ToastContext";
 import { ClassRecordExportModal } from "./ClassRecordExportModal";
+import {transmutedTermGrade} from './utils/finalGrades';
 import { computeStudentGrade, computeGroupResult, studentTotals } from './utils/assessmentGradeCalculation';
 import {useTeacherAcademicServices} from '../../../query/TeacherAcademicQueryContext';
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
@@ -69,6 +70,7 @@ interface AssessmentRecordsSectionProps {
   // this keeps subjects without a template working exactly as before
   // (the "grandfathered" rollout behavior).
   weights: { ww: number; pt: number; exam: number; examSubWeights?: { st1: number; st2: number; te: number }; examinations?: TemplateExaminations; templateStructure?: GradeTemplateStructure } | null;
+  initialComponentId?: string;
   gradingRulesVerified?: boolean;
   loading?: boolean;
   term: string;
@@ -223,6 +225,7 @@ export function AssessmentRecordsSection({
   items,
   scores,
   weights: resolvedWeights,
+  initialComponentId = '',
   gradingRulesVerified = true,
   loading = false,
   term,
@@ -238,7 +241,10 @@ export function AssessmentRecordsSection({
   toolbarAction,
 }: AssessmentRecordsSectionProps) {
   // Zero values are layout sentinels only while rules are unknown; never grade with them.
-  const weights = resolvedWeights ?? { ww: 0, pt: 0, exam: 0 };
+  const [selectedComponentId, setSelectedComponentId] = useState(initialComponentId);
+  const component = resolvedWeights?.templateStructure?.components?.find(c => c.id === selectedComponentId) ?? resolvedWeights?.templateStructure?.components?.[0];
+  const weights = component && resolvedWeights ? {...resolvedWeights, ww:component.ww.weightPercent,pt:component.pt.weightPercent,exam:component.examWeightPercent,examinations:component.examinations,examSubWeights:component.examSubWeights,templateStructure:{...resolvedWeights.templateStructure!,...component,components:undefined}} : resolvedWeights ?? { ww: 0, pt: 0, exam: 0 };
+  const combinedGrade = (id:string) => resolvedWeights ? transmutedTermGrade(id,term,items,scores,{source:'template',...resolvedWeights}) : null;
   const view = `subject-records:${subjectSectionId}:${term}`;
   const recordSection = useRef<HTMLElement>(null);
   const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
@@ -283,7 +289,7 @@ export function AssessmentRecordsSection({
   }
   const groups: ComponentColumnGroup[] = useMemo(() => {
     const forTerm = (t: GradeItem["tab"]) =>
-      items.filter((i) => i.tab === t && (!term || i.gradingPeriodId === term)).sort((a, b) => a.date.localeCompare(b.date));
+      items.filter((i) => (!component || i.templateDomainId === component.id || i.templateDomainId?.startsWith(component.id + '__')) && i.tab === t && (!term || i.gradingPeriodId === term)).sort((a, b) => a.date.localeCompare(b.date));
     const wwItems = forTerm("writtenWorks");
     const ptItems = forTerm("performanceTask");
     const examItems = forTerm("exams");
@@ -297,7 +303,7 @@ export function AssessmentRecordsSection({
     if (loading || weights.pt > 0) groups.push({ key: "performanceTask", label: "Product / Performance Tasks", weightLabel: `${weights.pt}%`, weight: weights.pt, items: ptItems, domains: ptDomains, ...ptLayout });
     if (loading || (examinations.enabled && weights.exam > 0)) groups.push({ key: "exams", label: "Examinations", weightLabel: `${weights.exam}%`, weight: weights.exam, items: examItems, ...examLayout });
     return groups;
-  }, [items, term, weights, examinations, loading]);
+  }, [items, term, weights, examinations, loading, component]);
 
   const grouped = useMemo(() => {
     const male = roster.filter((s) => s.gender !== "F");
@@ -307,13 +313,14 @@ export function AssessmentRecordsSection({
 
   const isFullyGraded = useMemo(() => {
     if (roster.length === 0) return false;
+    if (component) return roster.every(student => combinedGrade(student.id) !== null);
     return roster.every((student) =>
       groups.every((group) => {
         const result = computeGroupResult(group, student.id, scores, examinations);
         return result.isComplete;
       }),
     );
-  }, [roster, groups, scores, examinations]);
+  }, [roster, groups, scores, examinations, component, resolvedWeights, items, term]);
 
   const incompleteReasons = useMemo(() => {
     const reasons: string[] = [];
@@ -331,13 +338,13 @@ export function AssessmentRecordsSection({
   const gradePreviews: StudentGradePreview[] = useMemo(() => {
     return roster.map((student) => {
       const { initialGrade } = computeStudentGrade(student, groups, scores, examinations);
-      const termGrade = computeTransmutedGrade(initialGrade, weights.templateStructure?.transmutationTable);
+      const termGrade = component ? combinedGrade(student.id) : computeTransmutedGrade(initialGrade, weights.templateStructure?.transmutationTable, weights.templateStructure?.transmutationMode);
       const remarks = termGrade === null ? null : getRemarks(termGrade);
       const description = termGrade === null ? "Template transmutation table unavailable" : (weights.templateStructure?.descriptorTable.find((row) => row.numericalGrade === termGrade)?.descriptor ?? "");
       const previewGrade = initialGrade ?? 0;
       return { id: student.id, name: student.name, previewGrade, termGrade, remarks, description };
     });
-  }, [roster, groups, scores, examinations, weights.templateStructure?.descriptorTable, weights.templateStructure?.transmutationTable]);
+  }, [roster, groups, scores, examinations, weights.templateStructure?.descriptorTable, weights.templateStructure?.transmutationTable, component, resolvedWeights, items, term]);
 
   const {grading:{submitGrades,fetchGradeSubmissionStatus}}=useTeacherAcademicServices();
   const [existingSubmission, setExistingSubmission] = useState<import('../services/subjectGrading.service').GradeSubmissionStatus | null>(null);
@@ -544,7 +551,7 @@ export function AssessmentRecordsSection({
     });
 
     const { initialGrade } = computeStudentGrade(student, groups, scores, examinations);
-    const termGrade = computeTransmutedGrade(initialGrade, weights.templateStructure?.transmutationTable);
+    const termGrade = computeTransmutedGrade(initialGrade, weights.templateStructure?.transmutationTable, weights.templateStructure?.transmutationMode);
     const descriptor = termGrade === null
       ? null
       : weights.templateStructure?.descriptorTable.find((row) => row.numericalGrade === termGrade)?.descriptor ?? null;
@@ -688,6 +695,14 @@ export function AssessmentRecordsSection({
 
   return (
     <section ref={recordSection} className={cardClasses} aria-label={title}>
+      {component && <div className={`space-y-2 border-b p-4 ${panelBorder} ${textPrimary}`}>
+        <label className="flex items-center gap-3 text-sm font-semibold">MAPEH component
+          <select aria-label="MAPEH component" disabled={isEditing} value={component.id} onChange={e=>setSelectedComponentId(e.target.value)} className={`rounded-lg border p-2 ${panelBg} ${panelBorder}`}>
+            {resolvedWeights?.templateStructure?.components?.map(c=><option key={c.id} value={c.id}>{c.label}</option>)}
+          </select>
+        </label>
+        <p className={`text-xs ${textMuted}`}>The table shows {component.label} grades. Submission and Final Grades use the rounded average of both component grades. Both components must be complete before submission.</p>
+      </div>}
       <ClassRecordExportModal state={exportState} darkMode={darkMode} onClose={() => setExportState("idle")} />
       <div className={`flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3 ${panelBorder}`}>
         <div className="flex flex-wrap items-center gap-3">
@@ -783,7 +798,7 @@ export function AssessmentRecordsSection({
                 <thead>
                   <tr className={`border-b ${panelBorder} ${textMuted}`}>
                     <th className="py-2 text-left font-black uppercase">Student</th>
-                    <th className="py-2 text-center font-black uppercase">Initial Grade</th>
+                    <th className="py-2 text-center font-black uppercase">{component ? 'Selected component IG' : 'Initial Grade'}</th>
                     <th className="py-2 text-center font-black uppercase">Term Grade</th>
                     <th className="py-2 text-center font-black uppercase">Remarks</th>
                     <th className="py-2 text-left font-black uppercase">Description</th>

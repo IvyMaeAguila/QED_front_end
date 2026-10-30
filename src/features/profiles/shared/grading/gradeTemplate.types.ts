@@ -59,7 +59,18 @@ export interface DescriptorRow {
 // persist/return authoritatively, and what teacher's AssessmentRecordsSection
 // and GradeWeights math consume. One shape, one source of truth for all
 // three.
+export interface TemplateSubjectComponent {
+  id: string;
+  label: string;
+  ww: TemplateGroup;
+  pt: TemplateGroup;
+  examWeightPercent: number;
+  examinations?: TemplateExaminations;
+  examSubWeights?: ExamSubWeights;
+}
 export interface GradeTemplateStructure {
+  transmutationMode?: 'descendingMinimum';
+  components?: TemplateSubjectComponent[];
   ww: TemplateGroup;
   pt: TemplateGroup;
   examWeightPercent: number;
@@ -68,6 +79,9 @@ export interface GradeTemplateStructure {
   transmutationTable: TransmutationRow[];
   descriptorTable: DescriptorRow[];
   termConfigurations?: Record<string, {
+    transmutationMode?: 'descendingMinimum';
+  components?: TemplateSubjectComponent[];
+    examinations?: TemplateExaminations;
     ww: TemplateGroup;
     pt: TemplateGroup;
     examWeightPercent: number;

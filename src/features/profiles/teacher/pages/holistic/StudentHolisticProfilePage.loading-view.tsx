@@ -1,6 +1,6 @@
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { lastKnownCount, rememberRows, skeletonRows } from "@shared/loading/reservations";
-import { ArrowLeft, Printer } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
@@ -90,9 +90,6 @@ function useStudentHolisticProfilePageState() {
                 Current state, growth over the term, and a per-domain breakdown by subject.
               </p>
         </div>
-      </div>
-      <div className="flex shrink-0 items-center gap-2 print:hidden">
-        <button type="button" onClick={() => window.print()} className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold ${panelBg} ${panelBorder} ${textPrimary} ${subtleHover}`}><Printer size={13} />Print</button>
       </div>
       </div>
 

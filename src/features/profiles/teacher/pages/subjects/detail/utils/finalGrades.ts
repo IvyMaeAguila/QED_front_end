@@ -6,6 +6,13 @@ import type { GradeItem, ScoreMap } from '../types/Grading';
 
 export function transmutedTermGrade(studentId: string, periodId: string, items: GradeItem[], scores: ScoreMap, weights: EffectiveWeights | null | undefined): number | null {
   if (!weights?.templateStructure?.transmutationTable.length) return null;
+  const components = weights.templateStructure.components;
+  if (components?.length) {
+    const forTerm = items.filter(i => i.gradingPeriodId === periodId);
+    if (forTerm.some(i => !components.some(c => i.templateDomainId === c.id || i.templateDomainId?.startsWith(c.id + '__')))) return null;
+    const grades = components.map(c => transmutedTermGrade(studentId, periodId, forTerm.filter(i => i.templateDomainId === c.id || i.templateDomainId?.startsWith(c.id + '__')), scores, {...weights,ww:c.ww.weightPercent,pt:c.pt.weightPercent,exam:c.examWeightPercent,examinations:c.examinations,examSubWeights:c.examSubWeights,templateStructure:{...weights.templateStructure!,...c,components:undefined}}));
+    return grades.every(g => g !== null) ? Math.round((grades as number[]).reduce((s,g)=>s+g,0)/grades.length) : null;
+  }
   const examinations = weights.examinations ?? weights.templateStructure.examinations;
   if (weights.exam > 0 && !examinations) return null;
   const groups: ComponentColumnGroup[] = [];
@@ -22,7 +29,7 @@ export function transmutedTermGrade(studentId: string, periodId: string, items: 
   }
   if (!groups.length) return null;
   const { initialGrade } = computeStudentGrade({ id: studentId }, groups, scores, examinations);
-  const grade = computeTransmutedGrade(initialGrade, weights.templateStructure.transmutationTable);
+  const grade = computeTransmutedGrade(initialGrade, weights.templateStructure.transmutationTable, weights.templateStructure.transmutationMode);
   return typeof grade === 'number' && Number.isFinite(grade) ? grade : null;
 }
 

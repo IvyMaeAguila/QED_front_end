@@ -160,12 +160,12 @@ function parseGroup(
  * before persisting/trusting these numbers — this result is never
  * authoritative on its own.
  */
-export function parseGradeTemplate(file: File): Promise<GradeTemplateStructure> {
+function parseStandardGradeTemplate(file: File, sheetName = "TERM 1"): Promise<GradeTemplateStructure> {
   return file.arrayBuffer().then(async (buf) => {
     const XLSX = await import("xlsx");
     const workbook = XLSX.read(buf, { type: "array" });
 
-    const sheet = workbook.Sheets["TERM 1"];
+    const sheet = workbook.Sheets[sheetName];
     if (!sheet) {
       throw new Error(
         "Uploaded file has no 'TERM 1' sheet — is this the official DepEd ECR template?",
@@ -298,4 +298,28 @@ function parseExamConfiguration(
     components,
     outputs: { percentageScoreColumn: ps[1], weightedScoreColumn: overallWs[1] },
   };
+}
+
+export async function parseGradeTemplate(file: File): Promise<GradeTemplateStructure> {
+  const XLSX = await import('xlsx');
+  const buffer = await file.arrayBuffer();
+  const cachedFile = {arrayBuffer: async () => buffer} as File;
+  const workbook = XLSX.read(buffer,{type:'array'});
+  if (workbook.Sheets['TERM 1']) return parseStandardGradeTemplate(cachedFile);
+  const definitions = [{id:'music_arts',label:'Music and Arts',suffix:'M and A'},{id:'pe_health',label:'Physical Education and Health',suffix:'PE and H'}];
+  const configs: NonNullable<GradeTemplateStructure['termConfigurations']> = {};
+  let first: GradeTemplateStructure | undefined;
+  for (const n of [1,2,3]) {
+    const components = [];
+    for (const definition of definitions) {
+      const name = `TERM ${n} ${definition.suffix}`;
+      if (!workbook.Sheets[name]) throw new Error(`Missing required component sheet: ${name}.`);
+      const structure = await parseStandardGradeTemplate(cachedFile,name);
+      first ??= structure;
+      for (const group of [structure.ww,structure.pt]) for (const domain of group.domains) domain.id = `${definition.id}__${domain.id}`;
+      components.push({id:definition.id,label:definition.label,ww:structure.ww,pt:structure.pt,examWeightPercent:structure.examWeightPercent,examinations:structure.examinations,examSubWeights:structure.examSubWeights});
+    }
+    configs[String(n)] = {...first!,...components[0],components,transmutationMode:'descendingMinimum'};
+  }
+  return {...first!,...configs['1'],termConfigurations:configs};
 }

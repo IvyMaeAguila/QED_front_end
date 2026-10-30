@@ -178,7 +178,8 @@ export function SubjectGradeTemplateSection({
             <CheckCircle size={14} />
             Ready to save — {pendingFile?.name}
           </div>
-          <p>WW: {formatGroup(preview.ww)}</p>
+          {preview.components?.length ? <p>MAPEH: Music and Arts + Physical Education and Health. Separate component grades are averaged each term. Weights below apply to each component.</p> : null}
+                <p>WW: {formatGroup(preview.ww)}</p>
           <p>PT: {formatGroup(preview.pt)}</p>
           {preview.examinations?.enabled ? <>
             <p>Examinations: {preview.examWeightPercent}%</p>

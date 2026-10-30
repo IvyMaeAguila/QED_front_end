@@ -26,8 +26,10 @@ export interface TemplateTransmutationRow {
 export function computeTransmutedGrade(
   initialGrade: number | null,
   table: TemplateTransmutationRow[] | undefined,
+  mode?: "descendingMinimum",
 ): number | null {
   if (initialGrade === null || !table?.length) return null;
+  if (mode === 'descendingMinimum') return table.find(entry => initialGrade >= entry.igMin)?.transmuted ?? null;
   const row = table.find((entry) => initialGrade >= entry.igMin && initialGrade <= entry.igMax);
   return row?.transmuted ?? null;
 }

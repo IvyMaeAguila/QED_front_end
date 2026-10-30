@@ -4,19 +4,14 @@ import {mockDirectory} from './fixtures/directory';
 import {assertNoDataSpinner,captureFixedOverlay,checkRenderedContrast,checkShimmerPixels} from './design-pixels';
 import fs from 'node:fs';
 const url='/teacher/holistic/1?term=1';
-test('holistic profile print presents the full profile without navigation controls', async ({page}) => {
+test('holistic profile has no print action and retains profile content', async ({page}) => {
  const release = await fixture(page, true);
  await page.goto(url);await waitForDataRoute(page);release();
  await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);
- await page.evaluate(() => { window.print = () => { document.body.dataset.profilePrinted = 'true'; }; });
- await page.getByRole('button',{name:'Print',exact:true}).click();
- await expect(page.locator('body')).toHaveAttribute('data-profile-printed','true');
- await page.emulateMedia({media:'print'});
- await expect(page.getByRole('button',{name:'Print',exact:true})).toBeHidden();
+ await expect(page.getByRole('button',{name:'Print',exact:true})).toHaveCount(0);
  await expect(page.getByRole('heading',{name:'Holistic Development Profile'})).toBeVisible();
  await expect(page.getByRole('region',{name:'Evaluation history'})).toBeVisible();
- await expect(page.locator('main')).toHaveCSS('overflow-y','visible');
- await expect(page.getByRole('heading',{name:'Ana Cruz'})).toHaveCSS('color','rgb(17, 24, 39)');
+ await expect(page.getByRole('button',{name:'Go back',exact:true})).toBeVisible();
 });
 async function fixture(page:Page,dark:boolean,count=2,long=false,evaluations=3){const context=await mockDirectory(page,'TEACHER',dark);let finish!:()=>void;const gate=new Promise<void>(r=>{finish=r;});let failed='';const domains={cognitive:evaluations?3.9:null,emotional:evaluations?3.4:null,social:evaluations?4.3:null,behavioral:evaluations?2.7:null};
  await page.route('**/api/student/allStudents',async route=>{await gate;await route.fulfill({status:failed==='student'?500:200,json:failed==='student'?{message:'Student unavailable'}:{data:[{id:1,grade_level_id:1,section_id:1,student_number:'2026-01',learner_reference_number:'123456789001',first_name:long?'Maria Alexandra Isabella '.repeat(8):'Ana',last_name:'Cruz',middle_name:'',gender:'Female',grade_level_name:'Grade 1',section_name:'Maroon'}]}});});

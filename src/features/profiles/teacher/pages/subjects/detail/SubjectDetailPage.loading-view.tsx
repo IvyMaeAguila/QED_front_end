@@ -76,6 +76,10 @@ function useSubjectDetailPageState() {
   const [error, setError] = useState<string | null>(null);
   const [templateStructure, setTemplateStructure] = useState<GradeTemplateStructure | undefined>();
 
+  const [componentId, setComponentId] = useState('');
+  const component = templateStructure?.components?.find(c => c.id === componentId) ?? templateStructure?.components?.[0];
+  const selectedStructure = component ? {...templateStructure!, ...component} : templateStructure;
+  const componentItems = component ? items.filter(i => i.templateDomainId === component.id || i.templateDomainId?.startsWith(component.id + '__')) : items;
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const { navigationDialog, allowNavigation } = useUnsavedChanges(hasUnsavedChanges, darkMode);
   const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
@@ -99,6 +103,7 @@ function useSubjectDetailPageState() {
   async function handleAddItem(item: GradeItem) {
     if (!rulesReady.current) throw new Error('Verify grading rules before recording grades. Retry loading the rules.');
     if (!subjectId) return;
+    if (component && item.tab === 'exams') item = {...item,templateDomainId:component.id};
     try {
       const { id } = await addItemApi(subjectId, {
         tab: item.tab,
@@ -169,6 +174,7 @@ function useSubjectDetailPageState() {
           subjectName,
           gradeLevel,
           tab: activeTab,
+          componentId: component?.id,
           roster,
           items,
           scores,
@@ -219,6 +225,11 @@ function useSubjectDetailPageState() {
           </div>
         </div>
 
+        {component && activeTab !== 'holistic' && <label className={`flex items-center gap-3 text-sm font-semibold ${textPrimary}`}>MAPEH component
+          <select aria-label="MAPEH component" value={component.id} onChange={event => {const value=event.target.value;guardedNavigate(() => setComponentId(value));}} className={`rounded-lg border p-2 ${panelBg} ${panelBorder}`}>
+            {templateStructure?.components?.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+          </select>
+        </label>}
         <TabNav
           isGraded={isGraded}
           active={activeTab}
@@ -235,14 +246,14 @@ function useSubjectDetailPageState() {
         {!error && (activeTab === "writtenWorks" ||
           activeTab === "performanceTask" ||
           activeTab === "exams") && (
-          <fieldset disabled={!gradingRulesReady} className="min-w-0"><AssessmentTab key={`${subjectId}:${selectedTerm}:${activeTab}`}
+          <fieldset disabled={!gradingRulesReady} className="min-w-0"><AssessmentTab key={`${subjectId}:${selectedTerm}:${activeTab}:${component?.id ?? ""}`}
             loading={loading || (!gradingRules.configured && gradingRules.loading)}
             templateLoading={templateLoading}
             subjectSectionId={subjectId}
             subjectName={subjectName}
             tab={activeTab}
             roster={roster}
-            items={items}
+            items={componentItems}
             scores={scores}
             terms={terms}
             selectedTerm={selectedTerm}
@@ -263,14 +274,14 @@ function useSubjectDetailPageState() {
             textPrimary={textPrimary}
             textMuted={textMuted}
             templateDomains={activeTab === "writtenWorks"
-              ? templateStructure?.ww.domains
+              ? selectedStructure?.ww.domains
               : activeTab === "performanceTask"
-                ? templateStructure?.pt.domains
+                ? selectedStructure?.pt.domains
                 : []}
-            examTypes={templateStructure?.examinations?.enabled
-              ? (templateStructure.examinations.components.some((component) => component.key.toUpperCase() === "ALL")
+            examTypes={selectedStructure?.examinations?.enabled
+              ? (selectedStructure.examinations.components.some((component) => component.key.toUpperCase() === "ALL")
                 ? ["TE"]
-                : templateStructure.examinations.components.map((component) => component.key as "ST1" | "ST2" | "TE"))
+                : selectedStructure.examinations.components.map((component) => component.key as "ST1" | "ST2" | "TE"))
               : undefined}
           /></fieldset>
         )}

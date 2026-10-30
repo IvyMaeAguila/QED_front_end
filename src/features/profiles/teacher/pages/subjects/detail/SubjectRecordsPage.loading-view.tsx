@@ -45,6 +45,7 @@ interface MissingScoreEntry {
 interface RecordsLocationState {
   queryOwner?:{session:number;role:string;user:string};
   subjectName: string;
+  componentId?: string;
   subjectCategory: string | null;
   gradeLevel: string;
   tab: SubjectDetailTab;
@@ -427,6 +428,7 @@ function useSubjectRecordsPageState() {
 
         {isAssessment && !showFinalGrades && subjectId && !loadError && (isLoadingRecords || !hasLoadedOnce || weights) && (
           <fieldset disabled={!gradingRulesReady} className="min-w-0"><AssessmentRecordsSection
+            initialComponentId={state.componentId}
             gradingRulesVerified={gradingRulesReady}
             toolbarAction={editRecordsButton}
             subjectSectionId={subjectId}

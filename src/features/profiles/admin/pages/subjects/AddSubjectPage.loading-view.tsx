@@ -525,6 +525,7 @@ function useAddSubjectPageState() {
 
             {templatePreview && !templateError && (
               <div className="text-xs space-y-1 mt-3 pt-3 border-t border-current/10">
+                {templatePreview.components?.length ? <p>MAPEH: Music and Arts + Physical Education and Health. Separate component grades are averaged each term. Weights below apply to each component.</p> : null}
                 <p className={textPrimary}>WW: {formatGroup(templatePreview.ww)}</p>
                 <p className={textPrimary}>PT: {formatGroup(templatePreview.pt)}</p>
                 {templatePreview.examinations?.enabled ? <>
