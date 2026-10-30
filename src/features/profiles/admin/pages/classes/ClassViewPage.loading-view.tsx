@@ -71,7 +71,7 @@ function useClassViewPageState() {
     const slots = pending ? Array.from({ length: skeletonRows(`${view}:schedule`, undefined, 105) }, () => ({ startTime: "", endTime: "" })) : timeSlots;
     if (!slots.length) return <tr><td colSpan={columns.length} className={`px-4 py-10 text-center text-xs font-medium ${textMuted}`}>No schedule set yet.</td></tr>;
     return slots.map((slot, index) => <tr key={pending ? index : `${slot.startTime}-${slot.endTime}`} data-sk-region="class-schedule-row" data-sk-item="" className={`border-t ${panelBorder}`}>
-      <td data-sk-region="class-schedule-time" className="sk-surface-brand sk-surface-class-time whitespace-nowrap px-4 py-3 align-top font-bold text-white" style={{ background: rowHeaderBg }}>{pending ? <SkeletonText width="16ch" /> : formatTimeRange(slot.startTime, slot.endTime)}</td>
+      <td data-sk-region="class-schedule-time" className="qed-class-schedule-time sk-surface-brand sk-surface-class-time whitespace-nowrap px-4 py-3 align-top" style={{ background: rowHeaderBg }}>{pending ? <SkeletonText width="16ch" /> : formatTimeRange(slot.startTime, slot.endTime)}</td>
       {DAYS_OF_WEEK.map(day => {
         const period = pending ? undefined : cellFor(day, slot.startTime, slot.endTime);
         return <td key={day} data-sk-region={`class-schedule-${day}`} className={`border-l px-4 py-3 text-center align-top ${panelBorder}`}>{pending || period ? <><p data-sk-variable="" data-sk-field={`${view}:${index}:${day}:subject`} className={`font-bold ${textPrimary}`} data-sk-region="classviewpage-p-field-4">{pending ? <SkeletonParagraph field={`${view}:${index}:${day}:subject`} typical={2} width="16ch" /> : period?.subject}</p><p data-sk-variable="" data-sk-field={`${view}:${index}:${day}:teacher`} className={`mt-0.5 text-xs font-semibold ${textMuted}`} data-sk-region="classviewpage-p-field-5">{pending ? <SkeletonParagraph field={`${view}:${index}:${day}:teacher`} typical={2} width="14ch" /> : period?.teacherName || "Unassigned"}</p></> : <span className={textMuted}>—</span>}</td>;
@@ -100,7 +100,7 @@ function useClassViewPageState() {
               {error ? <span>{schoolClass.gradeLevel}{schoolClass.section ? ` · Section ${schoolClass.section}` : ""}</span> : <LoadingRegion as="span" name="class-identity" loading={loading && !error} variable skeleton={<SkeletonParagraph field={`${view}:identity`} typical={2} />}><span data-sk-field={`${view}:identity`}>{schoolClass.gradeLevel}{schoolClass.section ? ` · Section ${schoolClass.section}` : ""}</span></LoadingRegion>}
             </p>
           </div>
-          <button disabled={loading || !!error} onClick={() => navigate(`/admin/classes/${schoolClass.id}/edit`)} className="inline-flex h-9 shrink-0 items-center gap-2 rounded-xl px-4 text-xs font-bold text-white transition-colors hover:bg-maroon-light" style={{ background: ACCENT }} data-sk-region="classviewpage-edit-class" data-sk-static="">
+          <button disabled={loading || !!error} onClick={() => navigate(`/admin/classes/${schoolClass.id}/edit`)} className="inline-flex h-9 shrink-0 items-center gap-2 rounded-lg px-4 text-xs font-bold text-white transition-colors hover:bg-maroon-light" style={{ background: ACCENT }} data-sk-region="classviewpage-edit-class" data-sk-static="">
             <Pencil size={14} /> Edit Class
           </button>
         </div>

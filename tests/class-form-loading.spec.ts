@@ -20,3 +20,17 @@ test('class edit saves the original mapped schedule payload',async({page})=>{con
 for(const dark of [false,true])test(`class form ${dark?'dark':'light'} input surface pixels`,async({page})=>{await fixture(page,dark);await page.goto('/admin/classes/1/edit');await waitForDataRoute(page);await expect(page.locator('[data-sk-region="class-form-room"]')).toHaveAttribute('data-sk-phase','revealed');const shape=page.locator('[data-sk-region="class-form-room"] [data-sk-primitive]');await checkRenderedContrast(shape,`class-form-${dark?'dark':'light'}`);await checkShimmerPixels(shape,`class-form-${dark?'dark':'light'}`);});
 for(const dark of [false,true])test(`class adviser ${dark?'dark':'light'} disabled control surface pixels`,async({page})=>{await fixture(page,dark);await page.goto('/admin/classes/1/edit');await waitForDataRoute(page);await expect(page.locator('[data-sk-region="class-form-room"]')).toHaveAttribute('data-sk-phase','revealed');const shape=page.locator('[data-sk-region="class-adviser-value"] [data-sk-primitive]').first().or(page.getByRole('combobox',{name:'Class adviser',exact:true}).locator('[data-sk-primitive]')).first();await checkRenderedContrast(shape,`class-adviser-${dark?'dark':'light'}`);await checkShimmerPixels(shape,`class-adviser-${dark?'dark':'light'}`);});
 test('class form keeps the known Updating prefix real before record data arrives',async({page})=>{await fixture(page,false);await page.goto('/admin/classes/1/edit');await waitForDataRoute(page);await expect(page.getByText('Updating',{exact:true})).toBeVisible();});
+
+for (const action of ['Go back', 'Cancel']) test(`edit class ${action} returns to the previous class details page`,async({page})=>{
+ const release=await fixture(page,false);release();
+ await page.goto('/admin/classes/1');await waitForDataRoute(page);
+ const edit=page.getByRole('button',{name:'Edit Class',exact:true});await expect(edit).toBeEnabled();await expect(edit).toHaveCSS('border-radius','8px');await edit.click();
+ await expect(page).toHaveURL(/\/admin\/classes\/1\/edit$/);
+ await expect(page.getByPlaceholder('NEL 101')).toHaveValue('101');
+ await page.getByRole('button',{name:action,exact:true}).click();
+ await expect(page).toHaveURL(/\/admin\/classes\/1$/);
+});
+test('direct edit class back falls back to its details page',async({page})=>{
+ const release=await fixture(page,false);release();await page.goto('/admin/classes/1/edit');await waitForDataRoute(page);
+ await page.getByRole('button',{name:'Go back',exact:true}).click();await expect(page).toHaveURL(/\/admin\/classes\/1$/);
+});

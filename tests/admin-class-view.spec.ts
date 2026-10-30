@@ -46,6 +46,9 @@ for (const width of [375, 1280]) for (const dark of [false, true]) test(`class d
   release(); await expect(page.locator('.sk-region[aria-busy="true"]')).toHaveCount(0);
   await expect(page.locator("[data-sk-primitive], [data-sk-layer], [data-sk-frame], [role=status]")).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "Ana Cruz", exact: true })).toBeVisible();
+  const timeCell = page.locator('[data-sk-region="class-schedule-time"]').first();
+  await expect(timeCell).toHaveCSS('color', 'rgb(255, 255, 255)');
+  await expect(timeCell).toHaveCSS('font-weight', '600');
   await page.screenshot({ path: `${prefix}-loaded.png`, fullPage: true });
   await verifyOverlay();
   await page.getByRole("tab", { name: /Class list/ }).click();
@@ -74,6 +77,9 @@ test("class details error removes every reservation immediately and retries cont
   const before = release.requests(); release.recover();
   await page.getByRole("button", { name: "Retry", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Ana Cruz", exact: true })).toBeVisible();
+  const timeCell = page.locator('[data-sk-region="class-schedule-time"]').first();
+  await expect(timeCell).toHaveCSS('color', 'rgb(255, 255, 255)');
+  await expect(timeCell).toHaveCSS('font-weight', '600');
   await expect(page.getByRole("alert")).toHaveCount(0);
   expect(release.requests()).toBe(before + 1);
 });

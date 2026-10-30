@@ -85,6 +85,13 @@ function useClassFormPageState() {
   const { showToast } = useToast();
 
   const isEditing = Boolean(classId);
+  function goBack() {
+    if (isEditing && Number(window.history.state?.idx) > 0) {
+      navigate(-1);
+    } else {
+      navigate(isEditing ? `/admin/classes/${classId}` : '/admin/classes');
+    }
+  }
   const existing = classId ? getClass(classId) : undefined;
   const [choiceAttempt, setChoiceAttempt] = useState(0);
   const [choiceError, setChoiceError] = useState<string | null>(null);
@@ -259,7 +266,7 @@ function useClassFormPageState() {
           <div className="flex min-w-0 items-center gap-3">
             <button
               type="button"
-              onClick={() => navigate("/admin/classes")}
+              onClick={goBack}
               aria-label="Go back"
               className={`system-back-button shrink-0 ${
                 darkMode
@@ -564,7 +571,7 @@ function useClassFormPageState() {
             <div className="flex flex-col-reverse gap-2 sm:flex-row sm:gap-3">
             <button
               type="button"
-              onClick={() => navigate("/admin/classes")}
+              onClick={goBack}
               className={`h-10 w-full rounded-lg border px-4 text-xs font-bold transition-colors sm:w-auto ${
                 darkMode
                   ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"

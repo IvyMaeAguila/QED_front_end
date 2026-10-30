@@ -1050,6 +1050,14 @@ button.system-back-button--inverse:hover {
   }
 }
 
+/* Time labels sit on a brand-colored surface rather than a standard table cell. */
+@layer components {
+  .qed-account-ui table tbody td.qed-class-schedule-time {
+    color: #fff !important;
+    font-weight: var(--qed-weight-semibold) !important;
+  }
+}
+
 /* Semantic overrides for inline data values inside the shared table reset. */
 .qed-account-ui table tbody td .qed-type-table-empty-value {
   font-size: var(--qed-type-table-empty-value) !important;
