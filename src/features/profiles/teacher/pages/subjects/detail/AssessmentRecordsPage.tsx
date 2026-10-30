@@ -1,3 +1,4 @@
+import './AssessmentRecordsPage.css';
 import { useToast } from "@shared/context/ToastContext";
 import { ClassRecordExportModal } from "./ClassRecordExportModal";
 import {transmutedTermGrade} from './utils/finalGrades';
@@ -247,8 +248,8 @@ export function AssessmentRecordsSection({
   const combinedGrade = (id:string) => resolvedWeights ? transmutedTermGrade(id,term,items,scores,{source:'template',...resolvedWeights}) : null;
   const view = `subject-records:${subjectSectionId}:${term}`;
   const recordSection = useRef<HTMLElement>(null);
-  const cardClasses = `overflow-hidden rounded-2xl border shadow-sm ${panelBg} ${panelBorder}`;
-  const cellInputClasses = `w-14 rounded-md border px-1 py-0.5 text-center text-xs font-bold outline-none ${panelBorder} ${
+  const cardClasses = `overflow-hidden rounded-[12px] border shadow-sm ${panelBg} ${panelBorder}`;
+  const cellInputClasses = `w-14 rounded-lg border px-1 py-0.5 text-center text-xs font-bold outline-none ${panelBorder} ${
     darkMode ? "bg-panel-dark text-white" : "bg-white text-[#111827]"
   }`;
 
@@ -470,10 +471,10 @@ export function AssessmentRecordsSection({
               );
             }))}
             {componentWeightedCells.map(({ component, ws }) => (
-              <td key={`ws-${component.key}`} className="min-w-16 whitespace-nowrap px-2 py-2.5 text-center text-xs font-bold tabular-nums">{ws === null ? "—" : ws.toFixed(2)}</td>
+              <td key={`ws-${component.key}`} className="qed-record-ws min-w-16 whitespace-nowrap px-2 py-2.5 text-center text-xs font-bold tabular-nums">{ws === null ? "—" : ws.toFixed(2)}</td>
             ))}
             {group.examOutputs?.percentageScore && <td className="min-w-16 whitespace-nowrap px-2 py-2.5 text-center text-xs font-bold tabular-nums">{result.ps === null ? "—" : result.ps.toFixed(2)}</td>}
-            {group.examOutputs?.weightedScore && <td className="min-w-16 whitespace-nowrap px-2 py-2.5 text-center text-xs font-bold tabular-nums">{result.ws === null ? "—" : result.ws.toFixed(2)}</td>}
+            {group.examOutputs?.weightedScore && <td className="qed-record-ws min-w-16 whitespace-nowrap px-2 py-2.5 text-center text-xs font-bold tabular-nums">{result.ws === null ? "—" : result.ws.toFixed(2)}</td>}
           </Fragment>
         );
       }
@@ -510,7 +511,7 @@ export function AssessmentRecordsSection({
                 <td className="px-2 py-2.5 text-center text-xs font-bold tabular-nums">
                   {ps !== null ? ps.toFixed(2) : "—"}
                 </td>
-                <td className="px-2 py-2.5 text-center text-xs font-bold tabular-nums">
+                <td className="qed-record-ws px-2 py-2.5 text-center text-xs font-bold tabular-nums">
                   {ws !== null ? ws.toFixed(2) : "—"}
                 </td>
               </Fragment>
@@ -541,7 +542,7 @@ export function AssessmentRecordsSection({
               <td className="px-2 py-2.5 text-center text-xs font-bold tabular-nums">
                 {result.ps !== null ? result.ps.toFixed(2) : "—"}
               </td>
-              <td className="px-2 py-2.5 text-center text-xs font-bold tabular-nums">
+              <td className="qed-record-ws px-2 py-2.5 text-center text-xs font-bold tabular-nums">
                 {result.ws !== null ? result.ws.toFixed(2) : "—"}
               </td>
             </>
@@ -557,7 +558,7 @@ export function AssessmentRecordsSection({
       : weights.templateStructure?.descriptorTable.find((row) => row.numericalGrade === termGrade)?.descriptor ?? null;
 
     return (
-      <tr key={student.id} data-sk-region="subject-record-student" className={`border-t ${panelBorder} ${index % 2 ? (darkMode ? "bg-white/1.5" : "bg-black/[0.012]") : ""}`}>
+      <tr key={student.id} data-sk-region="subject-record-student" className={`qed-record-row border-t ${panelBorder} ${index % 2 ? (darkMode ? "bg-white/1.5" : "bg-black/[0.012]") : ""}`}>
         <td data-learner-number className={`sticky left-0 z-20 w-16 min-w-16 max-w-16 border-r px-4 py-2.5 text-xs tabular-nums ${darkMode ? "bg-panel-dark" : index % 2 ? "bg-[#FCFCFD]" : "bg-white"} ${panelBorder} ${textPrimary}`}>{index + 1}</td>
         <td data-learner-name className={`sticky left-16 z-20 min-w-60 border-r px-4 py-2.5 text-sm font-bold shadow-[2px_0_4px_rgba(15,23,42,0.05)] ${darkMode ? "bg-panel-dark" : index % 2 ? "bg-[#FCFCFD]" : "bg-white"} ${panelBorder} ${textPrimary}`}>
           {pending && !roster.length ? <SkeletonText width={index % 2 ? "13ch" : "17ch"} /> : student.name}
@@ -615,7 +616,7 @@ export function AssessmentRecordsSection({
       ? Array.from({ length: skeletonRows(view, undefined, 40) }, (_, index) => ({ id: `pending-${index}`, name: '', gender: index % 2 ? 'F' : 'M' })) : [];
     const visibleGroups = placeholderRoster.length ? { male: placeholderRoster.filter(student => student.gender === 'M'), female: placeholderRoster.filter(student => student.gender === 'F') } : grouped;
     return (<div className="overflow-x-auto" data-record-scroll="horizontal">
-        <table className="teacher-user-table w-full min-w-max border-collapse text-xs">
+        <table className="qed-assessment-table teacher-user-table w-full min-w-max border-collapse text-xs">
           {pending && <colgroup>{columnWidths.map((width, index) => <col key={index} style={{ width }} />)}</colgroup>}
           <thead className={`sticky top-0 z-30 ${darkMode ? "bg-[#241311]" : "bg-white"}`}>
             <tr className={darkMode ? "bg-white/5" : "bg-brand-light"}>
@@ -655,7 +656,7 @@ export function AssessmentRecordsSection({
                 </Fragment>) : null}
               </Fragment>)}
             </tr>
-            <tr className={darkMode ? "bg-white/2" : "bg-white"}>
+            <tr className="qed-record-hps">
               <th colSpan={2} className={`sticky left-0 z-50 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.08)] ${darkMode ? "bg-panel-dark" : "bg-white"} ${panelBorder} ${textMuted}`}>HPS</th>
               {pending ? maskCells(hpsCells) : hpsCells}
               <th className={`min-w-24 border px-2 py-2 ${panelBorder}`} aria-label="No HPS for Initial Grade" />
@@ -666,7 +667,7 @@ export function AssessmentRecordsSection({
           <tbody>
             {visibleGroups.male.length > 0 && (
               <>
-                <tr>
+                <tr className="qed-record-group">
                   <td colSpan={2} className={`sticky left-0 z-20 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.05)] ${panelBorder} ${darkMode ? "bg-[#34201D]" : "bg-brand-light"} ${textPrimary}`}>Male</td>
                   <td colSpan={columnCount - 2} className={`border px-3 py-2 ${panelBorder} ${darkMode ? "bg-white/10" : "bg-brand-light"}`} />
                 </tr>
@@ -675,7 +676,7 @@ export function AssessmentRecordsSection({
             )}
             {visibleGroups.female.length > 0 && (
               <>
-                <tr>
+                <tr className="qed-record-group">
                   <td colSpan={2} className={`sticky left-0 z-20 min-w-60 border-r px-3 py-2 text-left text-xs font-black uppercase shadow-[2px_0_5px_rgba(15,23,42,0.05)] ${panelBorder} ${darkMode ? "bg-[#34201D]" : "bg-brand-light"} ${textPrimary}`}>Female</td>
                   <td colSpan={columnCount - 2} className={`border px-3 py-2 ${panelBorder} ${darkMode ? "bg-white/10" : "bg-brand-light"}`} />
                 </tr>
@@ -694,7 +695,7 @@ export function AssessmentRecordsSection({
       </div>); }
 
   return (
-    <section ref={recordSection} className={cardClasses} aria-label={title}>
+    <section ref={recordSection} className={`qed-assessment-records ${cardClasses}`} aria-label={title}>
       {component && <div className={`space-y-2 border-b p-4 ${panelBorder} ${textPrimary}`}>
         <label className="flex items-center gap-3 text-sm font-semibold">MAPEH component
           <select aria-label="MAPEH component" disabled={isEditing} value={component.id} onChange={e=>setSelectedComponentId(e.target.value)} className={`rounded-lg border p-2 ${panelBg} ${panelBorder}`}>
@@ -704,15 +705,15 @@ export function AssessmentRecordsSection({
         <p className={`text-xs ${textMuted}`}>The table shows {component.label} grades. Submission and Final Grades use the rounded average of both component grades. Both components must be complete before submission.</p>
       </div>}
       <ClassRecordExportModal state={exportState} darkMode={darkMode} onClose={() => setExportState("idle")} />
-      <div className={`flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3 ${panelBorder}`}>
+      <div className={`flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4 ${panelBorder}`}>
         <div className="flex flex-wrap items-center gap-3">
-          <span className={`text-sm font-bold ${textPrimary}`}>Assessment records</span>
-          <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${darkMode ? 'bg-white/5' : 'bg-black/[0.035]'} ${textMuted}`}>
+          <span className={`qed-type-card-title font-semibold ${textPrimary}`}>Assessment records</span>
+          <span className={`rounded-full px-2.5 py-1 text-xs font-semibold qed-record-count`}>
             {loading && !roster.length ? <SkeletonText width="10ch" /> : <>{roster.length} student{roster.length === 1 ? '' : 's'}</>}
           </span>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <button type="button" aria-label="Export DepEd Class Record" title="Export using the official DepEd template" onClick={() => void exportClassRecord()} disabled={loading || exportState === "loading"} className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold transition-colors disabled:opacity-50 ${darkMode ? 'hover:bg-white/5' : 'hover:bg-black/[0.035]'} ${panelBorder} ${textPrimary}`}>
+          <button type="button" aria-label="Export DepEd Class Record" title="Export all terms using the official DepEd template" onClick={() => void exportClassRecord()} disabled={loading || exportState === "loading"} className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold transition-colors disabled:opacity-50 ${darkMode ? 'hover:bg-white/5' : 'hover:bg-black/[0.035]'} ${panelBorder} ${textPrimary}`}>
             <Download size={14} /> Export Class Record
           </button>
           {toolbarAction}
@@ -755,7 +756,7 @@ export function AssessmentRecordsSection({
             onClick={handleSubmitClick}
             disabled={isSubmitting || checkingSubmission || loading}
             title={isSubmitting ? "Submitting…" : "Submit Grades"}
-            className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-maroon px-4 text-xs font-bold uppercase tracking-wide text-white shadow-primary transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-maroon px-4 text-xs font-bold uppercase tracking-wide text-white shadow-primary transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Send className="h-3.5 w-3.5" />
             {isSubmitting ? "Submitting…" : "Submit Grades"}
@@ -789,8 +790,8 @@ export function AssessmentRecordsSection({
           descriptionClassName={textMuted}
           bodyClassName="space-y-3 px-5 pb-4 pt-0"
           footerClassName={`border-t px-5 py-4 ${panelBorder}`}
-          cancelButtonClassName={`h-9 rounded-xl uppercase tracking-wide ${panelBorder} ${textPrimary}`}
-          confirmButtonClassName="h-9 rounded-xl bg-maroon uppercase tracking-wide shadow-primary"
+          cancelButtonClassName={`h-9 rounded-lg uppercase tracking-wide ${panelBorder} ${textPrimary}`}
+          confirmButtonClassName="h-9 rounded-lg bg-maroon uppercase tracking-wide shadow-primary"
           confirmLeading={<Send className="h-3.5 w-3.5" />}
         >
           <>

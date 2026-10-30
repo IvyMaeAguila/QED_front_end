@@ -1,0 +1,38 @@
+@layer components {
+  .qed-gradebook-card {
+    --gradebook-accent: var(--brand-primary);
+    --gradebook-tint: var(--brand-soft);
+    border-top: 3px solid var(--brand-primary) !important;
+  }
+  .dark .qed-gradebook-card {
+    --gradebook-accent: color-mix(in srgb, var(--brand-primary) 18%, white);
+    --gradebook-tint: color-mix(in srgb, var(--brand-primary) 15%, var(--surface-card-dark));
+  }
+  .qed-gradebook-card .qed-gradebook-caption {
+    background: var(--gradebook-tint);
+  }
+  .qed-gradebook-card .qed-gradebook-caption p {
+    color: var(--gradebook-accent);
+  }
+  .qed-account-ui table.qed-gradebook-table thead th {
+    border-bottom: 2px solid color-mix(in srgb, var(--brand-primary) 35%, transparent);
+  }
+  .qed-account-ui table.qed-gradebook-table tbody tr.qed-gradebook-group > td {
+    background: var(--gradebook-tint) !important;
+    color: var(--gradebook-accent) !important;
+  }
+  .qed-account-ui table.qed-gradebook-table .qed-gradebook-average {
+    background: var(--gradebook-tint) !important;
+    border-left: 1px solid color-mix(in srgb, var(--brand-primary) 15%, transparent);
+  }
+  .qed-account-ui table.qed-gradebook-table thead .qed-gradebook-average,
+  .qed-account-ui table.qed-gradebook-table .qed-gradebook-average .qed-type-table-grade {
+    color: var(--gradebook-accent) !important;
+    font-weight: var(--qed-weight-semibold) !important;
+  }
+  .qed-account-ui table.qed-gradebook-table .qed-gradebook-provisional {
+    font-size: var(--qed-type-small-control) !important;
+    color: var(--qed-table-muted) !important;
+    font-weight: var(--qed-weight-regular) !important;
+  }
+}

@@ -79,6 +79,8 @@ export interface GradebookStudent {
   gender: "M" | "F";
   grades: Record<string, SubjectGradeCell>;
   overallAverage: number | null;
+  averageSubjectCount?: number;
+  overallAverageComplete?: boolean;
 }
 
 export interface AdvisoryGradebook {

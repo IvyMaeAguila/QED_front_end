@@ -333,9 +333,7 @@ function useSubjectRecordsPageState() {
   );
   const editRecordsButton = (
     <button type="button" disabled={!gradingRulesReady} onClick={handleDoneClick}
-      className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold transition-colors ${isEditing
-        ? 'border-transparent bg-maroon text-white hover:bg-maroon-light'
-        : `${panelBorder} ${textPrimary} ${darkMode ? 'hover:bg-white/5' : 'hover:bg-black/[0.035]'}`}`}>
+      className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-transparent bg-maroon px-3 text-xs font-semibold text-white transition-colors hover:bg-maroon-light disabled:opacity-50">
       {isEditing ? <Check size={14} /> : <Pencil size={14} />}
       {isEditing ? 'Done' : 'Edit Records'}
     </button>

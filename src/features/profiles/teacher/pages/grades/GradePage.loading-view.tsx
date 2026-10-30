@@ -1,3 +1,4 @@
+import './GradePage.css';
 import { useActionConfirmation } from "@shared/components/useActionConfirmation";
 import { useToast } from "@shared/context/ToastContext";
 import { useExportProgress } from "@shared/components/useExportProgress";
@@ -262,7 +263,7 @@ function useGradesPageState() {
     if(!pending && (!gradebook || filteredStudents.length===0))return <tr><td colSpan={columnCount} className={`px-4 py-10 text-center text-xs font-medium ${textMuted}`}>No records found matching "{search}".</td></tr>;
     return <>{groups.map((group) => (
                         <Fragment key={group.label}>
-                          <tr>
+                          <tr className="qed-gradebook-group">
                             <td className={`sticky left-0 z-20 ${groupBand} ${darkMode ? "bg-panel-dark" : "bg-brand-light"}`}>
                               {group.label} · {pending ? <SkeletonText width="2ch" className="inline-block align-top" /> : group.students.length} student{group.students.length === 1 ? "" : "s"}
                             </td>
@@ -309,12 +310,13 @@ function useGradesPageState() {
                                   </td>
                                 );
                               })}
-                              <td className="px-3 py-2 text-center">
+                              <td className="qed-gradebook-average px-3 py-2 text-center">
                                 {pending ? <SkeletonText width="3ch" className="mx-auto qed-type-table-grade" /> : student.overallAverage == null ? (
                                   <span className="qed-type-table-empty-value">—</span>
                                 ) : (
-                                  <span className={`qed-type-table-grade ${gradeTextColor(student.overallAverage)}`}>
-                                    {student.overallAverage}
+                                  <span className="inline-flex flex-col items-center gap-0.5" title={student.overallAverageComplete === false ? `Provisional average based on ${student.averageSubjectCount ?? 'available'} of ${displayBook.subjects.length} subject grades. Missing grades are excluded.` : 'Overall average of available subject grades'}>
+                                    <span className={`qed-type-table-grade ${gradeTextColor(student.overallAverage)}`}>{student.overallAverage}</span>
+                                    {student.overallAverageComplete === false && <span className="qed-gradebook-provisional">Provisional</span>}
                                   </span>
                                 )}
                               </td>
@@ -341,7 +343,7 @@ function useGradesPageState() {
                             <span>{pending && !subject.subjectName ? <SkeletonText width="12ch" /> : subject.subjectName}</span>
                           </th>
                         ))}
-                        <th className={`qed-type-table-header min-w-28 px-3 py-2 text-center uppercase tracking-wider ${textMuted}`}>
+                        <th className={`qed-gradebook-average qed-type-table-header min-w-28 px-3 py-2 text-center uppercase tracking-wider ${textMuted}`}>
                           Overall Average
                         </th>
                       </tr>
@@ -517,19 +519,16 @@ function useGradesPageState() {
                 so it never competes with the filter row above it, regardless of
                 DOM order. relative + z-0 keeps it a normal stacking context that
                 sits below the filter strip's z-20. */}
-            <section className={`relative z-0 ${cardClasses}`} aria-label="Advisory class grades">
-              <div className={`flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 ${panelBorder}`}>
+            <section className={`qed-gradebook-card relative z-0 ${cardClasses}`} aria-label="Advisory class grades">
+              <div className={`flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 qed-gradebook-caption ${panelBorder}`}>
                 <div className="flex min-w-0 items-center gap-2">
                   <p className={`qed-type-table-group flex items-center gap-1.5 uppercase ${textPrimary}`}>
                     {!tableError && (<LoadingRegion as="span" loading={dataLoading && !gradebook} variable name="teacher-grade-section-name" skeleton={<SkeletonParagraph field="teacher-grade-section-name" typical={2} width="14ch" />}><span data-sk-field="teacher-grade-section-name">{gradebook?.sectionName || "Advisory Class"}</span></LoadingRegion>)}
                   </p>
-                  <p className={`truncate text-xs font-medium ${textMuted}`}>
-                    {!tableError && (<LoadingRegion as="span" loading={dataLoading && !gradebook} variable preserveStatic name="teacher-grade-summary" skeleton={<><span>· </span><SkeletonText width="6ch" className="inline-block align-top" /><span> · </span><SkeletonText width="2ch" className="inline-block align-top" /><span> students</span></>}>· {terms.find((t) => t.id === selectedTermId)?.label ?? "—"} · {filteredStudents.length} student{filteredStudents.length === 1 ? "" : "s"}</LoadingRegion>)}
-                  </p>
                 </div>
               </div>
 
-              <div className="overflow-x-auto"><LoadingTable name="teacher-grades-table:table-body" staticRows view={view} loading={dataLoading} error={tableError} retry={()=>setAttempt(value=>value+1)} columns={[{label:"Student",typical:"Last name, First name"},...displayBook.subjects.map(subject=>({label:subject.subjectName,typical:"Not Submitted"})),{label:"Overall Average",typical:"100"}]} header={tableHeader} skeleton={renderRows(true)} count={filteredStudents.length} className="teacher-user-table w-full min-w-max text-sm">{renderRows(false)}</LoadingTable></div>
+              <div className="overflow-x-auto"><LoadingTable name="teacher-grades-table:table-body" staticRows view={view} loading={dataLoading} error={tableError} retry={()=>setAttempt(value=>value+1)} columns={[{label:"Student",typical:"Last name, First name"},...displayBook.subjects.map(subject=>({label:subject.subjectName,typical:"Not Submitted"})),{label:"Overall Average",typical:"100"}]} header={tableHeader} skeleton={renderRows(true)} count={filteredStudents.length} className="qed-gradebook-table teacher-user-table w-full min-w-max text-sm">{renderRows(false)}</LoadingTable></div>
 
             </section>
           </>

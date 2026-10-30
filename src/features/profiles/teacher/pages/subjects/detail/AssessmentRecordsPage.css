@@ -1,0 +1,72 @@
+/* The class record follows QED's typography, 12px card and 8px control scale. */
+@layer components {
+  .qed-assessment-records {
+    --record-surface: var(--surface-card);
+    --record-soft: var(--brand-soft);
+    --record-ink: var(--brand-primary);
+    --record-divider: color-mix(in srgb, var(--border-subtle) 65%, transparent);
+  }
+
+  .dark .qed-assessment-records {
+    --record-surface: var(--surface-card-dark);
+    --record-soft: color-mix(in srgb, var(--brand-primary) 22%, var(--surface-card-dark));
+    --record-ink: color-mix(in srgb, var(--brand-primary) 18%, white);
+    --record-divider: var(--border-subtle-dark);
+  }
+
+  .qed-assessment-records .qed-record-count {
+    background: var(--record-soft) !important;
+    color: var(--record-ink);
+  }
+
+  .qed-account-ui table.qed-assessment-table :is(th, td) {
+    padding: 0.75rem 0.875rem !important;
+    border-left-width: 0 !important;
+    border-right-width: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .qed-account-ui table.qed-assessment-table thead tr:not(.qed-record-hps),
+  .qed-account-ui table.qed-assessment-table thead tr:not(.qed-record-hps) th {
+    background: var(--brand-primary) !important;
+    color: white !important;
+    border: 0;
+  }
+
+  .qed-account-ui table.qed-assessment-table thead tr:first-child th[colspan] {
+    border-bottom: 1px solid rgb(255 255 255 / 30%);
+    border-right: 1px solid rgb(255 255 255 / 20%);
+  }
+
+  .qed-account-ui table.qed-assessment-table thead tr.qed-record-hps,
+  .qed-account-ui table.qed-assessment-table thead tr.qed-record-hps th {
+    background: var(--record-soft) !important;
+    color: var(--record-ink) !important;
+    font-weight: var(--qed-weight-semibold) !important;
+    border: 0;
+  }
+
+  .qed-account-ui table.qed-assessment-table tbody tr.qed-record-row,
+  .qed-account-ui table.qed-assessment-table tbody tr.qed-record-row > td {
+    background: var(--record-surface) !important;
+    border-color: var(--record-divider);
+  }
+
+  .qed-account-ui table.qed-assessment-table tbody tr.qed-record-row:hover,
+  .qed-account-ui table.qed-assessment-table tbody tr.qed-record-row:hover > td {
+    background: var(--record-soft) !important;
+  }
+
+  .qed-account-ui table.qed-assessment-table tbody tr.qed-record-group,
+  .qed-account-ui table.qed-assessment-table tbody tr.qed-record-group > td {
+    background: var(--record-surface) !important;
+    color: var(--record-ink) !important;
+    font-weight: var(--qed-weight-semibold) !important;
+    border-color: var(--record-divider);
+  }
+
+  .qed-account-ui table.qed-assessment-table tbody td.qed-record-ws {
+    color: var(--record-ink) !important;
+    font-weight: var(--qed-weight-semibold) !important;
+  }
+}

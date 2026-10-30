@@ -121,6 +121,6 @@ export async function downloadGradeRecordExport(subjectSectionId: string, gradin
     throw new Error("The server did not return an Excel workbook. Please try again or contact the administrator.");
   }
   const disposition = res.headers.get("content-disposition") ?? "";
-  const fileName = disposition.match(/filename="?([^";]+)"?/i)?.[1] ?? `QED-TERM-${gradingPeriodId}.xlsx`;
+  const fileName = disposition.match(/filename="?([^";]+)"?/i)?.[1] ?? `QED-CLASS-RECORD.xlsx`;
   return { buffer: await res.arrayBuffer(), fileName };
 }
