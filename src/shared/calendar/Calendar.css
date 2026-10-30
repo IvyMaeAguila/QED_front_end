@@ -1,4 +1,19 @@
 @layer components {
+  .qed-account-ui .qed-calendar-today {
+    background: var(--color-maroon-dark) !important;
+    color: #fff !important;
+  }
+  .qed-account-ui .qed-calendar-today .qed-calendar-today-date {
+    background: #fff !important;
+    color: var(--color-maroon-dark) !important;
+  }
+  .qed-account-ui .qed-calendar-today .qed-calendar-today-label {
+    color: rgb(255 255 255 / 85%) !important;
+  }
+  .qed-account-ui .qed-calendar-today .qed-calendar-today-value {
+    color: #fff !important;
+  }
+
   .qed-account-ui .qed-calendar-entry[data-calendar-entry="today"] {
     background: var(--color-maroon-dark) !important;
     border-color: var(--color-maroon-dark) !important;

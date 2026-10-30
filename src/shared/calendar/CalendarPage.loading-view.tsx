@@ -19,6 +19,7 @@ import { ExpandedListModal } from "./components/ExpandedListModal";
 import { HolidayGroupList,HolidaysCard } from "./components/HolidaysCard";
 import { ManageCalendarButton } from "./components/ManageCalendarButton";
 import { MonthGrid } from "./components/MonthGrid";
+import { TodayCard } from "./components/TodayCard";
 import {
 createCalendarActivities,
 createCalendarHolidays,
@@ -223,10 +224,12 @@ function useCalendarPageState({ viewerRole = "ADMIN", data }: CalendarPageProps)
         />
 
         <div className="min-w-0 space-y-4">
-          <div className="flex min-h-9 items-center justify-between gap-3">
-            <h2 className={`qed-type-card-title ${textPrimary}`}>{selectedDate ? "Selected date" : "Upcoming events"}</h2>
-            {selectedDate && <button type="button" className={`rounded-lg border px-3 py-2 text-sm font-semibold ${panelBg} ${panelBorder} ${textPrimary}`} onClick={() => setSelectedDate(undefined)}>Upcoming events</button>}
-          </div>
+          <TodayCard />
+          {selectedDate && (
+            <div className="flex justify-end">
+              <button type="button" className={`rounded-lg border px-3 py-2 text-sm font-semibold ${panelBg} ${panelBorder} ${textPrimary}`} onClick={() => setSelectedDate(undefined)}>Upcoming events</button>
+            </div>
+          )}
           {canManage && (
             <ManageCalendarButton
               onSelectActivities={() => setManageTarget("activity")}
