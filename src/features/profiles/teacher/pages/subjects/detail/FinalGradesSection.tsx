@@ -98,15 +98,15 @@ export function FinalGradesSection({ subjectSectionId, selectedPeriod, ...theme 
       exporting.current = false;
     }
   }
-  return <section aria-label="Final Grades" className={`min-w-0 overflow-hidden rounded-2xl border shadow-sm ${theme.panelBg} ${theme.panelBorder}`}>
+  return <section aria-label="Final Grades" className={`qed-assessment-records min-w-0 overflow-hidden rounded-[12px] border shadow-sm ${theme.panelBg} ${theme.panelBorder}`}>
     <ClassRecordExportModal state={exportState} darkMode={theme.darkMode} label="final grades" onClose={() => setExportState('idle')} />
-    <div className={`flex flex-wrap items-center gap-3 border-b px-4 py-3 ${theme.panelBorder}`}>
-      <h2 className={`text-sm font-bold ${theme.textPrimary}`}>Final Grades</h2>
-      <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${theme.darkMode ? 'bg-white/5' : 'bg-black/[0.035]'} ${theme.textMuted}`}>
+    <div className={`flex flex-wrap items-center gap-3 border-b px-5 py-4 ${theme.panelBorder}`}>
+      <h2 className={`qed-type-card-title font-semibold ${theme.textPrimary}`}>Final Grades</h2>
+      <span className={`rounded-full px-2.5 py-1 text-xs font-semibold qed-record-count`}>
         {ready ? <>{roster.length} student{roster.length === 1 ? '' : 's'}</> : <SkeletonText width="10ch" />}
       </span>
       <button type="button" onClick={() => void exportFinalGrades()} disabled={loading || !!error || missingRules || !roster.length || exportState === 'loading'}
-        className={`ml-auto inline-flex min-h-9 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold disabled:opacity-50 ${theme.panelBorder} ${theme.textPrimary}`}>
+        className={`ml-auto inline-flex h-8 min-h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold disabled:opacity-50 ${theme.panelBorder} ${theme.textPrimary}`}>
         <Download size={14} /> Export Final Grades
       </button>
     </div>

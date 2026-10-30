@@ -352,19 +352,7 @@ const isDirty = useMemo(() => {
                     Student
                   </th>
                   {tabItemsForTable.length === 0 ? (
-                    <th
-                      className={`px-4 py-2 text-left text-xs font-bold ${textMuted}`}
-                    >
-                      {!pending&&<div className="flex items-center justify-center gap-3 py-2 normal-case tracking-normal" style={{textTransform:'none'}}>
-                        <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${darkMode?'bg-white/10':'bg-white'}`}>
-                          {categoryFull||items.some(item=>item.tab===tab&&String(item.gradingPeriodId)===selectedTerm)?<CheckCircle2 size={18} className="text-emerald-600" aria-hidden="true"/>:<ClipboardList size={18} style={{color:'var(--brand-ink)'}} aria-hidden="true"/>}
-                        </span>
-                        <div className="text-left">
-                          <span className={`block text-sm font-semibold ${textPrimary}`}>{categoryFull?'All template slots used':items.some(item=>item.tab===tab&&String(item.gradingPeriodId)===selectedTerm)?'No pending assessments':'No assessment added'}</span>
-                          <span className={`mt-0.5 block text-xs font-normal ${textMuted}`}>{categoryFull||items.some(item=>item.tab===tab&&String(item.gradingPeriodId)===selectedTerm)?'View saved scores in Full Records.':'Select Add Item to start recording scores.'}</span>
-                        </div>
-                      </div>}
-                    </th>
+                    <th aria-label="Assessment scores" className="min-w-32 px-4 py-2" />
                   ) : (
                     tabItemsForTable.map((item) => {
                       if (itemMetadataPending) return <th key={item.id} className="min-w-32 px-1.5 py-1.5" aria-label="Loading assessment" />;
