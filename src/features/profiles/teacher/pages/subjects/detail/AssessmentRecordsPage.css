@@ -65,6 +65,17 @@
     border-color: var(--record-divider);
   }
 
+  /* Draw the divider inside each cell so the sticky name cell cannot
+     cover the collapsed table border at the start of a gender group. */
+  .qed-account-ui table.qed-assessment-table tbody tr.qed-record-group {
+    border-top: 0 !important;
+  }
+
+  .qed-account-ui table.qed-assessment-table tbody tr.qed-record-group > td {
+    border-top: 0 !important;
+    box-shadow: inset 0 1px 0 var(--record-divider) !important;
+  }
+
   .qed-account-ui table.qed-assessment-table tbody td.qed-record-ws {
     color: var(--record-ink) !important;
     font-weight: var(--qed-weight-semibold) !important;

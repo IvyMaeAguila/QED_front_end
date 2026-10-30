@@ -66,7 +66,7 @@ test('cold Section Assignment route keeps its own loading composition until the 
 test('Classes navigation opens dedicated page without another sidebar item', async ({ page }) => {
   await fixture(page); await page.goto('/admin/classes'); await page.getByRole('button', { name: 'Assign Sections', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Section Assignment', exact: true })).toBeVisible();
-  await page.getByRole('button', { name: 'Back to Classes Management' }).click(); await expect(page).toHaveURL(/\/admin\/classes$/);
+  await page.getByRole('button', { name: 'Go back', exact: true }).click(); await expect(page).toHaveURL(/\/admin\/classes$/);
 });
 test('explicit grade, eligible-only selection, confirmation and fresh counts', async ({ page }) => {
   const f = await fixture(page); await open(page);

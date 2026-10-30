@@ -39,7 +39,7 @@ for (const width of [375, 1280]) for (const dark of [false, true]) test(`class r
   await page.route('**/exportGradeTemplateBySection/**', async route => {
     calls++;
     await gate;
-    await route.fulfill({ contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', body: 'workbook', headers: { 'content-disposition': 'attachment; filename="QED-TERM-1.xlsx"' } });
+    await route.fulfill({ contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', body: 'workbook', headers: { 'content-disposition': 'attachment; filename="QED-CLASS-RECORD.xlsx"' } });
   });
   const button = page.getByRole('button', { name: 'Export DepEd Class Record', exact: true });
   await button.click();
@@ -52,7 +52,7 @@ for (const width of [375, 1280]) for (const dark of [false, true]) test(`class r
   await page.screenshot({ path: test.info().outputPath('export-loading.png') });
   const download = page.waitForEvent('download');
   release();
-  expect((await download).suggestedFilename()).toBe('QED-TERM-1.xlsx');
+  expect((await download).suggestedFilename()).toBe('QED-CLASS-RECORD.xlsx');
   await expect(dialog).toContainText('Your class record is ready');
   await page.screenshot({ path: test.info().outputPath('export-success.png') });
   await dialog.getByRole('button', { name: 'Done', exact: true }).click();

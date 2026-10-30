@@ -1,3 +1,4 @@
+import './ConfirmationModal.css';
 import type { ReactNode } from "react";
 import { useRef, useState } from "react";
 import { AlertTriangle } from "lucide-react";
@@ -91,7 +92,7 @@ export function ConfirmationModal({
       ariaLabel={title}
       closeOnBackdrop={allowBackdropCloseWhileLoading || !working}
       closeOnEscape={!working}
-      className={panelClassName}
+      className={`${layout === "compact" ? "qed-confirmation-compact" : ""} ${panelClassName}`}
     >
       <ModalHeader
         title={title}

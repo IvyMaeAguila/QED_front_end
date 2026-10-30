@@ -15,21 +15,27 @@ for (const width of [375, 1280]) for (const dark of [false, true]) test(`feedbac
   await dialog.getByRole('button',{name:'Delete record',exact:true}).click(); await control(page,false);
   await expect(dialog).toHaveCount(0);
   const rate=page.getByRole('button',{name:/Rate Test learner/}).first();
-  await rate.click(); await expect(page.getByText('Saving change…',{exact:true})).toBeVisible();
+  await rate.click();
   await expect(page.getByText('All changes saved.',{exact:true})).toHaveCount(0);
-  await control(page,true); await expect(page.getByRole('alert')).toContainText('could not be saved');
+  await control(page,true); await expect(page.getByText('Some holistic ratings could not be saved. Retry the failed changes.',{exact:true})).toBeVisible();
   await page.getByRole('button',{name:'Retry failed changes',exact:true}).click(); await control(page,false);
-  await expect(page.getByText('All changes saved.',{exact:true})).toBeVisible();
+  await expect(page.getByText('Holistic ratings saved.',{exact:true})).toBeVisible();
   await page.getByRole('button',{name:'Toast twice',exact:true}).click(); await expect(page.getByText('Saved once',{exact:true})).toHaveCount(1);
   await page.screenshot({path:test.info().outputPath('feedback.png')});
 });
-test('unsaved drafts guard application navigation and browser Back, but allow successful save',async({page})=>{
-  await page.goto('/tests/feedback-consistency.html');
+for (const width of [375,1280]) for (const dark of [false,true]) test(`unsaved drafts guard application navigation and browser Back, but allow successful save ${width} ${dark}`,async({page})=>{
+  await page.setViewportSize({width,height:900});
+  await page.goto(`/tests/feedback-consistency.html?dark=${dark}`);
   await page.getByRole('button',{name:'Open editor',exact:true}).click();
   await page.getByLabel('Draft',{exact:true}).fill('unsaved');
   await page.getByRole('button',{name:'Navigate away',exact:true}).click();
   const dialog=page.getByRole('alertdialog',{name:'Leave without saving?',exact:true});
-  await expect(dialog).toBeVisible(); await dialog.getByRole('button',{name:'Cancel',exact:true}).click();
+  await expect(dialog).toBeVisible();
+  await expect(dialog.locator('header')).toHaveCSS('border-bottom-width','0px');
+  await expect(dialog.getByRole('heading',{name:'Leave without saving?',exact:true})).toHaveCSS('color',dark ? 'rgb(255, 255, 255)' : 'rgb(17, 24, 39)');
+  await expect(dialog.locator('footer')).toHaveCSS('padding-top','4px');
+  await expect(dialog.getByRole('button',{name:'Leave page',exact:true})).toHaveCSS('border-radius','8px');
+  await dialog.screenshot({path:test.info().outputPath('unsaved-confirmation.png')}); await dialog.getByRole('button',{name:'Cancel',exact:true}).click();
   await expect(page.getByTestId('path')).toHaveText('/edit'); await expect(page.getByLabel('Draft')).toHaveValue('unsaved');
   await page.evaluate(()=>history.back()); await expect(dialog).toBeVisible();
   await expect(page.getByTestId('path')).toHaveText('/edit');

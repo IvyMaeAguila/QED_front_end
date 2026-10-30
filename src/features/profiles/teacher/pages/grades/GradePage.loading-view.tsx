@@ -263,7 +263,7 @@ function useGradesPageState() {
     if(!pending && (!gradebook || filteredStudents.length===0))return <tr><td colSpan={columnCount} className={`px-4 py-10 text-center text-xs font-medium ${textMuted}`}>No records found matching "{search}".</td></tr>;
     return <>{groups.map((group) => (
                         <Fragment key={group.label}>
-                          <tr className="qed-gradebook-group">
+                          <tr>
                             <td className={`sticky left-0 z-20 ${groupBand} ${darkMode ? "bg-panel-dark" : "bg-brand-light"}`}>
                               {group.label} · {pending ? <SkeletonText width="2ch" className="inline-block align-top" /> : group.students.length} student{group.students.length === 1 ? "" : "s"}
                             </td>
@@ -519,8 +519,8 @@ function useGradesPageState() {
                 so it never competes with the filter row above it, regardless of
                 DOM order. relative + z-0 keeps it a normal stacking context that
                 sits below the filter strip's z-20. */}
-            <section className={`qed-gradebook-card relative z-0 ${cardClasses}`} aria-label="Advisory class grades">
-              <div className={`flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 qed-gradebook-caption ${panelBorder}`}>
+            <section className={`relative z-0 ${cardClasses}`} aria-label="Advisory class grades">
+              <div className={`flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 ${panelBorder}`}>
                 <div className="flex min-w-0 items-center gap-2">
                   <p className={`qed-type-table-group flex items-center gap-1.5 uppercase ${textPrimary}`}>
                     {!tableError && (<LoadingRegion as="span" loading={dataLoading && !gradebook} variable name="teacher-grade-section-name" skeleton={<SkeletonParagraph field="teacher-grade-section-name" typical={2} width="14ch" />}><span data-sk-field="teacher-grade-section-name">{gradebook?.sectionName || "Advisory Class"}</span></LoadingRegion>)}
