@@ -112,7 +112,7 @@ function useCoursewareViewState({ darkMode: requestedDarkMode, serverState }: Co
     const visibleVideos=pending||showAllVideos?displayVideos:displayVideos.slice(0,2);
     return <div className="sq-container">
       <header data-sk-region="learning-page-header" className="sq-page-header">
-       <button type="button" onClick={()=>navigate(`/parent/students/${studentId}?tab=academic`, {state:{tab:"academic"}})} aria-label="Back to interventions" className="sq-back sq-action"><ArrowLeft size={26}/></button>
+       <button type="button" onClick={()=>navigate(`/parent/students/${studentId}/topics/${topicId}/support`)} aria-label="Back to Quest Board" className="sq-back sq-action"><ArrowLeft size={26}/></button>
        <div className="min-w-0"><p className="sq-eyebrow" data-sk-static="">Study Quest</p><h1 data-type-exempt="true" data-sk-variable="" data-sk-region="learning-title" data-sk-field={`${view}:title`}>{pending?<SkeletonParagraph field={`${view}:title`} typical={2}/>:document?.title??"Learning resources"}</h1></div>
       </header>
       {!headerOnly&&<div className="sq-content" data-sk-region="coursewareview-div-field-7">
