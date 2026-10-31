@@ -33,7 +33,7 @@ export default function StudentInfoTable({ student, theme, loading = false }: St
         <div key={field.label} className="contents sm:flex sm:flex-1 sm:items-center">
           <div className="min-w-0 sm:flex-1 sm:px-5 sm:py-4">
             <p className={`flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide ${textMuted}`}>
-              <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-maroon/10 text-maroon dark:bg-[#3A2424] dark:text-[#F3B5B5]">
+              <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center text-maroon dark:text-[#F3B5B5]">
                 <Icon aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={2} />
               </span>
               <span className="min-w-0">{field.label}</span>
