@@ -65,12 +65,12 @@ export default function VerifyStudentModal({
               Grade & Section
             </dt>
             <dd className={`font-medium ${ddColor}`}>
-              {match.gradeLevel} - {match.section}
+              {match.gradeLevel}{match.section ? ` - ${match.section}` : " - Section not assigned"}
             </dd>
           </div>
           <div className={`rounded-lg border p-3 ${borderColor}`}>
             <dt className={`mb-0.5 font-semibold ${dtColor}`}>Adviser</dt>
-            <dd className={`font-medium ${ddColor}`}>{match.adviser}</dd>
+            <dd className={`font-medium ${ddColor}`}>{match.adviser.trim() || "Not assigned"}</dd>
           </div>
         </dl>
 
