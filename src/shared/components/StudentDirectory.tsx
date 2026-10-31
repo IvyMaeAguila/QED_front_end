@@ -1,5 +1,5 @@
 import { AccountSelect } from "@shared/components/AccountSelect";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { Search } from "lucide-react";
 import { StudentDirectoryTable, type StudentDirectoryRow } from "./StudentDirectoryTable";
 
@@ -15,9 +15,10 @@ interface StudentDirectoryProps {
   textMuted: string;
   darkMode: boolean;
   onActivate?: (id: string) => void;
+  renderStudents?: (students: StudentDirectoryRow[]) => ReactNode;
 }
 
-export function StudentDirectory({ students, panelBg, panelBorder, textPrimary, textMuted, darkMode, onActivate, loading, error, retry, view = "student-directory" }: StudentDirectoryProps) {
+export function StudentDirectory({ students, panelBg, panelBorder, textPrimary, textMuted, darkMode, onActivate, renderStudents, loading, error, retry, view = "student-directory" }: StudentDirectoryProps) {
   const [search, setSearch] = useState("");
   const [gender, setGender] = useState<"All" | "Male" | "Female">("All");
   const visibleStudents = useMemo(() => {
@@ -57,7 +58,7 @@ export function StudentDirectory({ students, panelBg, panelBorder, textPrimary, 
           <option value="Female">Female</option>
         </AccountSelect>
       </div>
-      <StudentDirectoryTable
+      {renderStudents ? renderStudents(visibleStudents) : <StudentDirectoryTable
         loading={loading} error={error} retry={retry} view={`${view}:${search}:${gender}`}
         students={visibleStudents}
         totalStudents={students.length}
@@ -67,7 +68,7 @@ export function StudentDirectory({ students, panelBg, panelBorder, textPrimary, 
         textMuted={textMuted}
         darkMode={darkMode}
         onActivate={onActivate}
-      />
+      />}
     </div>
   );
 }

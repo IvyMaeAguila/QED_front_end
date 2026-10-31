@@ -22,6 +22,8 @@ interface TeacherClassRostersProps {
   textPrimary: string;
   textMuted: string;
   darkMode: boolean;
+  onStudentActivate?: (studentId: string) => void;
+  getStudentName?: (student: Student) => string;
 }
 
 function studentName(student: Student) {
@@ -41,6 +43,8 @@ export function TeacherClassRosters({
   textPrimary,
   textMuted,
   darkMode,
+  onStudentActivate,
+  getStudentName = studentName,
 }: TeacherClassRostersProps) {
   const renderRosters = (pending: boolean) => {
     const rows: TeacherClassRoster[] = pending ? Array.from({ length: Math.min(2, skeletonRows(view)) }, (_, index) => ({ classId: index, sectionLabel: "", room: "", students: Array.from({ length: skeletonRows(`${view}:students:${index}`) }, (_, student) => ({ studentId: String(student), firstName: "", middleInitial: "", lastName: "", gender: student % 2 ? "Female" : "Male" })) })) : rosters;
@@ -85,11 +89,18 @@ export function TeacherClassRosters({
                       ) : (
                         <ul className="divide-y divide-black/[0.06] dark:divide-white/[0.08]" data-sk-region="teacherclassrosters-ul-field-9">
                           {group.students.map((student) => {
-                            const name = studentName(student);
+                            const name = getStudentName(student);
                                 return (
                               <li key={student.studentId} className="flex min-w-0 items-center gap-2.5 px-4 py-2" data-sk-region="teacherclassrosters-li-field-10">
-                                {pending ? <SkeletonAvatar width="24px" style={{ height: "24px" }} /> : <StudentAvatar gender={student.gender} name={name} className="h-6 w-6" />}
-                                <span className={`truncate text-xs font-medium ${textPrimary}`} data-sk-region="teacherclassrosters-span-field-11">{pending ? <SkeletonText width="16ch" /> : name}</span>
+                                {onStudentActivate && !pending ? (
+                                  <button type="button" onClick={() => onStudentActivate(student.studentId)} className="flex w-full min-w-0 items-center gap-2.5 rounded-lg text-left outline-none focus-visible:ring-2 focus-visible:ring-maroon" aria-label={`Open student record for ${name}`}>
+                                    <StudentAvatar gender={student.gender} name={name} className="h-6 w-6" />
+                                    <span className={`truncate text-xs font-medium ${textPrimary}`} data-sk-region="teacherclassrosters-span-field-11">{name}</span>
+                                  </button>
+                                ) : <>
+                                  {pending ? <SkeletonAvatar width="24px" style={{ height: "24px" }} /> : <StudentAvatar gender={student.gender} name={name} className="h-6 w-6" />}
+                                  <span className={`truncate text-xs font-medium ${textPrimary}`} data-sk-region="teacherclassrosters-span-field-11">{pending ? <SkeletonText width="16ch" /> : name}</span>
+                                </>}
                               </li>
                             );
                           })}

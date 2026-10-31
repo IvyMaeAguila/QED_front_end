@@ -1,28 +1,23 @@
 import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
-import { rememberColumns,rememberRows,skeletonRows,useColumnReservation } from "@shared/loading/reservations";
 import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 import { ArrowLeft,Mail,Pencil,Phone,UserRound } from "lucide-react";
-import { useRef,useState } from "react";
+import { lazy,Suspense,useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import { ProfileOverviewCard } from "../../../../../shared/components/ProfileOverviewCard";
-import { StudentDirectory } from "../../../../../shared/components/StudentDirectory";
 import { getTeacherAvatar,getTeacherAvatarBorderColor } from "../../../../../shared/profile/utils/teacherAvatar";
 import { BackButton } from "../../../shared/components/DashboardUI";
 import type { AdminThemeContext } from "../AdminLayout";
 import { useStudents } from "../studentrecords/context/StudentsContext";
-import { formatFullName } from "../studentrecords/types/Students";
 import { useClasses } from "./context/ClassesContext";
 import { useTeachers } from "./context/TeachersContext";
-import { DAYS_OF_WEEK,type DayOfWeek,type SchoolClass,formatTimeRange } from "./types/Class";
+import { type SchoolClass } from "./types/Class";
+
+const ClassSchedulePanel = lazy(() => import("./components/ClassSchedulePanel"));
+const ClassRosterPanel = lazy(() => import("./components/ClassRosterPanel"));
 
 const ACCENT = "var(--color-maroon)";
-
-function timeToMinutes(t: string): number {
-  const [h, m] = t.split(":").map(Number);
-  return h * 60 + m;
-}
 
 function useClassViewPageState() {
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = useOutletContext<AdminThemeContext>();
@@ -38,9 +33,6 @@ function useClassViewPageState() {
   const error = classesError ?? teachersError ?? studentsError;
   const retry = () => { refreshClasses(); refetchTeachers(); void refetchStudents(); };
   const view = `admin-class:${classId}`;
-  const table = useRef<HTMLTableElement>(null);
-  const columns = [{ label: "Time", typical: "7:30 AM - 8:30 AM" }, ...DAYS_OF_WEEK.map(day => ({ label: day, typical: "Mathematics Teacher Cruz" }))];
-  const widths = useColumnReservation(`${view}:schedule`, columns, loading);
 
   if (!classesLoading && !fetchedClass && !classesError) {
     return { content: ((
@@ -62,32 +54,6 @@ function useClassViewPageState() {
   const adviserAvatarBorderColor = getTeacherAvatarBorderColor(adviser?.gender);
   const roster = students.filter((student) => Number(student.gradeLevelId) === Number(schoolClass.gradeLevelId) && student.sectionId === schoolClass.sectionId);
   const totalSubjects = new Set(schoolClass.schedule.map((period) => period.subject.trim()).filter(Boolean)).size;
-  const timeSlots = Array.from(
-    new Map(schoolClass.schedule.map((period) => [`${period.startTime}-${period.endTime}`, { startTime: period.startTime, endTime: period.endTime }])).values(),
-  ).sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
-  const cellFor = (day: DayOfWeek, startTime: string, endTime: string) => schoolClass.schedule.find((period) => period.startTime === startTime && period.endTime === endTime && period.days.includes(day));
-  const rowHeaderBg = darkMode ? "color-mix(in srgb, var(--brand-primary) 35%, transparent)" : ACCENT;
-  const renderScheduleRows = (pending: boolean) => {
-    const slots = pending ? Array.from({ length: skeletonRows(`${view}:schedule`, undefined, 105) }, () => ({ startTime: "", endTime: "" })) : timeSlots;
-    if (!slots.length) return <tr><td colSpan={columns.length} className={`px-4 py-10 text-center text-xs font-medium ${textMuted}`}>No schedule set yet.</td></tr>;
-    return slots.map((slot, index) => <tr key={pending ? index : `${slot.startTime}-${slot.endTime}`} data-sk-region="class-schedule-row" data-sk-item="" className={`border-t ${panelBorder}`}>
-      <td data-sk-region="class-schedule-time" className="qed-class-schedule-time sk-surface-brand sk-surface-class-time whitespace-nowrap px-4 py-3 align-top" style={{ background: rowHeaderBg }}>{pending ? <SkeletonText width="16ch" /> : formatTimeRange(slot.startTime, slot.endTime)}</td>
-      {DAYS_OF_WEEK.map(day => {
-        const period = pending ? undefined : cellFor(day, slot.startTime, slot.endTime);
-        return <td key={day} data-sk-region={`class-schedule-${day}`} className={`border-l px-4 py-3 text-center align-top ${panelBorder}`}>{pending || period ? <><p data-sk-variable="" data-sk-field={`${view}:${index}:${day}:subject`} className={`font-bold ${textPrimary}`} data-sk-region="classviewpage-p-field-4">{pending ? <SkeletonParagraph field={`${view}:${index}:${day}:subject`} typical={2} width="16ch" /> : period?.subject}</p><p data-sk-variable="" data-sk-field={`${view}:${index}:${day}:teacher`} className={`mt-0.5 text-xs font-semibold ${textMuted}`} data-sk-region="classviewpage-p-field-5">{pending ? <SkeletonParagraph field={`${view}:${index}:${day}:teacher`} typical={2} width="14ch" /> : period?.teacherName || "Unassigned"}</p></> : <span className={textMuted}>—</span>}</td>;
-      })}
-    </tr>);
-  };
-  const renderSchedule = (pending: boolean) => !pending && !timeSlots.length ? <p className={`px-4 py-10 text-center text-xs font-medium ${textMuted}`} data-sk-region="classviewpage-no-schedule-set-yet-" data-sk-static="">No schedule set yet.</p> : <div className="overflow-x-auto">
-    <table ref={table} className="teacher-user-table w-full min-w-160 border-collapse text-xs">
-      {pending && <colgroup>{widths.map((width, index) => <col key={index} style={{ width }} />)}</colgroup>}
-      <thead><tr className={darkMode ? "bg-white/5" : "bg-brand-light"}>
-        <th className={`px-4 py-2.5 text-left text-xs font-black uppercase tracking-wider ${textMuted}`} data-sk-region="classviewpage-time" data-sk-static="">Time</th>
-        {DAYS_OF_WEEK.map(day => <th key={day} className={`border-l px-4 py-2.5 text-center text-xs font-black uppercase tracking-wider ${panelBorder} ${textMuted}`}>{day}</th>)}
-      </tr></thead>
-      <tbody>{renderScheduleRows(pending)}</tbody>
-    </table>
-  </div>;
 
   return { content: ((
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 pb-12 font-sans" data-sk-region="classviewpage-div-field-6">
@@ -147,27 +113,20 @@ function useClassViewPageState() {
       />
 
       {activeTab === "schedule" ? (
-        <section id="class-schedule-panel" role="tabpanel" aria-label="Class schedule" className={`overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`}>
-          <div className={`border-b px-4 py-3 ${panelBorder}`}>
-            <h2 className={`text-xs font-bold uppercase tracking-wide ${textPrimary}`} data-sk-region="classviewpage-class-schedule" data-sk-static="">Class schedule</h2>
-          </div>
-          <LoadingRegion name="class-schedule" loading={loading} variable autoColumns skeleton={null} frame={renderSchedule} retainPrevious hasContent={timeSlots.length > 0} onSettled={() => { rememberRows(`${view}:schedule`, timeSlots.length); rememberColumns(`${view}:schedule`, table.current); }}>{null}</LoadingRegion>
-        </section>
+        <div id="class-schedule-panel" role="tabpanel" aria-label="Class schedule">
+          <Suspense fallback={<div className={`rounded-xl border p-6 ${panelBg} ${panelBorder}`}><SkeletonText width="20ch" /></div>}>
+            <ClassSchedulePanel schoolClass={schoolClass} loading={loading} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} darkMode={darkMode} />
+          </Suspense>
+        </div>
       ) : (
-        <div id="class-list-panel" role="tabpanel" aria-label="Class list">
-          <StudentDirectory
-            loading={loading}
-            error={error}
-            retry={retry}
-            view={`${view}:roster`}
-            students={roster.map((student) => ({ id: String(student.id), studentId: student.studentId, name: formatFullName(student), gender: student.gender }))}
-            panelBg={panelBg}
-            panelBorder={panelBorder}
-            textPrimary={textPrimary}
-            textMuted={textMuted}
-            darkMode={darkMode}
-            onActivate={(id) => navigate(`/admin/students/${id}/edit`)}
-          />
+        <div id="class-list-panel" role="tabpanel" aria-label="Class list" className="flex flex-col gap-3">
+          <Suspense fallback={<div className={`rounded-xl border p-4 ${panelBg} ${panelBorder}`}><SkeletonText width="12ch" /><div className="mt-4 grid gap-3 sm:grid-cols-2"><SkeletonParagraph field={`${view}:roster-male`} typical={3} /><SkeletonParagraph field={`${view}:roster-female`} typical={3} /></div></div>}>
+            <ClassRosterPanel
+              roster={roster} schoolClass={schoolClass} loading={loading} error={error} retry={retry} view={view}
+              panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} textMuted={textMuted} darkMode={darkMode}
+              onStudentActivate={id => navigate(`/admin/students/${id}/edit`)}
+            />
+          </Suspense>
         </div>
       )}
       </>}

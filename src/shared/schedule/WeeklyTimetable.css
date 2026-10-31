@@ -1,0 +1,21 @@
+@layer components {
+  .qed-account-ui .qed-weekly-timetable {
+    --timetable-accent: var(--brand-primary);
+    scrollbar-width: thin;
+    scrollbar-color: var(--timetable-accent) var(--brand-light);
+    scrollbar-gutter: stable;
+  }
+  .qed-account-ui .qed-weekly-timetable[data-timetable-theme="dark"] {
+    --timetable-accent: #f3b5b5;
+    scrollbar-color: #a85959 #292323;
+  }
+  .qed-account-ui .qed-weekly-timetable .qed-timetable-time {
+    color: var(--timetable-accent) !important;
+    font-weight: var(--qed-weight-semibold) !important;
+  }
+  .qed-weekly-timetable::-webkit-scrollbar { width: 9px; height: 9px; }
+  .qed-weekly-timetable::-webkit-scrollbar-track { background: var(--brand-light); border-radius: 8px; }
+  .qed-weekly-timetable::-webkit-scrollbar-thumb { background: var(--brand-primary); border: 2px solid var(--brand-light); border-radius: 8px; }
+  .qed-weekly-timetable[data-timetable-theme="dark"]::-webkit-scrollbar-track { background: #292323; }
+  .qed-weekly-timetable[data-timetable-theme="dark"]::-webkit-scrollbar-thumb { background: #a85959; border-color: #292323; }
+}
