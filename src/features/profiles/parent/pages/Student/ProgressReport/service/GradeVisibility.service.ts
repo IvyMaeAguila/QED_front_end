@@ -21,7 +21,7 @@ export interface TermVisibilityEntry {
   submitted: boolean;
   isVisible: boolean;
   termEnded: boolean;
-  /** Authoritative backend gate: advisory submission AND term end AND release. */
+  /** Authoritative backend gate: term end AND adviser visibility release; submission is separate. */
   available: boolean;
 }
 
