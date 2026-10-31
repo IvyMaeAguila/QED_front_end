@@ -26,7 +26,7 @@ export const Footer = () => {
               { label: "Attendance Tracking", href: "#features" },
               { label: "Holistic Development Monitoring", href: "#features" },
               { label: "Learning Intervention & Activities", href: "#intervention" },
-              { label: "Parent Access & Communication", href: "#features" },
+              { label: "Parent Access", href: "#features" },
               { label: "Reports & Analytics", href: "#features" },
               { label: "School Calendar & Events", href: "#features" },
               { label: "User & Account Management", href: "#features" },
