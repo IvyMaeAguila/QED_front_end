@@ -20,9 +20,18 @@ export function PeriodicRatingCard({ rows, termAverages, theme, student, loading
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } = theme;
 
   const view = `parent-periodic:${student.id}`;
-  const renderRow = (row:PeriodicRatingRow,index:number,pending:boolean) => (
+  const renderRow = (row:PeriodicRatingRow,index:number,pending:boolean) => {
+    const components = pending || row.parentLearningArea ? [] : rows.filter(child => child.parentLearningArea === row.learningArea);
+    return (
               <tr key={`${row.parentLearningArea ?? ""}:${row.learningArea}`} className={`border-t ${panelBorder}`}>
-                <td className={`${row.parentLearningArea ? "pl-7 pr-3" : "px-3"} py-2.5 text-sm ${row.parentLearningArea ? "font-normal" : "font-semibold"} ${textPrimary}`}>{pending ? <SkeletonParagraph field={view+":area:"+index} typical={2} width="100%" /> : <span data-sk-field={view+":area:"+index}>{row.learningArea}</span>}</td>
+                {components.length > 0 ? <>
+                  <td rowSpan={components.length + 1} className={`border-r px-3 py-2.5 align-top text-sm font-semibold ${panelBorder} ${textPrimary}`}>
+                    <span data-sk-field={view+":area:"+index}>{row.learningArea}</span>
+                  </td>
+                  <td className={`px-3 py-2.5 text-sm font-semibold ${textPrimary}`}>Average</td>
+                </> : <td colSpan={row.parentLearningArea ? 1 : 2} className={`px-3 py-2.5 text-sm ${row.parentLearningArea ? "font-normal" : "font-semibold"} ${textPrimary}`}>
+                  {pending ? <SkeletonParagraph field={view+":area:"+index} typical={2} width="100%" /> : <span data-sk-field={view+":area:"+index}>{row.learningArea}</span>}
+                </td>}
                 {TERMS.map((t) => {
                   const score = row.scores[t];
                   const isLow = typeof score === "number" && score < 85;
@@ -39,7 +48,8 @@ export function PeriodicRatingCard({ rows, termAverages, theme, student, loading
                 })}
                 <td className={`px-3 py-2.5 text-sm ${textMuted}`}>{pending ? <SkeletonParagraph field={view+":rating:"+index} typical={2} width="100%" /> : <span data-sk-field={view+":rating:"+index}>{row.finalRating}</span>}</td>
               </tr>
-  );
+    );
+  };
   return (
     <div className={`flex-[2] rounded-2xl border ${panelBorder} ${panelBg} px-5 pb-5`}>
       <SectionHeader
@@ -50,9 +60,9 @@ export function PeriodicRatingCard({ rows, termAverages, theme, student, loading
       />
 
       <div className="mt-4 overflow-x-auto">
-        <LoadingTable name="parent-periodic-table" view={view} loading={loading} count={rows.length} columns={[{label:"Learning Areas",typical:"Mathematics"},...TERMS.map(t=>({label:TERM_SHORT_LABELS[t],typical:"100%"})),{label:"Final Rating",typical:"Satisfactory"}]} className="teacher-user-table w-full min-w-[420px] border-collapse text-sm" header={(pending)=><><thead>
+        <LoadingTable name="parent-periodic-table" view={view} loading={loading} count={rows.length} columns={[{label:"Learning Areas",typical:"MAPEH"},{label:"Component",typical:"Physical Education and Health"},...TERMS.map(t=>({label:TERM_SHORT_LABELS[t],typical:"100%"})),{label:"Final Rating",typical:"Satisfactory"}]} className="teacher-user-table w-full min-w-[420px] border-collapse text-sm" header={(pending)=><><thead>
             <tr className={darkMode ? "bg-white/5" : "bg-brand-light"}>
-              <th className={`px-3 py-2 text-left text-xs font-semibold uppercase ${textMuted}`}>
+              <th colSpan={2} className={`px-3 py-2 text-left text-xs font-semibold uppercase ${textMuted}`}>
                 Learning Areas
               </th>
               {TERMS.map((t) => (
@@ -66,7 +76,7 @@ export function PeriodicRatingCard({ rows, termAverages, theme, student, loading
             </tr>
           </thead><tfoot>
             <tr className={`border-t-2 ${panelBorder} ${darkMode ? "bg-white/5" : "bg-brand-light"}`}>
-              <td className={`px-3 py-2.5 text-sm font-bold uppercase ${textPrimary}`}>
+              <td colSpan={2} className={`px-3 py-2.5 text-sm font-bold uppercase ${textPrimary}`}>
                 Term Average
               </td>
               {TERMS.map((t) => {
