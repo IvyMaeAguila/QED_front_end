@@ -1,0 +1,17 @@
+@layer components {
+  .qed-account-ui .qed-academic-section-header {
+    background: var(--brand-primary) !important;
+    border-color: var(--brand-primary) !important;
+  }
+  .qed-account-ui .qed-academic-section-header > :is(h2, h3) {
+    color: #fff !important;
+  }
+  .qed-account-ui .qed-academic-section-header .qed-academic-header-action {
+    background: #fff !important;
+    color: var(--brand-primary) !important;
+    border-color: rgb(255 255 255 / 80%) !important;
+  }
+  .qed-account-ui .qed-academic-section-header .qed-academic-header-action:hover:not(:disabled) {
+    background: var(--brand-light) !important;
+  }
+}

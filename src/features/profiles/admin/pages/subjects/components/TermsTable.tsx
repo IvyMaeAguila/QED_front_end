@@ -3,7 +3,7 @@ import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { skeletonRows } from "@shared/loading/reservations";
 import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { Pencil } from "lucide-react";
-import { ACCENT } from "../types/types";
+import "../AcademicYear.css";
 import type { Term } from "../types/academicyear";
 import { StatusBadge } from "./StatusBadge";
 
@@ -79,19 +79,15 @@ export function TermsTable({
   }
 
   return (
-    <div className={`rounded-[12px] border shadow-sm ${panelBg} ${panelBorder}`}>
-      <div className="flex items-center justify-between gap-4 flex-wrap px-5 pt-3 sm:px-6">
+    <div className={`overflow-hidden rounded-[12px] border shadow-sm ${panelBg} ${panelBorder}`}>
+      <div className="qed-academic-section-header flex flex-wrap items-center justify-between gap-3 border-b px-5 py-3 sm:px-6">
         <h3 className={`text-sm font-black ${textPrimary}`} data-sk-region="termstable-terms" data-sk-static="">Terms</h3>
         <button
           disabled={loading}
           onClick={onEdit}
-          className={`h-9 px-4 rounded-lg text-xs font-bold inline-flex items-center gap-2 border transition-colors ${
-            darkMode
-              ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-              : "border-border-subtle text-[#374151] hover:bg-brand-light"
-          }`} data-sk-region="termstable-edit-term-dates" data-sk-static=""
+          className="qed-academic-header-action inline-flex min-h-9 items-center justify-center gap-2 rounded-lg border px-4 py-2 text-xs font-semibold transition-colors disabled:opacity-50" data-sk-region="termstable-edit-term-dates" data-sk-static=""
         >
-          <Pencil size={14} style={{ color: ACCENT }} />
+          <Pencil size={14} />
           Edit Term Dates
         </button>
       </div>
@@ -103,7 +99,7 @@ export function TermsTable({
         </p>
       )}</LoadingRegion>
 
-      <div className="mt-3 overflow-x-auto">
+      <div className="overflow-x-auto">
         <LoadingTable loading={loading} view={view} columns={columns} header={<thead>
             <tr className={`border-b ${rowBorder}`}>
               {columns.map(column => <th key={column.label} className={headerCell}>{column.label}</th>)}

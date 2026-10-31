@@ -1,7 +1,7 @@
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { Pencil } from "lucide-react";
-import { ACCENT } from "../types/types";
+import "../AcademicYear.css";
 import type { AcademicYear } from "../types/academicyear";
 import { StatusBadge } from "./StatusBadge";
 
@@ -40,7 +40,7 @@ export function AcademicYearCard({
 }: AcademicYearCardProps) {
   // ── Shared design tokens (same as StudentFormPage) ──
   const cardClasses = `rounded-[12px] border shadow-xs overflow-hidden ${panelBg} ${panelBorder}`;
-  const cardHeaderClasses = `px-5 py-3 flex items-center justify-between border-b sm:px-6 ${panelBorder}`;
+  const cardHeaderClasses = `qed-academic-section-header px-5 py-3 flex flex-wrap items-center justify-between gap-3 border-b sm:px-6 ${panelBorder}`;
   const sectionTitleClasses = `text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 ${textPrimary}`;
   const labelClasses = `text-xs font-bold uppercase tracking-wide mb-1 ${textMuted}`;
 
@@ -52,13 +52,9 @@ export function AcademicYearCard({
           disabled={loading}
           type="button"
           onClick={onEdit}
-          className={`h-9 px-4 rounded-lg text-xs font-bold inline-flex items-center gap-2 border transition-colors ${
-            darkMode
-              ? "border-[#374151] text-[#D1D5DB] hover:bg-white/10"
-              : "border-border-subtle text-[#374151] hover:bg-brand-light"
-          }`} data-sk-region="academicyearcard-change-academic-year" data-sk-static=""
+          className="qed-academic-header-action inline-flex min-h-9 items-center justify-center gap-2 rounded-lg border px-4 py-2 text-xs font-semibold transition-colors disabled:opacity-50" data-sk-region="academicyearcard-change-academic-year" data-sk-static=""
         >
-          <Pencil size={14} style={{ color: ACCENT }} />
+          <Pencil size={14} />
           Change Academic Year
         </button>
       </div>
