@@ -336,7 +336,7 @@ function useAddSubjectPageState() {
             <WorkflowStepper darkMode={darkMode} current={currentStep} steps={SUBJECT_FORM_STEPS} />
           </aside>
 
-          <div className={`min-w-0 space-y-5 rounded-[12px] border p-4 sm:p-6 ${panelBorder} md:col-start-2`}>
+          <div className={`flex min-w-0 flex-col gap-5 rounded-[12px] border p-4 sm:p-6 ${panelBorder} md:col-start-2`}>
         <div className={currentStep === 1 ? "grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.4fr)] xl:gap-8" : "w-full"}>
         <div className="min-w-0 space-y-5">
           <div className="space-y-5">
@@ -567,7 +567,7 @@ function useAddSubjectPageState() {
             </section>
           )}
 
-          <div className="flex flex-col-reverse gap-2 pt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:pt-5">
+          <div className="mt-auto flex shrink-0 flex-col-reverse gap-2 pt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:pt-5">
             <div className="flex flex-col-reverse gap-2 sm:flex-row sm:gap-3">
             <button
               type="button"
