@@ -37,10 +37,10 @@ export type HolisticAxisKey = "cognitive" | "emotional" | "behavioral" | "social
 export type HolisticMap = Record<string, Partial<Record<HolisticAxisKey, number>>>;
 
 export const HOLISTIC_COLUMNS: { key: HolisticAxisKey; label: string; description: string }[] = [
-  { key: "cognitive", label: "Cognitive", description: "understanding" },
-  { key: "emotional", label: "Emotional", description: "self-regulation" },
-  { key: "behavioral", label: "Behavioral", description: "conduct" },
-  { key: "social", label: "Social", description: "collaboration" },
+  { key: "cognitive", label: "Cognitive", description: "Performance, Comprehension" },
+  { key: "emotional", label: "Emotional", description: "Motivation, Engagement" },
+  { key: "behavioral", label: "Behavioral", description: "Attendance, Discipline" },
+  { key: "social", label: "Social", description: "Participation, Team work" },
 ];
 
 export const HOLISTIC_LEVELS: { value: number; label: string; color: string }[] = [
