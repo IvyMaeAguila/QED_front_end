@@ -6,14 +6,18 @@ import ts from 'typescript';
 export const productionProxyOrigin = 'https://thesis-qed.vercel.app';
 
 export function checkApiProxy(config) {
+  const expected = ['/api/:path*/', '/api/:path*'];
   const rules = config.rewrites;
-  const index = Array.isArray(rules) ? rules.findIndex(rule => rule.source === '/api/:path*') : -1;
-  if (index !== 0 || rules[index].destination !== `${productionProxyOrigin}/api/:path*`)
-    throw new Error('Production API proxy must precede the SPA fallback and target the verified backend');
-  const headers = config.headers?.find(rule => rule.source === '/api/:path*')?.headers;
-  if (!headers?.some(header => header.key.toLowerCase() === 'cache-control' && /\bno-store\b/.test(header.value)))
-    throw new Error('Production API responses must disable caching');
-  return { source: rules[index].source, destination: rules[index].destination };
+  for (const [index, source] of expected.entries()) {
+    const destination = `${productionProxyOrigin}${source}`;
+    if (!Array.isArray(rules) || rules[index]?.source !== source || rules[index]?.destination !== destination)
+      throw new Error('Production API proxy must handle paths with and without a trailing slash before the SPA fallback');
+    const headers = config.headers?.find(rule => rule.source === source)?.headers;
+    if (!headers?.some(header => header.key.toLowerCase() === 'cache-control' && /\bno-store\b/.test(header.value)))
+      throw new Error('Production API responses must disable caching');
+  }
+  return { sources: expected, destination: productionProxyOrigin + '/api/' };
+
 }
 
 export function checkApiTarget(chunks, readChunk) {
