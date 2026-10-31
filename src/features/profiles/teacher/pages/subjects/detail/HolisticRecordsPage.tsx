@@ -1,3 +1,4 @@
+import { holisticTermWeeks, holisticWeeksInMonth, holisticWeekLabel, type HolisticTermWeek } from "./utils/holisticWeeks";
 import {useToast} from '@shared/context/ToastContext';
 import {useUnsavedChanges} from '@shared/components/useUnsavedChanges';
 import {useContext} from 'react';
@@ -55,23 +56,12 @@ interface MonthGroup {
   key: string;
   label: string;
   weekStartDates: string[];
+  weeks?: HolisticTermWeek[];
 }
 
 function formatMonthLabel(monthKey: string): string {
   const [year, month] = monthKey.split("-").map(Number);
   return new Date(year, month - 1, 1).toLocaleDateString(undefined, { month: "long", year: "numeric" });
-}
-
-function formatWeekRange(weekStartISO: string): string {
-  const start = new Date(weekStartISO + "T00:00:00");
-  const end = new Date(start);
-  end.setDate(start.getDate() + 4); // Mon -> Fri, a school week
-  const startLabel = start.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-  const endLabel =
-    end.getMonth() === start.getMonth()
-      ? String(end.getDate())
-      : end.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-  return `${startLabel}-${endLabel}`;
 }
 
 function currentMonthKey(): string {
@@ -107,21 +97,6 @@ function monthsInTerm(termStartDate?: string, termEndDate?: string): string[] {
     cursor.setMonth(cursor.getMonth() + 1);
   }
   return months;
-}
-
-function mondaysInMonth(monthKey: string): string[] {
-  const [year, month] = monthKey.split("-").map(Number);
-  const dates: string[] = [];
-  const cursor = new Date(year, month - 1, 1);
-  while (cursor.getDay() !== 1) cursor.setDate(cursor.getDate() + 1);
-  while (cursor.getMonth() === month - 1) {
-    const y = cursor.getFullYear();
-    const m = String(cursor.getMonth() + 1).padStart(2, "0");
-    const d = String(cursor.getDate()).padStart(2, "0");
-    dates.push(`${y}-${m}-${d}`);
-    cursor.setDate(cursor.getDate() + 7);
-  }
-  return dates;
 }
 
 function upsertAxisValue(
@@ -231,6 +206,7 @@ export function HolisticRecordsSection({
   // The termNumber actually sent to the API: explicit prop wins, otherwise
   // whatever the resolved DB period says.
   const resolvedTermNumber = termNumber ?? activePeriod?.termNumber;
+  const termWeeks = useMemo(() => holisticTermWeeks(activePeriod?.startDate, activePeriod?.endDate), [activePeriod?.startDate, activePeriod?.endDate]);
 
   useEffect(() => {
     if(queryManaged)return;
@@ -282,21 +258,13 @@ export function HolisticRecordsSection({
       }));
   }, [weeklyData]);
 
-  // Every month the dropdown should offer: any recorded month, plus every
-  // month that falls inside the active period's date range (fetched from
-  // the DB above), so you can jump to a term month that has no entries yet.
-  // If the period's bounds aren't available for some reason, fall back to
-  // just offering the current calendar month like before.
+  // Configured term dates own the calendar; recorded data cannot extend it.
   const availableMonthKeys = useMemo(() => {
-    const keys = new Set(monthGroups.map((g) => g.key));
-    const termMonths = monthsInTerm(activePeriod?.startDate, activePeriod?.endDate);
-    if (termMonths.length > 0) {
-      termMonths.forEach((m) => keys.add(m));
-    } else {
-      keys.add(currentMonthKey());
-    }
-    return Array.from(keys).sort();
-  }, [monthGroups, activePeriod]);
+    const months = monthsInTerm(activePeriod?.startDate?.slice(0, 10), activePeriod?.endDate?.slice(0, 10));
+    return months.length
+      ? months.filter(month => holisticWeeksInMonth(termWeeks, month).length > 0)
+      : monthGroups.map(group => group.key);
+  }, [monthGroups, activePeriod, termWeeks]);
 
   // Default month once both the weekly data and the grading periods have
   // loaded: today's month, clamped inside the active period's range.
@@ -306,19 +274,18 @@ export function HolisticRecordsSection({
   useEffect(() => {
     if (hasInitializedMonth.current || loading || !periodsLoaded) return;
     hasInitializedMonth.current = true;
-    setSelectedMonthKey(clampMonthToTerm(currentMonthKey(), activePeriod?.startDate, activePeriod?.endDate));
-  }, [loading, periodsLoaded, activePeriod]);
+    const preferred = clampMonthToTerm(currentMonthKey(), activePeriod?.startDate, activePeriod?.endDate);
+    setSelectedMonthKey(availableMonthKeys.includes(preferred) ? preferred : availableMonthKeys[0] ?? preferred);
+  }, [loading, periodsLoaded, activePeriod, availableMonthKeys]);
 
   const displayGroup: MonthGroup | null = useMemo(() => {
     if (!selectedMonthKey) return null;
-    const recorded = monthGroups.find((g) => g.key === selectedMonthKey);
-    if (recorded) return recorded;
-    return {
-      key: selectedMonthKey,
-      label: formatMonthLabel(selectedMonthKey),
-      weekStartDates: mondaysInMonth(selectedMonthKey),
-    };
-  }, [selectedMonthKey, monthGroups]);
+    if (activePeriod?.startDate && activePeriod?.endDate) {
+      const weeks = holisticWeeksInMonth(termWeeks, selectedMonthKey);
+      return { key: selectedMonthKey, label: formatMonthLabel(selectedMonthKey), weekStartDates: weeks.map(week => week.key), weeks };
+    }
+    return monthGroups.find(group => group.key === selectedMonthKey) ?? { key: selectedMonthKey, label: formatMonthLabel(selectedMonthKey), weekStartDates: [] };
+  }, [selectedMonthKey, monthGroups, activePeriod, termWeeks]);
 
   function isFemale(student: GenderedStudent): boolean {
     const g = String(student.gender ?? "").trim().toUpperCase();
@@ -394,11 +361,12 @@ export function HolisticRecordsSection({
   }
 
   const view = `subject-holistic-records:${subjectSectionId}:${resolvedTermNumber ?? "pending"}:${selectedMonthKey ?? currentMonthKey()}`;
-  const reservedWeeks = displayGroup?.weekStartDates ?? mondaysInMonth(currentMonthKey());
+  const reservedWeeks = displayGroup?.weekStartDates ?? [];
   const columnWidths = useColumnReservation(view, [{label:"Learner's Name",typical:"Maria Alexandra Delos Santos"}, ...reservedWeeks.flatMap(() => HOLISTIC_COLUMNS.map(column => ({label:column.label,typical:"5"})))], loading || !periodsLoaded);
   function renderWeeklyTable(pending: boolean) {
     if (!roster.length) return <p className={`px-5 py-16 text-center text-sm font-semibold ${textMuted}`}>No students enrolled yet.</p>; 
-          const group = displayGroup ?? { key: currentMonthKey(), label: formatMonthLabel(currentMonthKey()), weekStartDates: mondaysInMonth(currentMonthKey()) };
+          const group = displayGroup ?? { key: currentMonthKey(), label: formatMonthLabel(currentMonthKey()), weekStartDates: [] };
+          if (!group.weekStartDates.length) return <p className={`px-5 py-10 text-sm ${textMuted}`}>No school weeks fall within this term and month. Check the configured term dates.</p>;
           const columnCount = 1 + group.weekStartDates.length * domainCount;
           return (
             <div className="overflow-x-auto">
@@ -421,7 +389,7 @@ export function HolisticRecordsSection({
                         colSpan={domainCount}
                         className={`border px-2 py-2 text-center text-xs font-black uppercase tracking-wider ${panelBorder} ${textPrimary}`}
                       >
-                        Week {i + 1}
+                        Week {group.weeks?.[i]?.number ?? i + 1}
                       </th>
                     ))}
                   </tr>
@@ -433,7 +401,7 @@ export function HolisticRecordsSection({
                         colSpan={domainCount}
                         className={`border px-2 py-1.5 text-center text-xs font-bold normal-case ${panelBorder} ${textMuted}`}
                       >
-                        {formatWeekRange(week)}
+                        {holisticWeekLabel(week, group.weeks?.find(segment => segment.key === week))}
                       </th>
                     ))}
                   </tr>
