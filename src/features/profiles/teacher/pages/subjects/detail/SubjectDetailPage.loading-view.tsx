@@ -1,3 +1,4 @@
+import { currentHolisticPeriod } from "./utils/holisticTerm";
 import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
 import {useContext} from 'react';
 import {TeacherAcademicQueryContext} from '../../../query/TeacherAcademicQueryContext';
@@ -66,8 +67,8 @@ function useSubjectDetailPageState() {
   const [holistic, setHolistic] = useState<HolisticMap>({});
   const [holisticWeekStartDate, setHolisticWeekStartDate] =
     useState<string>("");
-  const [holisticTermNumber] = useState(1);
   const [terms, setTerms] = useState<GradingPeriod[]>([]);
+  const holisticPeriod = currentHolisticPeriod(terms);
   const [selectedTerm, setSelectedTerm] = useState<string>("");
   const gradingRulesReady = gradingRules.period === selectedTerm && !gradingRules.loading && !gradingRules.error && gradingRules.configured;
   const rulesReady = useRef(false); rulesReady.current = gradingRulesReady;
@@ -162,7 +163,8 @@ function useSubjectDetailPageState() {
     value: number,
   ) {
     if (!subjectId) throw new Error("No subject selected.");
-    await saveHolistic(subjectId, studentId, axis, value, holisticTermNumber);
+    if (!holisticPeriod) throw new Error("No grading term matches today. Ask an admin to check the academic-year dates.");
+    await saveHolistic(subjectId, studentId, axis, value, holisticPeriod.termNumber);
     setHolistic(prev => ({ ...prev, [studentId]: { ...prev[studentId], [axis]: value } }));
   }
 
@@ -180,7 +182,7 @@ function useSubjectDetailPageState() {
           scores,
           holistic,
           terms,
-          selectedTerm,
+          selectedTerm: activeTab === "holistic" ? holisticPeriod?.id ?? selectedTerm : selectedTerm,
           isOwnAdvisory,
           adviserName,
         },
@@ -293,7 +295,6 @@ function useSubjectDetailPageState() {
             roster={roster}
             ratings={holistic}
             weekStartDate={holisticWeekStartDate}
-            termNumber={holisticTermNumber}
             locked={holisticLocked}
             onRate={handleHolisticRate}
             onOpenRecords={openRecords}

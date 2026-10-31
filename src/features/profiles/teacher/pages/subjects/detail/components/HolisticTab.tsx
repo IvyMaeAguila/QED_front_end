@@ -25,7 +25,6 @@ interface HolisticTabProps {
   roster: GenderedStudent[];
   ratings: HolisticMap;
   weekStartDate: string;
-  termNumber: number;
   locked: boolean;
   onRate: (studentId: string, axis: HolisticAxisKey, value: number) => Promise<void>;
   onOpenRecords: () => void;

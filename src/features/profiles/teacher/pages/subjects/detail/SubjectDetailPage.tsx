@@ -28,7 +28,7 @@ function Effects({scope:s}:{scope:SubjectDetailPageEffectScope}){
  const graded=info.data?.isGraded!==false;
  const items=useTeacherReader(subjectKey(year,id,'items',{allPeriods:true}),o=>api.fetchItems(id,{allPeriods:true},o),'Could not load the class records. Please try again.',300_000,ready&&graded,false,true);
  const scores=useTeacherReader(subjectKey(year,id,'scores'),o=>api.fetchScores(id,o),'Could not load the class records. Please try again.',300_000,ready&&graded);
- const holistic=useTeacherReader(subjectKey(year,id,'holistic',1,currentSchoolWeek()),o=>api.fetchHolistic(id,o),'Could not load the class records. Please try again.',300_000,ready);
+ const holistic=useTeacherReader(subjectKey(year,id,'holistic','current',currentSchoolWeek()),o=>api.fetchHolistic(id,o),'Could not load the class records. Please try again.',300_000,ready);
  const weights=useTeacherReader(subjectKey(year,id,'weights',s.selectedTerm||'active'),o=>getEffectiveWeightsSafe(Number(id),s.selectedTerm||undefined,o),'Could not load grading rules.',300_000,ready&&graded&&!!s.selectedTerm);
  useTeacherRetryAttempt(s.attempt,periods.retry);useTeacherRetryAttempt(s.attempt,info.retry);useTeacherRetryAttempt(s.attempt,items.retry);useTeacherRetryAttempt(s.attempt,scores.retry);useTeacherRetryAttempt(s.attempt,holistic.retry);useTeacherRetryAttempt(s.attempt,weights.retry);
  const {setTemplateLoading,setTemplateStructure,setTerms,setSelectedTerm,setSubjectName,setGradeLevel,setRoster,setItems,setScores,setHolistic,setHolisticWeekStartDate,setIsOwnAdvisory,setAdviserName,setLoading,setError,hasUnsavedChanges}=s;
