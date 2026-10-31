@@ -30,7 +30,13 @@ function ProgressReportSection({
   theme: AdminThemeContext;
   student: DetailStudent;
 }) {
-  const { loading, error, refetch, selectedTerm, selectedTermVisibility } = useProgressReport();
+  const { data, loading, error, refetch, selectedTerm, selectedTermVisibility } = useProgressReport();
+  const reportStudent = {
+    ...student,
+    fullName: data.meta.learner.trim() || student.fullName,
+    adviser: data.meta.classAdviser.trim() || student.adviser,
+    schoolYear: data.meta.schoolYear.trim() || student.schoolYear,
+  };
   const isLocked = !(selectedTermVisibility?.available ?? false);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -66,8 +72,8 @@ function ProgressReportSection({
         </div>
       </div>
 
-      <StudentInfoTable student={student} theme={theme} />
-      <LoadingRegion name="parent-progress-report" loading={loading} error={error} retry={refetch} variable skeleton={null} frame={(pending) => !pending && isLocked ? <p className={`py-6 text-sm ${theme.textMuted}`}>This progress report is not available yet.</p> : <ProgressReportTab theme={theme} student={student} loading={pending} />}>{null}</LoadingRegion>
+      <StudentInfoTable student={reportStudent} gradeSection={data.meta.gradeSection} theme={theme} />
+      <LoadingRegion name="parent-progress-report" loading={loading} error={error} retry={refetch} variable skeleton={null} frame={(pending) => !pending && isLocked ? <p className={`py-6 text-sm ${theme.textMuted}`}>This progress report is not available yet.</p> : <ProgressReportTab theme={theme} student={reportStudent} loading={pending} />}>{null}</LoadingRegion>
       {!loading && !error && isLocked && <ProgressReportUnavailableModal open={modalOpen} onClose={handleModalClose} theme={theme} isVisible={selectedTermVisibility?.isVisible ?? false} termEnded={selectedTermVisibility?.termEnded ?? false} />}
     </>
   );

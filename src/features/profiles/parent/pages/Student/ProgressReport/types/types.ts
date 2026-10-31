@@ -22,6 +22,7 @@ export const TERM_FILTER_LABELS: Record<TermFilter, string> = {
 };
 
 export interface PeriodicRatingRow {
+  parentLearningArea?: string;
   learningArea: string;
   scores: Partial<Record<Term, number>>;
   finalRating: string;

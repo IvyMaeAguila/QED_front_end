@@ -13,15 +13,16 @@ interface StudentInfoTableProps {
   };
   theme: AdminThemeContext;
   loading?: boolean;
+  gradeSection?: string;
 }
 
-export default function StudentInfoTable({ student, theme, loading = false }: StudentInfoTableProps) {
+export default function StudentInfoTable({ student, theme, loading = false, gradeSection }: StudentInfoTableProps) {
   const { panelBg, panelBorder, textPrimary, textMuted } = theme;
 
   const fields = [
     { label: "Learner", icon: UserRound, value: student.fullName },
-    { label: "Grade & Section", icon: GraduationCap, value: `${student.gradeLevel} - ${student.section}` },
-    { label: "Class Adviser", icon: UserRoundCheck, value: student.adviser },
+    { label: "Grade & Section", icon: GraduationCap, value: gradeSection?.trim() || [student.gradeLevel, student.section].filter(Boolean).join(" - ") },
+    { label: "Class Adviser", icon: UserRoundCheck, value: student.adviser.trim() || "Not assigned" },
     { label: "School Year", icon: CalendarDays, value: student.schoolYear },
   ];
 

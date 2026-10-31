@@ -21,8 +21,8 @@ export function PeriodicRatingCard({ rows, termAverages, theme, student, loading
 
   const view = `parent-periodic:${student.id}`;
   const renderRow = (row:PeriodicRatingRow,index:number,pending:boolean) => (
-              <tr key={row.learningArea} className={`border-t ${panelBorder}`}>
-                <td className={`px-3 py-2.5 text-sm font-semibold ${textPrimary}`}>{pending ? <SkeletonParagraph field={view+":area:"+index} typical={2} width="100%" /> : <span data-sk-field={view+":area:"+index}>{row.learningArea}</span>}</td>
+              <tr key={`${row.parentLearningArea ?? ""}:${row.learningArea}`} className={`border-t ${panelBorder}`}>
+                <td className={`${row.parentLearningArea ? "pl-7 pr-3" : "px-3"} py-2.5 text-sm ${row.parentLearningArea ? "font-normal" : "font-semibold"} ${textPrimary}`}>{pending ? <SkeletonParagraph field={view+":area:"+index} typical={2} width="100%" /> : <span data-sk-field={view+":area:"+index}>{row.learningArea}</span>}</td>
                 {TERMS.map((t) => {
                   const score = row.scores[t];
                   const isLow = typeof score === "number" && score < 85;
