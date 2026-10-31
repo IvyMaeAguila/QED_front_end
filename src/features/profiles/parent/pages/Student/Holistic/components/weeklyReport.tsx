@@ -153,7 +153,7 @@ export function WholeChildSnapshot({
         </div>
       )}
 
-      <div className="p-5">
+      <div className="p-4 sm:p-5">
         <div className="grid gap-4 lg:grid-cols-[minmax(190px,0.72fr)_minmax(0,1.28fr)]">
           <div className={`flex min-h-[210px] flex-col items-center justify-center rounded-xl2 border px-4 py-5 text-center ${darkMode ? "border-[#374151] bg-[#111827]" : "border-gray-200 bg-gray-50"}`}>
             <p className={`text-xs font-semibold uppercase tracking-wide ${textMuted}`}>Overall holistic rating</p>
@@ -198,7 +198,7 @@ export function WholeChildSnapshot({
               <p className={`mt-0.5 text-xs ${textMuted}`}>Latest ratings for each subject, with a subject average across available domains.</p>
             </div>
             <div className={`overflow-hidden rounded-xl2 border ${panelBorder} ${darkMode ? "bg-[#111827]" : "bg-white"}`}>
-              <div className={`hidden grid-cols-[minmax(0,1.4fr)_minmax(110px,0.8fr)_repeat(4,minmax(90px,1fr))] items-center gap-3 border-b px-4 py-3 md:grid ${panelBorder} ${darkMode ? "bg-white/[0.04]" : "bg-gray-50"}`}>
+              <div className={`hidden grid-cols-[minmax(0,1.4fr)_minmax(110px,0.8fr)_repeat(4,minmax(90px,1fr))] items-center gap-3 border-b px-4 py-3 xl:grid ${panelBorder} ${darkMode ? "bg-white/[0.04]" : "bg-gray-50"}`}>
                 <span className={`text-xs font-bold uppercase tracking-wide ${textMuted}`}>Subject</span>
                 <span className={`text-center text-xs font-bold uppercase tracking-wide ${textMuted}`}>Overall</span>
                 {DOMAIN_KEYS.map((domain) => (
@@ -211,9 +211,10 @@ export function WholeChildSnapshot({
                 return (
                   <article
                     key={subject.subjectSectionId}
-                    className={`grid grid-cols-2 items-center gap-x-4 gap-y-3 px-4 py-4 md:grid-cols-[minmax(0,1.4fr)_minmax(110px,0.8fr)_repeat(4,minmax(90px,1fr))] md:gap-3 ${index < shownSubjects.length - 1 ? `border-b ${panelBorder}` : ""}`}
+                    data-holistic-subject=""
+                    className={`grid min-w-0 grid-cols-1 items-start gap-3 px-4 py-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(110px,0.8fr)_repeat(4,minmax(90px,1fr))] xl:gap-3 ${index < shownSubjects.length - 1 ? `border-b ${panelBorder}` : ""}`}
                   >
-                    <div className="col-span-2 min-w-0 md:col-span-1">
+                    <div className="min-w-0">
                       <h4 className={`break-words text-sm font-semibold leading-snug ${textPrimary}`}>{loading ? <SkeletonParagraph field={viewKey+":subject:"+subject.subjectSectionId} typical={2} width="100%" /> : <span data-sk-field={viewKey+":subject:"+subject.subjectSectionId}>{subject.subjectName}</span>}</h4>
                       <p className={`mt-1 text-xs ${textMuted}`}>
                         {loading ? <SkeletonText width="15ch" /> : subject.current.evaluationCount > 0
@@ -222,23 +223,23 @@ export function WholeChildSnapshot({
                       </p>
                     </div>
 
-                    <div className="min-w-0 text-center">
-                      <p className={`mb-1 text-xs font-bold uppercase tracking-wide text-gray-500 md:hidden`}>Overall</p>
+                    <div data-holistic-overall="" className={`flex min-w-0 items-center justify-between gap-3 rounded-lg border px-3 py-2.5 xl:block xl:border-0 xl:bg-transparent xl:p-0 xl:text-center ${panelBorder} ${darkMode ? "bg-white/[0.03]" : "bg-gray-50"}`}>
+                      <p className={`shrink-0 text-xs font-bold uppercase tracking-wide ${textMuted} xl:hidden`}>Overall</p>
                       {loading ? <SkeletonText width="9ch" /> : score === null ? (
                         <span className={`text-sm ${textMuted}`}>—</span>
                       ) : (
-                        <p className="text-sm font-bold text-brand-ink">{overallRating?.remark}</p>
+                        <p className="min-w-0 break-words text-right text-sm font-bold leading-snug text-brand-ink xl:text-center">{overallRating?.remark}</p>
                       )}
                     </div>
 
-                    <div className="col-span-2 grid grid-cols-2 gap-x-4 gap-y-3 md:contents">
+                    <div data-holistic-domains="" className="grid min-w-0 grid-cols-2 gap-3 xl:contents">
                       {DOMAIN_KEYS.map((domain) => {
                         const value = subject.current.domainAverages[domain];
                         const rating = value === null ? null : evaluationFor(value);
                         return (
                           <div key={domain} className="min-w-0">
-                            <p className={`mb-1 text-xs font-bold uppercase tracking-wide text-gray-500 md:hidden`}>{DOMAIN_META[domain].label}</p>
-                            <p className="text-xs font-semibold tabular-nums" style={{ color: rating ? "var(--color-maroon)" : "#9CA3AF" }}>
+                            <p className={`mb-1 break-words text-xs font-bold uppercase tracking-wide ${textMuted} xl:hidden`}>{DOMAIN_META[domain].label}</p>
+                            <p className="break-words text-xs font-semibold leading-relaxed tabular-nums" style={{ color: rating ? (darkMode ? "#F3B5B5" : "var(--color-maroon)") : "#9CA3AF" }}>
                               {loading ? <SkeletonParagraph field={viewKey+":rating:"+subject.subjectSectionId+":"+domain} typical={2} width="100%" /> : value === null ? "—" : rating?.remark}
                             </p>
                           </div>
