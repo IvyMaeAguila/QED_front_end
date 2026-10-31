@@ -7,6 +7,9 @@ import { useRoutePreview } from "@shared/loading/RoutePreview";
 import type { CalendarViewData } from "@shared/calendar/CalendarPageView.loading-view";
 import { CalendarDays } from "lucide-react";
 import type { SchoolEvent } from "../types/student";
+import { toISODate, visibleCalendarEntries } from "@shared/calendar/data";
+import "@shared/calendar/Calendar.css";
+type DatedSchoolEvent = SchoolEvent & { date?: string };
 import {
   HOLIDAY_TYPE_LABELS,
   type HolidayType,
@@ -19,20 +22,9 @@ export interface EventsCardProps {
   darkMode?: boolean;
 }
 
-// --------------------------------------------------------
-// "YYYY-MM" ng current month lang, para sa filter.
-// --------------------------------------------------------
-function getVisibleYearMonths(): string[] {
-  const now = new Date();
-  const toYearMonth = (d: Date) =>
-    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-
-  return [toYearMonth(now)];
-}
-
 function toDayMonth(dateStr: string) {
   const day = Number(dateStr.slice(8, 10));
-  const monthAbbr = new Date(dateStr)
+  const monthAbbr = new Date(dateStr.slice(0, 10) + "T00:00:00")
     .toLocaleString("en-US", { month: "short" })
     .toUpperCase();
   return { day, monthAbbr };
@@ -43,16 +35,18 @@ function EventRow({
   loading = false,
   darkMode = false,
 }: {
-  event: SchoolEvent;
+  event: DatedSchoolEvent;
   loading?: boolean;
   darkMode?: boolean;
 }) {
+  const happeningToday = !loading && event.date?.slice(0, 10) === toISODate(new Date());
   return (
     <div
-      className={`flex items-center gap-3 rounded-lg p-2.5 ${darkMode ? "bg-[#1a1a1a]" : "bg-surface/60"}`}
+      data-calendar-entry={happeningToday ? "today" : "upcoming"}
+      className={`qed-calendar-entry flex items-center gap-3 rounded-lg border p-2.5 ${happeningToday ? "bg-maroon border-maroon" : darkMode ? "border-border-dark bg-panel-dark" : "border-border-subtle bg-white"}`}
     >
       <div
-        className={`flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg text-maroon-dark shadow-sm ${darkMode ? "bg-[#111827]" : "bg-white"}`}
+        className={`qed-calendar-date flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg text-maroon-dark shadow-sm ${darkMode ? "bg-[#111827]" : "bg-white"}`}
       >
         <span className="text-base font-extrabold leading-none" data-sk-region="eventscard-span-field-1">
           {loading ? <SkeletonText width="2ch" /> : event.day}
@@ -63,15 +57,15 @@ function EventRow({
       </div>
       <div className="min-w-0" data-sk-region="eventscard-div-field-3">
         <p
-          className={`truncate text-xs font-semibold ${darkMode ? "text-gray-200" : "text-gray-800"}`} data-sk-region="eventscard-p-field-4"
+          className={`qed-calendar-entry-title break-words text-xs font-semibold ${darkMode ? "text-gray-200" : "text-gray-800"}`} data-sk-region="eventscard-p-field-4"
         >
           {loading ? <SkeletonText width="16ch" /> : event.title}
         </p>
-        {event.holidayType && (
+        {(event.holidayType || happeningToday) && (
           <p
-            className={`truncate text-xs ${darkMode ? "text-gray-500" : "text-gray-500"}`} data-sk-region="eventscard-p-field-5"
+            className={`qed-calendar-entry-meta text-xs ${darkMode ? "text-gray-500" : "text-gray-500"}`} data-sk-region="eventscard-p-field-5"
           >
-            {loading ? <SkeletonText width="12ch" /> : event.holidayType}
+            {loading ? <SkeletonText width="12ch" /> : [happeningToday ? "Today" : "", event.holidayType].filter(Boolean).join(" · ")}
           </p>
         )}
       </div>
@@ -88,10 +82,8 @@ export function EventsCardView({
   const events=useMemo(()=>{
     interface RawCalendarRecord {id:number;title:string;_sortKey:string;kind:'activity'|'holiday';holidayType?:HolidayType}
     const activityData=calendar.activities,holidayData=calendar.holidays;
-        const visibleYearMonths = new Set(getVisibleYearMonths());
 
-        const filteredActivities: RawCalendarRecord[] = activityData
-          .filter((a) => visibleYearMonths.has(a.date.slice(0, 7)))
+        const filteredActivities: RawCalendarRecord[] = visibleCalendarEntries(activityData)
           .map((a) => ({
             id: a.id,
             title: a.title,
@@ -99,8 +91,7 @@ export function EventsCardView({
             kind: "activity",
           }));
 
-        const filteredHolidays: RawCalendarRecord[] = holidayData
-          .filter((h) => visibleYearMonths.has(h.date.slice(0, 7)))
+        const filteredHolidays: RawCalendarRecord[] = visibleCalendarEntries(holidayData)
           .map((h) => ({
             id: h.id,
             title: h.title,
@@ -114,19 +105,20 @@ export function EventsCardView({
           ...filteredHolidays,
         ].sort((a, b) => a._sortKey.localeCompare(b._sortKey));
 
-        const combined: SchoolEvent[] = combinedRaw.map((record) => {
+        const combined: DatedSchoolEvent[] = combinedRaw.map((record) => {
           const { day, monthAbbr } = toDayMonth(record._sortKey);
 
           return {
             id: String(record.id),
             title: record.title,
+            date: record._sortKey,
             day,
             month: monthAbbr,
             type: record.kind,
             holidayType: record.holidayType
               ? HOLIDAY_TYPE_LABELS[record.holidayType]
               : undefined,
-          } as SchoolEvent;
+          } as DatedSchoolEvent;
         });
 
 
@@ -143,12 +135,12 @@ export function EventsCardView({
   );
 
   const renderGroups = (pending: boolean) => <>
-    {([{ type: "activity", label: "Activities", items: activity, empty: "No upcoming activities recorded for this month." }, { type: "holiday", label: "Holidays", items: holiday, empty: "There are no official holidays scheduled for this month." }] as const).map(group => {
-      const rows: SchoolEvent[] = pending ? Array.from({ length: skeletonRows(`parent-events:${group.type}`, undefined, 64) }, (_, index) => ({ id: String(index), day: 0, month: "", title: "", holidayType: "", type: group.type })) : group.items;
+    {([{ type: "activity", label: "Activities", items: activity, empty: "No upcoming activities." }, { type: "holiday", label: "Holidays", items: holiday, empty: "No upcoming holidays." }] as const).map(group => {
+      const rows: DatedSchoolEvent[] = pending ? Array.from({ length: skeletonRows(`parent-events:${group.type}`, undefined, 64) }, (_, index) => ({ id: String(index), day: 0, month: "", title: "", holidayType: "", type: group.type })) : group.items;
       const read=calendar.reads?.[group.type==='activity'?'activities':'holidays'];
       return <LoadingRegion key={group.type} name={'parent-events-'+group.type} loading={false} error={pending?null:read?.error} retry={read?.retry} hasContent={read?.hasData??false} retainOnError={read?.hasData??false} skeleton={null}><div className={group.type === "activity" ? "mb-3" : undefined}>
         <p className={`mb-1.5 text-xs font-semibold ${textMuted}`}>{group.label}</p>
-        {rows.length > 0 ? <div className="flex flex-col gap-2">{rows.map(event => <EventRow key={event.id} event={event} loading={pending} darkMode={darkMode} />)}</div> : <p className={`py-1 text-xs ${textMuted}`}>{group.empty}</p>}
+        {rows.length > 0 ? <div className="flex max-h-96 flex-col gap-2 overflow-y-auto">{rows.map(event => <EventRow key={event.id} event={event} loading={pending} darkMode={darkMode} />)}</div> : <p className={`py-1 text-xs ${textMuted}`}>{group.empty}</p>}
       </div></LoadingRegion>;
     })}
   </>;

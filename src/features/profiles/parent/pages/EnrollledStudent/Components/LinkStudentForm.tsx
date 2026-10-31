@@ -291,7 +291,7 @@ export function LinkStudentForm({
                 onChange={update("idNumber")}
                 darkMode={darkMode}
                 icon={<Hash size={16} />}
-                hint="Example: 2026-0001"
+                hint="Example: M26-0000"
                 autoComplete="off"
               />
 

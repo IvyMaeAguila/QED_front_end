@@ -32,7 +32,7 @@ export function ParentLinkingGuide({
   const hasChildren = childrenCount > 0;
 
   const renderGuide = (pending: boolean) => <>      {(pending || !hasChildren) && (
-        <div className={`border-t border-white/10 px-6 py-6 sm:px-8 ${darkMode ? "bg-panel-dark" : "bg-white"}`}>
+        <div className={`overflow-hidden rounded-[12px] border px-6 py-6 shadow-card sm:px-8 ${panelBorder} ${darkMode ? "bg-panel-dark" : "bg-white"}`}>
           <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center">
             <div className={`hidden h-24 w-32 shrink-0 items-center justify-center rounded-lg sm:flex ${darkMode ? "bg-white/5" : "bg-brand-light"}`}>
               <CircleUserRound size={44} className="text-brand-ink/60" />
