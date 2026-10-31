@@ -1,0 +1,16 @@
+@layer components {
+  .qed-account-ui table.qed-gradebook-table {
+    --gradebook-header-bg: #f6eeee;
+    --gradebook-header-text: var(--brand-primary);
+  }
+  :is(html.dark .qed-account-ui, .qed-account-ui.dark) table.qed-gradebook-table {
+    --gradebook-header-bg: #352426;
+    --gradebook-header-text: #f3b5b5;
+  }
+  .qed-account-ui table.qed-gradebook-table thead :is(tr, th) {
+    background: var(--gradebook-header-bg) !important;
+  }
+  .qed-account-ui table.qed-gradebook-table thead th {
+    color: var(--gradebook-header-text) !important;
+  }
+}

@@ -1,8 +1,8 @@
 import { AccountSelect } from "@shared/components/AccountSelect";
-import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { LoadingFormValue } from "@shared/loading/LoadingFormValue";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { useState } from "react";
+import { Search } from "lucide-react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@shared/query/queryClient";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -150,7 +150,6 @@ function GradeSheetContent({
         ...(females.length ? [{ label: "Female", students: females }] : []),
       ];
 
-  const activeTermLabel = gradingPeriods.find((period) => period.id === gradingPeriodId)?.termLabel ?? "Term";
 
   return (
     <div className="flex flex-col gap-6 font-sans">
@@ -189,26 +188,22 @@ function GradeSheetContent({
             textMuted={textMuted}
             darkMode={darkMode}
           />
-          <div className={`flex flex-col gap-2.5 rounded-[12px] border px-3 py-2 sm:flex-row sm:items-center sm:justify-between ${panelBg} ${panelBorder}`}>
-            <div className="w-full sm:w-80">
+          <div className={`relative z-20 flex flex-col gap-2.5 rounded-xl border px-3 py-2 lg:flex-row lg:items-center lg:justify-between ${panelBg} ${panelBorder}`}>
+            <div className="relative w-full lg:w-64">
+              <span className="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-2.5 text-gray-400"><Search size={13} /></span>
               <input
                 value={studentSearch}
                 onChange={(event) => setStudentSearch(event.target.value)}
-                placeholder="Search student name or ID..."
+                placeholder="Search student..."
                 aria-label="Search students by name or ID"
-                className={`h-8 w-full rounded-lg border px-2.5 text-xs font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
+                className={`qed-filter-control w-full rounded-lg border pl-8 pr-2.5 font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
               />
             </div>
-            <div className="flex flex-wrap items-center gap-2.5">
-              <span className={`whitespace-nowrap text-xs font-semibold ${textMuted}`}>
-                Showing <LoadingRegion as="span" loading={initialLoading} skeleton={<SkeletonText width="1ch" />}>{filteredStudents.length}</LoadingRegion> of <LoadingRegion as="span" loading={initialLoading} skeleton={<SkeletonText width="2ch" />}>{students.length}</LoadingRegion> students
-              </span>
+            <div className="relative z-20 flex flex-wrap items-center gap-2">
               <AccountSelect data-account-select=""
                 value={studentFilter}
                 onChange={(event) => setStudentFilter(event.target.value)}
                 aria-label="Filter students and grade ranking"
-                style={{ borderRadius: "8px" }}
-                className={`h-8 rounded-lg border px-3 text-xs font-semibold outline-none ${panelBg} ${panelBorder} ${textPrimary}`}
               >
                 <option>All Students</option>
                 <option>Highest Grades</option>
@@ -216,29 +211,22 @@ function GradeSheetContent({
                 <option>Boys</option>
                 <option>Girls</option>
               </AccountSelect>
-              <label className={`flex h-8 items-center gap-2 rounded-lg border px-3 text-xs font-semibold ${panelBg} ${panelBorder} ${textMuted}`}>
-                <span>Term:</span>
                 <LoadingFormValue loading={periodsLoading && gradingPeriods.length === 0} name="grade-sheet-term" intrinsic width="5ch" className="h-full"><AccountSelect data-account-select=""
                   value={String(gradingPeriodId)}
                   onChange={(event) => onTermChange(event.target.value)}
                   aria-label="Select grading term"
-                  className={`h-full bg-transparent font-bold outline-none ${textPrimary}`}
                 >
                   {gradingPeriods.map((period) => (
                     <option key={period.id} value={String(period.id)}>{period.termLabel}</option>
                   ))}
                 </AccountSelect></LoadingFormValue>
-              </label>
             </div>
           </div>
           <GradeSheetTable
             loading={loading}
             initialLoading={initialLoading}
-            termLoading={periodsLoading}
             view={`principal-grade-${gradeLevelId}-${sectionId ?? "all"}-${gradingPeriodId ?? "default"}-${studentFilter}-${query}`}
             sectionName={sectionName ?? gradeLabel}
-            termLabel={activeTermLabel}
-            totalStudents={students.length}
             subjects={subjects}
             males={groups.flatMap((group) => group.label === "Male" ? group.students : [])}
             females={groups.flatMap((group) => group.label === "Female" ? group.students : [])}

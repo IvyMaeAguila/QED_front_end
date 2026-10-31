@@ -1,3 +1,4 @@
+import "@shared/components/GradebookTable.css";
 import './GradePage.css';
 import { useActionConfirmation } from "@shared/components/useActionConfirmation";
 import { useToast } from "@shared/context/ToastContext";

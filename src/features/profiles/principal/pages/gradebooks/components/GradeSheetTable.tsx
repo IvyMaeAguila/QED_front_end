@@ -1,13 +1,10 @@
 import type { Student } from "../data/types";
 import { StudentGroupTable } from "./StudentGroupTable";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
-import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { SkeletonParagraph } from "@shared/loading/SkeletonParagraph";
 
 interface GradeSheetTableProps {
   sectionName: string;
-  termLabel: string;
-  totalStudents: number;
   subjects: string[];
   males: Student[];
   females: Student[];
@@ -19,14 +16,11 @@ interface GradeSheetTableProps {
   darkMode: boolean;
   loading?: boolean;
   initialLoading?: boolean;
-  termLoading?: boolean;
   view?: string;
 }
 
 export function GradeSheetTable({
   sectionName,
-  termLabel,
-  totalStudents,
   subjects,
   males,
   females,
@@ -36,12 +30,14 @@ export function GradeSheetTable({
   textPrimary,
   textMuted,
   darkMode,
-  loading = false, initialLoading = false, termLoading = false, view = "principal-grade-sheet",
+  loading = false, initialLoading = false, view = "principal-grade-sheet",
 }: GradeSheetTableProps) {
   return (
-    <section className={`overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`}>
-      <div className={`border-b px-4 py-3 text-xs font-bold uppercase tracking-wide ${panelBorder} ${textPrimary}`}>
-        <LoadingRegion as="span" loading={initialLoading} variable name="grade-sheet-table-section" skeleton={<SkeletonParagraph field={`${view}-section`} width="18ch" inline />}><span data-sk-field={`${view}-section`}>{sectionName}</span></LoadingRegion>{" "}<span className={textMuted}>· <LoadingRegion as="span" loading={termLoading} skeleton={<SkeletonText width="5ch" />}>{termLabel}</LoadingRegion> · <LoadingRegion as="span" loading={initialLoading} skeleton={<SkeletonText width="2ch" />}>{totalStudents}</LoadingRegion> students</span>
+    <section aria-label="Class grades" className={`relative z-0 overflow-hidden rounded-2xl border shadow-card ${panelBg} ${panelBorder}`}>
+      <div className={`flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 ${panelBorder}`}>
+        <p className={`qed-type-table-group flex min-w-0 items-center gap-1.5 uppercase ${textPrimary}`}>
+          <LoadingRegion as="span" loading={initialLoading} variable name="grade-sheet-table-section" skeleton={<SkeletonParagraph field={`${view}-section`} width="14ch" inline />}><span data-sk-field={`${view}-section`}>{sectionName}</span></LoadingRegion>
+        </p>
       </div>
       <StudentGroupTable
         loading={loading} view={view}

@@ -369,6 +369,7 @@ export function MiniStat({
   label,
   value,
   icon: Icon,
+  iconVariant = "badge",
   textPrimary,
   textMuted,
   darkMode,
@@ -379,6 +380,7 @@ export function MiniStat({
   label: string;
   value: string;
   icon?: LucideIcon;
+  iconVariant?: "badge" | "plain";
   textPrimary: string;
   textMuted: string;
   darkMode: boolean;
@@ -391,7 +393,7 @@ export function MiniStat({
       className="flex items-center gap-3 px-5 py-4 flex-1 min-w-35"
       style={isFirst ? undefined : { borderLeft: `1px solid ${darkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)"}` }}
     >
-      {Icon && (
+      {Icon && iconVariant === "badge" && (
         <span
           className="inline-flex items-center justify-center h-8 w-8 rounded-lg shrink-0"
           style={{
@@ -403,7 +405,10 @@ export function MiniStat({
         </span>
       )}
       <div className="min-w-0">
-        <p className={`text-xs font-bold uppercase tracking-widest ${textMuted}`} data-sk-static="">{label}</p>
+        <p className={`flex items-center gap-2 text-xs font-bold uppercase tracking-widest ${textMuted}`} data-sk-static="">
+          {Icon && iconVariant === "plain" && <Icon aria-hidden="true" className="h-4 w-4 shrink-0 text-maroon dark:text-[#F3B5B5]" strokeWidth={2} />}
+          {label}
+        </p>
         <p className={`text-sm font-bold truncate ${textPrimary}`} data-sk-region={region}>{loading === undefined ? value : <LoadingRegion as="span" loading={loading} skeleton={<SkeletonText width="2ch" />}>{value}</LoadingRegion>}</p>
       </div>
     </div>

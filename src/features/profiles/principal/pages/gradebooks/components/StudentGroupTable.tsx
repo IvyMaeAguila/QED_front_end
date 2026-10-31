@@ -1,3 +1,4 @@
+import "@shared/components/GradebookTable.css";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonText, SkeletonAvatar } from "@shared/components/SkeletonLoading";
 import { skeletonRows, lastKnownCount, rememberRows, rememberColumns, useColumnReservation } from "@shared/loading/reservations";
@@ -22,8 +23,6 @@ interface StudentGroupTableProps {
 export function StudentGroupTable({
   groups,
   subjects,
-  panelBg,
-  panelBorder,
   textPrimary,
   textMuted,
   darkMode,
@@ -42,19 +41,19 @@ export function StudentGroupTable({
     const displayGroups = pending ? [{ label: "Male", students: pendingStudents.filter(student => student.gender === "Male") }, { label: "Female", students: pendingStudents.filter(student => student.gender === "Female") }].filter(group => group.students.length) : groups;
     const columnCount = displaySubjects.length + 2;
     return (
-      <table ref={tableRef} className="teacher-user-table w-full min-w-max text-sm">
+      <table ref={tableRef} className="qed-gradebook-table teacher-user-table w-full min-w-max text-sm">
         {pending && <colgroup>{widths.map((width, index) => <col key={index} style={{ width }} />)}</colgroup>}
         <thead data-sk-region="grade-sheet-table-header">
-          <tr className={`border-b ${panelBorder}`}>
-            <th className={`qed-type-table-header sticky left-0 z-10 min-w-56 py-2 pr-4 text-left uppercase tracking-wider ${panelBg} ${textMuted}`}>
+          <tr className={darkMode ? "bg-white/5" : "bg-brand-light"}>
+            <th className={`qed-type-table-header sticky left-0 z-10 min-w-56 px-4 py-2 text-left uppercase tracking-wider ${darkMode ? "bg-panel-dark" : "bg-brand-light"} ${textMuted}`}>
               Student
             </th>
             {displaySubjects.map((subject, index) => (
-              <th key={subject} className={`qed-type-table-header min-w-28 whitespace-nowrap px-3 py-2 text-center uppercase tracking-wider ${textMuted}`}>
+              <th key={subject} className={`qed-type-table-header min-w-28 px-3 py-2 text-center uppercase tracking-wider ${textMuted}`}>
                 <span>{pending ? <SkeletonText width={index % 2 ? "13ch" : "10ch"} /> : subject}</span>
               </th>
             ))}
-            <th className={`qed-type-table-header min-w-28 py-2 pl-3 text-center uppercase tracking-wider ${textMuted}`}>
+            <th className={`qed-type-table-header min-w-28 px-3 py-2 text-center uppercase tracking-wider ${textMuted}`}>
               Overall Average
             </th>
           </tr>
@@ -63,8 +62,8 @@ export function StudentGroupTable({
           {displayGroups.map((group) => (
             <Fragment key={group.label}>
               <tr>
-                <td className={`sticky left-0 z-20 ${groupBand} ${darkMode ? "bg-[#111827]" : "bg-brand-light"}`}>
-                  {group.label} · {pending ? <SkeletonText width="1ch" className="inline-block align-middle" /> : group.students.length} students
+                <td className={`sticky left-0 z-20 ${groupBand} ${darkMode ? "bg-panel-dark" : "bg-brand-light"}`}>
+                  {group.label} · {pending ? <SkeletonText width="1ch" className="inline-block align-middle" /> : group.students.length} student{group.students.length === 1 ? "" : "s"}
                 </td>
                 <td colSpan={columnCount-1} className={groupBand} aria-hidden="true" />
               </tr>
@@ -73,7 +72,7 @@ export function StudentGroupTable({
                 const displayAverage = student.overallAverage ?? (average > 0 ? average : null);
                 return (
                   <tr key={student.studentId} data-sk-region="grade-sheet-student-row" data-sk-item="" className={`border-t ${darkMode ? "border-white/10" : "border-black/10"}`}>
-                    <td className={`sticky left-0 z-10 px-4 py-2 ${darkMode ? "bg-[#111827]" : "bg-white"}`}>
+                    <td className={`sticky left-0 z-10 px-4 py-2 ${darkMode ? "bg-panel-dark" : "bg-white"}`}>
                       <div className="flex min-w-0 items-center gap-2.5">
                         <span className="h-7 w-7 shrink-0" data-sk-region="grade-sheet-student-avatar">{pending ? <SkeletonAvatar width={28} /> : <StudentAvatar gender={student.gender} name={fullName(student)} />}</span>
                         <span data-sk-region="grade-sheet-student-name" className={`qed-type-table-body truncate ${textPrimary}`}>

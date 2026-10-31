@@ -1,3 +1,4 @@
+import { Users, Mars, Venus } from "lucide-react";
 import { MiniStat, MiniStatRow } from "../../../../shared/components/DashboardUI";
 
 interface GradeSheetSummaryProps {
@@ -27,6 +28,8 @@ export function GradeSheetSummary({
     <MiniStatRow panelBg={panelBg} panelBorder={panelBorder}>
       <MiniStat
         label="Total Students"
+        icon={Users}
+        iconVariant="plain"
         loading={loading} region="grade-sheet-stat-Total Students"
         value={totalStudents.toString()}
         textPrimary={textPrimary}
@@ -36,6 +39,8 @@ export function GradeSheetSummary({
       />
       <MiniStat
         label="Male"
+        icon={Mars}
+        iconVariant="plain"
         loading={loading} region="grade-sheet-stat-Male"
         value={maleCount.toString()}
         textPrimary={textPrimary}
@@ -44,6 +49,8 @@ export function GradeSheetSummary({
       />
       <MiniStat
         label="Female"
+        icon={Venus}
+        iconVariant="plain"
         loading={loading} region="grade-sheet-stat-Female"
         value={femaleCount.toString()}
         textPrimary={textPrimary}
