@@ -48,10 +48,10 @@ export function Sidebar({
 
   return (
     <aside
-      className={`qed-sidebar-glass absolute lg:relative inset-y-0 left-0 z-30 ${collapsed ? "w-60 lg:w-[4.5rem]" : "w-60"} max-w-[85vw] h-full flex flex-col text-white rounded-tr-none rounded-br-[28px] lg:rounded-none shadow-[8px_0_30px_-12px_rgba(0,0,0,0.35)] transition-[width,transform] duration-300 ${APPLE_EASE} ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
+      className={`qed-sidebar-glass absolute lg:relative inset-y-0 left-0 z-30 ${collapsed ? "w-60 lg:w-[4.5rem]" : "w-60"} max-w-[85vw] h-full flex flex-col text-white rounded-none shadow-[8px_0_30px_-12px_rgba(0,0,0,0.35)] transition-[width,transform] duration-300 ${APPLE_EASE} ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
     >
-      {/* Original thin metallic gold edge; its shape follows the mobile panel. */}
-      <div className="absolute top-0 bottom-0 right-0 w-0.75 pointer-events-none rounded-br-[28px] overflow-hidden z-20">
+      {/* Thin metallic gold edge with a straight finish on every screen size. */}
+      <div className="absolute top-0 bottom-0 right-0 w-0.75 pointer-events-none overflow-hidden z-20">
         <div className="qed-sidebar-metallic-edge absolute inset-0 opacity-95" />
       </div>
 
