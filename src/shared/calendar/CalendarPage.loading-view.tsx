@@ -197,14 +197,7 @@ function useCalendarPageState({ viewerRole = "ADMIN", data }: CalendarPageProps)
   return { content: ((
     <div className="w-full space-y-6 pb-12">
       {data?.reads && error && !data?.cachedOffline && <div role="alert" className={`rounded-xl border p-4 ${panelBg} ${panelBorder} ${textPrimary}`}><p>{error}</p><button type="button" className="mt-2 font-semibold underline" onClick={data.retry}>Retry</button></div>}
-      <div>
-        <h1 className={`qed-type-page-title ${textPrimary}`}>
-          Calendar
-        </h1>
-        <p className={`qed-type-page-description mt-1 ${textMuted}`}>
-          Manage your schedule and upcoming events.
-        </p>
-      </div>
+
 
       {data?.cachedOffline && <LoadingRegion loading={false} error={data.error} retry={retry} skeleton={null} className={textPrimary}>{null}</LoadingRegion>}
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.75fr)_minmax(16rem,0.75fr)]">
