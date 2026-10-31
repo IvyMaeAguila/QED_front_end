@@ -985,6 +985,10 @@ button.system-back-button--inverse:hover {
     padding: 0.5rem 1rem !important;
   }
 
+  .teacher-user-table tr[data-learning-area-group] > td {
+    padding: 0 !important;
+  }
+
   .teacher-user-table :is(th, td) {
     font-family: inherit !important;
   }

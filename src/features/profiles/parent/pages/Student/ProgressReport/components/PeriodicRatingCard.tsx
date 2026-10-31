@@ -22,16 +22,29 @@ export function PeriodicRatingCard({ rows, termAverages, theme, student, loading
   const view = `parent-periodic:${student.id}`;
   const renderRow = (row:PeriodicRatingRow,index:number,pending:boolean) => {
     const components = pending || row.parentLearningArea ? [] : rows.filter(child => child.parentLearningArea === row.learningArea);
+    if (components.length > 0) {
+      const group = [row, ...components];
+      return <tr key={row.learningArea} className={`border-t ${panelBorder}`} data-learning-area-group={row.learningArea}>
+        <td className={`!p-0 align-top text-sm ${textPrimary}`}>
+          {group.map((entry, position) => <div key={entry.learningArea} className={`flex h-16 items-center py-2 pr-3 ${position === 0 ? "pl-3 font-semibold" : "pl-7 font-normal"}`}>
+            <span>{entry.learningArea}</span>
+          </div>)}
+        </td>
+        {TERMS.map(term => <td key={term} className="!p-0 align-top text-center text-sm">
+          {group.map((entry,position) => <div key={entry.learningArea} data-grade-for={entry.learningArea} data-term={term} className={`flex h-16 items-center justify-center px-3 py-2 ${position > 0 ? `border-t ${panelBorder}` : ""} ${position === 0 ? "font-bold" : "font-medium"} ${entry.scores[term] === undefined ? textMuted : entry.scores[term]! < 85 ? "text-red-500" : textPrimary}`}>
+            {entry.scores[term] ?? ""}
+          </div>)}
+        </td>)}
+        <td className={`!p-0 align-top text-sm ${textMuted}`}>
+          {group.map((entry,position) => <div key={entry.learningArea} data-final-for={entry.learningArea} className={`flex h-16 items-center px-3 py-2 ${position > 0 ? `border-t ${panelBorder}` : ""} ${position === 0 ? "font-semibold" : ""}`}>{entry.finalRating}</div>)}
+        </td>
+      </tr>;
+    }
     return (
               <tr key={`${row.parentLearningArea ?? ""}:${row.learningArea}`} className={`border-t ${panelBorder}`}>
-                {components.length > 0 ? <>
-                  <td rowSpan={components.length + 1} className={`border-r px-3 py-2.5 align-top text-sm font-semibold ${panelBorder} ${textPrimary}`}>
-                    <span data-sk-field={view+":area:"+index}>{row.learningArea}</span>
-                  </td>
-                  <td className={`px-3 py-2.5 text-sm font-semibold ${textPrimary}`}>Average</td>
-                </> : <td colSpan={row.parentLearningArea ? 1 : 2} className={`px-3 py-2.5 text-sm ${row.parentLearningArea ? "font-normal" : "font-semibold"} ${textPrimary}`}>
+                <td className={`px-3 py-2.5 text-sm font-semibold ${textPrimary}`}>
                   {pending ? <SkeletonParagraph field={view+":area:"+index} typical={2} width="100%" /> : <span data-sk-field={view+":area:"+index}>{row.learningArea}</span>}
-                </td>}
+                </td>
                 {TERMS.map((t) => {
                   const score = row.scores[t];
                   const isLow = typeof score === "number" && score < 85;
@@ -60,9 +73,9 @@ export function PeriodicRatingCard({ rows, termAverages, theme, student, loading
       />
 
       <div className="mt-4 overflow-x-auto">
-        <LoadingTable name="parent-periodic-table" view={view} loading={loading} count={rows.length} columns={[{label:"Learning Areas",typical:"MAPEH"},{label:"Component",typical:"Physical Education and Health"},...TERMS.map(t=>({label:TERM_SHORT_LABELS[t],typical:"100%"})),{label:"Final Rating",typical:"Satisfactory"}]} className="teacher-user-table w-full min-w-[420px] border-collapse text-sm" header={(pending)=><><thead>
+        <LoadingTable name="parent-periodic-table" view={view} loading={loading} count={rows.filter(row => !row.parentLearningArea).length} columns={[{label:"Learning Areas",typical:"Physical Education and Health"},...TERMS.map(t=>({label:TERM_SHORT_LABELS[t],typical:"100%"})),{label:"Final Rating",typical:"Satisfactory"}]} className="teacher-user-table w-full min-w-[560px] border-collapse text-sm" header={(pending)=><><thead>
             <tr className={darkMode ? "bg-white/5" : "bg-brand-light"}>
-              <th colSpan={2} className={`px-3 py-2 text-left text-xs font-semibold uppercase ${textMuted}`}>
+              <th className={`px-3 py-2 text-left text-xs font-semibold uppercase ${textMuted}`}>
                 Learning Areas
               </th>
               {TERMS.map((t) => (
@@ -76,7 +89,7 @@ export function PeriodicRatingCard({ rows, termAverages, theme, student, loading
             </tr>
           </thead><tfoot>
             <tr className={`border-t-2 ${panelBorder} ${darkMode ? "bg-white/5" : "bg-brand-light"}`}>
-              <td colSpan={2} className={`px-3 py-2.5 text-sm font-bold uppercase ${textPrimary}`}>
+              <td className={`px-3 py-2.5 text-sm font-bold uppercase ${textPrimary}`}>
                 Term Average
               </td>
               {TERMS.map((t) => {
@@ -95,7 +108,7 @@ export function PeriodicRatingCard({ rows, termAverages, theme, student, loading
               })}
               <td />
             </tr>
-          </tfoot></>} skeleton={Array.from({length:skeletonRows(view)},(_,i)=>renderRow({learningArea:String(i),scores:{},finalRating:""},i,true))}>{rows.map((row,i)=>renderRow(row,i,false))}</LoadingTable> </div>
+          </tfoot></>} skeleton={Array.from({length:skeletonRows(view)},(_,i)=>renderRow({learningArea:String(i),scores:{},finalRating:""},i,true))}>{rows.filter(row => !row.parentLearningArea).map((row,i)=>renderRow(row,i,false))}</LoadingTable> </div>
     </div>
   );
 }
