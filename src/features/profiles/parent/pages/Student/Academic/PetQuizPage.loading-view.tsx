@@ -1,7 +1,7 @@
 import "./intervention-adventure.css";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { lastKnownCount,rememberRows,skeletonRows } from "@shared/loading/reservations";
-import { ArrowLeft,ChevronLeft,Flame } from "lucide-react";
+import { ArrowLeft,Flame,Star } from "lucide-react";
 import { useRef,useState } from "react";
 import { useNavigate,useParams } from "react-router-dom";
 import EDJourneyIntro from "./components/EDJourneyIntro";
@@ -579,6 +579,8 @@ function usePetQuizPageState(PetQuizService=DefaultPetQuizService) {
     !loadingBonus &&
     !!intervention;
   const showMeter = inGame && view !== "quiz";
+  const correctCount = roundResults.filter(value => value === true).length;
+  const quizPresentation = view === "quiz" || !!loadingLevel;
   const showStreak = inGame && streak >= 3;
 
   const allStepsDone = intervention
@@ -642,19 +644,15 @@ function usePetQuizPageState(PetQuizService=DefaultPetQuizService) {
   }
 
   return { content: ((
-    <div className="intervention-adventure adventure-quiz sk-surface-quiz relative isolate -m-4 flex min-h-[calc(100dvh-5.8125rem)] flex-col items-center gap-4 overflow-x-clip p-4 sm:-m-6 sm:p-6">
+    <div className="intervention-adventure adventure-quiz ed-experience sk-surface-quiz relative isolate flex min-h-dvh flex-col items-center gap-4 overflow-x-clip p-4 sm:p-6">
       <QuestWorldBackground />
-      {view !== "quiz" && (
-        <button
-          type="button"
-          onClick={handleBackHeader}
-          aria-label="Back to Quest Board"
-          className="flex items-center gap-1 self-start rounded-full bg-white px-3 py-1.5 text-xs font-bold text-gray-600 shadow-sm"
-        >
-          <ChevronLeft size={16} />
-          Quest Board
-        </button>
-      )}
+      <div className="ed-topbar">
+        <button type="button" className="ed-back" aria-label={view === "quiz" ? "Leave the quiz" : "Back to Quest Board"} disabled={view === "quiz" && isAnswering && !feedback} onClick={view === "quiz" ? handleRequestLeaveQuiz : handleBackHeader}><ArrowLeft size={24}/></button>
+        <div className="ed-topbar-meter"><label id="ed-meter-label">{quizPresentation ? "Busog ni Ed" : "Ed's Learning Adventure"}</label>
+          <div className="ed-meter" role="progressbar" aria-labelledby="ed-meter-label" aria-valuemin={0} aria-valuemax={quizPresentation ? activeQuestions.length || 1 : intervention?.hungerTotal || 5} aria-valuenow={quizPresentation ? correctCount : intervention?.hungerFilled || 0} aria-valuetext={quizPresentation ? `${correctCount} correct answers this round. Feeding progress is saved when a challenge is completed.` : `${intervention?.hungerFilled || 0} of ${intervention?.hungerTotal || 5} feeding steps saved`}><span style={{width:`${quizPresentation ? activeQuestions.length ? correctCount / activeQuestions.length * 100 : 0 : intervention?.hungerTotal ? intervention.hungerFilled / intervention.hungerTotal * 100 : 0}%`}}/></div>
+        </div>
+        {quizPresentation && <div className="ed-star-counter" aria-label={`${correctCount} correct answers this round`}><Star size={25} fill="#ffcf49" stroke="#b57a00"/><span>{correctCount}</span></div>}
+      </div>
       {showEndConfirm && (
         <EndInterventionConfirm
           onConfirm={confirmEndIntervention}
@@ -680,42 +678,14 @@ function usePetQuizPageState(PetQuizService=DefaultPetQuizService) {
 
       {endUncertain && <button type="button" disabled={isEnding} onClick={checkCompletionStatus} className="text-sm underline">Check completion status</button>}
 
-      {view === "quiz" && !feedback && (
-        <button
-          type="button"
-          onClick={handleRequestLeaveQuiz}
-          disabled={isAnswering}
-          aria-label="Leave the quiz"
-          className="flex items-center gap-1 self-start rounded-full bg-white px-3 py-1.5 text-xs font-bold text-gray-600 shadow-sm disabled:opacity-50"
-        >
-          <ArrowLeft size={14} />
-          Back
-        </button>
-      )}
-
-      {view !== "intro" &&
-        (view !== "loading" || initialTarget === "difficulty") && (
-          <div ref={petWrapRef} className="relative scroll-mt-4">
-            <QedPet state={petVisualState} onSettled={handleSettled} />
-            {feedback?.isCorrect && (
-              <ConfettiBurst key={`${roundMode}-${currentIndex}`} />
-            )}
-          </div>
-        )}
-
-      {view === "quiz" && feedback && (
-        <PetSpeechBubble
-          key={`${roundMode}-${currentIndex}`}
-          message={feedbackMessage}
-          isCorrect={feedback.isCorrect}
-          correctChoice={correctDisplayLetter}
-          correctText={correctText}
-          explanation={feedback.explanation}
-          isLast={isLastInRound}
-          onNext={goToNextQuestion}
-        />
-      )}
-
+      {quizPresentation && <div className="ed-feedback-slot">
+        {feedback && <PetSpeechBubble key={`${roundMode}-${currentIndex}`} message={feedbackMessage} isCorrect={feedback.isCorrect} correctChoice={correctDisplayLetter} correctText={correctText} explanation={feedback.explanation} isLast={isLastInRound} onNext={goToNextQuestion}/>}
+        {!feedback && (waiting || isAnswering) && <p className="ed-loading-label" role="status">{isAnswering ? "Ed is checking your answer…" : "Ed is gathering your questions…"}</p>}
+      </div>}
+      {view !== "intro" && (view !== "loading" || initialTarget === "difficulty") && <div ref={petWrapRef} className="ed-pet-stage relative scroll-mt-4">
+        <QedPet state={waiting ? "thinking" : feedback ? feedback.isCorrect ? "happy" : "wrong" : petVisualState} onSettled={handleSettled}/>
+        {feedback?.isCorrect && <ConfettiBurst key={`${roundMode}-${currentIndex}`}/>}
+      </div>}
       {(showMeter || showStreak) && (
         <div className="flex flex-col items-center gap-2">
           {showMeter && intervention && (
@@ -736,6 +706,8 @@ function usePetQuizPageState(PetQuizService=DefaultPetQuizService) {
       )}
 
       {quizError ? <>{view === "quiz" && <p role="alert" className="text-sm text-red-600">{quizError}</p>}{renderGame(false)}<button type="button" className="text-sm underline" onClick={() => requestedBonus && /bonus/.test(quizError) ? openBonus(requestedBonus) : startFullRound(difficulty)}>Retry</button></> : <LoadingRegion name="pet-quiz-content" loading={waiting} error={loadError} retry={() => setAttempt(value => value + 1)} variable className="w-full" skeleton={null} frame={renderGame} onSettled={() => { if (view === "quiz") rememberRows(gameView+":questions",activeQuestions.length); if (bonusGames) { rememberRows(gameView+":match",bonusGames.match.length); rememberRows(gameView+":memory",bonusGames.memory.length); } }}>{null}</LoadingRegion>}
+
+      {view === "quiz" && feedback && <button type="button" className="ed-primary ed-next" onClick={goToNextQuestion}>{isLastInRound ? "See Round Results" : "Next Question"}<span aria-hidden="true"> →</span></button>}
 
       {view === "roundResult" && (
         <RoundResult

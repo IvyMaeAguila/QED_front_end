@@ -45,7 +45,7 @@ export function ProgressDots({
 
 export function ConfettiBurst() {
   const [pieces] = useState(() => {
-    const colors = ["bg-maroon", "bg-maroon-light", "bg-gray-400", "bg-brand-light", "bg-gray-600"];
+    const colors = ["bg-amber-400", "bg-rose-400", "bg-sky-400", "bg-emerald-400", "bg-purple-400"];
     return Array.from({ length: 12 }).map((_, i) => ({
       left: 8 + Math.random() * 84,
       delay: Math.random() * 0.2,
@@ -55,7 +55,7 @@ export function ConfettiBurst() {
   });
 
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-visible">
+    <div className="ed-confetti pointer-events-none absolute inset-0 overflow-visible">
       {pieces.map((p, i) => (
         <span
           key={i}

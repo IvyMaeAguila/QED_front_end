@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
-import { CheckCircle2, Rocket, Sparkles, Star, Trophy, Zap } from "lucide-react";
+import { CheckCircle2, Rocket, Sparkles, Star, Zap } from "lucide-react";
 import type { Difficulty } from "../service/petQuiz.service";
+import QedPet from "./QedPet";
 import { HungerMeter } from "./QuizWidgets";
 import { DIFFICULTY_ORDER } from "./QuizShared";
 import { ModalCloseButton, ModalFrame } from "@shared/components/modal";
@@ -81,16 +82,16 @@ export function EndInterventionConfirm({
         </div>
 
         <p id="end-intervention-title" className="text-xl font-black text-brand-ink">
-          Send ED on his way?
+          Finish your adventure with Ed?
         </p>
 
         <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-xs font-black text-emerald-700">
           <Zap size={13} />
-          ED is fully charged
+          Ed is feeling full
         </span>
 
         <p className="mt-3 text-sm font-semibold text-gray-600">
-          ED has enough energy now to continue his journey. Ending the intervention means this
+          You and Ed have finished every challenge! Ending the intervention means this
           topic won't be flagged again unless new low grades come in.
         </p>
 
@@ -140,16 +141,14 @@ export function AccomplishmentModal({ onContinue }: { onContinue: () => void }) 
         </div>
 
         <div className="absolute -top-11 left-1/2 -translate-x-1/2">
-          <Coin face="bg-amber-400" edge="bg-amber-600">
-            <Trophy size={42} className="text-white drop-shadow" />
-          </Coin>
+          <QedPet state="happy" className="ed-finish-pet"/>
         </div>
 
         <p id="accomplishment-title" className="text-3xl font-black text-amber-950">
-          Well Done!
+          Busog na si Ed!
         </p>
         <p className="mt-1 text-sm font-bold text-amber-900">
-          ED has enough energy to continue his journey!
+          You helped Ed grow through learning!
         </p>
 
         <div className="mt-4 flex justify-center gap-1.5">

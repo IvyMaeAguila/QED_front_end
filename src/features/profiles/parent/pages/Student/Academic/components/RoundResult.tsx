@@ -30,7 +30,8 @@ export default function RoundResult({
   onStop,
 }: RoundResultProps) {
   return (
-    <div className="flex flex-col items-center gap-3 text-center w-full max-w-sm">
+    <div className="ed-result flex flex-col items-center gap-3 text-center w-full max-w-sm">
+      <h1 className="ed-result-title">{cleared ? "You did it, learning partner!" : "Every try helps us grow!"}</h1>
       {firstRoundScore && roundMode === "full" && (
         <>
           <StarRating ratio={firstRoundScore.score / firstRoundScore.total} />
