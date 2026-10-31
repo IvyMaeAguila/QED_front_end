@@ -16,7 +16,7 @@ const guides: {label: string; title: string; steps: Step[]}[] = [
   {label: 'Reports', title: 'Download a progress report', steps: [...navigation,
     {title: 'Choose your child', description: 'Tap your child in the linked children list to open their records.', preview: 'student'},
     {title: 'Open Progress Report', description: "Tap the report icon (the fourth tab) above your child's records to open Progress Report.", preview: 'report-tab'},
-    {title: 'Download the PDF', description: 'Tap Download PDF above the report. If it is unavailable, check whether the school has released the report.', preview: 'download'},
+    {title: 'Review the report', description: 'Choose a term to view the released grades, attendance, and holistic development.', preview: 'download'},
   ]},
   {label: 'Profile', title: 'Update student information', steps: [...navigation,
     {title: 'Choose your child', description: 'Tap your child in the linked children list to open their records.', preview: 'student'},
@@ -50,7 +50,7 @@ function PhonePreview({stage,darkMode}:{stage:Preview;darkMode:boolean}) {
           <div className={chip+' mt-auto bg-maroon text-center text-white '+(stage==='children'?highlight:'')}>+ Link Student</div>
         </>:<>
           <div className="flex gap-2 border-b pb-2">{[LayoutDashboard,BookOpen,SquareStar,FileBarChart,UserCircle].map((Icon,index)=>{const active=(stage==='report-tab'||stage==='download')?index===3:index===4;return <span key={index} className={'flex flex-1 justify-center rounded p-1.5 '+(active?'bg-maroon text-white '+(['report-tab','profile-tab'].includes(stage)?highlight:''):muted)}><Icon size={13}/></span>;})}</div>
-          {(stage==='download'||stage==='edit')&&<div className={chip+' ml-auto bg-maroon text-white '+highlight}>{stage==='download'?'Download PDF':'Edit'}</div>}
+          {stage==='edit'&&<div className={chip+' ml-auto bg-maroon text-white '+highlight}>Edit</div>}
           <div className={'h-8 rounded '+muted}/><div className={'h-2 w-2/3 rounded '+muted}/>
         </>}
       </div>

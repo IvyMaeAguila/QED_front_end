@@ -1,6 +1,5 @@
-import { useExportProgress } from "@shared/components/useExportProgress";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
-import { ArrowLeft,Download } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useRef, useState } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
@@ -20,7 +19,6 @@ import {
 ProgressReportProvider,
 useProgressReport,
 } from "./ProgressReport/context/ProgressReportContext";
-import { useFormalReportDownload } from "./ProgressReport/hooks/useFormalreportDownload";
 import ProgressReportUnavailableModal from "./ProgressReport/utils/ProgressReportUnavailableModal";
 import { StudentProfileTab } from "./StudentProfile/StudentProfileTab";
 
@@ -32,13 +30,7 @@ function ProgressReportSection({
   theme: AdminThemeContext;
   student: DetailStudent;
 }) {
-  const { data, loading, error, refetch, selectedTerm, selectedTermVisibility, complete } = useProgressReport();
-  const { runExport, exportFeedback } = useExportProgress(theme.darkMode, "progress report", "PDF");
-  const { downloading, handleDownload } = useFormalReportDownload({
-    elementId: "formal-progress-report",
-    fileName: `${data.meta.learner}-progress-report.pdf`,
-  });
-
+  const { loading, error, refetch, selectedTerm, selectedTermVisibility } = useProgressReport();
   const isLocked = !(selectedTermVisibility?.available ?? false);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -61,7 +53,6 @@ function ProgressReportSection({
 
   return (
     <>
-      {exportFeedback}
       <div className="flex flex-col gap-1 mt-4 mb-2">
         <h1 className={`qed-type-page-title ${theme.textPrimary}`}>
           Progess Report
@@ -72,14 +63,6 @@ function ProgressReportSection({
             development across all quarters.
           </p>
 
-          <button
-            type="button"
-            onClick={() => {if(complete&&!loading&&!isLocked&&!error)void runExport(handleDownload);}}
-            disabled={downloading || loading || isLocked || !!error || !complete}
-            className="flex shrink-0 items-center gap-1.5 rounded-lg bg-maroon px-3 py-2 text-xs font-semibold text-white hover:opacity-90 disabled:opacity-50"
-          >
-            <Download size={14} /> {downloading ? "Preparing…" : "Download PDF"}
-          </button>
         </div>
       </div>
 

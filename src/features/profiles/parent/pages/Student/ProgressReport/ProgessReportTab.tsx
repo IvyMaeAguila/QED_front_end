@@ -4,7 +4,6 @@ import { PeriodicRatingCard } from "./components/PeriodicRatingCard";
 import { TermAverageCard } from "./components/QuarterlyAverageCard";
 import { HolisticDevelopmentCard } from "./components/HolisticDevelopmentCard";
 import { AttendanceRecordCard } from "./components/AttendanceRecordCard";
-import { FormalReportTemplate } from "./components/FormalReportTemplate";
 import { TermTabs } from "./components/TermTabs";
 import type { DetailStudent } from "../GlobalTypes/types";
 import type {ReactNode} from 'react';
@@ -31,7 +30,6 @@ export function ProgressReportContent({ theme, student, loading = false }: Progr
     currentHolisticAssessment,
     currentAttendance,
     sections,
-    complete,
   } = useProgressReport();
   const { darkMode, textPrimary } = theme;
 
@@ -84,8 +82,6 @@ export function ProgressReportContent({ theme, student, loading = false }: Progr
         student={student}
       /></ReportSection>
 
-      {/* Hidden off-screen template used by generateFormalPDF */}
-      {complete&&<FormalReportTemplate data={data} />}
     </div>
   );
 }
