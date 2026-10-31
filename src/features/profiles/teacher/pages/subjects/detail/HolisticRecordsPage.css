@@ -1,0 +1,11 @@
+/* Match Full Records while retaining the sticky learner column and week grid. */
+@layer components {
+  .qed-account-ui table.teacher-user-table.qed-holistic-records-table thead :is(tr, th) {
+    background: var(--brand-primary) !important;
+    color: white !important;
+  }
+
+  .qed-account-ui table.teacher-user-table.qed-holistic-records-table thead th {
+    border-color: rgb(255 255 255 / 25%) !important;
+  }
+}

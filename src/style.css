@@ -301,7 +301,8 @@ button[aria-label^="Close" i] {
     inset 0 1px 0 rgb(255 255 255 / 0.08);
 }
 
-.qed-sidebar-metallic-edge {
+.qed-sidebar-metallic-edge,
+[data-drawer-panel="true"]::before {
   background:
     linear-gradient(90deg, rgb(255 255 255 / 0.20), transparent 55%, rgb(0 0 0 / 0.18)),
     linear-gradient(180deg,
@@ -313,6 +314,18 @@ button[aria-label^="Close" i] {
       var(--sidebar-metal-base));
   box-shadow: 0 0 8px color-mix(in srgb, var(--sidebar-metal-base) 20%, transparent),
     inset 0 0 0 1px rgb(255 255 255 / 0.10);
+}
+
+/* Right-side profile and settings drawers echo the sidebar's metallic edge. */
+[data-drawer-panel="true"]::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 3px;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0.95;
 }
 
 /* Filled text actions share a compact 8px shape and a 40px baseline. Small

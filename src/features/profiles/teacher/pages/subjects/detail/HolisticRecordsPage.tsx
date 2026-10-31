@@ -1,3 +1,4 @@
+import "./HolisticRecordsPage.css";
 import { holisticTermWeeks, holisticWeeksInMonth, holisticWeekLabel, type HolisticTermWeek } from "./utils/holisticWeeks";
 import {useToast} from '@shared/context/ToastContext';
 import {useUnsavedChanges} from '@shared/components/useUnsavedChanges';
@@ -370,7 +371,7 @@ export function HolisticRecordsSection({
           const columnCount = 1 + group.weekStartDates.length * domainCount;
           return (
             <div className="overflow-x-auto">
-              <table ref={table} className="teacher-user-table w-full min-w-max border-collapse text-xs">
+              <table ref={table} className="teacher-user-table qed-holistic-records-table w-full min-w-max border-collapse text-xs">
                 {pending && <colgroup>{columnWidths.map((width,index) => <col key={index} style={{width}} />)}</colgroup>}
                 <thead>
                   {/* Row 1: Week N, spanning that week's domain columns */}

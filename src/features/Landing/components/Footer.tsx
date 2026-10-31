@@ -20,25 +20,16 @@ export const Footer = () => {
           <p className="text-lg font-semibold mb-4">Features</p>
           <ul className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2">
             {[
-              { label: "Student Information Management", href: "#features" },
-              { label: "User & Role Management", href: "#features" },
-              { label: "Class & Section Management", href: "#features" },
-              { label: "Subject & Curriculum Management", href: "#features" },
-              { label: "Academic Year & Term Management", href: "#features" },
-              { label: "Class Scheduling", href: "#features" },
-              { label: "Grade Recording & Gradebooks", href: "#features" },
-              { label: "Assessment Management", href: "#features" },
+              { label: "Student Records Management", href: "#features" },
+              { label: "Academic & Class Management", href: "#features" },
+              { label: "Grades & Assessments", href: "#features" },
               { label: "Attendance Tracking", href: "#features" },
               { label: "Holistic Development Monitoring", href: "#features" },
-              { label: "Topic-Based Intervention", href: "#intervention" },
-              { label: "Study Quest & Learning Videos", href: "#intervention" },
-              { label: "Interactive Ed Quizzes", href: "#intervention" },
-              { label: "Matching & Memory Games", href: "#intervention" },
-              { label: "Parent Access & Student Linking", href: "#features" },
-              { label: "Progress Reports & Analytics", href: "#features" },
+              { label: "Learning Intervention & Activities", href: "#intervention" },
+              { label: "Parent Access & Communication", href: "#features" },
+              { label: "Reports & Analytics", href: "#features" },
               { label: "School Calendar & Events", href: "#features" },
-              { label: "Notifications & Updates", href: "#features" },
-              { label: "Account & Profile Settings", href: "#features" },
+              { label: "User & Account Management", href: "#features" },
             ].map(({ label, href }) => (
               <li key={label}>
                 <a href={href} className="text-white/75 text-xs leading-relaxed transition-colors hover:text-white">
