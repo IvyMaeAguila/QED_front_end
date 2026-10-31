@@ -28,6 +28,10 @@ export type ParentOutletContext = AdminThemeContext & {
 export function ParentLayout({ onLogout }: ParentLayoutProps) {
   const { pathname } = useLocation();
   const quizFocus = /^\/parent\/students\/[^/]+\/topics\/[^/]+\/quiz\/?$/.test(pathname);
+  const studyFocus = /^\/parent\/students\/[^/]+\/topics\/[^/]+\/courseware\/?$/.test(pathname);
+  const supportFocus = /^\/parent\/students\/[^/]+\/topics\/[^/]+\/support\/?$/.test(pathname);
+  const playfulFocus = quizFocus || supportFocus;
+  const focusMode = playfulFocus || studyFocus;
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { darkMode } = useSettings();
 
@@ -71,15 +75,15 @@ export function ParentLayout({ onLogout }: ParentLayoutProps) {
 
   return (
     <div
-      className={`qed-account-ui ${quizFocus ? "ed-focus-layout" : "parent-system"} flex h-dvh w-full overflow-hidden transition-colors ${
-        darkMode && !quizFocus ? "dark bg-page-dark" : "bg-surface"
+      className={`qed-account-ui ${playfulFocus ? "ed-focus-layout" : "parent-system"} flex h-dvh w-full overflow-hidden transition-colors ${
+        darkMode && !playfulFocus ? "dark bg-page-dark" : "bg-surface"
       }`}
     >
       {/* lg:z-0 → on desktop the sidebar sits below <main> (z-10), so modals
           rendered inside <main> (and their backdrop blur) cover it too.
           On mobile it stays z-50 as a slide-in drawer. */}
       <div
-        className={`${quizFocus ? "hidden" : ""} fixed inset-y-0 left-0 z-50 transition-transform duration-300 lg:relative lg:z-0 lg:translate-x-0 ${
+        className={`${focusMode ? "hidden" : ""} fixed inset-y-0 left-0 z-50 transition-transform duration-300 lg:relative lg:z-0 lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -94,7 +98,7 @@ export function ParentLayout({ onLogout }: ParentLayoutProps) {
         />
       </div>
 
-      {sidebarOpen && !quizFocus && (
+      {sidebarOpen && !focusMode && (
         <div
           className="fixed inset-0 z-40 bg-black/20 lg:hidden"
           onClick={() => setSidebarOpen(false)}
@@ -104,7 +108,7 @@ export function ParentLayout({ onLogout }: ParentLayoutProps) {
       <div className="relative flex h-full flex-1 flex-col overflow-hidden">
         <PolygonBackdrop darkMode={darkMode} />
 
-        <div className={quizFocus ? "hidden" : "relative z-10"}>
+        <div className={focusMode ? "hidden" : "relative z-10"}>
           <Header
             onMenuClick={() => setSidebarOpen(true)}
             onLogout={onLogout}
@@ -112,7 +116,7 @@ export function ParentLayout({ onLogout }: ParentLayoutProps) {
           />
         </div>
 
-        <main className={`relative z-10 flex-1 overflow-y-auto ${quizFocus ? "bg-[#bfe6f5]" : "p-4 sm:p-6"}`}>
+        <main className={`relative z-10 flex-1 overflow-y-auto ${focusMode ? quizFocus ? "bg-[#bfe6f5]" : "" : "p-4 sm:p-6"}`}>
           <ParentConnectionNotice darkMode={darkMode}/>
           <Suspense fallback={<RouteSkeleton outletContext={outletContext} />}><Outlet context={outletContext} /></Suspense>
         </main>

@@ -1,0 +1,32 @@
+/* Quest Board portals: the reference artwork, scoped to the intervention options. */
+.quest-portals { color-scheme:light; color:#2b1a3d; background:linear-gradient(#bfe6f5,#fff3cf); overflow-x:clip; }
+.quest-portals > svg { position:fixed; }
+.qp-page { position:relative; width:min(100%,980px); margin:0 auto; padding:max(20px,env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) max(56px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left)); }
+.qp-top { display:flex; align-items:center; gap:16px; }
+.quest-portals .qp-top p { margin:0; color:#2b1a3d; font-size:23px; font-weight:800; }
+.quest-portals button.qp-back { display:grid; place-items:center; width:54px; height:54px; flex-shrink:0; border:0; border-radius:18px; background:#fffaf0; color:#7a0000; box-shadow:0 5px 0 #00000024; cursor:pointer; }
+.qp-sign { position:relative; margin:38px auto 0; width:min(100%,570px); padding:18px 24px 20px; text-align:center; border:5px solid #8a5224; border-radius:22px; color:#fff; background:linear-gradient(#d99455,#b87333); box-shadow:0 7px 0 #0000002e; }
+.qp-sign::before,.qp-sign::after { content:""; position:absolute; top:-35px; width:5px; height:30px; background:#7a5a30; z-index:-1; }.qp-sign::before { left:15%; }.qp-sign::after { right:15%; }
+.qp-sign > span { display:block; font-size:14px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }
+.quest-portals .qp-sign h1 { color:#fff; font-size:clamp(27px,4vw,38px); font-weight:850; line-height:1.15; margin:8px 0; text-shadow:0 3px 0 #00000033; }
+.quest-portals .qp-sign p { color:#fff; font-size:17px; font-weight:650; line-height:1.5; margin:0; }
+.qp-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:40px; margin-top:40px; }
+.quest-portals button.qp-portal { --qp-rim:#7430db; --qp-edge:#4b1aa8; --qp-glow:#965aff66; --qp-gradient:linear-gradient(160deg,#c993ff,#7b3fe4 60%,#ff8ac8); display:flex; flex-direction:column; align-items:center; justify-content:flex-start; min-width:0; border:0; background:none; padding:8px 12px 14px; color:#2b1a3d; text-align:center; cursor:pointer; touch-action:manipulation; border-radius:26px; }
+.quest-portals button.qp-quiz { --qp-rim:#0b8068; --qp-edge:#075344; --qp-glow:#28c89666; --qp-gradient:linear-gradient(160deg,#9af0d0,#1fb58f 60%,#9be7ff); }
+.qp-arch { position:relative; display:block; width:min(100%,280px); aspect-ratio:3/3.6; flex-shrink:0; border:12px solid #fff; border-radius:999px 999px 28px 28px; overflow:hidden; background:var(--qp-gradient); box-shadow:0 0 0 6px var(--qp-rim),0 0 45px var(--qp-glow),0 12px 0 var(--qp-rim); transition:transform .35s cubic-bezier(.3,1.6,.5,1),box-shadow .3s; }
+.qp-swirl { position:absolute; display:block; inset:-50%; background:conic-gradient(from 0deg,#ffffff88,transparent 18%,#ffffff55 40%,transparent 60%,#ffffff80 80%,transparent); animation:qp-spin 9s linear infinite; }
+.qp-core { position:absolute; inset:0; background:radial-gradient(circle at 50% 55%,#fffffff2,#ffffff59 32%,transparent 62%); }
+.qp-portal:hover .qp-arch,.qp-portal:focus-visible .qp-arch { transform:translateY(-8px) scale(1.03); }.qp-portal:hover .qp-swirl { animation-duration:3s; }.qp-portal:active .qp-arch { transform:translateY(2px) scale(.98); }
+.quest-portals button:focus-visible { outline:4px solid #2b1a3d; outline-offset:5px; }
+.qp-float { position:absolute; display:block; font-size:36px; color:#fff; font-weight:850; text-shadow:0 4px 0 #00000026; animation:qp-bob 3s ease-in-out infinite; }.qp-one { left:10%; top:22%; animation-delay:-1.2s; }.qp-two { right:10%; top:16%; }.qp-three { left:17%; bottom:15%; animation-delay:-1.2s; }.qp-quiz .qp-one { top:auto; bottom:17%; left:6%; }.qp-quiz .qp-two { top:27%; right:5%; }.qp-quiz .qp-three { left:auto; right:12%; bottom:9%; }
+.qp-book { position:absolute; display:block; top:50%; left:50%; font-size:92px; line-height:1; margin:-46px 0 0 -46px; filter:drop-shadow(0 6px 0 #0000002e); animation:qp-bob 3.4s ease-in-out infinite; }
+.qp-ed-label { position:absolute; top:17px; left:50%; transform:translateX(-50%); white-space:nowrap; border-radius:99px; background:#fffaf0; color:#075344; padding:6px 12px; font-size:13px; font-weight:800; box-shadow:0 3px 0 #00000026; }
+.qp-arch .qp-ed { position:absolute; left:50%; top:50%; width:170px; height:181px; margin:-80px 0 0 -85px; }
+.qp-plaque { display:flex; flex:1; flex-direction:column; align-items:center; width:min(100%,310px); margin-top:24px; background:#fffaf0; border-radius:26px; padding:16px 18px 20px; box-shadow:0 7px 0 #00000026; }
+.qp-tag { display:inline-block; background:var(--qp-rim); color:white; border-radius:99px; padding:5px 14px; font-size:13px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
+.qp-title { display:block; color:#2b1a3d; font-size:34px; font-weight:850; line-height:1.2; margin:8px 0 4px; }
+.qp-description { display:block; color:#5f5070; font-size:17px; font-weight:650; line-height:1.45; margin-bottom:16px; overflow-wrap:anywhere; }
+.qp-enter { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; margin-top:auto; border-radius:18px; background:var(--qp-rim); color:white; font-size:21px; font-weight:800; padding:13px; box-shadow:0 6px 0 var(--qp-edge); }.qp-portal:active .qp-enter { transform:translateY(4px); box-shadow:0 2px 0 var(--qp-edge); }
+@keyframes qp-spin { to{transform:rotate(360deg);} }@keyframes qp-bob { 50%{transform:translateY(-10px) rotate(5deg);} }
+@media(max-width:720px) { .qp-page { padding: max(16px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) max(48px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left)); }.qp-options { grid-template-columns:minmax(0,1fr); gap:40px; margin-top:34px; }.qp-sign { padding:16px 16px 18px; }.quest-portals .qp-sign p { font-size:16px; }.qp-arch { width:min(100%,260px); }.qp-plaque { width:min(100%,310px); }.qp-top { gap:14px; }.quest-portals .qp-top p { font-size:22px; } }
+@media(prefers-reduced-motion:reduce) { .quest-portals * { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }
