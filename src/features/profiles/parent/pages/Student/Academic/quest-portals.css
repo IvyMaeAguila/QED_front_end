@@ -28,5 +28,22 @@
 .qp-description { display:block; color:#5f5070; font-size:17px; font-weight:650; line-height:1.45; margin-bottom:16px; overflow-wrap:anywhere; }
 .qp-enter { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; margin-top:auto; border-radius:18px; background:var(--qp-rim); color:white; font-size:21px; font-weight:800; padding:13px; box-shadow:0 6px 0 var(--qp-edge); }.qp-portal:active .qp-enter { transform:translateY(4px); box-shadow:0 2px 0 var(--qp-edge); }
 @keyframes qp-spin { to{transform:rotate(360deg);} }@keyframes qp-bob { 50%{transform:translateY(-10px) rotate(5deg);} }
-@media(max-width:720px) { .qp-page { padding: max(16px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) max(48px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left)); }.qp-options { grid-template-columns:minmax(0,1fr); gap:40px; margin-top:34px; }.qp-sign { padding:16px 16px 18px; }.quest-portals .qp-sign p { font-size:16px; }.qp-arch { width:min(100%,260px); }.qp-plaque { width:min(100%,310px); }.qp-top { gap:14px; }.quest-portals .qp-top p { font-size:22px; } }
+@media(max-width:720px) { .qp-page { padding: max(16px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) max(48px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left)); }.qp-options { grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-top:30px; }.qp-sign { padding:16px 16px 18px; }.quest-portals .qp-sign p { font-size:16px; }.qp-arch { width:min(100%,260px); }.qp-plaque { width:min(100%,310px); }.qp-top { gap:14px; }.quest-portals .qp-top p { font-size:22px; } }
 @media(prefers-reduced-motion:reduce) { .quest-portals * { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }
+
+@media(max-width:720px) {
+ .quest-portals button.qp-portal { padding:6px 2px 12px; }
+ .qp-arch { width:100%; border-width:7px; border-radius:999px 999px 18px 18px; box-shadow:0 0 0 4px var(--qp-rim),0 0 24px var(--qp-glow),0 8px 0 var(--qp-rim); }
+ .qp-plaque { width:100%; margin-top:18px; padding:12px 10px 16px; border-radius:20px; }
+ .qp-tag { font-size:11px; letter-spacing:.02em; padding:5px 8px; }
+ .qp-title { font-size:27px; margin-top:8px; }
+ .qp-description { font-size:14px; line-height:1.45; margin:6px 0 16px; }
+ .qp-enter { min-height:46px; font-size:17px; padding:10px 6px; gap:6px; border-radius:14px; }.qp-enter svg { width:18px; flex-shrink:0; }
+ .qp-book { font-size:clamp(48px,15vw,90px); margin:0; transform:translate(-50%,-50%); animation:qp-book-bob 3.4s ease-in-out infinite; }
+ .qp-float { font-size:clamp(18px,5vw,30px); }.qp-three { left:10%; bottom:12%; }
+ .qp-arch .qp-ed { width:clamp(78px,24vw,155px); height:auto; aspect-ratio:240/255; margin:0; top:56%; transform:translate(-50%,-50%); }
+ .qp-ed-label { white-space:normal; text-align:center; width:90%; padding:4px 6px; font-size:11px; line-height:1.2; top:8px; }
+}
+@keyframes qp-book-bob { 0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-50%,calc(-50% - 7px)) rotate(4deg)} }
+
+@media(prefers-reduced-motion:reduce) { .quest-portals * { animation:none!important; transition:none!important; } }
