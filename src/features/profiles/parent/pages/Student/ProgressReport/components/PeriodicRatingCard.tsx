@@ -26,17 +26,17 @@ export function PeriodicRatingCard({ rows, termAverages, theme, student, loading
       const group = [row, ...components];
       return <tr key={row.learningArea} className={`border-t ${panelBorder}`} data-learning-area-group={row.learningArea}>
         <td className={`!p-0 align-top text-sm ${textPrimary}`}>
-          {group.map((entry, position) => <div key={entry.learningArea} className={`flex h-16 items-center py-2 pr-3 ${position === 0 ? "pl-3 font-semibold" : "pl-7 font-normal"}`}>
+          {group.map((entry, position) => <div key={entry.learningArea} className={`flex h-12 sm:h-9 items-center py-1 pr-3 ${position === 0 ? "pl-3 font-semibold" : "pl-7 font-normal"}`}>
             <span>{entry.learningArea}</span>
           </div>)}
         </td>
         {TERMS.map(term => <td key={term} className="!p-0 align-top text-center text-sm">
-          {group.map((entry,position) => <div key={entry.learningArea} data-grade-for={entry.learningArea} data-term={term} className={`flex h-16 items-center justify-center px-3 py-2 ${position > 0 ? `border-t ${panelBorder}` : ""} ${position === 0 ? "font-bold" : "font-medium"} ${entry.scores[term] === undefined ? textMuted : entry.scores[term]! < 85 ? "text-red-500" : textPrimary}`}>
+          {group.map((entry,position) => <div key={entry.learningArea} data-grade-for={entry.learningArea} data-term={term} className={`flex h-12 sm:h-9 items-center justify-center px-3 py-1 ${position > 0 ? `border-t ${panelBorder}` : ""} ${position === 0 ? "font-bold" : "font-medium"} ${entry.scores[term] === undefined ? textMuted : entry.scores[term]! < 85 ? "text-red-500" : textPrimary}`}>
             {entry.scores[term] ?? ""}
           </div>)}
         </td>)}
         <td className={`!p-0 align-top text-sm ${textMuted}`}>
-          {group.map((entry,position) => <div key={entry.learningArea} data-final-for={entry.learningArea} className={`flex h-16 items-center px-3 py-2 ${position > 0 ? `border-t ${panelBorder}` : ""} ${position === 0 ? "font-semibold" : ""}`}>{entry.finalRating}</div>)}
+          {group.map((entry,position) => <div key={entry.learningArea} data-final-for={entry.learningArea} className={`flex h-12 sm:h-9 items-center px-3 py-1 ${position > 0 ? `border-t ${panelBorder}` : ""} ${position === 0 ? "font-semibold" : ""}`}>{entry.finalRating}</div>)}
         </td>
       </tr>;
     }
