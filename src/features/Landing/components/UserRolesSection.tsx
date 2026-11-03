@@ -1,5 +1,5 @@
-import { ArrowRight, UsersRound } from "lucide-react";
-import { UsersIcon, EditIcon, UserRoundCheckIcon, KnowledgeIcon } from "./LandingIcons";
+import { ArrowRight, BarChart3, UsersRound } from "lucide-react";
+import { UsersIcon, EditIcon, UserRoundCheckIcon } from "./LandingIcons";
 import { Reveal } from "./Reveal";
 
 const ROLES = [
@@ -7,6 +7,11 @@ const ROLES = [
     icon: <UsersIcon color="var(--color-maroon)" />,
     role: "Administrators",
     description: "Manage student records, classes, subjects, and school accounts.",
+  },
+  {
+    icon: <BarChart3 color="var(--color-maroon)" />,
+    role: "Principals",
+    description: "Review gradebooks, attendance, and school reports to monitor student progress.",
   },
   {
     icon: <EditIcon color="var(--color-maroon)" />,
@@ -17,11 +22,6 @@ const ROLES = [
     icon: <UserRoundCheckIcon color="var(--color-maroon)" />,
     role: "Parents",
     description: "Stay informed about a child’s academic progress and school activity.",
-  },
-  {
-    icon: <KnowledgeIcon color="var(--color-maroon)" />,
-    role: "Students",
-    description: "Review academic information and keep track of learning progress.",
   },
 ];
 
