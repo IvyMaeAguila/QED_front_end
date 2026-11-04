@@ -50,6 +50,16 @@ function usePrincipalDashboardHomeState() {
     if (!current) return null;
     const fullRanking = current.subjectRankingByTerm[rankingTerm] ?? [];
     const top5Ranking = fullRanking.slice(0,5);
+    // The current-term endpoint remains the source for the live dashboard;
+    // historical selections use the same published results as the ranking list.
+    const selectedTopSubjects = pending || rankingTerm === current.currentTerm
+      ? current.topSubjectPerGrade
+      : Array.from(fullRanking.reduce((byGrade, item) => {
+          const previous = byGrade.get(item.grade);
+          if (!previous || item.score > previous.score) byGrade.set(item.grade, item);
+          return byGrade;
+        }, new Map<string, PrincipalDashboardData["topSubjectPerGrade"][number]>()).values())
+        .sort((a,b) => a.grade.localeCompare(b.grade,undefined,{numeric:true}));
     return (<div className="flex flex-col gap-4 sm:gap-5 xl:gap-6">
       <LoadingRegion name="principal-region-overview" loading={false} error={pending?null:regions.overview.error} retry={regions.overview.retry} hasContent={regions.overview.hasData} retainOnError={regions.overview.retainOnError} skeleton={null}>
       <OverviewCards loading={pending||regions.overview.loading}
@@ -77,7 +87,7 @@ function usePrincipalDashboardHomeState() {
 
       <LoadingRegion name="principal-region-subject" loading={false} error={pending?null:regions.subject.error} retry={regions.subject.retry} hasContent={regions.subject.hasData} retainOnError={regions.subject.retainOnError} skeleton={null}>
       <SubjectPerformanceSection loading={pending||regions.subject.loading}
-        topSubjectPerGrade={current.topSubjectPerGrade}
+        topSubjectPerGrade={selectedTopSubjects}
         ranking={top5Ranking}
         rankingTerm={rankingTerm}
         onRankingTermChange={setRankingTerm}

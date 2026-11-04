@@ -34,14 +34,14 @@ export function SubjectPerformanceSection({
 }: SubjectPerformanceSectionProps) {
   return (
     <SectionCard title="Subject Performance" icon={Trophy} panelBg={panelBg} panelBorder={panelBorder} textPrimary={textPrimary} darkMode={darkMode}>
-      <p className={`mb-5 text-sm font-semibold ${textMuted}`}>Highest performing subject per grade level</p>
+      <p className={`mb-5 text-sm font-semibold ${textMuted}`}>Highest performing subject per grade level · {rankingTerm}</p>
       <div
         className="mb-8 grid gap-4"
         style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 380px), 1fr))" }}
       >
         {topSubjectPerGrade.length === 0 ? (
           <p className={`sm:col-span-2 xl:col-span-3 rounded-xl border border-dashed px-4 py-6 text-center text-sm ${panelBorder} ${textMuted}`}>
-            Subject performance will appear when grades are available.
+            No submitted subject grades are available for {rankingTerm}.
           </p>
         ) : topSubjectPerGrade.map((item, index) => (
           <div key={item.grade || index} data-sk-region="principal-top-subject" data-sk-variable="" className={`flex flex-col gap-4 rounded-xl border p-5 ${panelBorder} ${darkMode ? "bg-white/[0.03]" : "bg-white"}`}>
