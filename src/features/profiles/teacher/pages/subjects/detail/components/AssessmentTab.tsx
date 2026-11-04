@@ -5,7 +5,7 @@ import { QueryHttpError } from "@shared/http/QueryHttpError";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonText, SkeletonAvatar, SkeletonControl } from "@shared/components/SkeletonLoading";
 import { skeletonRows, rememberRows, rememberColumns, useColumnReservation, lastKnownCount } from "@shared/loading/reservations";
-import { useMemo, useRef, useState, type CSSProperties } from "react";
+import { useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { useRouteEffect as useEffect } from "@shared/loading/RoutePreview";
 import {
   CheckCircle2,
@@ -63,6 +63,7 @@ interface AssessmentTabProps {
   ) => void | Promise<void>;
   onScoresChange?: (edits:import("../../services/subjectGrading.service").ScoreEdit[])=>Promise<void>;
   onOpenRecords: () => void;
+  componentSelector?: ReactNode;
   onDirtyChange?: (dirty: boolean) => void;
   darkMode: boolean;
   panelBg: string;
@@ -96,6 +97,7 @@ export function AssessmentTab({
   onScoreChange,
   onScoresChange,
   onOpenRecords,
+  componentSelector,
   onDirtyChange,
   darkMode,
   panelBg,
@@ -453,7 +455,7 @@ const isDirty = useMemo(() => {
       <div
         className={`flex flex-col gap-2.5 rounded-xl border px-3 py-2 lg:flex-row lg:items-center lg:justify-between ${panelBg} ${panelBorder}`}
       >
-        <div className="relative w-full lg:w-72">
+        <div className="relative w-full lg:w-64 lg:shrink-0">
           <span className="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-2.5 text-gray-400">
             <Search size={13} />
           </span>
@@ -467,7 +469,7 @@ const isDirty = useMemo(() => {
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2.5 lg:justify-end">
           {SCORE_LEGEND.map((entry) => (
             <span
               key={entry.label}
@@ -486,6 +488,7 @@ const isDirty = useMemo(() => {
             className={`hidden h-5 w-px lg:block ${darkMode ? "bg-white/10" : "bg-black/10"}`}
           />
 
+          {componentSelector}
           {tab !== "exams" && (
             <button
               disabled={loading || saving} onClick={() => setTopicManagerOpen(true)}

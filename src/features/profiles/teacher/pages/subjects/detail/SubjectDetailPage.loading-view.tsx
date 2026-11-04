@@ -6,7 +6,8 @@ import {useTeacherAcademicServices} from '../../../query/TeacherAcademicQueryCon
 import {useAuth} from '@shared/hooks/useAuth';
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { SkeletonText } from "@shared/components/SkeletonLoading";
-import { ArrowLeft } from "lucide-react";
+import { AccountSelect } from "@shared/components/AccountSelect";
+import { ArrowLeft, Music2 } from "lucide-react";
 import { useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
@@ -227,11 +228,6 @@ function useSubjectDetailPageState() {
           </div>
         </div>
 
-        {component && activeTab !== 'holistic' && <label className={`flex items-center gap-3 text-sm font-semibold ${textPrimary}`}>MAPEH component
-          <select aria-label="MAPEH component" value={component.id} onChange={event => {const value=event.target.value;guardedNavigate(() => setComponentId(value));}} className={`rounded-lg border p-2 ${panelBg} ${panelBorder}`}>
-            {templateStructure?.components?.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
-          </select>
-        </label>}
         <TabNav
           isGraded={isGraded}
           active={activeTab}
@@ -269,6 +265,14 @@ function useSubjectDetailPageState() {
              setScores(previous=>{const next={...previous};for(const change of changes)next[change.studentId]={...next[change.studentId],[change.itemId]:change.value};return next;});
             }}
             onOpenRecords={openRecords}
+            componentSelector={component ? <div className="relative w-full shrink-0 sm:w-56" data-mapeh-component-selector="">
+              <Music2 aria-hidden="true" size={15} className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-maroon" />
+              <AccountSelect aria-label="MAPEH component" data-dropdown-dark={darkMode} value={component.id}
+                onChange={event => {const value=event.target.value;guardedNavigate(() => setComponentId(value));}}
+                className={`qed-filter-control w-full rounded-lg border !pl-9 pr-8 text-xs font-semibold ${panelBg} ${panelBorder} ${textPrimary}`}>
+                {templateStructure?.components?.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+              </AccountSelect>
+            </div> : undefined}
             onDirtyChange={setHasUnsavedChanges}
             darkMode={darkMode}
             panelBg={panelBg}
