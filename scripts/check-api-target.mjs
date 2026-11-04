@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
 
-export const productionProxyOrigin = 'https://thesis-qed.vercel.app';
+export const productionProxyOrigin = 'https://euc-qed.onrender.com';
 
 export function checkApiProxy(config) {
   const expected = ['/api/:path*/', '/api/:path*'];

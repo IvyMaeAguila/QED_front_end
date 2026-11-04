@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/api/:path*/",
-      "destination": "https://thesis-qed.vercel.app/api/:path*/"
+      "destination": "https://euc-qed.onrender.com/api/:path*/"
     },
     {
       "source": "/api/:path*",
-      "destination": "https://thesis-qed.vercel.app/api/:path*"
+      "destination": "https://euc-qed.onrender.com/api/:path*"
     },
     {
       "source": "/(.*)",
