@@ -6,6 +6,7 @@ import { QueryHttpError } from "@shared/http/QueryHttpError";
 const BASE_URL = `${API_CONFIG.baseURL}/api`;
 
 export interface ExaminationAnalytics {
+  coverage?: { expectedResults: number; completeResults: number; percentage: number | null };
   schoolYear: string | null;
   summary: { count: number; students: number; mean: number | null; sd: number | null };
   rows: { subjectId: number; subject: string; examination: string; comparisonCohort?: number | null; students: number; count: number; mean: number | null; sd: number | null }[];
