@@ -28,8 +28,15 @@ export function computeTransmutedGrade(
   table: TemplateTransmutationRow[] | undefined,
   mode?: "descendingMinimum",
 ): number | null {
-  if (initialGrade === null || !table?.length) return null;
+  if (initialGrade === null || !Number.isFinite(initialGrade) || !table?.length) return null;
   if (mode === 'descendingMinimum') return table.find(entry => initialGrade >= entry.igMin)?.transmuted ?? null;
   const row = table.find((entry) => initialGrade >= entry.igMin && initialGrade <= entry.igMax);
-  return row?.transmuted ?? null;
+  if (row) return row.transmuted;
+  // HELPER ranges are printed to two decimals. Full-precision weighted totals
+  // can land in the hundredth-wide gap; use the lower band, as the workbook's
+  // minimum-bound lookup does. Do not bridge genuinely missing template bands.
+  const gapRow = table.find(entry => initialGrade > entry.igMax && table.some(next =>
+    next.igMin > entry.igMax && next.igMin - entry.igMax <= 0.010000001 && initialGrade < next.igMin
+  ));
+  return gapRow?.transmuted ?? null;
 }

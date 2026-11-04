@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from "react";
 import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { PendingBar, PendingAxisTick } from "./PrincipalChartLoading";
 import { Users } from "lucide-react";
@@ -60,6 +61,28 @@ function CustomTooltip({
   textMuted,
   darkMode,
 }: CustomTooltipProps) {
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const element = tooltipRef.current;
+    if (!active || !element) return;
+    // Recharts constrains to the plot; also keep tall popups inside the screen.
+    const keepInViewport = () => {
+      const previousTop = parseFloat(element.style.top) || 0;
+      const bottom = element.getBoundingClientRect().bottom - previousTop;
+      element.style.top = `${Math.min(0, window.innerHeight - 12 - bottom)}px`;
+    };
+    keepInViewport();
+    const observer = new MutationObserver(keepInViewport);
+    if (element.parentElement) observer.observe(element.parentElement, { attributes: true, attributeFilter: ["style"] });
+    window.addEventListener("resize", keepInViewport);
+    window.addEventListener("scroll", keepInViewport, true);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", keepInViewport);
+      window.removeEventListener("scroll", keepInViewport, true);
+    };
+  }, [active, payload]);
+
   if (!active || !payload || payload.length === 0) {
     return null;
   }
@@ -73,13 +96,21 @@ function CustomTooltip({
 
   return (
     <div
+      ref={tooltipRef}
+      role="tooltip"
+      aria-label={`${data.grade} attendance breakdown`}
       className={`rounded-xl border px-4 py-3 shadow-xl ${
         darkMode
           ? "bg-zinc-900 border-white/10"
           : "bg-white border-gray-200"
       }`}
       style={{
+        position: "relative",
         minWidth: 210,
+        maxWidth: "calc(100vw - 48px)",
+        maxHeight: "min(360px, 50dvh)",
+        overflowY: "auto",
+        overscrollBehavior: "contain",
       }}
     >
       {/* Grade */}
@@ -458,6 +489,9 @@ export function TodaysAttendanceSection({
 
               {/* Hover */}
               <Tooltip
+                // Render above adjacent cards and allow long breakdowns to scroll.
+                wrapperStyle={{ zIndex: 30, pointerEvents: "auto" }}
+                isAnimationActive={false}
                 content={
                   <CustomTooltip
                     textPrimary={textPrimary}
