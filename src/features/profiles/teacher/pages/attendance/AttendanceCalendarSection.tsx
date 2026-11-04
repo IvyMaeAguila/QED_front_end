@@ -109,6 +109,8 @@ export function AttendanceCalendarSection({
   const dropoutReady=dropoutReader.data?.classId===sectionId&&!dropoutReader.loading&&!dropoutReader.error;
   const dropoutFor=useCallback((id:string)=>dropoutReader.data?.classId===sectionId?effectiveDropout(dropoutReader,id):undefined,[dropoutReader,sectionId]);
   const [attempt, setAttempt] = useState(0);
+  // Keep the school-year dataset intact; term/month filters only change the calendar view.
+  // Student summaries must always include every term.
   const [storedAttendance, setAttendance] = useState<AttendanceMap>({});
   const [loading, setLoading] = useState(true);
   const [attendanceError, setAttendanceError] = useState<string | null>(null);
@@ -136,15 +138,15 @@ export function AttendanceCalendarSection({
     let cancelled = false;
     setLoading(true);
     setAttendanceError(null);
-    fetchAdvisoryAttendance(sectionId, { termId: selectedTermId })
+    fetchAdvisoryAttendance(sectionId, { allPeriods: true })
       .then((res) => { if (!cancelled) setAttendance(res.data); })
       .catch((err) => {
         console.error("Failed to load attendance:", err);
-        if (!cancelled) setAttendanceError("Couldn't load attendance for this term. Please try again.");
+        if (!cancelled) setAttendanceError("Couldn't load attendance for this school year. Please try again.");
       })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [sectionId, selectedTermId, attempt, prerequisitesLoading, bridge]);
+  }, [sectionId, attempt, prerequisitesLoading, bridge]);
 
   useEffect(() => {
     if (term) setViewDate(defaultViewDate(term));
@@ -391,7 +393,7 @@ export function AttendanceCalendarSection({
   };
 
   if (!term && !prerequisitesLoading) {
-    return (<>{bridge && <Suspense fallback={null}><DropoutEffects classId={sectionId} ready={!prerequisitesLoading&&!!sectionId} onChange={setDropoutReader}/></Suspense>} {bridge && <bridge.Effects {...{classId:sectionId,termId:selectedTermId,ready:!prerequisitesLoading&&!!sectionId,attempt,setAttendance,setLoading,setError:setAttendanceError,errorMessage:"Couldn't load attendance for this term. Please try again."}}/>}
+    return (<>{bridge && <Suspense fallback={null}><DropoutEffects classId={sectionId} ready={!prerequisitesLoading&&!!sectionId} onChange={setDropoutReader}/></Suspense>} {bridge && <bridge.Effects {...{classId:sectionId,allPeriods:true,ready:!prerequisitesLoading&&!!sectionId,attempt,setAttendance,setLoading,setError:setAttendanceError,errorMessage:"Couldn't load attendance for this school year. Please try again."}}/>}
 {(
       <div className={`${cardClasses} px-5 py-16 text-center`}>
         <p className={`font-bold ${textPrimary}`}>No terms set up yet</p>
@@ -400,7 +402,7 @@ export function AttendanceCalendarSection({
     )}</>);
   }
 
-  return (<>{bridge && <Suspense fallback={null}><DropoutEffects classId={sectionId} ready={!prerequisitesLoading&&!!sectionId} onChange={setDropoutReader}/></Suspense>} {bridge && <bridge.Effects {...{classId:sectionId,termId:selectedTermId,ready:!prerequisitesLoading&&!!sectionId,attempt,setAttendance,setLoading,setError:setAttendanceError,errorMessage:"Couldn't load attendance for this term. Please try again."}}/>}
+  return (<>{bridge && <Suspense fallback={null}><DropoutEffects classId={sectionId} ready={!prerequisitesLoading&&!!sectionId} onChange={setDropoutReader}/></Suspense>} {bridge && <bridge.Effects {...{classId:sectionId,allPeriods:true,ready:!prerequisitesLoading&&!!sectionId,attempt,setAttendance,setLoading,setError:setAttendanceError,errorMessage:"Couldn't load attendance for this school year. Please try again."}}/>}
 {(
     <section className={cardClasses} aria-label="Attendance records">
       {saveFeedback}
