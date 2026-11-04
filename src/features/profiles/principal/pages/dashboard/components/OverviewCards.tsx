@@ -76,7 +76,6 @@ export function OverviewCards({
         icon={TrendingUp}
         showIcon={false}
         compact
-        trend={loading ? "flat" : overview.academicPerf >= 82 ? "up" : "down"}
         variant="primary"
         panelBg={panelBg}
         panelBorder={panelBorder}
