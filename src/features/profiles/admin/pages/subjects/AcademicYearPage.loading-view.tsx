@@ -3,12 +3,12 @@ import { useActionConfirmation } from "@shared/components/useActionConfirmation"
 import { useToast } from "@shared/context/ToastContext";
 import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { ArrowLeft } from "lucide-react";
-import { useCallback,useState } from "react";
+import { lazy,Suspense,useCallback,useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import type { AdminThemeContext } from "../AdminLayout";
 import { AcademicYearCard } from "./components/AcademicYearCard";
-import { EditAcademicYearModal } from "./components/EditAcademicYearModal";
+const EditAcademicYearModal=lazy(()=>import("./components/EditAcademicYearModal").then(module=>({default:module.EditAcademicYearModal})));
 import { EditTermDatesModal } from "./components/EditTermDatesModal";
 import { TermsTable } from "./components/TermsTable";
 import {
@@ -156,7 +156,7 @@ function useAcademicYearPageState(data?:AcademicYearData) {
             panelBorder={panelBorder}
             textPrimary={textPrimary}
             textMuted={textMuted}
-            onEdit={() => setEditingYear(true)}
+            onEdit={() => {if(academicYear?.canChangeYear)setEditingYear(true);}}
           />
 
           <TermsTable
@@ -170,8 +170,8 @@ function useAcademicYearPageState(data?:AcademicYearData) {
             onEdit={() => setEditingTerms(true)}
           />
 
-          {editingYear && academicYear && (
-            <EditAcademicYearModal
+          {editingYear && academicYear?.canChangeYear && (
+            <Suspense fallback={null}><EditAcademicYearModal
               academicYear={academicYear}
               darkMode={darkMode}
               panelBg={panelBg}
@@ -185,7 +185,7 @@ function useAcademicYearPageState(data?:AcademicYearData) {
               onSave={value => confirmAction({ title: "Change academic year?", description: `Save ${value.label} with status ${value.status}? This changes the academic-year context used by school records.`, confirmLabel: "Save academic year", action: () => saveAcademicYear(value) })}
               saving={savingYear}
               error={yearError}
-            />
+            /></Suspense>
           )}
 
           {editingTerms && (

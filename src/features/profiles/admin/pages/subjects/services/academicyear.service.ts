@@ -16,6 +16,8 @@ export interface SchoolYearRow {
 }
 
 export interface AcademicYearRow {
+  canChangeYear?:boolean;
+  changeLockReason?:string|null;
   id: number;
   label: string;
   startDate: string | null;

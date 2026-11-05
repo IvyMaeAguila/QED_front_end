@@ -2,6 +2,8 @@ export type SchoolYearStatus = "Active" | "Inactive";
 export type TermStatus = "Active" | "Upcoming" | "Completed";
 
 export interface AcademicYear {
+  canChangeYear?:boolean;
+  changeLockReason?:string|null;
   id: number;
   label: string; // e.g. "2026-2027"
   startDate: string | null; // derived from grading_periods, may be unset

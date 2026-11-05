@@ -49,9 +49,10 @@ export function AcademicYearCard({
       <div className={cardHeaderClasses}>
         <h2 className={sectionTitleClasses} data-sk-region="academicyearcard-school-year-details" data-sk-static="">School Year Details</h2>
         <button
-          disabled={loading}
+          disabled={loading||!academicYear.canChangeYear}
           type="button"
           onClick={onEdit}
+          aria-describedby={!loading&&!academicYear.canChangeYear?"year-change-lock":undefined}
           className="qed-academic-header-action inline-flex min-h-9 items-center justify-center gap-2 rounded-lg border px-4 py-2 text-xs font-semibold transition-colors disabled:opacity-50" data-sk-region="academicyearcard-change-academic-year" data-sk-static=""
         >
           <Pencil size={14} />
@@ -59,6 +60,7 @@ export function AcademicYearCard({
         </button>
       </div>
 
+      {!loading&&!academicYear.canChangeYear&&<p id="year-change-lock" className={`border-b px-5 py-3 text-xs ${panelBorder} ${textMuted}`}>{academicYear.changeLockReason??"Term completion has not been verified."}</p>}
       <dl className="grid gap-4 px-5 py-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
         <div>
           <dt className={labelClasses} data-sk-region="academicyearcard-school-year" data-sk-static="">School Year</dt>
