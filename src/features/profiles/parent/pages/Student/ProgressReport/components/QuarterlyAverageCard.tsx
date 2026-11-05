@@ -88,10 +88,10 @@ export function TermAverageCard({ entries, selectedTerm, theme, student, loading
             y="75"
             textAnchor="middle"
             className={darkMode ? "fill-white" : "fill-[#111827]"}
-            fontSize="24"
+            fontSize={currentTermEntry?.notEnrolled||currentTermEntry?.dropped?14:24}
             fontWeight="700"
           >
-            {currentTermEntry?.dropped ? currentTermEntry.ratingLabel??"Dropped" : displayAverage !== null ? `${displayAverage}%` : "—"}
+            {currentTermEntry?.notEnrolled?"Not enrolled":currentTermEntry?.dropped ? currentTermEntry.ratingLabel??"Dropped" : displayAverage !== null ? `${displayAverage}%` : "—"}
           </text>
         </svg>}</div>
         <p className={`mt-1 text-sm font-semibold ${textMuted}`}>{loading ? <SkeletonParagraph field="parent-average-label" typical={2} width="18ch" /> : <span data-sk-field="parent-average-label">{label}</span>}</p>

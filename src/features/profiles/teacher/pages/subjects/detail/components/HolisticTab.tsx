@@ -1,4 +1,4 @@
-import {isDroppedForWeek} from '../data';
+import {isDroppedForWeek,isNotEnrolledForWeek} from '../data';
 import {useToast} from '@shared/context/ToastContext';
 import { useSaveFeedback } from "@shared/components/useSaveFeedback";
 import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
@@ -26,6 +26,7 @@ interface HolisticTabProps {
   roster: GenderedStudent[];
   ratings: HolisticMap;
   weekStartDate: string;
+  periodEndDate?:string;
   locked: boolean;
   onRate: (studentId: string, axis: HolisticAxisKey, value: number) => Promise<void>;
   onOpenRecords: () => void;
@@ -57,7 +58,7 @@ export function HolisticTab({
   view = "holistic-working",
   roster,
   ratings,
-  weekStartDate,
+  weekStartDate,periodEndDate,
   locked,
   onRate,
   onOpenRecords,
@@ -117,12 +118,13 @@ const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} $
             <span data-sk-region="student-avatar" className="inline-flex h-7 w-7 shrink-0">{pending ? <SkeletonAvatar className="h-7 w-7" /> : <StudentAvatar gender={student.gender} name={student.name} />}</span>
             <span className={`truncate text-xs font-bold ${textPrimary}`}>
               {pending ? <SkeletonText className={Number(student.id.split("-").at(-1)) % 2 === 0 ? "w-[14ch]" : "w-[11ch]"} /> : student.name}
+              {isNotEnrolledForWeek(student,weekStartDate,{endDate:periodEndDate})&&<span className="ml-2 text-xs text-maroon">Not enrolled</span>}
               {isDroppedForWeek(student,weekStartDate) && <span className="ml-2 text-xs text-maroon">{student.withdrawalType==='transfer'?'Transferred Out':'Dropped'}</span>}
             </span>
           </div>
         </td>
         {HOLISTIC_COLUMNS.map((col) => {
-          const current = pending ? null : ratings[student.id]?.[col.key] ?? null;
+          const current = pending||isNotEnrolledForWeek(student,weekStartDate,{endDate:periodEndDate}) ? null : ratings[student.id]?.[col.key] ?? null;
           return (
             <td key={col.key} className="px-3 py-2">
               <div className="flex items-center justify-center gap-1">
@@ -134,8 +136,8 @@ const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} $
                       <button
                         key={level.value}
                         type="button"
-                        disabled={locked || pending || isDroppedForWeek(student,weekStartDate)}
-                        aria-disabled={locked || pending || isDroppedForWeek(student,weekStartDate)}
+                        disabled={locked || pending || isDroppedForWeek(student,weekStartDate)||isNotEnrolledForWeek(student,weekStartDate,{endDate:periodEndDate})}
+                        aria-disabled={locked || pending || isDroppedForWeek(student,weekStartDate)||isNotEnrolledForWeek(student,weekStartDate,{endDate:periodEndDate})}
                         aria-pressed={selected}
                         aria-label={`Rate ${student.name} ${level.label} for ${col.label}`}
                         onClick={() => {

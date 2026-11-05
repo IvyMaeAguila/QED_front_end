@@ -32,7 +32,7 @@ export function PeriodicRatingCard({ rows, termAverages, theme, student, loading
         </td>
         {TERMS.map(term => <td key={term} className="!p-0 align-top text-center text-sm">
           {group.map((entry,position) => <div key={entry.learningArea} data-grade-for={entry.learningArea} data-term={term} className={`flex h-12 sm:h-9 items-center justify-center px-3 py-1 ${position > 0 ? `border-t ${panelBorder}` : ""} ${position === 0 ? "font-bold" : "font-medium"} ${entry.scores[term] === undefined ? textMuted : entry.scores[term]! < 85 ? "text-red-500" : textPrimary}`}>
-            {entry.droppedTerms?.[term] ? entry.departureLabels?.[term]??"Dropped" : entry.scores[term] ?? ""}
+            {entry.notEnrolledTerms?.[term]?"Not enrolled":entry.droppedTerms?.[term] ? entry.departureLabels?.[term]??"Dropped" : entry.scores[term] ?? ""}
           </div>)}
         </td>)}
         <td className={`!p-0 align-top text-sm ${textMuted}`}>
@@ -55,7 +55,7 @@ export function PeriodicRatingCard({ rows, termAverages, theme, student, loading
                         score === undefined ? textMuted : isLow ? "text-red-500" : textPrimary
                       }`}
                     >
-                      {pending ? <SkeletonText width="3ch" /> : row.droppedTerms?.[t] ? row.departureLabels?.[t]??"Dropped" : score ?? ""}
+                      {pending ? <SkeletonText width="3ch" /> : row.notEnrolledTerms?.[t]?"Not enrolled":row.droppedTerms?.[t] ? row.departureLabels?.[t]??"Dropped" : score ?? ""}
                     </td>
                   );
                 })}
@@ -102,7 +102,7 @@ export function PeriodicRatingCard({ rows, termAverages, theme, student, loading
                       avg === null || avg === undefined ? textMuted : textPrimary
                     }`}
                   >
-                    {pending ? <SkeletonText width="4ch" /> : entry?.dropped ? entry.ratingLabel??"Dropped" : avg !== null && avg !== undefined ? `${avg}%` : ""}
+                    {pending ? <SkeletonText width="4ch" /> : entry?.notEnrolled?"Not enrolled":entry?.dropped ? entry.ratingLabel??"Dropped" : avg !== null && avg !== undefined ? `${avg}%` : ""}
                   </td>
                 );
               })}

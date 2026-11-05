@@ -23,6 +23,7 @@ export const TERM_FILTER_LABELS: Record<TermFilter, string> = {
 
 export interface PeriodicRatingRow {
   departureLabels?: Partial<Record<Term,string>>;
+  notEnrolledTerms?: Partial<Record<Term,boolean>>;
   droppedTerms?: Partial<Record<Term, boolean>>;
   parentLearningArea?: string;
   learningArea: string;
@@ -32,6 +33,7 @@ export interface PeriodicRatingRow {
 
 export interface TermAverageEntry {
   withdrawalType?: "dropout"|"transfer"|null;
+  notEnrolled?: boolean;
   dropped?: boolean;
   term: Term;
   average: number | null;

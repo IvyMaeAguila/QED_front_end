@@ -1,11 +1,11 @@
 // src/features/profiles/principal/pages/gradebooks/data/types.ts
 
 export type Gender = "Male" | "Female";
-export type GradeSubmissionStatus = "submitted" | "pending" | "not_submitted" | "dropped";
+export type GradeSubmissionStatus = "submitted" | "pending" | "not_submitted" | "dropped" | "not_enrolled";
 
 export interface Student {
   dropped?: boolean;
-  withdrawalType?: "dropout" | "transfer" | null; dropoutEffectiveDate?: string | null;
+  notEnrolled?:boolean; joinedDate?:string|null; withdrawalType?: "dropout" | "transfer" | null; dropoutEffectiveDate?: string | null;
   studentId: string;
   lastName: string;
   firstName: string;

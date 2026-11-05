@@ -1,4 +1,4 @@
-import {isDroppedForPeriod} from './data';
+import {isDroppedForPeriod,isNotEnrolledForPeriod} from './data';
 import {useToast} from '@shared/context/ToastContext';
 import { FinalGradesLoading } from './components/FinalGradesTable';
 import { useSaveFeedback } from "@shared/components/useSaveFeedback";
@@ -232,7 +232,7 @@ function useSubjectRecordsPageState() {
     if (!items || items.length === 0 || !state) return [];
     const missing: MissingScoreEntry[] = [];
     for (const student of state.roster) {
-      if(isDroppedForPeriod(student,state.terms.find(t=>t.id===term)))continue;
+      if(isDroppedForPeriod(student,state.terms.find(t=>t.id===term))||isNotEnrolledForPeriod(student,state.terms.find(t=>t.id===term)))continue;
       for (const item of items) {
         const value = localScores[student.id]?.[item.id];
         if (value === undefined || value === null) {
@@ -319,7 +319,7 @@ function useSubjectRecordsPageState() {
   }
 
   const { subjectName, terms } = state;
-  const roster = state.roster.map(student=>({...student,dropped:isDroppedForPeriod(student,terms.find(t=>t.id===term))}));
+  const roster = state.roster.map(student=>({...student,notEnrolled:isNotEnrolledForPeriod(student,terms.find(t=>t.id===term)),dropped:isDroppedForPeriod(student,terms.find(t=>t.id===term))}));
   const title = RECORDS_TITLES[tab as SubjectDetailTab];
   const subtitle =
     tab === "holistic"
@@ -436,7 +436,7 @@ function useSubjectRecordsPageState() {
             title={title}
             roster={roster}
             items={items ?? state.items ?? []}
-            scores={localScores}
+            scores={Object.fromEntries(Object.entries(localScores).filter(([id])=>!roster.find(s=>s.id===id)?.notEnrolled))}
             weights={weights}
             loading={isLoadingRecords || !hasLoadedOnce}
             term={term}

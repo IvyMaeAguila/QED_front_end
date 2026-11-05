@@ -9,6 +9,7 @@ export interface BackendTerm {
                        // the backend omits unsubmitted terms entirely
   released: boolean;
   withdrawalType?: "dropout"|"transfer"|null;
+  notEnrolled?:boolean;
   dropped?: boolean;
   average?: number;
   subjects: { subject: string; grade: number | null; components?: { id: string; subject: string; grade: number | null }[] }[];
@@ -36,15 +37,17 @@ export function toPeriodicRatingRows(backendTerms: BackendTerm[]): PeriodicRatin
   function ratingRow(learningArea: string, grades: {termNumber:number; grade:number|null}[], parentLearningArea?:string): PeriodicRatingRow {
     const scores: Partial<Record<Term, number>> = {};
     const departureLabels: Partial<Record<Term,string>> = {};
+    const notEnrolledTerms: Partial<Record<Term,boolean>> = {};
+    for(const entry of backendTerms){const term=termFromNumber(entry.termNumber);if(term&&entry.released&&entry.notEnrolled)notEnrolledTerms[term]=true;}
     const droppedTerms: Partial<Record<Term, boolean>> = {};
     for(const entry of backendTerms){const term=termFromNumber(entry.termNumber);if(term && entry.released && entry.dropped){droppedTerms[term]=true;departureLabels[term]=entry.withdrawalType==="transfer"?"Transferred Out":"Dropped";}}
     for (const entry of grades) {
       const term = termFromNumber(entry.termNumber);
-      if (term && !droppedTerms[term] && typeof entry.grade === "number" && entry.grade > 0) scores[term] = entry.grade;
+      if (term && !droppedTerms[term] && !notEnrolledTerms[term] && typeof entry.grade === "number" && entry.grade > 0) scores[term] = entry.grade;
     }
     const complete = TERM_ORDER.every(term => typeof scores[term] === "number");
     const average = complete ? TERM_ORDER.reduce((sum,term) => sum + scores[term]!,0) / TERM_ORDER.length : null;
-    return {learningArea, scores, droppedTerms, departureLabels, finalRating: Object.values(droppedTerms).some(Boolean) ? (Object.values(departureLabels).includes("Transferred Out")?"Transferred Out":"Dropped") : average === null ? "" : (Math.round(average * 100) / 100).toFixed(1), ...(parentLearningArea ? {parentLearningArea} : {})};
+    return {learningArea, scores, droppedTerms, notEnrolledTerms, departureLabels, finalRating: Object.values(droppedTerms).some(Boolean) ? (Object.values(departureLabels).includes("Transferred Out")?"Transferred Out":"Dropped") : Object.values(notEnrolledTerms).some(Boolean)?"Incomplete":average === null ? "" : (Math.round(average * 100) / 100).toFixed(1), ...(parentLearningArea ? {parentLearningArea} : {})};
   }
   return subjectNames.flatMap(subject => {
     const entries = backendTerms.filter(term => term.released).map(term => ({termNumber:term.termNumber, value:term.subjects.find(row => row.subject === subject)}));
@@ -72,6 +75,7 @@ export function toTermAverages(backendTerms: BackendTerm[]): TermAverageEntry[] 
       return { term, average: null, ratingLabel: null, released: false };
     }
 
+    if(backendTerm.notEnrolled)return {term,average:null,ratingLabel:"Not enrolled",released:true,notEnrolled:true};
     if(backendTerm.dropped)return {term,average:null,ratingLabel:backendTerm.withdrawalType==="transfer"?"Transferred Out":"Dropped",released:true,dropped:true,withdrawalType:backendTerm.withdrawalType};
     const avg = backendTerm.average ?? null;
     return {

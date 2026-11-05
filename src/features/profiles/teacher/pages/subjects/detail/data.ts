@@ -2,6 +2,7 @@ export interface RosterStudent {
   withdrawalType?: "dropout" | "transfer" | null;
   dropoutEffectiveDate?: string | null;
   dropped?: boolean;
+  notEnrolled?: boolean;
   joinedDate?: string | null;
   id: string;
   name: string;
@@ -23,4 +24,12 @@ export function isDroppedForWeek(student: Pick<RosterStudent, 'dropoutEffectiveD
   if (!student.dropoutEffectiveDate || !/^\d{4}-\d{2}-\d{2}$/.test(week)) return false;
   const end = new Date(week+'T12:00:00Z');end.setUTCDate(end.getUTCDate()+4);
   return student.dropoutEffectiveDate <= end.toISOString().slice(0,10);
+}
+
+export function isNotEnrolledForPeriod(student: Pick<RosterStudent,'joinedDate'>,period?:{endDate?:string|null}):boolean {
+ return !!student.joinedDate&&!!period?.endDate&&student.joinedDate>period.endDate.slice(0,10);
+}
+export function isNotEnrolledForWeek(student:Pick<RosterStudent,'joinedDate'>,week:string,period?:{endDate?:string|null}|null):boolean {
+ if(!student.joinedDate||!/^\d{4}-\d{2}-\d{2}$/.test(week))return false;
+ const end=new Date(week+'T12:00:00Z');end.setUTCDate(end.getUTCDate()+4);const friday=end.toISOString().slice(0,10);return student.joinedDate>(period?.endDate&&period.endDate<friday?period.endDate:friday);
 }

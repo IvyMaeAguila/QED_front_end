@@ -89,7 +89,7 @@ export function StudentGroupTable({
                             grade == null ? null : (
                               <span className="qed-type-table-grade text-brand-ink">{grade}</span>
                             )
-                          ) : status === "dropped" ? <span className="text-xs font-medium text-maroon">{student.withdrawalType==='transfer'?'Transferred Out':'Dropped'}</span> : status === "pending" ? (
+                          ) : status === "not_enrolled" ? <span className="text-xs font-medium text-maroon">Not enrolled</span> : status === "dropped" ? <span className="text-xs font-medium text-maroon">{student.withdrawalType==='transfer'?'Transferred Out':'Dropped'}</span> : status === "pending" ? (
                             <span className="qed-type-badge inline-flex items-center gap-1 uppercase tracking-wide text-[#B45309]">
                               <Clock size={10} aria-hidden="true" /> Pending
                             </span>
@@ -100,7 +100,7 @@ export function StudentGroupTable({
                       );
                     })}
                     <td className="px-3 py-2 text-center">
-                      {pending ? <SkeletonText width="4ch" className="qed-type-table-grade mx-auto" /> : student.dropped ? <span className="text-xs font-medium text-maroon">{student.withdrawalType==='transfer'?'Transferred Out':'Dropped'}</span> : displayAverage == null ? (
+                      {pending ? <SkeletonText width="4ch" className="qed-type-table-grade mx-auto" /> : student.notEnrolled ? <span className="text-xs font-medium text-maroon">Not enrolled</span> : student.dropped ? <span className="text-xs font-medium text-maroon">{student.withdrawalType==='transfer'?'Transferred Out':'Dropped'}</span> : displayAverage == null ? (
                         <span className="qed-type-table-empty-value">—</span>
                       ) : (
                         <span className="qed-type-table-grade text-brand-ink">{displayAverage}</span>

@@ -1,4 +1,4 @@
-import {isDroppedForPeriod} from './data';
+import {isDroppedForPeriod,isNotEnrolledForPeriod} from './data';
 import { currentHolisticPeriod } from "./utils/holisticTerm";
 import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
 import {useContext} from 'react';
@@ -251,7 +251,7 @@ function useSubjectDetailPageState() {
             subjectSectionId={subjectId}
             subjectName={subjectName}
             tab={activeTab}
-            roster={roster.map(student=>({...student,dropped:isDroppedForPeriod(student,terms.find(t=>t.id===selectedTerm))}))}
+            roster={roster.map(student=>({...student,notEnrolled:isNotEnrolledForPeriod(student,terms.find(t=>t.id===selectedTerm)),dropped:isDroppedForPeriod(student,terms.find(t=>t.id===selectedTerm))}))}
             items={componentItems}
             scores={scores}
             terms={terms}
@@ -299,7 +299,7 @@ function useSubjectDetailPageState() {
             view={`subject-${subjectId}-holistic`}
             roster={roster}
             ratings={holistic}
-            weekStartDate={holisticWeekStartDate}
+            weekStartDate={holisticWeekStartDate} periodEndDate={holisticPeriod?.endDate}
             locked={holisticLocked}
             onRate={handleHolisticRate}
             onOpenRecords={openRecords}

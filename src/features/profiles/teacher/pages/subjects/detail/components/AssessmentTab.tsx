@@ -223,7 +223,7 @@ const isDirty = useMemo(() => {
     setSavingItems(tabItems);
     setSaving(true);
     try {
-      if(changes.some(c=>roster.find(s=>s.id===c.studentId)?.dropped))throw new Error("A student has a dropout or transfer-out declaration. Reload before saving.");
+      if(changes.some(c=>roster.find(s=>s.id===c.studentId)?.dropped||roster.find(s=>s.id===c.studentId)?.notEnrolled))throw new Error("Student enrollment changed. Reload before saving.");
       if(onScoresChange)await onScoresChange(changes.map(change=>({...change,expectedValue:scores[change.studentId]?.[change.itemId]??null})));
       else {const results=await Promise.allSettled(changes.map(c=>onScoreChange(c.studentId,c.itemId,c.value)));
       const failed=results.find(result=>result.status==='rejected');
@@ -282,20 +282,21 @@ const isDirty = useMemo(() => {
             <span data-sk-region="student-avatar" className="inline-flex h-7 w-7 shrink-0">{pending && !filtered.length ? <SkeletonAvatar className="h-7 w-7" /> : <StudentAvatar gender={student.gender} name={student.name} />}</span>
             <span className={`truncate text-xs font-bold ${textPrimary}`}>
               {pending && !filtered.length ? <SkeletonText className={Number(student.id.split("-").at(-1)) % 2 === 0 ? "w-[22ch] max-w-full" : "w-[18ch] max-w-full"} /> : student.name}
-              {student.dropped && <span className="ml-2 text-xs font-medium text-maroon">{student.withdrawalType==='transfer'?'Transferred Out':'Dropped'}</span>}
+              {student.notEnrolled&&<span className="ml-2 text-xs font-medium text-maroon">Not enrolled</span>}
+              {student.dropped&&!student.notEnrolled && <span className="ml-2 text-xs font-medium text-maroon">{student.withdrawalType==='transfer'?'Transferred Out':'Dropped'}</span>}
             </span>
           </div>
         </td>
         {visibleItems.map((item) => {
-          const value = draftScores[student.id]?.[item.id] ?? null;
+          const value = student.notEnrolled?null:draftScores[student.id]?.[item.id] ?? null;
           const percent = value !== null ? (value / item.maxItems) * 100 : null;
           const style = scoreStyle(percent);
           return (
             <td key={item.id} className="px-3 py-2 text-center">
               {pending ? <span className="inline-flex h-7 w-14 items-center justify-center"><SkeletonControl className="h-2 w-8 rounded-full" /></span> : <input
                 type="number"
-                disabled={student.dropped}
-                title={student.dropped ? (student.withdrawalType==="transfer"?"Transferred Out for this term; earlier records are preserved":"Dropped for this term; earlier records are preserved") : undefined}
+                disabled={student.dropped||student.notEnrolled}
+                title={student.notEnrolled?"Not enrolled in this term":student.dropped ? (student.withdrawalType==="transfer"?"Transferred Out for this term; earlier records are preserved":"Dropped for this term; earlier records are preserved") : undefined}
                 min={0}
                 max={item.maxItems}
                 value={value ?? ""}

@@ -36,7 +36,7 @@ function useUserViewPageState() {
   if (forbidden) return { content: <LoadingRegion loading={false} error={error} retry={refetchUsers} name="user-account-details" skeleton={null}>{null}</LoadingRegion>, scope: {} };
   if (!loading && !error && !foundUser) {
     return { content: ((
-      <div className="max-w-7xl mx-auto pb-12">
+      <div className="w-full min-w-0 pb-12">
         <section className={`rounded-xl border shadow-xs p-8 text-center ${panelBg} ${panelBorder}`}>
           <p className={`text-sm font-semibold ${textMuted}`} data-sk-region="userviewpage-no-user-found-with-id" data-sk-static="">
             No user found with ID <span className="font-bold">{userId}</span>.
@@ -105,11 +105,10 @@ function useUserViewPageState() {
     { label: "Email Address", value: user.email },
     { label: "Contact Number", value: user.contactNumber },
     { label: "Status", value: user.status },
-    { label: "Last Login", value: user.lastLogin ?? "Never" },
   ];
 
   const renderDetails = (pending: boolean) => (
-    <div className="max-w-7xl mx-auto space-y-6 pb-12" data-sk-region="user-details-content">
+    <div className="w-full min-w-0 space-y-6 pb-12" data-sk-region="user-details-content">
       <section className={cardClasses}>
         <div className={cardHeaderClasses}>
           <div className="flex min-w-0 items-center gap-3">
@@ -132,16 +131,16 @@ function useUserViewPageState() {
         </div>
 
         <div className="p-6">
-          <div className="grid sm:grid-cols-2 gap-5 max-w-xl" data-sk-region="userviewpage-div-field-2">
+          <div className="grid w-full min-w-0 grid-cols-1 gap-x-10 gap-y-6 sm:grid-cols-2 xl:grid-cols-3" data-sk-region="userviewpage-div-field-2">
             {fields.map((f) => (
-              <div key={f.label}>
+              <div key={f.label} className="min-w-0 break-words">
                 <p className={`text-xs font-bold uppercase tracking-wide mb-1.5 ${textMuted}`}>{f.label}</p>
                 <p className={`text-sm font-semibold ${textPrimary}`} data-sk-region={`user-details-field-${f.label}`} data-sk-variable=""><span data-sk-field={`${view}:${f.label}`} className="block" data-sk-region="userviewpage-span-field-3">{pending && f.label !== "Role" ? <SkeletonParagraph field={`${view}:${f.label}`} typical={f.label === "Full Name" || f.label === "Email Address" ? 2 : 1} /> : f.value}</span></p>
               </div>
             ))}
           </div>
 
-          <div className="flex gap-3 mt-8">
+          <div className="mt-8 flex flex-wrap gap-3">
             <button
               onClick={() => navigate(`/admin/users/${user.role.toLowerCase()}/${user.id}/edit`)}
               className="h-10 px-4 rounded-xl text-xs font-bold text-white inline-flex items-center gap-2 transition-colors hover:bg-maroon-light"
