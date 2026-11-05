@@ -16,7 +16,7 @@ export function StudentDropoutDialog({classId,student,state,dropout,theme,onClos
  try{const options=scope.mutationRequest(new AbortController().signal);
  if(dropout)await reverseDropout(classId,student.id,dropout.id,remarks,options);else await declareDropout(classId,student.id,{effectiveDate,reason,remarks},options);
  // Invalidate every class/term projection and role-authorized profile reader.
- await Promise.all(['dropouts','attendance','advisory','monthly-attendance-report','holistic','students','dashboard'].map(key=>queryClient.invalidateQueries({queryKey:[...scope.key,key]})));
+ await queryClient.invalidateQueries({queryKey:scope.key});
  onSaved();onClose();
  }catch(failure){setError(failure instanceof Error?failure.message:'Unable to save this declaration.');setBusy(false);}
  }

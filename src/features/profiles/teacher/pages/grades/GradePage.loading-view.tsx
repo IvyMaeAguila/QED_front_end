@@ -55,6 +55,7 @@ function studentDisplayName(s: { firstName: string; lastName: string; middleName
 
 function cellDisplayValue(cell: { status: string; termGrade?: number | null; average: number | null; isOwnAdvisory?: boolean } | undefined): string | number {
   if (!cell) return "";
+  if (cell.status === "dropped") return "Dropped";
   if (cell.status === "submitted") return cell.termGrade ?? cell.average ?? "";
   if (cell.status === "pending") return "Pending";
   return "";
@@ -82,7 +83,7 @@ function toCSV(gradebook: AdvisoryGradebook) {
         studentDisplayName(student),
         student.studentId,
         ...gradebook.subjects.map((s) => cellDisplayValue(student.grades[s.subjectSectionId])),
-        student.overallAverage ?? "",
+        student.dropped ? "Dropped" : student.overallAverage ?? "",
       ]);
     });
   });
@@ -149,7 +150,7 @@ function useGradesPageState() {
   // submission-based sync rule.
   const allComplete = useMemo(() => {
     if (!gradebook) return false;
-    return gradebook.students.every((student) =>
+    return gradebook.students.filter(student=>!student.dropped).every((student) =>
       gradebook.subjects.every((s) => student.grades[s.subjectSectionId]?.status === "submitted")
     );
   }, [gradebook]);
@@ -157,7 +158,7 @@ function useGradesPageState() {
   const incompleteSubjectCount = useMemo(() => {
     if (!gradebook) return 0;
     return gradebook.subjects.filter(
-      (s) => !gradebook.students.every((student) => student.grades[s.subjectSectionId]?.status === "submitted")
+      (s) => !gradebook.students.filter(student=>!student.dropped).every((student) => student.grades[s.subjectSectionId]?.status === "submitted")
     ).length;
   }, [gradebook]);
 
@@ -300,7 +301,7 @@ function useGradesPageState() {
                                           </span>
                                         )
                                         : null
-                                    ) : status === "pending" ? (
+                                    ) : status === "dropped" ? <span className="text-xs font-medium text-maroon">Dropped</span> : status === "pending" ? (
                                       <span
                                         className="qed-type-badge inline-flex items-center gap-1 uppercase tracking-wide text-[#B45309]"
                                         title="Scores are complete but the subject teacher hasn't submitted yet"
@@ -312,7 +313,7 @@ function useGradesPageState() {
                                 );
                               })}
                               <td className="qed-gradebook-average px-3 py-2 text-center">
-                                {pending ? <SkeletonText width="3ch" className="mx-auto qed-type-table-grade" /> : student.overallAverage == null ? (
+                                {pending ? <SkeletonText width="3ch" className="mx-auto qed-type-table-grade" /> : student.dropped ? <span className="text-xs font-medium text-maroon">Dropped</span> : student.overallAverage == null ? (
                                   <span className="qed-type-table-empty-value">—</span>
                                 ) : (
                                   <span className="inline-flex flex-col items-center gap-0.5" title={student.overallAverageComplete === false ? `Provisional average based on ${student.averageSubjectCount ?? 'available'} of ${displayBook.subjects.length} subject grades. Missing grades are excluded.` : 'Overall average of available subject grades'}>

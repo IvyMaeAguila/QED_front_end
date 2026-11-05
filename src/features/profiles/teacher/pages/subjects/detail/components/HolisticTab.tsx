@@ -1,3 +1,4 @@
+import {isDroppedForWeek} from '../data';
 import {useToast} from '@shared/context/ToastContext';
 import { useSaveFeedback } from "@shared/components/useSaveFeedback";
 import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
@@ -116,6 +117,7 @@ const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} $
             <span data-sk-region="student-avatar" className="inline-flex h-7 w-7 shrink-0">{pending ? <SkeletonAvatar className="h-7 w-7" /> : <StudentAvatar gender={student.gender} name={student.name} />}</span>
             <span className={`truncate text-xs font-bold ${textPrimary}`}>
               {pending ? <SkeletonText className={Number(student.id.split("-").at(-1)) % 2 === 0 ? "w-[14ch]" : "w-[11ch]"} /> : student.name}
+              {isDroppedForWeek(student,weekStartDate) && <span className="ml-2 text-xs text-maroon">Dropped</span>}
             </span>
           </div>
         </td>
@@ -132,8 +134,8 @@ const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} $
                       <button
                         key={level.value}
                         type="button"
-                        disabled={locked || pending}
-                        aria-disabled={locked || pending}
+                        disabled={locked || pending || isDroppedForWeek(student,weekStartDate)}
+                        aria-disabled={locked || pending || isDroppedForWeek(student,weekStartDate)}
                         aria-pressed={selected}
                         aria-label={`Rate ${student.name} ${level.label} for ${col.label}`}
                         onClick={() => {

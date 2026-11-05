@@ -58,7 +58,7 @@ export interface ExamScore {
 // backend enforces this (see advisoryGrading.controller.js), so a
 // "pending" cell will never leak a number here even though the grade is
 // technically computed.
-export type GradeSubmissionState = "not_submitted" | "pending" | "submitted";
+export type GradeSubmissionState = "not_submitted" | "pending" | "submitted" | "dropped";
 
 export interface SubjectGradeCell {
   status: GradeSubmissionState;
@@ -72,6 +72,8 @@ export interface SubjectGradeCell {
 }
 
 export interface GradebookStudent {
+  dropped?: boolean;
+  dropoutEffectiveDate?: string | null;
   studentId: string;
   firstName: string;
   lastName: string;
@@ -149,6 +151,8 @@ export async function submitClassGrades(gradingPeriodId: string, classId?: strin
 }
 
 export interface VisibilityStudent {
+  dropped?: boolean;
+  dropoutEffectiveDate?: string | null;
   studentId: string;
   firstName: string;
   lastName: string;

@@ -94,7 +94,7 @@ export async function fetchGradeLevelSummaries(signal?: AbortSignal, onUnauthori
 // ---------------------------------------------------------------------------
 // Principal gradebook (students + subjects + grades sa isang call)
 // ---------------------------------------------------------------------------
-type GradeCellStatus = "submitted" | "pending" | "not_submitted";
+type GradeCellStatus = "submitted" | "pending" | "not_submitted" | "dropped";
 
 interface ApiGradeCell {
   status: GradeCellStatus;
@@ -117,6 +117,8 @@ interface ApiSubject {
 }
 
 interface ApiStudent {
+  dropped?: boolean;
+  dropoutEffectiveDate?: string | null;
   studentId: string;
   firstName: string;
   lastName: string;
@@ -237,6 +239,8 @@ function toStudent(
 
   return {
     studentId: apiStudent.studentId,
+    dropped: apiStudent.dropped,
+    dropoutEffectiveDate: apiStudent.dropoutEffectiveDate,
     lastName: apiStudent.lastName,
     firstName: apiStudent.firstName,
     middleInitial: toMiddleInitial(apiStudent.middleName),

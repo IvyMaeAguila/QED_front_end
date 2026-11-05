@@ -1,3 +1,4 @@
+import {isDroppedForWeek} from './data';
 import "./HolisticRecordsPage.css";
 import { holisticTermWeeks, holisticWeeksInMonth, holisticWeekLabel, type HolisticTermWeek } from "./utils/holisticWeeks";
 import {useToast} from '@shared/context/ToastContext';
@@ -331,7 +332,8 @@ export function HolisticRecordsSection({
                 <td key={`${week}-${column.key}`} className={`border px-1.5 py-2 text-center ${panelBorder}`}>
                   {pending ? <SkeletonControl className="mx-auto h-7 w-7 rounded-lg" /> : isEditing ? (
                     <input
-                      disabled={saving}
+                      disabled={saving || isDroppedForWeek(student,week)}
+                      title={isDroppedForWeek(student,week)?"Dropped; this week is locked":undefined}
                       type="number"
                       min={1}
                       max={5}

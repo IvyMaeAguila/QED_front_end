@@ -67,7 +67,7 @@ export function AddItemModal({
   const [newTopicName, setNewTopicName] = useState("");
   const [creatingTopic, setCreatingTopic] = useState(false);
 
-  const [examType, setExamType] = useState<ExamType>(initialItem?.examType ?? "ST1");
+  const [examType, setExamType] = useState<ExamType>(initialItem?.examType ?? examTypes[0] ?? "ST1");
   const [maxItems, setMaxItems] = useState(initialItem ? String(initialItem.maxItems) : "");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -117,6 +117,8 @@ export function AddItemModal({
     if (!isExam && !selectedTopic) {
       return setError("Pick a topic — this is what powers mastery and intervention tracking.");
     }
+
+    if (isExam && !examTypes.includes(examType)) return setError('This exam has already been added or is unavailable. Choose an unused exam.');
 
     const finalActivityName = isExam ? EXAM_TYPE_LABELS[examType] : selectedTopic!.topicName;
 

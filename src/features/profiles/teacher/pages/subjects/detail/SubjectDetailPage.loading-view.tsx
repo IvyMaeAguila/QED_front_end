@@ -1,3 +1,4 @@
+import {isDroppedForPeriod} from './data';
 import { currentHolisticPeriod } from "./utils/holisticTerm";
 import { useUnsavedChanges } from "@shared/components/useUnsavedChanges";
 import {useContext} from 'react';
@@ -250,7 +251,7 @@ function useSubjectDetailPageState() {
             subjectSectionId={subjectId}
             subjectName={subjectName}
             tab={activeTab}
-            roster={roster}
+            roster={roster.map(student=>({...student,dropped:isDroppedForPeriod(student,terms.find(t=>t.id===selectedTerm))}))}
             items={componentItems}
             scores={scores}
             terms={terms}

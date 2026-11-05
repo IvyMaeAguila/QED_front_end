@@ -22,6 +22,7 @@ export const TERM_FILTER_LABELS: Record<TermFilter, string> = {
 };
 
 export interface PeriodicRatingRow {
+  droppedTerms?: Partial<Record<Term, boolean>>;
   parentLearningArea?: string;
   learningArea: string;
   scores: Partial<Record<Term, number>>;
@@ -29,6 +30,7 @@ export interface PeriodicRatingRow {
 }
 
 export interface TermAverageEntry {
+  dropped?: boolean;
   term: Term;
   average: number | null;
   ratingLabel: string | null;

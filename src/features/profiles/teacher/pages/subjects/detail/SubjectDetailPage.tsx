@@ -46,6 +46,7 @@ function Effects({scope:s}:{scope:SubjectDetailPageEffectScope}){
  useEffect(()=>{
   setLoading(loading);setError(error);
   if(loading)return;
+  if(info.data && !info.error)setRoster(info.data.roster);
   // Never replace a local score draft or a confirmed local save with a stale cache projection.
   if(!error&&(hasUnsavedChanges||invalidated||port.writing))return;
   const projection=[info.data,items.data,scores.data,holistic.data];

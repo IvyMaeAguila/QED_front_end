@@ -1,3 +1,4 @@
+import {isDroppedForPeriod} from './data';
 import {useToast} from '@shared/context/ToastContext';
 import { FinalGradesLoading } from './components/FinalGradesTable';
 import { useSaveFeedback } from "@shared/components/useSaveFeedback";
@@ -231,6 +232,7 @@ function useSubjectRecordsPageState() {
     if (!items || items.length === 0 || !state) return [];
     const missing: MissingScoreEntry[] = [];
     for (const student of state.roster) {
+      if(isDroppedForPeriod(student,state.terms.find(t=>t.id===term)))continue;
       for (const item of items) {
         const value = localScores[student.id]?.[item.id];
         if (value === undefined || value === null) {
@@ -316,7 +318,8 @@ function useSubjectRecordsPageState() {
     )), scope: { subjectId, setRulesVerification, isAssessment, tab, setIsLoadingRecords, setLoadError, fetchItems, term, setTerm, fetchScores, setItems, setLocalScores, setEffectiveWeights, setWeightsError, setHasLoadedOnce, attempt, isEditing } };
   }
 
-  const { subjectName, roster, terms } = state;
+  const { subjectName, terms } = state;
+  const roster = state.roster.map(student=>({...student,dropped:isDroppedForPeriod(student,terms.find(t=>t.id===term))}));
   const title = RECORDS_TITLES[tab as SubjectDetailTab];
   const subtitle =
     tab === "holistic"

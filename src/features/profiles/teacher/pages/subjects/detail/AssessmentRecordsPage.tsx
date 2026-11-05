@@ -314,8 +314,8 @@ export function AssessmentRecordsSection({
 
   const isFullyGraded = useMemo(() => {
     if (roster.length === 0) return false;
-    if (component) return roster.every(student => combinedGrade(student.id) !== null);
-    return roster.every((student) =>
+    if (component) return roster.filter(student=>!student.dropped).every(student => combinedGrade(student.id) !== null);
+    return roster.filter(student=>!student.dropped).every((student) =>
       groups.every((group) => {
         const result = computeGroupResult(group, student.id, scores, examinations);
         return result.isComplete;
@@ -327,7 +327,7 @@ export function AssessmentRecordsSection({
     const reasons: string[] = [];
     groups.forEach((group) => {
       if (group.items.length === 0) return;
-      const anyMissing = roster.some((student) => {
+      const anyMissing = roster.filter(student=>!student.dropped).some((student) => {
         const result = computeGroupResult(group, student.id, scores, examinations);
         return !result.isComplete;
       });
@@ -337,7 +337,7 @@ export function AssessmentRecordsSection({
   }, [groups, roster, scores, examinations]);
 
   const gradePreviews: StudentGradePreview[] = useMemo(() => {
-    return roster.map((student) => {
+    return roster.filter(student=>!student.dropped).map((student) => {
       const { initialGrade } = computeStudentGrade(student, groups, scores, examinations);
       const termGrade = component ? combinedGrade(student.id) : computeTransmutedGrade(initialGrade, weights.templateStructure?.transmutationTable, weights.templateStructure?.transmutationMode);
       const remarks = termGrade === null ? null : getRemarks(termGrade);
@@ -451,7 +451,7 @@ export function AssessmentRecordsSection({
                 : column.item ? `${column.item.activityName} · ${formatShortDate(column.item.date)}` : "No examination score recorded";
               return (
                 <td key={column.id} title={title} className="min-w-14 whitespace-nowrap px-2 py-2.5 text-center text-xs font-bold tabular-nums">
-                  {isEditing && componentItems.length > 0 && component.key.toUpperCase() !== "ALL" && componentItems.length > 1 ? (
+                  {isEditing && !student.dropped && componentItems.length > 0 && component.key.toUpperCase() !== "ALL" && componentItems.length > 1 ? (
                     <span className="inline-flex flex-wrap justify-center gap-1">
                       {componentItems.map((item) => <input key={item.id} type="number" min={0} max={item.maxItems} step="1" inputMode="numeric"
                         aria-label={`${component.label}: ${item.activityName}`}
@@ -460,7 +460,7 @@ export function AssessmentRecordsSection({
                         onChange={(event) => onScoreChange(student.id, item.id, item.maxItems, event.target.value)}
                         className={cellInputClasses} />)}
                     </span>
-                  ) : isEditing && componentItems.length === 1 ? (
+                  ) : isEditing && !student.dropped && componentItems.length === 1 ? (
                     <input type="number" min={0} max={componentItems[0].maxItems} step="1" inputMode="numeric"
                       aria-label={`${component.label} score`} title={`${componentItems[0].activityName} · ${formatShortDate(componentItems[0].date)}`}
                       value={scores[student.id]?.[componentItems[0].id] ?? ""}
@@ -489,7 +489,7 @@ export function AssessmentRecordsSection({
               <Fragment key={domain.id}>
                 {domain.columns.map((column) => (
                   <td key={column.id} className="min-w-14 whitespace-nowrap px-2 py-2.5 text-center text-xs font-bold tabular-nums">
-                    {column.item && isEditing ? (
+                    {column.item && isEditing && !student.dropped ? (
                       <input
                         type="number"
                         min={0}
@@ -520,7 +520,7 @@ export function AssessmentRecordsSection({
             <>
               {group.columns.map((column) => (
                 <td key={column.id} className="min-w-14 whitespace-nowrap px-2 py-2.5 text-center text-xs font-bold tabular-nums">
-                  {column.item && isEditing ? (
+                  {column.item && isEditing && !student.dropped ? (
                     <input
                       type="number"
                       min={0}
@@ -552,7 +552,7 @@ export function AssessmentRecordsSection({
     });
 
     const { initialGrade } = computeStudentGrade(student, groups, scores, examinations);
-    const termGrade = computeTransmutedGrade(initialGrade, weights.templateStructure?.transmutationTable, weights.templateStructure?.transmutationMode);
+    const termGrade = student.dropped ? null : computeTransmutedGrade(initialGrade, weights.templateStructure?.transmutationTable, weights.templateStructure?.transmutationMode);
     const descriptor = termGrade === null
       ? null
       : weights.templateStructure?.descriptorTable.find((row) => row.numericalGrade === termGrade)?.descriptor ?? null;
@@ -568,10 +568,10 @@ export function AssessmentRecordsSection({
           {pending ? <SkeletonText width="5ch" className="mx-auto" /> : initialGrade !== null ? initialGrade.toFixed(2) : "—"}
         </td>
         <td className="px-3 py-2.5 text-center text-sm font-black tabular-nums" style={{ color: "var(--brand-ink)" }}>
-          {pending ? <SkeletonText width="3ch" className="mx-auto" /> : termGrade ?? "—"}
+          {pending ? <SkeletonText width="3ch" className="mx-auto" /> : student.dropped ? "Dropped" : termGrade ?? "—"}
         </td>
         <td className="px-3 py-2.5 text-center text-sm font-semibold">
-          {pending ? <SkeletonText width="12ch" className="mx-auto" /> : descriptor ?? "—"}
+          {pending ? <SkeletonText width="12ch" className="mx-auto" /> : student.dropped ? "Dropped" : descriptor ?? "—"}
         </td>
       </tr>
     );
@@ -769,7 +769,7 @@ export function AssessmentRecordsSection({
           title="Confirm Submission"
           description={
             <>
-                  This sends {roster.length} {roster.length === 1 ? "grade" : "grades"} to{" "}
+                  This sends {gradePreviews.length} {gradePreviews.length === 1 ? "grade" : "grades"} to{" "}
                   {adviserName ? `${adviserName}'s` : "the adviser's"} gradesheet. Review before confirming.
                   {existingSubmission?.submitted && <span className="mt-2 block">A submission is already recorded{existingSubmission.submittedAt ? ` (${new Date(existingSubmission.submittedAt).toLocaleString()})` : ''}. Confirming again creates a new submission history entry.</span>}
             </>

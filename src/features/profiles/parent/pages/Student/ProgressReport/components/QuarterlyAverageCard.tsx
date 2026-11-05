@@ -91,7 +91,7 @@ export function TermAverageCard({ entries, selectedTerm, theme, student, loading
             fontSize="24"
             fontWeight="700"
           >
-            {displayAverage !== null ? `${displayAverage}%` : "—"}
+            {currentTermEntry?.dropped ? "Dropped" : displayAverage !== null ? `${displayAverage}%` : "—"}
           </text>
         </svg>}</div>
         <p className={`mt-1 text-sm font-semibold ${textMuted}`}>{loading ? <SkeletonParagraph field="parent-average-label" typical={2} width="18ch" /> : <span data-sk-field="parent-average-label">{label}</span>}</p>

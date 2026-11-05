@@ -8,6 +8,7 @@ export interface BackendTerm {
   termNumber: number; // 1, 2, 3 — the only safe way to map to Term, since
                        // the backend omits unsubmitted terms entirely
   released: boolean;
+  dropped?: boolean;
   average?: number;
   subjects: { subject: string; grade: number | null; components?: { id: string; subject: string; grade: number | null }[] }[];
 }
@@ -33,13 +34,15 @@ export function toPeriodicRatingRows(backendTerms: BackendTerm[]): PeriodicRatin
 
   function ratingRow(learningArea: string, grades: {termNumber:number; grade:number|null}[], parentLearningArea?:string): PeriodicRatingRow {
     const scores: Partial<Record<Term, number>> = {};
+    const droppedTerms: Partial<Record<Term, boolean>> = {};
+    for(const entry of backendTerms){const term=termFromNumber(entry.termNumber);if(term && entry.released && entry.dropped)droppedTerms[term]=true;}
     for (const entry of grades) {
       const term = termFromNumber(entry.termNumber);
-      if (term && typeof entry.grade === "number" && entry.grade > 0) scores[term] = entry.grade;
+      if (term && !droppedTerms[term] && typeof entry.grade === "number" && entry.grade > 0) scores[term] = entry.grade;
     }
     const complete = TERM_ORDER.every(term => typeof scores[term] === "number");
     const average = complete ? TERM_ORDER.reduce((sum,term) => sum + scores[term]!,0) / TERM_ORDER.length : null;
-    return {learningArea, scores, finalRating: average === null ? "" : (Math.round(average * 100) / 100).toFixed(1), ...(parentLearningArea ? {parentLearningArea} : {})};
+    return {learningArea, scores, droppedTerms, finalRating: Object.values(droppedTerms).some(Boolean) ? "Dropped" : average === null ? "" : (Math.round(average * 100) / 100).toFixed(1), ...(parentLearningArea ? {parentLearningArea} : {})};
   }
   return subjectNames.flatMap(subject => {
     const entries = backendTerms.filter(term => term.released).map(term => ({termNumber:term.termNumber, value:term.subjects.find(row => row.subject === subject)}));
@@ -67,6 +70,7 @@ export function toTermAverages(backendTerms: BackendTerm[]): TermAverageEntry[] 
       return { term, average: null, ratingLabel: null, released: false };
     }
 
+    if(backendTerm.dropped)return {term,average:null,ratingLabel:"Dropped",released:true,dropped:true};
     const avg = backendTerm.average ?? null;
     return {
       term,

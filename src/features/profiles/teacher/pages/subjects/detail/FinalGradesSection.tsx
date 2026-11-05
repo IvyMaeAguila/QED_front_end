@@ -1,3 +1,4 @@
+import {isDroppedForPeriod} from './data';
 import { useContext, useRef, useState } from 'react';
 import { LoadingRegion } from '@shared/loading/LoadingRegion';
 import { SkeletonText } from '@shared/components/SkeletonLoading';
@@ -47,9 +48,10 @@ export function FinalGradesSection({ subjectSectionId, selectedPeriod, ...theme 
   const exporting = useRef(false);
   const rows: FinalGradeRow[] = roster.map(student => {
     const grades = loading ? [null, null, null] : terms.map(term => term.period && term.weights.data && term.items.data
-      ? transmutedTermGrade(student.id, term.period, term.items.data, scores.data ?? {}, term.weights.data) : null);
+      ? isDroppedForPeriod(student,periods.find(p=>p.id===term.period)) ? null : transmutedTermGrade(student.id, term.period, term.items.data, scores.data ?? {}, term.weights.data) : null);
     const final = finalGrade(grades);
-    return { ...student, grades: [...grades, final], descriptor: finalDescriptor(final, selected) };
+    const droppedTerms=terms.map(term=>isDroppedForPeriod(student,periods.find(p=>p.id===term.period)));
+    return { ...student, droppedTerms:[...droppedTerms,droppedTerms.some(Boolean)], grades: [...grades, final], descriptor: finalDescriptor(final, selected) };
   });
   async function exportFinalGrades() {
     if (exporting.current || loading || error || missingRules) return;
@@ -70,9 +72,9 @@ export function FinalGradesSection({ subjectSectionId, selectedPeriod, ...theme 
         header.font = { bold: true };
         group.students.forEach((student, index) => {
           const grades = terms.map(term => term.period && term.weights.data && term.items.data
-            ? transmutedTermGrade(student.id, term.period, term.items.data, scores.data ?? {}, term.weights.data) : null);
+            ? isDroppedForPeriod(student,periods.find(p=>p.id===term.period)) ? null : transmutedTermGrade(student.id, term.period, term.items.data, scores.data ?? {}, term.weights.data) : null);
           const final = finalGrade(grades);
-          sheet.addRow([index + 1, student.name, ...grades, final, finalDescriptor(final, selected), '']);
+          sheet.addRow([index + 1, student.name, ...grades.map((g,i)=>isDroppedForPeriod(student,periods.find(p=>p.id===terms[i].period))?"Dropped":g), terms.some(t=>isDroppedForPeriod(student,periods.find(p=>p.id===t.period)))?"Dropped":final, finalDescriptor(final, selected), '']);
         });
       }
       for (const number of [1, 2]) {

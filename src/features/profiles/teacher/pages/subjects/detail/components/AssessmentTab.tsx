@@ -1,4 +1,4 @@
-import {assessmentCapacity} from '../assessmentCapacity';
+import {assessmentCapacity,availableExamTypes} from '../assessmentCapacity';
 import {mergeScoreDraft} from '../../../../query/subjectScoreCache';
 import { useToast } from "@shared/context/ToastContext";
 import { QueryHttpError } from "@shared/http/QueryHttpError";
@@ -23,6 +23,7 @@ import type { ExamType } from "../types/Grading";
 
 type GenderedStudent = RosterStudent & { gender?: "M" | "F" };
 import {
+  EXAM_TYPES,
   formatDisplayDate,
   type AssessmentTabKey,
   type GradeItem,
@@ -222,6 +223,7 @@ const isDirty = useMemo(() => {
     setSavingItems(tabItems);
     setSaving(true);
     try {
+      if(changes.some(c=>roster.find(s=>s.id===c.studentId)?.dropped))throw new Error("A student is marked Dropped. Reload before saving.");
       if(onScoresChange)await onScoresChange(changes.map(change=>({...change,expectedValue:scores[change.studentId]?.[change.itemId]??null})));
       else {const results=await Promise.allSettled(changes.map(c=>onScoreChange(c.studentId,c.itemId,c.value)));
       const failed=results.find(result=>result.status==='rejected');
@@ -242,8 +244,10 @@ const isDirty = useMemo(() => {
 
   const capacity=assessmentCapacity(items,tab,selectedTerm,templateDomains);
   const fullDomainIds=capacity.filter(domain=>domain.full).map(domain=>domain.id);
-  const categoryFull=capacity.length>0&&capacity.every(domain=>domain.full);
-  const addReason=categoryFull?'Cannot add: all scoring columns allowed by the assigned Excel template are full for this term.':tabItems.length>0?'Save the current item before adding another.':loading||templateLoading?'Wait for the template limits to load.':saving?'Wait for the current save to finish.':'';
+  const unusedExamTypes=availableExamTypes(items,selectedTerm,examTypes??EXAM_TYPES);
+  const examsFull=tab==='exams'&&unusedExamTypes.length===0;
+  const categoryFull=examsFull||(capacity.length>0&&capacity.every(domain=>domain.full));
+  const addReason=examsFull?'All exams for this term have been added. View or edit them in Full Records.':categoryFull?'Cannot add: all scoring columns allowed by the assigned Excel template are full for this term.':tabItems.length>0?'Save the current item before adding another.':loading||templateLoading?'Wait for the template limits to load.':saving?'Wait for the current save to finish.':'';
   const selectedItem = tabItems.find((i) => i.id === selectedItemId) ?? null;
 
 
@@ -278,6 +282,7 @@ const isDirty = useMemo(() => {
             <span data-sk-region="student-avatar" className="inline-flex h-7 w-7 shrink-0">{pending && !filtered.length ? <SkeletonAvatar className="h-7 w-7" /> : <StudentAvatar gender={student.gender} name={student.name} />}</span>
             <span className={`truncate text-xs font-bold ${textPrimary}`}>
               {pending && !filtered.length ? <SkeletonText className={Number(student.id.split("-").at(-1)) % 2 === 0 ? "w-[22ch] max-w-full" : "w-[18ch] max-w-full"} /> : student.name}
+              {student.dropped && <span className="ml-2 text-xs font-medium text-maroon">Dropped</span>}
             </span>
           </div>
         </td>
@@ -289,6 +294,8 @@ const isDirty = useMemo(() => {
             <td key={item.id} className="px-3 py-2 text-center">
               {pending ? <span className="inline-flex h-7 w-14 items-center justify-center"><SkeletonControl className="h-2 w-8 rounded-full" /></span> : <input
                 type="number"
+                disabled={student.dropped}
+                title={student.dropped ? "Dropped for this term; earlier records are preserved" : undefined}
                 min={0}
                 max={item.maxItems}
                 value={value ?? ""}
@@ -602,7 +609,7 @@ const isDirty = useMemo(() => {
             textMuted={textMuted}
             fullDomainIds={fullDomainIds}
             templateDomains={templateDomains}
-            examTypes={examTypes}
+            examTypes={unusedExamTypes}
           />
         )}
 
