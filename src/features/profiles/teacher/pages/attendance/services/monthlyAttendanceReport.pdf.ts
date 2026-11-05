@@ -87,6 +87,7 @@ export async function createMonthlyAttendancePdf(report: MonthlyAttendanceReport
   }
   }
   movementList((report.dropouts??[]).map(e=>({name:e.name,date:e.effectiveDate})),1,9,'dropout');
+  movementList((report.transferOuts??[]).map(e=>({name:e.name,date:e.effectiveDate})),12,19,'transfer-out');
   movementList((report.transferIns??[]).map(e=>({name:e.name,date:e.joinedDate})),21,26,'transfer-in');
   put('Adviser_Name_or_Signature', signatories.adviserName, TextAlignment.Center, 11);
   put('Adviser_Designation', signatories.adviserDesignation, TextAlignment.Left, 12);

@@ -18,6 +18,7 @@ interface StudentAttendanceSummaryModalProps {
   panelBorder: string;
   textPrimary: string;
   textMuted: string;
+  withdrawalType?: "dropout"|"transfer";
   dropoutDate?: string;
   onClose: () => void;
 }
@@ -68,7 +69,7 @@ export function StudentAttendanceSummaryModal({
   textPrimary,
   textMuted,
   onClose,
-  dropoutDate,
+  dropoutDate,withdrawalType,
 }: StudentAttendanceSummaryModalProps) {
   const cellBase = `px-3 py-2.5 text-center text-xs font-bold tabular-nums ${textPrimary}`;
   const headBase = `px-3 py-2.5 text-center text-xs font-extrabold uppercase tracking-wider ${textMuted}`;
@@ -140,7 +141,7 @@ export function StudentAttendanceSummaryModal({
         <div className="relative shrink-0">
           <ModalHeader
             title={student.name}
-            subtitle={dropoutDate ? "Attendance Summary - Dropped effective " + dropoutDate : "Attendance Summary"}
+            subtitle={dropoutDate ? (withdrawalType==="transfer"?"Attendance Summary - Transferred Out effective ":"Attendance Summary - Dropped effective ") + dropoutDate : "Attendance Summary"}
             titleClassName={textPrimary}
             subtitleClassName={textMuted}
             leading={<StudentAvatar gender={student.gender} name={student.name} className="h-14 w-14 shadow-sm" />}

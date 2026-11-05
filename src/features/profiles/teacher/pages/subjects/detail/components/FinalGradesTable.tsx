@@ -4,7 +4,7 @@ import { SkeletonText } from '@shared/components/SkeletonLoading';
 import { groupLearners } from '../utils/finalGrades';
 import type { AdminThemeContext } from '../../../../../admin/pages/AdminLayout';
 
-export type FinalGradeRow = { id: string; name: string; gender?: 'M' | 'F'; droppedTerms?: boolean[]; grades: (number | null)[]; descriptor: string };
+export type FinalGradeRow = { id: string; name: string; gender?: 'M' | 'F'; withdrawalType?: "dropout"|"transfer"|null; droppedTerms?: boolean[]; grades: (number | null)[]; descriptor: string };
 type Theme = Pick<AdminThemeContext, 'darkMode' | 'panelBg' | 'panelBorder' | 'textPrimary' | 'textMuted'>;
 
 /** Same columns and row geometry while the module or its grade data loads. */
@@ -31,7 +31,7 @@ export function FinalGradesTable({ rows = [], loading = false, ...theme }: Theme
         {group.students.map((student, index) => <tr key={student.id} data-student-id={identityPending ? undefined : student.id} className={`qed-record-row border-b ${theme.panelBorder}`}>
           <td data-learner-number className="w-px whitespace-nowrap px-2 py-2 tabular-nums">{index + 1}</td>
           <td data-learner-name className="px-2 py-2 text-left text-sm font-bold">{identityPending ? <SkeletonText width={index % 2 ? '13ch' : '17ch'} /> : student.name}</td>
-          {student.grades.map((grade, i) => <td key={i} className={`${i === 3 ? "qed-record-ws " : ""}px-3 py-2.5 text-center text-sm font-black tabular-nums`} style={{ color: 'var(--brand-ink)' }}>{loading ? <SkeletonText width="3ch" className="mx-auto" /> : student.droppedTerms?.[i] ? "Dropped" : grade ?? ''}</td>)}
+          {student.grades.map((grade, i) => <td key={i} className={`${i === 3 ? "qed-record-ws " : ""}px-3 py-2.5 text-center text-sm font-black tabular-nums`} style={{ color: 'var(--brand-ink)' }}>{loading ? <SkeletonText width="3ch" className="mx-auto" /> : student.droppedTerms?.[i] ? (student.withdrawalType==="transfer"?"Transferred Out":"Dropped") : grade ?? ''}</td>)}
           <td className="whitespace-nowrap px-3 py-2.5 text-center text-sm font-semibold">{loading ? <SkeletonText width="10ch" className="mx-auto" /> : student.descriptor}</td>
           <td className="px-3 py-2.5 text-center text-sm font-semibold" />
         </tr>)}

@@ -6,6 +6,7 @@ import type { TeacherRequestOptions } from '../../../query/teacherQueryScope';
 export interface MonthlyAttendanceReport {
   classId: string; schoolYearId: string; schoolYearLabel: string; gradeSection: string; month: string; months: string[];
   annualEnrollment?: { male:number; female:number; total:number };
+  transferOuts?: {studentId:string;name:string;effectiveDate:string}[];
   transferIns?: {studentId:string;name:string;joinedDate:string}[];
   dropouts?: {studentId:string;name:string;effectiveDate:string}[];
   enrollment: { male: number; female: number; total: number }; rosterCount: number;

@@ -117,7 +117,7 @@ const cardClasses = `overflow-hidden rounded-2xl border shadow-card ${panelBg} $
             <span data-sk-region="student-avatar" className="inline-flex h-7 w-7 shrink-0">{pending ? <SkeletonAvatar className="h-7 w-7" /> : <StudentAvatar gender={student.gender} name={student.name} />}</span>
             <span className={`truncate text-xs font-bold ${textPrimary}`}>
               {pending ? <SkeletonText className={Number(student.id.split("-").at(-1)) % 2 === 0 ? "w-[14ch]" : "w-[11ch]"} /> : student.name}
-              {isDroppedForWeek(student,weekStartDate) && <span className="ml-2 text-xs text-maroon">Dropped</span>}
+              {isDroppedForWeek(student,weekStartDate) && <span className="ml-2 text-xs text-maroon">{student.withdrawalType==='transfer'?'Transferred Out':'Dropped'}</span>}
             </span>
           </div>
         </td>

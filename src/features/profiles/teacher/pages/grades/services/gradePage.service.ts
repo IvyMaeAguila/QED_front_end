@@ -73,7 +73,7 @@ export interface SubjectGradeCell {
 
 export interface GradebookStudent {
   dropped?: boolean;
-  dropoutEffectiveDate?: string | null;
+  withdrawalType?: "dropout" | "transfer" | null; dropoutEffectiveDate?: string | null;
   studentId: string;
   firstName: string;
   lastName: string;
@@ -152,7 +152,7 @@ export async function submitClassGrades(gradingPeriodId: string, classId?: strin
 
 export interface VisibilityStudent {
   dropped?: boolean;
-  dropoutEffectiveDate?: string | null;
+  withdrawalType?: "dropout" | "transfer" | null; dropoutEffectiveDate?: string | null;
   studentId: string;
   firstName: string;
   lastName: string;

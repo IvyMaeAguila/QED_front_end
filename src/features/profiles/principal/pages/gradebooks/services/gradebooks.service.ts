@@ -118,7 +118,7 @@ interface ApiSubject {
 
 interface ApiStudent {
   dropped?: boolean;
-  dropoutEffectiveDate?: string | null;
+  withdrawalType?: "dropout" | "transfer" | null; dropoutEffectiveDate?: string | null;
   studentId: string;
   firstName: string;
   lastName: string;
@@ -240,6 +240,7 @@ function toStudent(
   return {
     studentId: apiStudent.studentId,
     dropped: apiStudent.dropped,
+    withdrawalType: apiStudent.withdrawalType,
     dropoutEffectiveDate: apiStudent.dropoutEffectiveDate,
     lastName: apiStudent.lastName,
     firstName: apiStudent.firstName,

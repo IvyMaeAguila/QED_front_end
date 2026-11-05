@@ -568,10 +568,10 @@ export function AssessmentRecordsSection({
           {pending ? <SkeletonText width="5ch" className="mx-auto" /> : initialGrade !== null ? initialGrade.toFixed(2) : "—"}
         </td>
         <td className="px-3 py-2.5 text-center text-sm font-black tabular-nums" style={{ color: "var(--brand-ink)" }}>
-          {pending ? <SkeletonText width="3ch" className="mx-auto" /> : student.dropped ? "Dropped" : termGrade ?? "—"}
+          {pending ? <SkeletonText width="3ch" className="mx-auto" /> : student.dropped ? (student.withdrawalType==="transfer"?"Transferred Out":"Dropped") : termGrade ?? "—"}
         </td>
         <td className="px-3 py-2.5 text-center text-sm font-semibold">
-          {pending ? <SkeletonText width="12ch" className="mx-auto" /> : student.dropped ? "Dropped" : descriptor ?? "—"}
+          {pending ? <SkeletonText width="12ch" className="mx-auto" /> : student.dropped ? (student.withdrawalType==="transfer"?"Transferred Out":"Dropped") : descriptor ?? "—"}
         </td>
       </tr>
     );

@@ -74,7 +74,7 @@ export function FinalGradesSection({ subjectSectionId, selectedPeriod, ...theme 
           const grades = terms.map(term => term.period && term.weights.data && term.items.data
             ? isDroppedForPeriod(student,periods.find(p=>p.id===term.period)) ? null : transmutedTermGrade(student.id, term.period, term.items.data, scores.data ?? {}, term.weights.data) : null);
           const final = finalGrade(grades);
-          sheet.addRow([index + 1, student.name, ...grades.map((g,i)=>isDroppedForPeriod(student,periods.find(p=>p.id===terms[i].period))?"Dropped":g), terms.some(t=>isDroppedForPeriod(student,periods.find(p=>p.id===t.period)))?"Dropped":final, finalDescriptor(final, selected), '']);
+          sheet.addRow([index + 1, student.name, ...grades.map((g,i)=>isDroppedForPeriod(student,periods.find(p=>p.id===terms[i].period))?(student.withdrawalType==="transfer"?"Transferred Out":"Dropped"):g), terms.some(t=>isDroppedForPeriod(student,periods.find(p=>p.id===t.period)))?(student.withdrawalType==="transfer"?"Transferred Out":"Dropped"):final, finalDescriptor(final, selected), '']);
         });
       }
       for (const number of [1, 2]) {

@@ -333,7 +333,7 @@ export function HolisticRecordsSection({
                   {pending ? <SkeletonControl className="mx-auto h-7 w-7 rounded-lg" /> : isEditing ? (
                     <input
                       disabled={saving || isDroppedForWeek(student,week)}
-                      title={isDroppedForWeek(student,week)?"Dropped; this week is locked":undefined}
+                      title={isDroppedForWeek(student,week)?(student.withdrawalType==="transfer"?"Transferred Out; this week is locked":"Dropped; this week is locked"):undefined}
                       type="number"
                       min={1}
                       max={5}

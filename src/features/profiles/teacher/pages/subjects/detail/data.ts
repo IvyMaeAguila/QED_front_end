@@ -1,4 +1,5 @@
 export interface RosterStudent {
+  withdrawalType?: "dropout" | "transfer" | null;
   dropoutEffectiveDate?: string | null;
   dropped?: boolean;
   joinedDate?: string | null;

@@ -7,17 +7,18 @@ import type {RosterStudent} from '../subjects/detail/data';
 import type {DropoutReader} from './dropoutState';
 import type {Dropout} from './services/dropout.service';
 const StudentDropoutDialog=lazy(()=>import('./StudentDropoutDialog').then(module=>({default:module.StudentDropoutDialog})));
-type View='all'|'absences'|'dropouts'|'transfers';
+type View='all'|'absences'|'dropouts'|'transfers'|'transferOuts';
 type Props={classId:string;classLabel:string;month:string;roster:RosterStudent[];absences:{iso:string;students:RosterStudent[]}[];totalAbsent:number;pending:boolean;attendanceError:string|null;dropoutReader:DropoutReader;theme:AdminThemeContext};
 function dateLabel(date?:string|null){return date?new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'}).format(new Date(date.slice(0,10)+'T12:00:00Z')):'Not recorded';}
 export function AttendanceSummaryDetails({classId,classLabel,month,roster,absences,totalAbsent,pending,attendanceError,dropoutReader:reader,theme}:Props){
  const {darkMode,panelBg,panelBorder,textPrimary,textMuted}=theme;
  const [view,setView]=useState<View>('all'),[selected,setSelected]=useState<Dropout|null>(null);const id=useId();
  const matching=reader.data?.classId===classId;
- const dropouts=matching?reader.data!.dropouts.filter(entry=>entry.effectiveDate.slice(0,7)===month):[];
+ const dropouts=matching?reader.data!.dropouts.filter(entry=>entry.eventType!=='transfer'&&entry.effectiveDate.slice(0,7)===month):[];
+ const transferOuts=matching?reader.data!.dropouts.filter(entry=>entry.eventType==='transfer'&&entry.effectiveDate.slice(0,7)===month):[];
  const transferIns=matching?(reader.data!.transferIns??[]).filter(entry=>entry.joinedDate.slice(0,7)===month):[];
  const dropoutLoading=pending||reader.loading||(!matching&&!reader.error);
- const tabs=[{key:'all',label:'All'},{key:'absences',label:'Absences'},{key:'dropouts',label:'Dropouts'},{key:'transfers',label:'Transfer-ins'}] as const;
+ const tabs=[{key:'all',label:'All'},{key:'absences',label:'Absences'},{key:'dropouts',label:'Dropouts'},{key:'transfers',label:'Transfer-ins'},{key:'transferOuts',label:'Transfer-outs'}] as const;
  const surface='min-w-0 overflow-hidden rounded-[var(--radius-table)] border '+panelBorder;
  const head='flex flex-wrap items-center justify-between gap-3 border-b px-4 py-4 '+panelBorder;
  const th='px-4 py-3 text-left text-xs font-semibold '+textMuted;
@@ -27,8 +28,8 @@ export function AttendanceSummaryDetails({classId,classLabel,month,roster,absenc
  const name=(entry:Dropout)=>entry.studentName?.trim()||roster.find(s=>s.id===entry.studentId)?.name||'Student '+entry.studentId;
  return <div className="min-w-0 space-y-5" data-monthly-attendance-details="">
  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-  <div><h3 className={'text-sm font-bold '+textPrimary}>Monthly records</h3><p className={'mt-0.5 text-xs '+textMuted}>Review absences, dropouts, and incoming transferees for the selected month.</p></div>
-  <div role="tablist" aria-label="Monthly attendance details" className={'qed-segmented-control inline-flex w-full shrink-0 items-center rounded-lg p-0 sm:w-auto '+(darkMode?'bg-white/5':'bg-brand-light')}>
+  <div><h3 className={'text-sm font-bold '+textPrimary}>Monthly records</h3><p className={'mt-0.5 text-xs '+textMuted}>Review absences, dropouts, transfer-ins, and transfer-outs for the selected month.</p></div>
+  <div role="tablist" aria-label="Monthly attendance details" className={'qed-segmented-control inline-flex w-full overflow-x-auto shrink-0 items-center rounded-lg p-0 sm:w-auto '+(darkMode?'bg-white/5':'bg-brand-light')}>
    {tabs.map((tab,index)=><button key={tab.key} id={id+'-'+tab.key} type="button" role="tab" aria-selected={view===tab.key} aria-controls={id+'-panel'} tabIndex={view===tab.key?0:-1} onClick={()=>setView(tab.key)} onKeyDown={e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const target=e.key==='Home'?0:e.key==='End'?tabs.length-1:(index+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;setView(tabs[target].key);document.getElementById(id+'-'+tabs[target].key)?.focus();}} className={'flex-1 whitespace-nowrap rounded-lg px-2 py-2 text-[11px] font-bold transition-colors sm:px-3 sm:text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-maroon/40 sm:flex-none '+(view===tab.key?'bg-maroon text-white shadow-sm':textMuted)}>{tab.label}</button>)}
   </div>
  </div>
@@ -57,6 +58,10 @@ export function AttendanceSummaryDetails({classId,classLabel,month,roster,absenc
     <td className={td+' sticky right-0 z-10 border-l align-top '+panelBorder+' '+panelBg}><button type="button" disabled={busy||!matching||!!reader.error} aria-label={'Reverse dropout declaration for '+(busy?'student':name(entry))} onClick={()=>setSelected(entry)} className="inline-flex min-h-8 items-center gap-1.5 rounded-lg px-1.5 text-xs font-semibold transition-colors hover:bg-maroon/5 disabled:opacity-40" style={{color:'var(--brand-ink)'}}><Undo2 size={14} strokeWidth={1.75} aria-hidden="true"/>Reverse</button></td>
    </tr>)}{!busy&&!rows.length&&<tr><td colSpan={8} className={'px-4 py-8 text-center text-xs '+textMuted}>No dropout declarations effective this month.</td></tr>}</tbody></table>{!busy&&rows.length>0&&<p className={'border-t px-4 py-2 text-xs md:hidden '+panelBorder+' '+textMuted}>Scroll horizontally to view all declaration details.</p>}</div>;
   }}>{null}</LoadingRegion>
+ </section>}
+ {(view==='all'||view==='transferOuts')&&<section className={surface} aria-label="Transfer-outs this month">
+  <div className={head}><h3 className={'text-sm font-bold '+textPrimary}>Transfer-outs this month</h3><span className={'text-xs '+textMuted}>{transferOuts.length} students</span></div>
+  <LoadingRegion loading={dropoutLoading} error={reader.error} retry={reader.retry} variable name="monthly-transfer-out-records" skeleton={null} frame={busy=><div className="overflow-x-auto"><table className="w-full text-left"><thead className={tint}><tr>{['Student','Exact transfer date','Actions'].map(label=><th key={label} scope="col" className={th}>{label}</th>)}</tr></thead><tbody>{!busy&&transferOuts.map(entry=><tr key={entry.id} className={'border-t '+panelBorder}><td className={td+' font-semibold'}>{name(entry)}</td><td className={td}>{dateLabel(entry.effectiveDate)}</td><td className={td}><button type="button" disabled={!!reader.error} onClick={()=>setSelected(entry)} className="text-maroon font-semibold">Reverse</button></td></tr>)}{!busy&&!transferOuts.length&&<tr><td colSpan={3} className={'px-4 py-8 text-center text-xs '+textMuted}>No transfer-outs recorded this month.</td></tr>}</tbody></table></div>}>{null}</LoadingRegion>
  </section>}
  {(view==='all'||view==='transfers')&&<section className={surface} aria-label="Transfer-ins this month">
   <div className={head}><div><h3 className={'text-sm font-bold '+textPrimary}>Transfer-ins this month</h3><p className={'mt-1 text-xs leading-relaxed '+textMuted}>Students who joined this school during the selected month.</p></div><span className={'text-xs font-medium '+textMuted}>{dropoutLoading?<SkeletonText width="10ch"/>:reader.error?'Unavailable':`${transferIns.length} ${transferIns.length===1?'student':'students'}`}</span></div>

@@ -223,7 +223,7 @@ const isDirty = useMemo(() => {
     setSavingItems(tabItems);
     setSaving(true);
     try {
-      if(changes.some(c=>roster.find(s=>s.id===c.studentId)?.dropped))throw new Error("A student is marked Dropped. Reload before saving.");
+      if(changes.some(c=>roster.find(s=>s.id===c.studentId)?.dropped))throw new Error("A student has a dropout or transfer-out declaration. Reload before saving.");
       if(onScoresChange)await onScoresChange(changes.map(change=>({...change,expectedValue:scores[change.studentId]?.[change.itemId]??null})));
       else {const results=await Promise.allSettled(changes.map(c=>onScoreChange(c.studentId,c.itemId,c.value)));
       const failed=results.find(result=>result.status==='rejected');
@@ -282,7 +282,7 @@ const isDirty = useMemo(() => {
             <span data-sk-region="student-avatar" className="inline-flex h-7 w-7 shrink-0">{pending && !filtered.length ? <SkeletonAvatar className="h-7 w-7" /> : <StudentAvatar gender={student.gender} name={student.name} />}</span>
             <span className={`truncate text-xs font-bold ${textPrimary}`}>
               {pending && !filtered.length ? <SkeletonText className={Number(student.id.split("-").at(-1)) % 2 === 0 ? "w-[22ch] max-w-full" : "w-[18ch] max-w-full"} /> : student.name}
-              {student.dropped && <span className="ml-2 text-xs font-medium text-maroon">Dropped</span>}
+              {student.dropped && <span className="ml-2 text-xs font-medium text-maroon">{student.withdrawalType==='transfer'?'Transferred Out':'Dropped'}</span>}
             </span>
           </div>
         </td>
@@ -295,7 +295,7 @@ const isDirty = useMemo(() => {
               {pending ? <span className="inline-flex h-7 w-14 items-center justify-center"><SkeletonControl className="h-2 w-8 rounded-full" /></span> : <input
                 type="number"
                 disabled={student.dropped}
-                title={student.dropped ? "Dropped for this term; earlier records are preserved" : undefined}
+                title={student.dropped ? (student.withdrawalType==="transfer"?"Transferred Out for this term; earlier records are preserved":"Dropped for this term; earlier records are preserved") : undefined}
                 min={0}
                 max={item.maxItems}
                 value={value ?? ""}

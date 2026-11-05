@@ -105,6 +105,7 @@ export function AttendanceCalendarSection({
 }: AttendanceCalendarSectionProps) {
   const bridge=useContext(AttendanceQueryContext);
   const [dropoutReader,setDropoutReader]=useState(initialDropoutReader);
+  const [declarationType,setDeclarationType]=useState<'dropout'|'transfer'>('dropout');
   const [declarationStudent,setDeclarationStudent]=useState<RosterStudent|null>(null);
   const dropoutReady=dropoutReader.data?.classId===sectionId&&!dropoutReader.loading&&!dropoutReader.error;
   const dropoutFor=useCallback((id:string)=>dropoutReader.data?.classId===sectionId?effectiveDropout(dropoutReader,id):undefined,[dropoutReader,sectionId]);
@@ -233,7 +234,7 @@ export function AttendanceCalendarSection({
       <tr data-sk-region="attendance-record-row" key={student.id} className={`border-t ${panelBorder} ${rowStripe}`}>
         <td className={`sticky left-0 z-10 px-3 py-2 ${darkMode ? "bg-panel-dark" : "bg-white"}`}>
           <span title={student.name} className={`block truncate text-xs font-semibold ${textPrimary}`}>{pending && prerequisitesLoading ? <SkeletonText width={index % 2 ? "12ch" : "16ch"} /> : student.name}</span>
-          {!pending&&dropout&&<span className={'mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold '+(darkMode?'bg-white/10 text-slate-300':'bg-slate-100 text-slate-600')} title={'Dropped effective '+dropout.effectiveDate}>Dropped</span>}
+          {!pending&&dropout&&<span className={'mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold '+(darkMode?'bg-white/10 text-slate-300':'bg-slate-100 text-slate-600')} title={(dropout.eventType==='transfer'?'Transferred out effective ':'Dropped effective ')+dropout.effectiveDate}>{dropout.eventType==='transfer'?'Transferred Out':'Dropped'}</span>}
           {!pending&&!dropout&&risk&&risk.count>=5&&<span className={'mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold '+(darkMode?'bg-amber-500/10 text-amber-200':'bg-amber-50 text-amber-800')} title={risk.count+' consecutive school-day absences since '+risk.since}>At risk: {risk.count} consecutive absences</span>}
         </td>
         {days.map(({ iso, dayOfWeek }) => {
@@ -259,7 +260,7 @@ export function AttendanceCalendarSection({
                 data-attendance-date={iso}
                 data-attendance-student={student.id}
                 disabled={!clickable}
-                title={beforeJoined ? `Not yet enrolled - joined ${student.joinedDate}` : droppedDate ? `Dropped effective ${dropout.effectiveDate} - attendance entry is locked` : clickable
+                title={beforeJoined ? `Not yet enrolled - joined ${student.joinedDate}` : droppedDate ? `${dropout.eventType==='transfer'?'Transferred out':'Dropped'} effective ${dropout.effectiveDate} - attendance entry is locked` : clickable
                   ? `${formatDisplayDate(iso)} — ${iso < todayISO ? "edit saved attendance" : "mark today's attendance"}`
                   : !inTerm
                     ? `${formatDisplayDate(iso)} — outside ${term?.label ?? ""}`
@@ -284,7 +285,7 @@ export function AttendanceCalendarSection({
           </span>
         </td>
         <td className={`sticky right-0 z-10 border-l px-1 py-2 text-center ${panelBorder} ${stickyRightBg}`}>
-          <AttendanceRowMenu name={student.name} dropped={!!dropout} disabled={pending||!dropoutReady} darkMode={darkMode} onView={()=>setSummaryStudent(student)} onDropout={()=>guardAction(()=>setDeclarationStudent(student))}/>
+          <AttendanceRowMenu name={student.name} dropped={!!dropout} disabled={pending||!dropoutReady} darkMode={darkMode} onView={()=>setSummaryStudent(student)} transfer={dropout?.eventType==='transfer'} onTransfer={()=>guardAction(()=>{setDeclarationType('transfer');setDeclarationStudent(student);})} onDropout={()=>guardAction(()=>{setDeclarationType('dropout');setDeclarationStudent(student);})}/>
 
         </td>
       </tr>
@@ -408,7 +409,7 @@ export function AttendanceCalendarSection({
       {saveFeedback}
       {navigationDialog}
       {dropoutReader.error&&<div role="alert" className={'border-b px-5 py-3 text-xs '+panelBorder}><span>{dropoutReader.error}</span><button type="button" className="ml-2 font-semibold underline" onClick={dropoutReader.retry}>Retry dropout records</button></div>}
-      {declarationStudent&&dropoutReader.data&&<Suspense fallback={null}><StudentDropoutDialog classId={sectionId} student={declarationStudent} state={dropoutReader.data} dropout={dropoutFor(declarationStudent.id)} theme={{darkMode,panelBg,panelBorder,textPrimary,textMuted}} onClose={()=>setDeclarationStudent(null)} onSaved={()=>{dropoutReader.retry();setAttempt(n=>n+1);}}/></Suspense>}
+      {declarationStudent&&dropoutReader.data&&<Suspense fallback={null}><StudentDropoutDialog classId={sectionId} student={declarationStudent} declarationType={declarationType} state={dropoutReader.data} dropout={dropoutFor(declarationStudent.id)} theme={{darkMode,panelBg,panelBorder,textPrimary,textMuted}} onClose={()=>setDeclarationStudent(null)} onSaved={()=>{dropoutReader.retry();setAttempt(n=>n+1);}}/></Suspense>}
       <div className={`flex flex-col gap-4 border-b px-5 py-5 sm:flex-row sm:items-center sm:justify-between ${panelBorder}`}>
         <div className="flex items-start gap-3">
           <div>
@@ -485,7 +486,7 @@ export function AttendanceCalendarSection({
           roster={roster}
           attendance={attendance}
           terms={terms}
-          dropoutDate={dropoutFor(summaryStudent.id)?.effectiveDate}
+          dropoutDate={dropoutFor(summaryStudent.id)?.effectiveDate} withdrawalType={dropoutFor(summaryStudent.id)?.eventType}
           darkMode={darkMode}
           panelBg={panelBg}
           panelBorder={panelBorder}

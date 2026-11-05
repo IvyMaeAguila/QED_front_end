@@ -116,6 +116,7 @@ export default function MonthlyAttendanceReportModal({ section, initialMonth, th
             </table>
           </div>
           <p className={'text-xs ' + textMuted}>{data.numberOfDays} reporting day{data.numberOfDays === 1 ? '' : 's'} · Dropout declarations are listed for their effective month; transfer-out and entered-student fields remain blank.</p>
+          {!!data.transferOuts?.length&&<div className={'border-t pt-4 '+panelBorder}><h3 className="text-sm font-bold">Transferred out</h3><ul className={'mt-2 space-y-1 text-xs '+textMuted}>{data.transferOuts.map(entry=><li key={entry.studentId}>{entry.name} - {entry.effectiveDate}</li>)}</ul></div>}
           {!!data.dropouts?.length&&<div className={'border-t pt-4 '+panelBorder}><h3 className="text-sm font-bold">Declared dropouts</h3><ul className={'mt-2 space-y-1 text-xs '+textMuted}>{data.dropouts.map(entry=><li key={entry.studentId}>{entry.name} - {entry.effectiveDate}</li>)}</ul></div>}
           <div>
             <h3 className="text-sm font-bold">Report details</h3>

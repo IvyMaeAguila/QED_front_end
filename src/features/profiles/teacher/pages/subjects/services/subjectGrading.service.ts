@@ -72,7 +72,7 @@ export async function fetchSubjectSectionInfo(subjectSectionId: string, request:
     subjectName: string;
     gradeLevel: string;
     sectionName: string;
-    roster: { id: string; name: string; gender: "M" | "F"; dropoutEffectiveDate?: string | null }[];
+    roster: { id: string; name: string; gender: "M" | "F"; withdrawalType?: "dropout" | "transfer" | null; dropoutEffectiveDate?: string | null }[];
     isOwnAdvisory: boolean;
     adviserName: string | null;
   };

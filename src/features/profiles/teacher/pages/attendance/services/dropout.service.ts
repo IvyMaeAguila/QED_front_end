@@ -2,7 +2,7 @@ import {boundedFetch} from '@shared/http/boundedFetch';
 import {QueryHttpError} from '@shared/http/QueryHttpError';
 import {API_CONFIG} from '../../../../../../config/api.config';
 import type {TeacherRequestOptions} from '../../../query/teacherQueryScope';
-export type Dropout={studentName?:string;declaredByName?:string;declaredAt?:string|null;id:string;studentId:string;lastAttended:string|null;effectiveDate:string;reason:string;remarks:string};
+export type Dropout={eventType?:"dropout"|"transfer";studentName?:string;declaredByName?:string;declaredAt?:string|null;id:string;studentId:string;lastAttended:string|null;effectiveDate:string;reason:string;remarks:string};
 export type TransferIn={studentId:string;studentName:string;joinedDate:string};
 export type DropoutState={transferIns?:TransferIn[];classId:string;schoolYearId:string;today:string;asOf:string|null;students:Record<string,{lastAttended:string|null;risk:{count:number;since:string|null}}>;dropouts:Dropout[]};
 export type Declaration={effectiveDate:string;reason:string;remarks:string};
@@ -20,3 +20,6 @@ export async function getDropoutState(classId:string,options:TeacherRequestOptio
 }
 export async function declareDropout(classId:string,studentId:string,data:Declaration,options:TeacherRequestOptions){await request(encodeURIComponent(classId)+'/students/'+encodeURIComponent(studentId)+'/dropout',options,data);}
 export async function reverseDropout(classId:string,studentId:string,declarationId:string,reason:string,options:TeacherRequestOptions){await request(encodeURIComponent(classId)+'/students/'+encodeURIComponent(studentId)+'/dropout/reverse',options,{declarationId,reason});}
+
+export async function declareTransferOut(classId:string,studentId:string,data:Declaration,options:TeacherRequestOptions){await request(encodeURIComponent(classId)+'/students/'+encodeURIComponent(studentId)+'/transfer-out',options,data);}
+export async function reverseTransferOut(classId:string,studentId:string,declarationId:string,reason:string,options:TeacherRequestOptions){await request(encodeURIComponent(classId)+'/students/'+encodeURIComponent(studentId)+'/transfer-out/reverse',options,{declarationId,reason});}

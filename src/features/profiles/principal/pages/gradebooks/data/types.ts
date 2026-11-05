@@ -5,7 +5,7 @@ export type GradeSubmissionStatus = "submitted" | "pending" | "not_submitted" | 
 
 export interface Student {
   dropped?: boolean;
-  dropoutEffectiveDate?: string | null;
+  withdrawalType?: "dropout" | "transfer" | null; dropoutEffectiveDate?: string | null;
   studentId: string;
   lastName: string;
   firstName: string;
