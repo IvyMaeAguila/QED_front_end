@@ -70,11 +70,12 @@ export function ExaminationPerformance(p: Props) {
    <ExaminationInsights data={data} loading={query.isPending || query.isFetching&&data===undefined} panelBg={p.panelBg} panelBorder={p.panelBorder} textPrimary={p.textPrimary} textMuted={p.textMuted} />
    {!query.isPending && !data?.summary.count ? <p className={`py-6 text-center text-sm ${p.textMuted}`}>No valid examination scores for these filters.</p> : data && <div className="grid min-w-0 gap-3 lg:grid-cols-2">
     <div className={`self-start overflow-x-auto rounded-xl border p-4 ${p.panelBg} ${p.panelBorder}`}>
-      <table className={`w-full min-w-[400px] text-xs ${p.textPrimary}`}>
+      <table className={`w-full min-w-[520px] text-xs ${p.textPrimary}`}>
         <caption className="mb-3 text-left font-semibold">Examination results · percentage scale</caption>
-        <thead><tr>{['Subject','Examination','Students','Average (%)','SD (pp)'].map((label, index) => <th key={label} scope="col" className={`px-2 py-2 font-semibold ${index < 2 ? 'text-left' : 'text-right'}`}>{label}</th>)}</tr></thead>
+        <thead><tr>{['Subject','Grade Level','Examination','Students','Average (%)','SD (pp)'].map((label, index) => <th key={label} scope="col" className={`px-2 py-2 font-semibold ${index < 3 ? 'text-left' : 'text-right'}`}>{label}</th>)}</tr></thead>
         <tbody>{data.rows.map(row => <tr key={`${row.subjectId}:${row.examination}`} className={`border-t ${p.panelBorder}`}>
           <th scope="row" className="px-2 py-2 text-left font-medium">{row.subject}</th>
+          <td className="whitespace-nowrap px-2 py-2">{row.grade ?? '—'}</td>
           <td className="px-2 py-2">{row.examination}</td>
           <td className="px-2 py-2 text-right tabular-nums">{row.students}</td>
           <td className="px-2 py-2 text-right tabular-nums">{withUnit(row.mean, '%')}</td>
