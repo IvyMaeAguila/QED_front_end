@@ -38,6 +38,8 @@ export interface SubjectWeightDistributionItem {
 }
 
 export interface SubjectSectionByGradeRow {
+  structure_locked?: boolean;
+  grade_level_locked?: boolean;
   id: number;
   subject_id: number;
   subject_name: string;

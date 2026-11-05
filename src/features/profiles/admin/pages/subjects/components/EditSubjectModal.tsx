@@ -26,6 +26,7 @@ export function EditSubjectModal({subject,onClose,onSave,saving:parentSaving=fal
  const [schoolYears,setSchoolYears]=useState<SchoolYearRow[]>([]);
  useEffect(()=>{void loadSectionsForGrade(gradeLevel);},[gradeLevel,loadSectionsForGrade]);
  useEffect(()=>{let active=true;void fetchAllSchoolYears().then(rows=>{if(active)setSchoolYears(rows);}).catch(error=>console.error('Failed to load school years:',error));return()=>{active=false;};},[fetchAllSchoolYears]);
+ const structureLocked=subject.structureLocked!==false,gradeLocked=structureLocked||subject.gradeLevelLocked!==false;
  const gradeSections=getSectionsForGrade(gradeLevel);
  const sectionOptions=section&&!gradeSections.some(s=>s.name===section)?[{id:'current',name:section},...gradeSections]:gradeSections;
  function handleClose(){if(!saving)onClose();}
@@ -58,6 +59,7 @@ export function EditSubjectModal({subject,onClose,onSave,saving:parentSaving=fal
         new subject.
       </p>
 
+      {(structureLocked||gradeLocked)&&<p className={`text-xs ${textMuted}`}>Grade level is locked when academic records exist in any section. Section and school year are locked for assignments with records. Teacher reassignment remains available.</p>}
       {(error || saveTemplateError) && (
         <div
           className={`flex items-start gap-2 rounded-lg border px-3 py-2.5 text-xs font-semibold lg:col-span-2 ${
@@ -85,7 +87,7 @@ export function EditSubjectModal({subject,onClose,onSave,saving:parentSaving=fal
             const nextGrade = e.target.value as Subject["gradeLevel"];
             setGradeLevel(nextGrade);
             if (nextGrade !== gradeLevel) setSection("");
-          }} disabled={saving} className={saving ? disabledInputClasses : inputClasses}>
+          }} disabled={saving||gradeLocked} className={saving||gradeLocked ? disabledInputClasses : inputClasses}>
             {GRADE_LEVELS.map((grade) => <option key={grade} value={grade}>{grade}</option>)}
           </AccountSelect>
         </div>
@@ -94,8 +96,8 @@ export function EditSubjectModal({subject,onClose,onSave,saving:parentSaving=fal
           <AccountSelect data-account-select=""
             value={section}
             onChange={(e) => setSection(e.target.value)}
-            disabled={saving}
-            className={saving ? disabledInputClasses : inputClasses}
+            disabled={saving||structureLocked}
+            className={saving||structureLocked ? disabledInputClasses : inputClasses}
           >
             <option value="">Select section…</option>
             {sectionOptions.map((s) => (
@@ -126,7 +128,7 @@ export function EditSubjectModal({subject,onClose,onSave,saving:parentSaving=fal
         </div>
         <div>
           <label className={labelClasses}>School Year</label>
-          <AccountSelect data-account-select="" value={schoolYear} onChange={(e) => setSchoolYear(e.target.value)} disabled={saving} className={saving ? disabledInputClasses : inputClasses}>
+          <AccountSelect data-account-select="" value={schoolYear} onChange={(e) => setSchoolYear(e.target.value)} disabled={saving||structureLocked} className={saving||structureLocked ? disabledInputClasses : inputClasses}>
             {[...new Set([subject.schoolYear, ...schoolYears.map((year) => year.school_year)])].filter(Boolean).map((year) => (
               <option key={year} value={year}>{year}</option>
             ))}

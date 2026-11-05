@@ -15,6 +15,8 @@ export function mapSubjectRow(row: SubjectSectionByGradeRow): Subject {
   return {
     id: String(row.id),
     subjectId: String(row.subject_id),
+    structureLocked: row.structure_locked,
+    gradeLevelLocked: row.grade_level_locked,
     name: row.subject_name,
     gradeLevel: GRADE_LEVEL_BY_ID[Number(row.grade_level_id)],
     section: row.section_name,
