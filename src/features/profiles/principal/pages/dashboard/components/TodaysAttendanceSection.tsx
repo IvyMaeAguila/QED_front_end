@@ -574,12 +574,12 @@ export function TodaysAttendanceSection({
             }`}
           />
 
-          {/* Concerning */}
+          {/* Late / Excused */}
           <div>
             <p
               className={`text-xs font-medium ${textMuted}`}
             >
-              Concerning
+              Late / Excused
             </p>
 
             <p
