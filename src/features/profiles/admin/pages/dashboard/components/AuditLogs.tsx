@@ -1,3 +1,5 @@
+import {auditPresentation} from '../services/auditPresentation';
+import {formatSchoolTimestamp} from '@shared/utils/formatSchoolTimestamp';
 import {isTransientReadFailure} from '@shared/query/safeReadPolicy';
 import { AccountSelect } from "@shared/components/AccountSelect";
 import { useMemo, useRef, useState, type FormEvent } from "react";
@@ -10,9 +12,9 @@ import { rememberColumns, rememberRows, useColumnReservation, skeletonRows } fro
 const auditColumns = [
   { label: "When", typical: "10/08/2026, 10:30:00 AM" },
   { label: "Who", typical: "Maria Dela Cruz" },
-  { label: "Action", typical: "UPDATE student" },
-  { label: "Record / endpoint", typical: "/api/students/123/profile" },
-  { label: "Result", typical: "200" },
+  { label: "Action", typical: "Updated a record" },
+  { label: "Details", typical: "View details" },
+  { label: "Result", typical: "Successful" },
 ];
 interface AuditLogsProps {
   darkMode: boolean;
@@ -23,8 +25,7 @@ interface AuditLogsProps {
 }
 
 function formatTimestamp(value: string) {
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? value : date.toLocaleString();
+  return formatSchoolTimestamp(value);
 }
 
 export function AuditLogs({ darkMode, panelBg, panelBorder, textPrimary, textMuted }: AuditLogsProps) {
@@ -73,7 +74,7 @@ export function AuditLogs({ darkMode, panelBg, panelBorder, textPrimary, textMut
         <form onSubmit={applySearch} className="flex min-w-55 flex-1 gap-2">
           <div className="relative flex-1">
             <Search size={14} className={`absolute left-3 top-1/2 -translate-y-1/2 ${textMuted}`} />
-            <input value={searchInput} onChange={(event) => setSearchInput(event.target.value)} placeholder="Search user, action, endpoint, ID" className={`${inputClass} w-full pl-9`} />
+            <input value={searchInput} onChange={(event) => setSearchInput(event.target.value)} placeholder="Search user or record" className={`${inputClass} w-full pl-9`} />
           </div>
           <button className="rounded-lg bg-maroon px-3 text-xs font-bold text-white" data-sk-region="auditlogs-search" data-sk-static="">Search</button>
         </form>
@@ -81,7 +82,7 @@ export function AuditLogs({ darkMode, panelBg, panelBorder, textPrimary, textMut
           <option value="">All roles</option><option value="ADMIN">Admin</option><option value="PRINCIPAL">Principal</option><option value="TEACHER">Teacher</option><option value="PARENT">Parent</option><option value="ANONYMOUS">Anonymous</option>
         </AccountSelect>
         <AccountSelect data-account-select="" aria-label="Filter by action" value={action} onChange={(event) => { setAction(event.target.value); setPageNumber(1); }} className={inputClass}>
-          <option value="">All actions</option><option value="LOGIN">Login</option><option value="CREATE">Create</option><option value="UPDATE">Update</option><option value="DELETE">Delete</option><option value="UPLOAD">Upload</option><option value="SUBMIT">Submit</option><option value="CHANGE">Other change</option>
+          <option value="">All actions</option><option value="LOGIN">Logged in</option><option value="LOGOUT">Logged out</option><option value="CREATE">Added records</option><option value="UPDATE">Updated records</option><option value="DELETE">Removed records</option><option value="UPLOAD">Uploaded files</option><option value="SUBMIT">Submitted records</option><option value="CHANGE">Other activity</option>
         </AccountSelect>
         <label className={`flex items-center gap-1 text-xs font-semibold ${textMuted}`} data-sk-region="auditlogs-from" data-sk-static="">From<input aria-label="From date" type="date" value={from} onChange={(event) => { setFrom(event.target.value); setPageNumber(1); }} className={inputClass} /></label>
         <label className={`flex items-center gap-1 text-xs font-semibold ${textMuted}`} data-sk-region="auditlogs-to" data-sk-static="">To<input aria-label="To date" type="date" value={to} onChange={(event) => { setTo(event.target.value); setPageNumber(1); }} className={inputClass} /></label>
@@ -109,13 +110,14 @@ export function AuditLogs({ darkMode, panelBg, panelBorder, textPrimary, textMut
         </div>}
       >
             {entries.map((entry) => {
+              const display=auditPresentation(entry);
               return (
                 <tr key={entry.id} className={`border-t ${panelBorder}`}>
                   <td className={`whitespace-nowrap px-4 py-3 ${textMuted}`}>{formatTimestamp(entry.createdAt)}</td>
                   <td className={`px-4 py-3 ${textPrimary}`}><span className="font-bold">{entry.actorFullName || entry.actorUsername || "Unknown actor"}</span><span className={`mt-0.5 block text-xs ${textMuted}`}>{entry.actorUsername ? `@${entry.actorUsername} · ` : ""}{entry.actorRole || "Unknown role"}</span></td>
-                  <td className={`px-4 py-3 ${textPrimary}`}><span className="font-bold">{entry.action}</span><span className={`mt-0.5 block ${textMuted}`}>{entry.resource}{entry.resourceId ? ` · #${entry.resourceId}` : ""}</span></td>
-                  <td className={`max-w-80 break-all px-4 py-3 ${textMuted}`}><span className={`font-bold ${textPrimary}`}>{entry.httpMethod}</span> {entry.endpoint}</td>
-                  <td className="px-4 py-3 text-center"><span className={`rounded-full px-2 py-1 font-bold ${entry.statusCode < 400 ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>{entry.statusCode}</span></td>
+                  <td className={`px-4 py-3 ${textPrimary}`}><span className="font-bold">{display.action}</span><span className={`mt-0.5 block ${textMuted}`}>{display.area}{entry.resourceId ? ` · #${entry.resourceId}` : ""}</span></td>
+                  <td className={`max-w-80 px-4 py-3 ${textMuted}`}><details><summary className="cursor-pointer font-semibold text-maroon">View details</summary><dl className="mt-2 space-y-1 text-xs"><div><dt className="font-semibold">Request</dt><dd className="break-all">{entry.httpMethod} {entry.endpoint}</dd></div><div><dt className="font-semibold">Response code</dt><dd>{entry.statusCode}</dd></div>{entry.resourceId&&<div><dt className="font-semibold">Record reference</dt><dd>{entry.resourceId}</dd></div>}</dl></details></td>
+                  <td className="px-4 py-3 text-center"><span className={`rounded-full px-2 py-1 font-bold ${display.successful ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>{display.result}</span></td>
                 </tr>
               );
             })}
