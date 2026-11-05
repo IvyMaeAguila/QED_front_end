@@ -2,23 +2,35 @@
 import type { RankedSubject, AggregatedSubjectRank, FilteredSubjectRank } from "../data/types";
 import type { Trend } from "../../../../shared/components/DashboardUI";
 
-// Aggregates a term's raw grade+subject rows to one row per subject
-// (average score across grades, dominant trend), ranked descending.
+// Strip a grade suffix only when it agrees with the row's actual grade.
+// Distinct learning areas and numbers belonging to a different grade stay intact.
+function departmentSubjectName(item: RankedSubject): string {
+  const name = item.subject.trim().replace(/\s+/g, " ");
+  const grade = item.grade.trim().match(/^(?:grade\s*)?([1-6])$/i)?.[1];
+  const suffix = name.match(/\s+(?:[-\u2013\u2014]\s*)?(?:grade\s*)?([1-6])$/i);
+  return grade && suffix?.[1] === grade ? name.slice(0, suffix.index).trim() : name;
+}
+
+// One department row per learning area, averaging the eligible grade-level rows.
 export function aggregateWholeElementary(rawList: RankedSubject[]): AggregatedSubjectRank[] {
-  const bySubject: Record<string, { total: number; count: number; trendCounts: Record<string, number> }> = {};
+  const bySubject = new Map<string, { subject: string; total: number; count: number; trendCounts: Record<string, number> }>();
   for (const item of rawList) {
-    if (!bySubject[item.subject]) {
-      bySubject[item.subject] = { total: 0, count: 0, trendCounts: { up: 0, down: 0, flat: 0 } };
+    const subject = departmentSubjectName(item);
+    const key = subject.toLocaleLowerCase("en");
+    let group = bySubject.get(key);
+    if (!group) {
+      group = { subject, total: 0, count: 0, trendCounts: { up: 0, down: 0, flat: 0 } };
+      bySubject.set(key, group);
     }
-    bySubject[item.subject].total += item.score;
-    bySubject[item.subject].count += 1;
-    bySubject[item.subject].trendCounts[item.trend] += 1;
+    group.total += item.score;
+    group.count += 1;
+    group.trendCounts[item.trend] += 1;
   }
-  return Object.entries(bySubject)
-    .map(([subject, data]) => {
-      const avg = Math.round(data.total / data.count);
-      const dominantTrend = (Object.entries(data.trendCounts).sort((a, b) => b[1] - a[1])[0]?.[0] as Trend) ?? "flat";
-      return { subject, score: avg, trend: dominantTrend, gradeCount: data.count };
+  return [...bySubject.values()]
+    .map(({ subject, total, count, trendCounts }) => {
+      const avg = Math.round(total / count);
+      const dominantTrend = (Object.entries(trendCounts).sort((a, b) => b[1] - a[1])[0]?.[0] as Trend) ?? "flat";
+      return { subject, score: avg, trend: dominantTrend, gradeCount: count };
     })
     .sort((a, b) => b.score - a.score)
     .map((item, i) => ({ ...item, rank: i + 1 }));
