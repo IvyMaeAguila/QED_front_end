@@ -25,7 +25,7 @@ interface OnboardingCarouselProps {
 }
 
 // Autoplay: how long each PAGE stays up before auto-sliding to the next one.
-// Only pages auto-advance (Link Student -> Download Progress Report -> Edit
+// Only pages auto-advance (Link Student -> View Progress Report -> Edit
 // Student Information -> loops back) — steps within a page don't auto-play.
 const AUTOPLAY_INTERVAL_MS = 6000;
 
@@ -56,34 +56,28 @@ const pages: Page[] = [
     ],
   },
   {
-    heading: "Download Progress Report",
+    heading: "View Progress Report",
     description:
-      "Export a detailed PDF summary of acdemic and holistic development.",
+      "View your child's released grades, attendance, and holistic development in the system.",
     steps: [
       {
-        label: "Step 1 of 4",
+        label: "Step 1 of 3",
         title: "Open the Enrolled Children",
         desc: "Click the Enrolled Children from the side bar",
         highlight: "sidebar-2",
       },
       {
-        label: "Step 2 of 4",
+        label: "Step 2 of 3",
         title: "Choose Student",
-        desc: "Select a stdent from the list to download their progress report",
+        desc: "Select a student from the list to view their progress report.",
         highlight: "student-fields",
       },
       {
-        label: "Step 3 of 4",
+        label: "Step 3 of 3",
         title: "Open Progress Report",
-        desc: "Navigate to Progress Report at the top navigation bar to view the summary.",
+        desc: "Open Progress Report from the top navigation bar, then choose a term to review the released report.",
         highlight: "report-toolbar",
       },
-      {
-        label: "Step 4 of 4",
-        title: "Click Download",
-        desc: "Click the Download button below the top navigation bar to save the student's progress report as a PDF.",
-        highlight: "report-download",
-      }
     ],
   },
   {
@@ -155,7 +149,7 @@ function DesktopOnboardingCarousel({
     setStepIndex(0);
   };
 
-  // Auto-slide the pages (Link Student -> Download Progress Report -> Edit
+  // Auto-slide the pages (Link Student -> View Progress Report -> Edit
   // Student Information -> back to Link Student), looping forever. Pauses
   // while the user is hovering the widget or has the "..." menu open so it
   // doesn't yank the page out from under them mid-read.

@@ -56,7 +56,7 @@ export default function ProgressReportUnavailableModal({
         {!termEnded && !isVisible && (
           <p className={`mt-2 text-xs leading-relaxed ${textMuted}`}>
             Once the term ends and the report is released, you'll be able to
-            view and download it here.
+            view it here.
           </p>
         )}
         </ModalBody>

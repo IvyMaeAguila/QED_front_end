@@ -12,7 +12,6 @@ export type HighlightTarget =
   | "confirm-modal"
   | "student-fields"
   | "report-toolbar"
-  | "report-download"
   | "profile-toolbar"
   | "profile-detail"
   | "profile-edit";
@@ -41,7 +40,6 @@ export default function MockupFrame({
   const isHighlighted = (id: HighlightTarget) => highlight === id;
   const isStudentFields = highlight === "student-fields";
   const isReportToolbar = highlight === "report-toolbar";
-  const isReportDownload = highlight === "report-download";
   const isProfileToolbar = highlight === "profile-toolbar";
   const isProfileDetail = highlight === "profile-detail";
   const isProfileEdit = highlight === "profile-edit";
@@ -89,7 +87,7 @@ export default function MockupFrame({
       <div className="flex h-full">
         {/* Sidebar */}
         <div className={`flex w-1/4 flex-col gap-2.5 pt-4 px-2 ${sidebarBg}`}>
-          {isStudentFields || isReportToolbar || isReportDownload || isProfileToolbar || isProfileDetail || isProfileEdit ? (
+          {isStudentFields || isReportToolbar || isProfileToolbar || isProfileDetail || isProfileEdit ? (
             <>
               <div className="h-6 rounded-lg bg-white/15" />
               <div className="relative h-6 rounded-lg bg-white/15">
@@ -241,29 +239,6 @@ export default function MockupFrame({
                   <div
                     className={`relative h-5 flex-1 rounded-md border ring-2 ring-[#711111] ${inputBg}`}
                   >
-                    {smallCursor}
-                  </div>
-                </div>
-
-                {/* Skeleton bar */}
-                <div className={`h-5 w-full rounded-md ${surfaceBg}`} />
-
-                {/* Big content panel */}
-                <div className={`h-20 w-full rounded-lg ${surfaceBg}`} />
-              </div>
-            ) : isReportDownload ? (
-              <div className="flex w-full flex-col gap-3">
-                {/* Toolbar row: 4 plain segments */}
-                <div className="flex gap-2">
-                  <div className={`h-5 flex-1 rounded-md border ${inputBg}`} />
-                  <div className={`h-5 flex-1 rounded-md border ${inputBg}`} />
-                  <div className={`h-5 flex-1 rounded-md border ${inputBg}`} />
-                  <div className={`h-5 flex-1 rounded-md border ${inputBg}`} />
-                </div>
-
-                {/* Right-aligned download button, with cursor */}
-                <div className="flex justify-end">
-                  <div className="relative h-5 w-18 rounded-md ring-2 ring-white bg-[#7a1f1f]">
                     {smallCursor}
                   </div>
                 </div>

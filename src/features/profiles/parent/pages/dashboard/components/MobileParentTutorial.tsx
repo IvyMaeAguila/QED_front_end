@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Menu, LayoutDashboard, BookOpen, SquareStar, FileBarChart, UserCircle } from "lucide-react";
 
-type Preview = 'menu' | 'navigation' | 'children' | 'link' | 'verify' | 'student' | 'report-tab' | 'download' | 'profile-tab' | 'edit' | 'save';
+type Preview = 'menu' | 'navigation' | 'children' | 'link' | 'verify' | 'student' | 'report-tab' | 'report-view' | 'profile-tab' | 'edit' | 'save';
 type Step = { title: string; description: string; preview: Preview };
 const navigation: Step[] = [
   {title: 'Open the menu', description: 'Tap the menu icon at the top left of the screen.', preview: 'menu'},
@@ -13,10 +13,10 @@ const guides: {label: string; title: string; steps: Step[]}[] = [
     {title: 'Enter the student details', description: 'Enter the ID Number, First Name, and Last Name exactly as recorded by the school. Tap Connect Student.', preview: 'link'},
     {title: 'Confirm your child', description: 'Check the matched details, then tap Yes, this is correct. Choose Not my child if the details do not match.', preview: 'verify'},
   ]},
-  {label: 'Reports', title: 'Download a progress report', steps: [...navigation,
+  {label: 'Reports', title: 'View Progress Report', steps: [...navigation,
     {title: 'Choose your child', description: 'Tap your child in the linked children list to open their records.', preview: 'student'},
     {title: 'Open Progress Report', description: "Tap the report icon (the fourth tab) above your child's records to open Progress Report.", preview: 'report-tab'},
-    {title: 'Review the report', description: 'Choose a term to view the released grades, attendance, and holistic development.', preview: 'download'},
+    {title: 'Review the report', description: 'Choose a term to view the released grades, attendance, and holistic development.', preview: 'report-view'},
   ]},
   {label: 'Profile', title: 'Update student information', steps: [...navigation,
     {title: 'Choose your child', description: 'Tap your child in the linked children list to open their records.', preview: 'student'},
@@ -49,7 +49,7 @@ function PhonePreview({stage,darkMode}:{stage:Preview;darkMode:boolean}) {
           <p className="text-[10px] font-semibold">Enrolled Children</p><div className={'flex items-center gap-2 rounded border p-2 '+border+' '+(stage==='student'?highlight:'')}><span className={'h-7 w-7 rounded-full '+muted}/><div className="space-y-1"><div className={'h-2 w-24 rounded '+muted}/><div className={'h-1.5 w-16 rounded '+muted}/></div></div>
           <div className={chip+' mt-auto bg-maroon text-center text-white '+(stage==='children'?highlight:'')}>+ Link Student</div>
         </>:<>
-          <div className="flex gap-2 border-b pb-2">{[LayoutDashboard,BookOpen,SquareStar,FileBarChart,UserCircle].map((Icon,index)=>{const active=(stage==='report-tab'||stage==='download')?index===3:index===4;return <span key={index} className={'flex flex-1 justify-center rounded p-1.5 '+(active?'bg-maroon text-white '+(['report-tab','profile-tab'].includes(stage)?highlight:''):muted)}><Icon size={13}/></span>;})}</div>
+          <div className="flex gap-2 border-b pb-2">{[LayoutDashboard,BookOpen,SquareStar,FileBarChart,UserCircle].map((Icon,index)=>{const active=(stage==='report-tab'||stage==='report-view')?index===3:index===4;return <span key={index} className={'flex flex-1 justify-center rounded p-1.5 '+(active?'bg-maroon text-white '+(['report-tab','profile-tab'].includes(stage)?highlight:''):muted)}><Icon size={13}/></span>;})}</div>
           {stage==='edit'&&<div className={chip+' ml-auto bg-maroon text-white '+highlight}>Edit</div>}
           <div className={'h-8 rounded '+muted}/><div className={'h-2 w-2/3 rounded '+muted}/>
         </>}
