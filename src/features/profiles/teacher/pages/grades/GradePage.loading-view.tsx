@@ -1,3 +1,4 @@
+import {formatSchoolTimestamp} from '@shared/utils/formatSchoolTimestamp';
 import "@shared/components/GradebookTable.css";
 import './GradePage.css';
 import { useActionConfirmation } from "@shared/components/useActionConfirmation";
@@ -419,7 +420,7 @@ function useGradesPageState() {
                 )}</LoadingRegion>)}
                 {!tableError && (<LoadingRegion as="span" loading={statusLoading && (termsLoading || sectionsLoading || Boolean(selectedClassId))} error={statusError} retry={()=>setStatusAttempt(value=>value+1)} variable name="teacher-grade-submission-status" skeleton={<SkeletonText width="18ch" className="text-xs" />}>{submitted && (
                   <span className={`text-xs font-medium ${textMuted}`}>
-                    Submitted {submittedAt ? new Date(submittedAt).toLocaleString() : ""}
+                    Submitted {submittedAt ? formatSchoolTimestamp(submittedAt) : ""}
                   </span>
                 )}</LoadingRegion>)}
               </div>
@@ -564,7 +565,7 @@ function useGradesPageState() {
                       {pending ? <SkeletonText width="14ch" /> : log.label} <span className={textMuted}>· {pending ? <SkeletonText width="12ch" /> : log.type === "advisory" ? "Class submission" : "Subject submission"}</span>
                     </span>
                     <span className={`text-xs font-medium ${textMuted}`}>
-                      {pending ? <SkeletonText width="24ch" /> : <>{log.submittedByName ? `${log.submittedByName} · ` : ""}{new Date(log.submittedAt).toLocaleString()}</>}
+                      {pending ? <SkeletonText width="24ch" /> : <>{log.submittedByName ? `${log.submittedByName} · ` : ""}{formatSchoolTimestamp(log.submittedAt)}</>}
                     </span>
                   </li>
                 ))}

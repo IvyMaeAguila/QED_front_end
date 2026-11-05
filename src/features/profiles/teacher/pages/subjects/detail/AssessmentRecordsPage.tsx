@@ -1,3 +1,4 @@
+import {formatSchoolTimestamp} from '@shared/utils/formatSchoolTimestamp';
 import './AssessmentRecordsPage.css';
 import { useToast } from "@shared/context/ToastContext";
 import { ClassRecordExportModal } from "./ClassRecordExportModal";
@@ -771,7 +772,7 @@ export function AssessmentRecordsSection({
             <>
                   This sends {gradePreviews.length} {gradePreviews.length === 1 ? "grade" : "grades"} to{" "}
                   {adviserName ? `${adviserName}'s` : "the adviser's"} gradesheet. Review before confirming.
-                  {existingSubmission?.submitted && <span className="mt-2 block">A submission is already recorded{existingSubmission.submittedAt ? ` (${new Date(existingSubmission.submittedAt).toLocaleString()})` : ''}. Confirming again creates a new submission history entry.</span>}
+                  {existingSubmission?.submitted && <span className="mt-2 block">A submission is already recorded{existingSubmission.submittedAt ? ` (${formatSchoolTimestamp(existingSubmission.submittedAt)})` : ''}. Confirming again creates a new submission history entry.</span>}
             </>
           }
           onClose={() => setShowConfirmModal(false)}

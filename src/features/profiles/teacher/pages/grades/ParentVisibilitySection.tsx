@@ -1,3 +1,4 @@
+import {formatSchoolTimestamp} from '@shared/utils/formatSchoolTimestamp';
 import { useActionConfirmation } from "@shared/components/useActionConfirmation";
 import { useToast } from "@shared/context/ToastContext";
 import {useContext,useRef,useLayoutEffect} from 'react';
@@ -214,7 +215,7 @@ export function ParentVisibilitySection({
                         )}
                       </td>
                       <td className={`px-3 py-2 text-xs font-medium ${textMuted}`}>
-                        {pending ? <SkeletonText width="18ch" /> : student.updatedAt ? new Date(student.updatedAt).toLocaleString() : "—"}
+                        {pending ? <SkeletonText width="18ch" /> : student.updatedAt ? formatSchoolTimestamp(student.updatedAt) : "—"}
                       </td>
                     </tr>
                   ))}
