@@ -61,7 +61,8 @@ export async function createMonthlyAttendancePdf(report: MonthlyAttendanceReport
     attendanceRow(row, day.malePresent, day.femalePresent);
   });
   if (report.ada) {
-    enrollmentRow(25);
+    // The bottom summary follows the latest reported day, including enrollment movements.
+    enrollmentRow(25, report.days.at(-1)?.enrollment ?? report.enrollment);
     attendanceRow(25, report.ada.male, report.ada.female, true);
     attendanceRow(26, report.sums.male, report.sums.female);
   }
