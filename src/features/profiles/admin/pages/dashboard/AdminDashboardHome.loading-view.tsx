@@ -13,7 +13,10 @@ function useAdminDashboardHomeState(activity: boolean, overview: ReactNode) {
   return { content: ((
     <div className={`flex flex-col ${activity ? "gap-6" : "gap-4"}`}>
       {activity ? <>
-        <h1 className={`qed-type-page-title ${textPrimary}`}>Account Activity</h1>
+        <header>
+          <h1 className={`qed-type-page-title ${textPrimary}`}>Account Activity</h1>
+          <p className={`mt-1 text-sm ${theme.textMuted}`}>Review login trends and system changes.</p>
+        </header>
         <LoginFrequency {...theme} />
         <AuditLogs {...theme} />
       </> : <>
