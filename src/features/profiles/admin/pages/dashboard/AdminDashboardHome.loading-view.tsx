@@ -1,34 +1,37 @@
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
+import type { ReactNode } from "react";
 import { AuditLogs } from "./components/AuditLogs";
 import { LoginFrequency } from "./components/LoginFrequency";
 import { StatCards } from "./components/StatCards";
-// import { PerformanceByGrade } from "./components/PerformanceByGrade";
 import type { AdminThemeContext } from "../AdminLayout";
 
-function useAdminDashboardHomeState(activity: boolean) {
+function useAdminDashboardHomeState(activity: boolean, overview: ReactNode) {
   const theme = useOutletContext<AdminThemeContext>();
   const { panelBg, panelBorder, textPrimary, textMuted } = theme;
 
   return { content: ((
     <div className="flex flex-col gap-6">
-      <h1 className={`qed-type-page-title ${textPrimary}`}>{activity ? "Account Activity" : "Dashboard"}</h1>
       {activity ? <>
+        <h1 className={`qed-type-page-title ${textPrimary}`}>Account Activity</h1>
         <LoginFrequency {...theme} />
         <AuditLogs {...theme} />
-      </> : <StatCards
+      </> : <>
+      <StatCards
         panelBg={panelBg}
         panelBorder={panelBorder}
         textPrimary={textPrimary}
         textMuted={textMuted}
-      />}
+      />
+      {overview}
+      </>}
     </div>
   )), scope: {  } };
 }
 
 export type AdminDashboardHomeEffectScope = ReturnType<typeof useAdminDashboardHomeState>["scope"];
 export type AdminDashboardHomeRouteProps = Record<string, never>;
-export function AdminDashboardHomeComposition(props: { activity?: boolean; effects?: (scope: AdminDashboardHomeEffectScope) => import("react").ReactNode }) {
- const state = useAdminDashboardHomeState(props.activity ?? false);
+export function AdminDashboardHomeComposition(props: { activity?: boolean; overview?: ReactNode; effects?: (scope: AdminDashboardHomeEffectScope) => import("react").ReactNode }) {
+ const state = useAdminDashboardHomeState(props.activity ?? false, props.overview);
  return <>{props.effects?.(state.scope)}{state.content}</>;
 }
 
