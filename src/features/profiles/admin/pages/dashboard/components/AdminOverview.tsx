@@ -30,7 +30,7 @@ export function AdminOverview() {
   const rosterCounts = classes.map(item => ({
     key: item.id,
     label: [item.gradeLevel, item.section].filter(Boolean).join(" · "),
-    shortLabel: `${item.gradeLevel.replace(/^Grade\s+/i, "")}${item.section?.trim().charAt(0) ?? ""}`,
+    shortLabel: [item.gradeLevel.replace(/^Grade\s+/i, "G"), item.section?.trim().charAt(0)].filter(Boolean).join(" · "),
     value: Number(item.studentCount) || 0,
   }));
   const assigned = classes.filter(item => Number(item.adviserId) > 0).length;
@@ -42,9 +42,15 @@ export function AdminOverview() {
           error={usersError ?? (forbidden ? "Account data is unavailable." : null)} retry={refetchUsers}
           to="/admin/users" action="Manage users">
           <AccountBreakdown accounts={accounts} theme={theme} />
-          <dl className={`mt-4 flex flex-wrap border-t pt-3 ${theme.panelBorder} gap-x-5 gap-y-2 text-sm ${theme.textMuted}`}>
-            <div className="flex gap-2"><dt>Active accounts</dt><dd className={`font-semibold ${theme.textPrimary}`}>{active.toLocaleString()}</dd></div>
-            <div className="flex gap-2"><dt>Inactive accounts</dt><dd className={`font-semibold ${theme.textPrimary}`}>{inactive.toLocaleString()}</dd></div>
+          <dl className={`mt-4 grid grid-cols-2 divide-x divide-current/20 border-t pt-3 text-sm ${theme.panelBorder} ${theme.textMuted}`}>
+            <div className="pr-3">
+              <dt>Active accounts</dt>
+              <dd className={`mt-0.5 font-semibold tabular-nums ${theme.textPrimary}`}>{active.toLocaleString()}</dd>
+            </div>
+            <div className="pl-3">
+              <dt>Inactive accounts</dt>
+              <dd className={`mt-0.5 font-semibold tabular-nums ${theme.textPrimary}`}>{inactive.toLocaleString()}</dd>
+            </div>
           </dl>
         </OverviewPanel>}
       classOverview={<OverviewPanel theme={theme} icon={BookOpen} title="Class overview" loading={classesLoading}
@@ -70,7 +76,7 @@ export function AdminOverview() {
           </div>
           {rosterCounts.length > 0 && (
             <>
-              <h3 className={`qed-type-label mb-1 ${theme.textMuted}`}>Students per class</h3>
+              <h3 className={`qed-type-label mb-2 ${theme.textPrimary}`}>Students per class</h3>
               <EnrollmentBars bars={rosterCounts} label="Students per class" textMuted={theme.textMuted} />
             </>
           )}

@@ -40,30 +40,30 @@ export function EnrollmentOverview({ theme, account, classOverview }: { theme: A
         <SectionCard {...theme} compact title="Class enrollment by grade" icon={BarChart3}
           action={<span className={`text-xs ${textMuted}`}>{total.toLocaleString()} total</span>}>
           <EnrollmentBars label="Students on class rosters by grade" textMuted={textMuted}
-            bars={enrollment.map(grade => ({ key: grade.label, label: grade.label, shortLabel: grade.label.replace(/^Grade\s+/i, "G"), value: grade.students }))} />
+            bars={enrollment.map(grade => ({ key: grade.label, label: grade.label, shortLabel: grade.label, value: grade.students }))} />
         </SectionCard>
       </section>}
       rosters={<section aria-label="Class rosters" className="min-w-0">
         <SectionCard {...theme} compact title="Class rosters" icon={BookOpen}
-          action={<Link to="/admin/classes" className={`qed-type-button shrink-0 rounded-lg border px-3 py-2 ${panelBorder} ${textPrimary} hover:bg-maroon/5`}>View classes</Link>}>
+          action={<Link to="/admin/classes" className={`qed-type-button shrink-0 rounded-lg border px-3 py-1.5 text-maroon ${panelBorder} hover:bg-maroon/5`}>View classes</Link>}>
         <div className={`overflow-x-auto rounded-lg border ${panelBorder}`}>
           <table className={`teacher-user-table w-full text-left text-sm ${textPrimary}`}>
             <thead className={`${darkMode ? "bg-white/5" : "bg-brand-light"} ${textMuted}`}>
               <tr>
-                <th scope="col" className="qed-type-table-header px-5 py-2.5">Class</th>
+                <th scope="col" className="qed-type-table-header px-3 py-2.5 sm:px-4">Class</th>
                 <th scope="col" className="qed-type-table-header px-3 py-2.5">Adviser</th>
-                <th scope="col" className="qed-type-table-header px-5 py-2.5 text-right">Students</th>
+                <th scope="col" className="qed-type-table-header px-3 py-2.5 sm:px-4 text-right">Students</th>
               </tr>
             </thead>
             <tbody>
               {classes.map(item => <tr key={item.id} className={`border-t ${panelBorder} ${darkMode ? "hover:bg-white/5" : "hover:bg-black/[0.02]"}`}>
-                <th scope="row" className="px-5 py-2.5 font-medium">
-                  <Link className="underline-offset-4 hover:underline" to={`/admin/classes/${item.id}`}>
+                <th scope="row" className="px-3 py-2.5 font-medium sm:px-4">
+                  <Link className="text-maroon normal-case underline-offset-4 hover:underline focus-visible:underline" to={`/admin/classes/${item.id}`}>
                     {[item.gradeLevel, item.section].filter(Boolean).join(" · ")}
                   </Link>
                 </th>
                 <td className={`px-3 py-2.5 ${textMuted}`}>{item.adviserName?.trim() || "Unassigned"}</td>
-                <td className="px-5 py-2.5 text-right font-semibold tabular-nums">{(Number(item.studentCount) || 0).toLocaleString()}</td>
+                <td className="px-3 py-2.5 sm:px-4 text-right font-semibold tabular-nums">{(Number(item.studentCount) || 0).toLocaleString()}</td>
               </tr>)}
             </tbody>
           </table>
