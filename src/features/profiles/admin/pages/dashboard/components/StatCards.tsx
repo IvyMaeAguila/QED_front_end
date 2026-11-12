@@ -1,102 +1,36 @@
-import {isTransientReadFailure} from '@shared/query/safeReadPolicy';
-import { ArrowUpRight } from "lucide-react";
+import { isTransientReadFailure } from "@shared/query/safeReadPolicy";
+import { Users } from "lucide-react";
+import { OverviewCard } from "../../../../shared/components/DashboardUI";
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
+import { SkeletonText } from "@shared/components/SkeletonLoading";
 import { statsConfig } from "../data/Dashboarddata";
 import { useAdminDashboardData, adminDashboardOfflineError } from "../AdminDashboardDataContext";
-import type { DashboardCounts } from "../services/totalCounts.service";
+import type { AdminThemeContext } from "../../AdminLayout";
 
-import { LoadingRegion } from "../../../../../../shared/loading/LoadingRegion";
-import { SkeletonText } from "../../../../../../shared/components/SkeletonLoading";
-
-interface StatItem {
-  label: string;
-  value: string | number;
-  unit?: string;
-  variant?: "primary" | "default";
-  onClick?: () => void;
-}
-
-interface StatCardsProps {
-  panelBg: string;
-  panelBorder: string;
-  textPrimary: string;
-  textMuted: string;
-}
-
-export function StatCards({ panelBg, panelBorder, textPrimary, textMuted }: StatCardsProps) {
+export function StatCards(theme: AdminThemeContext) {
   const { counts: state } = useAdminDashboardData();
-  const { data: counts, loading, error, retry } = state;
-  const cachedOffline = !state.forbidden && counts !== undefined && (error === adminDashboardOfflineError || isTransientReadFailure(error));
-
-  const valueFor = (key: keyof DashboardCounts) => {
-    if (error && !cachedOffline) return "—";
-    return counts?.[key] ?? 0;
-  };
-
-  const stats: StatItem[] = statsConfig.map(({ key, label }, i) => ({
-    label,
-    value: valueFor(key),
-    variant: i === 0 ? "primary" : "default",
-  }));
+  const { data, loading, error, retry, forbidden } = state;
+  const cachedOffline = !forbidden && data !== undefined &&
+    (error === adminDashboardOfflineError || isTransientReadFailure(error));
 
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4" data-sk-region="statcards-div-field-1">
-      {stats.map(({ label, value, unit, variant = "default", onClick }) => {
-        const isPrimary = variant === "primary";
-        const clickable = Boolean(onClick);
-        const Tag = clickable ? "button" : "div";
-
-        return (
-          <Tag
-            data-sk-fixed-region={`admin-stat-${label}`}
-            key={label}
-            onClick={onClick}
-            className={`group rounded-table p-4 text-left transition-[opacity,transform] sm:p-5 ${
-              clickable ? "cursor-pointer active:scale-[0.98]" : ""
-            } ${isPrimary ? "text-white" : `border ${panelBg} ${panelBorder} hover:-translate-y-0.5`}`}
-            style={{
-              boxShadow: isPrimary
-                ? "0 12px 28px color-mix(in srgb, var(--brand-primary) 25%, transparent)"
-                : "0 4px 20px -2px rgba(0,0,0,0.05), 0 2px 10px -2px rgba(0,0,0,0.03)",
-              background: isPrimary ? "var(--color-maroon)" : undefined,
-            }}
-          >
-            <div className="mb-4 flex justify-end sm:mb-5">
-              {clickable && (
-                <ArrowUpRight
-                  size={18}
-                  className="opacity-30 group-hover:opacity-100 transition-opacity"
-                  style={{ color: isPrimary ? "#fff" : "var(--color-maroon)" }}
-                />
-              )}
-            </div>
-
-            <div>
-              <p
-                className={`text-xs font-bold uppercase tracking-widest mb-1 ${
-                  isPrimary ? "text-white/75" : textMuted
-                }`}
-              >
-                {label}
-              </p>
-              <div className="flex items-baseline gap-2">
-                <p
-                  className={`text-3xl font-black leading-none tracking-tight tabular-nums ${
-                    isPrimary ? "text-white" : textPrimary
-                  }`}
-                >
-                  {cachedOffline && <span role="alert">{error?.message}<button type="button" className="ml-2 font-semibold underline" onClick={retry}>Retry</button></span>}
-                  <LoadingRegion key={String(state.forbidden)} as="span" className={isPrimary ? "sk-surface-brand" : ""} loading={loading} error={cachedOffline ? null : error} retry={retry} skeleton={<SkeletonText width="3ch" />}>{value}</LoadingRegion>
-                </p>
-                {unit && (
-                  <p className={`text-sm font-medium ${isPrimary ? "text-white/70" : textMuted}`}>
-                    {unit}
-                  </p>
-                )}
-              </div>
-            </div>
-          </Tag>
-        );
-      })}
+      {statsConfig.map(({ key, label }, index) => (
+        <div key={key} data-sk-fixed-region={`admin-stat-${label}`}>
+          <OverviewCard {...theme} label={label} icon={Users} showIcon={false} compact
+            variant={index === 0 ? "spotlight" : "primary"} sub={null}
+            value={<>
+              {cachedOffline && <span role="alert" className="block text-sm">
+                {error?.message}<button type="button" className="ml-2 font-semibold underline" onClick={retry}>Retry</button>
+              </span>}
+              <LoadingRegion key={String(forbidden)} as="span" loading={loading}
+                error={cachedOffline ? null : error} retry={retry} skeleton={<SkeletonText width="3ch" />}>
+                {error && !cachedOffline ? "—" : (data?.[key] ?? 0).toLocaleString()}
+              </LoadingRegion>
+            </>}
+          />
+        </div>
+      ))}
     </div>
   );
 }

@@ -7,7 +7,7 @@ import type { AdminThemeContext } from "../AdminLayout";
 
 function useAdminDashboardHomeState(activity: boolean, overview: ReactNode) {
   const theme = useOutletContext<AdminThemeContext>();
-  const { panelBg, panelBorder, textPrimary, textMuted } = theme;
+  const { textPrimary } = theme;
 
   return { content: ((
     <div className="flex flex-col gap-6">
@@ -16,13 +16,8 @@ function useAdminDashboardHomeState(activity: boolean, overview: ReactNode) {
         <LoginFrequency {...theme} />
         <AuditLogs {...theme} />
       </> : <>
-      <StatCards
-        panelBg={panelBg}
-        panelBorder={panelBorder}
-        textPrimary={textPrimary}
-        textMuted={textMuted}
-      />
-      {overview}
+        <StatCards {...theme} />
+        {overview}
       </>}
     </div>
   )), scope: {  } };

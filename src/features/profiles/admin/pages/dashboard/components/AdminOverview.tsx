@@ -1,3 +1,5 @@
+import { BookOpen, Users } from "lucide-react";
+import { SectionCard } from "../../../../shared/components/DashboardUI";
 import { EnrollmentOverview } from "./EnrollmentOverview";
 import { Link } from "react-router-dom";
 import { useLoadingOutletContext } from "@shared/loading/RoutePreview";
@@ -23,18 +25,19 @@ export function AdminOverview() {
 
   return (
     <>
-    <div className="grid gap-5 xl:grid-cols-2">
-      <OverviewCard title="Account overview" rows={accounts} loading={usersLoading} error={usersError ?? (forbidden ? "Account data is unavailable." : null)}
+      <div className="grid gap-5 xl:grid-cols-2">
+      <OverviewCard icon={Users} title="Account overview" rows={accounts} loading={usersLoading} error={usersError ?? (forbidden ? "Account data is unavailable." : null)}
         retry={refetchUsers} link={{ to: "/admin/users", label: "Manage users" }} theme={theme} />
-      <OverviewCard title="Class overview" rows={school} loading={classesLoading} error={classesError}
+      <OverviewCard icon={BookOpen} title="Class overview" rows={school} loading={classesLoading} error={classesError}
         retry={refreshClasses} link={{ to: "/admin/classes", label: "Manage classes" }} theme={theme} />
-    </div>
-    <EnrollmentOverview {...theme} />
+      </div>
+      <EnrollmentOverview {...theme} />
     </>
   );
 }
 
 interface OverviewCardProps {
+  icon: typeof Users;
   title: string;
   rows: { label: string; value: number }[];
   loading: boolean;
@@ -44,29 +47,27 @@ interface OverviewCardProps {
   theme: AdminThemeContext;
 }
 
-function OverviewCard({ title, rows, loading, error, retry, link, theme }: OverviewCardProps) {
-  const { panelBg, panelBorder, textPrimary, textMuted } = theme;
+function OverviewCard({ icon, title, rows, loading, error, retry, link, theme }: OverviewCardProps) {
   return (
-    <section aria-label={title} className={`rounded-xl border shadow-sm ${panelBg} ${panelBorder} ${textPrimary}`}>
-      <div className={`flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4 ${panelBorder}`}>
-        <h2 className="font-bold">{title}</h2>
-        <Link to={link.to} className="text-sm font-semibold underline-offset-4 hover:underline">{link.label}</Link>
-      </div>
-      {error ? (
-        <div className={`px-5 py-4 text-sm ${textMuted}`} role="alert">
-          <p>{error}</p>
-          <button type="button" className="mt-2 font-semibold underline" onClick={() => void retry()}>Retry</button>
-        </div>
-      ) : (
-        <dl aria-busy={loading} className="grid gap-x-6 px-5 py-2 sm:grid-cols-2">
-          {rows.map(({ label, value }) => (
-            <div key={label} className={`flex items-center justify-between gap-3 border-b py-3 ${panelBorder}`}>
-              <dt className={`text-sm ${textMuted}`}>{label}</dt>
-              <dd className="font-semibold tabular-nums">{loading ? "—" : value.toLocaleString()}</dd>
-            </div>
-          ))}
-        </dl>
-      )}
+    <section aria-label={title}>
+      <SectionCard {...theme} compact title={title} icon={icon}
+        action={<Link to={link.to} className={`qed-type-button shrink-0 rounded-lg border px-3 py-2 ${theme.panelBorder} ${theme.textPrimary} hover:bg-maroon/5`}>{link.label}</Link>}>
+        {error ? (
+          <div className={`text-sm ${theme.textMuted}`} role="alert">
+            <p>{error}</p>
+            <button type="button" className="mt-2 font-semibold underline" onClick={() => void retry()}>Retry</button>
+          </div>
+        ) : (
+          <dl aria-busy={loading} className="grid gap-x-5 gap-y-3 sm:grid-cols-2">
+            {rows.map(({ label, value }) => (
+              <div key={label} className={`flex items-center justify-between gap-3 rounded-lg border px-3 py-2.5 ${theme.panelBorder} ${theme.darkMode ? "bg-white/5" : "bg-brand-light"}`}>
+                <dt className={`qed-type-metadata ${theme.textMuted}`}>{label}</dt>
+                <dd className={`qed-type-table-body font-semibold tabular-nums ${theme.textPrimary}`}>{loading ? "—" : value.toLocaleString()}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+      </SectionCard>
     </section>
   );
 }
