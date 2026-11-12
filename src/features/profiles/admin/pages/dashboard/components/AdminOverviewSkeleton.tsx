@@ -25,11 +25,9 @@ export function AdminOverviewColumns({ account, classes, enrollment, rosters }: 
   rosters?: ReactNode;
 }) {
   return (
-    <div className="grid gap-4 xl:auto-rows-fr xl:grid-cols-2 xl:[&>div>div]:h-full xl:[&>div>section]:h-full xl:[&>div>section>div]:h-full">
-      <div className="min-w-0">{account}</div>
-      <div className="min-w-0 xl:row-start-2">{enrollment}</div>
-      <div className="min-w-0 xl:col-start-2 xl:row-start-1">{classes}</div>
-      {rosters && <div className="min-w-0">{rosters}</div>}
+    <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+      <div className="grid min-w-0 gap-4">{account}{enrollment}</div>
+      <div className="grid min-w-0 gap-4">{classes}{rosters}</div>
     </div>
   );
 }

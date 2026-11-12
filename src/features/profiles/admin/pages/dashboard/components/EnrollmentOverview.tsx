@@ -46,9 +46,9 @@ export function EnrollmentOverview({ theme, account, classOverview }: { theme: A
       rosters={<section aria-label="Class rosters" className="min-w-0">
         <SectionCard {...theme} compact title="Class rosters" icon={BookOpen}
           action={<Link to="/admin/classes" className={`qed-type-button shrink-0 rounded-lg border px-3 py-1.5 text-maroon ${panelBorder} hover:bg-maroon/5`}>View classes</Link>}>
-        <div className={`overflow-auto rounded-lg border xl:max-h-56 ${panelBorder}`}>
+        <div className={`overflow-x-auto rounded-lg border ${panelBorder}`}>
           <table className={`teacher-user-table w-full text-left text-sm ${textPrimary}`}>
-            <thead className={`xl:sticky xl:top-0 ${darkMode ? "bg-panel-dark" : "bg-brand-light"} ${textMuted}`}>
+            <thead className={`${darkMode ? "bg-white/5" : "bg-brand-light"} ${textMuted}`}>
               <tr>
                 <th scope="col" className="qed-type-table-header px-3 py-2.5 sm:px-4">Class</th>
                 <th scope="col" className="qed-type-table-header px-3 py-2.5">Adviser</th>
