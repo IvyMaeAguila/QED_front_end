@@ -39,7 +39,7 @@ export function EnrollmentOverview({ theme, account, classOverview }: { theme: A
       enrollment={<section aria-label="Class enrollment by grade" className="min-w-0">
         <SectionCard {...theme} compact title="Class enrollment by grade" icon={BarChart3}
           action={<span className={`text-xs ${textMuted}`}>{total.toLocaleString()} total</span>}>
-          <EnrollmentBars label="Students on class rosters by grade" textMuted={textMuted}
+          <EnrollmentBars label="Students on class rosters by grade" darkMode={darkMode} textMuted={textMuted}
             bars={enrollment.map(grade => ({ key: grade.label, label: grade.label, shortLabel: grade.label, value: grade.students }))} />
         </SectionCard>
       </section>}

@@ -55,7 +55,7 @@ export function AdminOverview() {
         </OverviewPanel>}
       classOverview={<OverviewPanel theme={theme} icon={BookOpen} title="Class overview" loading={classesLoading}
           error={classesError} retry={refreshClasses} to="/admin/classes" action="Manage classes">
-          <dl className="grid grid-cols-3 gap-3">
+          <dl className={`grid grid-cols-3 gap-3 ${theme.textPrimary}`}>
             {[
               { label: "Classes", value: classes.length },
               { label: "Grade levels", value: new Set(classes.map(item => item.gradeLevelId)).size },
@@ -67,7 +67,7 @@ export function AdminOverview() {
               </div>
             ))}
           </dl>
-          <div className={`my-3 rounded-lg px-3 py-2 ${theme.darkMode ? "bg-[var(--brand-soft-dark)]" : "bg-brand-soft"}`}>
+          <div className={`my-3 rounded-lg px-3 py-2 ${theme.darkMode ? "bg-white/5" : "bg-brand-light"}`}>
             <div className="mb-2 flex flex-wrap justify-between gap-1 text-xs">
               <span>Classes with an adviser</span>
               <strong>{assigned} of {classes.length}</strong>
@@ -77,7 +77,7 @@ export function AdminOverview() {
           {rosterCounts.length > 0 && (
             <>
               <h3 className={`qed-type-label mb-2 ${theme.textPrimary}`}>Students per class</h3>
-              <EnrollmentBars bars={rosterCounts} label="Students per class" textMuted={theme.textMuted} />
+              <EnrollmentBars bars={rosterCounts} label="Students per class" darkMode={theme.darkMode} textMuted={theme.textMuted} />
             </>
           )}
         </OverviewPanel>}
