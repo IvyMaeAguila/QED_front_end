@@ -1,71 +1,144 @@
 import { BookOpen, Users } from "lucide-react";
-import { SectionCard } from "../../../../shared/components/DashboardUI";
-import { EnrollmentOverview } from "./EnrollmentOverview";
 import { Link } from "react-router-dom";
+import { LoadingRegion } from "@shared/loading/LoadingRegion";
 import { useLoadingOutletContext } from "@shared/loading/RoutePreview";
+import { ProgressBar, SectionCard } from "../../../../shared/components/DashboardUI";
 import { useClasses } from "../../classes/context/ClassesContext";
 import { useUsers } from "../../usermanagement/context/UsersContext";
-import { ROLES, ROLE_LABELS } from "../../usermanagement/types/user";
+import { ROLE_LABELS } from "../../usermanagement/types/user";
 import type { AdminThemeContext } from "../../AdminLayout";
+import { DashboardSkeletonRows } from "./AdminOverviewSkeleton";
+import { EnrollmentBars } from "./EnrollmentBars";
+import { EnrollmentOverview } from "./EnrollmentOverview";
+
+const accountRoles = [
+  { role: "TEACHER", color: "var(--color-maroon)" },
+  { role: "PARENT", color: "#ce8181" },
+  { role: "ADMIN", color: "#55454c" },
+  { role: "PRINCIPAL", color: "#e8c4c4" },
+] as const;
 
 export function AdminOverview() {
   const theme = useLoadingOutletContext<AdminThemeContext>();
   const { users, loading: usersLoading, error: usersError, forbidden, refetchUsers } = useUsers();
-  const { classes, loading: classesLoading, error: classesError, refreshClasses } = useClasses();
-  const accounts = [
-    { label: "Active accounts", value: users.filter(user => user.status === "Active").length },
-    { label: "Inactive accounts", value: users.filter(user => user.status === "Inactive").length },
-    ...ROLES.map(role => ({ label: ROLE_LABELS[role], value: users.filter(user => user.role === role).length })),
-  ];
-  const school = [
-    { label: "Classes", value: classes.length },
-    { label: "Grade levels with classes", value: new Set(classes.map(item => item.gradeLevelId)).size },
-    { label: "Classes without an adviser", value: classes.filter(item => !(Number(item.adviserId) > 0)).length },
-  ];
+  const { serverRows: classes, loading: classesLoading, error: classesError, refreshClasses } = useClasses();
+  const active = users.filter(user => user.status === "Active").length;
+  const inactive = users.filter(user => user.status === "Inactive").length;
+  const accounts = accountRoles.map(({ role, color }) => ({
+    label: ROLE_LABELS[role], color, value: users.filter(user => user.role === role).length,
+  }));
+  const rosterCounts = classes.map(item => ({
+    key: item.id,
+    label: [item.gradeLevel, item.section].filter(Boolean).join(" · "),
+    shortLabel: `${item.gradeLevel.replace(/^Grade\s+/i, "")}${item.section?.trim().charAt(0) ?? ""}`,
+    value: Number(item.studentCount) || 0,
+  }));
+  const assigned = classes.filter(item => Number(item.adviserId) > 0).length;
+  const coverage = classes.length ? assigned / classes.length * 100 : 0;
 
   return (
     <>
-      <div className="grid gap-5 xl:grid-cols-2">
-      <OverviewCard icon={Users} title="Account overview" rows={accounts} loading={usersLoading} error={usersError ?? (forbidden ? "Account data is unavailable." : null)}
-        retry={refetchUsers} link={{ to: "/admin/users", label: "Manage users" }} theme={theme} />
-      <OverviewCard icon={BookOpen} title="Class overview" rows={school} loading={classesLoading} error={classesError}
-        retry={refreshClasses} link={{ to: "/admin/classes", label: "Manage classes" }} theme={theme} />
+      <div className="grid gap-5 xl:grid-cols-2 [&>section>div]:h-full">
+        <OverviewPanel theme={theme} icon={Users} title="Account overview" loading={usersLoading}
+          error={usersError ?? (forbidden ? "Account data is unavailable." : null)} retry={refetchUsers}
+          to="/admin/users" action="Manage users">
+          <AccountBreakdown accounts={accounts} theme={theme} />
+          <dl className={`mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm ${theme.textMuted}`}>
+            <div className="flex gap-2"><dt>Active accounts</dt><dd className={`font-semibold ${theme.textPrimary}`}>{active.toLocaleString()}</dd></div>
+            <div className="flex gap-2"><dt>Inactive accounts</dt><dd className={`font-semibold ${theme.textPrimary}`}>{inactive.toLocaleString()}</dd></div>
+          </dl>
+        </OverviewPanel>
+        <OverviewPanel theme={theme} icon={BookOpen} title="Class overview" loading={classesLoading}
+          error={classesError} retry={refreshClasses} to="/admin/classes" action="Manage classes">
+          <dl className="grid grid-cols-3 gap-3">
+            {[
+              { label: "Classes", value: classes.length },
+              { label: "Grade levels", value: new Set(classes.map(item => item.gradeLevelId)).size },
+              { label: "Students on rosters", value: rosterCounts.reduce((sum, item) => sum + item.value, 0) },
+            ].map(({ label, value }) => (
+              <div key={label} className={`border-l pl-3 first:border-0 first:pl-0 ${theme.panelBorder}`}>
+                <dd className="text-xl font-bold tabular-nums">{value.toLocaleString()}</dd>
+                <dt className={`text-xs ${theme.textMuted}`}>{label}</dt>
+              </div>
+            ))}
+          </dl>
+          <div className={`my-4 rounded-lg p-3 ${theme.darkMode ? "bg-white/5" : "bg-maroon/5"}`}>
+            <div className="mb-2 flex flex-wrap justify-between gap-1 text-xs">
+              <span>Classes with an adviser</span>
+              <strong>{assigned} of {classes.length}</strong>
+            </div>
+            <div aria-hidden="true"><ProgressBar value={coverage} darkMode={theme.darkMode} /></div>
+          </div>
+          {rosterCounts.length > 0 && (
+            <>
+              <h3 className={`qed-type-label mb-1 ${theme.textMuted}`}>Students per class</h3>
+              <EnrollmentBars bars={rosterCounts} label="Students per class" textMuted={theme.textMuted} />
+            </>
+          )}
+        </OverviewPanel>
       </div>
       <EnrollmentOverview {...theme} />
     </>
   );
 }
 
-interface OverviewCardProps {
+function AccountBreakdown({ accounts, theme }: { accounts: { label: string; color: string; value: number }[]; theme: AdminThemeContext }) {
+  const total = accounts.reduce((sum, item) => sum + item.value, 0);
+  let start = 0;
+  const stops = accounts.map(({ value, color }) => {
+    const end = start + (total ? value / total * 100 : 0);
+    const stop = `${color} ${start}% ${end}%`;
+    start = end;
+    return stop;
+  });
+
+  return (
+    <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-4 sm:gap-6">
+      <div className="grid size-22 place-items-center rounded-full p-2.5 sm:size-32" aria-hidden="true"
+        style={{ background: total ? `conic-gradient(${stops.join(", ")})` : "var(--color-maroon)" }}>
+        <div className={`grid size-full content-center rounded-full text-center ${theme.darkMode ? "bg-panel-dark" : "bg-white"}`}>
+          <strong className="text-lg tabular-nums sm:text-2xl">{total.toLocaleString()}</strong>
+          <span className={`text-xs ${theme.textMuted}`}>accounts</span>
+        </div>
+      </div>
+      <ul aria-label="Accounts by role" className="space-y-2 text-xs sm:text-sm">
+        {accounts.map(({ label, value, color }) => (
+          <li key={label} className="grid grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-2">
+            <span aria-hidden="true" className="size-2.5 rounded-sm" style={{ backgroundColor: color }} />
+            <span>{label}</span>
+            <strong className="tabular-nums">{value.toLocaleString()}</strong>
+            <span className={`min-w-8 text-right tabular-nums ${theme.textMuted}`}>{total ? Math.round(value / total * 100) : 0}%</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function OverviewPanel({ icon, title, loading, error, retry, to, action, theme, children }: {
   icon: typeof Users;
   title: string;
-  rows: { label: string; value: number }[];
   loading: boolean;
   error: string | null;
   retry: () => void | Promise<void>;
-  link: { to: string; label: string };
+  to: string;
+  action: string;
   theme: AdminThemeContext;
-}
-
-function OverviewCard({ icon, title, rows, loading, error, retry, link, theme }: OverviewCardProps) {
+  children: React.ReactNode;
+}) {
   return (
-    <section aria-label={title}>
+    <section aria-label={title} className="min-w-0">
       <SectionCard {...theme} compact title={title} icon={icon}
-        action={<Link to={link.to} className={`qed-type-button shrink-0 rounded-lg border px-3 py-2 ${theme.panelBorder} ${theme.textPrimary} hover:bg-maroon/5`}>{link.label}</Link>}>
+        action={<Link to={to} className={`qed-type-button shrink-0 rounded-lg border px-3 py-2 ${theme.panelBorder} hover:bg-maroon/5`}>{action}</Link>}>
         {error ? (
           <div className={`text-sm ${theme.textMuted}`} role="alert">
             <p>{error}</p>
             <button type="button" className="mt-2 font-semibold underline" onClick={() => void retry()}>Retry</button>
           </div>
         ) : (
-          <dl aria-busy={loading} className="grid gap-x-5 gap-y-3 sm:grid-cols-2">
-            {rows.map(({ label, value }) => (
-              <div key={label} className={`flex items-center justify-between gap-3 rounded-lg border px-3 py-2.5 ${theme.panelBorder} ${theme.darkMode ? "bg-white/5" : "bg-brand-light"}`}>
-                <dt className={`qed-type-metadata ${theme.textMuted}`}>{label}</dt>
-                <dd className={`qed-type-table-body font-semibold tabular-nums ${theme.textPrimary}`}>{loading ? "—" : value.toLocaleString()}</dd>
-              </div>
-            ))}
-          </dl>
+          <LoadingRegion loading={loading} label={`Loading ${title.toLowerCase()}`} skeleton={<DashboardSkeletonRows count={6} paired />}>
+            {children}
+          </LoadingRegion>
         )}
       </SectionCard>
     </section>

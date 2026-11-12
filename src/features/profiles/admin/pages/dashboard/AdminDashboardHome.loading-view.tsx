@@ -1,5 +1,6 @@
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import type { ReactNode } from "react";
+import { AdminOverviewSkeleton } from "./components/AdminOverviewSkeleton";
 import { AuditLogs } from "./components/AuditLogs";
 import { LoginFrequency } from "./components/LoginFrequency";
 import { StatCards } from "./components/StatCards";
@@ -17,7 +18,7 @@ function useAdminDashboardHomeState(activity: boolean, overview: ReactNode) {
         <AuditLogs {...theme} />
       </> : <>
         <StatCards {...theme} />
-        {overview}
+        {overview ?? <AdminOverviewSkeleton {...theme} />}
       </>}
     </div>
   )), scope: {  } };
