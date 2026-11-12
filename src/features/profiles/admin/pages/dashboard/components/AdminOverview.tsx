@@ -1,3 +1,4 @@
+import { EnrollmentOverview } from "./EnrollmentOverview";
 import { Link } from "react-router-dom";
 import { useLoadingOutletContext } from "@shared/loading/RoutePreview";
 import { useClasses } from "../../classes/context/ClassesContext";
@@ -21,12 +22,15 @@ export function AdminOverview() {
   ];
 
   return (
+    <>
     <div className="grid gap-5 xl:grid-cols-2">
       <OverviewCard title="Account overview" rows={accounts} loading={usersLoading} error={usersError ?? (forbidden ? "Account data is unavailable." : null)}
         retry={refetchUsers} link={{ to: "/admin/users", label: "Manage users" }} theme={theme} />
       <OverviewCard title="Class overview" rows={school} loading={classesLoading} error={classesError}
         retry={refreshClasses} link={{ to: "/admin/classes", label: "Manage classes" }} theme={theme} />
     </div>
+    <EnrollmentOverview {...theme} />
+    </>
   );
 }
 
