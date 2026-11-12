@@ -29,7 +29,7 @@ function formatTimestamp(value: string) {
 }
 
 export function AuditLogs({ darkMode, panelBg, panelBorder, textPrimary, textMuted }: AuditLogsProps) {
-  const { audit: state, filters, setFilters } = useAdminDashboardData();
+  const { audit: state, filters, setFilters, renderAuditDelete } = useAdminDashboardData();
   const { data: page, loading, error, retry } = state;
   const { page: pageNumber, search, role, action, from, to } = filters;
   const setPageNumber = (value: number | ((current: number) => number)) => setFilters(current => ({ ...current, page: typeof value === "function" ? value(current.page) : value }));
@@ -116,7 +116,7 @@ export function AuditLogs({ darkMode, panelBg, panelBorder, textPrimary, textMut
                   <td className={`whitespace-nowrap px-4 py-3 ${textMuted}`}>{formatTimestamp(entry.createdAt)}</td>
                   <td className={`px-4 py-3 ${textPrimary}`}><span className="font-bold">{entry.actorFullName || entry.actorUsername || "Unknown actor"}</span><span className={`mt-0.5 block text-xs ${textMuted}`}>{entry.actorUsername ? `@${entry.actorUsername} · ` : ""}{entry.actorRole || "Unknown role"}</span></td>
                   <td className={`px-4 py-3 ${textPrimary}`}><span className="font-bold">{display.action}</span><span className={`mt-0.5 block ${textMuted}`}>{display.area}{entry.resourceId ? ` · #${entry.resourceId}` : ""}</span></td>
-                  <td className={`max-w-80 px-4 py-3 ${textMuted}`}><details><summary className="cursor-pointer font-semibold text-maroon">View details</summary><div className="mt-2 space-y-1 text-xs"><p className="break-all">{entry.httpMethod} {entry.endpoint}</p><p>Response code: {entry.statusCode}</p></div></details></td>
+                  <td className={`max-w-80 px-4 py-3 ${textMuted}`}><details><summary className="cursor-pointer font-semibold text-maroon">View details</summary><div className="mt-2 space-y-1 text-xs"><p className="break-all">{entry.httpMethod} {entry.endpoint}</p><p>Response code: {entry.statusCode}</p>{renderAuditDelete?.(entry, darkMode)}</div></details></td>
                   <td className="px-4 py-3 text-center"><span className={`rounded-full px-2 py-1 font-bold ${display.successful ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>{display.result}</span></td>
                 </tr>
               );

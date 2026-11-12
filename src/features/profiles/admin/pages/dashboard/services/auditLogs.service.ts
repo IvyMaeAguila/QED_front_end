@@ -3,7 +3,7 @@ import { API_CONFIG } from "../../../../../../config/api.config";
 import { QueryHttpError } from "@shared/http/QueryHttpError";
 
 export interface AuditLogEntry {
-  id: number;
+  id: string | number;
   actorUserId: number | null;
   actorFullName: string | null;
   actorUsername: string | null;
@@ -51,4 +51,15 @@ export async function fetchAuditLogs(filters: AuditLogFilters, signal?: AbortSig
     throw new QueryHttpError(body?.message || "Unable to load audit logs.", response.status, undefined, {requestId: response.requestId});
   }
   return body.data as AuditLogPage;
+}
+
+export async function deleteAuditLog(id: AuditLogEntry["id"], onUnauthorized: () => void): Promise<void> {
+  const response = await fetch(`${API_CONFIG.baseURL}/api/audit-logs/${encodeURIComponent(id)}`, {
+    method: "DELETE", credentials: "include", operation: "write",
+  });
+  if (response.status === 401) onUnauthorized();
+  if (response.status !== 204) {
+    const body = await response.json().catch(() => null);
+    throw new QueryHttpError(body?.message || "Unable to delete the audit entry.", response.status);
+  }
 }

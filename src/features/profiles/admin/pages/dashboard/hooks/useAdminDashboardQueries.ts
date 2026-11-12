@@ -1,12 +1,12 @@
 import {safeReadOptions} from '@shared/query/safeReadPolicy';
 import { useLayoutEffect, useState, useSyncExternalStore } from "react";
-import { onlineManager, useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { onlineManager, useQuery, useQueryClient, type UseQueryResult } from "@tanstack/react-query";
 import { useAuth } from "@shared/hooks/useAuth";
 import { useRoutePreview } from "@shared/loading/RoutePreview";
 import { adminDashboardOfflineError, defaultAuditFilters, type AdminDashboardData, type DashboardReader } from "../AdminDashboardDataContext";
 import { DashboardService } from "../services/totalCounts.service";
 import { getLoginFrequency, LoginFrequencyServiceError, type LoginFrequencyPeriod } from "../services/loginFrequency.service";
-import { fetchAuditLogs, type AuditLogFilters } from "../services/auditLogs.service";
+import { deleteAuditLog, fetchAuditLogs, type AuditLogEntry, type AuditLogFilters } from "../services/auditLogs.service";
 
 export const adminDashboardKeys = {
   all: (generation: number, role: string, userId: string) => ["session", generation, role, userId, "admin", "dashboard"] as const,
@@ -17,9 +17,10 @@ const subscribe = (notify: () => void) => onlineManager.subscribe(notify);
 const getOnline = () => onlineManager.isOnline();
 const denied = (error: unknown) => error instanceof Error && "status" in error && [401,403].includes(Number(error.status));
 
-export function useAdminDashboardQueries(view: "summary" | "activity" | "all" = "all"): AdminDashboardData {
+export function useAdminDashboardQueries(view: "summary" | "activity" | "all" = "all"): AdminDashboardData & { removeAuditEntry: (entry: AuditLogEntry) => Promise<void> } {
   const { user, isLoading, sessionScope, expireSession } = useAuth();
   const preview = useRoutePreview();
+  const queryClient = useQueryClient();
   const online = useSyncExternalStore(subscribe, getOnline);
   const enabled = !preview && !isLoading && user?.role === "ADMIN";
   useLayoutEffect(() => {
@@ -71,5 +72,13 @@ export function useAdminDashboardQueries(view: "summary" | "activity" | "all" = 
   if (login.error && login.error !== adminDashboardOfflineError && !(login.error instanceof LoginFrequencyServiceError)) {
     login.error = new Error("Nagka-error sa pagkuha ng login frequency.");
   }
-  return { counts, frequency: login, audit: reader(audit), selectedPeriod, setSelectedPeriod, filters, setFilters };
+  async function removeAuditEntry(entry: AuditLogEntry) {
+    await deleteAuditLog(entry.id, () => expireSession(sessionScope));
+    if (audit.data?.entries.length === 1 && filters.page > 1) {
+      setFilters(current => current === filters ? { ...current, page: current.page - 1 } : current);
+    }
+    void queryClient.invalidateQueries({ queryKey: key("audit") });
+  }
+
+  return { counts, frequency: login, audit: reader(audit), selectedPeriod, setSelectedPeriod, filters, setFilters, removeAuditEntry };
 }

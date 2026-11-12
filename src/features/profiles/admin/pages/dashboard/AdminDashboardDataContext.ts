@@ -1,7 +1,7 @@
-import { createContext, useContext, type Dispatch, type SetStateAction } from "react";
+import { createContext, useContext, type ReactNode, type Dispatch, type SetStateAction } from "react";
 import type { DashboardCounts } from "./services/totalCounts.service";
 import type { LoginFrequencyPeriod, LoginFrequencyResponse } from "./services/loginFrequency.service";
-import type { AuditLogFilters, AuditLogPage } from "./services/auditLogs.service";
+import type { AuditLogEntry, AuditLogFilters, AuditLogPage } from "./services/auditLogs.service";
 
 // Preview/presentation contract only. No Query runtime in the eager Admin graph.
 export const adminDashboardOfflineError = new Error("You are offline. Check your connection and try again.");
@@ -13,6 +13,7 @@ export interface AdminDashboardData {
   counts: DashboardReader<DashboardCounts>;
   frequency: DashboardReader<LoginFrequencyResponse>;
   audit: DashboardReader<AuditLogPage>;
+  renderAuditDelete?: (entry: AuditLogEntry, darkMode: boolean) => ReactNode;
   selectedPeriod: LoginFrequencyPeriod;
   setSelectedPeriod: Dispatch<SetStateAction<LoginFrequencyPeriod>>;
   filters: AuditLogFilters;
