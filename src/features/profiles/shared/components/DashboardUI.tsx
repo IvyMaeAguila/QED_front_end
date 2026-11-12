@@ -252,10 +252,10 @@ export function OverviewCard({
         <div className="flex flex-1 flex-col">
           <p className="qed-type-kpi-label uppercase tracking-widest text-white/75">{label}</p>
           <p data-sk-region={region} className="qed-type-kpi mt-1.5 leading-none tracking-tight text-white">{value}</p>
-          <div className="mt-auto flex min-h-6 items-center justify-between gap-2 pt-1.5">
+          {(sub != null || trend) && <div className="mt-auto flex min-h-6 items-center justify-between gap-2 pt-1.5">
             <p className="qed-type-metadata text-white/70">{sub}</p>
             {trend && (loading ? <SkeletonAvatar className="h-6 w-6" /> : <TrendChip trend={trend} darkMode={darkMode} />)}
-          </div>
+          </div>}
         </div>
       </div>
     );
@@ -276,10 +276,10 @@ export function OverviewCard({
       <div className="flex flex-1 flex-col">
         <p className={`qed-type-kpi-label uppercase tracking-widest ${textMuted}`}>{label}</p>
         <p data-sk-region={region} className={`qed-type-kpi mt-1.5 leading-none tracking-tight ${textPrimary}`}>{value}</p>
-        <div className="mt-auto flex min-h-6 items-center justify-between gap-2 pt-1.5">
+        {(sub != null || trend) && <div className="mt-auto flex min-h-6 items-center justify-between gap-2 pt-1.5">
           <p className={`qed-type-metadata ${textMuted}`}>{sub}</p>
           {trend && (loading ? <SkeletonAvatar className="h-6 w-6" /> : <TrendChip trend={trend} darkMode={darkMode} />)}
-        </div>
+        </div>}
       </div>
     </div>
   );
