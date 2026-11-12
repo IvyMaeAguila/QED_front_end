@@ -12,10 +12,10 @@ import { EnrollmentBars } from "./EnrollmentBars";
 import { EnrollmentOverview } from "./EnrollmentOverview";
 
 const accountRoles = [
-  { role: "TEACHER", color: "var(--color-maroon)" },
-  { role: "PARENT", color: "#ce8181" },
-  { role: "ADMIN", color: "#55454c" },
-  { role: "PRINCIPAL", color: "#e8c4c4" },
+  { role: "TEACHER", color: "var(--chart-primary)" },
+  { role: "PARENT", color: "color-mix(in srgb, var(--chart-primary) 62%, transparent)" },
+  { role: "ADMIN", color: "currentColor" },
+  { role: "PRINCIPAL", color: "color-mix(in srgb, var(--chart-primary) 30%, transparent)" },
 ] as const;
 
 export function AdminOverview() {
@@ -37,18 +37,17 @@ export function AdminOverview() {
   const coverage = classes.length ? assigned / classes.length * 100 : 0;
 
   return (
-    <>
-      <div className="grid gap-5 xl:grid-cols-2 [&>section>div]:h-full">
-        <OverviewPanel theme={theme} icon={Users} title="Account overview" loading={usersLoading}
+    <EnrollmentOverview theme={theme}
+      account={<OverviewPanel theme={theme} icon={Users} title="Account overview" loading={usersLoading}
           error={usersError ?? (forbidden ? "Account data is unavailable." : null)} retry={refetchUsers}
           to="/admin/users" action="Manage users">
           <AccountBreakdown accounts={accounts} theme={theme} />
-          <dl className={`mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm ${theme.textMuted}`}>
+          <dl className={`mt-4 flex flex-wrap border-t pt-3 ${theme.panelBorder} gap-x-5 gap-y-2 text-sm ${theme.textMuted}`}>
             <div className="flex gap-2"><dt>Active accounts</dt><dd className={`font-semibold ${theme.textPrimary}`}>{active.toLocaleString()}</dd></div>
             <div className="flex gap-2"><dt>Inactive accounts</dt><dd className={`font-semibold ${theme.textPrimary}`}>{inactive.toLocaleString()}</dd></div>
           </dl>
-        </OverviewPanel>
-        <OverviewPanel theme={theme} icon={BookOpen} title="Class overview" loading={classesLoading}
+        </OverviewPanel>}
+      classOverview={<OverviewPanel theme={theme} icon={BookOpen} title="Class overview" loading={classesLoading}
           error={classesError} retry={refreshClasses} to="/admin/classes" action="Manage classes">
           <dl className="grid grid-cols-3 gap-3">
             {[
@@ -62,7 +61,7 @@ export function AdminOverview() {
               </div>
             ))}
           </dl>
-          <div className={`my-4 rounded-lg p-3 ${theme.darkMode ? "bg-white/5" : "bg-maroon/5"}`}>
+          <div className={`my-3 rounded-lg px-3 py-2 ${theme.darkMode ? "bg-[var(--brand-soft-dark)]" : "bg-brand-soft"}`}>
             <div className="mb-2 flex flex-wrap justify-between gap-1 text-xs">
               <span>Classes with an adviser</span>
               <strong>{assigned} of {classes.length}</strong>
@@ -75,10 +74,8 @@ export function AdminOverview() {
               <EnrollmentBars bars={rosterCounts} label="Students per class" textMuted={theme.textMuted} />
             </>
           )}
-        </OverviewPanel>
-      </div>
-      <EnrollmentOverview {...theme} />
-    </>
+        </OverviewPanel>}
+    />
   );
 }
 
@@ -93,9 +90,9 @@ function AccountBreakdown({ accounts, theme }: { accounts: { label: string; colo
   });
 
   return (
-    <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-4 sm:gap-6">
-      <div className="grid size-22 place-items-center rounded-full p-2.5 sm:size-32" aria-hidden="true"
-        style={{ background: total ? `conic-gradient(${stops.join(", ")})` : "var(--color-maroon)" }}>
+    <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-4">
+      <div className="grid size-22 place-items-center rounded-full p-2.5 sm:size-26" aria-hidden="true"
+        style={{ background: total ? `conic-gradient(${stops.join(", ")})` : "var(--sk-base)" }}>
         <div className={`grid size-full content-center rounded-full text-center ${theme.darkMode ? "bg-panel-dark" : "bg-white"}`}>
           <strong className="text-lg tabular-nums sm:text-2xl">{total.toLocaleString()}</strong>
           <span className={`text-xs ${theme.textMuted}`}>accounts</span>
@@ -129,7 +126,7 @@ function OverviewPanel({ icon, title, loading, error, retry, to, action, theme, 
   return (
     <section aria-label={title} className="min-w-0">
       <SectionCard {...theme} compact title={title} icon={icon}
-        action={<Link to={to} className={`qed-type-button shrink-0 rounded-lg border px-3 py-2 ${theme.panelBorder} hover:bg-maroon/5`}>{action}</Link>}>
+        action={<Link to={to} className={`qed-type-button shrink-0 rounded-lg border px-3 py-1.5 text-maroon ${theme.panelBorder} hover:bg-maroon/5`}>{action}</Link>}>
         {error ? (
           <div className={`text-sm ${theme.textMuted}`} role="alert">
             <p>{error}</p>

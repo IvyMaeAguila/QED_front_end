@@ -1,15 +1,19 @@
+import type { ReactNode } from "react";
 import { BarChart3, BookOpen } from "lucide-react";
 import { SectionCard } from "../../../../shared/components/DashboardUI";
 import { EnrollmentBars } from "./EnrollmentBars";
-import { AdminEnrollmentSkeleton } from "./AdminOverviewSkeleton";
+import { AdminOverviewColumns, EnrollmentSkeleton } from "./AdminOverviewSkeleton";
 import { Link } from "react-router-dom";
 import { useClasses } from "../../classes/context/ClassesContext";
 import type { AdminThemeContext } from "../../AdminLayout";
 
-export function EnrollmentOverview(theme: AdminThemeContext) {
+export function EnrollmentOverview({ theme, account, classOverview }: { theme: AdminThemeContext; account: ReactNode; classOverview: ReactNode }) {
   const { darkMode, panelBorder, textPrimary, textMuted } = theme;
   const { serverRows: classes, loading, error, refreshClasses } = useClasses();
-  if (loading) return <AdminEnrollmentSkeleton {...theme} />;
+  if (loading) return (
+    <AdminOverviewColumns account={account} classes={classOverview}
+      enrollment={<EnrollmentSkeleton theme={theme} />} rosters={<EnrollmentSkeleton theme={theme} roster />} />
+  );
 
   const grades = new Map<number, { label: string; students: number }>();
   for (const item of classes) {
@@ -20,26 +24,26 @@ export function EnrollmentOverview(theme: AdminThemeContext) {
   const enrollment = [...grades.entries()].sort(([a], [b]) => a - b).map(([, grade]) => grade);
   const total = enrollment.reduce((sum, grade) => sum + grade.students, 0);
   if (error || !classes.length) return (
-    <SectionCard {...theme} compact title="Class enrollment" icon={BarChart3}>
+    <AdminOverviewColumns account={account} classes={classOverview} enrollment={<SectionCard {...theme} compact title="Class enrollment" icon={BarChart3}>
       {error ? <div role="alert" className={`mt-2 text-sm ${textMuted}`}>
         <p>{error}</p>
         <button type="button" className="mt-2 font-semibold underline" onClick={refreshClasses}>Retry</button>
       </div> : <p className={`mt-2 text-sm ${textMuted}`}>
         No classes are available for this school year.
       </p>}
-    </SectionCard>
+    </SectionCard>} />
   );
 
   return (
-    <div className="grid gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-      <section aria-label="Class enrollment by grade" className="min-w-0">
+    <AdminOverviewColumns account={account} classes={classOverview}
+      enrollment={<section aria-label="Class enrollment by grade" className="min-w-0">
         <SectionCard {...theme} compact title="Class enrollment by grade" icon={BarChart3}
           action={<span className={`text-xs ${textMuted}`}>{total.toLocaleString()} total</span>}>
           <EnrollmentBars label="Students on class rosters by grade" textMuted={textMuted}
             bars={enrollment.map(grade => ({ key: grade.label, label: grade.label, shortLabel: grade.label.replace(/^Grade\s+/i, "G"), value: grade.students }))} />
         </SectionCard>
-      </section>
-      <section aria-label="Class rosters" className="min-w-0">
+      </section>}
+      rosters={<section aria-label="Class rosters" className="min-w-0">
         <SectionCard {...theme} compact title="Class rosters" icon={BookOpen}
           action={<Link to="/admin/classes" className={`qed-type-button shrink-0 rounded-lg border px-3 py-2 ${panelBorder} ${textPrimary} hover:bg-maroon/5`}>View classes</Link>}>
         <div className={`overflow-x-auto rounded-lg border ${panelBorder}`}>
@@ -65,7 +69,7 @@ export function EnrollmentOverview(theme: AdminThemeContext) {
           </table>
         </div>
         </SectionCard>
-      </section>
-    </div>
+      </section>}
+    />
   );
 }

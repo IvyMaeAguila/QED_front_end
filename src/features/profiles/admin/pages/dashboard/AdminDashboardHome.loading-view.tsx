@@ -11,7 +11,7 @@ function useAdminDashboardHomeState(activity: boolean, overview: ReactNode) {
   const { textPrimary } = theme;
 
   return { content: ((
-    <div className="flex flex-col gap-6">
+    <div className={`flex flex-col ${activity ? "gap-6" : "gap-4"}`}>
       {activity ? <>
         <h1 className={`qed-type-page-title ${textPrimary}`}>Account Activity</h1>
         <LoginFrequency {...theme} />
