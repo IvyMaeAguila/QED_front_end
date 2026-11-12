@@ -17,7 +17,7 @@ const subscribe = (notify: () => void) => onlineManager.subscribe(notify);
 const getOnline = () => onlineManager.isOnline();
 const denied = (error: unknown) => error instanceof Error && "status" in error && [401,403].includes(Number(error.status));
 
-export function useAdminDashboardQueries(): AdminDashboardData {
+export function useAdminDashboardQueries(view: "summary" | "activity" | "all" = "all"): AdminDashboardData {
   const { user, isLoading, sessionScope, expireSession } = useAuth();
   const preview = useRoutePreview();
   const online = useSyncExternalStore(subscribe, getOnline);
@@ -33,16 +33,18 @@ export function useAdminDashboardQueries(): AdminDashboardData {
     adminDashboardKeys.resource(sessionScope, user?.role ?? "", String(user?.id ?? ""), resource, ...params);
   const options = { enabled, staleTime: 30_000, gcTime: 5 * 60_000,
     refetchOnWindowFocus: false, refetchOnReconnect: true };
+  const summaryEnabled = enabled && view !== "activity";
+  const activityEnabled = enabled && view !== "summary";
   const expire = (signal: AbortSignal) => () => { if (!signal.aborted) expireSession(sessionScope); };
-  const users = useQuery({ ...options, ...safeReadOptions, queryKey: key("users"),
+  const users = useQuery({ ...options, ...safeReadOptions, enabled: summaryEnabled, queryKey: key("users"),
     queryFn: ({ signal }) => DashboardService.getUserCounts({ signal, onUnauthorized: expire(signal) }) });
-  const students = useQuery({ ...options, ...safeReadOptions, queryKey: key("students"),
+  const students = useQuery({ ...options, ...safeReadOptions, enabled: summaryEnabled, queryKey: key("students"),
     queryFn: ({ signal }) => DashboardService.getTotalStudents({ signal, onUnauthorized: expire(signal) }) });
-  const frequency = useQuery({ ...options, ...safeReadOptions, queryKey: key("frequency", selectedPeriod),
-    refetchInterval: enabled ? 30_000 : false, refetchIntervalInBackground: true,
+  const frequency = useQuery({ ...options, ...safeReadOptions, enabled: activityEnabled, queryKey: key("frequency", selectedPeriod),
+    refetchInterval: activityEnabled ? 30_000 : false, refetchIntervalInBackground: true,
     queryFn: ({ signal }) => getLoginFrequency(selectedPeriod, signal, expire(signal)) });
   // The audit GET can initialize its table; it is not a pure read.
-  const audit = useQuery({ ...options, retry:false, queryKey: key("audit", filters.page, filters.search, filters.role, filters.action, filters.from, filters.to, 20),
+  const audit = useQuery({ ...options, enabled: activityEnabled, retry:false, queryKey: key("audit", filters.page, filters.search, filters.role, filters.action, filters.from, filters.to, 20),
     queryFn: ({ signal }) => fetchAuditLogs(filters, signal, expire(signal)) });
   function reader<T>(query: UseQueryResult<T, Error>): DashboardReader<T> {
     const offline = enabled && (!online || query.isPaused);

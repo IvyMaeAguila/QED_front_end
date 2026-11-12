@@ -10,6 +10,7 @@ interface ProgressReportUnavailableModalProps {
   isVisible: boolean;
   /** Has the active grading_period ended (end_date has passed / is_active turned off)? */
   termEnded: boolean;
+  approved: boolean;
 }
 
 export default function ProgressReportUnavailableModal({
@@ -18,14 +19,17 @@ export default function ProgressReportUnavailableModal({
   theme,
   isVisible,
   termEnded,
+  approved,
 }: ProgressReportUnavailableModalProps) {
   if (!open) return null;
 
   const { darkMode, textPrimary, textMuted } = theme;
 
   const reason = !termEnded
-    ? "The current grading period hasn't ended yet. Progress reports are released once the term is complete."
-    : "Your child's adviser hasn't released this progress report yet. It will appear here as soon as it's made visible.";
+    ? "The selected grading period is still in progress."
+    : !approved
+      ? "Your child's grades are awaiting principal approval."
+      : "Your child's adviser needs to enable Parent Visibility for this report.";
 
   return (
     <ModalFrame
@@ -53,10 +57,9 @@ export default function ProgressReportUnavailableModal({
         <ModalBody className="space-y-2 px-6 py-5">
           <p className={`text-sm leading-relaxed ${textMuted}`}>{reason}</p>
 
-        {!termEnded && !isVisible && (
+        {(!termEnded || !approved || !isVisible) && (
           <p className={`mt-2 text-xs leading-relaxed ${textMuted}`}>
-            Once the term ends and the report is released, you'll be able to
-            view it here.
+            You can view the report after the term ends, the principal approves the grades, and the adviser enables Parent Visibility.
           </p>
         )}
         </ModalBody>

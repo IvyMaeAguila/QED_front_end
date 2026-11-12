@@ -9,17 +9,20 @@ export { AdminDashboardHomeComposition } from "./AdminDashboardHome.loading-view
 export type { AdminDashboardHomeEffectScope, AdminDashboardHomeRouteProps } from "./AdminDashboardHome.loading-view";
 
 const DashboardQueries = lazy(() => import("./AdminDashboardQueries").then(module => ({ default: module.AdminDashboardQueryBoundary })));
-function DashboardStartup() {
+function DashboardStartup({ activity = false }: { activity?: boolean }) {
  const students = useStudents(), users = useUsers(), teachers = useTeachers(), classes = useClasses();
  const [initialized, setInitialized] = useState(false);
  const pending = students.loading || users.loading || teachers.loading || classes.loading;
  // Keep the initial Admin shell/preview Query-free. Existing providers settle on
  // success OR error; later provider refetches must not reset dashboard drafts.
  if (!initialized && !pending) setInitialized(true);
- if (!initialized && pending) return <AdminDashboardHomeComposition/>;
- return <Suspense fallback={<AdminDashboardHomeComposition/>}><DashboardQueries/></Suspense>;
+ if (!initialized && pending) return <AdminDashboardHomeComposition activity={activity}/>;
+ return <Suspense fallback={<AdminDashboardHomeComposition activity={activity}/>}><DashboardQueries activity={activity}/></Suspense>;
 }
-export function AdminDashboardHome() {
+function AdminDashboardRoute({ activity = false }: { activity?: boolean }) {
  const { sessionScope, user } = useAuth();
- return <DashboardStartup key={`${sessionScope}:${user?.role}:${user?.id}`}/>;
+ return <DashboardStartup activity={activity} key={`${sessionScope}:${user?.role}:${user?.id}`}/>;
 }
+
+export function AdminDashboardHome() { return <AdminDashboardRoute />; }
+export function AdminAccountActivity() { return <AdminDashboardRoute activity />; }

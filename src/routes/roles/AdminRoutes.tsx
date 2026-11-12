@@ -25,6 +25,7 @@ function AdminSection() {
   );
 }
 const AdminDashboardHome = lazy(routeSkeletons["/admin"].load);
+const AdminAccountActivity = lazy(routeSkeletons["/admin/account-activity"].load);
 const StudentRecordsPage = lazy(routeSkeletons["/admin/students"].load);
 const StudentFormPage = lazy(routeSkeletons["/admin/students/:studentId/edit"].load);
 const UserManagementPage = lazy(routeSkeletons["/admin/users"].load);
@@ -43,6 +44,7 @@ const SectionAssignmentPage = lazy(routeSkeletons["/admin/classes/section-assign
 export default function AdminRoutes() {
  return <RouteViewsContext.Provider value={routeViews}><Routes><Route element={<AdminSection/>}>
           <Route index element={<AdminDashboardHome />} />
+          <Route path="account-activity" element={<AdminAccountActivity />} />
           <Route path="students" element={<StudentRecordsPage />} />
           <Route path="students/new" element={<StudentFormPage />} />
           {/* <Route path="students/:studentId" element={<StudentDetailPage />} /> */}

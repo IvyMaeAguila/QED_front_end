@@ -10,7 +10,7 @@ import { CalendarPageComposition } from "../../shared/calendar/CalendarPage.load
 import { AcademicYearPageComposition } from "../../features/profiles/admin/pages/subjects/AcademicYearPage.loading-view";
 import { ManageSubjectsPageComposition } from "../../features/profiles/admin/pages/subjects/ManageSubjectsPage.loading-view";
 import { StudentRecordsPageComposition } from "../../features/profiles/admin/pages/studentrecords/StudentRecordsPage.loading-view";
-import { AdminDashboardHomeComposition } from "../../features/profiles/admin/pages/dashboard/AdminDashboardHome.loading-view";
+import { AdminAccountActivityComposition, AdminDashboardHomeComposition } from "../../features/profiles/admin/pages/dashboard/AdminDashboardHome.loading-view";
 import { ClassesPageComposition } from "../../features/profiles/admin/pages/classes/ClassPage.loading-view";
 import { UserManagementPageComposition } from "../../features/profiles/admin/pages/usermanagement/UserManagementPage.loading-view";
 import { SectionAssignmentPageComposition } from "../../features/profiles/admin/pages/classes/SectionAssignmentPage.loading-view";
@@ -29,6 +29,7 @@ export const routeViews = {
   ManageSubjectsPageComposition,
   StudentRecordsPageComposition,
   AdminDashboardHomeComposition,
+  AdminAccountActivityComposition,
   ClassesPageComposition,
   UserManagementPageComposition,
 };

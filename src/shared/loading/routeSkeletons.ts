@@ -438,6 +438,14 @@ export const routeSkeletons = {
     load: () => import("../../features/profiles/admin/pages/dashboard/AdminDashboardHome").then(module => ({ default: module.AdminDashboardHome })),
     regions: [
       { name: "counts", classification: "FIXED-SIZE", reason: "Single-line numeric values in existing stat tiles", count: "Four static tiles" },
+    ],
+  },
+  "/admin/account-activity": {
+    role: "ADMIN",
+    component: "AdminAccountActivity",
+    skeleton: "AdminAccountActivityComposition",
+    load: () => import("../../features/profiles/admin/pages/dashboard/AdminDashboardHome").then(module => ({ default: module.AdminAccountActivity })),
+    regions: [
       { name: "login plot", classification: "FIXED-SIZE", reason: "Existing h-52 plot independent of returned series", count: "Cache then viewport for placeholder bars" },
       { name: "login summaries", classification: "VARIABLE", reason: "Returned labels and period names may wrap", count: "Three summaries, typical two lines" },
       { name: "audit rows", classification: "AUTO-COLUMN", reason: "Native automatic column layout changes with actor, action and endpoint content", count: "Page size 20 capped to viewport and six rows; column widths cached per filtered view" },

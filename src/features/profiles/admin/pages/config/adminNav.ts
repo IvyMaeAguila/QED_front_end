@@ -1,5 +1,6 @@
 import {
   LayoutDashboard,
+  Activity,
   Users,
   BookOpen,
   BookMarked,
@@ -12,6 +13,7 @@ export const ADMIN_NAV_ITEMS = [
   { label: "Manage Users", Icon: Users, to: "/admin/users" },
   { label: "Classes", Icon: BookOpen, to: "/admin/classes" },
   { label: "Academics", Icon: BookMarked, to: "/admin/subjects" },
+  { label: "Account Activity", Icon: Activity, to: "/admin/account-activity" },
   { label: "Calendar", Icon: Calendar, to: "/admin/calendar" },
 ];
 

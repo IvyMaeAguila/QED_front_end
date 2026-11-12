@@ -113,7 +113,7 @@ export function ParentVisibilitySection({
   useLayoutEffect(()=>{currentResource.current=resource;return()=>{currentResource.current='';};},[resource]);
   function applyVisibility(visible: boolean) {
     if (!selected.size) return;
-    confirmAction({ title: visible ? "Show reports to parents?" : "Hide reports from parents?", description: `${visible ? "Show" : "Hide"} ${termLabel} reports for ${selected.size} selected students?`, confirmLabel: visible ? "Show reports" : "Hide reports", action: () => persistVisibility(visible) });
+    confirmAction({ title: visible ? "Enable Parent Visibility?" : "Hide reports from parents?", description: visible ? `Enable visibility for ${selected.size} selected students in ${termLabel}? Reports open to parents after the term ends and the principal approves the grades.` : `Hide ${termLabel} reports for ${selected.size} selected students?`, confirmLabel: visible ? "Enable visibility" : "Hide reports", action: () => persistVisibility(visible) });
   }
   async function persistVisibility(visible: boolean) {
     if (selected.size === 0) return;
@@ -136,7 +136,7 @@ export function ParentVisibilitySection({
         )
       );
       setSelected(new Set());
-      showToast(`${termLabel} reports ${visible ? "shown" : "hidden"} for ${selected.size} students.`);
+      showToast(`${termLabel} parent visibility ${visible ? "enabled" : "disabled"} for ${selected.size} students.`);
     } catch (err) {
       if(currentResource.current!==resource)return;
       console.error("Failed to update grade visibility:", err);

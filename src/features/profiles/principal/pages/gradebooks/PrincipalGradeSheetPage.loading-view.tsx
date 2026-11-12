@@ -8,6 +8,7 @@ import { queryClient } from "@shared/query/queryClient";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useLoadingOutletContext as useOutletContext } from "@shared/loading/RoutePreview";
 import type { AdminThemeContext } from "../../../admin/pages/AdminLayout";
+import { GradeApprovalPanel } from "./components/GradeApprovalPanel";
 import { GradeSheetHeader } from "./components/GradeSheetHeader";
 import { GradeSheetNotFound } from "./components/GradeSheetNotFound";
 import { GradeSheetSummary } from "./components/GradeSheetSummary";
@@ -105,6 +106,7 @@ function GradeSheetContent({
   const { darkMode, panelBg, panelBorder, textPrimary, textMuted } =
     useOutletContext<AdminThemeContext>();
   const navigate = useNavigate();
+  const [mode, setMode] = useState<"view" | "approve">("view");
   const [studentSearch, setStudentSearch] = useState("");
   const [studentFilter, setStudentFilter] = useState("All Students");
 
@@ -153,6 +155,7 @@ function GradeSheetContent({
 
   return (
     <div className="flex flex-col gap-6 font-sans">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <GradeSheetHeader
         gradeLabel={gradeLabel}
         loading={initialLoading}
@@ -164,6 +167,17 @@ function GradeSheetContent({
         textPrimary={textPrimary}
         textMuted={textMuted}
       />
+
+      <div role="group" aria-label="Grade sheet mode" className={`qed-segmented-control flex self-start rounded-lg border ${panelBg} ${panelBorder} sm:self-center`}>
+        {(["view", "approve"] as const).map(option => (
+          <button key={option} type="button" aria-pressed={mode === option}
+            onClick={() => setMode(option)}
+            className={`rounded-lg px-3 text-xs font-bold transition-colors ${mode === option ? "bg-maroon text-white" : textMuted}`}>
+            {option === "view" ? "View Grades" : "Approve Grades"}
+          </button>
+        ))}
+      </div>
+      </div>
 
       {cachedOffline && <LoadingRegion loading={false} error={error} retry={retry} skeleton={null} name="grade-sheet-offline">{null}</LoadingRegion>}
       {error && !cachedOffline ? (
@@ -189,7 +203,7 @@ function GradeSheetContent({
             darkMode={darkMode}
           />
           <div className={`relative z-20 flex flex-col gap-2.5 rounded-xl border px-3 py-2 lg:flex-row lg:items-center lg:justify-between ${panelBg} ${panelBorder}`}>
-            <div className="relative w-full lg:w-64">
+            {mode === "view" ? <div className="relative w-full lg:w-64">
               <span className="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-2.5 text-gray-400"><Search size={13} /></span>
               <input
                 value={studentSearch}
@@ -198,9 +212,9 @@ function GradeSheetContent({
                 aria-label="Search students by name or ID"
                 className={`qed-filter-control w-full rounded-lg border pl-8 pr-2.5 font-medium outline-none transition-colors ${panelBg} ${panelBorder} ${textPrimary} placeholder:text-gray-400 focus:border-maroon`}
               />
-            </div>
+            </div> : <p className={`text-sm ${textMuted}`}>Review submitted grades for the selected term.</p>}
             <div className="relative z-20 flex flex-wrap items-center gap-2">
-              <AccountSelect data-account-select=""
+              {mode === "view" && <AccountSelect data-account-select=""
                 value={studentFilter}
                 onChange={(event) => setStudentFilter(event.target.value)}
                 aria-label="Filter students and grade ranking"
@@ -210,7 +224,7 @@ function GradeSheetContent({
                 <option>Lowest Grades</option>
                 <option>Boys</option>
                 <option>Girls</option>
-              </AccountSelect>
+              </AccountSelect>}
                 <LoadingFormValue loading={periodsLoading && gradingPeriods.length === 0} name="grade-sheet-term" intrinsic width="5ch" className="h-full"><AccountSelect data-account-select=""
                   value={String(gradingPeriodId)}
                   onChange={(event) => onTermChange(event.target.value)}
@@ -222,7 +236,11 @@ function GradeSheetContent({
                 </AccountSelect></LoadingFormValue>
             </div>
           </div>
-          <GradeSheetTable
+          {mode === "approve" && gradingPeriodId !== undefined ? (
+            <GradeApprovalPanel key={gradingPeriodId} gradeLevelId={gradeLevelId} gradingPeriodId={gradingPeriodId}
+              sectionId={sectionId} className={[gradeLabel, sectionName].filter(Boolean).join(" · ")}
+              darkMode={darkMode} panelBg={panelBg} panelBorder={panelBorder} textMuted={textMuted} />
+          ) : <GradeSheetTable
             loading={loading}
             initialLoading={initialLoading}
             view={`principal-grade-${gradeLevelId}-${sectionId ?? "all"}-${gradingPeriodId ?? "default"}-${studentFilter}-${query}`}
@@ -236,7 +254,7 @@ function GradeSheetContent({
             textPrimary={textPrimary}
             textMuted={textMuted}
             darkMode={darkMode}
-          />
+          />}
         </>
       )}
     </div>

@@ -74,7 +74,7 @@ function ProgressReportSection({
 
       <StudentInfoTable student={reportStudent} gradeSection={data.meta.gradeSection} theme={theme} />
       <LoadingRegion name="parent-progress-report" loading={loading} error={error} retry={refetch} variable skeleton={null} frame={(pending) => !pending && isLocked ? <p className={`py-6 text-sm ${theme.textMuted}`}>This progress report is not available yet.</p> : <ProgressReportTab theme={theme} student={reportStudent} loading={pending} />}>{null}</LoadingRegion>
-      {!loading && !error && isLocked && <ProgressReportUnavailableModal open={modalOpen} onClose={handleModalClose} theme={theme} isVisible={selectedTermVisibility?.isVisible ?? false} termEnded={selectedTermVisibility?.termEnded ?? false} />}
+      {!loading && !error && isLocked && <ProgressReportUnavailableModal open={modalOpen} onClose={handleModalClose} theme={theme} isVisible={selectedTermVisibility?.isVisible ?? false} termEnded={selectedTermVisibility?.termEnded ?? false} approved={selectedTermVisibility?.approved ?? false} />}
     </>
   );
 }

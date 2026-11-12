@@ -217,6 +217,7 @@ function ProgressReportProvider({
         submitted: visibility.every((v) => v.submitted),
         isVisible: allVisible,
         termEnded: allTermEnded,
+        approved: visibility.every(v => v.approved === true),
         available: allAvailable,
       };
     }
